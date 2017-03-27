@@ -1,16 +1,18 @@
 package ru.terrakok.gitlabclient.view.launch
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.widget.Toast
 import com.arellomobile.mvp.presenter.InjectPresenter
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.android.SupportFragmentNavigator
 import ru.terrakok.gitlabclient.App
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.presentation.launch.LaunchPresenter
 import ru.terrakok.gitlabclient.presentation.launch.LaunchView
+import ru.terrakok.gitlabclient.view.auth.AuthFragment
 import ru.terrakok.gitlabclient.view.global.BaseActivity
+import ru.terrakok.gitlabclient.view.global.BaseFragment
 import javax.inject.Inject
 
 class MainActivity : BaseActivity(), LaunchView {
@@ -37,17 +39,24 @@ class MainActivity : BaseActivity(), LaunchView {
     }
 
     private val navigator = object : SupportFragmentNavigator(supportFragmentManager, R.id.mainContainer) {
-        override fun createFragment(screenKey: String?, data: Any?): Fragment {
-            TODO("createFragment not implemented")
+
+        override fun createFragment(screenKey: String?, data: Any?) = when (screenKey) {
+            Screens.AUTH_SCREEN -> AuthFragment()
+            else -> null
         }
 
-        override fun exit() {
-            finish()
-        }
+        override fun exit() = finish()
 
-        override fun showSystemMessage(message: String?) {
-            Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
-        }
+        override fun showSystemMessage(message: String?)
+                = Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
+    }
 
+    override fun onBackPressed() {
+        val fragment = supportFragmentManager.findFragmentById(R.id.mainContainer)
+        if (fragment is BaseFragment) {
+            fragment.onBackPressed()
+        } else {
+            presenter.onBackPressed()
+        }
     }
 }

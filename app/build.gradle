@@ -1,16 +1,21 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
+
     defaultConfig {
         applicationId "ru.terrakok.gitlabclient"
         minSdkVersion 19
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
+
+        vectorDrawables.useSupportLibrary true
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -40,7 +45,7 @@ dependencies {
     kapt "com.arello-mobile:moxy-compiler:$moxyVersion"
     compile "com.arello-mobile:moxy-app-compat:$moxyVersion"
     //Cicerone Navigation
-    compile "ru.terrakok.cicerone:cicerone:1.1"
+    compile "ru.terrakok.cicerone:cicerone:1.2"
     //DI
     compile "com.google.dagger:dagger:$daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"

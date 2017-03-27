@@ -27,4 +27,6 @@ class LaunchPresenter : MvpPresenter<LaunchView>() {
             router.newRootScreen(Screens.AUTH_SCREEN)
         }
     }
+
+    fun onBackPressed() = router.finishChain()
 }
