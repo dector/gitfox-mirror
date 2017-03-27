@@ -37,6 +37,7 @@ ext {
 dependencies {
     //Support
     compile "com.android.support:appcompat-v7:$supportLibraryVersion"
+    compile "com.android.support:design:$supportLibraryVersion"
     //Kotlin
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     //Log
