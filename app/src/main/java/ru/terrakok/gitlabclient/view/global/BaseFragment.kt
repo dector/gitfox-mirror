@@ -30,7 +30,7 @@ abstract class BaseFragment : MvpAppCompatFragment() {
     protected fun isProgress() = progressView.visibility == View.VISIBLE
 
     protected fun showSnackMessage(message: String) {
-        Snackbar.make(baseContentContainer, message, Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(baseContentContainer, message, Snackbar.LENGTH_LONG).show()
     }
 
     open fun onBackPressed() {}

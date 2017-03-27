@@ -3,4 +3,5 @@
 
     <!--Auth screen-->
     <string name="auth_title">Authorization</string>
+    <string name="invalid_hash">Invalid auth response!</string>
 </resources>

@@ -26,6 +26,6 @@ class App : Application() {
     }
 
     fun initDagger() {
-        DAGGER = Dagger()
+        DAGGER = Dagger(this)
     }
 }

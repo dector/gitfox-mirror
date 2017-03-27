@@ -55,8 +55,7 @@ class AuthFragment : BaseFragment(), AuthView {
             }
 
             private fun overrideUrlLoading(view: WebView, url: String): Boolean {
-                view.loadUrl(url)
-                return true
+                return presenter.onRedirect(url)
             }
         })
     }
@@ -75,8 +74,7 @@ class AuthFragment : BaseFragment(), AuthView {
 
     override fun onBackPressed() {
         if (!isProgress()) {
-            if (webView.canGoBack()) webView.goBack()
-            else presenter.onBackPressed()
+            presenter.onBackPressed()
         }
     }
 }
