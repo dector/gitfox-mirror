@@ -1,16 +1,21 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
+
     defaultConfig {
         applicationId "ru.terrakok.gitlabclient"
         minSdkVersion 19
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
+
+        vectorDrawables.useSupportLibrary true
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -19,13 +24,41 @@ android {
     }
 }
 
+kapt {
+    generateStubs true
+}
+
 ext {
     supportLibraryVersion = '25.3.0'
+    moxyVersion = '1.4.6'
+    daggerVersion = "2.10"
+    retrofitVersion = "2.2.0"
 }
 
 dependencies {
     //Support
     compile "com.android.support:appcompat-v7:$supportLibraryVersion"
+    compile "com.android.support:design:$supportLibraryVersion"
     //Kotlin
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    //Log
+    compile "com.jakewharton.timber:timber:4.1.2"
+    //MVP Moxy
+    kapt "com.arello-mobile:moxy-compiler:$moxyVersion"
+    compile "com.arello-mobile:moxy-app-compat:$moxyVersion"
+    //Cicerone Navigation
+    compile "ru.terrakok.cicerone:cicerone:1.2.1"
+    //DI
+    compile "com.google.dagger:dagger:$daggerVersion"
+    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+    //Gson
+    compile "com.google.code.gson:gson:2.7"
+    //Retrofit
+    compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    compile "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    compile "com.squareup.okhttp3:logging-interceptor:3.6.0"
+    compile "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
+    //RxJava
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    compile "io.reactivex.rxjava2:rxjava:2.0.7"
 }
