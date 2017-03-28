@@ -1,10 +1,9 @@
 package ru.terrakok.gitlabclient.view.launch
 
 import android.os.Bundle
-import android.widget.Toast
 import com.arellomobile.mvp.presenter.InjectPresenter
 import ru.terrakok.cicerone.NavigatorHolder
-import ru.terrakok.cicerone.android.SupportFragmentNavigator
+import ru.terrakok.cicerone.android.SupportAppNavigator
 import ru.terrakok.gitlabclient.App
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
@@ -38,17 +37,14 @@ class MainActivity : BaseActivity(), LaunchView {
         super.onPause()
     }
 
-    private val navigator = object : SupportFragmentNavigator(supportFragmentManager, R.id.mainContainer) {
+    private val navigator = object : SupportAppNavigator(this, R.id.mainContainer) {
+
+        override fun createActivityIntent(screenKey: String?, data: Any?) = null
 
         override fun createFragment(screenKey: String?, data: Any?) = when (screenKey) {
             Screens.AUTH_SCREEN -> AuthFragment()
             else -> null
         }
-
-        override fun exit() = finish()
-
-        override fun showSystemMessage(message: String?)
-                = Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
     }
 
     override fun onBackPressed() {
