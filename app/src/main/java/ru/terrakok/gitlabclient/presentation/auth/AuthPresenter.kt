@@ -2,11 +2,15 @@ package ru.terrakok.gitlabclient.presentation.auth
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.App
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.model.resources.ResourceManager
-import ru.terrakok.gitlabclient.model.server.ServerConfig
+import ru.terrakok.gitlabclient.model.server.ServerManager
+import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
@@ -18,11 +22,12 @@ class AuthPresenter : MvpPresenter<AuthView>() {
     @Inject
     lateinit var router: Router
     @Inject
-    lateinit var serverConfig: ServerConfig
+    lateinit var serverManager: ServerManager
     @Inject
     lateinit var resourceManager: ResourceManager
 
     private val authHash = UUID.randomUUID().toString()
+    private var disposable: Disposable? = null
 
     init {
         App.DAGGER.appComponent.inject(this)
@@ -33,21 +38,35 @@ class AuthPresenter : MvpPresenter<AuthView>() {
         startAuthorization()
     }
 
+    override fun onDestroy() {
+        disposable?.dispose()
+        super.onDestroy()
+    }
+
     private fun startAuthorization() {
-        viewState.loadUrl(serverConfig.getAuthUrl(authHash))
+        viewState.loadUrl(serverManager.getAuthUrl(authHash))
     }
 
     private fun requestToken(code: String) {
-
+        disposable = serverManager.auth(code)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    _ ->
+                    Timber.i("Auth success!")
+                }, {
+                    error ->
+                    Timber.e("Auth error: $error")
+                    viewState.showMessage(resourceManager.getString(R.string.auth_error))
+                })
     }
 
     fun onRedirect(url: String): Boolean {
-        if (serverConfig.checkRedirect(url)) {
+        if (serverManager.checkAuthRedirect(url)) {
             if (!url.contains(authHash)) {
-                viewState.showMessage(resourceManager.getString(R.string.invalid_hash))
-                startAuthorization()
+                router.exitWithMessage(resourceManager.getString(R.string.invalid_hash))
             } else {
-                requestToken(serverConfig.getCodeFromAuthRedirect(url))
+                requestToken(serverManager.getCodeFromAuthRedirect(url))
             }
             return true
         } else {

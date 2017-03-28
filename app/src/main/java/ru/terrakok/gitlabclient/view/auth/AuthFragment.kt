@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.RequiresApi
+import android.webkit.CookieManager
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -30,6 +31,7 @@ class AuthFragment : BaseFragment(), AuthView {
 
         toolbar.setNavigationOnClickListener { presenter.onBackPressed() }
 
+        CookieManager.getInstance().removeAllCookie()
         val settings = webView.settings
         settings.javaScriptEnabled = true
 
