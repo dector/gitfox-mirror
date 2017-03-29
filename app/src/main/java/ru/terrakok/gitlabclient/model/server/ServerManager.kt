@@ -1,5 +1,6 @@
 package ru.terrakok.gitlabclient.model.server
 
+import com.google.gson.GsonBuilder
 import io.reactivex.Single
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -10,6 +11,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.terrakok.gitlabclient.entity.TokenData
 import ru.terrakok.gitlabclient.model.auth.AuthManager
+
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 27.03.17
@@ -35,8 +37,12 @@ class ServerManager(private val authManager: AuthManager, debug: Boolean) {
             httpClientBuilder.addNetworkInterceptor(httpLoggingInterceptor)
         }
 
+        val gson = GsonBuilder()
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+                .create()
+
         val retrofit = Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(httpClientBuilder.build())
                 .baseUrl(DEFAULT_BASE_URL).build()

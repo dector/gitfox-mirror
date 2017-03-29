@@ -5,4 +5,7 @@
     <string name="auth_title">Authorization</string>
     <string name="invalid_hash">Invalid auth response!</string>
     <string name="auth_error">Unknown error! Try again later</string>
+
+    <!--Projects screen-->
+    <string name="projects_title">Projects</string>
 </resources>

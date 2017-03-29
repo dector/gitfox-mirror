@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.view.auth
+package ru.terrakok.gitlabclient.ui.auth
 
 import android.graphics.Bitmap
 import android.os.Build
@@ -11,9 +11,9 @@ import android.webkit.WebViewClient
 import com.arellomobile.mvp.presenter.InjectPresenter
 import kotlinx.android.synthetic.main.fragment_auth.*
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.presentation.auth.AuthPresenter
-import ru.terrakok.gitlabclient.presentation.auth.AuthView
-import ru.terrakok.gitlabclient.view.global.BaseFragment
+import ru.terrakok.gitlabclient.mvp.auth.AuthPresenter
+import ru.terrakok.gitlabclient.mvp.auth.AuthView
+import ru.terrakok.gitlabclient.ui.global.BaseFragment
 
 
 /**

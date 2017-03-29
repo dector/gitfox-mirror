@@ -1,17 +1,19 @@
-package ru.terrakok.gitlabclient.view.launch
+package ru.terrakok.gitlabclient.ui.launch
 
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.android.SupportAppNavigator
 import ru.terrakok.gitlabclient.App
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
-import ru.terrakok.gitlabclient.presentation.launch.LaunchPresenter
-import ru.terrakok.gitlabclient.presentation.launch.LaunchView
-import ru.terrakok.gitlabclient.view.auth.AuthFragment
-import ru.terrakok.gitlabclient.view.global.BaseActivity
-import ru.terrakok.gitlabclient.view.global.BaseFragment
+import ru.terrakok.gitlabclient.mvp.launch.LaunchPresenter
+import ru.terrakok.gitlabclient.mvp.launch.LaunchView
+import ru.terrakok.gitlabclient.ui.auth.AuthFragment
+import ru.terrakok.gitlabclient.ui.global.BaseActivity
+import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.ui.main.ProjectsListFragment
 import javax.inject.Inject
 
 class MainActivity : BaseActivity(), LaunchView {
@@ -41,8 +43,9 @@ class MainActivity : BaseActivity(), LaunchView {
 
         override fun createActivityIntent(screenKey: String?, data: Any?) = null
 
-        override fun createFragment(screenKey: String?, data: Any?) = when (screenKey) {
+        override fun createFragment(screenKey: String?, data: Any?): Fragment? = when (screenKey) {
             Screens.AUTH_SCREEN -> AuthFragment()
+            Screens.MAIN_SCREEN -> ProjectsListFragment()
             else -> null
         }
     }

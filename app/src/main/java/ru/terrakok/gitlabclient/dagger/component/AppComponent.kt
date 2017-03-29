@@ -3,9 +3,10 @@ package ru.terrakok.gitlabclient.dagger.component
 import dagger.Component
 import ru.terrakok.gitlabclient.dagger.module.AppModule
 import ru.terrakok.gitlabclient.dagger.module.NavigationModule
-import ru.terrakok.gitlabclient.presentation.auth.AuthPresenter
-import ru.terrakok.gitlabclient.presentation.launch.LaunchPresenter
-import ru.terrakok.gitlabclient.view.launch.MainActivity
+import ru.terrakok.gitlabclient.mvp.auth.AuthPresenter
+import ru.terrakok.gitlabclient.mvp.launch.LaunchPresenter
+import ru.terrakok.gitlabclient.mvp.main.ProjectsListPresenter
+import ru.terrakok.gitlabclient.ui.launch.MainActivity
 import javax.inject.Singleton
 
 /**
@@ -19,5 +20,6 @@ import javax.inject.Singleton
 interface AppComponent {
     fun inject(presenter: LaunchPresenter)
     fun inject(presenter: AuthPresenter)
+    fun inject(presenter: ProjectsListPresenter)
     fun inject(activity: MainActivity)
 }
