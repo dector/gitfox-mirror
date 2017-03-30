@@ -22,6 +22,7 @@ class ProjectsListPresenter : MvpPresenter<ProjectsListView>() {
     @Inject
     lateinit var serverManager: ServerManager
 
+    private var currentPage = 0
     private var disposable: Disposable? = null
 
     init {
@@ -30,22 +31,39 @@ class ProjectsListPresenter : MvpPresenter<ProjectsListView>() {
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        requestProjects()
+        requestFirstPage()
     }
 
-    private fun requestProjects() {
-        disposable = serverManager.api.getProjects()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    result -> Timber.d("getProjects: ${result.size}")
-                }, {
-                    error -> Timber.e("getProjects: $error")
-                })
+    private fun requestProjects(page: Int) {
+        Timber.d("requestProjects: $page")
+        if (disposable == null || disposable!!.isDisposed) {
+            disposable = serverManager.api.getProjects(page)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnSubscribe { if (page == 1) viewState.showProgress(true) else viewState.showPageProgress(true) }
+                    .doOnEvent { _, _ -> if (page == 1) viewState.showProgress(false) else viewState.showPageProgress(false) }
+                    .doOnSuccess { disposable!!.dispose() }
+                    .subscribe({
+                        result ->
+                        Timber.d("getProjects: ${result.size}")
+                        if (result.isNotEmpty()) {
+                            currentPage = page
+                            if (page == 1) viewState.clearData()
+                            viewState.setNewData(result)
+                        }
+                    }, {
+                        error ->
+                        Timber.e("getProjects: $error")
+                    })
+        }
     }
 
     override fun onDestroy() {
         disposable?.dispose()
         super.onDestroy()
     }
+
+    fun requestFirstPage() = requestProjects(1)
+    fun requestNextPage() = requestProjects(currentPage + 1)
+    fun onBackPressed() = router.exit()
 }

@@ -1,10 +1,7 @@
 package ru.terrakok.gitlabclient.model.server
 
 import io.reactivex.Single
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.GET
-import retrofit2.http.POST
+import retrofit2.http.*
 import ru.terrakok.gitlabclient.entity.*
 
 /**
@@ -24,14 +21,16 @@ interface GitlabApi {
 
     @GET("api/v4/projects")
     fun getProjects(
-            @Field("archived") archived: Boolean? = null,
-            @Field("visibility") visibility: Visibility? = null,
-            @Field("order_by") order_by: OrderBy? = null,
-            @Field("sort") sort: Sort? = null,
-            @Field("search") search: String? = null,
-            @Field("simple") simple: Boolean? = null,
-            @Field("owned") owned: Boolean? = null,
-            @Field("membership") membership: Boolean? = null,
-            @Field("starred") starred: Boolean? = null
+            @Query("page") page: Int = 1,
+            @Query("per_page") pageSize: Int = 20,
+            @Query("archived") archived: Boolean? = null,
+            @Query("visibility") visibility: Visibility? = null,
+            @Query("order_by") order_by: OrderBy? = null,
+            @Query("sort") sort: Sort? = null,
+            @Query("search") search: String? = null,
+            @Query("simple") simple: Boolean? = null,
+            @Query("owned") owned: Boolean? = null,
+            @Query("membership") membership: Boolean? = null,
+            @Query("starred") starred: Boolean? = null
     ): Single<List<Project>>
 }
