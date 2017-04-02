@@ -1,10 +1,14 @@
 package ru.terrakok.gitlabclient.ui.projects
 
+import android.graphics.Bitmap
 import android.graphics.PorterDuff
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.BitmapImageViewTarget
 import com.hannesdorfmann.adapterdelegates3.AbsListItemAdapterDelegate
 import kotlinx.android.synthetic.main.item_project.view.*
 import ru.terrakok.gitlabclient.R
@@ -44,6 +48,21 @@ class ProjectAdapterDelegate : AbsListItemAdapterDelegate<ProjectsListItem.Proje
             }
 
             view.letterTV.background.setColorFilter(view.resources.getColor(colorRes), PorterDuff.Mode.SRC_IN)
+
+            Glide.with(view.avatarIV.context)
+                    .load(project.avatarUrl)
+                    .asBitmap()
+                    .centerCrop()
+                    .into(object : BitmapImageViewTarget(view.avatarIV) {
+                        override fun setResource(resource: Bitmap?) {
+                            resource?.let {
+                                view.letterTV.visibility = View.GONE
+                                val drawable = RoundedBitmapDrawableFactory.create(view.resources, it)
+                                drawable.isCircular = true
+                                view.avatarIV.setImageDrawable(drawable)
+                            }
+                        }
+                    })
         }
     }
 }
