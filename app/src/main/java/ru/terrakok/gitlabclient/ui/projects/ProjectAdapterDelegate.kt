@@ -13,6 +13,7 @@ import com.hannesdorfmann.adapterdelegates3.AbsListItemAdapterDelegate
 import kotlinx.android.synthetic.main.item_project.view.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Project
+import ru.terrakok.gitlabclient.entity.Visibility
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 02.04.17
@@ -33,6 +34,13 @@ class ProjectAdapterDelegate : AbsListItemAdapterDelegate<ProjectsListItem.Proje
 
             view.descriptionTV.visibility = if (project.description.isNullOrEmpty()) View.GONE else View.VISIBLE
             view.descriptionTV.text = project.description
+
+            view.starsTV.text = project.starCount.toString()
+            view.publicIV.setImageResource(when (project.visibility) {
+                Visibility.PRIVATE -> R.drawable.ic_lock_white_18dp
+                Visibility.INTERNAL -> R.drawable.ic_lock_outline_white_18dp
+                else -> R.drawable.ic_globe_18dp
+            })
 
             project.name?.let {
                 view.letterTV.text = it.first().toUpperCase().toString()
@@ -56,7 +64,6 @@ class ProjectAdapterDelegate : AbsListItemAdapterDelegate<ProjectsListItem.Proje
                     .into(object : BitmapImageViewTarget(view.avatarIV) {
                         override fun setResource(resource: Bitmap?) {
                             resource?.let {
-                                view.letterTV.visibility = View.GONE
                                 val drawable = RoundedBitmapDrawableFactory.create(view.resources, it)
                                 drawable.isCircular = true
                                 view.avatarIV.setImageDrawable(drawable)

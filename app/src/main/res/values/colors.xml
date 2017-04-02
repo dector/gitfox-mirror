@@ -7,6 +7,7 @@
     <color name="colorAccent">#29a19c</color>
     <color name="colorAccentLight">#a3f7bf</color>
 
+    <color name="white">#ffffff</color>
     <color name="transparentBlack">#50000000</color>
 
     <color name="primary_text">#e0ffffff</color>
