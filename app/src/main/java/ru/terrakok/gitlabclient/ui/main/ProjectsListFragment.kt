@@ -4,10 +4,13 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.hannesdorfmann.adapterdelegates3.ListDelegationAdapter
 import kotlinx.android.synthetic.main.fragment_projects.*
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.entity.Project
+import ru.terrakok.gitlabclient.mvp.main.ProjectsListFilter
 import ru.terrakok.gitlabclient.mvp.main.ProjectsListPresenter
 import ru.terrakok.gitlabclient.mvp.main.ProjectsListView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
@@ -16,9 +19,36 @@ import ru.terrakok.gitlabclient.ui.global.BaseFragment
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 29.03.17
  */
 class ProjectsListFragment : BaseFragment(), ProjectsListView {
+    companion object {
+        private val ARG_TYPE = "plf_type"
+        val MY_PROJECTS = 1
+        val STARRED_PROJECTS = 2
+        val EXPLORE_PROJECTS = 3
+
+        fun newInstance(type: Int): ProjectsListFragment {
+            val fragment = ProjectsListFragment()
+
+            val bundle = Bundle()
+            bundle.putInt(ARG_TYPE, type)
+            fragment.arguments = bundle
+
+            return fragment
+        }
+    }
 
     @InjectPresenter
     lateinit var presenter: ProjectsListPresenter
+
+    @ProvidePresenter
+    fun createPresenter(): ProjectsListPresenter {
+        val filter = when(arguments.getInt(ARG_TYPE)) {
+            MY_PROJECTS -> ProjectsListFilter(membership = true, order_by = OrderBy.LAST_ACTIVITY_AT, starred = false)
+            STARRED_PROJECTS -> ProjectsListFilter(starred = true, order_by = OrderBy.LAST_ACTIVITY_AT)
+            else -> ProjectsListFilter(order_by = OrderBy.LAST_ACTIVITY_AT)
+        }
+
+        return ProjectsListPresenter(filter)
+    }
 
     private val adapter = ProjectsAdapter()
 

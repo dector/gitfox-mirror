@@ -17,5 +17,9 @@ enum class OrderBy {
     @SerializedName("updated_at")
     UPDATED_AT,
     @SerializedName("last_activity_at")
-    LAST_ACTIVITY_AT
+    LAST_ACTIVITY_AT;
+
+    override fun toString(): String {
+        return super.toString().toLowerCase()
+    }
 }

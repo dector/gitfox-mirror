@@ -9,5 +9,9 @@ enum class Sort {
     @SerializedName("asc")
     ASC,
     @SerializedName("desc")
-    DESC
+    DESC;
+
+    override fun toString(): String {
+        return super.toString().toLowerCase()
+    }
 }

@@ -45,7 +45,7 @@ class MainActivity : BaseActivity(), LaunchView {
 
         override fun createFragment(screenKey: String?, data: Any?): Fragment? = when (screenKey) {
             Screens.AUTH_SCREEN -> AuthFragment()
-            Screens.MAIN_SCREEN -> ProjectsListFragment()
+            Screens.MAIN_SCREEN -> ProjectsListFragment.newInstance(ProjectsListFragment.MY_PROJECTS)
             else -> null
         }
     }

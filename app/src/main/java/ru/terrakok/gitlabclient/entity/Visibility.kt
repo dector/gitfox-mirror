@@ -11,5 +11,9 @@ enum class Visibility {
     @SerializedName("internal")
     INTERNAL,
     @SerializedName("private")
-    PRIVATE
+    PRIVATE;
+
+    override fun toString(): String {
+        return super.toString().toLowerCase()
+    }
 }

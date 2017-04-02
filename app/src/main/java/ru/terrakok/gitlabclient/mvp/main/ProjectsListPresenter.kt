@@ -16,7 +16,7 @@ import javax.inject.Inject
  */
 
 @InjectViewState
-class ProjectsListPresenter : MvpPresenter<ProjectsListView>() {
+class ProjectsListPresenter(private val filter: ProjectsListFilter) : MvpPresenter<ProjectsListView>() {
     @Inject
     lateinit var router: Router
     @Inject
@@ -43,7 +43,17 @@ class ProjectsListPresenter : MvpPresenter<ProjectsListView>() {
         }
 
         if (disposable == null) {
-            disposable = serverManager.api.getProjects(page)
+            disposable = serverManager.api.getProjects(
+                    filter.archived,
+                    filter.visibility,
+                    filter.order_by,
+                    filter.sort,
+                    filter.search,
+                    filter.simple,
+                    filter.owned,
+                    filter.membership,
+                    filter.starred,
+                    page)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnSubscribe { if (page == 1) viewState.showProgress(true) else viewState.showPageProgress(true) }

@@ -21,8 +21,6 @@ interface GitlabApi {
 
     @GET("api/v4/projects")
     fun getProjects(
-            @Query("page") page: Int = 1,
-            @Query("per_page") pageSize: Int = 20,
             @Query("archived") archived: Boolean? = null,
             @Query("visibility") visibility: Visibility? = null,
             @Query("order_by") order_by: OrderBy? = null,
@@ -31,6 +29,8 @@ interface GitlabApi {
             @Query("simple") simple: Boolean? = null,
             @Query("owned") owned: Boolean? = null,
             @Query("membership") membership: Boolean? = null,
-            @Query("starred") starred: Boolean? = null
+            @Query("starred") starred: Boolean? = null,
+            @Query("page") page: Int = 1,
+            @Query("per_page") pageSize: Int = 20
     ): Single<List<Project>>
 }
