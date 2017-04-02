@@ -8,4 +8,14 @@
     <color name="colorAccentLight">#a3f7bf</color>
 
     <color name="transparentBlack">#50000000</color>
+
+    <color name="primary_text">#e0ffffff</color>
+    <color name="secondary_text">#9effffff</color>
+
+    <color name="badge_color_1">#E0F2F1</color>
+    <color name="badge_color_2">#E8EAF6</color>
+    <color name="badge_color_3">#F3E5F5</color>
+    <color name="badge_color_4">#FBE9E7</color>
+    <color name="badge_color_5">#EEEEEE</color>
+
 </resources>

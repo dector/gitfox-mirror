@@ -36,13 +36,19 @@ class ProjectsListPresenter : MvpPresenter<ProjectsListView>() {
 
     private fun requestProjects(page: Int) {
         Timber.d("requestProjects: $page")
-        if (disposable == null || disposable!!.isDisposed) {
+
+        if (page == 1) {
+            disposable?.dispose()
+            disposable = null
+        }
+
+        if (disposable == null) {
             disposable = serverManager.api.getProjects(page)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnSubscribe { if (page == 1) viewState.showProgress(true) else viewState.showPageProgress(true) }
                     .doOnEvent { _, _ -> if (page == 1) viewState.showProgress(false) else viewState.showPageProgress(false) }
-                    .doOnSuccess { disposable!!.dispose() }
+                    .doOnEvent { _, _ -> disposable = null }
                     .subscribe({
                         result ->
                         Timber.d("getProjects: ${result.size}")

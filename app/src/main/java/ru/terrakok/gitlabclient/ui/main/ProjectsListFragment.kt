@@ -3,12 +3,9 @@ package ru.terrakok.gitlabclient.ui.main
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import com.arellomobile.mvp.presenter.InjectPresenter
+import com.hannesdorfmann.adapterdelegates3.ListDelegationAdapter
 import kotlinx.android.synthetic.main.fragment_projects.*
-import kotlinx.android.synthetic.main.item_project.view.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.mvp.main.ProjectsListPresenter
@@ -52,39 +49,44 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
     }
 
     override fun showPageProgress(isVisible: Boolean) {
-        //
+        adapter.showProgress(isVisible)
     }
 
-    inner class ProjectsAdapter : RecyclerView.Adapter<ProjectsAdapter.ProjectVH>() {
-        private var projects: MutableList<Project> = mutableListOf()
+    inner class ProjectsAdapter : ListDelegationAdapter<MutableList<ProjectsListItem>>() {
+        init {
+            items = mutableListOf()
+            delegatesManager.addDelegate(ProjectAdapterDelegate())
+            delegatesManager.addDelegate(ProgressAdapterDelegate())
+        }
 
         fun clearData() {
-            projects = mutableListOf()
+            items = if (isProgress()) mutableListOf(ProjectsListItem.ProgressItem()) else mutableListOf()
             notifyDataSetChanged()
         }
 
         fun addData(newProjects: List<Project>) {
-            projects.addAll(newProjects)
+            items.addAll(
+                    if (isProgress()) items.size - 1 else items.size,
+                    newProjects.map { ProjectsListItem.ProjectItem(it) }
+            )
             notifyDataSetChanged()
         }
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)
-                = ProjectVH(LayoutInflater.from(parent.context).inflate(R.layout.item_project, parent, false))
+        fun showProgress(isVisible: Boolean) {
+            val currentProgress = isProgress()
 
-        override fun getItemCount() = projects.size
+            if (isVisible && !currentProgress) items.add(ProjectsListItem.ProgressItem())
+            else if (!isVisible && currentProgress) items.remove(items.last())
 
-        override fun onBindViewHolder(holder: ProjectVH, position: Int) {
-            holder.bind(projects[position])
-
-            if (position == projects.size - 5) {
-                presenter.requestNextPage()
-            }
+            notifyDataSetChanged()
         }
 
-        inner class ProjectVH(val view: View) : RecyclerView.ViewHolder(view) {
-            fun bind(project: Project) {
-                view.projectTitleTV.text = project.nameWithNamespace
-            }
+        private fun isProgress() = items.isNotEmpty() && items.last() is ProjectsListItem.ProgressItem
+
+        override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int, payloads: MutableList<Any?>?) {
+            super.onBindViewHolder(holder, position, payloads)
+
+            if (position == items.size - 10) presenter.requestNextPage()
         }
     }
 }
