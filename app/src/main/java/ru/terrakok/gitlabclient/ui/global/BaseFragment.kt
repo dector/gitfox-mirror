@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.view.global
+package ru.terrakok.gitlabclient.ui.global
 
 import android.os.Bundle
 import android.support.design.widget.Snackbar

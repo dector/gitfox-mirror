@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.presentation.auth
+package ru.terrakok.gitlabclient.mvp.auth
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
@@ -8,6 +8,7 @@ import io.reactivex.schedulers.Schedulers
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.App
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.model.resources.ResourceManager
 import ru.terrakok.gitlabclient.model.server.ServerManager
 import timber.log.Timber
@@ -54,6 +55,7 @@ class AuthPresenter : MvpPresenter<AuthView>() {
                 .subscribe({
                     _ ->
                     Timber.i("Auth success!")
+                    router.replaceScreen(Screens.MAIN_SCREEN)
                 }, {
                     error ->
                     Timber.e("Auth error: $error")

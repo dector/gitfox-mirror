@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.presentation.launch
+package ru.terrakok.gitlabclient.mvp.launch
 
 import com.arellomobile.mvp.MvpPresenter
 import ru.terrakok.cicerone.Router
@@ -25,6 +25,8 @@ class LaunchPresenter : MvpPresenter<LaunchView>() {
 
         if (!authManager.isSignedIn()) {
             router.newRootScreen(Screens.AUTH_SCREEN)
+        } else {
+            router.newRootScreen(Screens.MAIN_SCREEN)
         }
     }
 

@@ -9,4 +9,8 @@
         <item name="android:windowBackground">@color/colorPrimaryLight</item>
     </style>
 
+    <style name="ToolbarStyle">
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
+
 </resources>
