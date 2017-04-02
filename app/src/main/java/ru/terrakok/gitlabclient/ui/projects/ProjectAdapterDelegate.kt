@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.ui.main
+package ru.terrakok.gitlabclient.ui.projects
 
 import android.graphics.PorterDuff
 import android.support.v7.widget.RecyclerView

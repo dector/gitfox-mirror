@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.ui.main
+package ru.terrakok.gitlabclient.ui.projects
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -10,9 +10,9 @@ import kotlinx.android.synthetic.main.fragment_projects.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.entity.Project
-import ru.terrakok.gitlabclient.mvp.main.ProjectsListFilter
-import ru.terrakok.gitlabclient.mvp.main.ProjectsListPresenter
-import ru.terrakok.gitlabclient.mvp.main.ProjectsListView
+import ru.terrakok.gitlabclient.mvp.projects.ProjectsListFilter
+import ru.terrakok.gitlabclient.mvp.projects.ProjectsListPresenter
+import ru.terrakok.gitlabclient.mvp.projects.ProjectsListView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 
 /**

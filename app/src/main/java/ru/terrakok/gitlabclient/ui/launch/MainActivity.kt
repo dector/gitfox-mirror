@@ -13,7 +13,7 @@ import ru.terrakok.gitlabclient.mvp.launch.LaunchView
 import ru.terrakok.gitlabclient.ui.auth.AuthFragment
 import ru.terrakok.gitlabclient.ui.global.BaseActivity
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import ru.terrakok.gitlabclient.ui.main.ProjectsListFragment
+import ru.terrakok.gitlabclient.ui.main.MainFragment
 import javax.inject.Inject
 
 class MainActivity : BaseActivity(), LaunchView {
@@ -45,7 +45,7 @@ class MainActivity : BaseActivity(), LaunchView {
 
         override fun createFragment(screenKey: String?, data: Any?): Fragment? = when (screenKey) {
             Screens.AUTH_SCREEN -> AuthFragment()
-            Screens.MAIN_SCREEN -> ProjectsListFragment.newInstance(ProjectsListFragment.MY_PROJECTS)
+            Screens.MAIN_SCREEN -> MainFragment()
             else -> null
         }
     }

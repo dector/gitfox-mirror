@@ -8,4 +8,7 @@
 
     <!--Projects screen-->
     <string name="projects_title">Projects</string>
+    <string name="my_projects_title">My projects</string>
+    <string name="starred_projects_title">Starred</string>
+    <string name="explore_projects_title">Explore</string>
 </resources>

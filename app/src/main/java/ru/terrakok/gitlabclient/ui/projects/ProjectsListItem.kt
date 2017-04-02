@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.ui.main
+package ru.terrakok.gitlabclient.ui.projects
 
 import ru.terrakok.gitlabclient.entity.Project
 
