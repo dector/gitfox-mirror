@@ -3,6 +3,8 @@ package ru.terrakok.gitlabclient.ui.projects
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.hannesdorfmann.adapterdelegates3.ListDelegationAdapter
@@ -52,7 +54,8 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
 
     private val adapter = ProjectsAdapter()
 
-    override fun getLayoutId() = R.layout.fragment_projects
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?)
+            = inflater.inflate(R.layout.fragment_projects, container, false)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

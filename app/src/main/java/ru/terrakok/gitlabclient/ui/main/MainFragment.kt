@@ -4,6 +4,8 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentPagerAdapter
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import com.arellomobile.mvp.presenter.InjectPresenter
 import kotlinx.android.synthetic.main.fragment_main.*
 import ru.terrakok.gitlabclient.R
@@ -27,7 +29,8 @@ class MainFragment : BaseFragment(), MainView {
         adapter = MainPagesAdapter()
     }
 
-    override fun getLayoutId() = R.layout.fragment_main
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?)
+            = inflater.inflate(R.layout.fragment_main, container, false)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
