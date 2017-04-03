@@ -75,7 +75,7 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
     }
 
     override fun showProgress(isVisible: Boolean) {
-        swipeToRefresh.post { swipeToRefresh.isRefreshing = isVisible }
+        swipeToRefresh.post { swipeToRefresh?.isRefreshing = isVisible }
     }
 
     override fun showPageProgress(isVisible: Boolean) {

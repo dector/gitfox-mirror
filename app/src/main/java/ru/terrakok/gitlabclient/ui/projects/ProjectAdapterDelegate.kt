@@ -2,6 +2,7 @@ package ru.terrakok.gitlabclient.ui.projects
 
 import android.graphics.Bitmap
 import android.graphics.PorterDuff
+import android.graphics.drawable.Drawable
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -9,11 +10,15 @@ import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.BitmapImageViewTarget
+import com.bumptech.glide.request.target.Target
 import com.hannesdorfmann.adapterdelegates3.AbsListItemAdapterDelegate
 import kotlinx.android.synthetic.main.item_project.view.*
+import ru.mobileup.mnogotaxi.extension.color
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.Visibility
+import timber.log.Timber
+import java.lang.Exception
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 02.04.17
@@ -55,18 +60,23 @@ class ProjectAdapterDelegate : AbsListItemAdapterDelegate<ProjectsListItem.Proje
                 else -> R.color.badge_color_1
             }
 
-            view.letterTV.background.setColorFilter(view.resources.getColor(colorRes), PorterDuff.Mode.SRC_IN)
+            val letterTV = view.letterTV
+            letterTV.background.setColorFilter(view.resources.color(colorRes), PorterDuff.Mode.SRC_IN)
 
-            Glide.with(view.avatarIV.context)
+            view.avatarIV.visibility = View.INVISIBLE
+            Glide.with(view.context)
                     .load(project.avatarUrl)
                     .asBitmap()
                     .centerCrop()
                     .into(object : BitmapImageViewTarget(view.avatarIV) {
                         override fun setResource(resource: Bitmap?) {
                             resource?.let {
-                                val drawable = RoundedBitmapDrawableFactory.create(view.resources, it)
-                                drawable.isCircular = true
-                                view.avatarIV.setImageDrawable(drawable)
+                                view.avatarIV.visibility = View.VISIBLE
+                                letterTV.background.setColorFilter(view.resources.color(R.color.white), PorterDuff.Mode.SRC_IN)
+                                RoundedBitmapDrawableFactory.create(view.resources, it).run {
+                                    this.isCircular = true
+                                    view.avatarIV.setImageDrawable(this)
+                                }
                             }
                         }
                     })
