@@ -2,7 +2,6 @@ package ru.terrakok.gitlabclient.ui.projects
 
 import android.graphics.Bitmap
 import android.graphics.PorterDuff
-import android.graphics.drawable.Drawable
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -10,15 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.BitmapImageViewTarget
-import com.bumptech.glide.request.target.Target
 import com.hannesdorfmann.adapterdelegates3.AbsListItemAdapterDelegate
 import kotlinx.android.synthetic.main.item_project.view.*
 import ru.mobileup.mnogotaxi.extension.color
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.Visibility
-import timber.log.Timber
-import java.lang.Exception
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 02.04.17
@@ -52,12 +48,12 @@ class ProjectAdapterDelegate : AbsListItemAdapterDelegate<ProjectsListItem.Proje
             }
 
             val colorRes = when (project.id % 5) {
-                0L -> R.color.badge_color_1
-                1L -> R.color.badge_color_2
-                2L -> R.color.badge_color_3
-                3L -> R.color.badge_color_4
-                4L -> R.color.badge_color_5
-                else -> R.color.badge_color_1
+                0L -> R.color.accentRed
+                1L -> R.color.accentOrange
+                2L -> R.color.accentYellow
+                3L -> R.color.accentMint
+                4L -> R.color.accentGreen
+                else -> R.color.accentRed
             }
 
             val letterTV = view.letterTV

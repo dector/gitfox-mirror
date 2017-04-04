@@ -11,4 +11,12 @@
     <string name="my_projects_title">My projects</string>
     <string name="starred_projects_title">Starred</string>
     <string name="explore_projects_title">Explore</string>
+
+    <!--Navigation drawer-->
+    <string name="version" formatted="false">Version: %s</string>
+    <string name="projects_item">Projects</string>
+    <string name="activity_item">Activity</string>
+    <string name="groups_item">Groups</string>
+    <string name="settings_item">Settings</string>
+    <string name="about_item">About</string>
 </resources>

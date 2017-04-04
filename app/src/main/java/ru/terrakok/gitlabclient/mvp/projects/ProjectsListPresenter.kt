@@ -17,10 +17,8 @@ import javax.inject.Inject
 
 @InjectViewState
 class ProjectsListPresenter(private val filter: ProjectsListFilter) : MvpPresenter<ProjectsListView>() {
-    @Inject
-    lateinit var router: Router
-    @Inject
-    lateinit var serverManager: ServerManager
+    @Inject lateinit var router: Router
+    @Inject lateinit var serverManager: ServerManager
 
     private var currentPage = 0
     private var disposable: Disposable? = null

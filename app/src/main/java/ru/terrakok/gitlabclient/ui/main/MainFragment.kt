@@ -18,8 +18,7 @@ import ru.terrakok.gitlabclient.ui.projects.ProjectsListFragment
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 02.04.17
  */
 class MainFragment : BaseFragment(), MainView {
-    @InjectPresenter
-    lateinit var presenter: MainPresenter
+    @InjectPresenter lateinit var presenter: MainPresenter
 
     private lateinit var adapter: MainPagesAdapter
 

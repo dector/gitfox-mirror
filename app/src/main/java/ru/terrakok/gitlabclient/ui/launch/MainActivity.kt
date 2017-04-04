@@ -17,11 +17,9 @@ import ru.terrakok.gitlabclient.ui.main.MainFragment
 import javax.inject.Inject
 
 class MainActivity : BaseActivity(), LaunchView {
-    @Inject
-    lateinit var navigationHolder: NavigatorHolder
+    @Inject lateinit var navigationHolder: NavigatorHolder
 
-    @InjectPresenter
-    lateinit var presenter: LaunchPresenter
+    @InjectPresenter lateinit var presenter: LaunchPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         App.DAGGER.appComponent.inject(this)

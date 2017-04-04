@@ -22,8 +22,7 @@ import ru.terrakok.gitlabclient.ui.global.BaseFragment
  */
 class AuthFragment : BaseFragment(), AuthView {
 
-    @InjectPresenter
-    lateinit var presenter: AuthPresenter
+    @InjectPresenter lateinit var presenter: AuthPresenter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?)
             = inflater.inflate(R.layout.fragment_auth, container, false)

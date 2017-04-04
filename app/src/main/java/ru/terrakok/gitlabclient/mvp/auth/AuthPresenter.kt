@@ -20,12 +20,9 @@ import javax.inject.Inject
  */
 @InjectViewState
 class AuthPresenter : MvpPresenter<AuthView>() {
-    @Inject
-    lateinit var router: Router
-    @Inject
-    lateinit var serverManager: ServerManager
-    @Inject
-    lateinit var resourceManager: ResourceManager
+    @Inject lateinit var router: Router
+    @Inject lateinit var serverManager: ServerManager
+    @Inject lateinit var resourceManager: ResourceManager
 
     private val authHash = UUID.randomUUID().toString()
     private var disposable: Disposable? = null
