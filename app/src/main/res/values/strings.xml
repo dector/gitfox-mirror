@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GitLab Client</string>
+    <string name="app_name">GitFox</string>
 
     <!--Auth screen-->
     <string name="auth_title">Authorization</string>
