@@ -4,6 +4,7 @@ import dagger.Component
 import ru.terrakok.gitlabclient.dagger.module.AppModule
 import ru.terrakok.gitlabclient.dagger.module.NavigationModule
 import ru.terrakok.gitlabclient.mvp.auth.AuthPresenter
+import ru.terrakok.gitlabclient.mvp.drawer.NavigationDrawerPresenter
 import ru.terrakok.gitlabclient.mvp.launch.LaunchPresenter
 import ru.terrakok.gitlabclient.mvp.main.MainPresenter
 import ru.terrakok.gitlabclient.mvp.projects.ProjectsListPresenter
@@ -24,4 +25,5 @@ interface AppComponent {
     fun inject(presenter: ProjectsListPresenter)
     fun inject(activity: MainActivity)
     fun inject(presenter: MainPresenter)
+    fun inject(presenter: NavigationDrawerPresenter)
 }

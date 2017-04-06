@@ -95,7 +95,7 @@
             app:srcCompat="@drawable/ic_exit_to_app_white_24dp"/>
 
         <LinearLayout
-            android:id="@+id/linearLayout"
+            android:id="@+id/navDrawerMenuContainer"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -186,7 +186,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+            app:layout_constraintTop_toBottomOf="@+id/navDrawerMenuContainer"
             app:layout_constraintVertical_bias="1.0"
             tools:text="Version: 7.7.7"/>
 

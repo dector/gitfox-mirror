@@ -34,6 +34,7 @@ class MainFragment : BaseFragment(), MainView {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        toolbar.setNavigationOnClickListener { presenter.onMenuPressed() }
         viewPager.adapter = adapter
     }
 

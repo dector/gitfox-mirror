@@ -9,6 +9,14 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
  */
 @StateStrategyType(AddToEndSingleStrategy::class)
 interface NavigationDrawerView : MvpView {
+    enum class MenuItem {
+        PROJECTS,
+        ACTIVITY,
+        GROUPS,
+        SETTINGS,
+        ABOUT
+    }
+
     fun showVersionName(version: String)
-    fun selectMenuItem(id: Int)
+    fun selectMenuItem(item: MenuItem)
 }
