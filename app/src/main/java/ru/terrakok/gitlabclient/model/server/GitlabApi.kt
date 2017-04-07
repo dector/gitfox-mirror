@@ -8,6 +8,9 @@ import ru.terrakok.gitlabclient.entity.*
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 28.03.17
  */
 interface GitlabApi {
+    companion object {
+        const val API_PATH = "api/v4"
+    }
 
     @FormUrlEncoded
     @POST("oauth/token")
@@ -19,7 +22,7 @@ interface GitlabApi {
             @Field("grant_type") type: String = "authorization_code"
     ): Single<TokenData>
 
-    @GET("api/v4/projects")
+    @GET("$API_PATH/projects")
     fun getProjects(
             @Query("archived") archived: Boolean? = null,
             @Query("visibility") visibility: Visibility? = null,
@@ -33,4 +36,7 @@ interface GitlabApi {
             @Query("page") page: Int = 1,
             @Query("per_page") pageSize: Int = 20
     ): Single<List<Project>>
+
+    @GET("$API_PATH/user")
+    fun getMyUser(): Single<User>
 }
