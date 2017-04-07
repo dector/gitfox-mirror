@@ -1,13 +1,18 @@
 package ru.terrakok.gitlabclient.ui.drawer
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.os.Bundle
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.arellomobile.mvp.presenter.InjectPresenter
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.BitmapImageViewTarget
 import kotlinx.android.synthetic.main.fragment_nav_drawer.*
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.entity.User
 import ru.terrakok.gitlabclient.mvp.drawer.NavigationDrawerPresenter
 import ru.terrakok.gitlabclient.mvp.drawer.NavigationDrawerView
 import ru.terrakok.gitlabclient.mvp.drawer.NavigationDrawerView.MenuItem
@@ -53,6 +58,29 @@ class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView {
 
     override fun showVersionName(version: String) {
         versionTV.text = version
+    }
+
+    override fun showUserInfo(user: User, serverUrl: String) {
+        nickTV.text = user.name
+        serverNameTV.text = serverUrl
+        letterTV.text = user.name?.let {
+            it.first().toString()
+        }
+        Glide.with(avatarIV.context)
+                .load(user.avatarUrl)
+                .asBitmap()
+                .centerCrop()
+                .into(object : BitmapImageViewTarget(avatarIV) {
+                    override fun setResource(resource: Bitmap?) {
+                        resource?.let {
+                            avatarIV.visibility = View.VISIBLE
+                            RoundedBitmapDrawableFactory.create(view.resources, it).run {
+                                this.isCircular = true
+                                avatarIV.setImageDrawable(this)
+                            }
+                        }
+                    }
+                })
     }
 
     override fun selectMenuItem(item: MenuItem) {
