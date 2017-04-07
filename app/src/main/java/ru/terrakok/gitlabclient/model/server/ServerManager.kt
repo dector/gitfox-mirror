@@ -1,7 +1,6 @@
 package ru.terrakok.gitlabclient.model.server
 
 import com.google.gson.GsonBuilder
-import io.reactivex.Single
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -9,7 +8,6 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import ru.terrakok.gitlabclient.entity.TokenData
 import ru.terrakok.gitlabclient.model.auth.AuthManager
 
 
@@ -67,9 +65,9 @@ class ServerManager(private val authManager: AuthManager, debug: Boolean) {
         return url.substring(fi, li)
     }
 
-    fun auth(code: String): Single<TokenData>
-            = api.auth(APP_ID, APP_KEY, code, AUTH_REDIRECT_URI)
+    fun auth(code: String) = api.auth(APP_ID, APP_KEY, code, AUTH_REDIRECT_URI)
             .doOnEvent { (token), _ -> authManager.saveToken(token) }
+            .toCompletable()
 
     private class AuthHeaderInterceptor(private val authManager: AuthManager) : Interceptor {
         override fun intercept(chain: Interceptor.Chain): Response {
