@@ -88,7 +88,13 @@ class MainActivity : BaseActivity(), LaunchView {
             when (it) {
                 is MainFragment -> drawerFragment.onScreenChanged(NavigationDrawerView.MenuItem.PROJECTS)
             }
+            enableNavDrawer(isNavDrawerAvailableForFragment(it))
         }
+    }
+
+    private fun isNavDrawerAvailableForFragment(currentFragment: Fragment) = when(currentFragment) {
+        is MainFragment -> true
+        else -> false
     }
 
     override fun onBackPressed() {
