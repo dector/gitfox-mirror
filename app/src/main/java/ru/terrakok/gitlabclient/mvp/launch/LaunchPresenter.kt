@@ -4,7 +4,7 @@ import com.arellomobile.mvp.MvpPresenter
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.App
 import ru.terrakok.gitlabclient.Screens
-import ru.terrakok.gitlabclient.model.auth.AuthManager
+import ru.terrakok.gitlabclient.model.profile.ProfileManager
 import javax.inject.Inject
 
 /**
@@ -12,7 +12,7 @@ import javax.inject.Inject
  */
 class LaunchPresenter : MvpPresenter<LaunchView>() {
     @Inject lateinit var router: Router
-    @Inject lateinit var authManager: AuthManager
+    @Inject lateinit var profileManager: ProfileManager
 
     init {
         App.DAGGER.appComponent.inject(this)
@@ -21,9 +21,10 @@ class LaunchPresenter : MvpPresenter<LaunchView>() {
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
-        if (!authManager.isSignedIn()) {
+        if (!profileManager.isSignedIn()) {
             router.newRootScreen(Screens.AUTH_SCREEN)
         } else {
+            profileManager.refreshProfile()
             router.newRootScreen(Screens.MAIN_SCREEN)
         }
     }

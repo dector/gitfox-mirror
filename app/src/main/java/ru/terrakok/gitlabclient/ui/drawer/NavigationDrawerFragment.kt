@@ -43,6 +43,11 @@ class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        logoutIV.setOnClickListener {
+            mainActivity?.openNavDrawer(false)
+            presenter.onLogoutClick()
+        }
+
         projectsMI.tag = PROJECTS
         activityMI.tag = ACTIVITY
         groupsMI.tag = GROUPS

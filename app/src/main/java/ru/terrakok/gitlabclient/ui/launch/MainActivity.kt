@@ -65,11 +65,12 @@ class MainActivity : BaseActivity(), LaunchView {
         }
     }
 
+    //region nav drawer
     fun openNavDrawer(open: Boolean) {
-        drawerLayout.post {
+        drawerLayout.postDelayed({
             if (open) drawerLayout.openDrawer(GravityCompat.START)
             else drawerLayout.closeDrawer(GravityCompat.START)
-        }
+        }, 150)
     }
 
     fun enableNavDrawer(enable: Boolean) {
@@ -92,10 +93,11 @@ class MainActivity : BaseActivity(), LaunchView {
         }
     }
 
-    private fun isNavDrawerAvailableForFragment(currentFragment: Fragment) = when(currentFragment) {
+    private fun isNavDrawerAvailableForFragment(currentFragment: Fragment) = when (currentFragment) {
         is MainFragment -> true
         else -> false
     }
+    //endregion
 
     override fun onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
