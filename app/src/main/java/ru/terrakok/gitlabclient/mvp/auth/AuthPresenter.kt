@@ -3,8 +3,9 @@ package ru.terrakok.gitlabclient.mvp.auth
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import ru.mobileup.mnogotaxi.extension.addTo
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.App
 import ru.terrakok.gitlabclient.R
@@ -20,15 +21,12 @@ import javax.inject.Inject
  */
 @InjectViewState
 class AuthPresenter : MvpPresenter<AuthView>() {
-    @Inject
-    lateinit var router: Router
-    @Inject
-    lateinit var serverManager: ServerManager
-    @Inject
-    lateinit var resourceManager: ResourceManager
+    @Inject lateinit var router: Router
+    @Inject lateinit var serverManager: ServerManager
+    @Inject lateinit var resourceManager: ResourceManager
 
     private val authHash = UUID.randomUUID().toString()
-    private var disposable: Disposable? = null
+    private var compositeDisposable = CompositeDisposable()
 
     init {
         App.DAGGER.appComponent.inject(this)
@@ -40,8 +38,7 @@ class AuthPresenter : MvpPresenter<AuthView>() {
     }
 
     override fun onDestroy() {
-        disposable?.dispose()
-        super.onDestroy()
+        compositeDisposable.dispose()
     }
 
     private fun startAuthorization() {
@@ -49,18 +46,18 @@ class AuthPresenter : MvpPresenter<AuthView>() {
     }
 
     private fun requestToken(code: String) {
-        disposable = serverManager.auth(code)
+        serverManager.auth(code)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    _ ->
-                    Timber.i("Auth success!")
-                    router.replaceScreen(Screens.MAIN_SCREEN)
-                }, {
-                    error ->
-                    Timber.e("Auth error: $error")
-                    viewState.showMessage(resourceManager.getString(R.string.auth_error))
-                })
+                .subscribe(
+                        {
+                            router.replaceScreen(Screens.MAIN_SCREEN)
+                        },
+                        { error ->
+                            Timber.e("Auth error: $error")
+                            viewState.showMessage(resourceManager.getString(R.string.auth_error))
+                        }
+                ).addTo(compositeDisposable)
     }
 
     fun onRedirect(url: String): Boolean {

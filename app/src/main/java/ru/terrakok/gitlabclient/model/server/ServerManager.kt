@@ -1,7 +1,6 @@
 package ru.terrakok.gitlabclient.model.server
 
 import com.google.gson.GsonBuilder
-import io.reactivex.Single
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -9,7 +8,6 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import ru.terrakok.gitlabclient.entity.TokenData
 import ru.terrakok.gitlabclient.model.auth.AuthManager
 
 
@@ -20,10 +18,10 @@ class ServerManager(private val authManager: AuthManager, debug: Boolean) {
 
     //todo add ability for custom domain
     companion object {
-        private const val DEFAULT_BASE_URL = "https://gitlab.com/"
-        private const val APP_ID = "808b7f51c6634294afd879edd75d5eaf55f1a75e7fe5bd91ca8b7140a5af639d"
-        private const val APP_KEY = "a9dd39c8d2e781b65814007ca0f8b555d34f79b4d30c9356c38bb7ad9909c6f3"
-        private const val AUTH_REDIRECT_URI = "app://gitlab.client/"
+        val SERVER_URL = "https://gitlab.com/"
+        private val APP_ID = "808b7f51c6634294afd879edd75d5eaf55f1a75e7fe5bd91ca8b7140a5af639d"
+        private val APP_KEY = "a9dd39c8d2e781b65814007ca0f8b555d34f79b4d30c9356c38bb7ad9909c6f3"
+        private val AUTH_REDIRECT_URI = "app://gitlab.client/"
     }
 
     val api: GitlabApi
@@ -45,14 +43,14 @@ class ServerManager(private val authManager: AuthManager, debug: Boolean) {
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(httpClientBuilder.build())
-                .baseUrl(DEFAULT_BASE_URL).build()
+                .baseUrl(SERVER_URL).build()
 
         api = retrofit.create(GitlabApi::class.java)
     }
 
     //region auth
     fun getAuthUrl(hash: String)
-            = "${DEFAULT_BASE_URL}oauth/authorize" +
+            = "${SERVER_URL}oauth/authorize" +
             "?client_id=${APP_ID}" +
             "&redirect_uri=${AUTH_REDIRECT_URI}" +
             "&response_type=code&state=${hash}"
@@ -67,9 +65,9 @@ class ServerManager(private val authManager: AuthManager, debug: Boolean) {
         return url.substring(fi, li)
     }
 
-    fun auth(code: String): Single<TokenData>
-            = api.auth(APP_ID, APP_KEY, code, AUTH_REDIRECT_URI)
+    fun auth(code: String) = api.auth(APP_ID, APP_KEY, code, AUTH_REDIRECT_URI)
             .doOnEvent { (token), _ -> authManager.saveToken(token) }
+            .toCompletable()
 
     private class AuthHeaderInterceptor(private val authManager: AuthManager) : Interceptor {
         override fun intercept(chain: Interceptor.Chain): Response {

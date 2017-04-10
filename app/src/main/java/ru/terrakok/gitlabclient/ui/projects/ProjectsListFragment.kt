@@ -38,8 +38,7 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
         }
     }
 
-    @InjectPresenter
-    lateinit var presenter: ProjectsListPresenter
+    @InjectPresenter lateinit var presenter: ProjectsListPresenter
 
     @ProvidePresenter
     fun createPresenter(): ProjectsListPresenter {
