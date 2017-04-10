@@ -62,6 +62,7 @@ dependencies {
     //RxJava
     compile "io.reactivex.rxjava2:rxandroid:2.0.1"
     compile "io.reactivex.rxjava2:rxjava:2.0.7"
+    compile 'com.jakewharton.rxrelay2:rxrelay:2.0.0'
     //Adapter simplify
     compile "com.hannesdorfmann:adapterdelegates3:3.0.1"
     //Image load and cache

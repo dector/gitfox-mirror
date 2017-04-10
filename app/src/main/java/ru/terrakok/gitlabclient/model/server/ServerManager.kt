@@ -8,13 +8,13 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import ru.terrakok.gitlabclient.model.auth.AuthManager
+import ru.terrakok.gitlabclient.model.profile.ProfileManager
 
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 27.03.17
  */
-class ServerManager(private val authManager: AuthManager, debug: Boolean) {
+class ServerManager(private val profileManager: ProfileManager, debug: Boolean) {
 
     //todo add ability for custom domain
     companion object {
@@ -28,7 +28,7 @@ class ServerManager(private val authManager: AuthManager, debug: Boolean) {
 
     init {
         val httpClientBuilder = OkHttpClient.Builder()
-        httpClientBuilder.addNetworkInterceptor(AuthHeaderInterceptor(authManager))
+        httpClientBuilder.addNetworkInterceptor(AuthHeaderInterceptor(profileManager))
         if (debug) {
             val httpLoggingInterceptor = HttpLoggingInterceptor()
             httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
@@ -66,13 +66,16 @@ class ServerManager(private val authManager: AuthManager, debug: Boolean) {
     }
 
     fun auth(code: String) = api.auth(APP_ID, APP_KEY, code, AUTH_REDIRECT_URI)
-            .doOnEvent { (token), _ -> authManager.saveToken(token) }
+            .doOnEvent { (token), _ ->
+                profileManager.updateToken(token)
+                profileManager.refreshProfile()
+            }
             .toCompletable()
 
-    private class AuthHeaderInterceptor(private val authManager: AuthManager) : Interceptor {
+    private class AuthHeaderInterceptor(private val profileManager: ProfileManager) : Interceptor {
         override fun intercept(chain: Interceptor.Chain): Response {
             var request = chain.request()
-            authManager.getToken()?.let {
+            profileManager.getToken()?.let {
                 request = request.newBuilder().addHeader("Authorization", "Bearer " + it).build()
             }
             return chain.proceed(request)

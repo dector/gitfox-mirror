@@ -2,18 +2,16 @@ package ru.terrakok.gitlabclient.mvp.drawer
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import ru.mobileup.mnogotaxi.extension.addTo
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.App
 import ru.terrakok.gitlabclient.BuildConfig
 import ru.terrakok.gitlabclient.Screens
+import ru.terrakok.gitlabclient.model.profile.ProfileManager
 import ru.terrakok.gitlabclient.model.server.ServerManager
 import ru.terrakok.gitlabclient.mvp.drawer.NavigationDrawerView.MenuItem
 import ru.terrakok.gitlabclient.mvp.drawer.NavigationDrawerView.MenuItem.PROJECTS
-import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -22,7 +20,7 @@ import javax.inject.Inject
 @InjectViewState
 class NavigationDrawerPresenter : MvpPresenter<NavigationDrawerView>() {
     @Inject lateinit var router: Router
-    @Inject lateinit var serverManager: ServerManager
+    @Inject lateinit var profileManager: ProfileManager
 
     private var currentSelectedItem: MenuItem? = null
     private val compositeDisposable = CompositeDisposable()
@@ -33,21 +31,13 @@ class NavigationDrawerPresenter : MvpPresenter<NavigationDrawerView>() {
 
     override fun onFirstViewAttach() {
         viewState.showVersionName("${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})")
-        requestUserInfo()
+        subscribeOnProfileUpdates()
     }
 
-    private fun requestUserInfo() {
-        serverManager.api.getMyUser()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        { user ->
-                            viewState.showUserInfo(user, ServerManager.SERVER_URL)
-                        },
-                        { error ->
-                            Timber.e("getMyUser error: $error")
-                        }
-                ).addTo(compositeDisposable)
+    private fun subscribeOnProfileUpdates() {
+        profileManager.getProfile()
+                .subscribe({ user -> viewState.showUserInfo(user, ServerManager.SERVER_URL) })
+                .addTo(compositeDisposable)
     }
 
     fun onScreenChanged(item: MenuItem) {
@@ -63,6 +53,8 @@ class NavigationDrawerPresenter : MvpPresenter<NavigationDrawerView>() {
             }
         }
     }
+
+    fun onLogoutClick() = profileManager.logout()
 
     override fun onDestroy() {
         compositeDisposable.dispose()
