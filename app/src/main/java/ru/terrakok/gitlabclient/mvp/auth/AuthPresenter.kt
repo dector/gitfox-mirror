@@ -5,11 +5,11 @@ import com.arellomobile.mvp.MvpPresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import ru.mobileup.mnogotaxi.extension.addTo
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.App
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
+import ru.terrakok.gitlabclient.extension.addTo
 import ru.terrakok.gitlabclient.model.resources.ResourceManager
 import ru.terrakok.gitlabclient.model.server.ServerManager
 import timber.log.Timber

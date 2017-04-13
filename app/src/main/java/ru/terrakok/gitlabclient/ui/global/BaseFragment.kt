@@ -21,7 +21,9 @@ abstract class BaseFragment : MvpAppCompatFragment() {
     }
 
     protected fun showSnackMessage(message: String) {
-        Snackbar.make(view!!.rootView, message, Snackbar.LENGTH_LONG).show()
+        view?.let {
+            Snackbar.make(it, message, Snackbar.LENGTH_LONG).show()
+        }
     }
 
     open fun onBackPressed() {}

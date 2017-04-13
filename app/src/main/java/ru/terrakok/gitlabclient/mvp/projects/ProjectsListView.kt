@@ -3,6 +3,7 @@ package ru.terrakok.gitlabclient.mvp.projects
 import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
 import com.arellomobile.mvp.viewstate.strategy.AddToEndStrategy
+import com.arellomobile.mvp.viewstate.strategy.SkipStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 import ru.terrakok.gitlabclient.entity.Project
 
@@ -18,4 +19,7 @@ interface ProjectsListView : MvpView {
 
     @StateStrategyType(AddToEndStrategy::class)
     fun setNewData(projects: List<Project>)
+
+    @StateStrategyType(SkipStrategy::class)
+    fun showMessage(message: String)
 }

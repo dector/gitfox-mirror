@@ -7,6 +7,8 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.App
+import ru.terrakok.gitlabclient.extension.userMessage
+import ru.terrakok.gitlabclient.model.resources.ResourceManager
 import ru.terrakok.gitlabclient.model.server.ServerManager
 import timber.log.Timber
 import javax.inject.Inject
@@ -19,6 +21,7 @@ import javax.inject.Inject
 class ProjectsListPresenter(private val filter: ProjectsListFilter) : MvpPresenter<ProjectsListView>() {
     @Inject lateinit var router: Router
     @Inject lateinit var serverManager: ServerManager
+    @Inject lateinit var resourceManager: ResourceManager
 
     private var currentPage = 0
     private var disposable: Disposable? = null
@@ -68,6 +71,7 @@ class ProjectsListPresenter(private val filter: ProjectsListFilter) : MvpPresent
                     }, {
                         error ->
                         Timber.e("getProjects: $error")
+                        viewState.showMessage(error.userMessage(resourceManager))
                     })
         }
     }

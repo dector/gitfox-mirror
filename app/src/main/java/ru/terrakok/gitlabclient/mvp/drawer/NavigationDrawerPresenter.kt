@@ -3,11 +3,11 @@ package ru.terrakok.gitlabclient.mvp.drawer
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import io.reactivex.disposables.CompositeDisposable
-import ru.mobileup.mnogotaxi.extension.addTo
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.App
 import ru.terrakok.gitlabclient.BuildConfig
 import ru.terrakok.gitlabclient.Screens
+import ru.terrakok.gitlabclient.extension.addTo
 import ru.terrakok.gitlabclient.model.profile.ProfileManager
 import ru.terrakok.gitlabclient.model.server.ServerManager
 import ru.terrakok.gitlabclient.mvp.drawer.NavigationDrawerView.MenuItem

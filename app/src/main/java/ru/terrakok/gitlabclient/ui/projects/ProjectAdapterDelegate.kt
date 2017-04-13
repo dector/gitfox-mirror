@@ -11,10 +11,10 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.BitmapImageViewTarget
 import com.hannesdorfmann.adapterdelegates3.AbsListItemAdapterDelegate
 import kotlinx.android.synthetic.main.item_project.view.*
-import ru.mobileup.mnogotaxi.extension.color
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.Visibility
+import ru.terrakok.gitlabclient.extension.color
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 02.04.17

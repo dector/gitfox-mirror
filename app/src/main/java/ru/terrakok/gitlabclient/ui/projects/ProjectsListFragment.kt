@@ -80,6 +80,10 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
         swipeToRefresh.post { swipeToRefresh?.isRefreshing = isVisible }
     }
 
+    override fun showMessage(message: String) {
+        showSnackMessage(message)
+    }
+
     override fun showPageProgress(isVisible: Boolean) {
         adapter.showProgress(isVisible)
     }
