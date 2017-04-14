@@ -23,7 +23,7 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
         private val ARG_TYPE = "plf_type"
         val MY_PROJECTS = 1
         val STARRED_PROJECTS = 2
-        val EXPLORE_PROJECTS = 3
+        val ALL_PROJECTS = 3
 
         fun newInstance(type: Int): ProjectsListFragment {
             val fragment = ProjectsListFragment()
@@ -44,10 +44,10 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
 
     @ProvidePresenter
     fun createPresenter(): ProjectsListPresenter {
-        val filter = when(arguments.getInt(ARG_TYPE)) {
-            MY_PROJECTS -> ProjectsListFilter(membership = true, order_by = OrderBy.LAST_ACTIVITY_AT, starred = false)
-            STARRED_PROJECTS -> ProjectsListFilter(starred = true, order_by = OrderBy.LAST_ACTIVITY_AT)
-            else -> ProjectsListFilter(order_by = OrderBy.LAST_ACTIVITY_AT)
+        val filter = when (arguments.getInt(ARG_TYPE)) {
+            MY_PROJECTS -> ProjectsListFilter(owned = true, order_by = OrderBy.LAST_ACTIVITY_AT, archived = false)
+            STARRED_PROJECTS -> ProjectsListFilter(starred = true)
+            else -> ProjectsListFilter(membership = true, order_by = OrderBy.LAST_ACTIVITY_AT, archived = false)
         }
 
         return ProjectsListPresenter(filter)

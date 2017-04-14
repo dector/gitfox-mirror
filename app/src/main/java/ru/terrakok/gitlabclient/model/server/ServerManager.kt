@@ -35,6 +35,7 @@ class ServerManager(private val profileManager: ProfileManager, debug: Boolean) 
             val httpLoggingInterceptor = HttpLoggingInterceptor()
             httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
             httpClientBuilder.addNetworkInterceptor(httpLoggingInterceptor)
+            httpClientBuilder.addNetworkInterceptor(CurlLoggingInterceptor())
         }
 
         val gson = GsonBuilder()

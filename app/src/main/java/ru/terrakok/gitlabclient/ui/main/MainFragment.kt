@@ -37,14 +37,14 @@ class MainFragment : BaseFragment(), MainView {
 
     private inner class MainPagesAdapter : FragmentPagerAdapter(childFragmentManager) {
         private val pages = listOf<Fragment>(
+                ProjectsListFragment.newInstance(ProjectsListFragment.ALL_PROJECTS),
                 ProjectsListFragment.newInstance(ProjectsListFragment.MY_PROJECTS),
-                ProjectsListFragment.newInstance(ProjectsListFragment.STARRED_PROJECTS),
-                ProjectsListFragment.newInstance(ProjectsListFragment.EXPLORE_PROJECTS)
+                ProjectsListFragment.newInstance(ProjectsListFragment.STARRED_PROJECTS)
         )
         private val pageTitles = listOf<String>(
+                getString(R.string.all_projects_title),
                 getString(R.string.my_projects_title),
-                getString(R.string.starred_projects_title),
-                getString(R.string.explore_projects_title)
+                getString(R.string.starred_projects_title)
         )
 
         override fun getItem(position: Int) = pages[position]
