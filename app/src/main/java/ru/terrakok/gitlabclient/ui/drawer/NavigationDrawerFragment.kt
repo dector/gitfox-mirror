@@ -4,9 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.BitmapImageViewTarget
@@ -26,6 +24,8 @@ import ru.terrakok.gitlabclient.ui.launch.MainActivity
 class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView {
     @InjectPresenter lateinit var presenter: NavigationDrawerPresenter
 
+    override val layoutRes = R.layout.fragment_nav_drawer
+
     private var mainActivity: MainActivity? = null
     private val itemClickListener = { view: View ->
         mainActivity?.openNavDrawer(false)
@@ -36,9 +36,6 @@ class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView {
         super.onAttach(context)
         mainActivity = activity as MainActivity
     }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
-            = inflater.inflate(R.layout.fragment_nav_drawer, container, false)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

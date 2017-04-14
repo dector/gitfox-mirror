@@ -30,6 +30,7 @@ class ProfileManager(private val prefs: Prefs,
     }
 
     fun getProfile(): Observable<User> = profileCache
+    fun getDomen() = serverManager.get().domen
 
     fun refreshProfile() {
         if (isSignedIn()) {
@@ -37,12 +38,8 @@ class ProfileManager(private val prefs: Prefs,
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
-                            {
-                                profileCache.accept(it)
-                            },
-                            {
-                                Timber.e("getMyUser error: $it")
-                            })
+                            { profileCache.accept(it) },
+                            { Timber.e("getMyUser error: $it") })
         }
     }
 }

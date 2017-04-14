@@ -33,7 +33,6 @@ class AuthPresenter : MvpPresenter<AuthView>() {
     }
 
     override fun onFirstViewAttach() {
-        super.onFirstViewAttach()
         startAuthorization()
     }
 
@@ -49,12 +48,15 @@ class AuthPresenter : MvpPresenter<AuthView>() {
         serverManager.auth(code)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { viewState.showProgress(true) }
                 .subscribe(
                         {
+                            viewState.showProgress(false)
                             router.replaceScreen(Screens.MAIN_SCREEN)
                         },
                         { error ->
                             Timber.e("Auth error: $error")
+                            viewState.showProgress(false)
                             viewState.showMessage(resourceManager.getString(R.string.auth_error))
                         }
                 ).addTo(compositeDisposable)
@@ -63,6 +65,7 @@ class AuthPresenter : MvpPresenter<AuthView>() {
     fun onRedirect(url: String): Boolean {
         if (serverManager.checkAuthRedirect(url)) {
             if (!url.contains(authHash)) {
+                Timber.e("Invalid auth hash!")
                 router.exitWithMessage(resourceManager.getString(R.string.invalid_hash))
             } else {
                 requestToken(serverManager.getCodeFromAuthRedirect(url))
@@ -75,5 +78,4 @@ class AuthPresenter : MvpPresenter<AuthView>() {
     }
 
     fun onBackPressed() = router.exit()
-
 }

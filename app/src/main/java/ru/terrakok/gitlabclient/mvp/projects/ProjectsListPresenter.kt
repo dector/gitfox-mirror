@@ -31,7 +31,6 @@ class ProjectsListPresenter(private val filter: ProjectsListFilter) : MvpPresent
     }
 
     override fun onFirstViewAttach() {
-        super.onFirstViewAttach()
         requestFirstPage()
     }
 
@@ -60,25 +59,25 @@ class ProjectsListPresenter(private val filter: ProjectsListFilter) : MvpPresent
                     .doOnSubscribe { if (page == 1) viewState.showProgress(true) else viewState.showPageProgress(true) }
                     .doOnEvent { _, _ -> if (page == 1) viewState.showProgress(false) else viewState.showPageProgress(false) }
                     .doOnEvent { _, _ -> disposable = null }
-                    .subscribe({
-                        result ->
-                        Timber.d("getProjects: ${result.size}")
-                        if (result.isNotEmpty()) {
-                            currentPage = page
-                            if (page == 1) viewState.clearData()
-                            viewState.setNewData(result)
-                        }
-                    }, {
-                        error ->
-                        Timber.e("getProjects: $error")
-                        viewState.showMessage(error.userMessage(resourceManager))
-                    })
+                    .subscribe(
+                            { projects ->
+                                Timber.d("getProjects: ${projects.size}")
+                                if (projects.isNotEmpty()) {
+                                    currentPage = page
+                                    if (page == 1) viewState.clearData()
+                                    viewState.setNewData(projects)
+                                }
+                            },
+                            { error ->
+                                Timber.e("getProjects: $error")
+                                viewState.showMessage(error.userMessage(resourceManager))
+                            }
+                    )
         }
     }
 
     override fun onDestroy() {
         disposable?.dispose()
-        super.onDestroy()
     }
 
     fun requestFirstPage() = requestProjects(1)

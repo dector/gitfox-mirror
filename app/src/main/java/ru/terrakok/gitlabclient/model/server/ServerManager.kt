@@ -1,6 +1,7 @@
 package ru.terrakok.gitlabclient.model.server
 
 import com.google.gson.GsonBuilder
+import io.reactivex.Completable
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -16,14 +17,15 @@ import ru.terrakok.gitlabclient.model.profile.ProfileManager
  */
 class ServerManager(private val profileManager: ProfileManager, debug: Boolean) {
 
-    //todo add ability for custom domain
+    //todo remove develop params and add ability for custom domain
     companion object {
-        val SERVER_URL = "https://gitlab.com/"
+        private val SERVER_URL = "https://gitlab.com/"
         private val APP_ID = "808b7f51c6634294afd879edd75d5eaf55f1a75e7fe5bd91ca8b7140a5af639d"
         private val APP_KEY = "a9dd39c8d2e781b65814007ca0f8b555d34f79b4d30c9356c38bb7ad9909c6f3"
         private val AUTH_REDIRECT_URI = "app://gitlab.client/"
     }
 
+    val domen = SERVER_URL
     val api: GitlabApi
 
     init {
@@ -65,12 +67,13 @@ class ServerManager(private val profileManager: ProfileManager, debug: Boolean) 
         return url.substring(fi, li)
     }
 
-    fun auth(code: String) = api.auth(APP_ID, APP_KEY, code, AUTH_REDIRECT_URI)
-            .doOnEvent { (token), _ ->
-                profileManager.updateToken(token)
-                profileManager.refreshProfile()
-            }
-            .toCompletable()
+    fun auth(code: String): Completable =
+            api.auth(APP_ID, APP_KEY, code, AUTH_REDIRECT_URI)
+                    .doOnSuccess {
+                        profileManager.updateToken(it.token)
+                        profileManager.refreshProfile()
+                    }
+                    .toCompletable()
 
     private class AuthHeaderInterceptor(private val profileManager: ProfileManager) : Interceptor {
         override fun intercept(chain: Interceptor.Chain): Response {

@@ -19,8 +19,6 @@ class LaunchPresenter : MvpPresenter<LaunchView>() {
     }
 
     override fun onFirstViewAttach() {
-        super.onFirstViewAttach()
-
         if (!profileManager.isSignedIn()) {
             router.newRootScreen(Screens.AUTH_SCREEN)
         } else {

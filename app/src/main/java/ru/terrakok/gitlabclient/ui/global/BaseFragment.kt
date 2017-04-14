@@ -1,6 +1,9 @@
 package ru.terrakok.gitlabclient.ui.global
 
+import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import com.arellomobile.mvp.MvpAppCompatFragment
 
 /**
@@ -11,12 +14,19 @@ abstract class BaseFragment : MvpAppCompatFragment() {
         private val PROGRESS_TAG = "bf_progress"
     }
 
+    abstract val layoutRes: Int
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?)
+            = inflater.inflate(layoutRes, container, false)
+
     protected fun showProgressDialog(progress: Boolean) {
         val fragment = fragmentManager?.findFragmentByTag(PROGRESS_TAG)
         if (fragment != null && !progress) {
             (fragment as ProgressDialog).dismiss()
+            fragmentManager.executePendingTransactions()
         } else if (fragment == null && progress) {
             ProgressDialog().show(fragmentManager, PROGRESS_TAG)
+            fragmentManager.executePendingTransactions()
         }
     }
 

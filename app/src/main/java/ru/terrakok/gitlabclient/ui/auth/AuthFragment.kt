@@ -4,8 +4,6 @@ import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.RequiresApi
-import android.view.LayoutInflater
-import android.view.ViewGroup
 import android.webkit.CookieManager
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -24,8 +22,7 @@ class AuthFragment : BaseFragment(), AuthView {
 
     @InjectPresenter lateinit var presenter: AuthPresenter
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?)
-            = inflater.inflate(R.layout.fragment_auth, container, false)
+    override val layoutRes = R.layout.fragment_auth
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

@@ -9,7 +9,6 @@ import ru.terrakok.gitlabclient.BuildConfig
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.extension.addTo
 import ru.terrakok.gitlabclient.model.profile.ProfileManager
-import ru.terrakok.gitlabclient.model.server.ServerManager
 import ru.terrakok.gitlabclient.mvp.drawer.NavigationDrawerView.MenuItem
 import ru.terrakok.gitlabclient.mvp.drawer.NavigationDrawerView.MenuItem.PROJECTS
 import javax.inject.Inject
@@ -30,13 +29,13 @@ class NavigationDrawerPresenter : MvpPresenter<NavigationDrawerView>() {
     }
 
     override fun onFirstViewAttach() {
-        viewState.showVersionName("${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})")
         subscribeOnProfileUpdates()
+        viewState.showVersionName("${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})")
     }
 
     private fun subscribeOnProfileUpdates() {
         profileManager.getProfile()
-                .subscribe({ user -> viewState.showUserInfo(user, ServerManager.SERVER_URL) })
+                .subscribe({ user -> viewState.showUserInfo(user, profileManager.getDomen()) })
                 .addTo(compositeDisposable)
     }
 
