@@ -24,17 +24,17 @@ interface GitlabApi {
 
     @GET("$API_PATH/projects")
     fun getProjects(
-            @Query("archived") archived: Boolean? = null,
-            @Query("visibility") visibility: Visibility? = null,
-            @Query("order_by") order_by: OrderBy? = null,
-            @Query("sort") sort: Sort? = null,
-            @Query("search") search: String? = null,
-            @Query("simple") simple: Boolean? = null,
-            @Query("owned") owned: Boolean? = null,
-            @Query("membership") membership: Boolean? = null,
-            @Query("starred") starred: Boolean? = null,
-            @Query("page") page: Int = 1,
-            @Query("per_page") pageSize: Int = 20
+            @Query("archived") archived: Boolean?,
+            @Query("visibility") visibility: Visibility?,
+            @Query("order_by") order_by: OrderBy?,
+            @Query("sort") sort: Sort?,
+            @Query("search") search: String?,
+            @Query("simple") simple: Boolean?,
+            @Query("owned") owned: Boolean?,
+            @Query("membership") membership: Boolean?,
+            @Query("starred") starred: Boolean?,
+            @Query("page") page: Int,
+            @Query("per_page") pageSize: Int
     ): Single<List<Project>>
 
     @GET("$API_PATH/user")

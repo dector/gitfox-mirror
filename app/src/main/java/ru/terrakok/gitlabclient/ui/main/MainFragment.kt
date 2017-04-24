@@ -9,6 +9,7 @@ import kotlinx.android.synthetic.main.fragment_main.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.mvp.main.MainPresenter
 import ru.terrakok.gitlabclient.mvp.main.MainView
+import ru.terrakok.gitlabclient.mvp.projects.ProjectsListPresenter
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.projects.ProjectsListFragment
 
@@ -37,9 +38,9 @@ class MainFragment : BaseFragment(), MainView {
 
     private inner class MainPagesAdapter : FragmentPagerAdapter(childFragmentManager) {
         private val pages = listOf<Fragment>(
-                ProjectsListFragment.newInstance(ProjectsListFragment.ALL_PROJECTS),
-                ProjectsListFragment.newInstance(ProjectsListFragment.MY_PROJECTS),
-                ProjectsListFragment.newInstance(ProjectsListFragment.STARRED_PROJECTS)
+                ProjectsListFragment.newInstance(ProjectsListPresenter.MAIN_PROJECTS),
+                ProjectsListFragment.newInstance(ProjectsListPresenter.MY_PROJECTS),
+                ProjectsListFragment.newInstance(ProjectsListPresenter.STARRED_PROJECTS)
         )
         private val pageTitles = listOf<String>(
                 getString(R.string.all_projects_title),
