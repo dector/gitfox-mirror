@@ -15,7 +15,7 @@ import ru.terrakok.gitlabclient.model.server.interceptor.CurlLoggingInterceptor
  */
 class GitlabApiProvider(
         authData: AuthData,
-        serverData: ServerData,
+        serverConfig: ServerConfig,
         debug: Boolean) {
 
     val api: GitlabApi
@@ -39,7 +39,7 @@ class GitlabApiProvider(
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(httpClientBuilder.build())
-                .baseUrl(serverData.SERVER_URL).build()
+                .baseUrl(serverConfig.SERVER_URL).build()
 
         api = retrofit.create(GitlabApi::class.java)
     }

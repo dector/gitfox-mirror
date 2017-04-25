@@ -3,11 +3,12 @@ package ru.terrakok.gitlabclient.dagger.module
 import dagger.Module
 import dagger.Provides
 import ru.terrakok.gitlabclient.model.auth.AuthManager
+import ru.terrakok.gitlabclient.model.auth.AuthRepository
 import ru.terrakok.gitlabclient.model.profile.MyProfileManager
 import ru.terrakok.gitlabclient.model.profile.ProfileRepository
 import ru.terrakok.gitlabclient.model.project.MainProjectsListManager
 import ru.terrakok.gitlabclient.model.project.ProjectRepository
-import ru.terrakok.gitlabclient.model.server.ServerData
+import ru.terrakok.gitlabclient.model.server.ServerConfig
 import javax.inject.Singleton
 
 /**
@@ -17,12 +18,15 @@ import javax.inject.Singleton
 class ManagerModule {
 
     @Provides
-    @Singleton
-    fun provideMyProfileManager(serverData: ServerData, authManager: AuthManager, profileRepository: ProfileRepository)
-            = MyProfileManager(serverData, authManager, profileRepository)
+    fun provideMyProfileManager(authRepository: AuthRepository, profileRepository: ProfileRepository)
+            = MyProfileManager(authRepository, profileRepository)
+
+    @Provides
+    fun provideMainProjectsListManager(projectRepository: ProjectRepository)
+            = MainProjectsListManager(projectRepository)
 
     @Provides
     @Singleton
-    fun provideMainProjectsListManager(projectRepository: ProjectRepository)
-            = MainProjectsListManager(projectRepository)
+    fun provideAuthManager(serverConfig: ServerConfig, tokenRepository: AuthRepository)
+            = AuthManager(serverConfig, tokenRepository)
 }

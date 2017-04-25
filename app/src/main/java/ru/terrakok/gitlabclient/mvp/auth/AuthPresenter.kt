@@ -42,7 +42,7 @@ class AuthPresenter : MvpPresenter<AuthView>() {
     }
 
     private fun requestToken(url: String) {
-        authManager.auth(url)
+        authManager.login(url)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { viewState.showProgress(true) }
                 .doOnEvent { viewState.showProgress(false) }

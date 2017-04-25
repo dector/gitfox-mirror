@@ -1,29 +1,30 @@
 package ru.terrakok.gitlabclient.model.profile
 
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.Single
 import ru.terrakok.gitlabclient.entity.User
-import ru.terrakok.gitlabclient.model.auth.AuthManager
-import ru.terrakok.gitlabclient.model.server.ServerData
+import ru.terrakok.gitlabclient.model.auth.AuthRepository
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 24.04.17.
  */
 
 class MyProfileManager(
-        private val serverData: ServerData,
-        private val authManager: AuthManager,
+        private val authRepository: AuthRepository,
         private val profileRepository: ProfileRepository) {
 
-    fun getMyProfile(): Observable<User> =
-            authManager.getSignState()
-                    .filter { it }
+    fun getMyProfile(): Observable<MyUserInfo> =
+            authRepository.getSignState()
                     .flatMapSingle {
-                        profileRepository.getMyProfile()
-                                .subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
+                        if (it) {
+                            profileRepository
+                                    .getMyProfile()
+                                    .map { MyUserInfo(it, profileRepository.getMyServerName()) }
+                        } else {
+                            Single.just(MyUserInfo(null, profileRepository.getMyServerName()))
+                        }
                     }
 
-    fun getMyServerName() = serverData.SERVER_URL
 }
+
+data class MyUserInfo(val user: User?, val serverName: String)

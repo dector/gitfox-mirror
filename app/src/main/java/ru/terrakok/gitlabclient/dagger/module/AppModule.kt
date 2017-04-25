@@ -5,12 +5,10 @@ import dagger.Module
 import dagger.Provides
 import ru.terrakok.gitlabclient.BuildConfig
 import ru.terrakok.gitlabclient.model.auth.AuthData
-import ru.terrakok.gitlabclient.model.auth.AuthManager
-import ru.terrakok.gitlabclient.model.auth.TokenRepository
 import ru.terrakok.gitlabclient.model.resources.ResourceManager
 import ru.terrakok.gitlabclient.model.server.GitlabApi
 import ru.terrakok.gitlabclient.model.server.GitlabApiProvider
-import ru.terrakok.gitlabclient.model.server.ServerData
+import ru.terrakok.gitlabclient.model.server.ServerConfig
 import ru.terrakok.gitlabclient.model.storage.Prefs
 import javax.inject.Singleton
 
@@ -26,7 +24,7 @@ class AppModule(private val context: Context) {
 
     @Provides
     @Singleton
-    fun provideServerData() = ServerData()
+    fun provideServerData() = ServerConfig()
 
     @Provides
     @Singleton
@@ -34,11 +32,6 @@ class AppModule(private val context: Context) {
 
     @Provides
     @Singleton
-    fun provideGitlabApi(authData: AuthData, serverData: ServerData): GitlabApi
-            = GitlabApiProvider(authData, serverData, BuildConfig.DEBUG).api
-
-    @Provides
-    @Singleton
-    fun provideAuthManager(authData: AuthData, serverData: ServerData, tokenRepository: TokenRepository)
-            = AuthManager(authData, serverData, tokenRepository)
+    fun provideGitlabApi(authData: AuthData, serverConfig: ServerConfig): GitlabApi
+            = GitlabApiProvider(authData, serverConfig, BuildConfig.DEBUG).api
 }

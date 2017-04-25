@@ -1,46 +1,34 @@
 package ru.terrakok.gitlabclient.model.auth
 
-import com.jakewharton.rxrelay2.BehaviorRelay
 import io.reactivex.Completable
-import io.reactivex.Observable
-import io.reactivex.schedulers.Schedulers
-import ru.terrakok.gitlabclient.model.server.ServerData
+import ru.terrakok.gitlabclient.model.server.ServerConfig
 import java.util.*
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 23.04.17.
  */
 class AuthManager(
-        private val authData: AuthData,
-        private val serverData: ServerData,
-        private val tokenRepository: TokenRepository) {
+        private val serverConfig: ServerConfig,
+        private val authRepository: AuthRepository) {
 
     private val hash = UUID.randomUUID().toString()
-    private val signState = BehaviorRelay.createDefault(!authData.getAuthToken().isNullOrEmpty())
 
-    val oauthUrl = "${serverData.SERVER_URL}oauth/authorize?client_id=${serverData.APP_ID}" +
-            "&redirect_uri=${serverData.AUTH_REDIRECT_URI}&response_type=code&state=$hash"
+    val oauthUrl = "${serverConfig.SERVER_URL}oauth/authorize?client_id=${serverConfig.APP_ID}" +
+            "&redirect_uri=${serverConfig.AUTH_REDIRECT_URI}&response_type=code&state=$hash"
 
 
-    fun getSignState(): Observable<Boolean> = signState
+    fun checkOAuthRedirect(url: String) = url.indexOf(serverConfig.AUTH_REDIRECT_URI) == 0
 
-    fun checkOAuthRedirect(url: String) = url.indexOf(serverData.AUTH_REDIRECT_URI) == 0
+    fun isSignedIn() = authRepository.getSignState().firstOrError()
 
-    fun auth(oauthRedirect: String) =
+    fun login(oauthRedirect: String) =
             Completable.defer {
                 if (oauthRedirect.contains(hash)) {
-                    tokenRepository
-                            .getToken(
-                                    serverData.APP_ID,
-                                    serverData.APP_KEY,
+                    authRepository.refreshServerToken(
+                                    serverConfig.APP_ID,
+                                    serverConfig.APP_KEY,
                                     getCodeFromAuthRedirect(oauthRedirect),
-                                    serverData.AUTH_REDIRECT_URI)
-                            .subscribeOn(Schedulers.io())
-                            .doOnSuccess {
-                                authData.putAuthToken(it.token)
-                                signState.accept(!authData.getAuthToken().isNullOrEmpty())
-                            }
-                            .toCompletable()
+                                    serverConfig.AUTH_REDIRECT_URI)
                 } else {
                     Completable.error(RuntimeException("Not valid oauth hash!"))
                 }
@@ -54,9 +42,5 @@ class AuthManager(
         return url.substring(fi, li)
     }
 
-    fun logout() = Completable.defer {
-        authData.putAuthToken(null)
-        signState.accept(false)
-        Completable.complete()
-    }
+    fun logout() = authRepository.clearToken()
 }

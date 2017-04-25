@@ -1,7 +1,5 @@
 package ru.terrakok.gitlabclient.model.project
 
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import ru.terrakok.gitlabclient.entity.OrderBy
 
 /**
@@ -16,8 +14,6 @@ class MainProjectsListManager(private val projectRepository: ProjectRepository) 
                                     membership = true,
                                     order_by = OrderBy.LAST_ACTIVITY_AT,
                                     archived = false))
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
 
     fun getMyProjects(page: Int) =
             projectRepository
@@ -26,8 +22,6 @@ class MainProjectsListManager(private val projectRepository: ProjectRepository) 
                                     owned = true,
                                     order_by = OrderBy.LAST_ACTIVITY_AT,
                                     archived = false))
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
 
     fun getStarredProjects(page: Int) =
             projectRepository
@@ -36,6 +30,4 @@ class MainProjectsListManager(private val projectRepository: ProjectRepository) 
                                     starred = true,
                                     order_by = OrderBy.LAST_ACTIVITY_AT,
                                     archived = false))
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
 }

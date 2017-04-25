@@ -2,10 +2,12 @@ package ru.terrakok.gitlabclient.dagger.module
 
 import dagger.Module
 import dagger.Provides
-import ru.terrakok.gitlabclient.model.auth.TokenRepository
+import ru.terrakok.gitlabclient.model.auth.AuthData
+import ru.terrakok.gitlabclient.model.auth.AuthRepository
 import ru.terrakok.gitlabclient.model.profile.ProfileRepository
 import ru.terrakok.gitlabclient.model.project.ProjectRepository
 import ru.terrakok.gitlabclient.model.server.GitlabApi
+import ru.terrakok.gitlabclient.model.server.ServerConfig
 import javax.inject.Singleton
 
 /**
@@ -15,14 +17,14 @@ import javax.inject.Singleton
 class RepositoryModule {
 
     @Provides
-    @Singleton
-    fun provideProfileRepository(api: GitlabApi) = ProfileRepository(api)
+    fun provideProfileRepository(serverConfig: ServerConfig, api: GitlabApi) =
+            ProfileRepository(serverConfig, api)
 
     @Provides
     @Singleton
-    fun provideTokenRepository(api: GitlabApi) = TokenRepository(api)
+    fun provideAuthRepository(authData: AuthData, api: GitlabApi) =
+            AuthRepository(authData, api)
 
     @Provides
-    @Singleton
     fun provideProjectRepository(api: GitlabApi) = ProjectRepository(api)
 }

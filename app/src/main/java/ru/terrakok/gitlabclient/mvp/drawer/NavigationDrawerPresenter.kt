@@ -37,7 +37,7 @@ class NavigationDrawerPresenter : MvpPresenter<NavigationDrawerView>() {
 
     private fun subscribeOnProfileUpdates() {
         myProfileManager.getMyProfile()
-                .subscribe({ viewState.showUserInfo(it, myProfileManager.getMyServerName()) })
+                .subscribe({ viewState.showUserInfo(it) })
                 .addTo(compositeDisposable)
     }
 

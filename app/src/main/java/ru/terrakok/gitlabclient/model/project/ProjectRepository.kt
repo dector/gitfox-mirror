@@ -1,5 +1,7 @@
 package ru.terrakok.gitlabclient.model.project
 
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import ru.terrakok.gitlabclient.model.server.GitlabApi
 
 /**
@@ -19,4 +21,6 @@ class ProjectRepository(private val api: GitlabApi) {
                     filter.starred,
                     page,
                     pageSize)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
 }
