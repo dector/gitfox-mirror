@@ -8,9 +8,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.hannesdorfmann.adapterdelegates3.ListDelegationAdapter
 import kotlinx.android.synthetic.main.fragment_projects.*
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.entity.Project
-import ru.terrakok.gitlabclient.mvp.projects.ProjectsListFilter
 import ru.terrakok.gitlabclient.mvp.projects.ProjectsListPresenter
 import ru.terrakok.gitlabclient.mvp.projects.ProjectsListView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
@@ -20,16 +18,13 @@ import ru.terrakok.gitlabclient.ui.global.BaseFragment
  */
 class ProjectsListFragment : BaseFragment(), ProjectsListView {
     companion object {
-        private val ARG_TYPE = "plf_type"
-        val MY_PROJECTS = 1
-        val STARRED_PROJECTS = 2
-        val ALL_PROJECTS = 3
+        private val ARG_MODE = "plf_mode"
 
-        fun newInstance(type: Int): ProjectsListFragment {
+        fun newInstance(mode: Int): ProjectsListFragment {
             val fragment = ProjectsListFragment()
 
             val bundle = Bundle()
-            bundle.putInt(ARG_TYPE, type)
+            bundle.putInt(ARG_MODE, mode)
             fragment.arguments = bundle
 
             return fragment
@@ -41,17 +36,7 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
     override val layoutRes = R.layout.fragment_projects
 
     @InjectPresenter lateinit var presenter: ProjectsListPresenter
-
-    @ProvidePresenter
-    fun createPresenter(): ProjectsListPresenter {
-        val filter = when (arguments.getInt(ARG_TYPE)) {
-            MY_PROJECTS -> ProjectsListFilter(owned = true, order_by = OrderBy.LAST_ACTIVITY_AT, archived = false)
-            STARRED_PROJECTS -> ProjectsListFilter(starred = true)
-            else -> ProjectsListFilter(membership = true, order_by = OrderBy.LAST_ACTIVITY_AT, archived = false)
-        }
-
-        return ProjectsListPresenter(filter)
-    }
+    @ProvidePresenter fun createPresenter() = ProjectsListPresenter(arguments.getInt(ARG_MODE))
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

@@ -2,14 +2,12 @@ package ru.terrakok.gitlabclient.mvp.projects
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.App
 import ru.terrakok.gitlabclient.extension.userMessage
+import ru.terrakok.gitlabclient.model.project.MainProjectsListManager
 import ru.terrakok.gitlabclient.model.resources.ResourceManager
-import ru.terrakok.gitlabclient.model.server.ServerManager
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -18,9 +16,15 @@ import javax.inject.Inject
  */
 
 @InjectViewState
-class ProjectsListPresenter(private val filter: ProjectsListFilter) : MvpPresenter<ProjectsListView>() {
+class ProjectsListPresenter(private val mode: Int) : MvpPresenter<ProjectsListView>() {
+    companion object {
+        const val MAIN_PROJECTS = 0
+        const val MY_PROJECTS = 1
+        const val STARRED_PROJECTS = 2
+    }
+
     @Inject lateinit var router: Router
-    @Inject lateinit var serverManager: ServerManager
+    @Inject lateinit var mainProjectsListManager: MainProjectsListManager
     @Inject lateinit var resourceManager: ResourceManager
 
     private var currentPage = 0
@@ -43,19 +47,7 @@ class ProjectsListPresenter(private val filter: ProjectsListFilter) : MvpPresent
         }
 
         if (disposable == null) {
-            disposable = serverManager.api.getProjects(
-                    filter.archived,
-                    filter.visibility,
-                    filter.order_by,
-                    filter.sort,
-                    filter.search,
-                    filter.simple,
-                    filter.owned,
-                    filter.membership,
-                    filter.starred,
-                    page)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
+            disposable = getProjectsSingle(page)
                     .doOnSubscribe { if (page == 1) viewState.showProgress(true) else viewState.showPageProgress(true) }
                     .doOnEvent { _, _ -> if (page == 1) viewState.showProgress(false) else viewState.showPageProgress(false) }
                     .doOnEvent { _, _ -> disposable = null }
@@ -74,6 +66,12 @@ class ProjectsListPresenter(private val filter: ProjectsListFilter) : MvpPresent
                             }
                     )
         }
+    }
+
+    private fun getProjectsSingle(page: Int) = when(mode) {
+        STARRED_PROJECTS -> mainProjectsListManager.getStarredProjects(page)
+        MY_PROJECTS -> mainProjectsListManager.getMyProjects(page)
+        else -> mainProjectsListManager.getMainProjects(page)
     }
 
     override fun onDestroy() {

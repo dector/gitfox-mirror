@@ -16,7 +16,7 @@
  * Edited by @terrakok
  */
 
-package ru.terrakok.gitlabclient.model.server
+package ru.terrakok.gitlabclient.model.server.interceptor
 
 import okhttp3.Interceptor
 import okhttp3.Response

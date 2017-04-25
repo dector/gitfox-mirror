@@ -4,16 +4,14 @@ import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.App
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.extension.addTo
+import ru.terrakok.gitlabclient.model.auth.AuthManager
 import ru.terrakok.gitlabclient.model.resources.ResourceManager
-import ru.terrakok.gitlabclient.model.server.ServerManager
 import timber.log.Timber
-import java.util.*
 import javax.inject.Inject
 
 /**
@@ -22,10 +20,9 @@ import javax.inject.Inject
 @InjectViewState
 class AuthPresenter : MvpPresenter<AuthView>() {
     @Inject lateinit var router: Router
-    @Inject lateinit var serverManager: ServerManager
+    @Inject lateinit var authManager: AuthManager
     @Inject lateinit var resourceManager: ResourceManager
 
-    private val authHash = UUID.randomUUID().toString()
     private var compositeDisposable = CompositeDisposable()
 
     init {
@@ -41,35 +38,28 @@ class AuthPresenter : MvpPresenter<AuthView>() {
     }
 
     private fun startAuthorization() {
-        viewState.loadUrl(serverManager.getAuthUrl(authHash))
+        viewState.loadUrl(authManager.oauthUrl)
     }
 
-    private fun requestToken(code: String) {
-        serverManager.auth(code)
-                .subscribeOn(Schedulers.io())
+    private fun requestToken(url: String) {
+        authManager.login(url)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { viewState.showProgress(true) }
+                .doOnEvent { viewState.showProgress(false) }
                 .subscribe(
                         {
-                            viewState.showProgress(false)
                             router.replaceScreen(Screens.MAIN_SCREEN)
                         },
                         { error ->
                             Timber.e("Auth error: $error")
-                            viewState.showProgress(false)
                             viewState.showMessage(resourceManager.getString(R.string.auth_error))
                         }
                 ).addTo(compositeDisposable)
     }
 
     fun onRedirect(url: String): Boolean {
-        if (serverManager.checkAuthRedirect(url)) {
-            if (!url.contains(authHash)) {
-                Timber.e("Invalid auth hash!")
-                router.exitWithMessage(resourceManager.getString(R.string.invalid_hash))
-            } else {
-                requestToken(serverManager.getCodeFromAuthRedirect(url))
-            }
+        if (authManager.checkOAuthRedirect(url)) {
+            requestToken(url)
             return true
         } else {
             viewState.loadUrl(url)

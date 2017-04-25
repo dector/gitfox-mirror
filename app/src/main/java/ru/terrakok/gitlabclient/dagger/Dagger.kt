@@ -7,7 +7,7 @@ import ru.terrakok.gitlabclient.dagger.module.AppModule
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 26.03.17.
  */
-class Dagger(private val context: Context) {
+class Dagger(context: Context) {
     val appComponent = DaggerAppComponent.builder()
             .appModule(AppModule(context))
             .build()

@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.mvp.projects
+package ru.terrakok.gitlabclient.model.project
 
 import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.entity.Sort
