@@ -53,7 +53,7 @@ dependencies {
     compile "com.google.dagger:dagger:$daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
     //Gson
-    compile "com.google.code.gson:gson:2.7"
+    compile "com.google.code.gson:gson:2.8.0"
     //Retrofit
     compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
     compile "com.squareup.retrofit2:converter-gson:$retrofitVersion"
@@ -67,4 +67,6 @@ dependencies {
     compile "com.hannesdorfmann:adapterdelegates3:3.0.1"
     //Image load and cache
     compile "com.github.bumptech.glide:glide:3.7.0"
+    //Markdown view
+    compile "us.feras.mdv:markdownview:1.1.0"
 }

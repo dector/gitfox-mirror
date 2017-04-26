@@ -3,14 +3,12 @@ package ru.terrakok.gitlabclient.model.project
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import ru.terrakok.gitlabclient.model.server.GitlabApi
-import ru.terrakok.gitlabclient.model.server.ServerConfig
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 24.04.17.
  */
 class ProjectRepository(
-        private val api: GitlabApi,
-        private val serverConfig: ServerConfig) {
+        private val api: GitlabApi) {
 
     fun getProjectsList(filter: ProjectsListFilter, page: Int, pageSize: Int = 20) =
             api.getProjects(
@@ -33,5 +31,8 @@ class ProjectRepository(
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
 
-    fun getRawFilePath(projectId: Long, path: String) = serverConfig.getRawFilePath(projectId, path)
+    fun getFile(projectId: Long, path: String, branchName: String) =
+            api.getFile(projectId, path, branchName)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
 }

@@ -7,5 +7,6 @@ class ProjectManager(private val projectRepository: ProjectRepository) {
 
     fun getProject(id: Long) = projectRepository.getProject(id)
 
-    fun getProjectReadmePath(id: Long) = projectRepository.getRawFilePath(id, "README.md")
+    fun getProjectReadmeFile(id: Long, branchName: String)
+            = projectRepository.getFile(id, "README.md", branchName)
 }

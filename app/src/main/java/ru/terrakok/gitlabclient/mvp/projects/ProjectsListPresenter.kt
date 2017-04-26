@@ -5,6 +5,7 @@ import com.arellomobile.mvp.MvpPresenter
 import io.reactivex.disposables.Disposable
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.App
+import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.extension.userMessage
 import ru.terrakok.gitlabclient.model.project.MainProjectsListManager
 import ru.terrakok.gitlabclient.model.resources.ResourceManager
@@ -80,5 +81,7 @@ class ProjectsListPresenter(private val mode: Int) : MvpPresenter<ProjectsListVi
 
     fun requestFirstPage() = requestProjects(1)
     fun requestNextPage() = requestProjects(currentPage + 1)
+
+    fun onProjectClicked(id: Long) = router.navigateTo(Screens.PROJECT_SCREEN, id)
     fun onBackPressed() = router.exit()
 }

@@ -4,7 +4,6 @@ import android.graphics.Bitmap
 import android.graphics.PorterDuff
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
@@ -15,22 +14,32 @@ import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.Visibility
 import ru.terrakok.gitlabclient.extension.color
+import ru.terrakok.gitlabclient.extension.inflate
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 02.04.17
  */
-class ProjectAdapterDelegate : AbsListItemAdapterDelegate<ProjectsListItem.ProjectItem, ProjectsListItem, ProjectAdapterDelegate.ProjectViewHolder>() {
+class ProjectAdapterDelegate(private val clickListener: (Project) -> Unit)
+    : AbsListItemAdapterDelegate<ProjectsListItem.ProjectItem, ProjectsListItem, ProjectAdapterDelegate.ProjectViewHolder>() {
+
     override fun isForViewType(item: ProjectsListItem, items: MutableList<ProjectsListItem>, position: Int)
             = item is ProjectsListItem.ProjectItem
 
     override fun onCreateViewHolder(parent: ViewGroup)
-            = ProjectViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_project, parent, false))
+            = ProjectViewHolder(parent.inflate(R.layout.item_project), clickListener)
 
     override fun onBindViewHolder(item: ProjectsListItem.ProjectItem, viewHolder: ProjectViewHolder, payloads: MutableList<Any>)
             = viewHolder.bind(item.projest)
 
-    class ProjectViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+    class ProjectViewHolder(val view: View, clickListener: (Project) -> Unit) : RecyclerView.ViewHolder(view) {
+        private lateinit var project: Project
+
+        init {
+            view.setOnClickListener { clickListener.invoke(project) }
+        }
+
         fun bind(project: Project) {
+            this.project = project
             view.titleTV.text = project.nameWithNamespace
 
             view.descriptionTV.visibility = if (project.description.isNullOrEmpty()) View.GONE else View.VISIBLE

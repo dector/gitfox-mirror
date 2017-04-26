@@ -21,6 +21,7 @@ import ru.terrakok.gitlabclient.ui.drawer.NavigationDrawerFragment
 import ru.terrakok.gitlabclient.ui.global.BaseActivity
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.main.MainFragment
+import ru.terrakok.gitlabclient.ui.project.ProjectInfoFragment
 import javax.inject.Inject
 
 class MainActivity : BaseActivity(), LaunchView {
@@ -61,6 +62,7 @@ class MainActivity : BaseActivity(), LaunchView {
         override fun createFragment(screenKey: String?, data: Any?): Fragment? = when (screenKey) {
             Screens.AUTH_SCREEN -> AuthFragment()
             Screens.MAIN_SCREEN -> MainFragment()
+            Screens.PROJECT_SCREEN -> ProjectInfoFragment.createNewInstance(data as Long)
             else -> null
         }
     }

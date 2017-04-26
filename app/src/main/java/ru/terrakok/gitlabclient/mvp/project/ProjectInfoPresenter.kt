@@ -29,18 +29,22 @@ class ProjectInfoPresenter(private val projectId: Long) : MvpPresenter<ProjectIn
 
     override fun onFirstViewAttach() {
         projectManager.getProject(projectId)
+                .doOnSuccess { project -> viewState.showProjectInfo(project) }
+                .flatMap { project ->
+                    projectManager.getProjectReadmeFile(project.id, project.defaultBranch)
+                }
                 .doOnSubscribe { viewState.showProgress(true) }
                 .doOnEvent { _, _ -> viewState.showProgress(false) }
                 .subscribe(
-                        { project -> viewState.showProjectInfo(project) },
+                        { file ->
+                            viewState.showReadmeFile(file.content)
+                        },
                         { error ->
                             Timber.e("getProjects: $error")
                             viewState.showMessage(error.userMessage(resourceManager))
                         }
                 )
                 .addTo(compositeDisposable)
-
-        viewState.showReadmeFile(projectManager.getProjectReadmePath(projectId))
     }
 
     override fun onDestroy() {

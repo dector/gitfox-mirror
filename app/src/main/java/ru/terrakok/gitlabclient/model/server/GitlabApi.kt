@@ -42,6 +42,13 @@ interface GitlabApi {
             @Path("id") id: Long
     ): Single<Project>
 
+    @GET("$API_PATH/projects/{id}/repository/files/{file_path}")
+    fun getFile(
+            @Path("id") id: Long,
+            @Path("file_path") filePath: String,
+            @Query("ref") branchName: String
+    ): Single<File>
+
     @GET("$API_PATH/user")
     fun getMyUser(): Single<User>
 }

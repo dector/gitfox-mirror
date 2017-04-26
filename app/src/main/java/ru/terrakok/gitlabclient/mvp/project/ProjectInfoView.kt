@@ -13,9 +13,7 @@ import ru.terrakok.gitlabclient.entity.Project
 interface ProjectInfoView : MvpView {
     fun showProjectInfo(project: Project)
     fun showProgress(show: Boolean)
-
-    @StateStrategyType(OneExecutionStateStrategy::class) //webview can caching
-    fun showReadmeFile(url: String)
+    fun showReadmeFile(rawFile: String)
 
     @StateStrategyType(OneExecutionStateStrategy::class)
     fun showMessage(message: String)
