@@ -7,6 +7,7 @@ import ru.terrakok.gitlabclient.model.auth.AuthRepository
 import ru.terrakok.gitlabclient.model.profile.MyProfileManager
 import ru.terrakok.gitlabclient.model.profile.ProfileRepository
 import ru.terrakok.gitlabclient.model.project.MainProjectsListManager
+import ru.terrakok.gitlabclient.model.project.ProjectManager
 import ru.terrakok.gitlabclient.model.project.ProjectRepository
 import ru.terrakok.gitlabclient.model.server.ServerConfig
 import javax.inject.Singleton
@@ -29,4 +30,8 @@ class ManagerModule {
     @Singleton
     fun provideAuthManager(serverConfig: ServerConfig, tokenRepository: AuthRepository)
             = AuthManager(serverConfig, tokenRepository)
+
+    @Provides
+    fun provideProjectManager(projectRepository: ProjectRepository)
+            = ProjectManager(projectRepository)
 }

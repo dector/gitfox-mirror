@@ -9,6 +9,7 @@ import ru.terrakok.gitlabclient.mvp.auth.AuthPresenter
 import ru.terrakok.gitlabclient.mvp.drawer.NavigationDrawerPresenter
 import ru.terrakok.gitlabclient.mvp.launch.LaunchPresenter
 import ru.terrakok.gitlabclient.mvp.main.MainPresenter
+import ru.terrakok.gitlabclient.mvp.project.ProjectInfoPresenter
 import ru.terrakok.gitlabclient.mvp.projects.ProjectsListPresenter
 import ru.terrakok.gitlabclient.ui.launch.MainActivity
 import javax.inject.Singleton
@@ -30,4 +31,5 @@ interface AppComponent {
     fun inject(activity: MainActivity)
     fun inject(presenter: MainPresenter)
     fun inject(presenter: NavigationDrawerPresenter)
+    fun inject(presenter: ProjectInfoPresenter)
 }
