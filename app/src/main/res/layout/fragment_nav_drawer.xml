@@ -22,30 +22,14 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
-
-        <TextView
-            android:id="@+id/letterTV"
+        <include
+            android:id="@+id/avatarLay"
+            layout="@layout/layout_avatar"
             android:layout_width="72dp"
             android:layout_height="72dp"
             android:layout_margin="16dp"
-            android:layout_marginStart="16dp"
-            android:background="@drawable/circle"
-            android:gravity="center"
-            android:textColor="@color/primary_text"
-            android:textSize="24sp"
-            app:backgroundTint="@color/accentOrange"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="R"/>
-
-        <ImageView
-            android:id="@+id/avatarIV"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintLeft_toLeftOf="@+id/letterTV"
-            app:layout_constraintBottom_toBottomOf="@+id/letterTV"
-            app:layout_constraintRight_toRightOf="@+id/letterTV"
-            app:layout_constraintTop_toTopOf="@+id/letterTV"/>
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
             android:id="@+id/nickTV"
@@ -63,7 +47,7 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/letterTV"
+            app:layout_constraintTop_toBottomOf="@+id/avatarLay"
             tools:text="Terrakok"/>
 
         <TextView

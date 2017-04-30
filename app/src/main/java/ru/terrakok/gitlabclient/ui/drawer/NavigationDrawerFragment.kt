@@ -9,6 +9,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.BitmapImageViewTarget
 import kotlinx.android.synthetic.main.fragment_nav_drawer.*
+import kotlinx.android.synthetic.main.layout_avatar.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.model.profile.MyUserInfo
 import ru.terrakok.gitlabclient.mvp.drawer.NavigationDrawerPresenter
