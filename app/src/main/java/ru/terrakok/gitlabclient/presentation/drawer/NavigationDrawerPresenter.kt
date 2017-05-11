@@ -8,8 +8,8 @@ import ru.terrakok.gitlabclient.App
 import ru.terrakok.gitlabclient.BuildConfig
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.extension.addTo
-import ru.terrakok.gitlabclient.model.auth.AuthManager
-import ru.terrakok.gitlabclient.model.profile.MyProfileManager
+import ru.terrakok.gitlabclient.model.interactor.auth.AuthInteractor
+import ru.terrakok.gitlabclient.model.interactor.profile.MyProfileInteractor
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem.PROJECTS
 import javax.inject.Inject
@@ -20,8 +20,8 @@ import javax.inject.Inject
 @InjectViewState
 class NavigationDrawerPresenter : MvpPresenter<NavigationDrawerView>() {
     @Inject lateinit var router: Router
-    @Inject lateinit var authManager: AuthManager
-    @Inject lateinit var myProfileManager: MyProfileManager
+    @Inject lateinit var authInteractor: AuthInteractor
+    @Inject lateinit var myProfileInteractor: MyProfileInteractor
 
     private var currentSelectedItem: MenuItem? = null
     private val compositeDisposable = CompositeDisposable()
@@ -36,7 +36,7 @@ class NavigationDrawerPresenter : MvpPresenter<NavigationDrawerView>() {
     }
 
     private fun subscribeOnProfileUpdates() {
-        myProfileManager.getMyProfile()
+        myProfileInteractor.getMyProfile()
                 .subscribe({ viewState.showUserInfo(it) })
                 .addTo(compositeDisposable)
     }
@@ -56,7 +56,7 @@ class NavigationDrawerPresenter : MvpPresenter<NavigationDrawerView>() {
     }
 
     fun onLogoutClick() {
-        authManager.logout()
+        authInteractor.logout()
                 .subscribe({ router.newRootScreen(Screens.AUTH_SCREEN) })
                 .addTo(compositeDisposable)
     }

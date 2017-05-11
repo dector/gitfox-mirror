@@ -6,8 +6,8 @@ import io.reactivex.disposables.Disposable
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.App
 import ru.terrakok.gitlabclient.extension.userMessage
-import ru.terrakok.gitlabclient.model.project.MainProjectsListManager
-import ru.terrakok.gitlabclient.model.resources.ResourceManager
+import ru.terrakok.gitlabclient.model.interactor.project.MainProjectsListInteractor
+import ru.terrakok.gitlabclient.model.manager.ResourceManager
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -24,7 +24,7 @@ class ProjectsListPresenter(private val mode: Int) : MvpPresenter<ProjectsListVi
     }
 
     @Inject lateinit var router: Router
-    @Inject lateinit var mainProjectsListManager: MainProjectsListManager
+    @Inject lateinit var mainProjectsListInteractor: MainProjectsListInteractor
     @Inject lateinit var resourceManager: ResourceManager
 
     private var currentPage = 0
@@ -69,9 +69,9 @@ class ProjectsListPresenter(private val mode: Int) : MvpPresenter<ProjectsListVi
     }
 
     private fun getProjectsSingle(page: Int) = when(mode) {
-        STARRED_PROJECTS -> mainProjectsListManager.getStarredProjects(page)
-        MY_PROJECTS -> mainProjectsListManager.getMyProjects(page)
-        else -> mainProjectsListManager.getMainProjects(page)
+        STARRED_PROJECTS -> mainProjectsListInteractor.getStarredProjects(page)
+        MY_PROJECTS -> mainProjectsListInteractor.getMyProjects(page)
+        else -> mainProjectsListInteractor.getMainProjects(page)
     }
 
     override fun onDestroy() {

@@ -1,15 +1,15 @@
-package ru.terrakok.gitlabclient.model.profile
+package ru.terrakok.gitlabclient.model.interactor.profile
 
 import io.reactivex.Observable
 import io.reactivex.Single
-import ru.terrakok.gitlabclient.entity.User
-import ru.terrakok.gitlabclient.model.auth.AuthRepository
+import ru.terrakok.gitlabclient.model.repository.auth.AuthRepository
+import ru.terrakok.gitlabclient.model.repository.profile.ProfileRepository
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 24.04.17.
  */
 
-class MyProfileManager(
+class MyProfileInteractor(
         private val authRepository: AuthRepository,
         private val profileRepository: ProfileRepository) {
 
@@ -26,5 +26,3 @@ class MyProfileManager(
                     }
 
 }
-
-data class MyUserInfo(val user: User?, val serverName: String)

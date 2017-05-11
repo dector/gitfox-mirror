@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.model.server
+package ru.terrakok.gitlabclient.model.data.server
 
 import io.reactivex.Single
 import retrofit2.http.*

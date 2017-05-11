@@ -1,9 +1,9 @@
-package ru.terrakok.gitlabclient.model.profile
+package ru.terrakok.gitlabclient.model.repository.profile
 
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import ru.terrakok.gitlabclient.model.server.GitlabApi
-import ru.terrakok.gitlabclient.model.server.ServerConfig
+import ru.terrakok.gitlabclient.model.data.server.GitlabApi
+import ru.terrakok.gitlabclient.model.data.server.ServerConfig
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 24.04.17.

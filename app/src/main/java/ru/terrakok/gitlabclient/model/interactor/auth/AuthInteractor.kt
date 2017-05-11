@@ -1,13 +1,14 @@
-package ru.terrakok.gitlabclient.model.auth
+package ru.terrakok.gitlabclient.model.interactor.auth
 
 import io.reactivex.Completable
-import ru.terrakok.gitlabclient.model.server.ServerConfig
+import ru.terrakok.gitlabclient.model.data.server.ServerConfig
+import ru.terrakok.gitlabclient.model.repository.auth.AuthRepository
 import java.util.*
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 23.04.17.
  */
-class AuthManager(
+class AuthInteractor(
         private val serverConfig: ServerConfig,
         private val authRepository: AuthRepository) {
 

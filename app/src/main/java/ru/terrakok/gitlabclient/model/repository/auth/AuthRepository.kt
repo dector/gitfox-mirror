@@ -1,16 +1,17 @@
-package ru.terrakok.gitlabclient.model.auth
+package ru.terrakok.gitlabclient.model.repository.auth
 
 import com.jakewharton.rxrelay2.BehaviorRelay
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import ru.terrakok.gitlabclient.model.server.GitlabApi
+import ru.terrakok.gitlabclient.model.data.auth.AuthHolder
+import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 23.04.17.
  */
-class AuthRepository(private val authData: AuthData, private val api: GitlabApi) {
+class AuthRepository(private val authData: AuthHolder, private val api: GitlabApi) {
 
     private val signState = BehaviorRelay.createDefault(!authData.getAuthToken().isNullOrEmpty())
 

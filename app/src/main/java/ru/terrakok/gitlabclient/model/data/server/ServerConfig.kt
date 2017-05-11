@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.model.server
+package ru.terrakok.gitlabclient.model.data.server
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 23.04.17.

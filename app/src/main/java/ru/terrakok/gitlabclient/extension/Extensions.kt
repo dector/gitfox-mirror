@@ -6,7 +6,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import retrofit2.HttpException
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.model.resources.ResourceManager
+import ru.terrakok.gitlabclient.model.manager.ResourceManager
 import java.io.IOException
 
 /**

@@ -9,8 +9,8 @@ import ru.terrakok.gitlabclient.App
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.extension.addTo
-import ru.terrakok.gitlabclient.model.auth.AuthManager
-import ru.terrakok.gitlabclient.model.resources.ResourceManager
+import ru.terrakok.gitlabclient.model.interactor.auth.AuthInteractor
+import ru.terrakok.gitlabclient.model.manager.ResourceManager
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -20,7 +20,7 @@ import javax.inject.Inject
 @InjectViewState
 class AuthPresenter : MvpPresenter<AuthView>() {
     @Inject lateinit var router: Router
-    @Inject lateinit var authManager: AuthManager
+    @Inject lateinit var authInteractor: AuthInteractor
     @Inject lateinit var resourceManager: ResourceManager
 
     private var compositeDisposable = CompositeDisposable()
@@ -38,11 +38,11 @@ class AuthPresenter : MvpPresenter<AuthView>() {
     }
 
     private fun startAuthorization() {
-        viewState.loadUrl(authManager.oauthUrl)
+        viewState.loadUrl(authInteractor.oauthUrl)
     }
 
     private fun requestToken(url: String) {
-        authManager.login(url)
+        authInteractor.login(url)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { viewState.showProgress(true) }
                 .doOnEvent { viewState.showProgress(false) }
@@ -58,7 +58,7 @@ class AuthPresenter : MvpPresenter<AuthView>() {
     }
 
     fun onRedirect(url: String): Boolean {
-        if (authManager.checkOAuthRedirect(url)) {
+        if (authInteractor.checkOAuthRedirect(url)) {
             requestToken(url)
             return true
         } else {

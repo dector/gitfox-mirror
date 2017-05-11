@@ -6,7 +6,7 @@ import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.App
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.extension.addTo
-import ru.terrakok.gitlabclient.model.auth.AuthManager
+import ru.terrakok.gitlabclient.model.interactor.auth.AuthInteractor
 import javax.inject.Inject
 
 /**
@@ -14,7 +14,7 @@ import javax.inject.Inject
  */
 class LaunchPresenter : MvpPresenter<LaunchView>() {
     @Inject lateinit var router: Router
-    @Inject lateinit var authManager: AuthManager
+    @Inject lateinit var authInteractor: AuthInteractor
     private val compositeDisposable = CompositeDisposable()
 
     init {
@@ -22,7 +22,7 @@ class LaunchPresenter : MvpPresenter<LaunchView>() {
     }
 
     override fun onFirstViewAttach() {
-        authManager.isSignedIn()
+        authInteractor.isSignedIn()
                 .subscribe({ isSignedIn ->
                     if (isSignedIn) router.newRootScreen(Screens.MAIN_SCREEN)
                     else router.newRootScreen(Screens.AUTH_SCREEN)
