@@ -7,9 +7,9 @@ import android.support.v4.app.FragmentPagerAdapter
 import com.arellomobile.mvp.presenter.InjectPresenter
 import kotlinx.android.synthetic.main.fragment_main.*
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.mvp.main.MainPresenter
-import ru.terrakok.gitlabclient.mvp.main.MainView
-import ru.terrakok.gitlabclient.mvp.projects.ProjectsListPresenter
+import ru.terrakok.gitlabclient.presentation.main.MainPresenter
+import ru.terrakok.gitlabclient.presentation.main.MainView
+import ru.terrakok.gitlabclient.presentation.projects.ProjectsListPresenter
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.projects.ProjectsListFragment
 

@@ -7,8 +7,8 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_project_info.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Project
-import ru.terrakok.gitlabclient.mvp.project.ProjectInfoPresenter
-import ru.terrakok.gitlabclient.mvp.project.ProjectInfoView
+import ru.terrakok.gitlabclient.presentation.project.ProjectInfoPresenter
+import ru.terrakok.gitlabclient.presentation.project.ProjectInfoView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 
 /**
