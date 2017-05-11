@@ -13,9 +13,9 @@ import ru.terrakok.cicerone.commands.Forward
 import ru.terrakok.gitlabclient.App
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
-import ru.terrakok.gitlabclient.mvp.drawer.NavigationDrawerView
-import ru.terrakok.gitlabclient.mvp.launch.LaunchPresenter
-import ru.terrakok.gitlabclient.mvp.launch.LaunchView
+import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView
+import ru.terrakok.gitlabclient.presentation.launch.LaunchPresenter
+import ru.terrakok.gitlabclient.presentation.launch.LaunchView
 import ru.terrakok.gitlabclient.ui.auth.AuthFragment
 import ru.terrakok.gitlabclient.ui.drawer.NavigationDrawerFragment
 import ru.terrakok.gitlabclient.ui.global.BaseActivity

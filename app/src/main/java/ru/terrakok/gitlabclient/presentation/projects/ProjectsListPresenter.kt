@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.mvp.projects
+package ru.terrakok.gitlabclient.presentation.projects
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter

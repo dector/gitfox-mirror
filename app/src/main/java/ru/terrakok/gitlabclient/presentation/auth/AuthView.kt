@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.mvp.auth
+package ru.terrakok.gitlabclient.presentation.auth
 
 import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy

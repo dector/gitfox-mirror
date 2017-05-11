@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.mvp.drawer
+package ru.terrakok.gitlabclient.presentation.drawer
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
@@ -10,8 +10,8 @@ import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.extension.addTo
 import ru.terrakok.gitlabclient.model.auth.AuthManager
 import ru.terrakok.gitlabclient.model.profile.MyProfileManager
-import ru.terrakok.gitlabclient.mvp.drawer.NavigationDrawerView.MenuItem
-import ru.terrakok.gitlabclient.mvp.drawer.NavigationDrawerView.MenuItem.PROJECTS
+import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem
+import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem.PROJECTS
 import javax.inject.Inject
 
 /**

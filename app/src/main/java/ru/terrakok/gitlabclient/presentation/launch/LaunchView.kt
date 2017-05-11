@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.mvp.launch
+package ru.terrakok.gitlabclient.presentation.launch
 
 import com.arellomobile.mvp.MvpView
 

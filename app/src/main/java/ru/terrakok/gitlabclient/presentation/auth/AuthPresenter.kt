@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.mvp.auth
+package ru.terrakok.gitlabclient.presentation.auth
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter

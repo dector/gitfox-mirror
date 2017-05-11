@@ -5,11 +5,11 @@ import ru.terrakok.gitlabclient.dagger.module.AppModule
 import ru.terrakok.gitlabclient.dagger.module.ManagerModule
 import ru.terrakok.gitlabclient.dagger.module.NavigationModule
 import ru.terrakok.gitlabclient.dagger.module.RepositoryModule
-import ru.terrakok.gitlabclient.mvp.auth.AuthPresenter
-import ru.terrakok.gitlabclient.mvp.drawer.NavigationDrawerPresenter
-import ru.terrakok.gitlabclient.mvp.launch.LaunchPresenter
-import ru.terrakok.gitlabclient.mvp.main.MainPresenter
-import ru.terrakok.gitlabclient.mvp.projects.ProjectsListPresenter
+import ru.terrakok.gitlabclient.presentation.auth.AuthPresenter
+import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerPresenter
+import ru.terrakok.gitlabclient.presentation.launch.LaunchPresenter
+import ru.terrakok.gitlabclient.presentation.main.MainPresenter
+import ru.terrakok.gitlabclient.presentation.projects.ProjectsListPresenter
 import ru.terrakok.gitlabclient.ui.launch.MainActivity
 import javax.inject.Singleton
 
