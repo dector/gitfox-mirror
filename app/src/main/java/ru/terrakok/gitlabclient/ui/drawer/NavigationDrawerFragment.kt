@@ -10,11 +10,11 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.BitmapImageViewTarget
 import kotlinx.android.synthetic.main.fragment_nav_drawer.*
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.model.profile.MyUserInfo
-import ru.terrakok.gitlabclient.mvp.drawer.NavigationDrawerPresenter
-import ru.terrakok.gitlabclient.mvp.drawer.NavigationDrawerView
-import ru.terrakok.gitlabclient.mvp.drawer.NavigationDrawerView.MenuItem
-import ru.terrakok.gitlabclient.mvp.drawer.NavigationDrawerView.MenuItem.*
+import ru.terrakok.gitlabclient.model.interactor.profile.MyUserInfo
+import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerPresenter
+import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView
+import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem
+import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem.*
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.launch.MainActivity
 

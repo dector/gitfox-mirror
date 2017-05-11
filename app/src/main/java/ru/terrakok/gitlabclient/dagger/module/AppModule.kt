@@ -4,12 +4,12 @@ import android.content.Context
 import dagger.Module
 import dagger.Provides
 import ru.terrakok.gitlabclient.BuildConfig
-import ru.terrakok.gitlabclient.model.auth.AuthData
-import ru.terrakok.gitlabclient.model.resources.ResourceManager
-import ru.terrakok.gitlabclient.model.server.GitlabApi
-import ru.terrakok.gitlabclient.model.server.GitlabApiProvider
-import ru.terrakok.gitlabclient.model.server.ServerConfig
-import ru.terrakok.gitlabclient.model.storage.Prefs
+import ru.terrakok.gitlabclient.model.data.auth.AuthHolder
+import ru.terrakok.gitlabclient.model.data.server.GitlabApi
+import ru.terrakok.gitlabclient.model.data.server.GitlabApiProvider
+import ru.terrakok.gitlabclient.model.data.server.ServerConfig
+import ru.terrakok.gitlabclient.model.data.storage.Prefs
+import ru.terrakok.gitlabclient.model.manager.ResourceManager
 import javax.inject.Singleton
 
 /**
@@ -28,10 +28,10 @@ class AppModule(private val context: Context) {
 
     @Provides
     @Singleton
-    fun provideAuthData(): AuthData = Prefs(context)
+    fun provideAuthData(): AuthHolder = Prefs(context)
 
     @Provides
     @Singleton
-    fun provideGitlabApi(authData: AuthData, serverConfig: ServerConfig): GitlabApi
+    fun provideGitlabApi(authData: AuthHolder, serverConfig: ServerConfig): GitlabApi
             = GitlabApiProvider(authData, serverConfig, BuildConfig.DEBUG).api
 }
