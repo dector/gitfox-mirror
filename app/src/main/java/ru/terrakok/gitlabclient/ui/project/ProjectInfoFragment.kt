@@ -1,7 +1,6 @@
 package ru.terrakok.gitlabclient.ui.project
 
 import android.os.Bundle
-import android.util.Base64
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_project_info.*
@@ -44,8 +43,8 @@ class ProjectInfoFragment : BaseFragment(), ProjectInfoView {
         showProgressDialog(show)
     }
 
-    override fun showReadmeFile(rawFile: String) {
-        markdownView.loadMarkdown(String(Base64.decode(rawFile.toByteArray(), Base64.DEFAULT)))
+    override fun showReadmeFile(html: String) {
+        markdownView.loadData(html, "text/html", "UTF-8")
     }
 
     override fun showMessage(message: String) {

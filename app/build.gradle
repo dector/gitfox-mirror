@@ -2,6 +2,10 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
+repositories {
+    flatDir { dirs 'libs' }
+}
+
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
@@ -67,6 +71,6 @@ dependencies {
     compile "com.hannesdorfmann:adapterdelegates3:3.0.1"
     //Image load and cache
     compile "com.github.bumptech.glide:glide:3.7.0"
-    //Markdown view
-    compile "us.feras.mdv:markdownview:1.1.0"
+    //Markdown to HTML converter
+    compile(name:"anddown-0.3.0", ext:"aar")
 }

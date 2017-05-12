@@ -25,13 +25,13 @@ class ProjectInfoPresenter(private val projectId: Long) : com.arellomobile.mvp.M
         projectInteractor.getProject(projectId)
                 .doOnSuccess { project -> viewState.showProjectInfo(project) }
                 .flatMap { project ->
-                    projectInteractor.getProjectReadmeFile(project.id, project.defaultBranch)
+                    projectInteractor.getProjectReadmeHtml(project.id, project.defaultBranch)
                 }
                 .doOnSubscribe { viewState.showProgress(true) }
                 .doOnEvent { _, _ -> viewState.showProgress(false) }
                 .subscribe(
-                        { file ->
-                            viewState.showReadmeFile(file.content)
+                        { htmlReadme ->
+                            viewState.showReadmeFile(htmlReadme)
                         },
                         { error ->
                             timber.log.Timber.e("getProjects: $error")
