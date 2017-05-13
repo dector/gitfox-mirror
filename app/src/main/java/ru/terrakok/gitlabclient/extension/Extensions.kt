@@ -2,6 +2,10 @@ package ru.terrakok.gitlabclient.extension
 
 import android.content.res.Resources
 import android.os.Build
+import android.support.annotation.LayoutRes
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import retrofit2.HttpException
@@ -21,6 +25,10 @@ fun Resources.color(colorRes: Int) =
 
 fun Disposable.addTo(compositeDisposable: CompositeDisposable) {
     compositeDisposable.add(this)
+}
+
+fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachToRoot: Boolean = false): View {
+    return LayoutInflater.from(context).inflate(layoutRes, this, attachToRoot)
 }
 
 fun Throwable.userMessage(resourceManager: ResourceManager) = when (this) {

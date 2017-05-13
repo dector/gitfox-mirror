@@ -1,12 +1,11 @@
-package ru.terrakok.gitlabclient.model.interactor.project
+package ru.terrakok.gitlabclient.model.interactor.projects
 
 import ru.terrakok.gitlabclient.entity.OrderBy
-import ru.terrakok.gitlabclient.model.repository.project.ProjectRepository
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 24.04.17.
  */
-class MainProjectsListInteractor(private val projectRepository: ProjectRepository) {
+class MainProjectsListInteractor(private val projectRepository: ru.terrakok.gitlabclient.model.repository.project.ProjectRepository) {
 
     fun getMainProjects(page: Int) =
             projectRepository

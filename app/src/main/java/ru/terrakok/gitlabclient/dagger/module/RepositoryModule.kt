@@ -26,5 +26,6 @@ class RepositoryModule {
             AuthRepository(authData, api)
 
     @Provides
-    fun provideProjectRepository(api: GitlabApi) = ProjectRepository(api)
+    fun provideProjectRepository(api: GitlabApi) =
+            ProjectRepository(api)
 }

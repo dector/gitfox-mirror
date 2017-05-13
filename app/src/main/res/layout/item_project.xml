@@ -13,29 +13,11 @@
         android:orientation="vertical"
         app:layout_constraintGuide_begin="72dp"/>
 
-    <TextView
-        android:id="@+id/letterTV"
+    <include
+        layout="@layout/layout_avatar"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="8dp"
-        android:background="@drawable/circle"
-        android:gravity="center"
-        android:textColor="@color/primary_text"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/guideline"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="R"/>
-
-    <ImageView
-        android:id="@+id/avatarIV"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_margin="8dp"
-        android:background="@drawable/circle"
-        android:visibility="gone"
-        app:backgroundTint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/guideline"
@@ -58,9 +40,9 @@
         android:id="@+id/titleTV"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginRight="8dp"
         android:ellipsize="end"
         android:lines="1"
-        android:layout_marginRight="8dp"
         android:textColor="@color/primary_text"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/descriptionTV"

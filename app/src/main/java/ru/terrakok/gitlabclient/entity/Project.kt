@@ -6,7 +6,7 @@ import java.util.*
 data class Project(
         @SerializedName("id") val id: Long,
         @SerializedName("description") val description: String?,
-        @SerializedName("default_branch") val defaultBranch: String?,
+        @SerializedName("default_branch") val defaultBranch: String,
         @SerializedName("visibility") val visibility: Visibility,
         @SerializedName("ssh_url_to_repo") val sshUrlToRepo: String?,
         @SerializedName("http_url_to_repo") val httpUrlToRepo: String?,
@@ -15,7 +15,7 @@ data class Project(
         @SerializedName("owner") val owner: Owner?,
         @SerializedName("name") val name: String?,
         @SerializedName("name_with_namespace") val nameWithNamespace: String?,
-        @SerializedName("path") val path: String?,
+        @SerializedName("path") val path: String,
         @SerializedName("path_with_namespace") val pathWithNamespace: String?,
         @SerializedName("issues_enabled") val issuesEnabled: Boolean,
         @SerializedName("open_issues_count") val openIssuesCount: Long,

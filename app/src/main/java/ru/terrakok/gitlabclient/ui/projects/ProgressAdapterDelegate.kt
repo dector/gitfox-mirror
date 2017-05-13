@@ -1,11 +1,11 @@
 package ru.terrakok.gitlabclient.ui.projects
 
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.hannesdorfmann.adapterdelegates3.AbsListItemAdapterDelegate
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.extension.inflate
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 02.04.17
@@ -15,7 +15,7 @@ class ProgressAdapterDelegate : AbsListItemAdapterDelegate<ProjectsListItem.Prog
             = item is ProjectsListItem.ProgressItem
 
     override fun onCreateViewHolder(parent: ViewGroup)
-            = ProgressViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_progress, parent, false))
+            = ProgressViewHolder(parent.inflate(R.layout.item_progress))
 
     override fun onBindViewHolder(item: ProjectsListItem.ProgressItem, viewHolder: ProgressViewHolder, payloads: MutableList<Any>) {}
 

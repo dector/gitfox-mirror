@@ -73,7 +73,7 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
     inner class ProjectsAdapter : ListDelegationAdapter<MutableList<ProjectsListItem>>() {
         init {
             items = mutableListOf()
-            delegatesManager.addDelegate(ProjectAdapterDelegate())
+            delegatesManager.addDelegate(ProjectAdapterDelegate({ presenter.onProjectClicked(it.id) }))
             delegatesManager.addDelegate(ProgressAdapterDelegate())
         }
 

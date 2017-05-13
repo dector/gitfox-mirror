@@ -7,4 +7,5 @@ object Screens {
     const val AUTH_SCREEN = "oauth screen"
     const val MAIN_SCREEN = "main screen"
     const val NAVIGATION_DRAWER = "nav drawer screen"
+    const val PROJECT_SCREEN = "project screen"
 }

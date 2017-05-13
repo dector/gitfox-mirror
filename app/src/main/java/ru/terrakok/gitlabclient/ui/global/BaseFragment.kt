@@ -20,13 +20,13 @@ abstract class BaseFragment : MvpAppCompatFragment() {
             = inflater.inflate(layoutRes, container, false)
 
     protected fun showProgressDialog(progress: Boolean) {
-        val fragment = fragmentManager?.findFragmentByTag(PROGRESS_TAG)
+        val fragment = childFragmentManager?.findFragmentByTag(PROGRESS_TAG)
         if (fragment != null && !progress) {
             (fragment as ProgressDialog).dismiss()
-            fragmentManager.executePendingTransactions()
+            childFragmentManager.executePendingTransactions()
         } else if (fragment == null && progress) {
-            ProgressDialog().show(fragmentManager, PROGRESS_TAG)
-            fragmentManager.executePendingTransactions()
+            ProgressDialog().show(childFragmentManager, PROGRESS_TAG)
+            childFragmentManager.executePendingTransactions()
         }
     }
 

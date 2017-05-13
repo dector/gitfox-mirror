@@ -5,7 +5,8 @@ import dagger.Provides
 import ru.terrakok.gitlabclient.model.data.server.ServerConfig
 import ru.terrakok.gitlabclient.model.interactor.auth.AuthInteractor
 import ru.terrakok.gitlabclient.model.interactor.profile.MyProfileInteractor
-import ru.terrakok.gitlabclient.model.interactor.project.MainProjectsListInteractor
+import ru.terrakok.gitlabclient.model.interactor.project.ProjectInteractor
+import ru.terrakok.gitlabclient.model.interactor.projects.MainProjectsListInteractor
 import ru.terrakok.gitlabclient.model.repository.auth.AuthRepository
 import ru.terrakok.gitlabclient.model.repository.profile.ProfileRepository
 import ru.terrakok.gitlabclient.model.repository.project.ProjectRepository
@@ -29,4 +30,8 @@ class InteractorModule {
     @Singleton
     fun provideAuthInteractor(serverConfig: ServerConfig, tokenRepository: AuthRepository)
             = AuthInteractor(serverConfig, tokenRepository)
+
+    @Provides
+    fun provideProjectInteractor(projectRepository: ProjectRepository)
+            = ProjectInteractor(projectRepository)
 }
