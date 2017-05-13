@@ -37,6 +37,8 @@ class ProjectInfoFragment : BaseFragment(), ProjectInfoView {
 
     override fun showProjectInfo(project: Project) {
         toolbar.title = project.name
+        starsCountTV.text = project.starCount.toString()
+        forksCountTV.text = project.forksCount.toString()
     }
 
     override fun showProgress(show: Boolean) {

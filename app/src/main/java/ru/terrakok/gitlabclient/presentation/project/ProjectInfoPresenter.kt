@@ -1,5 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.project
 
+import com.arellomobile.mvp.MvpPresenter
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.extension.addTo
 import ru.terrakok.gitlabclient.extension.userMessage
@@ -10,7 +11,7 @@ import ru.terrakok.gitlabclient.model.manager.ResourceManager
  * @author Konstantin Tskhovrebov (aka terrakok) on 27.04.17.
  */
 @com.arellomobile.mvp.InjectViewState
-class ProjectInfoPresenter(private val projectId: Long) : com.arellomobile.mvp.MvpPresenter<ProjectInfoView>() {
+class ProjectInfoPresenter(private val projectId: Long) : MvpPresenter<ProjectInfoView>() {
     @javax.inject.Inject lateinit var resourceManager: ResourceManager
     @javax.inject.Inject lateinit var router: Router
     @javax.inject.Inject lateinit var projectInteractor: ProjectInteractor
