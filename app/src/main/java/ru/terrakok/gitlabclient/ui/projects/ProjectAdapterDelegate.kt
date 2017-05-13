@@ -49,7 +49,7 @@ class ProjectAdapterDelegate(private val clickListener: (Project) -> Unit)
             view.starsTV.text = project.starCount.toString()
             view.publicIV.setImageResource(when (project.visibility) {
                 Visibility.PRIVATE -> R.drawable.ic_lock_white_18dp
-                Visibility.INTERNAL -> R.drawable.ic_lock_outline_white_18dp
+                Visibility.INTERNAL -> R.drawable.ic_security_white_24dp
                 else -> R.drawable.ic_globe_18dp
             })
 

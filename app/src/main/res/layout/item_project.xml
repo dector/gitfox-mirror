@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="72dp">
+    android:layout_height="72dp"
+    android:background="?attr/selectableItemBackground">
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline"
@@ -55,14 +56,15 @@
 
     <ImageView
         android:id="@+id/starIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
         android:layout_marginRight="8dp"
+        android:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/titleTV"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintRight_toLeftOf="@+id/starsTV"
         app:layout_constraintTop_toTopOf="@+id/titleTV"
-        app:srcCompat="@drawable/ic_star_white_18dp"/>
+        app:srcCompat="@drawable/ic_star_black_24dp"/>
 
     <TextView
         android:id="@+id/starsTV"
