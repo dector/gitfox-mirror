@@ -6,6 +6,10 @@
     <string name="invalid_hash">Invalid auth response!</string>
     <string name="auth_error">Unknown error! Try again later</string>
 
+    <!--About screen-->
+    <string name="about_title">About</string>
+    <string name="version" formatted="false">Version: %s</string>
+
     <!--Projects screen-->
     <string name="projects_title">Projects</string>
     <string name="my_projects_title">My projects</string>
@@ -13,7 +17,6 @@
     <string name="all_projects_title">All</string>
 
     <!--Navigation drawer-->
-    <string name="version" formatted="false">Version: %s</string>
     <string name="projects_item">Projects</string>
     <string name="activity_item">Activity</string>
     <string name="groups_item">Groups</string>

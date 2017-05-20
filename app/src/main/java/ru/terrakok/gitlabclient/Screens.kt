@@ -8,4 +8,5 @@ object Screens {
     const val MAIN_SCREEN = "main screen"
     const val NAVIGATION_DRAWER = "nav drawer screen"
     const val PROJECT_SCREEN = "project screen"
+    const val ABOUT_SCREEN = "about screen"
 }
