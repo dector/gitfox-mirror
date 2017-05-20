@@ -1,0 +1,13 @@
+android.defaultConfig.versionCode = getBuildNumber()
+
+static Integer getBuildNumber() {
+    if (System.env.BUILD_NUMBER != null) {
+        return Integer.parseInt(System.env.BUILD_NUMBER)
+    }
+    return 1
+}
+
+gradle.buildFinished {
+    println('VersionName: ' + android.defaultConfig.versionName)
+    println('VersionCode: ' + android.defaultConfig.versionCode)
+}

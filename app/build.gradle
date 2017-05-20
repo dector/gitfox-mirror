@@ -6,16 +6,19 @@ repositories {
     flatDir { dirs 'libs' }
 }
 
+//CI
+apply from: '../ci.gradle'
+
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "25.0.3"
 
     defaultConfig {
         applicationId "ru.terrakok.gitlabclient"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 1
         versionName "1.0"
+        // versionCode 1 get it from '../ci.gradle'
 
         vectorDrawables.useSupportLibrary true
     }
