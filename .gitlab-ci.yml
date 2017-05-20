@@ -21,7 +21,6 @@ before_script:
   - echo y | $ANDROID_HOME/tools/bin/sdkmanager 'extras;android;m2repository'
   - echo y | $ANDROID_HOME/tools/bin/sdkmanager 'extras;google;google_play_services'
   - echo y | $ANDROID_HOME/tools/bin/sdkmanager 'extras;google;m2repository'
-  - echo y | $ANDROID_HOME/tools/bin/sdkmanager 'cmake;'$ANDROID_CMAKE_REV
   - export BUILD_NUMBER=$(git rev-list --count ${CI_BUILD_REF})
   - chmod +x ./gradlew
 
