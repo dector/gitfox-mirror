@@ -11,6 +11,7 @@ import ru.terrakok.gitlabclient.extension.addTo
 import ru.terrakok.gitlabclient.model.interactor.auth.AuthInteractor
 import ru.terrakok.gitlabclient.model.interactor.profile.MyProfileInteractor
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem
+import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem.ABOUT
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem.PROJECTS
 import javax.inject.Inject
 
@@ -50,6 +51,7 @@ class NavigationDrawerPresenter : MvpPresenter<NavigationDrawerView>() {
         if (item != currentSelectedItem) {
             when (item) {
                 PROJECTS -> router.newRootScreen(Screens.MAIN_SCREEN)
+                ABOUT -> router.newRootScreen(Screens.ABOUT_SCREEN)
                 else -> router.showSystemMessage("Unknown screen yet!") //todo
             }
         }
