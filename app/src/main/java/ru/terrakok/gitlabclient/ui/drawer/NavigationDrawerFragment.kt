@@ -11,7 +11,7 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget
 import kotlinx.android.synthetic.main.fragment_nav_drawer.*
 import kotlinx.android.synthetic.main.layout_avatar.*
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.model.interactor.profile.MyUserInfo
+import ru.terrakok.gitlabclient.entity.app.MyUserInfo
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerPresenter
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem

@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.entity
+package ru.terrakok.gitlabclient.entity.common
 
 import com.google.gson.annotations.SerializedName
 

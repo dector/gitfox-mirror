@@ -2,8 +2,8 @@ package ru.terrakok.gitlabclient.model.repository.project
 
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import ru.terrakok.gitlabclient.entity.app.ProjectsListFilter
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
-import ru.terrakok.gitlabclient.model.interactor.projects.ProjectsListFilter
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 24.04.17.

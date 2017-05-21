@@ -8,7 +8,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.hannesdorfmann.adapterdelegates3.ListDelegationAdapter
 import kotlinx.android.synthetic.main.fragment_projects.*
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.Project
+import ru.terrakok.gitlabclient.entity.common.Project
 import ru.terrakok.gitlabclient.presentation.projects.ProjectsListPresenter
 import ru.terrakok.gitlabclient.presentation.projects.ProjectsListView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment

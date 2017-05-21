@@ -1,6 +1,6 @@
 package ru.terrakok.gitlabclient.ui.projects
 
-import ru.terrakok.gitlabclient.entity.Project
+import ru.terrakok.gitlabclient.entity.common.Project
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 02.04.17

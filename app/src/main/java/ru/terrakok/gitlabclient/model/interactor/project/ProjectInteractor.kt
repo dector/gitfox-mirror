@@ -10,7 +10,7 @@ import ru.terrakok.gitlabclient.model.repository.project.ProjectRepository
  * @author Konstantin Tskhovrebov (aka terrakok) on 26.04.17.
  */
 class ProjectInteractor(private val projectRepository: ProjectRepository) {
-    val mdConverter = AndDown()
+    private val mdConverter = AndDown()
 
     fun getProject(id: Long) = projectRepository.getProject(id)
 

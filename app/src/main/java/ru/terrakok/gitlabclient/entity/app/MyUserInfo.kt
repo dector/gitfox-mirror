@@ -1,6 +1,6 @@
-package ru.terrakok.gitlabclient.model.interactor.profile
+package ru.terrakok.gitlabclient.entity.app
 
-import ru.terrakok.gitlabclient.entity.User
+import ru.terrakok.gitlabclient.entity.common.User
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 11.05.17.
