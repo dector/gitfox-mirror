@@ -10,7 +10,7 @@ import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.extension.addTo
 import ru.terrakok.gitlabclient.model.interactor.auth.AuthInteractor
-import ru.terrakok.gitlabclient.model.manager.ResourceManager
+import ru.terrakok.gitlabclient.model.system.ResourceManager
 import timber.log.Timber
 import javax.inject.Inject
 

@@ -1,10 +1,7 @@
 package ru.terrakok.gitlabclient.dagger.component
 
 import dagger.Component
-import ru.terrakok.gitlabclient.dagger.module.AppModule
-import ru.terrakok.gitlabclient.dagger.module.InteractorModule
-import ru.terrakok.gitlabclient.dagger.module.NavigationModule
-import ru.terrakok.gitlabclient.dagger.module.RepositoryModule
+import ru.terrakok.gitlabclient.dagger.module.*
 import ru.terrakok.gitlabclient.presentation.about.AboutPresenter
 import ru.terrakok.gitlabclient.presentation.auth.AuthPresenter
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerPresenter
@@ -21,8 +18,9 @@ import javax.inject.Singleton
 @Component(modules = arrayOf(
         AppModule::class,
         NavigationModule::class,
-        RepositoryModule::class,
-        InteractorModule::class
+        AuthModule::class,
+        ProfileModule::class,
+        ProjectModule::class
 ))
 @Singleton
 interface AppComponent {

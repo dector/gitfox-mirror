@@ -5,7 +5,7 @@ import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.extension.addTo
 import ru.terrakok.gitlabclient.extension.userMessage
 import ru.terrakok.gitlabclient.model.interactor.project.ProjectInteractor
-import ru.terrakok.gitlabclient.model.manager.ResourceManager
+import ru.terrakok.gitlabclient.model.system.ResourceManager
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 27.04.17.

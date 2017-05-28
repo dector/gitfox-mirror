@@ -15,7 +15,9 @@ import ru.terrakok.gitlabclient.model.data.server.ServerConfig
 import ru.terrakok.gitlabclient.model.data.server.interceptor.AuthHeaderInterceptor
 import ru.terrakok.gitlabclient.model.data.server.interceptor.CurlLoggingInterceptor
 import ru.terrakok.gitlabclient.model.data.storage.Prefs
-import ru.terrakok.gitlabclient.model.manager.ResourceManager
+import ru.terrakok.gitlabclient.model.system.AppSchedulers
+import ru.terrakok.gitlabclient.model.system.ResourceManager
+import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
@@ -36,6 +38,10 @@ class AppModule(private val context: Context) {
     @Provides
     @Singleton
     fun provideAuthData(): AuthHolder = Prefs(context)
+
+    @Provides
+    @Singleton
+    fun provideSchedulers(): SchedulersProvider = AppSchedulers()
 
     @Provides
     @Singleton

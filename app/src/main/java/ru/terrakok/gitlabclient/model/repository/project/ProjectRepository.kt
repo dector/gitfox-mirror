@@ -1,15 +1,14 @@
 package ru.terrakok.gitlabclient.model.repository.project
 
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import ru.terrakok.gitlabclient.entity.app.ProjectsListFilter
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
+import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 24.04.17.
  */
-class ProjectRepository(
-        private val api: GitlabApi) {
+class ProjectRepository(private val api: GitlabApi,
+                        private val schedulers: SchedulersProvider) {
 
     fun getProjectsList(filter: ProjectsListFilter, page: Int, pageSize: Int = 20) =
             api.getProjects(
@@ -24,16 +23,16 @@ class ProjectRepository(
                     filter.starred,
                     page,
                     pageSize)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(schedulers.io())
+                    .observeOn(schedulers.ui())
 
     fun getProject(id: Long) =
             api.getProject(id)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(schedulers.io())
+                    .observeOn(schedulers.ui())
 
     fun getFile(projectId: Long, path: String, branchName: String) =
             api.getFile(projectId, path, branchName)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(schedulers.io())
+                    .observeOn(schedulers.ui())
 }

@@ -8,7 +8,7 @@ import ru.terrakok.gitlabclient.App
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.extension.userMessage
 import ru.terrakok.gitlabclient.model.interactor.projects.MainProjectsListInteractor
-import ru.terrakok.gitlabclient.model.manager.ResourceManager
+import ru.terrakok.gitlabclient.model.system.ResourceManager
 import timber.log.Timber
 import javax.inject.Inject
 

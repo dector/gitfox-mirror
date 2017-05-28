@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.model.manager
+package ru.terrakok.gitlabclient.model.system
 
 import android.content.Context
 
