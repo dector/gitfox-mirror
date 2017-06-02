@@ -22,10 +22,11 @@ class MyProfileInteractorTest {
         val testUser = User(1L, null, null, null, null, null,
                 null, Date(), false, null, null, null, null, null,
                 null, null, Date(), Date(), 0L, 0L, Date(), null, false, false, false, false)
+        val testServer = "Test server"
+        val testUserInfo = MyUserInfo(testUser, testServer)
 
         val profileRepo = mock(ProfileRepository::class.java)
         `when`(profileRepo.getMyProfile()).thenReturn(Single.just(testUser))
-        val testServer = "Test server"
         `when`(profileRepo.getMyServerName()).thenReturn(testServer)
 
         val authRepo = mock(AuthRepository::class.java)
@@ -37,7 +38,10 @@ class MyProfileInteractorTest {
         testObserver.awaitTerminalEvent()
 
         verify(profileRepo, times(1)).getMyProfile()
-        val testUserInfo = MyUserInfo(testUser, testServer)
+        verify(profileRepo, times(1)).getMyServerName()
+
+        verify(authRepo, times(1)).getSignState()
+
         testObserver
                 .assertValueCount(1)
                 .assertValue(testUserInfo)
