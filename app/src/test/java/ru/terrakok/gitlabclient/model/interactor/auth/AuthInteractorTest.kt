@@ -18,8 +18,12 @@ import ru.terrakok.gitlabclient.model.repository.auth.AuthRepository
  */
 class AuthInteractorTest {
 
-    lateinit var interactor: AuthInteractor
-    lateinit var authRepo: AuthRepository
+    private lateinit var interactor: AuthInteractor
+    private lateinit var authRepo: AuthRepository
+
+    private val REDIRECT_URI = "app://url/"
+    private val HASH = "some_hash_here"
+    private val EMPTY_STRING = ""
 
     @Before
     fun setUp() {
@@ -27,16 +31,17 @@ class AuthInteractorTest {
         `when`(authRepo.getSignState()).thenReturn(Observable.just(true))
 
         val serverConf = Mockito.mock(ServerConfig::class.java)
-        `when`(serverConf.AUTH_REDIRECT_URI).thenReturn("app://url/")
+        `when`(serverConf.AUTH_REDIRECT_URI).thenReturn(REDIRECT_URI)
+        `when`(serverConf.APP_ID).thenReturn(EMPTY_STRING)
+        `when`(serverConf.APP_KEY).thenReturn(EMPTY_STRING)
+        `when`(serverConf.SERVER_URL).thenReturn(EMPTY_STRING)
 
-        interactor = AuthInteractor(serverConf, authRepo)
+        interactor = AuthInteractor(serverConf, authRepo, HASH)
     }
 
-    // Maybe, it is a stupid test...
-    // We check that address starts from the given string
     @Test
     fun check_oauth_redirect() {
-        val testUrl = "app://url/somepath"
+        val testUrl = REDIRECT_URI + "somepath"
         val result = interactor.checkOAuthRedirect(testUrl)
         Assert.assertTrue(result)
     }
@@ -49,13 +54,6 @@ class AuthInteractorTest {
     }
 
     @Test
-    fun check_oauth_bad_redirect_path2() {
-        val testUrl = "http://url/somepath"
-        val result = interactor.checkOAuthRedirect(testUrl)
-        Assert.assertFalse(result)
-    }
-
-    @Test
     fun check_logout_cleans_token() {
         `when`(authRepo.clearToken()).thenReturn(Completable.complete())
 
@@ -63,7 +61,9 @@ class AuthInteractorTest {
         testObserver.awaitTerminalEvent()
 
         verify(authRepo).clearToken()
-        testObserver.assertNoErrors()
+        testObserver
+                .assertNoErrors()
+                .assertNoValues()
     }
 
     @Test
@@ -108,28 +108,28 @@ class AuthInteractorTest {
                 .assertError(Throwable::class.java)
     }
 
-    // This test does not pass. Please, help fixing it
     @Test
     fun refresh_token_correct_oauth() {
+        val code = "helloReader"
+        val testUrl = "http://something.com/test?code=" + code + "&state=happiness" + HASH
+
         `when`(authRepo.refreshServerToken(
                 ArgumentMatchers.anyString(),
                 ArgumentMatchers.anyString(),
                 ArgumentMatchers.anyString(),
-                ArgumentMatchers.anyString())).thenReturn(Completable.fromAction {  })
+                ArgumentMatchers.anyString())).thenReturn(Completable.complete())
 
-        val testOauthRedirect = "Something may be here " + interactor.hash + "Something here"
-
-        val testObserver: TestObserver<Void> = interactor.login(testOauthRedirect).test()
+        val testObserver: TestObserver<Void> = interactor.login(testUrl).test()
         testObserver.awaitTerminalEvent()
 
         verify(authRepo).refreshServerToken(
-                ArgumentMatchers.anyString(),
-                ArgumentMatchers.anyString(),
-                ArgumentMatchers.anyString(),
-                ArgumentMatchers.anyString())
+                EMPTY_STRING,
+                EMPTY_STRING,
+                code,
+                REDIRECT_URI)
 
         testObserver
-                .assertValueCount(0)
+                .assertNoValues()
                 .assertNoErrors()
     }
 
@@ -143,7 +143,7 @@ class AuthInteractorTest {
         verifyNoMoreInteractions(authRepo)
 
         testObserver
-                .assertValueCount(0)
+                .assertNoValues()
                 .assertError(RuntimeException::class.java)
     }
 }
