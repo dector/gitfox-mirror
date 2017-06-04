@@ -1,5 +1,6 @@
 package ru.terrakok.gitlabclient.model.interactor.auth
 
+import android.support.annotation.VisibleForTesting
 import io.reactivex.Completable
 import ru.terrakok.gitlabclient.model.data.server.ServerConfig
 import ru.terrakok.gitlabclient.model.repository.auth.AuthRepository
@@ -12,7 +13,8 @@ class AuthInteractor(
         private val serverConfig: ServerConfig,
         private val authRepository: AuthRepository) {
 
-    private val hash = UUID.randomUUID().toString()
+    @VisibleForTesting
+    val hash = UUID.randomUUID().toString()
 
     val oauthUrl = "${serverConfig.SERVER_URL}oauth/authorize?client_id=${serverConfig.APP_ID}" +
             "&redirect_uri=${serverConfig.AUTH_REDIRECT_URI}&response_type=code&state=$hash"
