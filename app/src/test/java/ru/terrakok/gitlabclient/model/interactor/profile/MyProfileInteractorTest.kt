@@ -18,11 +18,13 @@ import java.util.*
  */
 class MyProfileInteractorTest {
 
-    lateinit var profileRepo:ProfileRepository
-    lateinit var authRepo:AuthRepository
+    private lateinit var profileRepo: ProfileRepository
+    private lateinit var authRepo: AuthRepository
 
-    var testUser:User? = null
-    lateinit var testServer:String
+    private var testUser: User? = null
+    private lateinit var testServer: String
+    private lateinit var testError: Throwable
+
 
     @Before
     fun setUp() {
@@ -32,6 +34,7 @@ class MyProfileInteractorTest {
         testServer = "Test server"
         profileRepo = mock(ProfileRepository::class.java)
         authRepo = mock(AuthRepository::class.java)
+        testError =  RuntimeException("test error")
     }
 
     @Test
@@ -62,7 +65,7 @@ class MyProfileInteractorTest {
     @Test
     fun get_unauthorized_user_info() {
         testUser = null
-        val testUserInfo = MyUserInfo(testUser, testServer)
+        val testUserInfo = MyUserInfo(null, testServer)
 
         `when`(profileRepo.getMyServerName()).thenReturn(testServer)
         `when`(authRepo.getSignState()).thenReturn(Observable.just(false))
@@ -83,13 +86,9 @@ class MyProfileInteractorTest {
 
     @Test
     fun get_user_info_error() {
-        val error = RuntimeException("test error")
+        `when`(profileRepo.getMyProfile()).thenReturn(Single.error(testError))
+        `when`(profileRepo.getMyServerName()).thenReturn(testServer)
 
-        val profileRepo = mock(ProfileRepository::class.java)
-        `when`(profileRepo.getMyProfile()).thenReturn(Single.error(error))
-        `when`(profileRepo.getMyServerName()).thenReturn("Test server")
-
-        val authRepo = mock(AuthRepository::class.java)
         `when`(authRepo.getSignState()).thenReturn(Observable.just(true))
 
         val interactor = MyProfileInteractor(authRepo, profileRepo)
@@ -99,7 +98,22 @@ class MyProfileInteractorTest {
 
         verify(profileRepo, times(1)).getMyProfile()
         testObserver
-                .assertValueCount(0)
-                .assertError(error)
+                .assertNoValues()
+                .assertError(testError)
+    }
+
+    @Test
+    fun check_sign_state_error() {
+        `when`(authRepo.getSignState()).thenReturn(Observable.error(testError))
+
+        val interactor = MyProfileInteractor(authRepo, profileRepo)
+
+        val testObserver: TestObserver<MyUserInfo> = interactor.getMyProfile().test()
+        testObserver.awaitTerminalEvent()
+
+        verifyNoMoreInteractions(profileRepo)
+        testObserver
+                .assertNoValues()
+                .assertError(testError)
     }
 }
