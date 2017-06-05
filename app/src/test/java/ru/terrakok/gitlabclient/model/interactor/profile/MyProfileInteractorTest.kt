@@ -21,7 +21,7 @@ class MyProfileInteractorTest {
     private lateinit var profileRepo: ProfileRepository
     private lateinit var authRepo: AuthRepository
 
-    private var testUser: User? = null
+    private lateinit var testUser: User
     private lateinit var testServer: String
     private lateinit var testError: Throwable
 
@@ -51,10 +51,10 @@ class MyProfileInteractorTest {
         val testObserver: TestObserver<MyUserInfo> = interactor.getMyProfile().test()
         testObserver.awaitTerminalEvent()
 
-        verify(profileRepo, times(1)).getMyProfile()
-        verify(profileRepo, times(1)).getMyServerName()
+        verify(profileRepo).getMyProfile()
+        verify(profileRepo).getMyServerName()
 
-        verify(authRepo, times(1)).getSignState()
+        verify(authRepo).getSignState()
 
         testObserver
                 .assertValueCount(1)
@@ -64,7 +64,6 @@ class MyProfileInteractorTest {
 
     @Test
     fun get_unauthorized_user_info() {
-        testUser = null
         val testUserInfo = MyUserInfo(null, testServer)
 
         `when`(profileRepo.getMyServerName()).thenReturn(testServer)
@@ -75,8 +74,8 @@ class MyProfileInteractorTest {
         val testObserver: TestObserver<MyUserInfo> = interactor.getMyProfile().test()
         testObserver.awaitTerminalEvent()
 
-        verify(profileRepo, times(1)).getMyServerName()
-        verify(authRepo, times(1)).getSignState()
+        verify(profileRepo).getMyServerName()
+        verify(authRepo).getSignState()
 
         testObserver
                 .assertValueCount(1)
@@ -96,7 +95,7 @@ class MyProfileInteractorTest {
         val testObserver: TestObserver<MyUserInfo> = interactor.getMyProfile().test()
         testObserver.awaitTerminalEvent()
 
-        verify(profileRepo, times(1)).getMyProfile()
+        verify(profileRepo).getMyProfile()
         testObserver
                 .assertNoValues()
                 .assertError(testError)
