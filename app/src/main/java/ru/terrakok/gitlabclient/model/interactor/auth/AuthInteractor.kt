@@ -3,7 +3,7 @@ package ru.terrakok.gitlabclient.model.interactor.auth
 import io.reactivex.Completable
 import ru.terrakok.gitlabclient.model.data.server.ServerConfig
 import ru.terrakok.gitlabclient.model.repository.auth.AuthRepository
-import ru.terrakok.gitlabclient.model.utils.getQueryParameterFromUri
+import java.net.URI
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 23.04.17.
@@ -37,4 +37,20 @@ class AuthInteractor(
             }
 
     fun logout() = authRepository.clearToken()
+
+    private fun getQueryParameterFromUri(url: String, queryName: String): String {
+        val uri = URI(url)
+        val query = uri.query
+        val parameters = query.split("&")
+
+        var code = ""
+        for (parameter in parameters) {
+            if (parameter.startsWith(queryName)) {
+                code = parameter.substring(queryName.length + 1)
+                break
+            }
+        }
+        return code
+    }
+
 }
