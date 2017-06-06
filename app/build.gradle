@@ -50,7 +50,7 @@ dependencies {
     //Kotlin
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     //Log
-    compile "com.jakewharton.timber:timber:4.1.2"
+    compile "com.jakewharton.timber:timber:4.5.1"
     //MVP Moxy
     kapt "com.arello-mobile:moxy-compiler:$moxyVersion"
     compile "com.arello-mobile:moxy-app-compat:$moxyVersion"
@@ -75,5 +75,12 @@ dependencies {
     //Image load and cache
     compile "com.github.bumptech.glide:glide:3.7.0"
     //Markdown to HTML converter
-    compile(name:"anddown-0.3.0", ext:"aar")
+    compile(name: "anddown-0.3.0", ext: "aar")
+
+    //JUnit
+    testCompile "junit:junit:4.12"
+    //Mockito
+    testCompile "org.mockito:mockito-core:2.8.9"
+    //Mockito Kotlin
+    testCompile "com.nhaarman:mockito-kotlin-kt1.1:1.5.0"
 }

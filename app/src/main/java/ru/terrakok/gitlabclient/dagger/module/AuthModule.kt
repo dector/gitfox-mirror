@@ -8,6 +8,7 @@ import ru.terrakok.gitlabclient.model.data.server.ServerConfig
 import ru.terrakok.gitlabclient.model.interactor.auth.AuthInteractor
 import ru.terrakok.gitlabclient.model.repository.auth.AuthRepository
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
+import java.util.*
 import javax.inject.Singleton
 
 /**
@@ -25,5 +26,5 @@ class AuthModule {
     @Provides
     @Singleton
     fun provideAuthInteractor(serverConfig: ServerConfig, tokenRepository: AuthRepository)
-            = AuthInteractor(serverConfig, tokenRepository)
+            = AuthInteractor(serverConfig, tokenRepository, UUID.randomUUID().toString())
 }
