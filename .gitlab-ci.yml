@@ -26,14 +26,25 @@ before_script:
 
 stages:
   - build
+  - test
 
 build:
   stage: build
   script:
     - ./gradlew assembleDebug
   artifacts:
+    name: "${CI_PROJECT_NAME}_${CI_COMMIT_REF_NAME}_${CI_COMMIT_SHA}"
     paths:
     - app/build/outputs/
+  only:
+    - develop
+    - release
+    - master
+
+unitTests:
+  stage: test
+  script:
+    - ./gradlew test
   only:
     - develop
     - release
