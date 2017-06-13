@@ -6,23 +6,18 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        style="@style/ToolbarStyle"
+    <FrameLayout
+        android:id="@+id/mainScreenContainer"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        app:navigationIcon="@drawable/ic_menu_white_24dp"
-        app:title="@string/projects_title"/>
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/viewPager"
+    <com.roughike.bottombar.BottomBar
+        android:id="@+id/bottomBar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <android.support.design.widget.TabLayout
-            android:background="@color/colorPrimary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </android.support.v4.view.ViewPager>
+        android:layout_height="60dp"
+        app:bb_activeTabColor="@color/colorAccent"
+        app:bb_behavior="shifting"
+        app:bb_tabXmlResource="@xml/main_bottombar_tabs"/>
 
 </LinearLayout>

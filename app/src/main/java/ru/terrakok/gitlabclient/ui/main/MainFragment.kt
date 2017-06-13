@@ -1,58 +1,52 @@
 package ru.terrakok.gitlabclient.ui.main
 
-import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentPagerAdapter
 import com.arellomobile.mvp.presenter.InjectPresenter
 import kotlinx.android.synthetic.main.fragment_main.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.presentation.main.MainPresenter
 import ru.terrakok.gitlabclient.presentation.main.MainView
-import ru.terrakok.gitlabclient.presentation.projects.ProjectsListPresenter
+import ru.terrakok.gitlabclient.ui.gitlab_issues.MyActivityFragment
+import ru.terrakok.gitlabclient.ui.gitlab_issues.MyIssuesFragment
+import ru.terrakok.gitlabclient.ui.gitlab_issues.MyMergeRequestsFragment
+import ru.terrakok.gitlabclient.ui.gitlab_issues.MyTodosFragment
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import ru.terrakok.gitlabclient.ui.projects.ProjectsListFragment
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 02.04.17
  */
 class MainFragment : BaseFragment(), MainView {
-    @InjectPresenter lateinit var presenter: MainPresenter
-
-    private lateinit var adapter: MainPagesAdapter
-
     override val layoutRes = R.layout.fragment_main
 
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
+    @InjectPresenter lateinit var presenter: MainPresenter
 
-        adapter = MainPagesAdapter()
-    }
+    private val fragments = hashMapOf(
+            R.id.tab_activity to MyActivityFragment(),
+            R.id.tab_issue to MyIssuesFragment(),
+            R.id.tab_merge to MyMergeRequestsFragment(),
+            R.id.tab_todo to MyTodosFragment()
+    )
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        childFragmentManager.beginTransaction()
+                .add(R.id.mainScreenContainer, fragments[R.id.tab_activity])
+                .add(R.id.mainScreenContainer, fragments[R.id.tab_issue])
+                .add(R.id.mainScreenContainer, fragments[R.id.tab_merge])
+                .add(R.id.mainScreenContainer, fragments[R.id.tab_todo])
+                .commit()
 
-        toolbar.setNavigationOnClickListener { presenter.onMenuPressed() }
-        viewPager.adapter = adapter
+        bottomBar.setOnTabSelectListener { showTab(it) }
     }
 
-    private inner class MainPagesAdapter : FragmentPagerAdapter(childFragmentManager) {
-        private val pages = listOf<Fragment>(
-                ProjectsListFragment.newInstance(ProjectsListPresenter.MAIN_PROJECTS),
-                ProjectsListFragment.newInstance(ProjectsListPresenter.MY_PROJECTS),
-                ProjectsListFragment.newInstance(ProjectsListPresenter.STARRED_PROJECTS)
-        )
-        private val pageTitles = listOf<String>(
-                getString(R.string.all_projects_title),
-                getString(R.string.my_projects_title),
-                getString(R.string.starred_projects_title)
-        )
-
-        override fun getItem(position: Int) = pages[position]
-
-        override fun getCount() = pages.size
-
-        override fun getPageTitle(position: Int) = pageTitles[position]
+    private fun showTab(id: Int) {
+        childFragmentManager.beginTransaction()
+                .detach(fragments[R.id.tab_activity])
+                .detach(fragments[R.id.tab_issue])
+                .detach(fragments[R.id.tab_merge])
+                .detach(fragments[R.id.tab_todo])
+                .attach(fragments[id])
+                .commit()
     }
 
     override fun onBackPressed() = presenter.onBackPressed()

@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">GitFox</string>
 
+    <!--Main screen-->
+    <string name="gitlab_activity">Activity</string>
+    <string name="gitlab_issue">Issues</string>
+    <string name="gitlab_merge">Merge Requests</string>
+    <string name="gitlab_todo">ToDo</string>
+
     <!--Auth screen-->
     <string name="auth_title">Authorization</string>
     <string name="invalid_hash">Invalid auth response!</string>
