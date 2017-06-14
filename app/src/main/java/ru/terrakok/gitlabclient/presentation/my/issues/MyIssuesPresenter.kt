@@ -22,6 +22,7 @@ class MyIssuesPresenter : MvpPresenter<MyIssuesView>() {
     private val FIRST_PAGE = 1
 
     private var currentPage = 0
+    private var hasMoreIssues = false
     private var myIssues = mutableListOf<Issue>()
 
     private var disposable: Disposable? = null
@@ -43,9 +44,10 @@ class MyIssuesPresenter : MvpPresenter<MyIssuesView>() {
         if (page == FIRST_PAGE) {
             disposable?.dispose()
             disposable = null
+            hasMoreIssues = true
         }
 
-        if (disposable == null) {
+        if (disposable == null && hasMoreIssues) {
             disposable = myIssuesInteractor.getMyIssues(page)
                     .doOnSubscribe {
                         if (page == FIRST_PAGE) viewState.showProgress(true)
@@ -55,7 +57,6 @@ class MyIssuesPresenter : MvpPresenter<MyIssuesView>() {
                         if (page == FIRST_PAGE) viewState.showProgress(true)
                         else viewState.showPageProgress(true)
 
-                        currentPage = page
                         disposable?.dispose()
                         disposable = null
                     }
@@ -64,6 +65,8 @@ class MyIssuesPresenter : MvpPresenter<MyIssuesView>() {
                                 if (page == FIRST_PAGE) myIssues.clear()
                                 myIssues.addAll(issues)
                                 viewState.showIssues(myIssues)
+
+                                hasMoreIssues = issues.isNotEmpty()
                             },
                             { error ->
                                 Timber.e("getMyIssues($page): $error")

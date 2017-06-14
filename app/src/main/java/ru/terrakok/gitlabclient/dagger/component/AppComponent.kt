@@ -21,7 +21,8 @@ import javax.inject.Singleton
         NavigationModule::class,
         AuthModule::class,
         ProfileModule::class,
-        ProjectModule::class
+        ProjectModule::class,
+        IssueModule::class
 ))
 @Singleton
 interface AppComponent {
