@@ -51,4 +51,10 @@ interface GitlabApi {
 
     @GET("$API_PATH/user")
     fun getMyUser(): Single<User>
+
+    @GET("$API_PATH/issues")
+    fun getMyIssues(
+            @Query("page") page: Int,
+            @Query("per_page") pageSize: Int
+    ): Single<List<Issue>>
 }
