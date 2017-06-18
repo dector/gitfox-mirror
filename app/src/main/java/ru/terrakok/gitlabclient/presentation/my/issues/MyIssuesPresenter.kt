@@ -36,6 +36,7 @@ class MyIssuesPresenter : MvpPresenter<MyIssuesView>() {
         refreshIssues()
     }
 
+    fun onIssueClick(issue: Issue) {}
     fun refreshIssues() = loadNewPage(FIRST_PAGE)
     fun loadNextIssuesPage() = loadNewPage(currentPage + 1)
 
@@ -54,8 +55,8 @@ class MyIssuesPresenter : MvpPresenter<MyIssuesView>() {
                         else viewState.showPageProgress(true)
                     }
                     .doAfterTerminate {
-                        if (page == FIRST_PAGE) viewState.showProgress(true)
-                        else viewState.showPageProgress(true)
+                        if (page == FIRST_PAGE) viewState.showProgress(false)
+                        else viewState.showPageProgress(false)
 
                         disposable?.dispose()
                         disposable = null
@@ -66,6 +67,7 @@ class MyIssuesPresenter : MvpPresenter<MyIssuesView>() {
                                 myIssues.addAll(issues)
                                 viewState.showIssues(myIssues)
 
+                                currentPage = page
                                 hasMoreIssues = issues.isNotEmpty()
                             },
                             { error ->

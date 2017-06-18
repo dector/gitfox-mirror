@@ -12,6 +12,8 @@ import ru.terrakok.gitlabclient.entity.common.Project
 import ru.terrakok.gitlabclient.presentation.projects.ProjectsListPresenter
 import ru.terrakok.gitlabclient.presentation.projects.ProjectsListView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.ui.global.list.ListItem
+import ru.terrakok.gitlabclient.ui.global.list.ProgressAdapterDelegate
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 29.03.17
@@ -70,7 +72,7 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
         adapter.showProgress(isVisible)
     }
 
-    inner class ProjectsAdapter : ListDelegationAdapter<MutableList<ProjectsListItem>>() {
+    inner class ProjectsAdapter : ListDelegationAdapter<MutableList<ListItem>>() {
         init {
             items = mutableListOf()
             delegatesManager.addDelegate(ProjectAdapterDelegate({ presenter.onProjectClicked(it.id) }))
@@ -78,14 +80,14 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
         }
 
         fun clearData() {
-            items = if (isProgress()) mutableListOf(ProjectsListItem.ProgressItem()) else mutableListOf()
+            items = if (isProgress()) mutableListOf(ListItem.ProgressItem()) else mutableListOf()
             notifyDataSetChanged()
         }
 
         fun addData(newProjects: List<Project>) {
             items.addAll(
                     if (isProgress()) items.size - 1 else items.size,
-                    newProjects.map { ProjectsListItem.ProjectItem(it) }
+                    newProjects.map { ListItem.ProjectItem(it) }
             )
             notifyDataSetChanged()
         }
@@ -93,13 +95,13 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
         fun showProgress(isVisible: Boolean) {
             val currentProgress = isProgress()
 
-            if (isVisible && !currentProgress) items.add(ProjectsListItem.ProgressItem())
+            if (isVisible && !currentProgress) items.add(ListItem.ProgressItem())
             else if (!isVisible && currentProgress) items.remove(items.last())
 
             notifyDataSetChanged()
         }
 
-        private fun isProgress() = items.isNotEmpty() && items.last() is ProjectsListItem.ProgressItem
+        private fun isProgress() = items.isNotEmpty() && items.last() is ListItem.ProgressItem
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int, payloads: MutableList<Any?>?) {
             super.onBindViewHolder(holder, position, payloads)

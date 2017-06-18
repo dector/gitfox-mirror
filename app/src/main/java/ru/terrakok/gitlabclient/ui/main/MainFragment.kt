@@ -7,10 +7,10 @@ import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.presentation.main.MainPresenter
 import ru.terrakok.gitlabclient.presentation.main.MainView
 import ru.terrakok.gitlabclient.ui.gitlab_issues.MyActivityFragment
-import ru.terrakok.gitlabclient.ui.gitlab_issues.MyIssuesFragment
 import ru.terrakok.gitlabclient.ui.gitlab_issues.MyMergeRequestsFragment
 import ru.terrakok.gitlabclient.ui.gitlab_issues.MyTodosFragment
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.ui.my.issues.MyIssuesFragment
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 02.04.17

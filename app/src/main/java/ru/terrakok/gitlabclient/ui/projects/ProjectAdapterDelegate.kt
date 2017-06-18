@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.BitmapImageViewTarget
-import com.hannesdorfmann.adapterdelegates3.AbsListItemAdapterDelegate
+import com.hannesdorfmann.adapterdelegates3.AdapterDelegate
 import kotlinx.android.synthetic.main.item_project.view.*
 import kotlinx.android.synthetic.main.layout_avatar.view.*
 import ru.terrakok.gitlabclient.R
@@ -16,21 +16,24 @@ import ru.terrakok.gitlabclient.entity.common.Project
 import ru.terrakok.gitlabclient.entity.common.Visibility
 import ru.terrakok.gitlabclient.extension.color
 import ru.terrakok.gitlabclient.extension.inflate
+import ru.terrakok.gitlabclient.ui.global.list.ListItem
 
 /**
- * @author Konstantin Tskhovrebov (aka terrakok). Date: 02.04.17
+ * @author Konstantin Tskhovrebov (aka terrakok) on 18.06.17.
  */
-class ProjectAdapterDelegate(private val clickListener: (Project) -> Unit)
-    : AbsListItemAdapterDelegate<ProjectsListItem.ProjectItem, ProjectsListItem, ProjectAdapterDelegate.ProjectViewHolder>() {
+class ProjectAdapterDelegate(private val clickListener: (Project) -> Unit) : AdapterDelegate<MutableList<ListItem>>() {
 
-    override fun isForViewType(item: ProjectsListItem, items: MutableList<ProjectsListItem>, position: Int)
-            = item is ProjectsListItem.ProjectItem
+    override fun isForViewType(items: MutableList<ListItem>, position: Int) =
+            items[position] is ListItem.ProgressItem
 
-    override fun onCreateViewHolder(parent: ViewGroup)
-            = ProjectViewHolder(parent.inflate(R.layout.item_project), clickListener)
+    override fun onCreateViewHolder(parent: ViewGroup) =
+            ProjectViewHolder(parent.inflate(R.layout.item_project), clickListener)
 
-    override fun onBindViewHolder(item: ProjectsListItem.ProjectItem, viewHolder: ProjectViewHolder, payloads: MutableList<Any>)
-            = viewHolder.bind(item.projest)
+    override fun onBindViewHolder(items: MutableList<ListItem>,
+                                  position: Int,
+                                  viewHolder: RecyclerView.ViewHolder,
+                                  payloads: MutableList<Any>) =
+            (viewHolder as ProjectViewHolder).bind((items[position] as ListItem.ProjectItem).project)
 
     class ProjectViewHolder(val view: View, clickListener: (Project) -> Unit) : RecyclerView.ViewHolder(view) {
         private lateinit var project: Project
