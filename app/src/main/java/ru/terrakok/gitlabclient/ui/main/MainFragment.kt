@@ -20,32 +20,55 @@ class MainFragment : BaseFragment(), MainView {
 
     @InjectPresenter lateinit var presenter: MainPresenter
 
-    private val fragments = hashMapOf(
-            R.id.tab_activity to MyActivityFragment(),
-            R.id.tab_issue to MyIssuesFragment(),
-            R.id.tab_merge to MyMergeRequestsFragment(),
-            R.id.tab_todo to MyTodosFragment()
+    private lateinit var tabs: HashMap<String, BaseFragment>
+    private val tabKeys = listOf(
+            tabIdToFragmentTag(R.id.tab_activity),
+            tabIdToFragmentTag(R.id.tab_issue),
+            tabIdToFragmentTag(R.id.tab_merge),
+            tabIdToFragmentTag(R.id.tab_todo)
     )
+
+    private fun tabIdToFragmentTag(id: Int) = "tab_$id"
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        childFragmentManager.beginTransaction()
-                .add(R.id.mainScreenContainer, fragments[R.id.tab_activity])
-                .add(R.id.mainScreenContainer, fragments[R.id.tab_issue])
-                .add(R.id.mainScreenContainer, fragments[R.id.tab_merge])
-                .add(R.id.mainScreenContainer, fragments[R.id.tab_todo])
-                .commit()
+
+        if (savedInstanceState == null) {
+            tabs = createNewFragments()
+            childFragmentManager.beginTransaction()
+                    .add(R.id.mainScreenContainer, tabs[tabKeys[0]], tabKeys[0])
+                    .add(R.id.mainScreenContainer, tabs[tabKeys[1]], tabKeys[1])
+                    .add(R.id.mainScreenContainer, tabs[tabKeys[2]], tabKeys[2])
+                    .add(R.id.mainScreenContainer, tabs[tabKeys[3]], tabKeys[3])
+                    .commit()
+        } else {
+            tabs = findFragments()
+        }
 
         bottomBar.setOnTabSelectListener { showTab(it) }
     }
 
+    private fun createNewFragments(): HashMap<String, BaseFragment> = hashMapOf(
+            tabKeys[0] to MyActivityFragment(),
+            tabKeys[1] to MyIssuesFragment(),
+            tabKeys[2] to MyMergeRequestsFragment(),
+            tabKeys[3] to MyTodosFragment()
+    )
+
+    private fun findFragments(): HashMap<String, BaseFragment> = hashMapOf(
+            tabKeys[0] to childFragmentManager.findFragmentByTag(tabKeys[0]) as BaseFragment,
+            tabKeys[1] to childFragmentManager.findFragmentByTag(tabKeys[1]) as BaseFragment,
+            tabKeys[2] to childFragmentManager.findFragmentByTag(tabKeys[2]) as BaseFragment,
+            tabKeys[3] to childFragmentManager.findFragmentByTag(tabKeys[3]) as BaseFragment
+    )
+
     private fun showTab(id: Int) {
         childFragmentManager.beginTransaction()
-                .detach(fragments[R.id.tab_activity])
-                .detach(fragments[R.id.tab_issue])
-                .detach(fragments[R.id.tab_merge])
-                .detach(fragments[R.id.tab_todo])
-                .attach(fragments[id])
+                .detach(tabs[tabIdToFragmentTag(R.id.tab_activity)])
+                .detach(tabs[tabIdToFragmentTag(R.id.tab_issue)])
+                .detach(tabs[tabIdToFragmentTag(R.id.tab_merge)])
+                .detach(tabs[tabIdToFragmentTag(R.id.tab_todo)])
+                .attach(tabs[tabIdToFragmentTag(id)])
                 .commit()
     }
 
