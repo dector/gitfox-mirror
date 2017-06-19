@@ -2,7 +2,6 @@ package ru.terrakok.gitlabclient.presentation.main
 
 import com.arellomobile.mvp.MvpPresenter
 import ru.terrakok.cicerone.Router
-import ru.terrakok.gitlabclient.App
 import javax.inject.Inject
 
 /**
@@ -10,10 +9,6 @@ import javax.inject.Inject
  */
 class MainPresenter : MvpPresenter<MainView>() {
     @Inject lateinit var router: Router
-
-    init {
-        App.DAGGER.appComponent.inject(this)
-    }
 
     fun onBackPressed() = router.exit()
 }

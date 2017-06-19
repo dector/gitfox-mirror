@@ -4,11 +4,13 @@ import android.os.Bundle
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_project_info.*
+import ru.terrakok.gitlabclient.App
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.common.Project
 import ru.terrakok.gitlabclient.presentation.project.ProjectInfoPresenter
 import ru.terrakok.gitlabclient.presentation.project.ProjectInfoView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import toothpick.Toothpick
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 27.04.17.
@@ -25,9 +27,10 @@ class ProjectInfoFragment : BaseFragment(), ProjectInfoView {
     override val layoutRes = R.layout.fragment_project_info
 
     @InjectPresenter lateinit var presenter: ProjectInfoPresenter
-
     @ProvidePresenter
-    fun providePresenter() = ProjectInfoPresenter(arguments.getLong(ARG_PROJECT_ID))
+    fun providePresenter() = ProjectInfoPresenter(arguments.getLong(ARG_PROJECT_ID)).also {
+        Toothpick.inject(it, App.APP_SCOPE)
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

@@ -4,6 +4,8 @@ import io.reactivex.Completable
 import ru.terrakok.gitlabclient.model.data.server.ServerConfig
 import ru.terrakok.gitlabclient.model.repository.auth.AuthRepository
 import java.net.URI
+import java.util.*
+import javax.inject.Inject
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 23.04.17.
@@ -12,6 +14,10 @@ class AuthInteractor(
         private val serverConfig: ServerConfig,
         private val authRepository: AuthRepository,
         private val hash: String) {
+
+    @Inject constructor(serverConfig: ServerConfig,
+                        authRepository: AuthRepository)
+            : this(serverConfig, authRepository, UUID.randomUUID().toString())
 
     private val PARAMETER_CODE = "code"
 
@@ -27,10 +33,10 @@ class AuthInteractor(
             Completable.defer {
                 if (oauthRedirect.contains(hash)) {
                     authRepository.refreshServerToken(
-                                    serverConfig.APP_ID,
-                                    serverConfig.APP_KEY,
-                                    getQueryParameterFromUri(oauthRedirect, PARAMETER_CODE),
-                                    serverConfig.AUTH_REDIRECT_URI)
+                            serverConfig.APP_ID,
+                            serverConfig.APP_KEY,
+                            getQueryParameterFromUri(oauthRedirect, PARAMETER_CODE),
+                            serverConfig.AUTH_REDIRECT_URI)
                 } else {
                     Completable.error(RuntimeException("Not valid oauth hash!"))
                 }

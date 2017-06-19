@@ -4,7 +4,6 @@ import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import io.reactivex.disposables.CompositeDisposable
 import ru.terrakok.cicerone.Router
-import ru.terrakok.gitlabclient.App
 import ru.terrakok.gitlabclient.BuildConfig
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.extension.addTo
@@ -26,10 +25,6 @@ class NavigationDrawerPresenter : MvpPresenter<NavigationDrawerView>() {
 
     private var currentSelectedItem: MenuItem? = null
     private val compositeDisposable = CompositeDisposable()
-
-    init {
-        App.DAGGER.appComponent.inject(this)
-    }
 
     override fun onFirstViewAttach() {
         subscribeOnProfileUpdates()

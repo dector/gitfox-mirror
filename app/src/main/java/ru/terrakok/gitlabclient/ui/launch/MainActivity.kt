@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.android.SupportAppNavigator
@@ -23,15 +24,18 @@ import ru.terrakok.gitlabclient.ui.global.BaseActivity
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.main.MainFragment
 import ru.terrakok.gitlabclient.ui.project.ProjectInfoFragment
+import toothpick.Toothpick
 import javax.inject.Inject
 
 class MainActivity : BaseActivity(), LaunchView {
     @Inject lateinit var navigationHolder: NavigatorHolder
 
     @InjectPresenter lateinit var presenter: LaunchPresenter
+    @ProvidePresenter
+    fun providePresenter() = LaunchPresenter().also { Toothpick.inject(it, App.APP_SCOPE) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        App.DAGGER.appComponent.inject(this)
+        Toothpick.inject(this, App.APP_SCOPE)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
     }

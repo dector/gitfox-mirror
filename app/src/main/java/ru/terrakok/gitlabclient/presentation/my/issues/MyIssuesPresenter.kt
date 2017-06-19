@@ -3,7 +3,6 @@ package ru.terrakok.gitlabclient.presentation.my.issues
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import io.reactivex.disposables.Disposable
-import ru.terrakok.gitlabclient.App
 import ru.terrakok.gitlabclient.entity.common.Issue
 import ru.terrakok.gitlabclient.extension.userMessage
 import ru.terrakok.gitlabclient.model.interactor.issue.MyIssuesInteractor
@@ -26,10 +25,6 @@ class MyIssuesPresenter : MvpPresenter<MyIssuesView>() {
     private var myIssues = mutableListOf<Issue>()
 
     private var disposable: Disposable? = null
-
-    init {
-        App.DAGGER.appComponent.inject(this)
-    }
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()

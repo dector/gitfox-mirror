@@ -5,7 +5,6 @@ import com.arellomobile.mvp.MvpPresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import ru.terrakok.cicerone.Router
-import ru.terrakok.gitlabclient.App
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.extension.addTo
@@ -24,10 +23,6 @@ class AuthPresenter : MvpPresenter<AuthView>() {
     @Inject lateinit var resourceManager: ResourceManager
 
     private var compositeDisposable = CompositeDisposable()
-
-    init {
-        App.DAGGER.appComponent.inject(this)
-    }
 
     override fun onFirstViewAttach() {
         startAuthorization()

@@ -4,7 +4,6 @@ import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import io.reactivex.disposables.Disposable
 import ru.terrakok.cicerone.Router
-import ru.terrakok.gitlabclient.App
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.extension.userMessage
 import ru.terrakok.gitlabclient.model.interactor.projects.MainProjectsListInteractor
@@ -30,10 +29,6 @@ class ProjectsListPresenter(private val mode: Int) : MvpPresenter<ProjectsListVi
 
     private var currentPage = 0
     private var disposable: Disposable? = null
-
-    init {
-        App.DAGGER.appComponent.inject(this)
-    }
 
     override fun onFirstViewAttach() {
         requestFirstPage()

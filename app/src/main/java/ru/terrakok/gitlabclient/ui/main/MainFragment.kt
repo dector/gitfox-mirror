@@ -2,7 +2,9 @@ package ru.terrakok.gitlabclient.ui.main
 
 import android.os.Bundle
 import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_main.*
+import ru.terrakok.gitlabclient.App
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.presentation.main.MainPresenter
 import ru.terrakok.gitlabclient.presentation.main.MainView
@@ -11,6 +13,7 @@ import ru.terrakok.gitlabclient.ui.gitlab_issues.MyMergeRequestsFragment
 import ru.terrakok.gitlabclient.ui.gitlab_issues.MyTodosFragment
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.my.issues.MyIssuesFragment
+import toothpick.Toothpick
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 02.04.17
@@ -19,6 +22,8 @@ class MainFragment : BaseFragment(), MainView {
     override val layoutRes = R.layout.fragment_main
 
     @InjectPresenter lateinit var presenter: MainPresenter
+    @ProvidePresenter
+    fun providePresenter() = MainPresenter().also { Toothpick.inject(it, App.APP_SCOPE) }
 
     private lateinit var tabs: HashMap<String, BaseFragment>
     private val tabKeys = listOf(

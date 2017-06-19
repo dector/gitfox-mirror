@@ -6,13 +6,14 @@ import io.reactivex.Observable
 import ru.terrakok.gitlabclient.model.data.auth.AuthHolder
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
+import javax.inject.Inject
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 23.04.17.
  */
-class AuthRepository(private val authData: AuthHolder,
-                     private val api: GitlabApi,
-                     private val schedulers: SchedulersProvider) {
+class AuthRepository @Inject constructor(private val authData: AuthHolder,
+                                         private val api: GitlabApi,
+                                         private val schedulers: SchedulersProvider) {
 
     private val signState = BehaviorRelay.createDefault(!authData.getAuthToken().isNullOrEmpty())
 

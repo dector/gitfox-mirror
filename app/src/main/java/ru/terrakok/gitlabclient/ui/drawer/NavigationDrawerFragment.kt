@@ -6,10 +6,12 @@ import android.os.Bundle
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.view.View
 import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.BitmapImageViewTarget
 import kotlinx.android.synthetic.main.fragment_nav_drawer.*
 import kotlinx.android.synthetic.main.layout_avatar.*
+import ru.terrakok.gitlabclient.App
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.MyUserInfo
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerPresenter
@@ -18,12 +20,15 @@ import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuIte
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem.*
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.launch.MainActivity
+import toothpick.Toothpick
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 04.04.17
  */
 class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView {
     @InjectPresenter lateinit var presenter: NavigationDrawerPresenter
+    @ProvidePresenter
+    fun providePresenter() = NavigationDrawerPresenter().also { Toothpick.inject(it, App.APP_SCOPE) }
 
     override val layoutRes = R.layout.fragment_nav_drawer
 

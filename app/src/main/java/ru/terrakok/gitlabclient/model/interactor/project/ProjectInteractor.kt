@@ -2,14 +2,15 @@ package ru.terrakok.gitlabclient.model.interactor.project
 
 import ru.terrakok.gitlabclient.model.repository.project.ProjectRepository
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
+import javax.inject.Inject
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 26.04.17.
  */
-class ProjectInteractor(private val projectRepository: ProjectRepository,
-                        private val mdConverter: MarkDownConverter,
-                        private val schedulers: SchedulersProvider,
-                        private val base64Tools: Base64Tools) {
+class ProjectInteractor @Inject constructor(private val projectRepository: ProjectRepository,
+                                            private val mdConverter: MarkDownConverter,
+                                            private val schedulers: SchedulersProvider,
+                                            private val base64Tools: Base64Tools) {
 
     fun getProject(id: Long) = projectRepository.getProject(id)
 

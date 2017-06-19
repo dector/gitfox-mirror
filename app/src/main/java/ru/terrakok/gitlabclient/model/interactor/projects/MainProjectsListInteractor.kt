@@ -3,11 +3,12 @@ package ru.terrakok.gitlabclient.model.interactor.projects
 import ru.terrakok.gitlabclient.entity.app.ProjectsListFilter
 import ru.terrakok.gitlabclient.entity.common.OrderBy
 import ru.terrakok.gitlabclient.model.repository.project.ProjectRepository
+import javax.inject.Inject
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 24.04.17.
  */
-class MainProjectsListInteractor(private val projectRepository: ProjectRepository) {
+class MainProjectsListInteractor @Inject constructor(private val projectRepository: ProjectRepository) {
 
     fun getMainProjects(page: Int) =
             projectRepository
