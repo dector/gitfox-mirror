@@ -1,22 +1,21 @@
 package ru.terrakok.gitlabclient
 
 import android.app.Application
-import ru.terrakok.gitlabclient.dagger.Dagger
+import ru.terrakok.gitlabclient.toothpick.DI
+import ru.terrakok.gitlabclient.toothpick.module.AppModule
 import timber.log.Timber
+import toothpick.Toothpick
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 26.03.17.
  */
 class App : Application() {
-    companion object {
-        lateinit var DAGGER: Dagger
-    }
 
     override fun onCreate() {
         super.onCreate()
 
         initLogger()
-        initDagger()
+        initAppScope()
     }
 
     private fun initLogger() {
@@ -25,7 +24,7 @@ class App : Application() {
         }
     }
 
-    fun initDagger() {
-        DAGGER = Dagger(this)
+    private fun initAppScope() {
+        Toothpick.openScope(DI.APP_SCOPE).installModules(AppModule(this))
     }
 }

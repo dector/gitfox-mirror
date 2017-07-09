@@ -3,12 +3,13 @@ package ru.terrakok.gitlabclient.model.repository.project
 import ru.terrakok.gitlabclient.entity.app.ProjectsListFilter
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
+import javax.inject.Inject
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 24.04.17.
  */
-class ProjectRepository(private val api: GitlabApi,
-                        private val schedulers: SchedulersProvider) {
+class ProjectRepository @Inject constructor(private val api: GitlabApi,
+                                            private val schedulers: SchedulersProvider) {
 
     fun getProjectsList(filter: ProjectsListFilter, page: Int, pageSize: Int = 20) =
             api.getProjects(

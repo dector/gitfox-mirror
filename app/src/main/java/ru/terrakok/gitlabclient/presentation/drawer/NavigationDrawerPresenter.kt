@@ -4,7 +4,6 @@ import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import io.reactivex.disposables.CompositeDisposable
 import ru.terrakok.cicerone.Router
-import ru.terrakok.gitlabclient.App
 import ru.terrakok.gitlabclient.BuildConfig
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.extension.addTo
@@ -19,17 +18,14 @@ import javax.inject.Inject
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 04.04.17
  */
 @InjectViewState
-class NavigationDrawerPresenter : MvpPresenter<NavigationDrawerView>() {
-    @Inject lateinit var router: Router
-    @Inject lateinit var authInteractor: AuthInteractor
-    @Inject lateinit var myProfileInteractor: MyProfileInteractor
+class NavigationDrawerPresenter @Inject constructor(
+        private val router: Router,
+        private val authInteractor: AuthInteractor,
+        private val myProfileInteractor: MyProfileInteractor
+) : MvpPresenter<NavigationDrawerView>() {
 
     private var currentSelectedItem: MenuItem? = null
     private val compositeDisposable = CompositeDisposable()
-
-    init {
-        App.DAGGER.appComponent.inject(this)
-    }
 
     override fun onFirstViewAttach() {
         subscribeOnProfileUpdates()

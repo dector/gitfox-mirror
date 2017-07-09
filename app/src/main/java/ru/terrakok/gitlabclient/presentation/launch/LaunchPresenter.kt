@@ -3,7 +3,6 @@ package ru.terrakok.gitlabclient.presentation.launch
 import com.arellomobile.mvp.MvpPresenter
 import io.reactivex.disposables.CompositeDisposable
 import ru.terrakok.cicerone.Router
-import ru.terrakok.gitlabclient.App
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.extension.addTo
 import ru.terrakok.gitlabclient.model.interactor.auth.AuthInteractor
@@ -12,14 +11,12 @@ import javax.inject.Inject
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 26.03.17.
  */
-class LaunchPresenter : MvpPresenter<LaunchView>() {
-    @Inject lateinit var router: Router
-    @Inject lateinit var authInteractor: AuthInteractor
-    private val compositeDisposable = CompositeDisposable()
+class LaunchPresenter @Inject constructor(
+        private val router: Router,
+        private val authInteractor: AuthInteractor
+) : MvpPresenter<LaunchView>() {
 
-    init {
-        App.DAGGER.appComponent.inject(this)
-    }
+    private val compositeDisposable = CompositeDisposable()
 
     override fun onFirstViewAttach() {
         authInteractor.isSignedIn()

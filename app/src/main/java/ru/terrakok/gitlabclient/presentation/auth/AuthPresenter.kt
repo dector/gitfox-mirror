@@ -5,7 +5,6 @@ import com.arellomobile.mvp.MvpPresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import ru.terrakok.cicerone.Router
-import ru.terrakok.gitlabclient.App
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.extension.addTo
@@ -18,16 +17,13 @@ import javax.inject.Inject
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 27.03.17
  */
 @InjectViewState
-class AuthPresenter : MvpPresenter<AuthView>() {
-    @Inject lateinit var router: Router
-    @Inject lateinit var authInteractor: AuthInteractor
-    @Inject lateinit var resourceManager: ResourceManager
+class AuthPresenter @Inject constructor(
+        private val router: Router,
+        private val authInteractor: AuthInteractor,
+        private val resourceManager: ResourceManager
+) : MvpPresenter<AuthView>() {
 
     private var compositeDisposable = CompositeDisposable()
-
-    init {
-        App.DAGGER.appComponent.inject(this)
-    }
 
     override fun onFirstViewAttach() {
         startAuthorization()

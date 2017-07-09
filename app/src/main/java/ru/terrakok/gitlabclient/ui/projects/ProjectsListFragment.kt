@@ -11,9 +11,14 @@ import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.common.Project
 import ru.terrakok.gitlabclient.presentation.projects.ProjectsListPresenter
 import ru.terrakok.gitlabclient.presentation.projects.ProjectsListView
+import ru.terrakok.gitlabclient.toothpick.DI
+import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
+import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectListMode
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.list.ListItem
 import ru.terrakok.gitlabclient.ui.global.list.ProgressAdapterDelegate
+import toothpick.Toothpick
+import toothpick.config.Module
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 29.03.17
@@ -38,7 +43,22 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
     override val layoutRes = R.layout.fragment_projects
 
     @InjectPresenter lateinit var presenter: ProjectsListPresenter
-    @ProvidePresenter fun createPresenter() = ProjectsListPresenter(arguments.getInt(ARG_MODE))
+
+    @ProvidePresenter
+    fun createPresenter(): ProjectsListPresenter {
+        val scopeName = "projects list scope"
+        val scope = Toothpick.openScopes(DI.APP_SCOPE, scopeName)
+        scope.installModules(object : Module() {
+            init {
+                bind(PrimitiveWrapper::class.java)
+                        .withName(ProjectListMode::class.java)
+                        .toInstance(PrimitiveWrapper(arguments.getInt(ARG_MODE)))
+            }
+        })
+        return scope.getInstance(ProjectsListPresenter::class.java).also {
+            Toothpick.closeScope(scopeName)
+        }
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

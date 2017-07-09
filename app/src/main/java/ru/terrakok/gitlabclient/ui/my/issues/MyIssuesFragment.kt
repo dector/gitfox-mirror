@@ -4,15 +4,18 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.hannesdorfmann.adapterdelegates3.ListDelegationAdapter
 import kotlinx.android.synthetic.main.fragment_my_issues.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.common.Issue
 import ru.terrakok.gitlabclient.presentation.my.issues.MyIssuesPresenter
 import ru.terrakok.gitlabclient.presentation.my.issues.MyIssuesView
+import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.list.ListItem
 import ru.terrakok.gitlabclient.ui.global.list.ProgressAdapterDelegate
+import toothpick.Toothpick
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 13.06.17
@@ -20,8 +23,16 @@ import ru.terrakok.gitlabclient.ui.global.list.ProgressAdapterDelegate
 class MyIssuesFragment : BaseFragment(), MyIssuesView {
     override val layoutRes = R.layout.fragment_my_issues
 
-    @InjectPresenter lateinit var presenter: MyIssuesPresenter
     private val adapter = IssuesAdapter()
+
+    @InjectPresenter lateinit var presenter: MyIssuesPresenter
+
+    @ProvidePresenter
+    fun providePresenter(): MyIssuesPresenter {
+        return Toothpick
+                .openScope(DI.APP_SCOPE)
+                .getInstance(MyIssuesPresenter::class.java)
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

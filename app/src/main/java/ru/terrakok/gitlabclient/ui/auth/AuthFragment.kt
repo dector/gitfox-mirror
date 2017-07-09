@@ -9,20 +9,30 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_auth.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.presentation.auth.AuthPresenter
 import ru.terrakok.gitlabclient.presentation.auth.AuthView
+import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import toothpick.Toothpick
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 27.03.17
  */
 class AuthFragment : BaseFragment(), AuthView {
 
+    override val layoutRes = R.layout.fragment_auth
+
     @InjectPresenter lateinit var presenter: AuthPresenter
 
-    override val layoutRes = R.layout.fragment_auth
+    @ProvidePresenter
+    fun providePresenter(): AuthPresenter {
+        return Toothpick
+                .openScope(DI.APP_SCOPE)
+                .getInstance(AuthPresenter::class.java)
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

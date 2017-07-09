@@ -5,12 +5,13 @@ import io.reactivex.Single
 import ru.terrakok.gitlabclient.entity.app.MyUserInfo
 import ru.terrakok.gitlabclient.model.repository.auth.AuthRepository
 import ru.terrakok.gitlabclient.model.repository.profile.ProfileRepository
+import javax.inject.Inject
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 24.04.17.
  */
 
-class MyProfileInteractor(
+class MyProfileInteractor @Inject constructor(
         private val authRepository: AuthRepository,
         private val profileRepository: ProfileRepository) {
 

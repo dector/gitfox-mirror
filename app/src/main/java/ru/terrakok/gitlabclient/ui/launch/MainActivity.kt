@@ -5,17 +5,18 @@ import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.android.SupportAppNavigator
 import ru.terrakok.cicerone.commands.Command
 import ru.terrakok.cicerone.commands.Forward
-import ru.terrakok.gitlabclient.App
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView
 import ru.terrakok.gitlabclient.presentation.launch.LaunchPresenter
 import ru.terrakok.gitlabclient.presentation.launch.LaunchView
+import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.about.AboutFragment
 import ru.terrakok.gitlabclient.ui.auth.AuthFragment
 import ru.terrakok.gitlabclient.ui.drawer.NavigationDrawerFragment
@@ -23,6 +24,7 @@ import ru.terrakok.gitlabclient.ui.global.BaseActivity
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.main.MainFragment
 import ru.terrakok.gitlabclient.ui.project.ProjectInfoFragment
+import toothpick.Toothpick
 import javax.inject.Inject
 
 class MainActivity : BaseActivity(), LaunchView {
@@ -30,8 +32,15 @@ class MainActivity : BaseActivity(), LaunchView {
 
     @InjectPresenter lateinit var presenter: LaunchPresenter
 
+    @ProvidePresenter
+    fun providePresenter(): LaunchPresenter {
+        return Toothpick
+                .openScope(DI.APP_SCOPE)
+                .getInstance(LaunchPresenter::class.java)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        App.DAGGER.appComponent.inject(this)
+        Toothpick.inject(this, Toothpick.openScope(DI.APP_SCOPE))
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
     }

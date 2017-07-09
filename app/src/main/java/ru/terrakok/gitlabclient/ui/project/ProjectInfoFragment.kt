@@ -8,7 +8,12 @@ import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.common.Project
 import ru.terrakok.gitlabclient.presentation.project.ProjectInfoPresenter
 import ru.terrakok.gitlabclient.presentation.project.ProjectInfoView
+import ru.terrakok.gitlabclient.toothpick.DI
+import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
+import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import toothpick.Toothpick
+import toothpick.config.Module
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 27.04.17.
@@ -27,7 +32,20 @@ class ProjectInfoFragment : BaseFragment(), ProjectInfoView {
     @InjectPresenter lateinit var presenter: ProjectInfoPresenter
 
     @ProvidePresenter
-    fun providePresenter() = ProjectInfoPresenter(arguments.getLong(ARG_PROJECT_ID))
+    fun providePresenter(): ProjectInfoPresenter {
+        val scopeName = "project info scope"
+        val scope = Toothpick.openScopes(DI.APP_SCOPE, scopeName)
+        scope.installModules(object : Module() {
+            init {
+                bind(PrimitiveWrapper::class.java)
+                        .withName(ProjectId::class.java)
+                        .toInstance(PrimitiveWrapper(arguments.getLong(ARG_PROJECT_ID)))
+            }
+        })
+        return scope.getInstance(ProjectInfoPresenter::class.java).also {
+            Toothpick.closeScope(scopeName)
+        }
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

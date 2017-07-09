@@ -4,11 +4,12 @@ import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import io.reactivex.disposables.Disposable
 import ru.terrakok.cicerone.Router
-import ru.terrakok.gitlabclient.App
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.extension.userMessage
 import ru.terrakok.gitlabclient.model.interactor.projects.MainProjectsListInteractor
 import ru.terrakok.gitlabclient.model.system.ResourceManager
+import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
+import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectListMode
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -17,23 +18,22 @@ import javax.inject.Inject
  */
 
 @InjectViewState
-class ProjectsListPresenter(private val mode: Int) : MvpPresenter<ProjectsListView>() {
+class ProjectsListPresenter @Inject constructor(
+        @ProjectListMode private val modeWrapper: PrimitiveWrapper<Int>,
+        private val router: Router,
+        private val mainProjectsListInteractor: MainProjectsListInteractor,
+        private val resourceManager: ResourceManager
+) : MvpPresenter<ProjectsListView>() {
+
     companion object {
         const val MAIN_PROJECTS = 0
         const val MY_PROJECTS = 1
         const val STARRED_PROJECTS = 2
     }
 
-    @Inject lateinit var router: Router
-    @Inject lateinit var mainProjectsListInteractor: MainProjectsListInteractor
-    @Inject lateinit var resourceManager: ResourceManager
-
+    private val mode = modeWrapper.value
     private var currentPage = 0
     private var disposable: Disposable? = null
-
-    init {
-        App.DAGGER.appComponent.inject(this)
-    }
 
     override fun onFirstViewAttach() {
         requestFirstPage()
@@ -69,7 +69,7 @@ class ProjectsListPresenter(private val mode: Int) : MvpPresenter<ProjectsListVi
         }
     }
 
-    private fun getProjectsSingle(page: Int) = when(mode) {
+    private fun getProjectsSingle(page: Int) = when (mode) {
         STARRED_PROJECTS -> mainProjectsListInteractor.getStarredProjects(page)
         MY_PROJECTS -> mainProjectsListInteractor.getMyProjects(page)
         else -> mainProjectsListInteractor.getMainProjects(page)
