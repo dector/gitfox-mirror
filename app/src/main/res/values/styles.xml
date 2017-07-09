@@ -9,6 +9,10 @@
         <item name="android:windowBackground">@color/colorPrimaryLight</item>
     </style>
 
+    <style name="AppTheme.SplashStyle">
+        <item name="android:windowBackground">@drawable/splash_background</item>
+    </style>
+
     <style name="ToolbarStyle">
         <item name="android:background">@color/colorPrimary</item>
     </style>
