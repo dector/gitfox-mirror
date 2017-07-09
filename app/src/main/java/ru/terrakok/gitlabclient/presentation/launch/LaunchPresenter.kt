@@ -11,9 +11,11 @@ import javax.inject.Inject
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 26.03.17.
  */
-class LaunchPresenter : MvpPresenter<LaunchView>() {
-    @Inject lateinit var router: Router
-    @Inject lateinit var authInteractor: AuthInteractor
+class LaunchPresenter @Inject constructor(
+        private val router: Router,
+        private val authInteractor: AuthInteractor
+) : MvpPresenter<LaunchView>() {
+
     private val compositeDisposable = CompositeDisposable()
 
     override fun onFirstViewAttach() {

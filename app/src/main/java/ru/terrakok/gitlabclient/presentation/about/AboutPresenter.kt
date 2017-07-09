@@ -11,8 +11,9 @@ import javax.inject.Inject
  * @author Konstantin Tskhovrebov (aka terrakok) on 20.05.17.
  */
 @InjectViewState
-class AboutPresenter : MvpPresenter<AboutView>() {
-    @Inject lateinit var router: Router
+class AboutPresenter @Inject constructor(
+        private val router: Router
+) : MvpPresenter<AboutView>() {
 
     override fun onFirstViewAttach() {
         viewState.showAppVersion("${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})")

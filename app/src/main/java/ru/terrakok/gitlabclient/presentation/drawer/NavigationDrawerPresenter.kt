@@ -18,10 +18,11 @@ import javax.inject.Inject
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 04.04.17
  */
 @InjectViewState
-class NavigationDrawerPresenter : MvpPresenter<NavigationDrawerView>() {
-    @Inject lateinit var router: Router
-    @Inject lateinit var authInteractor: AuthInteractor
-    @Inject lateinit var myProfileInteractor: MyProfileInteractor
+class NavigationDrawerPresenter @Inject constructor(
+        private val router: Router,
+        private val authInteractor: AuthInteractor,
+        private val myProfileInteractor: MyProfileInteractor
+) : MvpPresenter<NavigationDrawerView>() {
 
     private var currentSelectedItem: MenuItem? = null
     private val compositeDisposable = CompositeDisposable()

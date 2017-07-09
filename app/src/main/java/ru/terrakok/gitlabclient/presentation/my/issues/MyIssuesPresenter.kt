@@ -14,9 +14,10 @@ import javax.inject.Inject
  * @author Konstantin Tskhovrebov (aka terrakok) on 15.06.17.
  */
 @InjectViewState
-class MyIssuesPresenter : MvpPresenter<MyIssuesView>() {
-    @Inject lateinit var myIssuesInteractor: MyIssuesInteractor
-    @Inject lateinit var resourceManager: ResourceManager
+class MyIssuesPresenter @Inject constructor(
+        private val myIssuesInteractor: MyIssuesInteractor,
+        private val resourceManager: ResourceManager
+) : MvpPresenter<MyIssuesView>() {
 
     private val FIRST_PAGE = 1
 

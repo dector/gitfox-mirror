@@ -11,10 +11,10 @@ import android.webkit.WebViewClient
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_auth.*
-import ru.terrakok.gitlabclient.App
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.presentation.auth.AuthPresenter
 import ru.terrakok.gitlabclient.presentation.auth.AuthView
+import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import toothpick.Toothpick
 
@@ -23,11 +23,16 @@ import toothpick.Toothpick
  */
 class AuthFragment : BaseFragment(), AuthView {
 
-    @InjectPresenter lateinit var presenter: AuthPresenter
-    @ProvidePresenter
-    fun providePresenter() = AuthPresenter().also { Toothpick.inject(it, App.APP_SCOPE) }
-
     override val layoutRes = R.layout.fragment_auth
+
+    @InjectPresenter lateinit var presenter: AuthPresenter
+
+    @ProvidePresenter
+    fun providePresenter(): AuthPresenter {
+        return Toothpick
+                .openScope(DI.APP_SCOPE)
+                .getInstance(AuthPresenter::class.java)
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

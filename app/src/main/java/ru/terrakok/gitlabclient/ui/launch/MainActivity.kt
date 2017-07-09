@@ -11,12 +11,12 @@ import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.android.SupportAppNavigator
 import ru.terrakok.cicerone.commands.Command
 import ru.terrakok.cicerone.commands.Forward
-import ru.terrakok.gitlabclient.App
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView
 import ru.terrakok.gitlabclient.presentation.launch.LaunchPresenter
 import ru.terrakok.gitlabclient.presentation.launch.LaunchView
+import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.about.AboutFragment
 import ru.terrakok.gitlabclient.ui.auth.AuthFragment
 import ru.terrakok.gitlabclient.ui.drawer.NavigationDrawerFragment
@@ -31,11 +31,16 @@ class MainActivity : BaseActivity(), LaunchView {
     @Inject lateinit var navigationHolder: NavigatorHolder
 
     @InjectPresenter lateinit var presenter: LaunchPresenter
+
     @ProvidePresenter
-    fun providePresenter() = LaunchPresenter().also { Toothpick.inject(it, App.APP_SCOPE) }
+    fun providePresenter(): LaunchPresenter {
+        return Toothpick
+                .openScope(DI.APP_SCOPE)
+                .getInstance(LaunchPresenter::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Toothpick.inject(this, App.APP_SCOPE)
+        Toothpick.inject(this, Toothpick.openScope(DI.APP_SCOPE))
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
     }

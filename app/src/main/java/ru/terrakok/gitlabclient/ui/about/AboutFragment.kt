@@ -4,10 +4,10 @@ import android.os.Bundle
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_about.*
-import ru.terrakok.gitlabclient.App
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.presentation.about.AboutPresenter
 import ru.terrakok.gitlabclient.presentation.about.AboutView
+import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import toothpick.Toothpick
 
@@ -18,8 +18,13 @@ class AboutFragment : BaseFragment(), AboutView {
     override val layoutRes = R.layout.fragment_about
 
     @InjectPresenter lateinit var presenter: AboutPresenter
+
     @ProvidePresenter
-    fun providePresenter() = AboutPresenter().also { Toothpick.inject(it, App.APP_SCOPE) }
+    fun providePresenter(): AboutPresenter {
+        return Toothpick
+                .openScope(DI.APP_SCOPE)
+                .getInstance(AboutPresenter::class.java)
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
