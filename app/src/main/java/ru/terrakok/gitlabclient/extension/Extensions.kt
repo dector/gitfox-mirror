@@ -12,6 +12,8 @@ import retrofit2.HttpException
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 03.03.17
@@ -46,4 +48,23 @@ fun Throwable.userMessage(resourceManager: ResourceManager) = when (this) {
     }
     is IOException -> resourceManager.getString(R.string.network_error)
     else -> resourceManager.getString(R.string.unknown_error)
+}
+
+private val DATE_FORMAT = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+fun Date.humanTime(resources: Resources): String {
+    val timeDelta = (System.currentTimeMillis() - this.time) / 1000L
+    val timeStr =
+            if (timeDelta < 60) {
+                resources.getString(R.string.time_sec, timeDelta)
+            } else if (timeDelta < 60*60) {
+                resources.getString(R.string.time_min, timeDelta)
+            } else if (timeDelta < 60*60*24) {
+                resources.getString(R.string.time_hour, timeDelta)
+            }  else if (timeDelta < 60*60*24*7) {
+                resources.getString(R.string.time_day, timeDelta)
+            } else {
+                return DATE_FORMAT.format(this)
+            }
+
+    return resources.getString(R.string.time_ago, timeStr)
 }

@@ -41,4 +41,17 @@
     <string name="conflict_error">409 Conflict</string>
     <string name="unprocessable_error">422 Unprocessable</string>
     <string name="server_error_error">500 Server Error</string>
+
+    <!--My Issues screen-->
+    <string name="by_author" formatted="false">by %s</string>
+    <string name="sharp_id" formatted="false">#%d</string>
+    <string name="time_sec" formatted="false">%d sec</string>
+    <string name="time_min" formatted="false">%d min</string>
+    <string name="time_hour" formatted="false">%d h</string>
+    <string name="time_day" formatted="false">%d d</string>
+    <string name="time_ago" formatted="false">%s ago</string>
+
+    <!--Calligraphy Config-->
+    <string name="font_main_regular">fonts/Roboto-Regular.ttf</string>
+    <string name="font_main_medium">fonts/Roboto-Medium.ttf</string>
 </resources>

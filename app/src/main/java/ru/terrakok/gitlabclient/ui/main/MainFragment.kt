@@ -51,6 +51,7 @@ class MainFragment : BaseFragment(), MainView {
                     .add(R.id.mainScreenContainer, tabs[tabKeys[2]], tabKeys[2])
                     .add(R.id.mainScreenContainer, tabs[tabKeys[3]], tabKeys[3])
                     .commit()
+            bottomBar.selectTabAtPosition(1, false)
         } else {
             tabs = findFragments()
         }
