@@ -7,6 +7,7 @@ import com.hannesdorfmann.adapterdelegates3.AdapterDelegate
 import kotlinx.android.synthetic.main.item_issue.view.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.common.Issue
+import ru.terrakok.gitlabclient.extension.humanTime
 import ru.terrakok.gitlabclient.extension.inflate
 import ru.terrakok.gitlabclient.ui.global.list.ListItem
 
@@ -36,7 +37,13 @@ class IssueAdapterDelegate(private val clickListener: (Issue) -> Unit) : Adapter
 
         fun bind(issue: Issue) {
             this.issue = issue
-            view.issueTitle.text = issue.title
+
+            val res = view.resources
+            view.issueTitleTextView.text = res.getString(R.string.by_author, issue.author?.username ?: issue.author?.name)
+            view.issueDescriptionTextView.text = issue.title
+            view.issueIdTextView.text = res.getString(R.string.sharp_id, issue.id)
+            view.issueMessagesCountTextView.text = issue.userNotesCount.toString()
+            view.issueDateTextView.text = issue.createdAt?.humanTime(res)
         }
     }
 }

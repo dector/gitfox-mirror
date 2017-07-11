@@ -5,7 +5,7 @@
         title="@string/gitlab_activity"/>
     <tab
         id="@+id/tab_issue"
-        icon="@drawable/ic_issue"
+        icon="@drawable/ic_issues"
         title="@string/gitlab_issue"/>
     <tab
         id="@+id/tab_merge"

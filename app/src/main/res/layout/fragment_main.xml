@@ -16,8 +16,12 @@
         android:id="@+id/bottomBar"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        app:bb_activeTabColor="@color/colorAccent"
+        android:background="@color/white"
+        android:elevation="8dp"
+        app:bb_activeTabColor="@color/colorPrimary"
         app:bb_behavior="shifting"
+        app:bb_inActiveTabAlpha="1.0"
+        app:bb_inActiveTabColor="@color/secondary_text"
         app:bb_tabXmlResource="@xml/main_bottombar_tabs"/>
 
 </LinearLayout>

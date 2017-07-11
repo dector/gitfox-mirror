@@ -79,6 +79,8 @@ dependencies {
     compile(name: "anddown-0.3.0", ext: "aar")
     //Bottom navigation bar
     compile 'com.roughike:bottom-bar:2.3.1'
+    //Custom fonts
+    compile 'uk.co.chrisjenx:calligraphy:2.3.0'
 
     //JUnit
     testCompile "junit:junit:4.12"
