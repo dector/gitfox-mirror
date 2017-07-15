@@ -3,10 +3,6 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 
-repositories {
-    flatDir { dirs 'libs' }
-}
-
 //CI
 apply from: '../ci.gradle'
 
@@ -37,7 +33,7 @@ kapt {
 }
 
 ext {
-    supportLibraryVersion = "25.3.1"
+    supportLibraryVersion = "25.4.0"
     moxyVersion = "1.4.6"
     toothpickVersion = "1.0.6"
     retrofitVersion = "2.2.0"
@@ -74,9 +70,9 @@ dependencies {
     //Adapter simplify
     compile "com.hannesdorfmann:adapterdelegates3:3.0.1"
     //Image load and cache
-    compile "com.github.bumptech.glide:glide:3.7.0"
+    compile "com.github.bumptech.glide:glide:3.8.0"
     //Markdown to HTML converter
-    compile(name: "anddown-0.3.0", ext: "aar")
+    compile project(':anddown')
     //Bottom navigation bar
     compile 'com.roughike:bottom-bar:2.3.1'
     //Custom fonts
