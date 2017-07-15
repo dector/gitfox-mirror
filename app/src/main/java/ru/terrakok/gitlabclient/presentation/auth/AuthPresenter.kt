@@ -2,7 +2,6 @@ package ru.terrakok.gitlabclient.presentation.auth
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.R
@@ -39,9 +38,8 @@ class AuthPresenter @Inject constructor(
 
     private fun requestToken(url: String) {
         authInteractor.login(url)
-                .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { viewState.showProgress(true) }
-                .doOnEvent { viewState.showProgress(false) }
+                .doAfterTerminate { viewState.showProgress(false) }
                 .subscribe(
                         {
                             router.replaceScreen(Screens.MAIN_SCREEN)
