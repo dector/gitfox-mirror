@@ -12,7 +12,7 @@ import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.ServerConfig
 import ru.terrakok.gitlabclient.model.data.storage.Prefs
 import ru.terrakok.gitlabclient.model.interactor.auth.AuthInteractor
-import ru.terrakok.gitlabclient.model.interactor.issue.MyIssuesInteractor
+import ru.terrakok.gitlabclient.model.interactor.issue.IssuesInteractor
 import ru.terrakok.gitlabclient.model.interactor.profile.MyProfileInteractor
 import ru.terrakok.gitlabclient.model.interactor.project.ProjectInteractor
 import ru.terrakok.gitlabclient.model.interactor.projects.MainProjectsListInteractor
@@ -57,6 +57,6 @@ class AppModule(context: Context) : Module() {
         bind(ProjectInteractor::class.java)
 
         bind(IssueRepository::class.java)
-        bind(MyIssuesInteractor::class.java)
+        bind(IssuesInteractor::class.java)
     }
 }

@@ -16,11 +16,21 @@ import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.list.ListItem
 import ru.terrakok.gitlabclient.ui.global.list.ProgressAdapterDelegate
 import toothpick.Toothpick
+import toothpick.config.Module
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 13.06.17
  */
 class MyIssuesFragment : BaseFragment(), MyIssuesView {
+
+    companion object {
+        private val ARG_MODE_IS_OPENED = "arg_mode_is_opened"
+
+        fun newInstance(isOpened: Boolean) = MyIssuesFragment().apply {
+            arguments = Bundle().apply { putBoolean(ARG_MODE_IS_OPENED, isOpened) }
+        }
+    }
+
     override val layoutRes = R.layout.fragment_my_issues
 
     private val adapter = IssuesAdapter()
@@ -29,9 +39,18 @@ class MyIssuesFragment : BaseFragment(), MyIssuesView {
 
     @ProvidePresenter
     fun providePresenter(): MyIssuesPresenter {
-        return Toothpick
-                .openScope(DI.APP_SCOPE)
-                .getInstance(MyIssuesPresenter::class.java)
+        val scopeName = "MyIssuesScope_${hashCode()}"
+        val scope = Toothpick.openScopes(DI.APP_SCOPE, scopeName)
+        scope.installModules(object : Module() {
+            init {
+                bind(MyIssuesPresenter.InitParams::class.java)
+                        .toInstance(MyIssuesPresenter.InitParams(arguments.getBoolean(ARG_MODE_IS_OPENED)))
+            }
+        })
+
+        return scope.getInstance(MyIssuesPresenter::class.java).also {
+            Toothpick.closeScope(scopeName)
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

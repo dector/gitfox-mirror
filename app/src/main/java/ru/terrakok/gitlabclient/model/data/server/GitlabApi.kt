@@ -54,6 +54,7 @@ interface GitlabApi {
 
     @GET("$API_PATH/issues")
     fun getMyIssues(
+            @Query("state") state: IssueState,
             @Query("page") page: Int,
             @Query("per_page") pageSize: Int
     ): Single<List<Issue>>
