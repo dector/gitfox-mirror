@@ -9,6 +9,7 @@ import com.hannesdorfmann.adapterdelegates3.ListDelegationAdapter
 import kotlinx.android.synthetic.main.fragment_my_issues.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.common.Issue
+import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.my.issues.MyIssuesPresenter
 import ru.terrakok.gitlabclient.presentation.my.issues.MyIssuesView
 import ru.terrakok.gitlabclient.toothpick.DI
@@ -65,8 +66,9 @@ class MyIssuesFragment : BaseFragment(), MyIssuesView {
         swipeToRefresh.setOnRefreshListener { presenter.refreshIssues() }
     }
 
-    override fun showProgress(show: Boolean) {
-        swipeToRefresh.post { swipeToRefresh.isRefreshing = show }
+    override fun showProgress(show: Boolean, fullscreen: Boolean) {
+        fullscreenProgressView.visible(show && fullscreen)
+        swipeToRefresh.post { swipeToRefresh.isRefreshing = show && !fullscreen }
     }
 
     override fun showPageProgress(show: Boolean) {

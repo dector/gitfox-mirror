@@ -33,6 +33,10 @@ fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachToRoot: Boolean = false):
     return LayoutInflater.from(context).inflate(layoutRes, this, attachToRoot)
 }
 
+fun View.visible(visible: Boolean) {
+    this.visibility = if (visible) View.VISIBLE else View.GONE
+}
+
 fun Throwable.userMessage(resourceManager: ResourceManager) = when (this) {
     is HttpException -> when (this.code()) {
         304 -> resourceManager.getString(R.string.not_modified_error)
@@ -56,11 +60,11 @@ fun Date.humanTime(resources: Resources): String {
     val timeStr =
             if (timeDelta < 60) {
                 resources.getString(R.string.time_sec, timeDelta)
-            } else if (timeDelta < 60*60) {
+            } else if (timeDelta < 60 * 60) {
                 resources.getString(R.string.time_min, timeDelta)
-            } else if (timeDelta < 60*60*24) {
+            } else if (timeDelta < 60 * 60 * 24) {
                 resources.getString(R.string.time_hour, timeDelta)
-            }  else if (timeDelta < 60*60*24*7) {
+            } else if (timeDelta < 60 * 60 * 24 * 7) {
                 resources.getString(R.string.time_day, timeDelta)
             } else {
                 return DATE_FORMAT.format(this)

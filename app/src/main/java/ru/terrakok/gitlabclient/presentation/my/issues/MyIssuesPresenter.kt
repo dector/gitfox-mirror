@@ -24,6 +24,7 @@ class MyIssuesPresenter @Inject constructor(
     private val FIRST_PAGE = 1
 
     private var currentPage = 0
+    private var firstLoad = true
     private var hasMoreIssues = false
     private var myIssues = mutableListOf<Issue>()
 
@@ -49,13 +50,14 @@ class MyIssuesPresenter @Inject constructor(
         if (disposable == null && hasMoreIssues) {
             disposable = issuesInteractor.getMyIssues(initParams.isOpened, page)
                     .doOnSubscribe {
-                        if (page == FIRST_PAGE) viewState.showProgress(true)
+                        if (page == FIRST_PAGE) viewState.showProgress(true, firstLoad)
                         else viewState.showPageProgress(true)
                     }
                     .doAfterTerminate {
-                        if (page == FIRST_PAGE) viewState.showProgress(false)
+                        if (page == FIRST_PAGE) viewState.showProgress(false, firstLoad)
                         else viewState.showPageProgress(false)
 
+                        firstLoad = false
                         disposable?.dispose()
                         disposable = null
                     }
