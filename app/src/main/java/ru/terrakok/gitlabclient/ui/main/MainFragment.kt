@@ -12,7 +12,7 @@ import ru.terrakok.gitlabclient.ui.gitlab_issues.MyActivityFragment
 import ru.terrakok.gitlabclient.ui.gitlab_issues.MyMergeRequestsFragment
 import ru.terrakok.gitlabclient.ui.gitlab_issues.MyTodosFragment
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import ru.terrakok.gitlabclient.ui.my.issues.MyIssuesFragment
+import ru.terrakok.gitlabclient.ui.my.issues.MyIssuesContainerFragment
 import toothpick.Toothpick
 
 /**
@@ -61,7 +61,7 @@ class MainFragment : BaseFragment(), MainView {
 
     private fun createNewFragments(): HashMap<String, BaseFragment> = hashMapOf(
             tabKeys[0] to MyActivityFragment(),
-            tabKeys[1] to MyIssuesFragment(),
+            tabKeys[1] to MyIssuesContainerFragment(),
             tabKeys[2] to MyMergeRequestsFragment(),
             tabKeys[3] to MyTodosFragment()
     )

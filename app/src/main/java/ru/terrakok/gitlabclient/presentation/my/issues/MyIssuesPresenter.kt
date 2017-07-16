@@ -5,7 +5,7 @@ import com.arellomobile.mvp.MvpPresenter
 import io.reactivex.disposables.Disposable
 import ru.terrakok.gitlabclient.entity.common.Issue
 import ru.terrakok.gitlabclient.extension.userMessage
-import ru.terrakok.gitlabclient.model.interactor.issue.MyIssuesInteractor
+import ru.terrakok.gitlabclient.model.interactor.issue.IssuesInteractor
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import timber.log.Timber
 import javax.inject.Inject
@@ -15,13 +15,16 @@ import javax.inject.Inject
  */
 @InjectViewState
 class MyIssuesPresenter @Inject constructor(
-        private val myIssuesInteractor: MyIssuesInteractor,
+        private val initParams: InitParams,
+        private val issuesInteractor: IssuesInteractor,
         private val resourceManager: ResourceManager
 ) : MvpPresenter<MyIssuesView>() {
+    data class InitParams(val isOpened: Boolean)
 
     private val FIRST_PAGE = 1
 
     private var currentPage = 0
+    private var firstLoad = true
     private var hasMoreIssues = false
     private var myIssues = mutableListOf<Issue>()
 
@@ -45,15 +48,16 @@ class MyIssuesPresenter @Inject constructor(
         }
 
         if (disposable == null && hasMoreIssues) {
-            disposable = myIssuesInteractor.getMyIssues(page)
+            disposable = issuesInteractor.getMyIssues(initParams.isOpened, page)
                     .doOnSubscribe {
-                        if (page == FIRST_PAGE) viewState.showProgress(true)
+                        if (page == FIRST_PAGE) viewState.showProgress(true, firstLoad)
                         else viewState.showPageProgress(true)
                     }
                     .doAfterTerminate {
-                        if (page == FIRST_PAGE) viewState.showProgress(false)
+                        if (page == FIRST_PAGE) viewState.showProgress(false, firstLoad)
                         else viewState.showPageProgress(false)
 
+                        firstLoad = false
                         disposable?.dispose()
                         disposable = null
                     }

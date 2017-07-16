@@ -9,6 +9,7 @@ import com.hannesdorfmann.adapterdelegates3.ListDelegationAdapter
 import kotlinx.android.synthetic.main.fragment_my_issues.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.common.Issue
+import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.my.issues.MyIssuesPresenter
 import ru.terrakok.gitlabclient.presentation.my.issues.MyIssuesView
 import ru.terrakok.gitlabclient.toothpick.DI
@@ -16,11 +17,21 @@ import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.list.ListItem
 import ru.terrakok.gitlabclient.ui.global.list.ProgressAdapterDelegate
 import toothpick.Toothpick
+import toothpick.config.Module
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 13.06.17
  */
 class MyIssuesFragment : BaseFragment(), MyIssuesView {
+
+    companion object {
+        private val ARG_MODE_IS_OPENED = "arg_mode_is_opened"
+
+        fun newInstance(isOpened: Boolean) = MyIssuesFragment().apply {
+            arguments = Bundle().apply { putBoolean(ARG_MODE_IS_OPENED, isOpened) }
+        }
+    }
+
     override val layoutRes = R.layout.fragment_my_issues
 
     private val adapter = IssuesAdapter()
@@ -29,9 +40,18 @@ class MyIssuesFragment : BaseFragment(), MyIssuesView {
 
     @ProvidePresenter
     fun providePresenter(): MyIssuesPresenter {
-        return Toothpick
-                .openScope(DI.APP_SCOPE)
-                .getInstance(MyIssuesPresenter::class.java)
+        val scopeName = "MyIssuesScope_${hashCode()}"
+        val scope = Toothpick.openScopes(DI.APP_SCOPE, scopeName)
+        scope.installModules(object : Module() {
+            init {
+                bind(MyIssuesPresenter.InitParams::class.java)
+                        .toInstance(MyIssuesPresenter.InitParams(arguments.getBoolean(ARG_MODE_IS_OPENED)))
+            }
+        })
+
+        return scope.getInstance(MyIssuesPresenter::class.java).also {
+            Toothpick.closeScope(scopeName)
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -46,8 +66,9 @@ class MyIssuesFragment : BaseFragment(), MyIssuesView {
         swipeToRefresh.setOnRefreshListener { presenter.refreshIssues() }
     }
 
-    override fun showProgress(show: Boolean) {
-        swipeToRefresh.post { swipeToRefresh.isRefreshing = show }
+    override fun showProgress(show: Boolean, fullscreen: Boolean) {
+        fullscreenProgressView.visible(show && fullscreen)
+        swipeToRefresh.post { swipeToRefresh.isRefreshing = show && !fullscreen }
     }
 
     override fun showPageProgress(show: Boolean) {

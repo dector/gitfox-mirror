@@ -12,6 +12,7 @@ import ru.terrakok.gitlabclient.model.interactor.profile.MyProfileInteractor
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem.ABOUT
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem.PROJECTS
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -34,7 +35,10 @@ class NavigationDrawerPresenter @Inject constructor(
 
     private fun subscribeOnProfileUpdates() {
         myProfileInteractor.getMyProfile()
-                .subscribe({ viewState.showUserInfo(it) })
+                .subscribe(
+                        { viewState.showUserInfo(it) },
+                        { error -> Timber.e("getMyProfile(): $error") }
+                )
                 .addTo(compositeDisposable)
     }
 

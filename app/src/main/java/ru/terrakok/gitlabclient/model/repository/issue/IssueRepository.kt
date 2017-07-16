@@ -1,5 +1,6 @@
 package ru.terrakok.gitlabclient.model.repository.issue
 
+import ru.terrakok.gitlabclient.entity.common.IssueState
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import javax.inject.Inject
@@ -10,8 +11,10 @@ import javax.inject.Inject
 class IssueRepository @Inject constructor(private val api: GitlabApi,
                                           private val schedulers: SchedulersProvider) {
 
-    fun getMyIssues(page: Int, pageSize: Int = 20) =
-            api.getMyIssues(page, pageSize)
+    fun getMyIssues(state: IssueState = IssueState.OPENED,
+                    page: Int,
+                    pageSize: Int = 20) =
+            api.getMyIssues(state, page, pageSize)
                     .subscribeOn(schedulers.io())
                     .observeOn(schedulers.ui())
 }
