@@ -4,6 +4,7 @@ import com.nhaarman.mockito_kotlin.*
 import io.reactivex.Single
 import org.junit.Before
 import org.junit.Test
+import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.model.repository.project.ProjectRepository
 
 /**
@@ -12,7 +13,6 @@ import ru.terrakok.gitlabclient.model.repository.project.ProjectRepository
 class MainProjectsListInteractorTest {
 
     private lateinit var projectRepository: ProjectRepository
-    private val testFilter = ProjectsListFilter()
     private val testPage = 0
     private val testError = RuntimeException()
 
@@ -23,15 +23,30 @@ class MainProjectsListInteractorTest {
 
     @Test
     fun getMainProjects_success() {
-        whenever(projectRepository.getProjectsList(any(), any(), any())).thenReturn(Single.just(emptyList()))
+        whenever(projectRepository.getProjectsList(
+                any(), any(), any(),
+                any(), any(), any(),
+                any(), any(), any(),
+                any(), any())).thenReturn(Single.just(emptyList()))
 
         val interactor = MainProjectsListInteractor(projectRepository)
 
         val testObserver = interactor.getMainProjects(testPage).test()
         testObserver.awaitTerminalEvent()
 
-        val captor = argumentCaptor<ProjectsListFilter>()
-        verify(projectRepository).getProjectsList(captor.capture(), eq(testPage), any())
+        verify(projectRepository).getProjectsList(
+                eq(false),
+                eq(null),
+                eq(OrderBy.LAST_ACTIVITY_AT),
+                eq(null),
+                eq(null),
+                eq(null),
+                eq(null),
+                eq(true),
+                eq(null),
+                eq(testPage),
+                any()
+        )
         testObserver
                 .assertValueCount(1)
                 .assertNoErrors()
@@ -39,15 +54,30 @@ class MainProjectsListInteractorTest {
 
     @Test
     fun getMainProjects_error() {
-        whenever(projectRepository.getProjectsList(any(), any(), any())).thenReturn(Single.error(testError))
+        whenever(projectRepository.getProjectsList(
+                any(), any(), any(),
+                any(), any(), any(),
+                any(), any(), any(),
+                any(), any())).thenReturn(Single.error(testError))
 
         val interactor = MainProjectsListInteractor(projectRepository)
 
         val testObserver = interactor.getMainProjects(testPage).test()
         testObserver.awaitTerminalEvent()
 
-        val captor = argumentCaptor<ProjectsListFilter>()
-        verify(projectRepository).getProjectsList(captor.capture(), eq(testPage), any())
+        verify(projectRepository).getProjectsList(
+                eq(false),
+                eq(null),
+                eq(OrderBy.LAST_ACTIVITY_AT),
+                eq(null),
+                eq(null),
+                eq(null),
+                eq(null),
+                eq(true),
+                eq(null),
+                eq(testPage),
+                any()
+        )
         testObserver
                 .assertNoValues()
                 .assertError(testError)
@@ -55,15 +85,30 @@ class MainProjectsListInteractorTest {
 
     @Test
     fun getMyProjects_success() {
-        whenever(projectRepository.getProjectsList(any(), any(), any())).thenReturn(Single.just(emptyList()))
+        whenever(projectRepository.getProjectsList(
+                any(), any(), any(),
+                any(), any(), any(),
+                any(), any(), any(),
+                any(), any())).thenReturn(Single.just(emptyList()))
 
         val interactor = MainProjectsListInteractor(projectRepository)
 
         val testObserver = interactor.getMyProjects(testPage).test()
         testObserver.awaitTerminalEvent()
 
-        val captor = argumentCaptor<ProjectsListFilter>()
-        verify(projectRepository).getProjectsList(captor.capture(), eq(testPage), any())
+        verify(projectRepository).getProjectsList(
+                eq(false),
+                eq(null),
+                eq(OrderBy.LAST_ACTIVITY_AT),
+                eq(null),
+                eq(null),
+                eq(null),
+                eq(true),
+                eq(null),
+                eq(null),
+                eq(testPage),
+                any()
+        )
         testObserver
                 .assertValueCount(1)
                 .assertNoErrors()
@@ -71,15 +116,30 @@ class MainProjectsListInteractorTest {
 
     @Test
     fun getMyProjects_error() {
-        whenever(projectRepository.getProjectsList(any(), any(), any())).thenReturn(Single.error(testError))
+        whenever(projectRepository.getProjectsList(
+                any(), any(), any(),
+                any(), any(), any(),
+                any(), any(), any(),
+                any(), any())).thenReturn(Single.error(testError))
 
         val interactor = MainProjectsListInteractor(projectRepository)
 
         val testObserver = interactor.getMyProjects(testPage).test()
         testObserver.awaitTerminalEvent()
 
-        val captor = argumentCaptor<ProjectsListFilter>()
-        verify(projectRepository).getProjectsList(captor.capture(), eq(testPage), any())
+        verify(projectRepository).getProjectsList(
+                eq(false),
+                eq(null),
+                eq(OrderBy.LAST_ACTIVITY_AT),
+                eq(null),
+                eq(null),
+                eq(null),
+                eq(true),
+                eq(null),
+                eq(null),
+                eq(testPage),
+                any()
+        )
         testObserver
                 .assertNoValues()
                 .assertError(testError)
@@ -87,15 +147,30 @@ class MainProjectsListInteractorTest {
 
     @Test
     fun getStarredProjects_success() {
-        whenever(projectRepository.getProjectsList(any(), any(), any())).thenReturn(Single.just(emptyList()))
+        whenever(projectRepository.getProjectsList(
+                any(), any(), any(),
+                any(), any(), any(),
+                any(), any(), any(),
+                any(), any())).thenReturn(Single.just(emptyList()))
 
         val interactor = MainProjectsListInteractor(projectRepository)
 
         val testObserver = interactor.getStarredProjects(testPage).test()
         testObserver.awaitTerminalEvent()
 
-        val captor = argumentCaptor<ProjectsListFilter>()
-        verify(projectRepository).getProjectsList(captor.capture(), eq(testPage), any())
+        verify(projectRepository).getProjectsList(
+                eq(false),
+                eq(null),
+                eq(OrderBy.LAST_ACTIVITY_AT),
+                eq(null),
+                eq(null),
+                eq(null),
+                eq(null),
+                eq(null),
+                eq(true),
+                eq(testPage),
+                any()
+        )
         testObserver
                 .assertValueCount(1)
                 .assertNoErrors()
@@ -103,15 +178,30 @@ class MainProjectsListInteractorTest {
 
     @Test
     fun getStarredProjects_error() {
-        whenever(projectRepository.getProjectsList(any(), any(), any())).thenReturn(Single.error(testError))
+        whenever(projectRepository.getProjectsList(
+                any(), any(), any(),
+                any(), any(), any(),
+                any(), any(), any(),
+                any(), any())).thenReturn(Single.error(testError))
 
         val interactor = MainProjectsListInteractor(projectRepository)
 
         val testObserver = interactor.getStarredProjects(testPage).test()
         testObserver.awaitTerminalEvent()
 
-        val captor = argumentCaptor<ProjectsListFilter>()
-        verify(projectRepository).getProjectsList(captor.capture(), eq(testPage), any())
+        verify(projectRepository).getProjectsList(
+                eq(false),
+                eq(null),
+                eq(OrderBy.LAST_ACTIVITY_AT),
+                eq(null),
+                eq(null),
+                eq(null),
+                eq(null),
+                eq(null),
+                eq(true),
+                eq(testPage),
+                any()
+        )
         testObserver
                 .assertNoValues()
                 .assertError(testError)
