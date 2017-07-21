@@ -3,7 +3,7 @@ package ru.terrakok.gitlabclient.presentation.my.issues
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import io.reactivex.disposables.Disposable
-import ru.terrakok.gitlabclient.entity.common.Issue
+import ru.terrakok.gitlabclient.entity.Issue
 import ru.terrakok.gitlabclient.extension.userMessage
 import ru.terrakok.gitlabclient.model.interactor.issue.IssuesInteractor
 import ru.terrakok.gitlabclient.model.system.ResourceManager

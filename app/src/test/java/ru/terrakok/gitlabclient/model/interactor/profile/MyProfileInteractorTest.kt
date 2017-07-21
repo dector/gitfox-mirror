@@ -6,8 +6,7 @@ import io.reactivex.observers.TestObserver
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.*
-import ru.terrakok.gitlabclient.entity.app.MyUserInfo
-import ru.terrakok.gitlabclient.entity.common.User
+import ru.terrakok.gitlabclient.entity.User
 import ru.terrakok.gitlabclient.model.repository.auth.AuthRepository
 import ru.terrakok.gitlabclient.model.repository.profile.ProfileRepository
 import java.util.*

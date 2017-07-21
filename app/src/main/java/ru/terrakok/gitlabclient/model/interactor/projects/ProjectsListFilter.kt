@@ -1,8 +1,8 @@
-package ru.terrakok.gitlabclient.entity.app
+package ru.terrakok.gitlabclient.model.interactor.projects
 
-import ru.terrakok.gitlabclient.entity.common.OrderBy
-import ru.terrakok.gitlabclient.entity.common.Sort
-import ru.terrakok.gitlabclient.entity.common.Visibility
+import ru.terrakok.gitlabclient.entity.OrderBy
+import ru.terrakok.gitlabclient.entity.Sort
+import ru.terrakok.gitlabclient.entity.Visibility
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 02.04.17

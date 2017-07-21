@@ -1,6 +1,6 @@
 package ru.terrakok.gitlabclient.model.repository.issue
 
-import ru.terrakok.gitlabclient.entity.common.IssueState
+import ru.terrakok.gitlabclient.entity.IssueState
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import javax.inject.Inject

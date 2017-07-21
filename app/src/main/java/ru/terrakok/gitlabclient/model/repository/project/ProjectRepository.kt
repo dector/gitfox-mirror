@@ -1,7 +1,7 @@
 package ru.terrakok.gitlabclient.model.repository.project
 
-import ru.terrakok.gitlabclient.entity.app.ProjectsListFilter
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
+import ru.terrakok.gitlabclient.model.interactor.projects.ProjectsListFilter
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import javax.inject.Inject
 

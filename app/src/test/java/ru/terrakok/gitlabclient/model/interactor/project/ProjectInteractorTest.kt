@@ -6,9 +6,9 @@ import org.junit.Test
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mockito.*
 import ru.terrakok.gitlabclient.TestSchedulers
-import ru.terrakok.gitlabclient.entity.common.File
-import ru.terrakok.gitlabclient.entity.common.Project
-import ru.terrakok.gitlabclient.entity.common.Visibility
+import ru.terrakok.gitlabclient.entity.File
+import ru.terrakok.gitlabclient.entity.Project
+import ru.terrakok.gitlabclient.entity.Visibility
 import ru.terrakok.gitlabclient.model.repository.project.ProjectRepository
 
 /**

@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegate
 import kotlinx.android.synthetic.main.item_issue.view.*
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.common.Issue
+import ru.terrakok.gitlabclient.entity.Issue
 import ru.terrakok.gitlabclient.extension.humanTime
 import ru.terrakok.gitlabclient.extension.inflate
 import ru.terrakok.gitlabclient.ui.global.list.ListItem

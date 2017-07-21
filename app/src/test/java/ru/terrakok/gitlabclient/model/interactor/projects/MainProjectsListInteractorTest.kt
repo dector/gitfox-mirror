@@ -4,7 +4,6 @@ import com.nhaarman.mockito_kotlin.*
 import io.reactivex.Single
 import org.junit.Before
 import org.junit.Test
-import ru.terrakok.gitlabclient.entity.app.ProjectsListFilter
 import ru.terrakok.gitlabclient.model.repository.project.ProjectRepository
 
 /**

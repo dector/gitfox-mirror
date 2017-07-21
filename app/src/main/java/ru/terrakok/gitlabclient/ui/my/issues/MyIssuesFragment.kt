@@ -8,7 +8,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.hannesdorfmann.adapterdelegates3.ListDelegationAdapter
 import kotlinx.android.synthetic.main.fragment_my_issues.*
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.common.Issue
+import ru.terrakok.gitlabclient.entity.Issue
 import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.my.issues.MyIssuesPresenter
 import ru.terrakok.gitlabclient.presentation.my.issues.MyIssuesView

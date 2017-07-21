@@ -1,7 +1,6 @@
 package ru.terrakok.gitlabclient.model.interactor.projects
 
-import ru.terrakok.gitlabclient.entity.app.ProjectsListFilter
-import ru.terrakok.gitlabclient.entity.common.OrderBy
+import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.model.repository.project.ProjectRepository
 import javax.inject.Inject
 

@@ -12,8 +12,8 @@ import com.hannesdorfmann.adapterdelegates3.AdapterDelegate
 import kotlinx.android.synthetic.main.item_project.view.*
 import kotlinx.android.synthetic.main.layout_avatar.view.*
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.common.Project
-import ru.terrakok.gitlabclient.entity.common.Visibility
+import ru.terrakok.gitlabclient.entity.Project
+import ru.terrakok.gitlabclient.entity.Visibility
 import ru.terrakok.gitlabclient.extension.color
 import ru.terrakok.gitlabclient.extension.inflate
 import ru.terrakok.gitlabclient.ui.global.list.ListItem
