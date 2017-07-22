@@ -11,9 +11,12 @@ import ru.terrakok.gitlabclient.entity.Issue
  */
 @StateStrategyType(AddToEndSingleStrategy::class)
 interface MyIssuesView : MvpView {
-    fun showProgress(show: Boolean, fullscreen: Boolean)
+    fun showRefreshProgress(show: Boolean)
+    fun showEmptyProgress(show: Boolean)
     fun showPageProgress(show: Boolean)
-    fun showIssues(issues: List<Issue>)
+    fun showEmptyView(show: Boolean)
+    fun showEmptyError(show: Boolean, message: String?)
+    fun showIssues(show: Boolean, issues: List<Issue>)
 
     @StateStrategyType(OneExecutionStateStrategy::class)
     fun showMessage(message: String)

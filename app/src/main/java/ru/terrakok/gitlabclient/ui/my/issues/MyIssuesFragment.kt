@@ -33,7 +33,6 @@ class MyIssuesFragment : BaseFragment(), MyIssuesView {
     }
 
     override val layoutRes = R.layout.fragment_my_issues
-
     private val adapter = IssuesAdapter()
 
     @InjectPresenter lateinit var presenter: MyIssuesPresenter
@@ -66,16 +65,33 @@ class MyIssuesFragment : BaseFragment(), MyIssuesView {
         swipeToRefresh.setOnRefreshListener { presenter.refreshIssues() }
     }
 
-    override fun showProgress(show: Boolean, fullscreen: Boolean) {
-        fullscreenProgressView.visible(show && fullscreen)
-        swipeToRefresh.post { swipeToRefresh.isRefreshing = show && !fullscreen }
+    override fun showRefreshProgress(show: Boolean) {
+        swipeToRefresh.post { swipeToRefresh.isRefreshing = show }
+    }
+
+    override fun showEmptyProgress(show: Boolean) {
+        fullscreenProgressView.visible(show)
+
+        //trick for disable and hide swipeToRefresh on fullscreen progress
+        swipeToRefresh.visible(!show)
+        swipeToRefresh.post { swipeToRefresh.isRefreshing = false }
     }
 
     override fun showPageProgress(show: Boolean) {
         recyclerView.post { adapter.showProgress(show) }
     }
 
-    override fun showIssues(issues: List<Issue>) {
+    override fun showEmptyView(show: Boolean) {
+        //todo
+    }
+
+    override fun showEmptyError(show: Boolean, message: String?) {
+        //todo
+        if (show && message != null) showSnackMessage(message)
+    }
+
+    override fun showIssues(show: Boolean, issues: List<Issue>) {
+        recyclerView.visible(show)
         recyclerView.post { adapter.setData(issues) }
     }
 

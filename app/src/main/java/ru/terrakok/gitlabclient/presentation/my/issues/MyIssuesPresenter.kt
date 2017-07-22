@@ -2,12 +2,11 @@ package ru.terrakok.gitlabclient.presentation.my.issues
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
-import io.reactivex.disposables.Disposable
 import ru.terrakok.gitlabclient.entity.Issue
 import ru.terrakok.gitlabclient.extension.userMessage
 import ru.terrakok.gitlabclient.model.interactor.issue.IssuesInteractor
 import ru.terrakok.gitlabclient.model.system.ResourceManager
-import timber.log.Timber
+import ru.terrakok.gitlabclient.presentation.global.Paginator
 import javax.inject.Inject
 
 /**
@@ -21,66 +20,50 @@ class MyIssuesPresenter @Inject constructor(
 ) : MvpPresenter<MyIssuesView>() {
     data class InitParams(val isOpened: Boolean)
 
-    private val FIRST_PAGE = 1
-
-    private var currentPage = 0
-    private var firstLoad = true
-    private var hasMoreIssues = false
-    private var myIssues = mutableListOf<Issue>()
-
-    private var disposable: Disposable? = null
-
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         refreshIssues()
     }
 
+    private val paginator = Paginator(
+            { issuesInteractor.getMyIssues(initParams.isOpened, it) },
+            object : Paginator.ViewController<Issue> {
+                override fun showEmptyProgress(show: Boolean) {
+                    viewState.showEmptyProgress(show)
+                }
+
+                override fun showEmptyError(show: Boolean, error: Throwable?) {
+                    viewState.showEmptyError(show, error?.userMessage(resourceManager))
+                }
+
+                override fun showErrorMessage(error: Throwable) {
+                    viewState.showMessage(error.userMessage(resourceManager))
+                }
+
+                override fun showEmptyView(show: Boolean) {
+                    viewState.showEmptyView(show)
+                }
+
+                override fun showData(show: Boolean, data: List<Issue>) {
+                    viewState.showIssues(show, data)
+                }
+
+                override fun showRefreshProgress(show: Boolean) {
+                    viewState.showRefreshProgress(show)
+                }
+
+                override fun showPageProgress(show: Boolean) {
+                    viewState.showPageProgress(show)
+                }
+            }
+    )
+
     fun onIssueClick(issue: Issue) {}
-    fun refreshIssues() = loadNewPage(FIRST_PAGE)
-    fun loadNextIssuesPage() = loadNewPage(currentPage + 1)
-
-    private fun loadNewPage(page: Int) {
-        Timber.d("loadNewPage($page)")
-        if (page == FIRST_PAGE) {
-            disposable?.dispose()
-            disposable = null
-            hasMoreIssues = true
-        }
-
-        if (disposable == null && hasMoreIssues) {
-            disposable = issuesInteractor.getMyIssues(initParams.isOpened, page)
-                    .doOnSubscribe {
-                        if (page == FIRST_PAGE) viewState.showProgress(true, firstLoad)
-                        else viewState.showPageProgress(true)
-                    }
-                    .doAfterTerminate {
-                        if (page == FIRST_PAGE) viewState.showProgress(false, firstLoad)
-                        else viewState.showPageProgress(false)
-
-                        firstLoad = false
-                        disposable?.dispose()
-                        disposable = null
-                    }
-                    .subscribe(
-                            { issues ->
-                                if (page == FIRST_PAGE) myIssues.clear()
-                                myIssues.addAll(issues)
-                                viewState.showIssues(myIssues)
-
-                                currentPage = page
-                                hasMoreIssues = issues.isNotEmpty()
-                            },
-                            { error ->
-                                Timber.e("getMyIssues($page): $error")
-                                viewState.showMessage(error.userMessage(resourceManager))
-                            }
-                    )
-        }
-    }
+    fun refreshIssues() = paginator.refresh()
+    fun loadNextIssuesPage() = paginator.loadNewPage()
 
     override fun onDestroy() {
         super.onDestroy()
-
-        disposable?.dispose()
+        paginator.release()
     }
 }
