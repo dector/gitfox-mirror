@@ -24,9 +24,9 @@ class MainProjectsListInteractorTest {
     @Test
     fun getMainProjects_success() {
         whenever(projectRepository.getProjectsList(
-                any(), any(), any(),
-                any(), any(), any(),
-                any(), any(), any(),
+                anyOrNull(), anyOrNull(), anyOrNull(),
+                anyOrNull(), anyOrNull(), anyOrNull(),
+                anyOrNull(), anyOrNull(), anyOrNull(),
                 any(), any())).thenReturn(Single.just(emptyList()))
 
         val interactor = MainProjectsListInteractor(projectRepository)
@@ -55,9 +55,9 @@ class MainProjectsListInteractorTest {
     @Test
     fun getMainProjects_error() {
         whenever(projectRepository.getProjectsList(
-                any(), any(), any(),
-                any(), any(), any(),
-                any(), any(), any(),
+                anyOrNull(), anyOrNull(), anyOrNull(),
+                anyOrNull(), anyOrNull(), anyOrNull(),
+                anyOrNull(), anyOrNull(), anyOrNull(),
                 any(), any())).thenReturn(Single.error(testError))
 
         val interactor = MainProjectsListInteractor(projectRepository)
@@ -86,9 +86,9 @@ class MainProjectsListInteractorTest {
     @Test
     fun getMyProjects_success() {
         whenever(projectRepository.getProjectsList(
-                any(), any(), any(),
-                any(), any(), any(),
-                any(), any(), any(),
+                anyOrNull(), anyOrNull(), anyOrNull(),
+                anyOrNull(), anyOrNull(), anyOrNull(),
+                anyOrNull(), anyOrNull(), anyOrNull(),
                 any(), any())).thenReturn(Single.just(emptyList()))
 
         val interactor = MainProjectsListInteractor(projectRepository)
@@ -117,9 +117,9 @@ class MainProjectsListInteractorTest {
     @Test
     fun getMyProjects_error() {
         whenever(projectRepository.getProjectsList(
-                any(), any(), any(),
-                any(), any(), any(),
-                any(), any(), any(),
+                anyOrNull(), anyOrNull(), anyOrNull(),
+                anyOrNull(), anyOrNull(), anyOrNull(),
+                anyOrNull(), anyOrNull(), anyOrNull(),
                 any(), any())).thenReturn(Single.error(testError))
 
         val interactor = MainProjectsListInteractor(projectRepository)
@@ -148,9 +148,9 @@ class MainProjectsListInteractorTest {
     @Test
     fun getStarredProjects_success() {
         whenever(projectRepository.getProjectsList(
-                any(), any(), any(),
-                any(), any(), any(),
-                any(), any(), any(),
+                anyOrNull(), anyOrNull(), anyOrNull(),
+                anyOrNull(), anyOrNull(), anyOrNull(),
+                anyOrNull(), anyOrNull(), anyOrNull(),
                 any(), any())).thenReturn(Single.just(emptyList()))
 
         val interactor = MainProjectsListInteractor(projectRepository)
@@ -179,9 +179,9 @@ class MainProjectsListInteractorTest {
     @Test
     fun getStarredProjects_error() {
         whenever(projectRepository.getProjectsList(
-                any(), any(), any(),
-                any(), any(), any(),
-                any(), any(), any(),
+                anyOrNull(), anyOrNull(), anyOrNull(),
+                anyOrNull(), anyOrNull(), anyOrNull(),
+                anyOrNull(), anyOrNull(), anyOrNull(),
                 any(), any())).thenReturn(Single.error(testError))
 
         val interactor = MainProjectsListInteractor(projectRepository)
