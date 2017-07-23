@@ -22,7 +22,7 @@ class AboutFragment : BaseFragment(), AboutView {
     @ProvidePresenter
     fun providePresenter(): AboutPresenter {
         return Toothpick
-                .openScope(DI.APP_SCOPE)
+                .openScope(DI.MAIN_ACTIVITY_SCOPE)
                 .getInstance(AboutPresenter::class.java)
     }
 

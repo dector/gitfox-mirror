@@ -40,7 +40,7 @@ class MyIssuesFragment : BaseFragment(), MyIssuesView {
     @ProvidePresenter
     fun providePresenter(): MyIssuesPresenter {
         val scopeName = "MyIssuesScope_${hashCode()}"
-        val scope = Toothpick.openScopes(DI.APP_SCOPE, scopeName)
+        val scope = Toothpick.openScopes(DI.MAIN_ACTIVITY_SCOPE, scopeName)
         scope.installModules(object : Module() {
             init {
                 bind(MyIssuesPresenter.InitParams::class.java)
