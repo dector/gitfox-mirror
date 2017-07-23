@@ -74,5 +74,5 @@ interface GitlabApi {
             @Query("sort") sort: Sort?,
             @Query("page") page: Int,
             @Query("per_page") pageSize: Int
-    ): Single<List<Issue>>
+    ): Single<List<Event>>
 }
