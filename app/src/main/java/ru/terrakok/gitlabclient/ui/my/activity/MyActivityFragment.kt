@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.ui.gitlab_issues
+package ru.terrakok.gitlabclient.ui.my.activity
 
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.ui.global.BaseFragment

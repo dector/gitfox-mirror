@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.ui.my.issues
+package ru.terrakok.gitlabclient.ui.global.list
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -9,7 +9,6 @@ import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Issue
 import ru.terrakok.gitlabclient.extension.humanTime
 import ru.terrakok.gitlabclient.extension.inflate
-import ru.terrakok.gitlabclient.ui.global.list.ListItem
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 18.06.17.
@@ -19,7 +18,7 @@ class IssueAdapterDelegate(private val clickListener: (Issue) -> Unit) : Adapter
     override fun isForViewType(items: MutableList<ListItem>, position: Int) =
             items[position] is ListItem.IssueItem
 
-    override fun onCreateViewHolder(parent: ViewGroup) =
+    override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder =
             IssueViewHolder(parent.inflate(R.layout.item_issue), clickListener)
 
     override fun onBindViewHolder(items: MutableList<ListItem>,
@@ -28,7 +27,7 @@ class IssueAdapterDelegate(private val clickListener: (Issue) -> Unit) : Adapter
                                   payloads: MutableList<Any>) =
             (viewHolder as IssueViewHolder).bind((items[position] as ListItem.IssueItem).issue)
 
-    class IssueViewHolder(val view: View, clickListener: (Issue) -> Unit) : RecyclerView.ViewHolder(view) {
+    private class IssueViewHolder(val view: View, clickListener: (Issue) -> Unit) : RecyclerView.ViewHolder(view) {
         private lateinit var issue: Issue
 
         init {
