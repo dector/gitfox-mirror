@@ -3,6 +3,9 @@ package ru.terrakok.gitlabclient.model.data.server
 import io.reactivex.Single
 import retrofit2.http.*
 import ru.terrakok.gitlabclient.entity.*
+import ru.terrakok.gitlabclient.entity.event.Event
+import ru.terrakok.gitlabclient.entity.event.EventAction
+import ru.terrakok.gitlabclient.entity.event.EventTarget
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 28.03.17

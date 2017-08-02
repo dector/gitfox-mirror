@@ -1,8 +1,8 @@
 package ru.terrakok.gitlabclient.model.repository.event
 
-import ru.terrakok.gitlabclient.entity.EventAction
-import ru.terrakok.gitlabclient.entity.EventTarget
 import ru.terrakok.gitlabclient.entity.Sort
+import ru.terrakok.gitlabclient.entity.event.EventAction
+import ru.terrakok.gitlabclient.entity.event.EventTarget
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
@@ -20,7 +20,7 @@ class EventRepository @Inject constructor(
         @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
-    private val dayFormat = SimpleDateFormat("YYYY-MM-DD")
+    private val dayFormat = SimpleDateFormat("yyyy-MM-dd")
 
     fun getEvents(
             action: EventAction? = null,
@@ -41,5 +41,5 @@ class EventRepository @Inject constructor(
                         pageSize
                 )
                 .subscribeOn(schedulers.io())
-                .observeOn(schedulers.newThread())
+                .observeOn(schedulers.ui())
 }
