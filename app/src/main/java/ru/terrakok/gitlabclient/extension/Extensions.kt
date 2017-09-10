@@ -61,11 +61,11 @@ fun Date.humanTime(resources: Resources): String {
             if (timeDelta < 60) {
                 resources.getString(R.string.time_sec, timeDelta)
             } else if (timeDelta < 60 * 60) {
-                resources.getString(R.string.time_min, timeDelta)
+                resources.getString(R.string.time_min, timeDelta / 60)
             } else if (timeDelta < 60 * 60 * 24) {
-                resources.getString(R.string.time_hour, timeDelta)
+                resources.getString(R.string.time_hour, timeDelta / (60 * 60))
             } else if (timeDelta < 60 * 60 * 24 * 7) {
-                resources.getString(R.string.time_day, timeDelta)
+                resources.getString(R.string.time_day, timeDelta / (60 * 60 * 24))
             } else {
                 return DATE_FORMAT.format(this)
             }

@@ -3,6 +3,9 @@ package ru.terrakok.gitlabclient.model.data.server
 import io.reactivex.Single
 import retrofit2.http.*
 import ru.terrakok.gitlabclient.entity.*
+import ru.terrakok.gitlabclient.entity.event.Event
+import ru.terrakok.gitlabclient.entity.event.EventAction
+import ru.terrakok.gitlabclient.entity.event.EventTarget
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 28.03.17
@@ -26,7 +29,7 @@ interface GitlabApi {
     fun getProjects(
             @Query("archived") archived: Boolean?,
             @Query("visibility") visibility: Visibility?,
-            @Query("order_by") order_by: OrderBy?,
+            @Query("order_by") orderBy: OrderBy?,
             @Query("sort") sort: Sort?,
             @Query("search") search: String?,
             @Query("simple") simple: Boolean?,
@@ -54,8 +57,25 @@ interface GitlabApi {
 
     @GET("$API_PATH/issues")
     fun getMyIssues(
-            @Query("state") state: IssueState,
+            @Query("state") state: IssueState?,
+            @Query("labels") labels: String?,
+            @Query("milestone") milestone: String?,
+            @Query("iids") iids: Array<Long>?,
+            @Query("order_by") orderBy: OrderBy?,
+            @Query("sort") sort: Sort?,
+            @Query("search") search: String?,
             @Query("page") page: Int,
             @Query("per_page") pageSize: Int
     ): Single<List<Issue>>
+
+    @GET("$API_PATH/events")
+    fun getEvents(
+            @Query("action") action: EventAction?,
+            @Query("target_type") targetType: EventTarget?,
+            @Query("before") beforeDay: String?,
+            @Query("after") afterDay: String?,
+            @Query("sort") sort: Sort?,
+            @Query("page") page: Int,
+            @Query("per_page") pageSize: Int
+    ): Single<List<Event>>
 }

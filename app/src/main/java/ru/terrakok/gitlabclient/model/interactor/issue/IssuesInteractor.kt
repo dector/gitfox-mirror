@@ -7,10 +7,15 @@ import javax.inject.Inject
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 15.06.17.
  */
-class IssuesInteractor @Inject constructor(private val issueRepository: IssueRepository) {
-    fun getMyIssues(isOpened: Boolean, page: Int) =
-            issueRepository.getMyIssues(
-                    if (isOpened) IssueState.OPENED else IssueState.CLOSED,
-                    page
+class IssuesInteractor @Inject constructor(
+        private val issueRepository: IssueRepository
+) {
+    fun getMyIssues(
+            isOpened: Boolean,
+            page: Int
+    ) = issueRepository
+            .getMyIssues(
+                    state = if (isOpened) IssueState.OPENED else IssueState.CLOSED,
+                    page = page
             )
 }

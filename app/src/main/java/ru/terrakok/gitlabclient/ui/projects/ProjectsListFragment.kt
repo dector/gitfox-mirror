@@ -17,6 +17,7 @@ import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectListMode
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.list.ListItem
 import ru.terrakok.gitlabclient.ui.global.list.ProgressAdapterDelegate
+import ru.terrakok.gitlabclient.ui.global.list.ProjectAdapterDelegate
 import toothpick.Toothpick
 import toothpick.config.Module
 

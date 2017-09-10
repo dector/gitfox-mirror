@@ -53,6 +53,13 @@
     <string name="time_day" formatted="false">%d d</string>
     <string name="time_ago" formatted="false">%s ago</string>
 
+    <!--My Events Screen-->
+    <string name="event_target_type_issue">issue</string>
+    <string name="event_target_type_note">issue</string>
+    <string name="event_target_type_diff_note">issue</string>
+    <string name="event_target_type_mr">merge request</string>
+    <string name="event_target_type_milestone">milestone</string>
+
     <!--Calligraphy Config-->
     <string name="font_main_regular">fonts/Roboto-Regular.ttf</string>
     <string name="font_main_medium">fonts/Roboto-Medium.ttf</string>

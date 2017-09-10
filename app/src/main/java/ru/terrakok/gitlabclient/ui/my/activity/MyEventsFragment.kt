@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.ui.my.issues
+package ru.terrakok.gitlabclient.ui.my.activity
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -6,53 +6,35 @@ import android.support.v7.widget.RecyclerView
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.hannesdorfmann.adapterdelegates3.ListDelegationAdapter
+import kotlinx.android.synthetic.main.fragment_my_activity.*
 import kotlinx.android.synthetic.main.layout_base_list.*
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.Issue
+import ru.terrakok.gitlabclient.entity.event.Event
 import ru.terrakok.gitlabclient.extension.visible
-import ru.terrakok.gitlabclient.presentation.my.issues.MyIssuesPresenter
-import ru.terrakok.gitlabclient.presentation.my.issues.MyIssuesView
+import ru.terrakok.gitlabclient.presentation.my.events.MyEventsPresenter
+import ru.terrakok.gitlabclient.presentation.my.events.MyEventsView
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import ru.terrakok.gitlabclient.ui.global.list.IssueAdapterDelegate
+import ru.terrakok.gitlabclient.ui.global.list.EventAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.ListItem
 import ru.terrakok.gitlabclient.ui.global.list.ProgressAdapterDelegate
 import toothpick.Toothpick
-import toothpick.config.Module
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 13.06.17
  */
-class MyIssuesFragment : BaseFragment(), MyIssuesView {
+class MyEventsFragment : BaseFragment(), MyEventsView {
+    override val layoutRes = R.layout.fragment_my_activity
 
-    companion object {
-        private val ARG_MODE_IS_OPENED = "arg_mode_is_opened"
+    private val adapter = EventsAdapter()
 
-        fun newInstance(isOpened: Boolean) = MyIssuesFragment().apply {
-            arguments = Bundle().apply { putBoolean(ARG_MODE_IS_OPENED, isOpened) }
-        }
-    }
-
-    override val layoutRes = R.layout.fragment_my_issues
-    private val adapter = IssuesAdapter()
-
-    @InjectPresenter lateinit var presenter: MyIssuesPresenter
+    @InjectPresenter lateinit var presenter: MyEventsPresenter
 
     @ProvidePresenter
-    fun providePresenter(): MyIssuesPresenter {
-        val scopeName = "MyIssuesScope_${hashCode()}"
-        val scope = Toothpick.openScopes(DI.MAIN_ACTIVITY_SCOPE, scopeName)
-        scope.installModules(object : Module() {
-            init {
-                bind(MyIssuesPresenter.InitParams::class.java)
-                        .toInstance(MyIssuesPresenter.InitParams(arguments.getBoolean(ARG_MODE_IS_OPENED)))
-            }
-        })
-
-        return scope.getInstance(MyIssuesPresenter::class.java).also {
-            Toothpick.closeScope(scopeName)
-        }
-    }
+    fun providePresenter(): MyEventsPresenter =
+        Toothpick
+                .openScope(DI.MAIN_ACTIVITY_SCOPE)
+                .getInstance(MyEventsPresenter::class.java)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -60,10 +42,11 @@ class MyIssuesFragment : BaseFragment(), MyIssuesView {
         recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true)
-            adapter = this@MyIssuesFragment.adapter
+            adapter = this@MyEventsFragment.adapter
         }
 
-        swipeToRefresh.setOnRefreshListener { presenter.refreshIssues() }
+        swipeToRefresh.setOnRefreshListener { presenter.refreshEvents() }
+        toolbar.setNavigationOnClickListener { presenter.onMenuClick() }
     }
 
     override fun showRefreshProgress(show: Boolean) {
@@ -91,27 +74,27 @@ class MyIssuesFragment : BaseFragment(), MyIssuesView {
         if (show && message != null) showSnackMessage(message)
     }
 
-    override fun showIssues(show: Boolean, issues: List<Issue>) {
+    override fun showEvents(show: Boolean, events: List<Event>) {
         recyclerView.visible(show)
-        recyclerView.post { adapter.setData(issues) }
+        recyclerView.post { adapter.setData(events) }
     }
 
     override fun showMessage(message: String) {
         showSnackMessage(message)
     }
 
-    inner class IssuesAdapter : ListDelegationAdapter<MutableList<ListItem>>() {
+    inner class EventsAdapter : ListDelegationAdapter<MutableList<ListItem>>() {
         init {
             items = mutableListOf()
-            delegatesManager.addDelegate(IssueAdapterDelegate({ presenter.onIssueClick(it) }))
+            delegatesManager.addDelegate(EventAdapterDelegate({ presenter.onEventClick(it) }))
             delegatesManager.addDelegate(ProgressAdapterDelegate())
         }
 
-        fun setData(issues: List<Issue>) {
+        fun setData(events: List<Event>) {
             val progress = isProgress()
 
             items.clear()
-            items.addAll(issues.map { ListItem.IssueItem(it) })
+            items.addAll(events.map { ListItem.EventItem(it) })
             if (progress) items.add(ListItem.ProgressItem())
 
             notifyDataSetChanged()
@@ -131,7 +114,7 @@ class MyIssuesFragment : BaseFragment(), MyIssuesView {
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int, payloads: MutableList<Any?>?) {
             super.onBindViewHolder(holder, position, payloads)
 
-            if (position == items.size - 10) presenter.loadNextIssuesPage()
+            if (position == items.size - 10) presenter.loadNextEventsPage()
         }
     }
 }

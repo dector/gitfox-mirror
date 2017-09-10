@@ -15,7 +15,7 @@ class ProgressAdapterDelegate : AdapterDelegate<MutableList<ListItem>>() {
     override fun isForViewType(items: MutableList<ListItem>, position: Int) =
             items[position] is ListItem.ProgressItem
 
-    override fun onCreateViewHolder(parent: ViewGroup) =
+    override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder =
             ProgressViewHolder(parent.inflate(R.layout.item_progress))
 
     override fun onBindViewHolder(items: MutableList<ListItem>,
@@ -23,5 +23,5 @@ class ProgressAdapterDelegate : AdapterDelegate<MutableList<ListItem>>() {
                                   viewHolder: RecyclerView.ViewHolder,
                                   payloads: MutableList<Any>) {}
 
-    class ProgressViewHolder(view: View) : RecyclerView.ViewHolder(view)
+    private class ProgressViewHolder(view: View) : RecyclerView.ViewHolder(view)
 }
