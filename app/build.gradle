@@ -18,6 +18,12 @@ android {
         // versionCode 1 get it from '../ci.gradle'
 
         vectorDrawables.useSupportLibrary true
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [toothpick_registry_package_name: 'ru.terrakok.gitlabclient']
+            }
+        }
     }
 
     buildTypes {
