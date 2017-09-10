@@ -46,8 +46,8 @@ class MainActivity : BaseActivity(), LaunchView {
         setContentView(R.layout.activity_main)
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onResumeFragments() {
+        super.onResumeFragments()
         navigationHolder.setNavigator(navigator)
     }
 
