@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.ui.projects
+package ru.terrakok.gitlabclient.ui.global.list
 
 import android.graphics.Bitmap
 import android.graphics.PorterDuff
@@ -16,7 +16,6 @@ import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.Visibility
 import ru.terrakok.gitlabclient.extension.color
 import ru.terrakok.gitlabclient.extension.inflate
-import ru.terrakok.gitlabclient.ui.global.list.ListItem
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 18.06.17.
@@ -26,7 +25,7 @@ class ProjectAdapterDelegate(private val clickListener: (Project) -> Unit) : Ada
     override fun isForViewType(items: MutableList<ListItem>, position: Int) =
             items[position] is ListItem.ProgressItem
 
-    override fun onCreateViewHolder(parent: ViewGroup) =
+    override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder =
             ProjectViewHolder(parent.inflate(R.layout.item_project), clickListener)
 
     override fun onBindViewHolder(items: MutableList<ListItem>,
@@ -35,7 +34,7 @@ class ProjectAdapterDelegate(private val clickListener: (Project) -> Unit) : Ada
                                   payloads: MutableList<Any>) =
             (viewHolder as ProjectViewHolder).bind((items[position] as ListItem.ProjectItem).project)
 
-    class ProjectViewHolder(val view: View, clickListener: (Project) -> Unit) : RecyclerView.ViewHolder(view) {
+    private class ProjectViewHolder(val view: View, clickListener: (Project) -> Unit) : RecyclerView.ViewHolder(view) {
         private lateinit var project: Project
 
         init {

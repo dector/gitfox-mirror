@@ -11,23 +11,30 @@ import javax.inject.Inject
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 23.04.17.
  */
-class AuthRepository @Inject constructor(private val authData: AuthHolder,
-                                         private val api: GitlabApi,
-                                         private val schedulers: SchedulersProvider) {
+class AuthRepository @Inject constructor(
+        private val authData: AuthHolder,
+        private val api: GitlabApi,
+        private val schedulers: SchedulersProvider
+) {
 
     private val signState = BehaviorRelay.createDefault(!authData.getAuthToken().isNullOrEmpty())
 
     fun getSignState(): Observable<Boolean> = signState
 
-    fun refreshServerToken(appId: String, appKey: String, code: String, redirectUri: String) =
-            api.auth(appId, appKey, code, redirectUri)
-                    .subscribeOn(schedulers.io())
-                    .observeOn(schedulers.ui())
-                    .doOnSuccess {
-                        authData.putAuthToken(it.token)
-                        signState.accept(!it.token.isNullOrEmpty())
-                    }
-                    .toCompletable()
+    fun refreshServerToken(
+            appId: String,
+            appKey: String,
+            code: String,
+            redirectUri: String
+    ) = api
+            .auth(appId, appKey, code, redirectUri)
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
+            .doOnSuccess {
+                authData.putAuthToken(it.token)
+                signState.accept(!it.token.isNullOrEmpty())
+            }
+            .toCompletable()
 
     fun clearToken() = Completable.defer {
         authData.putAuthToken(null)

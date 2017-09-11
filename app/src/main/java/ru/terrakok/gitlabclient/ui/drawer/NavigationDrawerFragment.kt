@@ -30,7 +30,6 @@ class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView {
 
     private var mainActivity: MainActivity? = null
     private val itemClickListener = { view: View ->
-        mainActivity?.openNavDrawer(false)
         presenter.onMenuItemClick(view.tag as MenuItem)
     }
 
@@ -39,7 +38,7 @@ class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView {
     @ProvidePresenter
     fun providePresenter(): NavigationDrawerPresenter {
         return Toothpick
-                .openScope(DI.APP_SCOPE)
+                .openScope(DI.MAIN_ACTIVITY_SCOPE)
                 .getInstance(NavigationDrawerPresenter::class.java)
     }
 
@@ -52,10 +51,7 @@ class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        logoutIV.setOnClickListener {
-            mainActivity?.openNavDrawer(false)
-            presenter.onLogoutClick()
-        }
+        logoutIV.setOnClickListener { presenter.onLogoutClick() }
 
         projectsMI.tag = PROJECTS
         activityMI.tag = ACTIVITY

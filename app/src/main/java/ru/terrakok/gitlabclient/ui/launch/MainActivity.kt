@@ -6,17 +6,19 @@ import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.android.SupportAppNavigator
 import ru.terrakok.cicerone.commands.Command
-import ru.terrakok.cicerone.commands.Forward
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView
+import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
 import ru.terrakok.gitlabclient.presentation.launch.LaunchPresenter
 import ru.terrakok.gitlabclient.presentation.launch.LaunchView
 import ru.terrakok.gitlabclient.toothpick.DI
+import ru.terrakok.gitlabclient.toothpick.module.MainActivityModule
 import ru.terrakok.gitlabclient.ui.about.AboutFragment
 import ru.terrakok.gitlabclient.ui.auth.AuthFragment
 import ru.terrakok.gitlabclient.ui.drawer.NavigationDrawerFragment
@@ -29,6 +31,9 @@ import javax.inject.Inject
 
 class MainActivity : BaseActivity(), LaunchView {
     @Inject lateinit var navigationHolder: NavigatorHolder
+    @Inject lateinit var menuController: GlobalMenuController
+
+    private var menuStateDisposable: Disposable? = null
 
     @InjectPresenter lateinit var presenter: LaunchPresenter
 
@@ -41,31 +46,37 @@ class MainActivity : BaseActivity(), LaunchView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
-        Toothpick.inject(this, Toothpick.openScope(DI.APP_SCOPE))
+
+        val scope = Toothpick.openScopes(DI.APP_SCOPE, DI.MAIN_ACTIVITY_SCOPE)
+        scope.installModules(MainActivityModule())
+        Toothpick.inject(this, scope)
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
     }
 
     override fun onResumeFragments() {
         super.onResumeFragments()
+        menuStateDisposable = menuController.state.subscribe { openNavDrawer(it) }
         navigationHolder.setNavigator(navigator)
     }
 
     override fun onPause() {
+        menuStateDisposable?.dispose()
         navigationHolder.removeNavigator()
         super.onPause()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (isFinishing) Toothpick.closeScope(DI.MAIN_ACTIVITY_SCOPE)
     }
 
     private val navigator = object : SupportAppNavigator(this, R.id.mainContainer) {
 
         override fun applyCommand(command: Command?) {
-            if (command is Forward && command.screenKey == Screens.NAVIGATION_DRAWER) {
-                openNavDrawer(true)
-            } else {
-                openNavDrawer(false)
-                super.applyCommand(command)
-                updateNavDrawer()
-            }
+            super.applyCommand(command)
+            updateNavDrawer()
         }
 
         override fun createActivityIntent(screenKey: String?, data: Any?) = null
@@ -80,14 +91,14 @@ class MainActivity : BaseActivity(), LaunchView {
     }
 
     //region nav drawer
-    fun openNavDrawer(open: Boolean) {
+    private fun openNavDrawer(open: Boolean) {
         drawerLayout.postDelayed({
             if (open) drawerLayout.openDrawer(GravityCompat.START)
             else drawerLayout.closeDrawer(GravityCompat.START)
         }, 150)
     }
 
-    fun enableNavDrawer(enable: Boolean) {
+    private fun enableNavDrawer(enable: Boolean) {
         drawerLayout.setDrawerLockMode(
                 if (enable) DrawerLayout.LOCK_MODE_UNLOCKED
                 else DrawerLayout.LOCK_MODE_LOCKED_CLOSED,
