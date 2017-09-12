@@ -40,8 +40,7 @@ class AuthFragment : BaseFragment(), AuthView {
         toolbar.setNavigationOnClickListener { presenter.onBackPressed() }
 
         CookieManager.getInstance().removeAllCookie()
-        val settings = webView.settings
-        settings.javaScriptEnabled = true
+        webView.settings.javaScriptEnabled = true
 
         webView.setWebViewClient(object : WebViewClient() {
 
@@ -83,6 +82,7 @@ class AuthFragment : BaseFragment(), AuthView {
     }
 
     override fun onBackPressed() {
-        presenter.onBackPressed()
+        if (webView.canGoBack()) webView.goBack()
+        else presenter.onBackPressed()
     }
 }
