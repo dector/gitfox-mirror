@@ -23,7 +23,7 @@ import ru.terrakok.gitlabclient.extension.inflate
 class ProjectAdapterDelegate(private val clickListener: (Project) -> Unit) : AdapterDelegate<MutableList<ListItem>>() {
 
     override fun isForViewType(items: MutableList<ListItem>, position: Int) =
-            items[position] is ListItem.ProgressItem
+            items[position] is ListItem.ProjectItem
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder =
             ProjectViewHolder(parent.inflate(R.layout.item_project), clickListener)
