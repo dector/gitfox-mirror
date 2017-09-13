@@ -7,9 +7,9 @@ import okhttp3.OkHttpClient
 import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
+import ru.terrakok.gitlabclient.BuildConfig
 import ru.terrakok.gitlabclient.model.data.auth.AuthHolder
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
-import ru.terrakok.gitlabclient.model.data.server.ServerConfig
 import ru.terrakok.gitlabclient.model.data.storage.Prefs
 import ru.terrakok.gitlabclient.model.interactor.auth.AuthInteractor
 import ru.terrakok.gitlabclient.model.interactor.event.EventInteractor
@@ -29,6 +29,7 @@ import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.provider.ApiProvider
 import ru.terrakok.gitlabclient.toothpick.provider.OkHttpClientProvider
 import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultPageSize
+import ru.terrakok.gitlabclient.toothpick.qualifier.ServerPath
 import toothpick.config.Module
 
 /**
@@ -38,6 +39,7 @@ class AppModule(context: Context) : Module() {
     init {
         //Global
         bind(Context::class.java).toInstance(context)
+        bind(String::class.java).withName(ServerPath::class.java).toInstance(BuildConfig.ORIGIN_GITLAB_ENDPOINT)
         bind(PrimitiveWrapper::class.java).withName(DefaultPageSize::class.java).toInstance(PrimitiveWrapper(20))
         bind(SchedulersProvider::class.java).toInstance(AppSchedulers())
         bind(ResourceManager::class.java).singletonInScope()
@@ -45,7 +47,6 @@ class AppModule(context: Context) : Module() {
         //Network
         bind(Gson::class.java).toInstance(GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create())
         bind(OkHttpClient::class.java).toProvider(OkHttpClientProvider::class.java).singletonInScope()
-        bind(ServerConfig::class.java).toInstance(ServerConfig())
         bind(GitlabApi::class.java).toProvider(ApiProvider::class.java).singletonInScope()
 
         //Auth

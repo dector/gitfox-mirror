@@ -10,8 +10,12 @@ import ru.terrakok.gitlabclient.model.data.auth.AuthHolder
 class AuthHeaderInterceptor(private val authData: AuthHolder) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         var request = chain.request()
-        authData.getAuthToken()?.let {
-            request = request.newBuilder().addHeader("Authorization", "Bearer " + it).build()
+        authData.token?.let {
+            if (authData.isOAuthToken) {
+                request = request.newBuilder().addHeader("Authorization", "Bearer " + it).build()
+            } else {
+                request = request.newBuilder().addHeader("PRIVATE-TOKEN", it).build()
+            }
         }
         return chain.proceed(request)
     }
