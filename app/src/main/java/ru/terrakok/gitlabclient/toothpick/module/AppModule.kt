@@ -14,6 +14,7 @@ import ru.terrakok.gitlabclient.model.data.storage.Prefs
 import ru.terrakok.gitlabclient.model.interactor.auth.AuthInteractor
 import ru.terrakok.gitlabclient.model.interactor.event.EventInteractor
 import ru.terrakok.gitlabclient.model.interactor.issue.IssuesInteractor
+import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestListInteractor
 import ru.terrakok.gitlabclient.model.interactor.profile.MyProfileInteractor
 import ru.terrakok.gitlabclient.model.interactor.project.ProjectInteractor
 import ru.terrakok.gitlabclient.model.interactor.projects.MainProjectsListInteractor
@@ -78,5 +79,6 @@ class AppModule(context: Context) : Module() {
 
         //Merge request
         bind(MergeRequestRepository::class.java)
+        bind(MergeRequestListInteractor::class.java)
     }
 }
