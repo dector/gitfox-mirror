@@ -22,7 +22,7 @@ abstract class BaseFragment : MvpAppCompatFragment() {
     protected fun showProgressDialog(progress: Boolean) {
         val fragment = childFragmentManager?.findFragmentByTag(PROGRESS_TAG)
         if (fragment != null && !progress) {
-            (fragment as ProgressDialog).dismiss()
+            (fragment as ProgressDialog).dismissAllowingStateLoss()
             childFragmentManager.executePendingTransactions()
         } else if (fragment == null && progress) {
             ProgressDialog().show(childFragmentManager, PROGRESS_TAG)
