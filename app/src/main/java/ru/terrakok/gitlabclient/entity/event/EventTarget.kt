@@ -5,16 +5,14 @@ import com.google.gson.annotations.SerializedName
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 22.07.17.
  */
-enum class EventTarget {
-    @SerializedName("issue") ISSUE,
-    @SerializedName("milestone") MILESTONE,
-    @SerializedName("merge_request") MERGE_REQUEST,
-    @SerializedName("note") NOTE,
-    @SerializedName("project") PROJECT,
-    @SerializedName("snippet") SNIPPET,
-    @SerializedName("user") USER;
+enum class EventTarget(private val jsonName: String) {
+    @SerializedName("issue") ISSUE("issue"),
+    @SerializedName("milestone") MILESTONE("milestone"),
+    @SerializedName("merge_request") MERGE_REQUEST("merge_request"),
+    @SerializedName("note") NOTE("note"),
+    @SerializedName("project") PROJECT("project"),
+    @SerializedName("snippet") SNIPPET("snippet"),
+    @SerializedName("user") USER("user");
 
-    override fun toString(): String {
-        return super.toString().toLowerCase()
-    }
+    override fun toString() = jsonName
 }
