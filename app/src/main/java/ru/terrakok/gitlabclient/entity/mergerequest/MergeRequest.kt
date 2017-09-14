@@ -1,6 +1,8 @@
-package ru.terrakok.gitlabclient.entity
+package ru.terrakok.gitlabclient.entity.mergerequest
 
 import com.google.gson.annotations.SerializedName
+import ru.terrakok.gitlabclient.entity.Milestone
+import ru.terrakok.gitlabclient.entity.User
 import java.util.*
 
 data class MergeRequest(
