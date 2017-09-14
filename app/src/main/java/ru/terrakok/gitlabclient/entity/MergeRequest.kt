@@ -31,5 +31,5 @@ data class MergeRequest(
         @SerializedName("force_remove_source_branch") val forceRemoveSourceBranch: Boolean,
         @SerializedName("web_url") val webUrl: String?,
         @SerializedName("time_stats") val timeStats: MergeRequestTimeStats?,
-        @SerializedName("labels") val labels: List<String>? = null
+        @SerializedName("labels") val labels: List<String>?
 )
