@@ -1,6 +1,10 @@
 package ru.terrakok.gitlabclient.model.repository.merge_request
 
-import ru.terrakok.gitlabclient.entity.*
+import ru.terrakok.gitlabclient.entity.OrderBy
+import ru.terrakok.gitlabclient.entity.Sort
+import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestScope
+import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
+import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestViewType
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
