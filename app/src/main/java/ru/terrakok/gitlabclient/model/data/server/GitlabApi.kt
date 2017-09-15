@@ -6,6 +6,10 @@ import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.entity.event.Event
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.event.EventTarget
+import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
+import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestScope
+import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
+import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestViewType
 import java.util.*
 
 /**
@@ -16,7 +20,6 @@ interface GitlabApi {
         const val API_PATH = "api/v4"
     }
 
-    //<editor-fold desc="Auth" defaultstate="collapsed">
     @FormUrlEncoded
     @POST("oauth/token")
     fun auth(
@@ -27,8 +30,6 @@ interface GitlabApi {
             @Field("grant_type") type: String = "authorization_code"
     ): Single<TokenData>
 
-    //</editor-fold>
-    //<editor-fold desc="Projects" defaultstate="collapsed">
     @GET("$API_PATH/projects")
     fun getProjects(
             @Query("archived") archived: Boolean?,
@@ -56,13 +57,9 @@ interface GitlabApi {
             @Query("ref") branchName: String
     ): Single<File>
 
-    //</editor-fold>
-    //<editor-fold desc="Users" defaultstate="collapsed">
     @GET("$API_PATH/user")
     fun getMyUser(): Single<User>
 
-    //</editor-fold>
-    //<editor-fold desc="Issues" defaultstate="collapsed">
     @GET("$API_PATH/issues")
     fun getMyIssues(
             @Query("state") state: IssueState?,
@@ -76,8 +73,6 @@ interface GitlabApi {
             @Query("per_page") pageSize: Int
     ): Single<List<Issue>>
 
-    //</editor-fold>
-    //<editor-fold desc="Events" defaultstate="collapsed">
     @GET("$API_PATH/events")
     fun getEvents(
             @Query("action") action: EventAction?,
@@ -89,8 +84,6 @@ interface GitlabApi {
             @Query("per_page") pageSize: Int
     ): Single<List<Event>>
 
-    //</editor-fold>
-    //<editor-fold desc="Merge requests" defaultstate="collapsed">
     @GET("$API_PATH/merge_requests")
     fun getMergeRequests(
             @Query("state") state: MergeRequestState?,
@@ -109,7 +102,6 @@ interface GitlabApi {
             @Query("per_page") pageSize: Int
     ): Single<List<MergeRequest>>
 
-    @GET("$API_PATH/projects/{project_id}/merge_requests")
     fun getProjectMergeRequests(
             @Path("project_id") projectId: Int,
             @Query("state") state: MergeRequestState?,
@@ -133,6 +125,5 @@ interface GitlabApi {
             @Path("project_id") projectId: Int,
             @Path("merge_request_id") mergeRequestId: Int
     ): Single<MergeRequest>
-    //</editor-fold>
 
 }

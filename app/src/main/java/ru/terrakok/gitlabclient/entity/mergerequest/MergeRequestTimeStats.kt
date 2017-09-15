@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.entity
+package ru.terrakok.gitlabclient.entity.mergerequest
 
 import com.google.gson.annotations.SerializedName
 

@@ -1,6 +1,8 @@
-package ru.terrakok.gitlabclient.entity
+package ru.terrakok.gitlabclient.entity.mergerequest
 
 import com.google.gson.annotations.SerializedName
+import ru.terrakok.gitlabclient.entity.Milestone
+import ru.terrakok.gitlabclient.entity.User
 import java.util.*
 
 data class MergeRequest(
@@ -31,5 +33,5 @@ data class MergeRequest(
         @SerializedName("force_remove_source_branch") val forceRemoveSourceBranch: Boolean,
         @SerializedName("web_url") val webUrl: String?,
         @SerializedName("time_stats") val timeStats: MergeRequestTimeStats?,
-        @SerializedName("labels") val labels: List<String>? = null
+        @SerializedName("labels") val labels: List<String>?
 )
