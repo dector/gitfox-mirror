@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.model.repository.merge_request
+package ru.terrakok.gitlabclient.model.repository.mergerequest
 
 import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.entity.Sort
