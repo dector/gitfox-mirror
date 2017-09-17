@@ -11,6 +11,16 @@
     <string name="auth_title">Authorization</string>
     <string name="invalid_hash">Invalid auth response!</string>
     <string name="auth_error">Unknown error! Try again later</string>
+    <string name="custom_auth_menu">Access token authorization</string>
+    <string name="custom_authorization">Enter your access token</string>
+    <string name="server_path">Url:</string>
+    <string name="server_path_hint">https://gitlab.com/</string>
+    <string name="private_token">Token:</string>
+    <string name="private_token_hint">abcdefg1234</string>
+    <string name="login">Login</string>
+    <string name="cancel">Cancel</string>
+    <string name="invalid_server_url">Invalid server path!</string>
+    <string name="empty_token">Empty token!</string>
 
     <!--About screen-->
     <string name="about_title">About</string>

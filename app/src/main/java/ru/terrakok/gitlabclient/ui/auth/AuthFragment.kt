@@ -21,9 +21,10 @@ import toothpick.Toothpick
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 27.03.17
  */
-class AuthFragment : BaseFragment(), AuthView {
+class AuthFragment : BaseFragment(), AuthView, CustomServerAuthFragment.OnClickListener {
 
     override val layoutRes = R.layout.fragment_auth
+    override val customLogin = { url: String, token: String -> presenter.loginOnCustomServer(url, token) }
 
     @InjectPresenter lateinit var presenter: AuthPresenter
 
@@ -37,7 +38,16 @@ class AuthFragment : BaseFragment(), AuthView {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        toolbar.setNavigationOnClickListener { presenter.onBackPressed() }
+        toolbar.apply {
+            setNavigationOnClickListener { presenter.onBackPressed() }
+            inflateMenu(R.menu.custom_auth_menu)
+            setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.customAuthAction -> CustomServerAuthFragment().show(childFragmentManager, null)
+                }
+                true
+            }
+        }
 
         CookieManager.getInstance().removeAllCookie()
         webView.settings.javaScriptEnabled = true
