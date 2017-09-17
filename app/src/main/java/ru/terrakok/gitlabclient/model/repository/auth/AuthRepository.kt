@@ -5,6 +5,7 @@ import io.reactivex.Observable
 import ru.terrakok.gitlabclient.model.data.auth.AuthHolder
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
+import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultServerPath
 import javax.inject.Inject
 
 /**
@@ -13,7 +14,8 @@ import javax.inject.Inject
 class AuthRepository @Inject constructor(
         private val authData: AuthHolder,
         private val api: GitlabApi,
-        private val schedulers: SchedulersProvider
+        private val schedulers: SchedulersProvider,
+        @DefaultServerPath private val defaultServerPath: String
 ) {
 
     private val signState = BehaviorRelay.createDefault(!authData.token.isNullOrEmpty())
@@ -43,7 +45,7 @@ class AuthRepository @Inject constructor(
 
     fun clearAuthData() {
         authData.token = null
-        authData.serverPath = null
+        authData.serverPath = defaultServerPath
         signState.accept(false)
     }
 }

@@ -5,10 +5,10 @@ import com.arellomobile.mvp.MvpPresenter
 import io.reactivex.disposables.CompositeDisposable
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.extension.addTo
 import ru.terrakok.gitlabclient.model.interactor.auth.AuthInteractor
 import ru.terrakok.gitlabclient.model.system.ResourceManager
+import ru.terrakok.gitlabclient.model.system.ServerSwitcher
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -19,6 +19,7 @@ import javax.inject.Inject
 class AuthPresenter @Inject constructor(
         private val router: Router,
         private val authInteractor: AuthInteractor,
+        private val serverSwitcher: ServerSwitcher,
         private val resourceManager: ResourceManager
 ) : MvpPresenter<AuthView>() {
 
@@ -42,7 +43,7 @@ class AuthPresenter @Inject constructor(
                 .doAfterTerminate { viewState.showProgress(false) }
                 .subscribe(
                         {
-                            router.replaceScreen(Screens.MAIN_SCREEN)
+                            serverSwitcher.switchOnNewServer()
                         },
                         { error ->
                             Timber.e("Auth error: $error")
@@ -59,6 +60,19 @@ class AuthPresenter @Inject constructor(
             viewState.loadUrl(url)
             return false
         }
+    }
+
+    fun loginOnCustomServer(url: String, token: String) {
+        authInteractor.login(url, token)
+                .subscribe(
+                        {
+                            serverSwitcher.switchOnNewServer()
+                        },
+                        { error ->
+                            Timber.e("Auth error: $error")
+                            viewState.showMessage(resourceManager.getString(R.string.auth_error))
+                        }
+                ).addTo(compositeDisposable)
     }
 
     fun onBackPressed() = router.exit()

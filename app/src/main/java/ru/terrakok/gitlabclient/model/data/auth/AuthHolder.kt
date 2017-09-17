@@ -5,6 +5,6 @@ package ru.terrakok.gitlabclient.model.data.auth
  */
 interface AuthHolder {
     var token: String?
-    var serverPath: String?
+    var serverPath: String
     var isOAuthToken: Boolean
 }

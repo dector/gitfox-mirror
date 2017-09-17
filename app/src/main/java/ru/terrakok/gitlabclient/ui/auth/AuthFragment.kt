@@ -30,7 +30,7 @@ class AuthFragment : BaseFragment(), AuthView {
     @ProvidePresenter
     fun providePresenter(): AuthPresenter {
         return Toothpick
-                .openScope(DI.APP_SCOPE)
+                .openScope(DI.SERVER_SCOPE)
                 .getInstance(AuthPresenter::class.java)
     }
 
