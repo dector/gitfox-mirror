@@ -38,6 +38,7 @@ class MainActivity : BaseActivity(), LaunchView {
 
     private var restarterDisposable: Disposable? = null
     private var menuStateDisposable: Disposable? = null
+    private var restart = false
 
     @InjectPresenter lateinit var presenter: LaunchPresenter
 
@@ -76,7 +77,9 @@ class MainActivity : BaseActivity(), LaunchView {
 
     override fun onDestroy() {
         super.onDestroy()
-        if (isFinishing) Toothpick.closeScope(DI.MAIN_ACTIVITY_SCOPE)
+
+        //'!restart' - because onDestroy old Activity will be called after onCreate new Activity
+        if (!restart && isFinishing) Toothpick.closeScope(DI.MAIN_ACTIVITY_SCOPE)
     }
 
     private val navigator = object : SupportAppNavigator(this, R.id.mainContainer) {
@@ -147,7 +150,13 @@ class MainActivity : BaseActivity(), LaunchView {
     }
 
     private fun restartActivity() {
+        restart = true
+        Toothpick.closeScope(DI.MAIN_ACTIVITY_SCOPE)
+        startActivity(
+                Intent(this, MainActivity::class.java).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                }
+        )
         finish()
-        startActivity(Intent(this, MainActivity::class.java))
     }
 }
