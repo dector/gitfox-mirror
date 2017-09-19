@@ -28,6 +28,9 @@
     <string name="groups_item">Groups</string>
     <string name="settings_item">Settings</string>
     <string name="about_item">About</string>
+    <string name="exit">exit</string>
+    <string name="cancel">cancel</string>
+    <string name="logout_question">Logout?</string>
 
     <!--Error messages todo-->
     <string name="unknown_error">Unknown error</string>
@@ -63,4 +66,5 @@
     <!--Calligraphy Config-->
     <string name="font_main_regular">fonts/Roboto-Regular.ttf</string>
     <string name="font_main_medium">fonts/Roboto-Medium.ttf</string>
+    <string name="ok">ok</string>
 </resources>
