@@ -5,11 +5,9 @@ import com.google.gson.annotations.SerializedName
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 15.07.17.
  */
-enum class IssueState {
-    @SerializedName("opened") OPENED,
-    @SerializedName("closed") CLOSED;
+enum class IssueState(private val jsonName: String) {
+    @SerializedName("opened") OPENED("opened"),
+    @SerializedName("closed") CLOSED("closed");
 
-    override fun toString(): String {
-        return super.toString().toLowerCase()
-    }
+    override fun toString() = jsonName
 }

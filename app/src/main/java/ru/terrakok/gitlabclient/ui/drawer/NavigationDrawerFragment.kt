@@ -16,21 +16,29 @@ import ru.terrakok.gitlabclient.model.interactor.profile.MyUserInfo
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerPresenter
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem
-import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem.*
+import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem.ABOUT
+import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem.ACTIVITY
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.ui.global.ConfirmDialog
 import ru.terrakok.gitlabclient.ui.launch.MainActivity
 import toothpick.Toothpick
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 04.04.17
  */
-class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView {
+class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView, ConfirmDialog.OnClickListener {
     override val layoutRes = R.layout.fragment_nav_drawer
-
     private var mainActivity: MainActivity? = null
+
     private val itemClickListener = { view: View ->
         presenter.onMenuItemClick(view.tag as MenuItem)
+    }
+
+    override val dialogConfirm: (tag: String) -> Unit = { tag ->
+        when (tag) {
+            CONFIRM_LOGOUT_TAG -> presenter.onLogoutClick()
+        }
     }
 
     @InjectPresenter lateinit var presenter: NavigationDrawerPresenter
@@ -51,23 +59,21 @@ class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        logoutIV.setOnClickListener { presenter.onLogoutClick() }
+        logoutIV.setOnClickListener {
+            ConfirmDialog
+                    .newInstants(
+                            msg = getString(R.string.logout_question),
+                            positive = getString(R.string.exit),
+                            tag = CONFIRM_LOGOUT_TAG
+                    )
+                    .show(childFragmentManager, CONFIRM_LOGOUT_TAG)
+        }
 
-        projectsMI.tag = PROJECTS
         activityMI.tag = ACTIVITY
-        groupsMI.tag = GROUPS
-        settingsMI.tag = SETTINGS
         aboutMI.tag = ABOUT
 
-        projectsMI.setOnClickListener(itemClickListener)
         activityMI.setOnClickListener(itemClickListener)
-        groupsMI.setOnClickListener(itemClickListener)
-        settingsMI.setOnClickListener(itemClickListener)
         aboutMI.setOnClickListener(itemClickListener)
-    }
-
-    override fun showVersionName(version: String) {
-        versionTV.text = version
     }
 
     override fun showUserInfo(user: MyUserInfo) {
@@ -79,9 +85,7 @@ class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView {
         } else with(user.user) {
             nickTV.text = this.name
             serverNameTV.text = user.serverName
-            letterTV.text = this.name?.let {
-                it.first().toString().toUpperCase()
-            }
+            letterTV.text = this.name?.first()?.toString()?.toUpperCase()
             Glide.with(avatarIV.context)
                     .load(this.avatarUrl)
                     .asBitmap()
@@ -101,15 +105,16 @@ class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView {
     }
 
     override fun selectMenuItem(item: MenuItem) {
-        for (i in 0..navDrawerMenuContainer.childCount - 1) {
-            val menuItem = navDrawerMenuContainer.getChildAt(i)
-            menuItem.tag?.let {
-                menuItem.isSelected = it == item
-            }
-        }
+        (0 until navDrawerMenuContainer.childCount)
+                .map { navDrawerMenuContainer.getChildAt(it) }
+                .forEach { menuItem -> menuItem.tag?.let { menuItem.isSelected = it == item } }
     }
 
     fun onScreenChanged(item: MenuItem) {
         presenter.onScreenChanged(item)
+    }
+
+    private companion object {
+        private val CONFIRM_LOGOUT_TAG = "confirm_logout_tag"
     }
 }
