@@ -11,14 +11,10 @@ import ru.terrakok.gitlabclient.model.interactor.profile.MyUserInfo
 @StateStrategyType(AddToEndSingleStrategy::class)
 interface NavigationDrawerView : MvpView {
     enum class MenuItem {
-        PROJECTS,
         ACTIVITY,
-        GROUPS,
-        SETTINGS,
         ABOUT
     }
 
-    fun showVersionName(version: String)
     fun showUserInfo(user: MyUserInfo)
     fun selectMenuItem(item: MenuItem)
 }
