@@ -6,6 +6,9 @@ import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.entity.event.Event
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.event.EventTarget
+import ru.terrakok.gitlabclient.entity.target.TargetState
+import ru.terrakok.gitlabclient.entity.target.issue.Issue
+import ru.terrakok.gitlabclient.entity.todo.Todo
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 28.03.17
@@ -57,7 +60,7 @@ interface GitlabApi {
 
     @GET("$API_PATH/issues")
     fun getMyIssues(
-            @Query("state") state: IssueState?,
+            @Query("state") state: TargetState?,
             @Query("labels") labels: String?,
             @Query("milestone") milestone: String?,
             @Query("iids") iids: Array<Long>?,
@@ -78,4 +81,10 @@ interface GitlabApi {
             @Query("page") page: Int,
             @Query("per_page") pageSize: Int
     ): Single<List<Event>>
+
+    @GET("$API_PATH/todos")
+    fun getTodos(
+            @Query("page") page: Int,
+            @Query("per_page") pageSize: Int
+    ): Single<List<Todo>>
 }

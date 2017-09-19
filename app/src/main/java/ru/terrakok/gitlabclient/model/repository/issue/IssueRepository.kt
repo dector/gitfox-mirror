@@ -1,8 +1,8 @@
 package ru.terrakok.gitlabclient.model.repository.issue
 
-import ru.terrakok.gitlabclient.entity.IssueState
 import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.entity.Sort
+import ru.terrakok.gitlabclient.entity.target.TargetState
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
@@ -20,7 +20,7 @@ class IssueRepository @Inject constructor(
     private val defaultPageSize = defaultPageSizeWrapper.value
 
     fun getMyIssues(
-            state: IssueState? = null,
+            state: TargetState? = null,
             labels: String? = null,
             milestone: String? = null,
             iids: Array<Long>? = null,

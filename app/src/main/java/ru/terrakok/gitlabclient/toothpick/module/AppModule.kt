@@ -2,7 +2,6 @@ package ru.terrakok.gitlabclient.toothpick.module
 
 import android.content.Context
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.NavigatorHolder
@@ -27,6 +26,7 @@ import ru.terrakok.gitlabclient.model.system.ResourceManager
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.provider.ApiProvider
+import ru.terrakok.gitlabclient.toothpick.provider.GsonProvider
 import ru.terrakok.gitlabclient.toothpick.provider.OkHttpClientProvider
 import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultPageSize
 import toothpick.config.Module
@@ -43,7 +43,7 @@ class AppModule(context: Context) : Module() {
         bind(ResourceManager::class.java).singletonInScope()
 
         //Network
-        bind(Gson::class.java).toInstance(GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create())
+        bind(Gson::class.java).toProvider(GsonProvider::class.java).singletonInScope()
         bind(OkHttpClient::class.java).toProvider(OkHttpClientProvider::class.java).singletonInScope()
         bind(ServerConfig::class.java).toInstance(ServerConfig())
         bind(GitlabApi::class.java).toProvider(ApiProvider::class.java).singletonInScope()

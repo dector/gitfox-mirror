@@ -1,6 +1,6 @@
 package ru.terrakok.gitlabclient.model.interactor.issue
 
-import ru.terrakok.gitlabclient.entity.IssueState
+import ru.terrakok.gitlabclient.entity.target.TargetState
 import ru.terrakok.gitlabclient.model.repository.issue.IssueRepository
 import javax.inject.Inject
 
@@ -15,7 +15,7 @@ class IssuesInteractor @Inject constructor(
             page: Int
     ) = issueRepository
             .getMyIssues(
-                    state = if (isOpened) IssueState.OPENED else IssueState.CLOSED,
+                    state = if (isOpened) TargetState.OPENED else TargetState.CLOSED,
                     page = page
             )
 }
