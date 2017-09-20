@@ -21,7 +21,7 @@ import ru.terrakok.gitlabclient.model.interactor.projects.MainProjectsListIntera
 import ru.terrakok.gitlabclient.model.repository.auth.AuthRepository
 import ru.terrakok.gitlabclient.model.repository.event.EventRepository
 import ru.terrakok.gitlabclient.model.repository.issue.IssueRepository
-import ru.terrakok.gitlabclient.model.repository.merge_request.MergeRequestRepository
+import ru.terrakok.gitlabclient.model.repository.mergerequest.MergeRequestRepository
 import ru.terrakok.gitlabclient.model.repository.profile.ProfileRepository
 import ru.terrakok.gitlabclient.model.repository.project.ProjectRepository
 import ru.terrakok.gitlabclient.model.system.AppSchedulers
