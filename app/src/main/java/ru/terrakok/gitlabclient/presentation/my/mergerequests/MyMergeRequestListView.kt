@@ -4,7 +4,7 @@ import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
-import ru.terrakok.gitlabclient.entity.MergeRequest
+import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
 
 @StateStrategyType(AddToEndSingleStrategy::class)
 interface MyMergeRequestListView : MvpView {

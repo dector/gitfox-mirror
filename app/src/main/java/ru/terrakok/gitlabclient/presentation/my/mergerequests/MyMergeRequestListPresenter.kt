@@ -2,8 +2,8 @@ package ru.terrakok.gitlabclient.presentation.my.mergerequests
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
-import ru.terrakok.gitlabclient.entity.MergeRequest
-import ru.terrakok.gitlabclient.entity.MergeRequestState
+import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
+import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
 import ru.terrakok.gitlabclient.extension.userMessage
 import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestListInteractor
 import ru.terrakok.gitlabclient.model.system.ResourceManager
