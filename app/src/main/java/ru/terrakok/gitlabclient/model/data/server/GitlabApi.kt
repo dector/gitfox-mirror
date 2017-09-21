@@ -1,5 +1,6 @@
 package ru.terrakok.gitlabclient.model.data.server
 
+import io.reactivex.Completable
 import io.reactivex.Single
 import retrofit2.http.*
 import ru.terrakok.gitlabclient.entity.*
@@ -7,8 +8,11 @@ import ru.terrakok.gitlabclient.entity.event.Event
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.event.EventTarget
 import ru.terrakok.gitlabclient.entity.target.TargetState
+import ru.terrakok.gitlabclient.entity.target.TargetType
 import ru.terrakok.gitlabclient.entity.target.issue.Issue
 import ru.terrakok.gitlabclient.entity.todo.Todo
+import ru.terrakok.gitlabclient.entity.todo.TodoAction
+import ru.terrakok.gitlabclient.entity.todo.TodoState
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 28.03.17
@@ -84,7 +88,20 @@ interface GitlabApi {
 
     @GET("$API_PATH/todos")
     fun getTodos(
+            @Query("action") action: TodoAction?,
+            @Query("author_id") authorId: Long?,
+            @Query("project_id") projectId: Long?,
+            @Query("state") state: TodoState?,
+            @Query("type") targetType: TargetType?,
             @Query("page") page: Int,
             @Query("per_page") pageSize: Int
     ): Single<List<Todo>>
+
+    @POST("$API_PATH/todos/{id}/mark_as_done")
+    fun markPendingTodoAsDone(
+            @Path("id") id: Int
+    ): Single<Todo>
+
+    @POST("$API_PATH/todos/mark_as_done")
+    fun markAllPendingTodosAsDone(): Completable
 }
