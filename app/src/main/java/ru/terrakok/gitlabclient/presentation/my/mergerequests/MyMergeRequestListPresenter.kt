@@ -12,11 +12,10 @@ import javax.inject.Inject
 
 @InjectViewState
 class MyMergeRequestListPresenter @Inject constructor(
-        private val initParams: InitParams,
+        private val mrState: MergeRequestState,
         private val interactor: MergeRequestListInteractor,
         private val resourceManager: ResourceManager
 ) : MvpPresenter<MyMergeRequestListView>() {
-    data class InitParams(val state: MergeRequestState)
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -24,7 +23,7 @@ class MyMergeRequestListPresenter @Inject constructor(
     }
 
     private val paginator = Paginator(
-            { interactor.getMyMergeRequests(initParams.state, it) },
+            { interactor.getMyMergeRequests(mrState, it) },
             object : Paginator.ViewController<MergeRequest> {
                 override fun showEmptyProgress(show: Boolean) {
                     viewState.showEmptyProgress(show)
