@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">GitFox</string>
+    <string name="cancel">Cancel</string>
 
     <!--Main screen-->
     <string name="gitlab_activity">Activity</string>
@@ -18,7 +19,6 @@
     <string name="private_token">Token:</string>
     <string name="private_token_hint">abcdefg1234</string>
     <string name="login">Login</string>
-    <string name="cancel">Cancel</string>
     <string name="invalid_server_url">Invalid server path!</string>
     <string name="empty_token">Empty token!</string>
 
@@ -39,7 +39,6 @@
     <string name="settings_item">Settings</string>
     <string name="about_item">About</string>
     <string name="exit">exit</string>
-    <string name="cancel">cancel</string>
     <string name="logout_question">Logout?</string>
 
     <!--Error messages todo-->
