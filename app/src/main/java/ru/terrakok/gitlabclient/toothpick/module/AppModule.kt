@@ -16,11 +16,13 @@ import ru.terrakok.gitlabclient.model.interactor.issue.IssuesInteractor
 import ru.terrakok.gitlabclient.model.interactor.profile.MyProfileInteractor
 import ru.terrakok.gitlabclient.model.interactor.project.ProjectInteractor
 import ru.terrakok.gitlabclient.model.interactor.projects.MainProjectsListInteractor
+import ru.terrakok.gitlabclient.model.interactor.todo.TodoListInteractor
 import ru.terrakok.gitlabclient.model.repository.auth.AuthRepository
 import ru.terrakok.gitlabclient.model.repository.event.EventRepository
 import ru.terrakok.gitlabclient.model.repository.issue.IssueRepository
 import ru.terrakok.gitlabclient.model.repository.profile.ProfileRepository
 import ru.terrakok.gitlabclient.model.repository.project.ProjectRepository
+import ru.terrakok.gitlabclient.model.repository.todo.TodoRepository
 import ru.terrakok.gitlabclient.model.system.AppSchedulers
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
@@ -74,5 +76,9 @@ class AppModule(context: Context) : Module() {
         //Event
         bind(EventRepository::class.java)
         bind(EventInteractor::class.java)
+
+        //Todos
+        bind(TodoRepository::class.java)
+        bind(TodoListInteractor::class.java)
     }
 }
