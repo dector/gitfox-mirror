@@ -13,25 +13,25 @@ import javax.inject.Inject
 class AuthInteractor(
         private val serverPath: String,
         private val authRepository: AuthRepository,
-        private val hash: String) {
+        private val hash: String,
+        private val oauthParams: OAuthParams) {
 
     @Inject constructor(
             @ServerPath serverPath: String,
-            authRepository: AuthRepository
-    ) : this(serverPath, authRepository, UUID.randomUUID().toString())
+            authRepository: AuthRepository,
+            oauthParams: OAuthParams
+    ) : this(
+            serverPath,
+            authRepository,
+            UUID.randomUUID().toString(),
+            oauthParams
+    )
 
-    private val PARAMETER_CODE = "code"
-
-    //todo: before release change and move to private config
-    private val OAUTH_APP_ID = "808b7f51c6634294afd879edd75d5eaf55f1a75e7fe5bd91ca8b7140a5af639d"
-    private val OAUTH_APP_KEY = "a9dd39c8d2e781b65814007ca0f8b555d34f79b4d30c9356c38bb7ad9909c6f3"
-    private val OAUTH_REDIRECT_URI = "app://gitlab.client/"
-
-    val oauthUrl = "${serverPath}oauth/authorize?client_id=$OAUTH_APP_ID" +
-            "&redirect_uri=$OAUTH_REDIRECT_URI&response_type=code&state=$hash"
+    val oauthUrl = "${serverPath}oauth/authorize?client_id=${oauthParams.appId}" +
+            "&redirect_uri=${oauthParams.redirectUrl}&response_type=code&state=$hash"
 
 
-    fun checkOAuthRedirect(url: String) = url.indexOf(OAUTH_REDIRECT_URI) == 0
+    fun checkOAuthRedirect(url: String) = url.indexOf(oauthParams.redirectUrl) == 0
 
     fun isSignedIn() = authRepository.getSignState().firstOrError()
 
@@ -40,10 +40,10 @@ class AuthInteractor(
                 if (oauthRedirect.contains(hash)) {
                     authRepository
                             .requestOAuthToken(
-                                    OAUTH_APP_ID,
-                                    OAUTH_APP_KEY,
+                                    oauthParams.appId,
+                                    oauthParams.appKey,
                                     getQueryParameterFromUri(oauthRedirect, PARAMETER_CODE),
-                                    OAUTH_REDIRECT_URI
+                                    oauthParams.redirectUrl
                             )
                             .doOnSuccess {
                                 authRepository.saveAuthData(it.token, serverPath, true)
@@ -80,4 +80,7 @@ class AuthInteractor(
         return code
     }
 
+    companion object {
+        private const val PARAMETER_CODE = "code"
+    }
 }
