@@ -119,7 +119,7 @@ class MainActivity : BaseActivity(), LaunchView {
         val drawerFragment = supportFragmentManager.findFragmentById(R.id.navigationDrawer) as NavigationDrawerFragment
         supportFragmentManager.findFragmentById(R.id.mainContainer)?.let {
             when (it) {
-                is MainFragment -> drawerFragment.onScreenChanged(NavigationDrawerView.MenuItem.PROJECTS)
+                is MainFragment -> drawerFragment.onScreenChanged(NavigationDrawerView.MenuItem.ACTIVITY)
                 is AboutFragment -> drawerFragment.onScreenChanged(NavigationDrawerView.MenuItem.ABOUT)
             }
             enableNavDrawer(isNavDrawerAvailableForFragment(it))

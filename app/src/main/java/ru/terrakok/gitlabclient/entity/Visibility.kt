@@ -5,12 +5,10 @@ import com.google.gson.annotations.SerializedName
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 30.03.17
  */
-enum class Visibility {
-    @SerializedName("public") PUBLIC,
-    @SerializedName("internal") INTERNAL,
-    @SerializedName("private") PRIVATE;
+enum class Visibility(private val jsonName: String) {
+    @SerializedName("public") PUBLIC("public"),
+    @SerializedName("internal") INTERNAL("internal"),
+    @SerializedName("private") PRIVATE("private");
 
-    override fun toString(): String {
-        return super.toString().toLowerCase()
-    }
+    override fun toString() = jsonName
 }
