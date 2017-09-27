@@ -17,6 +17,8 @@ android {
         versionName "1.0"
         // versionCode 1 get it from '../ci.gradle'
 
+        buildConfigField "String", "ORIGIN_GITLAB_ENDPOINT", '"https://gitlab.com/"'
+
         vectorDrawables.useSupportLibrary true
 
         javaCompileOptions {
