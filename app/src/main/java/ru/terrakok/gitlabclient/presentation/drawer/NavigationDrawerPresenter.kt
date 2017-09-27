@@ -9,8 +9,7 @@ import ru.terrakok.gitlabclient.extension.addTo
 import ru.terrakok.gitlabclient.model.interactor.auth.AuthInteractor
 import ru.terrakok.gitlabclient.model.interactor.profile.MyProfileInteractor
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem
-import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem.ABOUT
-import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem.ACTIVITY
+import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem.*
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
 import timber.log.Timber
 import javax.inject.Inject
@@ -53,6 +52,7 @@ class NavigationDrawerPresenter @Inject constructor(
         if (item != currentSelectedItem) {
             when (item) {
                 ACTIVITY -> router.newRootScreen(Screens.MAIN_SCREEN)
+                PROJECTS -> router.newRootScreen(Screens.PROJECTS_SCREEN)
                 ABOUT -> router.newRootScreen(Screens.ABOUT_SCREEN)
             }
         }

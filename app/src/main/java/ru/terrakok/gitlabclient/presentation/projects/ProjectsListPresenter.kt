@@ -50,8 +50,8 @@ class ProjectsListPresenter @Inject constructor(
         if (disposable == null) {
             disposable = getProjectsSingle(page)
                     .doOnSubscribe { if (page == 1) viewState.showProgress(true) else viewState.showPageProgress(true) }
-                    .doOnEvent { _, _ -> if (page == 1) viewState.showProgress(false) else viewState.showPageProgress(false) }
-                    .doOnEvent { _, _ -> disposable = null }
+                    .doAfterTerminate { if (page == 1) viewState.showProgress(false) else viewState.showPageProgress(false) }
+                    .doAfterTerminate { disposable = null }
                     .subscribe(
                             { projects ->
                                 Timber.d("getProjects: ${projects.size}")
@@ -82,6 +82,6 @@ class ProjectsListPresenter @Inject constructor(
     fun requestFirstPage() = requestProjects(1)
     fun requestNextPage() = requestProjects(currentPage + 1)
 
-    fun onProjectClicked(id: Long) = router.navigateTo(Screens.PROJECT_SCREEN, id)
+    fun onProjectClicked(id: Long) = router.navigateTo(Screens.PROJECT_INFO_SCREEN, id)
     fun onBackPressed() = router.exit()
 }

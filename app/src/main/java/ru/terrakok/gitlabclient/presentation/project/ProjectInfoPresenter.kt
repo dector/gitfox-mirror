@@ -33,7 +33,7 @@ class ProjectInfoPresenter @Inject constructor(
                     projectInteractor.getProjectReadmeHtml(project.id, project.defaultBranch)
                 }
                 .doOnSubscribe { viewState.showProgress(true) }
-                .doOnEvent { _, _ -> viewState.showProgress(false) }
+                .doAfterTerminate { viewState.showProgress(false) }
                 .subscribe(
                         { htmlReadme ->
                             viewState.showReadmeFile(htmlReadme)

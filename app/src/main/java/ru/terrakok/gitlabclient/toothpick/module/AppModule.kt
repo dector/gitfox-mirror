@@ -15,6 +15,8 @@ import ru.terrakok.gitlabclient.model.interactor.auth.AuthInteractor
 import ru.terrakok.gitlabclient.model.interactor.event.EventInteractor
 import ru.terrakok.gitlabclient.model.interactor.issue.IssuesInteractor
 import ru.terrakok.gitlabclient.model.interactor.profile.MyProfileInteractor
+import ru.terrakok.gitlabclient.model.interactor.project.Base64Tools
+import ru.terrakok.gitlabclient.model.interactor.project.MarkDownConverter
 import ru.terrakok.gitlabclient.model.interactor.project.ProjectInteractor
 import ru.terrakok.gitlabclient.model.interactor.projects.MainProjectsListInteractor
 import ru.terrakok.gitlabclient.model.repository.auth.AuthRepository
@@ -74,5 +76,11 @@ class AppModule(context: Context) : Module() {
         //Event
         bind(EventRepository::class.java)
         bind(EventInteractor::class.java)
+
+        //MarkDownConverter
+        bind(MarkDownConverter::class.java).toInstance(MarkDownConverter())
+
+        //Base64Tools
+        bind(Base64Tools::class.java).toInstance(Base64Tools())
     }
 }

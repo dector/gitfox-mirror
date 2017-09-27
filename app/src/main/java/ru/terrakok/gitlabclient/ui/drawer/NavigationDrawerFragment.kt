@@ -16,8 +16,7 @@ import ru.terrakok.gitlabclient.model.interactor.profile.MyUserInfo
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerPresenter
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem
-import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem.ABOUT
-import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem.ACTIVITY
+import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem.*
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.ConfirmDialog
@@ -70,9 +69,11 @@ class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView, ConfirmDi
         }
 
         activityMI.tag = ACTIVITY
+        projectsMI.tag = PROJECTS
         aboutMI.tag = ABOUT
 
         activityMI.setOnClickListener(itemClickListener)
+        projectsMI.setOnClickListener(itemClickListener)
         aboutMI.setOnClickListener(itemClickListener)
     }
 
