@@ -15,8 +15,9 @@
         <item name="android:windowBackground">@drawable/splash_background</item>
     </style>
 
-    <style name="ToolbarStyle">
+    <style name="ToolbarStyle" parent="ThemeOverlay.AppCompat.Dark">
         <item name="android:background">@color/colorPrimary</item>
+        <item name="android:textColorPrimary">@color/white</item>
     </style>
 
     <style name="ProgressDialogStyle" parent="ThemeOverlay.AppCompat.Dialog">

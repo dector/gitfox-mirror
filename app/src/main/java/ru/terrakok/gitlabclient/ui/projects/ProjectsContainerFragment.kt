@@ -3,12 +3,10 @@ package ru.terrakok.gitlabclient.ui.projects
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentPagerAdapter
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_my_issues_container.*
+import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
-import ru.terrakok.gitlabclient.presentation.projects.ProjectsContainerPresenter
 import ru.terrakok.gitlabclient.presentation.projects.ProjectsConteinerView
 import ru.terrakok.gitlabclient.presentation.projects.ProjectsListPresenter
 import ru.terrakok.gitlabclient.toothpick.DI
@@ -19,18 +17,11 @@ import javax.inject.Inject
 
 class ProjectsContainerFragment : BaseFragment(), ProjectsConteinerView {
     @Inject lateinit var menuController: GlobalMenuController
-    @InjectPresenter lateinit var presenter: ProjectsContainerPresenter
+    @Inject lateinit var router: Router
 
     override val layoutRes = R.layout.fragment_projects_container
 
     private val adapter: ProjectsPagesAdapter by lazy { ProjectsPagesAdapter() }
-
-    @ProvidePresenter
-    fun providePresenter(): ProjectsContainerPresenter {
-        return Toothpick
-                .openScope(DI.MAIN_ACTIVITY_SCOPE)
-                .getInstance(ProjectsContainerPresenter::class.java)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Toothpick.inject(this, Toothpick.openScope(DI.MAIN_ACTIVITY_SCOPE))
@@ -45,7 +36,7 @@ class ProjectsContainerFragment : BaseFragment(), ProjectsConteinerView {
     }
 
     override fun onBackPressed() {
-        presenter.onBackPressed()
+        router.exit()
     }
 
     private inner class ProjectsPagesAdapter : FragmentPagerAdapter(childFragmentManager) {
