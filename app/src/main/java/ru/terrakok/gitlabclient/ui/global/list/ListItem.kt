@@ -1,6 +1,7 @@
 package ru.terrakok.gitlabclient.ui.global.list
 
 import ru.terrakok.gitlabclient.entity.Issue
+import ru.terrakok.gitlabclient.entity.MergeRequest
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.event.Event
 
@@ -11,5 +12,6 @@ sealed class ListItem {
     class ProgressItem : ListItem()
     class ProjectItem(val project: Project) : ListItem()
     class IssueItem(val issue: Issue) : ListItem()
+    class MergeRequestItem(val mergeRequest: MergeRequest) : ListItem()
     class EventItem(val event: Event) : ListItem()
 }
