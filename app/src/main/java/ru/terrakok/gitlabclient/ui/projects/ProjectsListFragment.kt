@@ -6,9 +6,10 @@ import android.support.v7.widget.RecyclerView
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.hannesdorfmann.adapterdelegates3.ListDelegationAdapter
-import kotlinx.android.synthetic.main.fragment_projects.*
+import kotlinx.android.synthetic.main.layout_base_list.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Project
+import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.projects.ProjectsListPresenter
 import ru.terrakok.gitlabclient.presentation.projects.ProjectsListView
 import ru.terrakok.gitlabclient.toothpick.DI
@@ -76,7 +77,11 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
     }
 
     override fun showEmptyProgress(show: Boolean) {
-        swipeToRefresh.post { swipeToRefresh?.isRefreshing = show }
+        fullscreenProgressView.visible(show)
+
+        //trick for disable and hide swipeToRefresh on fullscreen progress
+        swipeToRefresh.visible(!show)
+        swipeToRefresh.post { swipeToRefresh.isRefreshing = false }
     }
 
     override fun showEmptyView(show: Boolean) {
@@ -88,10 +93,9 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
     }
 
     override fun showProjects(show: Boolean, projects: List<Project>) {
+        recyclerView.visible(show)
         recyclerView.post { adapter.setData(projects) }
     }
-
-    override fun onBackPressed() = presenter.onBackPressed()
 
     override fun showMessage(message: String) {
         showSnackMessage(message)
@@ -100,6 +104,8 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
     override fun showPageProgress(isVisible: Boolean) {
         recyclerView.post { adapter.showProgress(isVisible) }
     }
+
+    override fun onBackPressed() = presenter.onBackPressed()
 
     inner class ProjectsAdapter : ListDelegationAdapter<MutableList<ListItem>>() {
         init {
