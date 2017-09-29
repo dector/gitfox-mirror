@@ -1,5 +1,6 @@
 package ru.terrakok.gitlabclient.ui.launch
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
@@ -13,6 +14,7 @@ import ru.terrakok.cicerone.android.SupportAppNavigator
 import ru.terrakok.cicerone.commands.Command
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
+import ru.terrakok.gitlabclient.model.system.ServerSwitcher
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
 import ru.terrakok.gitlabclient.presentation.launch.LaunchPresenter
@@ -30,26 +32,30 @@ import toothpick.Toothpick
 import javax.inject.Inject
 
 class MainActivity : BaseActivity(), LaunchView {
+    @Inject lateinit var restarter: ServerSwitcher
     @Inject lateinit var navigationHolder: NavigatorHolder
     @Inject lateinit var menuController: GlobalMenuController
 
+    private var restarterDisposable: Disposable? = null
     private var menuStateDisposable: Disposable? = null
+    private var restart = false
 
     @InjectPresenter lateinit var presenter: LaunchPresenter
 
     @ProvidePresenter
     fun providePresenter(): LaunchPresenter {
         return Toothpick
-                .openScope(DI.APP_SCOPE)
+                .openScope(DI.SERVER_SCOPE)
                 .getInstance(LaunchPresenter::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
 
-        val scope = Toothpick.openScopes(DI.APP_SCOPE, DI.MAIN_ACTIVITY_SCOPE)
-        scope.installModules(MainActivityModule())
-        Toothpick.inject(this, scope)
+        Toothpick.openScopes(DI.SERVER_SCOPE, DI.MAIN_ACTIVITY_SCOPE).apply {
+            installModules(MainActivityModule())
+            Toothpick.inject(this@MainActivity, this)
+        }
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -57,11 +63,13 @@ class MainActivity : BaseActivity(), LaunchView {
 
     override fun onResumeFragments() {
         super.onResumeFragments()
+        restarterDisposable = restarter.restartLaunchActivitySignal.subscribe { restartActivity() }
         menuStateDisposable = menuController.state.subscribe { openNavDrawer(it) }
         navigationHolder.setNavigator(navigator)
     }
 
     override fun onPause() {
+        restarterDisposable?.dispose()
         menuStateDisposable?.dispose()
         navigationHolder.removeNavigator()
         super.onPause()
@@ -69,7 +77,9 @@ class MainActivity : BaseActivity(), LaunchView {
 
     override fun onDestroy() {
         super.onDestroy()
-        if (isFinishing) Toothpick.closeScope(DI.MAIN_ACTIVITY_SCOPE)
+
+        //'!restart' - because onDestroy old Activity will be called after onCreate new Activity
+        if (!restart && isFinishing) Toothpick.closeScope(DI.MAIN_ACTIVITY_SCOPE)
     }
 
     private val navigator = object : SupportAppNavigator(this, R.id.mainContainer) {
@@ -112,7 +122,7 @@ class MainActivity : BaseActivity(), LaunchView {
         val drawerFragment = supportFragmentManager.findFragmentById(R.id.navigationDrawer) as NavigationDrawerFragment
         supportFragmentManager.findFragmentById(R.id.mainContainer)?.let {
             when (it) {
-                is MainFragment -> drawerFragment.onScreenChanged(NavigationDrawerView.MenuItem.PROJECTS)
+                is MainFragment -> drawerFragment.onScreenChanged(NavigationDrawerView.MenuItem.ACTIVITY)
                 is AboutFragment -> drawerFragment.onScreenChanged(NavigationDrawerView.MenuItem.ABOUT)
             }
             enableNavDrawer(isNavDrawerAvailableForFragment(it))
@@ -137,5 +147,16 @@ class MainActivity : BaseActivity(), LaunchView {
                 presenter.onBackPressed()
             }
         }
+    }
+
+    private fun restartActivity() {
+        restart = true
+        Toothpick.closeScope(DI.MAIN_ACTIVITY_SCOPE)
+        startActivity(
+                Intent(this, MainActivity::class.java).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                }
+        )
+        finish()
     }
 }
