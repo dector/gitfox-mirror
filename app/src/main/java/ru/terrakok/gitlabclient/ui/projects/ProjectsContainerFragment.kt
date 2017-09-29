@@ -7,7 +7,6 @@ import kotlinx.android.synthetic.main.fragment_my_issues_container.*
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
-import ru.terrakok.gitlabclient.presentation.projects.ProjectsConteinerView
 import ru.terrakok.gitlabclient.presentation.projects.ProjectsListPresenter
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
@@ -15,7 +14,7 @@ import toothpick.Toothpick
 import javax.inject.Inject
 
 
-class ProjectsContainerFragment : BaseFragment(), ProjectsConteinerView {
+class ProjectsContainerFragment : BaseFragment() {
     @Inject lateinit var menuController: GlobalMenuController
     @Inject lateinit var router: Router
 

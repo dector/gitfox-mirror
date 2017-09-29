@@ -28,6 +28,8 @@ class AppModule(context: Context) : Module() {
         bind(PrimitiveWrapper::class.java).withName(DefaultPageSize::class.java).toInstance(PrimitiveWrapper(20))
         bind(SchedulersProvider::class.java).toInstance(AppSchedulers())
         bind(ResourceManager::class.java).singletonInScope()
+        bind(MarkDownConverter::class.java).toInstance(MarkDownConverter())
+        bind(Base64Tools::class.java).toInstance(Base64Tools())
 
         //Navigation
         val cicerone = Cicerone.create()
@@ -36,10 +38,5 @@ class AppModule(context: Context) : Module() {
 
         //Auth
         bind(AuthHolder::class.java).to(Prefs::class.java).singletonInScope()
-
-        bind(MarkDownConverter::class.java).toInstance(MarkDownConverter())
-
-        //Base64Tools
-        bind(Base64Tools::class.java).toInstance(Base64Tools())
     }
 }
