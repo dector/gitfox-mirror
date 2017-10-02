@@ -6,6 +6,7 @@ package ru.terrakok.gitlabclient
 object Screens {
     const val AUTH_SCREEN = "oauth screen"
     const val MAIN_SCREEN = "main screen"
-    const val PROJECT_SCREEN = "project screen"
+    const val PROJECTS_SCREEN = "projects screen"
+    const val PROJECT_INFO_SCREEN = "project_info_screen"
     const val ABOUT_SCREEN = "about screen"
 }

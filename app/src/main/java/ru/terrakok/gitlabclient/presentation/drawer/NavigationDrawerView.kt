@@ -12,6 +12,7 @@ import ru.terrakok.gitlabclient.model.interactor.profile.MyUserInfo
 interface NavigationDrawerView : MvpView {
     enum class MenuItem {
         ACTIVITY,
+        PROJECTS,
         ABOUT
     }
 

@@ -6,9 +6,10 @@ import android.support.v7.widget.RecyclerView
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.hannesdorfmann.adapterdelegates3.ListDelegationAdapter
-import kotlinx.android.synthetic.main.fragment_projects.*
+import kotlinx.android.synthetic.main.layout_base_list.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Project
+import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.projects.ProjectsListPresenter
 import ru.terrakok.gitlabclient.presentation.projects.ProjectsListView
 import ru.terrakok.gitlabclient.toothpick.DI
@@ -48,7 +49,7 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
     @ProvidePresenter
     fun createPresenter(): ProjectsListPresenter {
         val scopeName = "projects list scope"
-        val scope = Toothpick.openScopes(DI.APP_SCOPE, scopeName)
+        val scope = Toothpick.openScopes(DI.MAIN_ACTIVITY_SCOPE, scopeName)
         scope.installModules(object : Module() {
             init {
                 bind(PrimitiveWrapper::class.java)
@@ -68,21 +69,32 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = adapter
 
-        swipeToRefresh.setOnRefreshListener { presenter.requestFirstPage() }
+        swipeToRefresh.setOnRefreshListener { presenter.refreshProjects() }
     }
 
-    override fun onBackPressed() = presenter.onBackPressed()
-
-    override fun clearData() {
-        adapter.clearData()
+    override fun showRefreshProgress(show: Boolean) {
+        swipeToRefresh.post { swipeToRefresh?.isRefreshing = show }
     }
 
-    override fun setNewData(projects: List<Project>) {
-        adapter.addData(projects)
+    override fun showEmptyProgress(show: Boolean) {
+        fullscreenProgressView.visible(show)
+
+        //trick for disable and hide swipeToRefresh on fullscreen progress
+        swipeToRefresh.visible(!show)
+        swipeToRefresh.post { swipeToRefresh.isRefreshing = false }
     }
 
-    override fun showProgress(isVisible: Boolean) {
-        swipeToRefresh.post { swipeToRefresh?.isRefreshing = isVisible }
+    override fun showEmptyView(show: Boolean) {
+        //todo
+    }
+
+    override fun showEmptyError(show: Boolean, message: String?) {
+        if (show && message != null) showSnackMessage(message)
+    }
+
+    override fun showProjects(show: Boolean, projects: List<Project>) {
+        recyclerView.visible(show)
+        recyclerView.post { adapter.setData(projects) }
     }
 
     override fun showMessage(message: String) {
@@ -90,8 +102,10 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
     }
 
     override fun showPageProgress(isVisible: Boolean) {
-        adapter.showProgress(isVisible)
+        recyclerView.post { adapter.showProgress(isVisible) }
     }
+
+    override fun onBackPressed() = presenter.onBackPressed()
 
     inner class ProjectsAdapter : ListDelegationAdapter<MutableList<ListItem>>() {
         init {
@@ -100,16 +114,13 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
             delegatesManager.addDelegate(ProgressAdapterDelegate())
         }
 
-        fun clearData() {
-            items = if (isProgress()) mutableListOf(ListItem.ProgressItem()) else mutableListOf()
-            notifyDataSetChanged()
-        }
+        fun setData(projects: List<Project>) {
+            val progress = isProgress()
 
-        fun addData(newProjects: List<Project>) {
-            items.addAll(
-                    if (isProgress()) items.size - 1 else items.size,
-                    newProjects.map { ListItem.ProjectItem(it) }
-            )
+            items.clear()
+            items.addAll(projects.map { ListItem.ProjectItem(it) })
+            if (progress) items.add(ListItem.ProgressItem())
+
             notifyDataSetChanged()
         }
 
@@ -127,7 +138,7 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int, payloads: MutableList<Any?>?) {
             super.onBindViewHolder(holder, position, payloads)
 
-            if (position == items.size - 10) presenter.requestNextPage()
+            if (position == items.size - 10) presenter.loadNextProjectsPage()
         }
     }
 }

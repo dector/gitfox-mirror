@@ -28,6 +28,7 @@ import ru.terrakok.gitlabclient.ui.global.BaseActivity
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.main.MainFragment
 import ru.terrakok.gitlabclient.ui.project.ProjectInfoFragment
+import ru.terrakok.gitlabclient.ui.projects.ProjectsContainerFragment
 import toothpick.Toothpick
 import javax.inject.Inject
 
@@ -94,7 +95,8 @@ class MainActivity : BaseActivity(), LaunchView {
         override fun createFragment(screenKey: String?, data: Any?): Fragment? = when (screenKey) {
             Screens.AUTH_SCREEN -> AuthFragment()
             Screens.MAIN_SCREEN -> MainFragment()
-            Screens.PROJECT_SCREEN -> ProjectInfoFragment.createNewInstance(data as Long)
+            Screens.PROJECTS_SCREEN -> ProjectsContainerFragment()
+            Screens.PROJECT_INFO_SCREEN -> ProjectInfoFragment.createNewInstance(data as Long)
             Screens.ABOUT_SCREEN -> AboutFragment()
             else -> null
         }
@@ -123,6 +125,7 @@ class MainActivity : BaseActivity(), LaunchView {
         supportFragmentManager.findFragmentById(R.id.mainContainer)?.let {
             when (it) {
                 is MainFragment -> drawerFragment.onScreenChanged(NavigationDrawerView.MenuItem.ACTIVITY)
+                is ProjectsContainerFragment -> drawerFragment.onScreenChanged(NavigationDrawerView.MenuItem.PROJECTS)
                 is AboutFragment -> drawerFragment.onScreenChanged(NavigationDrawerView.MenuItem.ABOUT)
             }
             enableNavDrawer(isNavDrawerAvailableForFragment(it))
@@ -131,6 +134,7 @@ class MainActivity : BaseActivity(), LaunchView {
 
     private fun isNavDrawerAvailableForFragment(currentFragment: Fragment) = when (currentFragment) {
         is MainFragment -> true
+        is ProjectsContainerFragment -> true
         is AboutFragment -> true
         else -> false
     }

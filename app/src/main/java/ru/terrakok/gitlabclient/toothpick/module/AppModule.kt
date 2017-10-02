@@ -7,6 +7,8 @@ import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.BuildConfig
 import ru.terrakok.gitlabclient.model.data.auth.AuthHolder
 import ru.terrakok.gitlabclient.model.data.storage.Prefs
+import ru.terrakok.gitlabclient.model.interactor.project.Base64Tools
+import ru.terrakok.gitlabclient.model.interactor.project.MarkDownConverter
 import ru.terrakok.gitlabclient.model.system.AppSchedulers
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
@@ -26,6 +28,8 @@ class AppModule(context: Context) : Module() {
         bind(PrimitiveWrapper::class.java).withName(DefaultPageSize::class.java).toInstance(PrimitiveWrapper(20))
         bind(SchedulersProvider::class.java).toInstance(AppSchedulers())
         bind(ResourceManager::class.java).singletonInScope()
+        bind(MarkDownConverter::class.java).toInstance(MarkDownConverter())
+        bind(Base64Tools::class.java).toInstance(Base64Tools())
 
         //Navigation
         val cicerone = Cicerone.create()
