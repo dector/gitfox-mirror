@@ -72,6 +72,12 @@
     <string name="event_target_type_mr">merge request</string>
     <string name="event_target_type_milestone">milestone</string>
 
+    <!--My Merge Requests Screen-->
+    <string name="merge_request_opened">Opened</string>
+    <string name="merge_request_merged">Merged</string>
+    <string name="merge_request_closed">Closed</string>
+    <string name="merge_request_item_opened_at_by_author" formatted="false">opened %s by %s</string>
+
     <!--Calligraphy Config-->
     <string name="font_main_regular">fonts/Roboto-Regular.ttf</string>
     <string name="font_main_medium">fonts/Roboto-Medium.ttf</string>

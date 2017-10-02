@@ -6,6 +6,11 @@ import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.entity.event.Event
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.event.EventTarget
+import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
+import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestScope
+import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
+import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestViewType
+import java.util.*
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 28.03.17
@@ -78,4 +83,47 @@ interface GitlabApi {
             @Query("page") page: Int,
             @Query("per_page") pageSize: Int
     ): Single<List<Event>>
+
+    @GET("$API_PATH/merge_requests")
+    fun getMergeRequests(
+            @Query("state") state: MergeRequestState?,
+            @Query("milestone") milestone: String?,
+            @Query("view") viewType: MergeRequestViewType?,
+            @Query("labels") labels: String?,
+            @Query("created_before") createdBefore: Date?,
+            @Query("created_after") createdAfter: Date?,
+            @Query("scope") scope: MergeRequestScope?,
+            @Query("author_id") authorId: Int?,
+            @Query("assignee_id") assigneeId: Int?,
+            @Query("my_reaction_emoji") meReactionEmoji: String?,
+            @Query("order_by") orderBy: OrderBy?,
+            @Query("sort") sort: Sort?,
+            @Query("page") page: Int,
+            @Query("per_page") pageSize: Int
+    ): Single<List<MergeRequest>>
+
+    fun getProjectMergeRequests(
+            @Path("project_id") projectId: Int,
+            @Query("state") state: MergeRequestState?,
+            @Query("milestone") milestone: String?,
+            @Query("view") viewType: MergeRequestViewType?,
+            @Query("labels") labels: String?,
+            @Query("created_before") createdBefore: Date?,
+            @Query("created_after") createdAfter: Date?,
+            @Query("scope") scope: MergeRequestScope?,
+            @Query("author_id") authorId: Int?,
+            @Query("assignee_id") assigneeId: Int?,
+            @Query("my_reaction_emoji") meReactionEmoji: String?,
+            @Query("order_by") orderBy: OrderBy?,
+            @Query("sort") sort: Sort?,
+            @Query("page") page: Int,
+            @Query("per_page") pageSize: Int
+    ): Single<List<MergeRequest>>
+
+    @GET("$API_PATH/projects/{project_id}/merge_requests/{merge_request_id}")
+    fun getMergeRequest(
+            @Path("project_id") projectId: Int,
+            @Path("merge_request_id") mergeRequestId: Int
+    ): Single<MergeRequest>
+
 }
