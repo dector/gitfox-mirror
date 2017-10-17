@@ -1,10 +1,13 @@
 package ru.terrakok.gitlabclient.ui.global
 
+import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.TextView
 import com.arellomobile.mvp.MvpAppCompatFragment
+
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 26.03.17.
@@ -32,7 +35,10 @@ abstract class BaseFragment : MvpAppCompatFragment() {
 
     protected fun showSnackMessage(message: String) {
         view?.let {
-            Snackbar.make(it, message, Snackbar.LENGTH_LONG).show()
+            val snackbar = Snackbar.make(it, message, Snackbar.LENGTH_LONG)
+            val messageTextView = snackbar.view.findViewById(android.support.design.R.id.snackbar_text) as TextView
+            messageTextView.setTextColor(Color.WHITE)
+            snackbar.show()
         }
     }
 
