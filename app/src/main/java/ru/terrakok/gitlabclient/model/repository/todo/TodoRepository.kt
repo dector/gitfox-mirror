@@ -9,6 +9,9 @@ import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultPageSize
 import javax.inject.Inject
 
+/**
+ * @author Eugene Shapovalov (CraggyHaggy). Date: 20.09.17
+ */
 class TodoRepository @Inject constructor(
         private val api: GitlabApi,
         private val schedulers: SchedulersProvider,
