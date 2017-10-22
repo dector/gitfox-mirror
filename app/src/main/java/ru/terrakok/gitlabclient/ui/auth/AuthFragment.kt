@@ -11,6 +11,7 @@ import android.webkit.WebViewClient
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_auth.*
+import ru.terrakok.gitlabclient.BuildConfig
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.presentation.auth.AuthPresenter
 import ru.terrakok.gitlabclient.presentation.auth.AuthView
@@ -49,8 +50,16 @@ class AuthFragment : BaseFragment(), AuthView, CustomServerAuthFragment.OnClickL
             }
         }
 
-        CookieManager.getInstance().removeAllCookie()
-        webView.settings.javaScriptEnabled = true
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            CookieManager.getInstance().removeAllCookies(null)
+        } else {
+            CookieManager.getInstance().removeAllCookie()
+        }
+
+        with(webView.settings) {
+            javaScriptEnabled = true
+            userAgentString = BuildConfig.WEB_AUTH_USER_AGENT
+        }
 
         webView.setWebViewClient(object : WebViewClient() {
 
