@@ -8,11 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import org.joda.time.DateTimeZone
+import org.joda.time.format.DateTimeFormat
 import retrofit2.HttpException
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import java.io.IOException
-import java.text.SimpleDateFormat
 import java.util.*
 
 /**
@@ -54,9 +55,10 @@ fun Throwable.userMessage(resourceManager: ResourceManager) = when (this) {
     else -> resourceManager.getString(R.string.unknown_error)
 }
 
-private val DATE_FORMAT = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+private val DATE_FORMAT = DateTimeFormat.forPattern("dd.MM.yyyy")
 fun Date.humanTime(resources: Resources): String {
-    val timeDelta = (System.currentTimeMillis() - this.time) / 1000L
+    val localMillis = DateTimeZone.getDefault().convertUTCToLocal(this.time)
+    val timeDelta = (System.currentTimeMillis() - localMillis) / 1000L
     val timeStr =
             if (timeDelta < 60) {
                 resources.getString(R.string.time_sec, timeDelta)
@@ -67,7 +69,7 @@ fun Date.humanTime(resources: Resources): String {
             } else if (timeDelta < 60 * 60 * 24 * 7) {
                 resources.getString(R.string.time_day, timeDelta / (60 * 60 * 24))
             } else {
-                return DATE_FORMAT.format(this)
+                return DATE_FORMAT.print(localMillis)
             }
 
     return resources.getString(R.string.time_ago, timeStr)
