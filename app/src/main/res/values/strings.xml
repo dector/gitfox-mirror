@@ -5,7 +5,7 @@
     <string name="gitlab_activity">Activity</string>
     <string name="gitlab_issue">Issues</string>
     <string name="gitlab_merge">Merge Requests</string>
-    <string name="gitlab_todo">ToDo</string>
+    <string name="gitlab_todo">Todos</string>
 
     <!--Auth screen-->
     <string name="auth_title">Authorization</string>
@@ -59,6 +59,10 @@
     <string name="event_target_type_diff_note">issue</string>
     <string name="event_target_type_mr">merge request</string>
     <string name="event_target_type_milestone">milestone</string>
+
+    <!--My Todos Screen-->
+    <string name="my_todos_pending">Pending</string>
+    <string name="my_todos_done">Done</string>
 
     <!--Calligraphy Config-->
     <string name="font_main_regular">fonts/Roboto-Regular.ttf</string>

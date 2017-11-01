@@ -61,7 +61,11 @@ class MyTodoListPresenter @Inject constructor(
             }
     )
 
+    fun onTodoClick(todo: Todo) {}
     fun refreshTodos() = paginator.refresh()
+    fun loadNextTodosPage() {
+        paginator.loadNewPage()
+    }
 
     override fun onDestroy() {
         super.onDestroy()
