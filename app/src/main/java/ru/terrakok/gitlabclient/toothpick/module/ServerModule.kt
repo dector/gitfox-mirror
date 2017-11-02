@@ -18,7 +18,6 @@ import ru.terrakok.gitlabclient.model.repository.issue.IssueRepository
 import ru.terrakok.gitlabclient.model.repository.mergerequest.MergeRequestRepository
 import ru.terrakok.gitlabclient.model.repository.profile.ProfileRepository
 import ru.terrakok.gitlabclient.model.repository.project.ProjectRepository
-import ru.terrakok.gitlabclient.model.system.ServerSwitcher
 import ru.terrakok.gitlabclient.toothpick.provider.ApiProvider
 import ru.terrakok.gitlabclient.toothpick.provider.OkHttpClientProvider
 import ru.terrakok.gitlabclient.toothpick.qualifier.ServerPath
@@ -34,7 +33,6 @@ class ServerModule(serverUrl: String) : Module() {
         bind(Gson::class.java).toInstance(GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create())
         bind(OkHttpClient::class.java).toProvider(OkHttpClientProvider::class.java).singletonInScope()
         bind(GitlabApi::class.java).toProvider(ApiProvider::class.java).singletonInScope()
-        bind(ServerSwitcher::class.java).singletonInScope()
 
         //Auth
         //todo: before release change and move to private config

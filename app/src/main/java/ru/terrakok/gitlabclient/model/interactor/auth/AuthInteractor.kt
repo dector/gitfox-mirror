@@ -2,7 +2,10 @@ package ru.terrakok.gitlabclient.model.interactor.auth
 
 import io.reactivex.Completable
 import ru.terrakok.gitlabclient.model.repository.auth.AuthRepository
+import ru.terrakok.gitlabclient.toothpick.DI
+import ru.terrakok.gitlabclient.toothpick.module.ServerModule
 import ru.terrakok.gitlabclient.toothpick.qualifier.ServerPath
+import toothpick.Toothpick
 import java.net.URI
 import java.util.*
 import javax.inject.Inject
@@ -59,6 +62,7 @@ class AuthInteractor(
         if (!customServerPath.endsWith("/")) serverPath += "/"
 
         authRepository.saveAuthData(privateToken, serverPath, false)
+        switchServerIfNeeded(customServerPath)
     }
 
     fun logout() = Completable.fromAction {
@@ -78,6 +82,15 @@ class AuthInteractor(
             }
         }
         return code
+    }
+
+    private fun switchServerIfNeeded(newServerPath: String) {
+        if (serverPath != newServerPath) {
+            Toothpick.closeScope(DI.SERVER_SCOPE)
+            Toothpick
+                    .openScopes(DI.APP_SCOPE, DI.SERVER_SCOPE)
+                    .installModules(ServerModule(newServerPath))
+        }
     }
 
     companion object {
