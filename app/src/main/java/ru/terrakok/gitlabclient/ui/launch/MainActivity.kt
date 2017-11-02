@@ -14,7 +14,6 @@ import ru.terrakok.cicerone.android.SupportAppNavigator
 import ru.terrakok.cicerone.commands.Command
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
-import ru.terrakok.gitlabclient.model.system.ServerSwitcher
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
 import ru.terrakok.gitlabclient.presentation.launch.LaunchPresenter
@@ -22,7 +21,7 @@ import ru.terrakok.gitlabclient.presentation.launch.LaunchView
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.toothpick.module.MainActivityModule
 import ru.terrakok.gitlabclient.ui.about.AboutFragment
-import ru.terrakok.gitlabclient.ui.auth.AuthFragment
+import ru.terrakok.gitlabclient.ui.auth.AuthActivity
 import ru.terrakok.gitlabclient.ui.drawer.NavigationDrawerFragment
 import ru.terrakok.gitlabclient.ui.global.BaseActivity
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
@@ -33,13 +32,12 @@ import toothpick.Toothpick
 import javax.inject.Inject
 
 class MainActivity : BaseActivity(), LaunchView {
-    @Inject lateinit var restarter: ServerSwitcher
     @Inject lateinit var navigationHolder: NavigatorHolder
     @Inject lateinit var menuController: GlobalMenuController
 
-    private var restarterDisposable: Disposable? = null
     private var menuStateDisposable: Disposable? = null
-    private var restart = false
+
+    override val layoutRes = R.layout.activity_main
 
     @InjectPresenter lateinit var presenter: LaunchPresenter
 
@@ -59,18 +57,15 @@ class MainActivity : BaseActivity(), LaunchView {
         }
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
     }
 
     override fun onResumeFragments() {
         super.onResumeFragments()
-        restarterDisposable = restarter.restartLaunchActivitySignal.subscribe { restartActivity() }
         menuStateDisposable = menuController.state.subscribe { openNavDrawer(it) }
         navigationHolder.setNavigator(navigator)
     }
 
     override fun onPause() {
-        restarterDisposable?.dispose()
         menuStateDisposable?.dispose()
         navigationHolder.removeNavigator()
         super.onPause()
@@ -78,9 +73,7 @@ class MainActivity : BaseActivity(), LaunchView {
 
     override fun onDestroy() {
         super.onDestroy()
-
-        //'!restart' - because onDestroy old Activity will be called after onCreate new Activity
-        if (!restart && isFinishing) Toothpick.closeScope(DI.MAIN_ACTIVITY_SCOPE)
+        if (isFinishing) Toothpick.closeScope(DI.MAIN_ACTIVITY_SCOPE)
     }
 
     private val navigator = object : SupportAppNavigator(this, R.id.mainContainer) {
@@ -90,10 +83,12 @@ class MainActivity : BaseActivity(), LaunchView {
             updateNavDrawer()
         }
 
-        override fun createActivityIntent(screenKey: String?, data: Any?) = null
+        override fun createActivityIntent(screenKey: String?, data: Any?): Intent? = when (screenKey) {
+            Screens.AUTH_SCREEN -> Intent(this@MainActivity, AuthActivity::class.java)
+            else -> null
+        }
 
         override fun createFragment(screenKey: String?, data: Any?): Fragment? = when (screenKey) {
-            Screens.AUTH_SCREEN -> AuthFragment()
             Screens.MAIN_SCREEN -> MainFragment()
             Screens.PROJECTS_SCREEN -> ProjectsContainerFragment()
             Screens.PROJECT_INFO_SCREEN -> ProjectInfoFragment.createNewInstance(data as Long)
@@ -151,16 +146,5 @@ class MainActivity : BaseActivity(), LaunchView {
                 presenter.onBackPressed()
             }
         }
-    }
-
-    private fun restartActivity() {
-        restart = true
-        Toothpick.closeScope(DI.MAIN_ACTIVITY_SCOPE)
-        startActivity(
-                Intent(this, MainActivity::class.java).apply {
-                    addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-                }
-        )
-        finish()
     }
 }

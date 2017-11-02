@@ -61,7 +61,7 @@ dependencies {
     kapt "com.arello-mobile:moxy-compiler:$moxyVersion"
     compile "com.arello-mobile:moxy-app-compat:$moxyVersion"
     //Cicerone Navigation
-    compile "ru.terrakok.cicerone:cicerone:1.2.1"
+    compile "ru.terrakok.cicerone:cicerone:2.1.0"
     //DI
     compile "com.github.stephanenicolas.toothpick:toothpick-runtime:$toothpickVersion"
     kapt "com.github.stephanenicolas.toothpick:toothpick-compiler:$toothpickVersion"
