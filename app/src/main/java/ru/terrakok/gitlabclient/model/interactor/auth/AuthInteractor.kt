@@ -36,7 +36,7 @@ class AuthInteractor(
 
     fun checkOAuthRedirect(url: String) = url.indexOf(oauthParams.redirectUrl) == 0
 
-    fun isSignedIn() = authRepository.getSignState().firstOrError()
+    fun isSignedIn() = authRepository.isSignedIn
 
     fun login(oauthRedirect: String) =
             Completable.defer {
@@ -65,9 +65,7 @@ class AuthInteractor(
         switchServerIfNeeded(customServerPath)
     }
 
-    fun logout() = Completable.fromAction {
-        authRepository.clearAuthData()
-    }
+    fun logout() = authRepository.clearAuthData()
 
     private fun getQueryParameterFromUri(url: String, queryName: String): String {
         val uri = URI(url)

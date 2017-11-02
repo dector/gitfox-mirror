@@ -1,8 +1,6 @@
 package ru.terrakok.gitlabclient.model.interactor.profile
 
-import io.reactivex.Observable
 import io.reactivex.Single
-import ru.terrakok.gitlabclient.model.repository.auth.AuthRepository
 import ru.terrakok.gitlabclient.model.repository.profile.ProfileRepository
 import javax.inject.Inject
 
@@ -11,19 +9,12 @@ import javax.inject.Inject
  */
 
 class MyProfileInteractor @Inject constructor(
-        private val authRepository: AuthRepository,
-        private val profileRepository: ProfileRepository) {
+        private val profileRepository: ProfileRepository
+) {
 
-    fun getMyProfile(): Observable<MyUserInfo> =
-            authRepository.getSignState()
-                    .flatMapSingle {
-                        if (it) {
-                            profileRepository
-                                    .getMyProfile()
-                                    .map { MyUserInfo(it, profileRepository.getMyServerName()) }
-                        } else {
-                            Single.just(MyUserInfo(null, profileRepository.getMyServerName()))
-                        }
-                    }
+    fun getMyProfile(): Single<MyUserInfo> =
+            profileRepository
+                    .getMyProfile()
+                    .map { MyUserInfo(it, profileRepository.getMyServerName()) }
 
 }
