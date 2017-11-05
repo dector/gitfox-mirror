@@ -10,8 +10,8 @@ import ru.terrakok.gitlabclient.model.interactor.auth.AuthInteractor
 import ru.terrakok.gitlabclient.model.interactor.profile.MyProfileInteractor
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem.*
+import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
-import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -22,7 +22,8 @@ class NavigationDrawerPresenter @Inject constructor(
         private val router: Router,
         private val menuController: GlobalMenuController,
         private val authInteractor: AuthInteractor,
-        private val myProfileInteractor: MyProfileInteractor
+        private val myProfileInteractor: MyProfileInteractor,
+        private val errorHandler: ErrorHandler
 ) : MvpPresenter<NavigationDrawerView>() {
 
     private var currentSelectedItem: MenuItem? = null
@@ -36,7 +37,7 @@ class NavigationDrawerPresenter @Inject constructor(
         myProfileInteractor.getMyProfile()
                 .subscribe(
                         { viewState.showUserInfo(it) },
-                        { error -> Timber.e("getMyProfile(): $error") }
+                        { errorHandler.proceed(it) }
                 )
                 .addTo(compositeDisposable)
     }
@@ -61,8 +62,7 @@ class NavigationDrawerPresenter @Inject constructor(
     fun onLogoutClick() {
         menuController.close()
         authInteractor.logout()
-                .subscribe { router.newRootScreen(Screens.AUTH_SCREEN) }
-                .addTo(compositeDisposable)
+        router.newRootScreen(Screens.AUTH_SCREEN)
     }
 
     override fun onDestroy() {

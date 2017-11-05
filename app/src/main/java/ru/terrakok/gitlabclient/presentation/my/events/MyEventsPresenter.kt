@@ -3,9 +3,8 @@ package ru.terrakok.gitlabclient.presentation.my.events
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import ru.terrakok.gitlabclient.entity.event.Event
-import ru.terrakok.gitlabclient.extension.userMessage
 import ru.terrakok.gitlabclient.model.interactor.event.EventInteractor
-import ru.terrakok.gitlabclient.model.system.ResourceManager
+import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 import javax.inject.Inject
@@ -16,8 +15,8 @@ import javax.inject.Inject
 @InjectViewState
 class MyEventsPresenter @Inject constructor(
         private val eventInteractor: EventInteractor,
-        private val resourceManager: ResourceManager,
-        private val menuController: GlobalMenuController
+        private val menuController: GlobalMenuController,
+        private val errorHandler: ErrorHandler
 ) : MvpPresenter<MyEventsView>() {
 
     override fun onFirstViewAttach() {
@@ -33,11 +32,15 @@ class MyEventsPresenter @Inject constructor(
                 }
 
                 override fun showEmptyError(show: Boolean, error: Throwable?) {
-                    viewState.showEmptyError(show, error?.userMessage(resourceManager))
+                    if (error != null) {
+                        errorHandler.proceed(error, { viewState.showEmptyError(show, it) })
+                    } else {
+                        viewState.showEmptyError(show, null)
+                    }
                 }
 
                 override fun showErrorMessage(error: Throwable) {
-                    viewState.showMessage(error.userMessage(resourceManager))
+                    errorHandler.proceed(error, { viewState.showMessage(it) })
                 }
 
                 override fun showEmptyView(show: Boolean) {

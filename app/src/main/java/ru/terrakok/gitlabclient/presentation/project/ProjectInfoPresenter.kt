@@ -5,9 +5,8 @@ import com.arellomobile.mvp.MvpPresenter
 import io.reactivex.disposables.CompositeDisposable
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.extension.addTo
-import ru.terrakok.gitlabclient.extension.userMessage
 import ru.terrakok.gitlabclient.model.interactor.project.ProjectInteractor
-import ru.terrakok.gitlabclient.model.system.ResourceManager
+import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
 import javax.inject.Inject
@@ -18,9 +17,9 @@ import javax.inject.Inject
 @InjectViewState
 class ProjectInfoPresenter @Inject constructor(
         @ProjectId private val projectIdWrapper: PrimitiveWrapper<Long>,
-        private val resourceManager: ResourceManager,
         private val router: Router,
-        private val projectInteractor: ProjectInteractor
+        private val projectInteractor: ProjectInteractor,
+        private val errorHandler: ErrorHandler
 ) : MvpPresenter<ProjectInfoView>() {
 
     private val compositeDisposable = CompositeDisposable()
@@ -35,13 +34,8 @@ class ProjectInfoPresenter @Inject constructor(
                 .doOnSubscribe { viewState.showProgress(true) }
                 .doAfterTerminate { viewState.showProgress(false) }
                 .subscribe(
-                        { htmlReadme ->
-                            viewState.showReadmeFile(htmlReadme)
-                        },
-                        { error ->
-                            timber.log.Timber.e("getProjects: $error")
-                            viewState.showMessage(error.userMessage(resourceManager))
-                        }
+                        { viewState.showReadmeFile(it) },
+                        { errorHandler.proceed(it, { viewState.showMessage(it) }) }
                 )
                 .addTo(compositeDisposable)
     }

@@ -1,7 +1,5 @@
 package ru.terrakok.gitlabclient.model.repository.auth
 
-import com.jakewharton.rxrelay2.BehaviorRelay
-import io.reactivex.Observable
 import ru.terrakok.gitlabclient.model.data.auth.AuthHolder
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
@@ -18,9 +16,7 @@ class AuthRepository @Inject constructor(
         @DefaultServerPath private val defaultServerPath: String
 ) {
 
-    private val signState = BehaviorRelay.createDefault(!authData.token.isNullOrEmpty())
-
-    fun getSignState(): Observable<Boolean> = signState
+    val isSignedIn get() = !authData.token.isNullOrEmpty()
 
     fun requestOAuthToken(
             appId: String,
@@ -40,12 +36,10 @@ class AuthRepository @Inject constructor(
         authData.token = token
         authData.serverPath = serverPath
         authData.isOAuthToken = isOAuthToken
-        signState.accept(!token.isNullOrEmpty())
     }
 
     fun clearAuthData() {
         authData.token = null
         authData.serverPath = defaultServerPath
-        signState.accept(false)
     }
 }

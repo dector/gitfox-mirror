@@ -18,6 +18,7 @@ import ru.terrakok.gitlabclient.model.repository.issue.IssueRepository
 import ru.terrakok.gitlabclient.model.repository.mergerequest.MergeRequestRepository
 import ru.terrakok.gitlabclient.model.repository.profile.ProfileRepository
 import ru.terrakok.gitlabclient.model.repository.project.ProjectRepository
+import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.toothpick.provider.ApiProvider
 import ru.terrakok.gitlabclient.toothpick.provider.OkHttpClientProvider
 import ru.terrakok.gitlabclient.toothpick.qualifier.ServerPath
@@ -43,6 +44,9 @@ class ServerModule(serverUrl: String) : Module() {
         ))
         bind(AuthRepository::class.java).singletonInScope()
         bind(AuthInteractor::class.java).singletonInScope()
+
+        //Error handler with logout logic
+        bind(ErrorHandler::class.java)
 
         //Profile
         bind(ProfileRepository::class.java)

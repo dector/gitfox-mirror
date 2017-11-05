@@ -4,9 +4,8 @@ import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
-import ru.terrakok.gitlabclient.extension.userMessage
 import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestListInteractor
-import ru.terrakok.gitlabclient.model.system.ResourceManager
+import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 import javax.inject.Inject
 
@@ -14,7 +13,7 @@ import javax.inject.Inject
 class MyMergeRequestListPresenter @Inject constructor(
         private val mrState: MergeRequestState,
         private val interactor: MergeRequestListInteractor,
-        private val resourceManager: ResourceManager
+        private val errorHandler: ErrorHandler
 ) : MvpPresenter<MyMergeRequestListView>() {
 
     override fun onFirstViewAttach() {
@@ -30,11 +29,15 @@ class MyMergeRequestListPresenter @Inject constructor(
                 }
 
                 override fun showEmptyError(show: Boolean, error: Throwable?) {
-                    viewState.showEmptyError(show, error?.userMessage(resourceManager))
+                    if (error != null) {
+                        errorHandler.proceed(error, { viewState.showEmptyError(show, it) })
+                    } else {
+                        viewState.showEmptyError(show, null)
+                    }
                 }
 
                 override fun showErrorMessage(error: Throwable) {
-                    viewState.showMessage(error.userMessage(resourceManager))
+                    errorHandler.proceed(error, { viewState.showMessage(it) })
                 }
 
                 override fun showEmptyView(show: Boolean) {
