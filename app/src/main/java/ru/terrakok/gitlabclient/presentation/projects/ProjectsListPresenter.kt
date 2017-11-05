@@ -5,9 +5,8 @@ import com.arellomobile.mvp.MvpPresenter
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.Project
-import ru.terrakok.gitlabclient.extension.userMessage
 import ru.terrakok.gitlabclient.model.interactor.projects.MainProjectsListInteractor
-import ru.terrakok.gitlabclient.model.system.ResourceManager
+import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectListMode
@@ -22,7 +21,7 @@ class ProjectsListPresenter @Inject constructor(
         @ProjectListMode private val modeWrapper: PrimitiveWrapper<Int>,
         private val router: Router,
         private val mainProjectsListInteractor: MainProjectsListInteractor,
-        private val resourceManager: ResourceManager
+        private val errorHandler: ErrorHandler
 ) : MvpPresenter<ProjectsListView>() {
 
     companion object {
@@ -45,11 +44,15 @@ class ProjectsListPresenter @Inject constructor(
                 }
 
                 override fun showEmptyError(show: Boolean, error: Throwable?) {
-                    viewState.showEmptyError(show, error?.userMessage(resourceManager))
+                    if (error != null) {
+                        errorHandler.proceed(error, { viewState.showEmptyError(show, it) })
+                    } else {
+                        viewState.showEmptyError(show, null)
+                    }
                 }
 
                 override fun showErrorMessage(error: Throwable) {
-                    viewState.showMessage(error.userMessage(resourceManager))
+                    errorHandler.proceed(error, { viewState.showMessage(it) })
                 }
 
                 override fun showEmptyView(show: Boolean) {
