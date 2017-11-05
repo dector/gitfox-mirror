@@ -45,9 +45,8 @@ class MyMergeRequestsFragment : BaseFragment(), MyMergeRequestListView {
         val scope = Toothpick.openScopes(DI.MAIN_ACTIVITY_SCOPE, scopeName)
         scope.installModules(object : Module() {
             init {
-                val state = arguments.getSerializable(ARG_STATE) as MergeRequestState
                 bind(MergeRequestState::class.java)
-                        .toInstance(state)
+                        .toInstance(arguments?.getSerializable(ARG_STATE) as MergeRequestState)
             }
         })
 

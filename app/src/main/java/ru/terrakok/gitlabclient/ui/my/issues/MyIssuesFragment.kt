@@ -45,7 +45,9 @@ class MyIssuesFragment : BaseFragment(), MyIssuesView {
         scope.installModules(object : Module() {
             init {
                 bind(MyIssuesPresenter.InitParams::class.java)
-                        .toInstance(MyIssuesPresenter.InitParams(arguments.getBoolean(ARG_MODE_IS_OPENED)))
+                        .toInstance(
+                                MyIssuesPresenter.InitParams(arguments?.getBoolean(ARG_MODE_IS_OPENED) ?: true)
+                        )
             }
         })
 

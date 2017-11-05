@@ -25,12 +25,12 @@ class CustomServerAuthFragment : BottomSheetDialogFragment() {
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater?,
+            inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? = inflater?.inflate(R.layout.fragment_custom_server_auth, container)
+    ): View? = inflater.inflate(R.layout.fragment_custom_server_auth, container)
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (serverPathValue.text.isEmpty()) {
             serverPathValue.setText(BuildConfig.ORIGIN_GITLAB_ENDPOINT)

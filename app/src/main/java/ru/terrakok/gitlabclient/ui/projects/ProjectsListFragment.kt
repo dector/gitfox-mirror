@@ -29,14 +29,10 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
     companion object {
         private val ARG_MODE = "plf_mode"
 
-        fun newInstance(mode: Int): ProjectsListFragment {
-            val fragment = ProjectsListFragment()
-
-            val bundle = Bundle()
-            bundle.putInt(ARG_MODE, mode)
-            fragment.arguments = bundle
-
-            return fragment
+        fun newInstance(mode: Int) = ProjectsListFragment().apply {
+            arguments = Bundle().apply {
+                putInt(ARG_MODE, mode)
+            }
         }
     }
 
@@ -54,7 +50,7 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
             init {
                 bind(PrimitiveWrapper::class.java)
                         .withName(ProjectListMode::class.java)
-                        .toInstance(PrimitiveWrapper(arguments.getInt(ARG_MODE)))
+                        .toInstance(PrimitiveWrapper(arguments?.getInt(ARG_MODE)))
             }
         })
         return scope.getInstance(ProjectsListPresenter::class.java).also {
