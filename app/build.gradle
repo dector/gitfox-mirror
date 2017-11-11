@@ -30,8 +30,18 @@ android {
     }
 
     buildTypes {
+        debugPG {
+            initWith debug
+
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            applicationIdSuffix '.debugPG'
+            versionNameSuffix ' (debugPG)'
+        }
+
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
