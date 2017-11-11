@@ -126,4 +126,21 @@ interface GitlabApi {
             @Path("merge_request_id") mergeRequestId: Int
     ): Single<MergeRequest>
 
+    @GET("$API_PATH/projects/{project_id}/merge_requests/{merge_request_id}/commits")
+    fun getMergeRequestCommits(
+            @Path("project_id") projectId: Int,
+            @Path("merge_request_id") mergeRequestId: Int
+    ): Single<List<Commit>>
+
+    @GET("$API_PATH/projects/{project_id}/merge_requests/{merge_request_id}/changes")
+    fun getMergeRequestChanges(
+            @Path("project_id") projectId: Int,
+            @Path("merge_request_id") mergeRequestId: Int
+    ): Single<MergeRequest>
+
+    @GET("$API_PATH/projects/{project_id}/merge_requests/{merge_request_id}/notes")
+    fun getMergeRequestNotes(
+            @Path("project_id") projectId: Int,
+            @Path("merge_request_id") mergeRequestId: Int
+    ): Single<List<Note>>
 }
