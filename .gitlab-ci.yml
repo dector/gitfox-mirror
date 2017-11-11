@@ -3,6 +3,7 @@ image: jangrewe/gitlab-ci-android
 before_script:
   - export GRADLE_USER_HOME=$(pwd)/.gradle
   - export BUILD_NUMBER=$(git rev-list --count ${CI_BUILD_REF})
+  - export BUILD_COMMIT_SHA=${CI_COMMIT_SHA}
   - chmod +x ./gradlew
 
 cache:

@@ -2,8 +2,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
-
-//CI
 apply from: '../ci.gradle'
 
 android {
@@ -14,8 +12,8 @@ android {
         applicationId "ru.terrakok.gitlabclient"
         minSdkVersion 19
         targetSdkVersion 27
-        versionName "1.0"
-        // versionCode 1 get it from '../ci.gradle'
+        versionName "1.0 (" + getBuildUid() + ")"
+        versionCode getBuildNumber()
 
         buildConfigField "String", "WEB_AUTH_USER_AGENT", '"gitfox_user_agent"'
         buildConfigField "String", "ORIGIN_GITLAB_ENDPOINT", '"https://gitlab.com/"'
@@ -37,7 +35,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
             applicationIdSuffix '.debugPG'
-            versionNameSuffix ' (debugPG)'
+            versionNameSuffix ' debugPG'
         }
 
         release {
