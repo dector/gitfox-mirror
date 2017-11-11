@@ -33,5 +33,11 @@ data class MergeRequest(
         @SerializedName("force_remove_source_branch") val forceRemoveSourceBranch: Boolean,
         @SerializedName("web_url") val webUrl: String?,
         @SerializedName("time_stats") val timeStats: MergeRequestTimeStats?,
-        @SerializedName("labels") val labels: List<String>?
+        @SerializedName("labels") val labels: List<String>?,
+        @SerializedName("subscribed") val subscribed: Boolean?,
+        @SerializedName("changes_count") val changesCount: String?,
+        @SerializedName("approvals_before_merge") val approvalsBeforeMerge: Int?,
+        @SerializedName("squash") val squash: Boolean?,
+        @SerializedName("discussion_locked") val discussionLocked: Boolean?,
+        @SerializedName("changes") val changes: List<MergeRequestChange>
 )
