@@ -34,12 +34,6 @@ class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView, ConfirmDi
         presenter.onMenuItemClick(view.tag as MenuItem)
     }
 
-    override val dialogConfirm: (tag: String) -> Unit = { tag ->
-        when (tag) {
-            CONFIRM_LOGOUT_TAG -> presenter.onLogoutClick()
-        }
-    }
-
     @InjectPresenter lateinit var presenter: NavigationDrawerPresenter
 
     @ProvidePresenter
@@ -113,6 +107,12 @@ class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView, ConfirmDi
 
     fun onScreenChanged(item: MenuItem) {
         presenter.onScreenChanged(item)
+    }
+
+    override fun dialogConfirm(tag: String) {
+        when (tag) {
+            CONFIRM_LOGOUT_TAG -> presenter.onLogoutClick()
+        }
     }
 
     private companion object {

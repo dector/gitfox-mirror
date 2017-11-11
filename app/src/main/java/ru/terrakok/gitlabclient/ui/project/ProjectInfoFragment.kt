@@ -39,7 +39,7 @@ class ProjectInfoFragment : BaseFragment(), ProjectInfoView {
             init {
                 bind(PrimitiveWrapper::class.java)
                         .withName(ProjectId::class.java)
-                        .toInstance(PrimitiveWrapper(arguments.getLong(ARG_PROJECT_ID)))
+                        .toInstance(PrimitiveWrapper(arguments?.getLong(ARG_PROJECT_ID)))
             }
         })
         return scope.getInstance(ProjectInfoPresenter::class.java).also {

@@ -2,20 +2,18 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
-
-//CI
 apply from: '../ci.gradle'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    compileSdkVersion 27
+    buildToolsVersion '27.0.0'
 
     defaultConfig {
         applicationId "ru.terrakok.gitlabclient"
         minSdkVersion 19
-        targetSdkVersion 25
-        versionName "1.0"
-        // versionCode 1 get it from '../ci.gradle'
+        targetSdkVersion 27
+        versionName "1.0 (" + getBuildUid() + ")"
+        versionCode getBuildNumber()
 
         buildConfigField "String", "WEB_AUTH_USER_AGENT", '"gitfox_user_agent"'
         buildConfigField "String", "ORIGIN_GITLAB_ENDPOINT", '"https://gitlab.com/"'
@@ -30,8 +28,18 @@ android {
     }
 
     buildTypes {
+        debugPG {
+            initWith debug
+
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            applicationIdSuffix '.debugPG'
+            versionNameSuffix ' debugPG'
+        }
+
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -42,7 +50,7 @@ kapt {
 }
 
 ext {
-    supportLibraryVersion = "25.4.0"
+    supportLibraryVersion = "27.0.0"
     moxyVersion = "1.4.6"
     toothpickVersion = "1.0.6"
     retrofitVersion = "2.2.0"

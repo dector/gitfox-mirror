@@ -1,13 +1,13 @@
-android.defaultConfig.versionCode = getBuildNumber()
+ext.getBuildNumber = {
+    (System.env.BUILD_NUMBER ?: 1) as int
+}
 
-static Integer getBuildNumber() {
-    if (System.env.BUILD_NUMBER != null) {
-        return Integer.parseInt(System.env.BUILD_NUMBER)
-    }
-    return 1
+ext.getBuildUid = {
+    System.env.BUILD_COMMIT_SHA ?: "local"
 }
 
 gradle.buildFinished {
-    println('VersionName: ' + android.defaultConfig.versionName)
-    println('VersionCode: ' + android.defaultConfig.versionCode)
+    println("VersionName: ${android.defaultConfig.versionName}")
+    println("VersionCode: ${getBuildNumber()}")
+    println("BuildUid: ${getBuildUid()}")
 }

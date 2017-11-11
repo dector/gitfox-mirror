@@ -11,16 +11,18 @@ import ru.terrakok.gitlabclient.R
 class ConfirmDialog : DialogFragment() {
     private var clickListener: OnClickListener? = null
 
+    private val title: String? get() = arguments?.getString(TITLE)
+    private val msg: String get() = arguments?.getString(MSG) ?: ""
+    private val positive: String get() = arguments?.getString(POSITIVE_TEXT) ?: getString(R.string.ok)
+    private val negative: String get() = arguments?.getString(NEGATIVE_TEXT) ?: getString(R.string.cancel)
+    private val dialogTag: String get() = arguments?.getString(TAG) ?: "ConfirmDialog tag"
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-            AlertDialog.Builder(context, R.style.AppCompatAlertDialogStyle).apply {
-                arguments.getString(TITLE)?.let { setTitle(it) }
-                setMessage(arguments.getString(MSG))
-                setPositiveButton(arguments.getString(POSITIVE_TEXT) ?: getString(R.string.ok)) { _, _ ->
-                    clickListener?.dialogConfirm?.invoke(arguments.getString(TAG))
-                }
-                setNegativeButton(arguments.getString(NEGATIVE_TEXT) ?: getString(R.string.cancel)) { _, _ ->
-                    dismiss()
-                }
+            AlertDialog.Builder(context!!, R.style.AppCompatAlertDialogStyle).apply {
+                title?.let { setTitle(title) }
+                setMessage(msg)
+                setPositiveButton(positive) { _, _ -> clickListener?.dialogConfirm(dialogTag) }
+                setNegativeButton(negative) { _, _ -> dismiss() }
             }.create()
 
     override fun onAttach(context: Context?) {
@@ -41,9 +43,9 @@ class ConfirmDialog : DialogFragment() {
     companion object {
         private const val TITLE = "title"
         private const val MSG = "msg"
-        private const val TAG = "tag"
         private const val POSITIVE_TEXT = "positive_text"
         private const val NEGATIVE_TEXT = "negative_text"
+        private const val TAG = "tag"
 
         fun newInstants(
                 title: String? = null,
@@ -64,6 +66,6 @@ class ConfirmDialog : DialogFragment() {
     }
 
     interface OnClickListener {
-        val dialogConfirm: (tag: String) -> Unit
+        fun dialogConfirm(tag: String)
     }
 }

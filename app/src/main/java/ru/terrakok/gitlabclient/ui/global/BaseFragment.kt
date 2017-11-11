@@ -23,7 +23,7 @@ abstract class BaseFragment : MvpAppCompatFragment() {
             = inflater.inflate(layoutRes, container, false)
 
     protected fun showProgressDialog(progress: Boolean) {
-        val fragment = childFragmentManager?.findFragmentByTag(PROGRESS_TAG)
+        val fragment = childFragmentManager.findFragmentByTag(PROGRESS_TAG)
         if (fragment != null && !progress) {
             (fragment as ProgressDialog).dismissAllowingStateLoss()
             childFragmentManager.executePendingTransactions()
@@ -36,7 +36,7 @@ abstract class BaseFragment : MvpAppCompatFragment() {
     protected fun showSnackMessage(message: String) {
         view?.let {
             val snackbar = Snackbar.make(it, message, Snackbar.LENGTH_LONG)
-            val messageTextView = snackbar.view.findViewById(android.support.design.R.id.snackbar_text) as TextView
+            val messageTextView = snackbar.view.findViewById<TextView>(android.support.design.R.id.snackbar_text)
             messageTextView.setTextColor(Color.WHITE)
             snackbar.show()
         }
