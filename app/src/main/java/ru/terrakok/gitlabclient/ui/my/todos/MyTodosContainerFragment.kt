@@ -14,7 +14,7 @@ import javax.inject.Inject
 /**
  * @author Eugene Shapovalov (CraggyHaggy). Date: 28.10.17
  */
-class MyTodoListContainerFragment : BaseFragment() {
+class MyTodosContainerFragment : BaseFragment() {
 
     @Inject lateinit var menuController: GlobalMenuController
 
@@ -36,8 +36,8 @@ class MyTodoListContainerFragment : BaseFragment() {
 
     private inner class MyTodosPagerAdapter : FragmentPagerAdapter(childFragmentManager) {
         private val pages = listOf<Fragment>(
-                MyTodoListFragment.newInstance(true),
-                MyTodoListFragment.newInstance(false)
+                MyTodosFragment.newInstance(true),
+                MyTodosFragment.newInstance(false)
         )
         private val titles = listOf<String>(
                 getString(R.string.my_todos_pending),

@@ -15,7 +15,7 @@ import javax.inject.Inject
  * @author Eugene Shapovalov (CraggyHaggy). Date: 27.09.17
  */
 @InjectViewState
-class MyTodoListPresenter @Inject constructor(
+class MyTodosPresenter @Inject constructor(
         private @TodoListPendingState val pendingStateWrapper: PrimitiveWrapper<Boolean>,
         private val todoListInteractor: TodoListInteractor,
         private val resourceManager: ResourceManager
@@ -63,9 +63,7 @@ class MyTodoListPresenter @Inject constructor(
 
     fun onTodoClick(todo: Todo) {}
     fun refreshTodos() = paginator.refresh()
-    fun loadNextTodosPage() {
-        paginator.loadNewPage()
-    }
+    fun loadNextTodosPage() = paginator.loadNewPage()
 
     override fun onDestroy() {
         super.onDestroy()

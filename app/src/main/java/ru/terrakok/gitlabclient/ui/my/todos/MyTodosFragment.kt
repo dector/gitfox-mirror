@@ -9,8 +9,9 @@ import com.hannesdorfmann.adapterdelegates3.ListDelegationAdapter
 import kotlinx.android.synthetic.main.layout_base_list.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.todo.Todo
-import ru.terrakok.gitlabclient.presentation.my.todos.MyTodoListPresenter
+import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.my.todos.MyTodoListView
+import ru.terrakok.gitlabclient.presentation.my.todos.MyTodosPresenter
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.TodoListPendingState
@@ -24,12 +25,12 @@ import toothpick.config.Module
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 13.06.17
  */
-class MyTodoListFragment : BaseFragment(), MyTodoListView {
+class MyTodosFragment : BaseFragment(), MyTodoListView {
 
     companion object {
         private val ARG_MODE_IS_PENDING = "arg_mode_is_pending"
 
-        fun newInstance(isPending: Boolean) = MyTodoListFragment().apply {
+        fun newInstance(isPending: Boolean) = MyTodosFragment().apply {
             arguments = Bundle().apply { putBoolean(ARG_MODE_IS_PENDING, isPending) }
         }
     }
@@ -37,10 +38,10 @@ class MyTodoListFragment : BaseFragment(), MyTodoListView {
     override val layoutRes = R.layout.fragment_my_todos
     private val adapter = TodosAdapter()
 
-    @InjectPresenter lateinit var presenter: MyTodoListPresenter
+    @InjectPresenter lateinit var presenter: MyTodosPresenter
 
     @ProvidePresenter
-    fun providePresenter(): MyTodoListPresenter {
+    fun providePresenter(): MyTodosPresenter {
         val scopeName = "MyTodoListScope_${hashCode()}"
         val scope = Toothpick.openScopes(DI.MAIN_ACTIVITY_SCOPE, scopeName)
         scope.installModules(object : Module() {
@@ -51,7 +52,7 @@ class MyTodoListFragment : BaseFragment(), MyTodoListView {
             }
         })
 
-        return scope.getInstance(MyTodoListPresenter::class.java).also {
+        return scope.getInstance(MyTodosPresenter::class.java).also {
             Toothpick.closeScope(scopeName)
         }
     }
@@ -62,7 +63,7 @@ class MyTodoListFragment : BaseFragment(), MyTodoListView {
         recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true)
-            adapter = this@MyTodoListFragment.adapter
+            adapter = this@MyTodosFragment.adapter
         }
 
         swipeToRefresh.setOnRefreshListener { presenter.refreshTodos() }
@@ -73,7 +74,11 @@ class MyTodoListFragment : BaseFragment(), MyTodoListView {
     }
 
     override fun showEmptyProgress(show: Boolean) {
-        swipeToRefresh.post { swipeToRefresh.isRefreshing = show }
+        fullscreenProgressView.visible(show)
+
+        //trick for disable and hide swipeToRefresh on fullscreen progress
+        swipeToRefresh.visible(!show)
+        swipeToRefresh.post { swipeToRefresh.isRefreshing = false }
     }
 
     override fun showPageProgress(show: Boolean) {
@@ -90,6 +95,7 @@ class MyTodoListFragment : BaseFragment(), MyTodoListView {
     }
 
     override fun showTodos(show: Boolean, todos: List<Todo>) {
+        recyclerView.visible(show)
         recyclerView.post { adapter.setData(todos) }
     }
 
