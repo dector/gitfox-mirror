@@ -1,6 +1,5 @@
 package ru.terrakok.gitlabclient.model.interactor.auth
 
-import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
 import org.junit.Assert
@@ -26,8 +25,6 @@ class AuthInteractorTest {
     @Before
     fun setUp() {
         authRepo = mock(AuthRepository::class.java)
-        `when`(authRepo.getSignState()).thenReturn(Observable.just(true))
-
         interactor = AuthInteractor("some server path", authRepo, HASH, OAUTH_PARAMS)
     }
 
@@ -47,55 +44,26 @@ class AuthInteractorTest {
 
     @Test
     fun check_logout_cleans_token() {
-        val testObserver: TestObserver<Void> = interactor.logout().test()
-        testObserver.awaitTerminalEvent()
-
+        interactor.logout()
         verify(authRepo).clearAuthData()
-        testObserver
-                .assertNoErrors()
-                .assertNoValues()
     }
 
     @Test
     fun is_signed_in() {
-        `when`(authRepo.getSignState()).thenReturn(Observable.just(true, false))
+        `when`(authRepo.isSignedIn).thenReturn(true)
+        val result = interactor.isSignedIn()
 
-        val testObserver: TestObserver<Boolean> = interactor.isSignedIn().test()
-        testObserver.awaitTerminalEvent()
-
-        verify(authRepo).getSignState()
-        testObserver
-                .assertNoErrors()
-                .assertValueCount(1)
-                .assertValue(true)
+        verify(authRepo).isSignedIn
+        Assert.assertTrue(result)
     }
 
     @Test
-    fun is_signed_in_error() {
-        val error = RuntimeException("test error")
+    fun is_not_signed_in() {
+        `when`(authRepo.isSignedIn).thenReturn(false)
+        val result = interactor.isSignedIn()
 
-        `when`(authRepo.getSignState()).thenReturn(Observable.error(error))
-
-        val testObserver: TestObserver<Boolean> = interactor.isSignedIn().test()
-        testObserver.awaitTerminalEvent()
-
-        verify(authRepo).getSignState()
-        testObserver
-                .assertError(error)
-                .assertNoValues()
-    }
-
-    @Test
-    fun is_signed_in_no_values() {
-        `when`(authRepo.getSignState()).thenReturn(Observable.empty())
-
-        val testObserver: TestObserver<Boolean> = interactor.isSignedIn().test()
-        testObserver.awaitTerminalEvent()
-
-        verify(authRepo).getSignState()
-        testObserver
-                .assertNoValues()
-                .assertError(Throwable::class.java)
+        verify(authRepo).isSignedIn
+        Assert.assertFalse(result)
     }
 
     @Test
