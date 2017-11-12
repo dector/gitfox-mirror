@@ -46,7 +46,7 @@ class ServerModule(serverUrl: String) : Module() {
         bind(AuthInteractor::class.java).singletonInScope()
 
         //Error handler with logout logic
-        bind(ErrorHandler::class.java)
+        bind(ErrorHandler::class.java).singletonInScope()
 
         //Profile
         bind(ProfileRepository::class.java)

@@ -39,6 +39,12 @@ class MainActivity : BaseActivity(), LaunchView {
 
     override val layoutRes = R.layout.activity_main
 
+    private val currentFragment
+        get() = supportFragmentManager.findFragmentById(R.id.mainContainer) as BaseFragment?
+
+    private val drawerFragment
+        get() = supportFragmentManager.findFragmentById(R.id.navDrawerContainer) as NavigationDrawerFragment?
+
     @InjectPresenter lateinit var presenter: LaunchPresenter
 
     @ProvidePresenter
@@ -74,6 +80,14 @@ class MainActivity : BaseActivity(), LaunchView {
     override fun onDestroy() {
         super.onDestroy()
         if (isFinishing) Toothpick.closeScope(DI.MAIN_ACTIVITY_SCOPE)
+    }
+
+    override fun initMainScreen() {
+        supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.mainContainer, MainFragment())
+                .replace(R.id.navDrawerContainer, NavigationDrawerFragment())
+                .commitNow()
     }
 
     private val navigator = object : SupportAppNavigator(this, R.id.mainContainer) {
@@ -116,14 +130,15 @@ class MainActivity : BaseActivity(), LaunchView {
     private fun updateNavDrawer() {
         supportFragmentManager.executePendingTransactions()
 
-        val drawerFragment = supportFragmentManager.findFragmentById(R.id.navigationDrawer) as NavigationDrawerFragment
-        supportFragmentManager.findFragmentById(R.id.mainContainer)?.let {
-            when (it) {
-                is MainFragment -> drawerFragment.onScreenChanged(NavigationDrawerView.MenuItem.ACTIVITY)
-                is ProjectsContainerFragment -> drawerFragment.onScreenChanged(NavigationDrawerView.MenuItem.PROJECTS)
-                is AboutFragment -> drawerFragment.onScreenChanged(NavigationDrawerView.MenuItem.ABOUT)
+        drawerFragment?.let { drawerFragment ->
+            currentFragment?.let {
+                when (it) {
+                    is MainFragment -> drawerFragment.onScreenChanged(NavigationDrawerView.MenuItem.ACTIVITY)
+                    is ProjectsContainerFragment -> drawerFragment.onScreenChanged(NavigationDrawerView.MenuItem.PROJECTS)
+                    is AboutFragment -> drawerFragment.onScreenChanged(NavigationDrawerView.MenuItem.ABOUT)
+                }
+                enableNavDrawer(isNavDrawerAvailableForFragment(it))
             }
-            enableNavDrawer(isNavDrawerAvailableForFragment(it))
         }
     }
 
@@ -139,12 +154,7 @@ class MainActivity : BaseActivity(), LaunchView {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             openNavDrawer(false)
         } else {
-            val fragment = supportFragmentManager.findFragmentById(R.id.mainContainer)
-            if (fragment is BaseFragment) {
-                fragment.onBackPressed()
-            } else {
-                presenter.onBackPressed()
-            }
+            currentFragment?.onBackPressed() ?: presenter.onBackPressed()
         }
     }
 }

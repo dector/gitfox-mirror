@@ -2,7 +2,6 @@
 <android.support.v4.widget.DrawerLayout
     android:id="@+id/drawerLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -11,12 +10,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <fragment
-        android:id="@+id/navigationDrawer"
-        android:name="ru.terrakok.gitlabclient.ui.drawer.NavigationDrawerFragment"
+    <FrameLayout
+        android:id="@+id/navDrawerContainer"
         android:layout_width="@dimen/navigation_drawer_width"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
-        tools:layout="@layout/fragment_nav_drawer"/>
+        android:layout_gravity="start"/>
 
 </android.support.v4.widget.DrawerLayout>
