@@ -1,7 +1,11 @@
 package ru.terrakok.gitlabclient.model.repository.mergerequest
 
+import io.reactivex.Single
+import ru.terrakok.gitlabclient.entity.Commit
+import ru.terrakok.gitlabclient.entity.Note
 import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.entity.Sort
+import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestScope
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestViewType
@@ -96,6 +100,39 @@ class MergeRequestRepository @Inject constructor(
             mergeRequestId: Int
     ) = api
             .getMergeRequest(
+                    projectId,
+                    mergeRequestId
+            )
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
+
+    fun getMergeRequestCommits(
+            projectId: Int,
+            mergeRequestId: Int
+    ): Single<List<Commit>> = api
+            .getMergeRequestCommits(
+                    projectId,
+                    mergeRequestId
+            )
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
+
+    fun getMergeRequestChanges(
+            projectId: Int,
+            mergeRequestId: Int
+    ): Single<MergeRequest> = api
+            .getMergeRequestChanges(
+                    projectId,
+                    mergeRequestId
+            )
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
+
+    fun getMergeRequestNotes(
+            projectId: Int,
+            mergeRequestId: Int
+    ): Single<List<Note>> = api
+            .getMergeRequestNotes(
                     projectId,
                     mergeRequestId
             )
