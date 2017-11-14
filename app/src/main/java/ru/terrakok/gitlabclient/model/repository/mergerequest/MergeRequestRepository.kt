@@ -99,10 +99,7 @@ class MergeRequestRepository @Inject constructor(
             projectId: Int,
             mergeRequestId: Int
     ) = api
-            .getMergeRequest(
-                    projectId,
-                    mergeRequestId
-            )
+            .getMergeRequest(projectId, mergeRequestId)
             .subscribeOn(schedulers.io())
             .observeOn(schedulers.ui())
 
@@ -110,10 +107,7 @@ class MergeRequestRepository @Inject constructor(
             projectId: Int,
             mergeRequestId: Int
     ): Single<List<Commit>> = api
-            .getMergeRequestCommits(
-                    projectId,
-                    mergeRequestId
-            )
+            .getMergeRequestCommits(projectId, mergeRequestId)
             .subscribeOn(schedulers.io())
             .observeOn(schedulers.ui())
 
@@ -121,10 +115,7 @@ class MergeRequestRepository @Inject constructor(
             projectId: Int,
             mergeRequestId: Int
     ): Single<MergeRequest> = api
-            .getMergeRequestChanges(
-                    projectId,
-                    mergeRequestId
-            )
+            .getMergeRequestChanges(projectId, mergeRequestId)
             .subscribeOn(schedulers.io())
             .observeOn(schedulers.ui())
 
@@ -132,10 +123,7 @@ class MergeRequestRepository @Inject constructor(
             projectId: Int,
             mergeRequestId: Int
     ): Single<List<Note>> = api
-            .getMergeRequestNotes(
-                    projectId,
-                    mergeRequestId
-            )
+            .getMergeRequestNotes(projectId, mergeRequestId)
             .subscribeOn(schedulers.io())
             .observeOn(schedulers.ui())
 }
