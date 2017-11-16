@@ -103,7 +103,7 @@ class MyTodosFragment : BaseFragment(), MyTodoListView {
         showSnackMessage(message)
     }
 
-    inner class TodosAdapter : ListDelegationAdapter<MutableList<ListItem>>() {
+    private inner class TodosAdapter : ListDelegationAdapter<MutableList<ListItem>>() {
         init {
             items = mutableListOf()
             delegatesManager.addDelegate(TodoAdapterDelegate({ presenter.onTodoClick(it) }))
