@@ -10,7 +10,8 @@ enum class TodoAction(private val jsonName: String) {
     @SerializedName("mentioned") MENTIONED("mentioned"),
     @SerializedName("build_failed") BUILD_FAILED("build_failed"),
     @SerializedName("marked") MARKED("marked"),
-    @SerializedName("approval_required") APPROVAL_REQUIRED("approval_required");
+    @SerializedName("approval_required") APPROVAL_REQUIRED("approval_required"),
+    @SerializedName("directly_addressed") DIRECTLY_ADDRESSED("directly_addressed");
 
     override fun toString() = jsonName
 }
