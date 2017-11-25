@@ -11,6 +11,7 @@
         style="@style/ToolbarStyle"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
+        android:elevation="0dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark"
         app:navigationIcon="@drawable/ic_menu_white_24dp"
         app:title="@string/gitlab_merge"/>

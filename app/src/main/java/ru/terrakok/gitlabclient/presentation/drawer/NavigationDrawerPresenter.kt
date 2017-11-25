@@ -65,6 +65,8 @@ class NavigationDrawerPresenter @Inject constructor(
         router.newRootScreen(Screens.AUTH_SCREEN)
     }
 
+    fun onUserClick(id: Long) = router.navigateTo(Screens.USER_INFO_SCREEN, id)
+
     override fun onDestroy() {
         compositeDisposable.dispose()
     }

@@ -15,9 +15,11 @@
         <item name="android:windowBackground">@drawable/splash_background</item>
     </style>
 
-    <style name="ToolbarStyle" parent="ThemeOverlay.AppCompat.Dark">
+    <style name="ToolbarStyle">
+        <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark</item>
         <item name="android:background">@color/colorPrimary</item>
         <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:elevation">8dp</item>
     </style>
 
     <style name="ProgressDialogStyle" parent="ThemeOverlay.AppCompat.Dialog">

@@ -12,12 +12,14 @@ import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestListIn
 import ru.terrakok.gitlabclient.model.interactor.profile.MyProfileInteractor
 import ru.terrakok.gitlabclient.model.interactor.project.ProjectInteractor
 import ru.terrakok.gitlabclient.model.interactor.projects.MainProjectsListInteractor
+import ru.terrakok.gitlabclient.model.interactor.user.UserInteractor
 import ru.terrakok.gitlabclient.model.repository.auth.AuthRepository
 import ru.terrakok.gitlabclient.model.repository.event.EventRepository
 import ru.terrakok.gitlabclient.model.repository.issue.IssueRepository
 import ru.terrakok.gitlabclient.model.repository.mergerequest.MergeRequestRepository
 import ru.terrakok.gitlabclient.model.repository.profile.ProfileRepository
 import ru.terrakok.gitlabclient.model.repository.project.ProjectRepository
+import ru.terrakok.gitlabclient.model.repository.user.UserRepository
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.toothpick.provider.ApiProvider
 import ru.terrakok.gitlabclient.toothpick.provider.OkHttpClientProvider
@@ -68,5 +70,9 @@ class ServerModule(serverUrl: String) : Module() {
         //Merge request
         bind(MergeRequestRepository::class.java)
         bind(MergeRequestListInteractor::class.java)
+
+        //User info
+        bind(UserRepository::class.java)
+        bind(UserInteractor::class.java)
     }
 }

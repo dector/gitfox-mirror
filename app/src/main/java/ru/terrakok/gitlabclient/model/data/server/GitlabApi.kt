@@ -126,4 +126,8 @@ interface GitlabApi {
             @Path("merge_request_id") mergeRequestId: Int
     ): Single<MergeRequest>
 
+    @GET("$API_PATH/users/{user_id}")
+    fun getUser(
+            @Path("user_id") userId: Long
+    ): Single<User>
 }

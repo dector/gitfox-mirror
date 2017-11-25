@@ -6,7 +6,7 @@
     <color name="colorAccent">@color/white</color>
 
     <color name="primary_text">#ff1f1f1f</color>
-    <color name="secondary_text">#ff6a8398</color>
+    <color name="secondary_text">#aa1f1f1f</color>
 
     <color name="white">#ffffff</color>
     <color name="divider">#ffe0e6ea</color>
