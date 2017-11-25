@@ -128,6 +128,6 @@ interface GitlabApi {
 
     @GET("$API_PATH/users/{user_id}")
     fun getUser(
-            @Path("user_id") userId: Int
+            @Path("user_id") userId: Long
     ): Single<User>
 }

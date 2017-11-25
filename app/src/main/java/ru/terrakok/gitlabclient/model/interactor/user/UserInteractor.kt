@@ -10,5 +10,5 @@ class UserInteractor @Inject constructor(
         private val userRepository: UserRepository
 ) {
 
-    fun getUser(id: Int) = userRepository.getUser(id)
+    fun getUser(id: Long) = userRepository.getUser(id)
 }

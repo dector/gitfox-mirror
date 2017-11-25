@@ -19,7 +19,7 @@ class UserInfoPresenter @Inject constructor(
         private val userInteractor: UserInteractor,
         private val router: Router,
         private val errorHandler: ErrorHandler,
-        @UserId userIdWrapper: PrimitiveWrapper<Int>
+        @UserId userIdWrapper: PrimitiveWrapper<Long>
 ) : MvpPresenter<UserInfoView>() {
     private val userId = userIdWrapper.value
 

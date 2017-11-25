@@ -12,7 +12,7 @@ class UserRepository @Inject constructor(
         private val schedulers: SchedulersProvider
 ) {
 
-    fun getUser(id: Int) = api
+    fun getUser(id: Long) = api
             .getUser(id)
             .subscribeOn(schedulers.io())
             .observeOn(schedulers.ui())

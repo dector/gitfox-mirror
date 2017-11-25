@@ -1,14 +1,11 @@
 package ru.terrakok.gitlabclient.ui.drawer
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.os.Bundle
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.view.View
+import android.view.ViewGroup
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.BitmapImageViewTarget
 import kotlinx.android.synthetic.main.fragment_nav_drawer.*
 import kotlinx.android.synthetic.main.layout_avatar.*
 import ru.terrakok.gitlabclient.R
@@ -20,6 +17,7 @@ import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuIte
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.ConfirmDialog
+import ru.terrakok.gitlabclient.ui.global.holder.AvatarViewHolder
 import ru.terrakok.gitlabclient.ui.launch.MainActivity
 import toothpick.Toothpick
 
@@ -29,6 +27,9 @@ import toothpick.Toothpick
 class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView, ConfirmDialog.OnClickListener {
     override val layoutRes = R.layout.fragment_nav_drawer
     private var mainActivity: MainActivity? = null
+    private var avatar: AvatarViewHolder? = null
+
+    private var userId: Long? = null
 
     private val itemClickListener = { view: View ->
         presenter.onMenuItemClick(view.tag as MenuItem)
@@ -51,6 +52,9 @@ class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView, ConfirmDi
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        avatar = AvatarViewHolder(avatarLay as ViewGroup)
+
+        avatarLay.setOnClickListener { userId?.let { presenter.onUserClick(it) } }
 
         logoutIV.setOnClickListener {
             ConfirmDialog
@@ -73,29 +77,16 @@ class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView, ConfirmDi
 
     override fun showUserInfo(user: MyUserInfo) {
         if (user.user == null) {
+            userId = null
             nickTV.text = ""
             serverNameTV.text = ""
             letterTV.text = ""
             avatarIV.visibility = View.GONE
         } else with(user.user) {
+            userId = this.id
             nickTV.text = this.name
             serverNameTV.text = user.serverName
-            letterTV.text = this.name?.first()?.toString()?.toUpperCase()
-            Glide.with(avatarIV.context)
-                    .load(this.avatarUrl)
-                    .asBitmap()
-                    .centerCrop()
-                    .into(object : BitmapImageViewTarget(avatarIV) {
-                        override fun setResource(resource: Bitmap?) {
-                            resource?.let {
-                                avatarIV.visibility = View.VISIBLE
-                                RoundedBitmapDrawableFactory.create(view.resources, it).run {
-                                    this.isCircular = true
-                                    avatarIV.setImageDrawable(this)
-                                }
-                            }
-                        }
-                    })
+            avatar?.setData(this.avatarUrl, this.name)
         }
     }
 
