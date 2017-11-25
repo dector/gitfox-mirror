@@ -88,7 +88,7 @@ fun TextView.showTextOrHide(str: String?) {
 
 fun Fragment.tryOpenLink(link: String?, basePath: String? = "https://google.com/search?q=") {
     try {
-        this.startActivity(Intent(
+        startActivity(Intent(
                 Intent.ACTION_VIEW,
                 when {
                     URLUtil.isValidUrl(link) -> Uri.parse(link)
@@ -97,9 +97,21 @@ fun Fragment.tryOpenLink(link: String?, basePath: String? = "https://google.com/
         ))
     } catch (e: Exception) {
         Timber.e("tryOpenLink error: $e")
-        this.startActivity(Intent(
+        startActivity(Intent(
                 Intent.ACTION_VIEW,
                 Uri.parse("https://google.com/search?q=$link")
+        ))
+    }
+}
+
+fun Fragment.shareText(text: String?) {
+    text?.let {
+        startActivity(Intent.createChooser(
+                Intent(Intent.ACTION_SEND).apply {
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_TEXT, text)
+                },
+                getString(R.string.share_to)
         ))
     }
 }

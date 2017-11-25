@@ -7,6 +7,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_user_info.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.User
+import ru.terrakok.gitlabclient.extension.shareText
 import ru.terrakok.gitlabclient.extension.showTextOrHide
 import ru.terrakok.gitlabclient.extension.tryOpenLink
 import ru.terrakok.gitlabclient.presentation.user.UserInfoPresenter
@@ -26,6 +27,7 @@ class UserInfoFragment : BaseFragment(), UserInfoView {
 
     override val layoutRes = R.layout.fragment_user_info
     private var avatar: AvatarViewHolder? = null
+    private var user: User? = null
 
     @InjectPresenter lateinit var presenter: UserInfoPresenter
 
@@ -50,12 +52,20 @@ class UserInfoFragment : BaseFragment(), UserInfoView {
         toolbar.setNavigationOnClickListener { presenter.onBackPressed() }
         avatar = AvatarViewHolder(avatarLay as ViewGroup)
 
-        userCompanyTextView.setOnClickListener { tryOpenLink(userCompanyTextView.text.toString()) }
-        userLocationTextView.setOnClickListener { tryOpenLink(userLocationTextView.text.toString()) }
-        userSiteTextView.setOnClickListener { tryOpenLink(userSiteTextView.text.toString()) }
-        userSkypeTextView.setOnClickListener { tryOpenLink(userSkypeTextView.text.toString(), "skype:") }
-        userLinkedinTextView.setOnClickListener { tryOpenLink(userLinkedinTextView.text.toString(), "https://www.linkedin.com/in/") }
-        userTwitterTextView.setOnClickListener { tryOpenLink(userTwitterTextView.text.toString(), "https://www.twitter.com/") }
+        toolbar.inflateMenu(R.menu.share_menu)
+        toolbar.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.shareAction -> shareText(user?.webUrl)
+            }
+            true
+        }
+
+        userCompanyTextView.setOnClickListener { tryOpenLink(user?.organization) }
+        userLocationTextView.setOnClickListener { tryOpenLink(user?.location) }
+        userSiteTextView.setOnClickListener { tryOpenLink(user?.websiteUrl) }
+        userSkypeTextView.setOnClickListener { tryOpenLink(user?.skype, "skype:") }
+        userLinkedinTextView.setOnClickListener { tryOpenLink(user?.linkedin, "https://www.linkedin.com/in/") }
+        userTwitterTextView.setOnClickListener { tryOpenLink(user?.twitter, "https://www.twitter.com/") }
     }
 
     override fun onBackPressed() {
@@ -64,6 +74,7 @@ class UserInfoFragment : BaseFragment(), UserInfoView {
     }
 
     override fun showUser(user: User) {
+        this.user = user
         toolbar.title = user.username
         avatar?.setData(user.avatarUrl, user.name)
         usernameTextView.text = user.name
