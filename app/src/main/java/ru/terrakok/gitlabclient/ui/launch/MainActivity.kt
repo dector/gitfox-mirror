@@ -89,6 +89,7 @@ class MainActivity : BaseActivity(), LaunchView {
                 .replace(R.id.mainContainer, MainFragment())
                 .replace(R.id.navDrawerContainer, NavigationDrawerFragment())
                 .commitNow()
+        updateNavDrawer()
     }
 
     private val navigator = object : SupportAppNavigator(this, R.id.mainContainer) {
