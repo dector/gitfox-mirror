@@ -4,6 +4,7 @@ import io.reactivex.Completable
 import ru.terrakok.gitlabclient.model.repository.auth.AuthRepository
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.toothpick.module.ServerModule
+import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultServerPath
 import ru.terrakok.gitlabclient.toothpick.qualifier.ServerPath
 import toothpick.Toothpick
 import java.net.URI
@@ -15,16 +16,19 @@ import javax.inject.Inject
  */
 class AuthInteractor(
         private val serverPath: String,
+        private val defaultServerPath: String,
         private val authRepository: AuthRepository,
         private val hash: String,
         private val oauthParams: OAuthParams) {
 
     @Inject constructor(
             @ServerPath serverPath: String,
+            @DefaultServerPath defaultServerPath: String,
             authRepository: AuthRepository,
             oauthParams: OAuthParams
     ) : this(
             serverPath,
+            defaultServerPath,
             authRepository,
             UUID.randomUUID().toString(),
             oauthParams
@@ -65,7 +69,10 @@ class AuthInteractor(
         switchServerIfNeeded(customServerPath)
     }
 
-    fun logout() = authRepository.clearAuthData()
+    fun logout() {
+        authRepository.clearAuthData()
+        switchServerIfNeeded(defaultServerPath)
+    }
 
     private fun getQueryParameterFromUri(url: String, queryName: String): String {
         val uri = URI(url)
