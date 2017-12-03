@@ -8,5 +8,6 @@ enum class EventTarget {
     MERGE_REQUEST,
     BRANCH,
     PROJECT,
-    SNIPPET
+    SNIPPET,
+    MILESTONE
 }
