@@ -5,6 +5,8 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_about.*
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.entity.app.develop.AppDeveloper
+import ru.terrakok.gitlabclient.entity.app.develop.AppInfo
 import ru.terrakok.gitlabclient.presentation.about.AboutPresenter
 import ru.terrakok.gitlabclient.presentation.about.AboutView
 import ru.terrakok.gitlabclient.toothpick.DI
@@ -32,8 +34,13 @@ class AboutFragment : BaseFragment(), AboutView {
         toolbar.setNavigationOnClickListener { presenter.onMenuPressed() }
     }
 
-    override fun showAppVersion(version: String) {
-        aboutVersionTV.text = version
+    override fun showAppInfo(appInfo: AppInfo) {
+        versionNameTextView.text = appInfo.versionName
+        versionCodeTextView.text = "(${appInfo.versionCode} ${appInfo.buildId})"
+    }
+
+    override fun showAppDevelopers(devs: List<AppDeveloper>) {
+
     }
 
     override fun onBackPressed() {

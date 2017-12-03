@@ -15,17 +15,29 @@
         app:title="@string/about_item"/>
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
         android:src="@mipmap/ic_launcher"
         android:layout_gravity="center_horizontal"
-        android:layout_margin="72dp"/>
+        android:layout_marginTop="40dp"/>
 
     <TextView
-        android:id="@+id/aboutVersionTV"
+        android:id="@+id/versionNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal"
+        android:textSize="16sp"
+        android:textColor="@color/secondary_text"
+        android:layout_marginTop="24dp"
+        android:layout_gravity="center_horizontal"
+        tools:text="version 7.7.7"/>
+
+    <TextView
+        android:id="@+id/versionCodeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:textColor="@color/secondary_text"
+        android:layout_gravity="center_horizontal"
         tools:text="version 7.7.7"/>
 
 </LinearLayout>

@@ -12,8 +12,13 @@ android {
         applicationId "ru.terrakok.gitlabclient"
         minSdkVersion 19
         targetSdkVersion 27
-        versionName "1.0 (" + getBuildUid() + ")"
+
+        versionName "1.0"
         versionCode getBuildNumber()
+        buildConfigField "String", "VERSION_UID", '"' + getBuildUid() + '"'
+        buildConfigField "String", "APP_DESCRIPTION", '"Gitfox is an Android client for Gitlab."'
+        buildConfigField "String", "FEEDBACK_EMAIL", '"test@test.com"' //todo
+        buildConfigField "String", "APP_HOME_PAGE", '"https://gitlab.com/terrakok/gitlab-client"'
 
         buildConfigField "String", "WEB_AUTH_USER_AGENT", '"gitfox_user_agent"'
         buildConfigField "String", "ORIGIN_GITLAB_ENDPOINT", '"https://gitlab.com/"'
