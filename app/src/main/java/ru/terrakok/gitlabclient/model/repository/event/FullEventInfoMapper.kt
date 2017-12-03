@@ -19,7 +19,7 @@ class FullEventInfoMapper {
                 event.author,
                 event.createdAt,
                 project,
-                "Test body",
+                transformBody(event),
                 event.targetId ?: event.projectId
         )
     }
@@ -50,6 +50,24 @@ class FullEventInfoMapper {
                 event.pushData != null -> EventTarget.BRANCH
                 else -> throw IllegalArgumentException(
                         "Unsupported event action name: ${event.actionName}.")
+            }
+        }
+    }
+
+    private fun transformBody(event: Event): String? {
+        return if (event.targetType != null) {
+            when (event.targetType) {
+                EventTargetType.NOTE -> event.note!!.body
+                EventTargetType.ISSUE -> event.targetTitle
+                EventTargetType.MERGE_REQUEST -> event.targetTitle
+                EventTargetType.MILESTONE -> event.targetTitle
+                else -> null
+            }
+        } else {
+            if (event.pushData != null) {
+                event.pushData.commitTitle
+            } else {
+                null
             }
         }
     }
