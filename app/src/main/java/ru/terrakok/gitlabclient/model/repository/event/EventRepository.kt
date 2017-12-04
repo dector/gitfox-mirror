@@ -3,8 +3,12 @@ package ru.terrakok.gitlabclient.model.repository.event
 import io.reactivex.Single
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.Sort
+import ru.terrakok.gitlabclient.entity.app.FullEventInfo
+import ru.terrakok.gitlabclient.entity.app.FullEventTarget
+import ru.terrakok.gitlabclient.entity.event.Event
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.event.EventTarget
+import ru.terrakok.gitlabclient.entity.event.EventTargetType
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
@@ -19,7 +23,6 @@ import javax.inject.Inject
 class EventRepository @Inject constructor(
         private val api: GitlabApi,
         private val schedulers: SchedulersProvider,
-        private val fullEventInfoMapper: FullEventInfoMapper,
         @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
@@ -49,15 +52,73 @@ class EventRepository @Inject constructor(
             .flatMapSingle { event ->
                 val projectId = event.projectId
                 if (cachedProjects.containsKey(projectId)) {
-                    Single.just(fullEventInfoMapper.transform(event, cachedProjects[projectId]!!))
+                    Single.just(getFullEventInfo(event, cachedProjects[projectId]!!))
                 } else {
                     api.getProject(projectId)
                             .doOnSuccess { cachedProjects.put(projectId, it) }
-                            .map { project -> fullEventInfoMapper.transform(event, project) }
+                            .map { project -> getFullEventInfo(event, project) }
                 }
             }
             .toList()
-            .doOnEvent { _, _ -> cachedProjects.clear() }
             .subscribeOn(schedulers.io())
             .observeOn(schedulers.ui())
+
+    private fun getFullEventInfo(event: Event, project: Project): FullEventInfo {
+        return FullEventInfo(
+                event.actionName,
+                getFullEventTarget(event),
+                event.author,
+                event.createdAt,
+                project,
+                getBody(event),
+                event.targetId ?: event.projectId
+        )
+    }
+
+    private fun getFullEventTarget(event: Event): FullEventTarget {
+        return if (event.targetType != null) {
+            when (event.targetType) {
+                EventTargetType.ISSUE -> FullEventTarget.ISSUE
+                EventTargetType.MERGE_REQUEST -> FullEventTarget.MERGE_REQUEST
+                EventTargetType.MILESTONE -> FullEventTarget.MILESTONE
+                EventTargetType.NOTE -> {
+                    when (event.note!!.noteableType) {
+                        EventTargetType.ISSUE -> FullEventTarget.ISSUE
+                        EventTargetType.MERGE_REQUEST -> FullEventTarget.MERGE_REQUEST
+                        EventTargetType.MILESTONE -> FullEventTarget.MILESTONE
+                        EventTargetType.SNIPPET -> FullEventTarget.SNIPPET
+                        else -> throw IllegalArgumentException(
+                                "Unsupported noteable target type: ${event.note.noteableType}.")
+                    }
+                }
+                else -> throw IllegalArgumentException(
+                        "Unsupported event target type: ${event.targetType}.")
+            }
+        } else {
+            when {
+                event.actionName == EventAction.JOINED -> FullEventTarget.PROJECT
+                event.pushData != null -> FullEventTarget.BRANCH
+                else -> throw IllegalArgumentException(
+                        "Unsupported event action name: ${event.actionName}.")
+            }
+        }
+    }
+
+    private fun getBody(event: Event): String? {
+        return if (event.targetType != null) {
+            when (event.targetType) {
+                EventTargetType.NOTE -> event.note!!.body
+                EventTargetType.ISSUE -> event.targetTitle
+                EventTargetType.MERGE_REQUEST -> event.targetTitle
+                EventTargetType.MILESTONE -> event.targetTitle
+                else -> null
+            }
+        } else {
+            if (event.pushData != null) {
+                event.pushData.commitTitle
+            } else {
+                null
+            }
+        }
+    }
 }

@@ -10,7 +10,7 @@ import java.util.*
  */
 data class FullEventInfo(
         val action: EventAction,
-        val target: EventTarget,
+        val target: FullEventTarget,
         val author: Author,
         val createdAt: Date,
         val project: Project?,
