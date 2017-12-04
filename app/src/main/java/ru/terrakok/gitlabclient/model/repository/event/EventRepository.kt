@@ -1,6 +1,8 @@
 package ru.terrakok.gitlabclient.model.repository.event
 
+import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.functions.BiFunction
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.Sort
 import ru.terrakok.gitlabclient.entity.app.FullEventInfo
@@ -28,8 +30,6 @@ class EventRepository @Inject constructor(
     private val defaultPageSize = defaultPageSizeWrapper.value
     private val dayFormat = SimpleDateFormat("yyyy-MM-dd")
 
-    private val cachedProjects = mutableMapOf<Long, Project>()
-
     fun getEvents(
             action: EventAction? = null,
             targetType: EventTarget? = null,
@@ -48,20 +48,29 @@ class EventRepository @Inject constructor(
                     page,
                     pageSize
             )
-            .flattenAsObservable { it }
-            .flatMapSingle { event ->
-                val projectId = event.projectId
-                if (cachedProjects.containsKey(projectId)) {
-                    Single.just(getFullEventInfo(event, cachedProjects[projectId]!!))
-                } else {
-                    api.getProject(projectId)
-                            .doOnSuccess { cachedProjects.put(projectId, it) }
-                            .map { project -> getFullEventInfo(event, project) }
-                }
+            .flatMap { events ->
+                Single.zip(
+                        Single.just(events),
+                        getDistinctProjects(events),
+                        BiFunction<List<Event>, Map<Long, Project>, List<FullEventInfo>>
+                        { sourceEvents, projects ->
+                            val fullEventInfos = mutableListOf<FullEventInfo>()
+                            sourceEvents.forEach {
+                                fullEventInfos.add(getFullEventInfo(it, projects[it.projectId]!!))
+                            }
+                            return@BiFunction fullEventInfos
+                        }
+                )
             }
-            .toList()
             .subscribeOn(schedulers.io())
             .observeOn(schedulers.ui())
+
+    private fun getDistinctProjects(events: List<Event>): Single<Map<Long, Project>> {
+        return Observable.fromIterable(events)
+                .distinct { it.projectId }
+                .flatMapSingle { event -> api.getProject(event.projectId) }
+                .toMap { it.id }
+    }
 
     private fun getFullEventInfo(event: Event, project: Project): FullEventInfo {
         return FullEventInfo(
