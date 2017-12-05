@@ -52,11 +52,10 @@ class EventRepository @Inject constructor(
                 Single.zip(
                         Single.just(events),
                         getDistinctProjects(events),
-                        BiFunction<List<Event>, Map<Long, Project>, List<FullEventInfo>>
-                        { sourceEvents, projects ->
+                        BiFunction<List<Event>, Map<Long, Project>, List<FullEventInfo>> { sourceEvents, projects ->
                             val fullEventInfos = mutableListOf<FullEventInfo>()
                             sourceEvents.forEach {
-                                fullEventInfos.add(getFullEventInfo(it, projects[it.projectId]!!))
+                                fullEventInfos.add(getFullEventInfo(it, projects[it.projectId]))
                             }
                             return@BiFunction fullEventInfos
                         }
@@ -72,7 +71,7 @@ class EventRepository @Inject constructor(
                 .toMap { it.id }
     }
 
-    private fun getFullEventInfo(event: Event, project: Project): FullEventInfo {
+    private fun getFullEventInfo(event: Event, project: Project?): FullEventInfo {
         return FullEventInfo(
                 event.actionName,
                 getFullEventTarget(event),
@@ -96,19 +95,16 @@ class EventRepository @Inject constructor(
                         EventTargetType.MERGE_REQUEST -> FullEventTarget.MERGE_REQUEST
                         EventTargetType.MILESTONE -> FullEventTarget.MILESTONE
                         EventTargetType.SNIPPET -> FullEventTarget.SNIPPET
-                        else -> throw IllegalArgumentException(
-                                "Unsupported noteable target type: ${event.note.noteableType}.")
+                        else -> throw IllegalArgumentException("Unsupported noteable target type: ${event.note.noteableType}.")
                     }
                 }
-                else -> throw IllegalArgumentException(
-                        "Unsupported event target type: ${event.targetType}.")
+                else -> throw IllegalArgumentException("Unsupported event target type: ${event.targetType}.")
             }
         } else {
             when {
                 event.actionName == EventAction.JOINED -> FullEventTarget.PROJECT
                 event.pushData != null -> FullEventTarget.BRANCH
-                else -> throw IllegalArgumentException(
-                        "Unsupported event action name: ${event.actionName}.")
+                else -> throw IllegalArgumentException("Unsupported event action name: ${event.actionName}.")
             }
         }
     }
@@ -123,11 +119,7 @@ class EventRepository @Inject constructor(
                 else -> null
             }
         } else {
-            if (event.pushData != null) {
-                event.pushData.commitTitle
-            } else {
-                null
-            }
+            event.pushData?.commitTitle
         }
     }
 }
