@@ -2,7 +2,7 @@ package ru.terrakok.gitlabclient.presentation.my.events
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
-import ru.terrakok.gitlabclient.entity.event.Event
+import ru.terrakok.gitlabclient.entity.app.FullEventInfo
 import ru.terrakok.gitlabclient.model.interactor.event.EventInteractor
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
@@ -26,7 +26,7 @@ class MyEventsPresenter @Inject constructor(
 
     private val paginator = Paginator(
             { eventInteractor.getEvents(it) },
-            object : Paginator.ViewController<Event> {
+            object : Paginator.ViewController<FullEventInfo> {
                 override fun showEmptyProgress(show: Boolean) {
                     viewState.showEmptyProgress(show)
                 }
@@ -47,7 +47,7 @@ class MyEventsPresenter @Inject constructor(
                     viewState.showEmptyView(show)
                 }
 
-                override fun showData(show: Boolean, data: List<Event>) {
+                override fun showData(show: Boolean, data: List<FullEventInfo>) {
                     viewState.showEvents(show, data)
                 }
 
@@ -62,7 +62,7 @@ class MyEventsPresenter @Inject constructor(
     )
 
     fun onMenuClick() = menuController.open()
-    fun onEventClick(event: Event) {}
+    fun onEventClick(event: FullEventInfo) {}
     fun refreshEvents() = paginator.refresh()
     fun loadNextEventsPage() = paginator.loadNewPage()
 

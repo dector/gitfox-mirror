@@ -21,7 +21,8 @@ enum class EventAction(private val jsonName: String) {
     @SerializedName("merged") MERGED("merged"),
     @SerializedName("left") LEFT("left"),
     @SerializedName("destroyed") DESTROYED("destroyed"),
-    @SerializedName("expired") EXPIRED("expired");
+    @SerializedName("expired") EXPIRED("expired"),
+    @SerializedName("opened") OPENED("opened");
 
     override fun toString() = jsonName
 }
