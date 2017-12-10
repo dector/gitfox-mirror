@@ -9,5 +9,6 @@ enum class FullEventTarget {
     BRANCH,
     PROJECT,
     SNIPPET,
-    MILESTONE
+    MILESTONE,
+    COMMIT
 }
