@@ -28,6 +28,7 @@ import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.main.MainFragment
 import ru.terrakok.gitlabclient.ui.project.ProjectInfoFragment
 import ru.terrakok.gitlabclient.ui.projects.ProjectsContainerFragment
+import ru.terrakok.gitlabclient.ui.user.UserActivity
 import toothpick.Toothpick
 import javax.inject.Inject
 
@@ -88,6 +89,7 @@ class MainActivity : BaseActivity(), LaunchView {
                 .replace(R.id.mainContainer, MainFragment())
                 .replace(R.id.navDrawerContainer, NavigationDrawerFragment())
                 .commitNow()
+        updateNavDrawer()
     }
 
     private val navigator = object : SupportAppNavigator(this, R.id.mainContainer) {
@@ -99,6 +101,7 @@ class MainActivity : BaseActivity(), LaunchView {
 
         override fun createActivityIntent(screenKey: String?, data: Any?): Intent? = when (screenKey) {
             Screens.AUTH_SCREEN -> Intent(this@MainActivity, AuthActivity::class.java)
+            Screens.USER_INFO_SCREEN -> UserActivity.getStartIntent(data as Long, this@MainActivity)
             else -> null
         }
 

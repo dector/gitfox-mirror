@@ -1,12 +1,17 @@
 package ru.terrakok.gitlabclient.extension
 
+import android.content.Intent
 import android.content.res.Resources
+import android.net.Uri
 import android.os.Build
 import android.support.annotation.DrawableRes
 import android.support.annotation.LayoutRes
+import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.URLUtil
+import android.widget.TextView
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import org.joda.time.DateTimeZone
@@ -16,6 +21,7 @@ import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.FullEventTarget
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.model.system.ResourceManager
+import timber.log.Timber
 import java.io.IOException
 import java.util.*
 
@@ -76,6 +82,41 @@ fun Date.humanTime(resources: Resources): String {
             }
 
     return resources.getString(R.string.time_ago, timeStr)
+}
+
+fun TextView.showTextOrHide(str: String?) {
+    this.text = str
+    this.visible(!str.isNullOrBlank())
+}
+
+fun Fragment.tryOpenLink(link: String?, basePath: String? = "https://google.com/search?q=") {
+    try {
+        startActivity(Intent(
+                Intent.ACTION_VIEW,
+                when {
+                    URLUtil.isValidUrl(link) -> Uri.parse(link)
+                    else -> Uri.parse(basePath + link)
+                }
+        ))
+    } catch (e: Exception) {
+        Timber.e("tryOpenLink error: $e")
+        startActivity(Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("https://google.com/search?q=$link")
+        ))
+    }
+}
+
+fun Fragment.shareText(text: String?) {
+    text?.let {
+        startActivity(Intent.createChooser(
+                Intent(Intent.ACTION_SEND).apply {
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_TEXT, text)
+                },
+                getString(R.string.share_to)
+        ))
+    }
 }
 
 fun FullEventTarget.getHumanName(resources: Resources) = when (this) {

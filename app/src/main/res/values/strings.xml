@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">GitFox</string>
     <string name="cancel">Cancel</string>
+    <string name="share_to">Share to</string>
 
     <!--Main screen-->
     <string name="gitlab_activity">Activity</string>

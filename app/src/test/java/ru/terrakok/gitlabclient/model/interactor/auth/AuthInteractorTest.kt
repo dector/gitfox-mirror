@@ -25,7 +25,7 @@ class AuthInteractorTest {
     @Before
     fun setUp() {
         authRepo = mock(AuthRepository::class.java)
-        interactor = AuthInteractor("some server path", authRepo, HASH, OAUTH_PARAMS)
+        interactor = AuthInteractor("some server path", "some default server path", authRepo, HASH, OAUTH_PARAMS)
     }
 
     @Test

@@ -14,7 +14,7 @@ data class User(
         @SerializedName("created_at") val createdAt: Date,
         @SerializedName("is_admin") val isAdmin: Boolean,
         @SerializedName("bio") val bio: String?,
-        @SerializedName("location") val location: Any?,
+        @SerializedName("location") val location: String?,
         @SerializedName("skype") val skype: String?,
         @SerializedName("linkedin") val linkedin: String?,
         @SerializedName("twitter") val twitter: String?,
