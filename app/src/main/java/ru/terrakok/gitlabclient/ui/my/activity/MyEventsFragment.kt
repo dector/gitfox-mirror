@@ -9,7 +9,7 @@ import com.hannesdorfmann.adapterdelegates3.ListDelegationAdapter
 import kotlinx.android.synthetic.main.fragment_my_activity.*
 import kotlinx.android.synthetic.main.layout_base_list.*
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.event.Event
+import ru.terrakok.gitlabclient.entity.app.FullEventInfo
 import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.my.events.MyEventsPresenter
 import ru.terrakok.gitlabclient.presentation.my.events.MyEventsView
@@ -74,7 +74,7 @@ class MyEventsFragment : BaseFragment(), MyEventsView {
         if (show && message != null) showSnackMessage(message)
     }
 
-    override fun showEvents(show: Boolean, events: List<Event>) {
+    override fun showEvents(show: Boolean, events: List<FullEventInfo>) {
         recyclerView.visible(show)
         recyclerView.post { adapter.setData(events) }
     }
@@ -90,7 +90,7 @@ class MyEventsFragment : BaseFragment(), MyEventsView {
             delegatesManager.addDelegate(ProgressAdapterDelegate())
         }
 
-        fun setData(events: List<Event>) {
+        fun setData(events: List<FullEventInfo>) {
             val progress = isProgress()
 
             items.clear()

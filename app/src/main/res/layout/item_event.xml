@@ -52,6 +52,7 @@
         android:layout_marginTop="16dp"
         android:textColor="@color/secondary_text"
         android:textSize="14sp"
+        android:gravity="end"
         app:layout_constraintBaseline_toBaselineOf="@id/eventTitleTextView"
         app:layout_constraintRight_toRightOf="parent"
         tools:text="29 min ago"/>
