@@ -53,7 +53,7 @@ class AppModule(context: Context) : Module() {
                 BuildConfig.APP_DESCRIPTION,
                 BuildConfig.VERSION_UID.take(8),
                 BuildConfig.APP_HOME_PAGE,
-                BuildConfig.FEEDBACK_EMAIL
+                BuildConfig.FEEDBACK_URL
         ))
         bind(AppInfoRepository::class.java)
         bind(AppInfoInteractor::class.java)

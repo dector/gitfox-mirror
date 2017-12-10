@@ -4,6 +4,7 @@ import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import io.reactivex.disposables.CompositeDisposable
 import ru.terrakok.cicerone.Router
+import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.extension.addTo
 import ru.terrakok.gitlabclient.model.interactor.app.AppInfoInteractor
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
@@ -43,6 +44,10 @@ class AboutPresenter @Inject constructor(
         super.onDestroy()
         compositeDisposable.dispose()
     }
+
+    fun onShowLibrariesClicked() {}
+
+    fun onDeveloperClicked(id: Long) = router.navigateTo(Screens.USER_INFO_SCREEN, id)
 
     fun onMenuPressed() = menuController.open()
     fun onBackPressed() = router.exit()

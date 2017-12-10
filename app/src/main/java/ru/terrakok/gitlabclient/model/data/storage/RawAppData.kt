@@ -17,8 +17,8 @@ class RawAppData @Inject constructor(
         private val gson: Gson
 ) {
 
-    fun getAppLibraries(): Single<List<AppLibrary>> = fromAsset("app_libraries.json")
-    fun getAppDevelopers(): Single<List<AppDeveloper>> = fromAsset("app_developers.json")
+    fun getAppLibraries(): Single<List<AppLibrary>> = fromAsset("app/app_libraries.json")
+    fun getAppDevelopers(): Single<List<AppDeveloper>> = fromAsset("app/app_developers.json")
 
     private inline fun <reified T> fromAsset(pathToAsset: String) = Single.defer {
         assets.open(pathToAsset).use { stream ->

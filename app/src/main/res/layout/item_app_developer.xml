@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground">
+
+    <include
+        android:id="@+id/avatarLayout"
+        layout="@layout/layout_avatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/nameTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:ellipsize="end"
+        android:lines="1"
+        android:textColor="@color/primary_text"
+        android:textSize="16sp"
+        app:layout_constraintLeft_toRightOf="@id/avatarLayout"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/avatarLayout"
+        tools:text="Konstantin Tskhovrebov"/>
+
+    <TextView
+        android:id="@+id/roleTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:ellipsize="end"
+        android:lines="1"
+        android:textColor="@color/secondary_text"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toRightOf="@id/avatarLayout"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/nameTextView"
+        tools:text="Konstantin Tskhovrebov"/>
+</android.support.constraint.ConstraintLayout>

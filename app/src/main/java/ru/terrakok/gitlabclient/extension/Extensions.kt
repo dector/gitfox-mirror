@@ -87,20 +87,22 @@ fun TextView.showTextOrHide(str: String?) {
 }
 
 fun Fragment.tryOpenLink(link: String?, basePath: String? = "https://google.com/search?q=") {
-    try {
-        startActivity(Intent(
-                Intent.ACTION_VIEW,
-                when {
-                    URLUtil.isValidUrl(link) -> Uri.parse(link)
-                    else -> Uri.parse(basePath + link)
-                }
-        ))
-    } catch (e: Exception) {
-        Timber.e("tryOpenLink error: $e")
-        startActivity(Intent(
-                Intent.ACTION_VIEW,
-                Uri.parse("https://google.com/search?q=$link")
-        ))
+    if (link != null) {
+        try {
+            startActivity(Intent(
+                    Intent.ACTION_VIEW,
+                    when {
+                        URLUtil.isValidUrl(link) -> Uri.parse(link)
+                        else -> Uri.parse(basePath + link)
+                    }
+            ))
+        } catch (e: Exception) {
+            Timber.e("tryOpenLink error: $e")
+            startActivity(Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://google.com/search?q=$link")
+            ))
+        }
     }
 }
 
@@ -112,6 +114,15 @@ fun Fragment.shareText(text: String?) {
                     putExtra(Intent.EXTRA_TEXT, text)
                 },
                 getString(R.string.share_to)
+        ))
+    }
+}
+
+fun Fragment.sendEmail(email: String?) {
+    if (email != null) {
+        startActivity(Intent.createChooser(
+                Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", email, null)),
+                null
         ))
     }
 }

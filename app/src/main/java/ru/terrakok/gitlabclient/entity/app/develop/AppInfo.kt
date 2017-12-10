@@ -9,5 +9,5 @@ data class AppInfo(
         val description: String,
         val buildId: String,
         val url: String,
-        val feedbackEmail: String
+        val feedbackUrl: String
 )
