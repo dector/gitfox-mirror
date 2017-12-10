@@ -89,6 +89,7 @@ class EventRepository @Inject constructor(
                 EventTargetType.ISSUE -> FullEventTarget.ISSUE
                 EventTargetType.MERGE_REQUEST -> FullEventTarget.MERGE_REQUEST
                 EventTargetType.MILESTONE -> FullEventTarget.MILESTONE
+                EventTargetType.DIFF_NOTE -> FullEventTarget.COMMIT
                 EventTargetType.NOTE -> {
                     when (event.note!!.noteableType) {
                         EventTargetType.ISSUE -> FullEventTarget.ISSUE
@@ -103,6 +104,8 @@ class EventRepository @Inject constructor(
         } else {
             when {
                 event.actionName == EventAction.JOINED -> FullEventTarget.PROJECT
+                event.actionName == EventAction.CREATED -> FullEventTarget.PROJECT
+                event.actionName == EventAction.LEFT -> FullEventTarget.PROJECT
                 event.pushData != null -> FullEventTarget.BRANCH
                 else -> throw IllegalArgumentException("Unsupported event action name: ${event.actionName}.")
             }
@@ -116,6 +119,7 @@ class EventRepository @Inject constructor(
                 EventTargetType.ISSUE -> event.targetTitle
                 EventTargetType.MERGE_REQUEST -> event.targetTitle
                 EventTargetType.MILESTONE -> event.targetTitle
+                EventTargetType.DIFF_NOTE -> event.note!!.body
                 else -> null
             }
         } else {

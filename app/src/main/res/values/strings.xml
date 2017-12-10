@@ -66,11 +66,30 @@
     <string name="time_ago" formatted="false">%s ago</string>
 
     <!--My Events Screen-->
-    <string name="event_target_type_issue">issue</string>
-    <string name="event_target_type_note">issue</string>
-    <string name="event_target_type_diff_note">issue</string>
-    <string name="event_target_type_mr">merge request</string>
-    <string name="event_target_type_milestone">milestone</string>
+    <string name="full_event_target_project">project</string>
+    <string name="full_event_target_issue">issue</string>
+    <string name="full_event_target_merge_request">merge request</string>
+    <string name="full_event_target_commit">commit</string>
+    <string name="full_event_target_snippet">snippet</string>
+    <string name="full_event_target_milestone">milestone</string>
+    <string name="full_event_target_branch">branch</string>
+    <string name="event_action_closed">closed</string>
+    <string name="event_action_commented_on">commented on</string>
+    <string name="event_action_created">created</string>
+    <string name="event_action_pushed_to">pushed to</string>
+    <string name="event_action_pushed_new">pushed new</string>
+    <string name="event_action_deleted">deleted</string>
+    <string name="event_action_accepted">accepted</string>
+    <string name="event_action_joined">joined</string>
+    <string name="event_action_updated">updated</string>
+    <string name="event_action_reopened">reopened</string>
+    <string name="event_action_pushed">pushed</string>
+    <string name="event_action_commented">commented</string>
+    <string name="event_action_destroyed">destroyed</string>
+    <string name="event_action_expired">expired</string>
+    <string name="event_action_opened">opened</string>
+    <string name="event_action_left">left</string>
+    <string name="event_action_merged">merged</string>
 
     <!--My Merge Requests Screen-->
     <string name="merge_request_opened">Opened</string>

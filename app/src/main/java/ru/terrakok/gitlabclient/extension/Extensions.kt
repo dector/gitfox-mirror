@@ -2,6 +2,7 @@ package ru.terrakok.gitlabclient.extension
 
 import android.content.res.Resources
 import android.os.Build
+import android.support.annotation.DrawableRes
 import android.support.annotation.LayoutRes
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,8 @@ import org.joda.time.DateTimeZone
 import org.joda.time.format.DateTimeFormat
 import retrofit2.HttpException
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.entity.app.FullEventTarget
+import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import java.io.IOException
 import java.util.*
@@ -73,4 +76,49 @@ fun Date.humanTime(resources: Resources): String {
             }
 
     return resources.getString(R.string.time_ago, timeStr)
+}
+
+fun FullEventTarget.getHumanName(resources: Resources) = when (this) {
+    FullEventTarget.PROJECT -> resources.getString(R.string.full_event_target_project)
+    FullEventTarget.ISSUE -> resources.getString(R.string.full_event_target_issue)
+    FullEventTarget.MERGE_REQUEST -> resources.getString(R.string.full_event_target_merge_request)
+    FullEventTarget.BRANCH -> resources.getString(R.string.full_event_target_branch)
+    FullEventTarget.COMMIT -> resources.getString(R.string.full_event_target_commit)
+    FullEventTarget.MILESTONE -> resources.getString(R.string.full_event_target_milestone)
+    FullEventTarget.SNIPPET -> resources.getString(R.string.full_event_target_snippet)
+}
+
+fun EventAction.getHumanName(resources: Resources) = when (this) {
+    EventAction.UPDATED -> resources.getString(R.string.event_action_updated)
+    EventAction.REOPENED -> resources.getString(R.string.event_action_reopened)
+    EventAction.PUSHED_TO -> resources.getString(R.string.event_action_pushed_to)
+    EventAction.PUSHED_NEW -> resources.getString(R.string.event_action_pushed_new)
+    EventAction.PUSHED -> resources.getString(R.string.event_action_pushed)
+    EventAction.LEFT -> resources.getString(R.string.event_action_left)
+    EventAction.OPENED -> resources.getString(R.string.event_action_opened)
+    EventAction.DESTROYED -> resources.getString(R.string.event_action_destroyed)
+    EventAction.DELETED -> resources.getString(R.string.event_action_deleted)
+    EventAction.EXPIRED -> resources.getString(R.string.event_action_expired)
+    EventAction.MERGED -> resources.getString(R.string.event_action_merged)
+    EventAction.CLOSED -> resources.getString(R.string.event_action_closed)
+    EventAction.ACCEPTED -> resources.getString(R.string.event_action_accepted)
+    EventAction.COMMENTED -> resources.getString(R.string.event_action_commented)
+    EventAction.COMMENTED_ON -> resources.getString(R.string.event_action_commented_on)
+    EventAction.JOINED -> resources.getString(R.string.event_action_joined)
+    EventAction.CREATED -> resources.getString(R.string.event_action_created)
+}
+
+@DrawableRes
+fun EventAction.getIcon() = when (this) {
+    EventAction.CREATED -> R.drawable.ic_event_created_24dp
+    EventAction.JOINED -> R.drawable.ic_event_joined_24dp
+    EventAction.COMMENTED_ON, EventAction.COMMENTED -> R.drawable.ic_event_commented_24dp
+    EventAction.MERGED, EventAction.ACCEPTED -> R.drawable.ic_event_merged_24dp
+    EventAction.CLOSED -> R.drawable.ic_event_closed_24dp
+    EventAction.DELETED, EventAction.DESTROYED -> R.drawable.ic_event_destroyed_24dp
+    EventAction.EXPIRED -> R.drawable.ic_event_expired_24dp
+    EventAction.LEFT -> R.drawable.ic_event_left_24dp
+    EventAction.OPENED, EventAction.REOPENED -> R.drawable.ic_event_reopened_24dp
+    EventAction.PUSHED, EventAction.PUSHED_NEW, EventAction.PUSHED_TO -> R.drawable.ic_event_pushed_24dp
+    EventAction.UPDATED -> R.drawable.ic_event_updated_24dp
 }
