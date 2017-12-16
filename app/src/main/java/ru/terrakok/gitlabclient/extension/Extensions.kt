@@ -1,16 +1,23 @@
 package ru.terrakok.gitlabclient.extension
 
+import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.support.annotation.LayoutRes
 import android.support.v4.app.Fragment
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.URLUtil
+import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.BitmapImageViewTarget
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import org.joda.time.DateTimeZone
@@ -125,4 +132,32 @@ fun Fragment.sendEmail(email: String?) {
                 null
         ))
     }
+}
+
+fun ImageView.loadRoundedImage(
+        url: String?,
+        ctx: Context? = null
+) {
+    Glide.with(ctx ?: context)
+            .load(url)
+            .asBitmap()
+            .centerCrop()
+            .into(object : BitmapImageViewTarget(this) {
+                override fun onLoadStarted(placeholder: Drawable?) {
+                    setImageResource(R.drawable.default_img)
+                }
+
+                override fun onLoadFailed(e: java.lang.Exception?, errorDrawable: Drawable?) {
+                    setImageResource(R.drawable.default_img)
+                }
+
+                override fun setResource(resource: Bitmap?) {
+                    resource?.let {
+                        RoundedBitmapDrawableFactory.create(view.resources, it).run {
+                            this.isCircular = true
+                            setImageDrawable(this)
+                        }
+                    }
+                }
+            })
 }

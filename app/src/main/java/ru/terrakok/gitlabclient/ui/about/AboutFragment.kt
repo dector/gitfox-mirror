@@ -9,6 +9,7 @@ import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.develop.AppDeveloper
 import ru.terrakok.gitlabclient.entity.app.develop.AppInfo
 import ru.terrakok.gitlabclient.extension.inflate
+import ru.terrakok.gitlabclient.extension.loadRoundedImage
 import ru.terrakok.gitlabclient.extension.sendEmail
 import ru.terrakok.gitlabclient.extension.tryOpenLink
 import ru.terrakok.gitlabclient.presentation.about.AboutPresenter
@@ -59,6 +60,8 @@ class AboutFragment : BaseFragment(), AboutView {
                     else
                         sendEmail(developer.email)
                 }
+                this.avatarImageView.loadRoundedImage(developer.avatarUrl, this@AboutFragment.context)
+
                 developersContainer.addView(this)
             }
         }

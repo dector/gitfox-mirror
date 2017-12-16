@@ -6,6 +6,7 @@ package ru.terrakok.gitlabclient.entity.app.develop
 data class AppDeveloper(
         val name: String,
         val gitlabId: Long? = null,
+        val avatarUrl: String? = null,
         val email: String? = null,
         val role: String
 )
