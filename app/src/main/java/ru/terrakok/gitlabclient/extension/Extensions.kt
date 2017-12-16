@@ -1,17 +1,24 @@
 package ru.terrakok.gitlabclient.extension
 
+import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.support.annotation.DrawableRes
 import android.support.annotation.LayoutRes
 import android.support.v4.app.Fragment
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.URLUtil
+import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.BitmapImageViewTarget
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import org.joda.time.DateTimeZone
@@ -90,20 +97,22 @@ fun TextView.showTextOrHide(str: String?) {
 }
 
 fun Fragment.tryOpenLink(link: String?, basePath: String? = "https://google.com/search?q=") {
-    try {
-        startActivity(Intent(
-                Intent.ACTION_VIEW,
-                when {
-                    URLUtil.isValidUrl(link) -> Uri.parse(link)
-                    else -> Uri.parse(basePath + link)
-                }
-        ))
-    } catch (e: Exception) {
-        Timber.e("tryOpenLink error: $e")
-        startActivity(Intent(
-                Intent.ACTION_VIEW,
-                Uri.parse("https://google.com/search?q=$link")
-        ))
+    if (link != null) {
+        try {
+            startActivity(Intent(
+                    Intent.ACTION_VIEW,
+                    when {
+                        URLUtil.isValidUrl(link) -> Uri.parse(link)
+                        else -> Uri.parse(basePath + link)
+                    }
+            ))
+        } catch (e: Exception) {
+            Timber.e("tryOpenLink error: $e")
+            startActivity(Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://google.com/search?q=$link")
+            ))
+        }
     }
 }
 
@@ -162,4 +171,41 @@ fun EventAction.getIcon() = when (this) {
     EventAction.OPENED, EventAction.REOPENED -> R.drawable.ic_event_reopened_24dp
     EventAction.PUSHED, EventAction.PUSHED_NEW, EventAction.PUSHED_TO -> R.drawable.ic_event_pushed_24dp
     EventAction.UPDATED -> R.drawable.ic_event_updated_24dp
+}
+
+fun Fragment.sendEmail(email: String?) {
+    if (email != null) {
+        startActivity(Intent.createChooser(
+                Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", email, null)),
+                null
+        ))
+    }
+}
+
+fun ImageView.loadRoundedImage(
+        url: String?,
+        ctx: Context? = null
+) {
+    Glide.with(ctx ?: context)
+            .load(url)
+            .asBitmap()
+            .centerCrop()
+            .into(object : BitmapImageViewTarget(this) {
+                override fun onLoadStarted(placeholder: Drawable?) {
+                    setImageResource(R.drawable.default_img)
+                }
+
+                override fun onLoadFailed(e: java.lang.Exception?, errorDrawable: Drawable?) {
+                    setImageResource(R.drawable.default_img)
+                }
+
+                override fun setResource(resource: Bitmap?) {
+                    resource?.let {
+                        RoundedBitmapDrawableFactory.create(view.resources, it).run {
+                            this.isCircular = true
+                            setImageDrawable(this)
+                        }
+                    }
+                }
+            })
 }

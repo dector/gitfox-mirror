@@ -22,9 +22,9 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
-        <include
-            android:id="@+id/avatarLay"
-            layout="@layout/layout_avatar"
+        <ImageView
+            android:id="@+id/avatarImageView"
+            android:src="@drawable/default_img"
             android:layout_width="72dp"
             android:layout_height="72dp"
             android:layout_margin="16dp"
@@ -48,7 +48,7 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/avatarLay"
+            app:layout_constraintTop_toBottomOf="@+id/avatarImageView"
             tools:text="Terrakok"/>
 
         <TextView

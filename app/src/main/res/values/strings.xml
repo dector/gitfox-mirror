@@ -2,6 +2,7 @@
     <string name="app_name">GitFox</string>
     <string name="cancel">Cancel</string>
     <string name="share_to">Share to</string>
+    <string name="ok">ok</string>
 
     <!--Main screen-->
     <string name="gitlab_activity">Activity</string>
@@ -25,7 +26,10 @@
 
     <!--About screen-->
     <string name="about_title">About</string>
-    <string name="version" formatted="false">Version: %s</string>
+    <string name="about_info">Info</string>
+    <string name="about_feedback">Write feedback</string>
+    <string name="about_open_source_libraries">Open Source Libraries</string>
+    <string name="about_authors">Authors</string>
 
     <!--Projects screen-->
     <string name="projects_title">Projects</string>
@@ -101,5 +105,4 @@
     <!--Calligraphy Config-->
     <string name="font_main_regular">fonts/Roboto-Regular.ttf</string>
     <string name="font_main_medium">fonts/Roboto-Medium.ttf</string>
-    <string name="ok">ok</string>
 </resources>

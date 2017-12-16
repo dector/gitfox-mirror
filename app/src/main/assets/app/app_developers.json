@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Konstantin Tskhovrebov",
+    "avatarUrl": "https://assets.gitlab-static.net/uploads/-/system/user/avatar/62974/avatar.png",
+    "gitlabId": 62974,
+    "role": "owner"
+  },
+  {
+    "name": "Eugene Shapovalov",
+    "avatarUrl": "https://assets.gitlab-static.net/uploads/-/system/user/avatar/1583723/avatar.png",
+    "gitlabId": 1583723,
+    "role": "developer"
+  },
+  {
+    "name": "Vladimir Parfenov",
+    "avatarUrl": "https://assets.gitlab-static.net/uploads/-/system/user/avatar/1523697/avatar.png",
+    "gitlabId": 1523697,
+    "role": "developer"
+  }
+]

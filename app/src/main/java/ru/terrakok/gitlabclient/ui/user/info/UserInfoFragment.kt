@@ -1,12 +1,12 @@
 package ru.terrakok.gitlabclient.ui.user.info
 
 import android.os.Bundle
-import android.view.ViewGroup
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_user_info.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.User
+import ru.terrakok.gitlabclient.extension.loadRoundedImage
 import ru.terrakok.gitlabclient.extension.shareText
 import ru.terrakok.gitlabclient.extension.showTextOrHide
 import ru.terrakok.gitlabclient.extension.tryOpenLink
@@ -16,7 +16,6 @@ import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.UserId
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import ru.terrakok.gitlabclient.ui.global.holder.AvatarViewHolder
 import toothpick.Toothpick
 import toothpick.config.Module
 
@@ -26,7 +25,6 @@ import toothpick.config.Module
 class UserInfoFragment : BaseFragment(), UserInfoView {
 
     override val layoutRes = R.layout.fragment_user_info
-    private var avatar: AvatarViewHolder? = null
     private var user: User? = null
 
     @InjectPresenter lateinit var presenter: UserInfoPresenter
@@ -50,7 +48,6 @@ class UserInfoFragment : BaseFragment(), UserInfoView {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         toolbar.setNavigationOnClickListener { presenter.onBackPressed() }
-        avatar = AvatarViewHolder(avatarLay as ViewGroup)
 
         toolbar.inflateMenu(R.menu.share_menu)
         toolbar.setOnMenuItemClickListener { item ->
@@ -76,7 +73,7 @@ class UserInfoFragment : BaseFragment(), UserInfoView {
     override fun showUser(user: User) {
         this.user = user
         toolbar.title = user.username
-        avatar?.setData(user.avatarUrl, user.name)
+        avatarImageView.loadRoundedImage(user.avatarUrl, context)
         usernameTextView.text = user.name
         userIdTextView.text = "@${user.username}"
 
