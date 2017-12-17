@@ -62,6 +62,7 @@ interface GitlabApi {
 
     @GET("$API_PATH/issues")
     fun getMyIssues(
+            @Query("scope") scope: IssueScope?,
             @Query("state") state: IssueState?,
             @Query("labels") labels: String?,
             @Query("milestone") milestone: String?,

@@ -1,5 +1,6 @@
 package ru.terrakok.gitlabclient.model.repository.issue
 
+import ru.terrakok.gitlabclient.entity.IssueScope
 import ru.terrakok.gitlabclient.entity.IssueState
 import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.entity.Sort
@@ -20,6 +21,7 @@ class IssueRepository @Inject constructor(
     private val defaultPageSize = defaultPageSizeWrapper.value
 
     fun getMyIssues(
+            scope: IssueScope? = null,
             state: IssueState? = null,
             labels: String? = null,
             milestone: String? = null,
@@ -31,6 +33,7 @@ class IssueRepository @Inject constructor(
             pageSize: Int = defaultPageSize
     ) = api
             .getMyIssues(
+                    scope,
                     state,
                     labels,
                     milestone,

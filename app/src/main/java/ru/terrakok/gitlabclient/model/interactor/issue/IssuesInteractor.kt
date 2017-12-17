@@ -1,6 +1,6 @@
 package ru.terrakok.gitlabclient.model.interactor.issue
 
-import ru.terrakok.gitlabclient.entity.IssueState
+import ru.terrakok.gitlabclient.entity.IssueScope
 import ru.terrakok.gitlabclient.model.repository.issue.IssueRepository
 import javax.inject.Inject
 
@@ -11,11 +11,11 @@ class IssuesInteractor @Inject constructor(
         private val issueRepository: IssueRepository
 ) {
     fun getMyIssues(
-            isOpened: Boolean,
+            createdByMe: Boolean,
             page: Int
     ) = issueRepository
             .getMyIssues(
-                    state = if (isOpened) IssueState.OPENED else IssueState.CLOSED,
+                    scope = if (createdByMe) IssueScope.CREATED_BY_ME else IssueScope.ASSIGNED_BY_ME,
                     page = page
             )
 }

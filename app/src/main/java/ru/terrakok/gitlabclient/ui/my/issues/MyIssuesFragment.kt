@@ -26,10 +26,10 @@ import toothpick.config.Module
 class MyIssuesFragment : BaseFragment(), MyIssuesView {
 
     companion object {
-        private val ARG_MODE_IS_OPENED = "arg_mode_is_opened"
+        private val ARG_MODE_CREATED_BY_ME = "arg_mode_created_by_me"
 
-        fun newInstance(isOpened: Boolean) = MyIssuesFragment().apply {
-            arguments = Bundle().apply { putBoolean(ARG_MODE_IS_OPENED, isOpened) }
+        fun newInstance(createdByMe: Boolean) = MyIssuesFragment().apply {
+            arguments = Bundle().apply { putBoolean(ARG_MODE_CREATED_BY_ME, createdByMe) }
         }
     }
 
@@ -46,7 +46,7 @@ class MyIssuesFragment : BaseFragment(), MyIssuesView {
             init {
                 bind(MyIssuesPresenter.InitParams::class.java)
                         .toInstance(
-                                MyIssuesPresenter.InitParams(arguments?.getBoolean(ARG_MODE_IS_OPENED) ?: true)
+                                MyIssuesPresenter.InitParams(arguments?.getBoolean(ARG_MODE_CREATED_BY_ME) ?: true)
                         )
             }
         })

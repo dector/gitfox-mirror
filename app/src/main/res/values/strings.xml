@@ -60,8 +60,8 @@
     <string name="server_error_error">500 Server Error</string>
 
     <!--My Issues screen-->
-    <string name="opened">Opened</string>
-    <string name="closed">Closed</string>
+    <string name="issues_created_by_me">Created</string>
+    <string name="issues_assigned_by_me">Assigned</string>
     <string name="by_author" formatted="false">by %s</string>
     <string name="sharp_id" formatted="false">#%d</string>
     <string name="time_sec" formatted="false">%d sec</string>

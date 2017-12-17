@@ -17,7 +17,7 @@ class MyIssuesPresenter @Inject constructor(
         private val issuesInteractor: IssuesInteractor,
         private val errorHandler: ErrorHandler
 ) : MvpPresenter<MyIssuesView>() {
-    data class InitParams(val isOpened: Boolean)
+    data class InitParams(val createdByMe: Boolean)
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -25,7 +25,7 @@ class MyIssuesPresenter @Inject constructor(
     }
 
     private val paginator = Paginator(
-            { issuesInteractor.getMyIssues(initParams.isOpened, it) },
+            { issuesInteractor.getMyIssues(initParams.createdByMe, it) },
             object : Paginator.ViewController<Issue> {
                 override fun showEmptyProgress(show: Boolean) {
                     viewState.showEmptyProgress(show)

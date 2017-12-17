@@ -1,7 +1,6 @@
 package ru.terrakok.gitlabclient.ui.my.issues
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentPagerAdapter
 import kotlinx.android.synthetic.main.fragment_my_issues_container.*
 import ru.terrakok.gitlabclient.R
@@ -34,13 +33,13 @@ class MyIssuesContainerFragment : BaseFragment() {
     }
 
     private inner class MyIssuesPagesAdapter : FragmentPagerAdapter(childFragmentManager) {
-        private val pages = listOf<Fragment>(
+        private val pages = listOf(
                 MyIssuesFragment.newInstance(true),
                 MyIssuesFragment.newInstance(false)
         )
-        private val pageTitles = listOf<String>(
-                getString(R.string.opened),
-                getString(R.string.closed)
+        private val pageTitles = listOf(
+                getString(R.string.issues_created_by_me),
+                getString(R.string.issues_assigned_by_me)
         )
 
         override fun getItem(position: Int) = pages[position]
