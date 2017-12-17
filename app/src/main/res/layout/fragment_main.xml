@@ -21,7 +21,7 @@
         app:bb_activeTabColor="@color/colorPrimary"
         app:bb_behavior="shifting"
         app:bb_inActiveTabAlpha="1.0"
-        app:bb_inActiveTabColor="@color/secondary_text"
+        app:bb_inActiveTabColor="@color/silver"
         app:bb_tabXmlResource="@xml/main_bottombar_tabs"/>
 
 </LinearLayout>

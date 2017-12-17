@@ -14,7 +14,7 @@ class ProgressDialog : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(STYLE_NO_FRAME, R.style.ProgressDialogStyle)
+        setStyle(STYLE_NO_FRAME, R.style.ProgressDialogTheme)
         isCancelable = false
     }
 

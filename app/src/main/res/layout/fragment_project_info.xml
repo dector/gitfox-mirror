@@ -12,7 +12,6 @@
         style="@style/ToolbarStyle"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark"
         app:navigationIcon="@drawable/ic_arrow_back_24dp"/>
 
     <LinearLayout
@@ -27,9 +26,10 @@
             android:layout_weight="1"
             android:drawableLeft="@drawable/ic_star_black_24dp"
             android:drawablePadding="8dp"
-            android:drawableTint="@color/white"
+            android:drawableTint="@color/colorPrimary"
             android:gravity="center_vertical"
             android:padding="16dp"
+            android:textColor="@color/colorPrimary"
             tools:text="1200"/>
 
         <TextView
@@ -39,9 +39,10 @@
             android:layout_weight="1"
             android:drawableLeft="@drawable/ic_fork"
             android:drawablePadding="8dp"
-            android:drawableTint="@color/white"
+            android:drawableTint="@color/colorPrimary"
             android:gravity="center_vertical"
             android:padding="16dp"
+            android:textColor="@color/colorPrimary"
             tools:text="1200"/>
 
     </LinearLayout>

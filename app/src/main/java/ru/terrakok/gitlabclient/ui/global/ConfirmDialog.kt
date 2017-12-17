@@ -18,7 +18,7 @@ class ConfirmDialog : DialogFragment() {
     private val dialogTag: String get() = arguments?.getString(TAG) ?: "ConfirmDialog tag"
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-            AlertDialog.Builder(context!!, R.style.AppCompatAlertDialogStyle).apply {
+            AlertDialog.Builder(context!!).apply {
                 title?.let { setTitle(title) }
                 setMessage(msg)
                 setPositiveButton(positive) { _, _ -> clickListener?.dialogConfirm(dialogTag) }

@@ -6,7 +6,7 @@ apply from: '../ci.gradle'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '27.0.0'
+    buildToolsVersion '27.0.1'
 
     defaultConfig {
         applicationId "ru.terrakok.gitlabclient"
@@ -55,7 +55,7 @@ kapt {
 }
 
 ext {
-    supportLibraryVersion = "27.0.0"
+    supportLibraryVersion = "27.0.2"
     moxyVersion = "1.4.6"
     toothpickVersion = "1.0.6"
     retrofitVersion = "2.2.0"
