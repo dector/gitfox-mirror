@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.model.interactor.profile
+package ru.terrakok.gitlabclient.entity.app.user
 
 import ru.terrakok.gitlabclient.entity.User
 

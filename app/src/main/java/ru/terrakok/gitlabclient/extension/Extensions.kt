@@ -25,7 +25,7 @@ import org.joda.time.DateTimeZone
 import org.joda.time.format.DateTimeFormat
 import retrofit2.HttpException
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.app.FullEventTarget
+import ru.terrakok.gitlabclient.entity.app.event.AppEventTarget
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import timber.log.Timber
@@ -128,14 +128,14 @@ fun Fragment.shareText(text: String?) {
     }
 }
 
-fun FullEventTarget.getHumanName(resources: Resources) = when (this) {
-    FullEventTarget.PROJECT -> resources.getString(R.string.full_event_target_project)
-    FullEventTarget.ISSUE -> resources.getString(R.string.full_event_target_issue)
-    FullEventTarget.MERGE_REQUEST -> resources.getString(R.string.full_event_target_merge_request)
-    FullEventTarget.BRANCH -> resources.getString(R.string.full_event_target_branch)
-    FullEventTarget.COMMIT -> resources.getString(R.string.full_event_target_commit)
-    FullEventTarget.MILESTONE -> resources.getString(R.string.full_event_target_milestone)
-    FullEventTarget.SNIPPET -> resources.getString(R.string.full_event_target_snippet)
+fun AppEventTarget.getHumanName(resources: Resources) = when (this) {
+    AppEventTarget.PROJECT -> resources.getString(R.string.full_event_target_project)
+    AppEventTarget.ISSUE -> resources.getString(R.string.full_event_target_issue)
+    AppEventTarget.MERGE_REQUEST -> resources.getString(R.string.full_event_target_merge_request)
+    AppEventTarget.BRANCH -> resources.getString(R.string.full_event_target_branch)
+    AppEventTarget.COMMIT -> resources.getString(R.string.full_event_target_commit)
+    AppEventTarget.MILESTONE -> resources.getString(R.string.full_event_target_milestone)
+    AppEventTarget.SNIPPET -> resources.getString(R.string.full_event_target_snippet)
 }
 
 fun EventAction.getHumanName(resources: Resources) = when (this) {

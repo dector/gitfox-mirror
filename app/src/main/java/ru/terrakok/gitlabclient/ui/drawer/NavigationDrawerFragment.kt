@@ -7,8 +7,8 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_nav_drawer.*
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.entity.app.user.MyUserInfo
 import ru.terrakok.gitlabclient.extension.loadRoundedImage
-import ru.terrakok.gitlabclient.model.interactor.profile.MyUserInfo
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerPresenter
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem

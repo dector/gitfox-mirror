@@ -5,8 +5,8 @@ import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.Sort
-import ru.terrakok.gitlabclient.entity.app.FullEventInfo
-import ru.terrakok.gitlabclient.entity.app.FullEventTarget
+import ru.terrakok.gitlabclient.entity.app.event.AppEventInfo
+import ru.terrakok.gitlabclient.entity.app.event.AppEventTarget
 import ru.terrakok.gitlabclient.entity.event.Event
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.event.EventTarget
@@ -52,8 +52,8 @@ class EventRepository @Inject constructor(
                 Single.zip(
                         Single.just(events),
                         getDistinctProjects(events),
-                        BiFunction<List<Event>, Map<Long, Project>, List<FullEventInfo>> { sourceEvents, projects ->
-                            val fullEventInfos = mutableListOf<FullEventInfo>()
+                        BiFunction<List<Event>, Map<Long, Project>, List<AppEventInfo>> { sourceEvents, projects ->
+                            val fullEventInfos = mutableListOf<AppEventInfo>()
                             sourceEvents.forEach {
                                 fullEventInfos.add(getFullEventInfo(it, projects[it.projectId]))
                             }
@@ -71,8 +71,8 @@ class EventRepository @Inject constructor(
                 .toMap { it.id }
     }
 
-    private fun getFullEventInfo(event: Event, project: Project?): FullEventInfo {
-        return FullEventInfo(
+    private fun getFullEventInfo(event: Event, project: Project?): AppEventInfo {
+        return AppEventInfo(
                 event.actionName,
                 getFullEventTarget(event),
                 event.author,
@@ -83,19 +83,19 @@ class EventRepository @Inject constructor(
         )
     }
 
-    private fun getFullEventTarget(event: Event): FullEventTarget {
+    private fun getFullEventTarget(event: Event): AppEventTarget {
         return if (event.targetType != null) {
             when (event.targetType) {
-                EventTargetType.ISSUE -> FullEventTarget.ISSUE
-                EventTargetType.MERGE_REQUEST -> FullEventTarget.MERGE_REQUEST
-                EventTargetType.MILESTONE -> FullEventTarget.MILESTONE
-                EventTargetType.DIFF_NOTE -> FullEventTarget.COMMIT
+                EventTargetType.ISSUE -> AppEventTarget.ISSUE
+                EventTargetType.MERGE_REQUEST -> AppEventTarget.MERGE_REQUEST
+                EventTargetType.MILESTONE -> AppEventTarget.MILESTONE
+                EventTargetType.DIFF_NOTE -> AppEventTarget.COMMIT
                 EventTargetType.NOTE -> {
                     when (event.note!!.noteableType) {
-                        EventTargetType.ISSUE -> FullEventTarget.ISSUE
-                        EventTargetType.MERGE_REQUEST -> FullEventTarget.MERGE_REQUEST
-                        EventTargetType.MILESTONE -> FullEventTarget.MILESTONE
-                        EventTargetType.SNIPPET -> FullEventTarget.SNIPPET
+                        EventTargetType.ISSUE -> AppEventTarget.ISSUE
+                        EventTargetType.MERGE_REQUEST -> AppEventTarget.MERGE_REQUEST
+                        EventTargetType.MILESTONE -> AppEventTarget.MILESTONE
+                        EventTargetType.SNIPPET -> AppEventTarget.SNIPPET
                         else -> throw IllegalArgumentException("Unsupported noteable target type: ${event.note.noteableType}.")
                     }
                 }
@@ -103,10 +103,10 @@ class EventRepository @Inject constructor(
             }
         } else {
             when {
-                event.actionName == EventAction.JOINED -> FullEventTarget.PROJECT
-                event.actionName == EventAction.CREATED -> FullEventTarget.PROJECT
-                event.actionName == EventAction.LEFT -> FullEventTarget.PROJECT
-                event.pushData != null -> FullEventTarget.BRANCH
+                event.actionName == EventAction.JOINED -> AppEventTarget.PROJECT
+                event.actionName == EventAction.CREATED -> AppEventTarget.PROJECT
+                event.actionName == EventAction.LEFT -> AppEventTarget.PROJECT
+                event.pushData != null -> AppEventTarget.BRANCH
                 else -> throw IllegalArgumentException("Unsupported event action name: ${event.actionName}.")
             }
         }

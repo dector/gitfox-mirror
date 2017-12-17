@@ -11,7 +11,7 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegate
 import kotlinx.android.synthetic.main.item_event.view.*
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.app.FullEventInfo
+import ru.terrakok.gitlabclient.entity.app.event.AppEventInfo
 import ru.terrakok.gitlabclient.extension.getHumanName
 import ru.terrakok.gitlabclient.extension.getIcon
 import ru.terrakok.gitlabclient.extension.humanTime
@@ -20,7 +20,7 @@ import ru.terrakok.gitlabclient.extension.inflate
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 18.06.17.
  */
-class EventAdapterDelegate(private val clickListener: (FullEventInfo) -> Unit) : AdapterDelegate<MutableList<ListItem>>() {
+class EventAdapterDelegate(private val clickListener: (AppEventInfo) -> Unit) : AdapterDelegate<MutableList<ListItem>>() {
 
     override fun isForViewType(items: MutableList<ListItem>, position: Int) =
             items[position] is ListItem.EventItem
@@ -34,14 +34,14 @@ class EventAdapterDelegate(private val clickListener: (FullEventInfo) -> Unit) :
                                   payloads: MutableList<Any>) =
             (viewHolder as EventViewHolder).bind((items[position] as ListItem.EventItem).event)
 
-    private class EventViewHolder(val view: View, clickListener: (FullEventInfo) -> Unit) : RecyclerView.ViewHolder(view) {
-        private lateinit var event: FullEventInfo
+    private class EventViewHolder(val view: View, clickListener: (AppEventInfo) -> Unit) : RecyclerView.ViewHolder(view) {
+        private lateinit var event: AppEventInfo
 
         init {
             view.setOnClickListener { clickListener.invoke(event) }
         }
 
-        fun bind(event: FullEventInfo) {
+        fun bind(event: AppEventInfo) {
             this.event = event
 
             val res = view.resources
@@ -67,7 +67,7 @@ class EventAdapterDelegate(private val clickListener: (FullEventInfo) -> Unit) :
                     })
         }
 
-        private fun createSubtitle(resources: Resources, event: FullEventInfo): String {
+        private fun createSubtitle(resources: Resources, event: AppEventInfo): String {
             val actionName = event.action.getHumanName(resources)
             val target = event.target.getHumanName(resources)
             val targetId = event.targetId

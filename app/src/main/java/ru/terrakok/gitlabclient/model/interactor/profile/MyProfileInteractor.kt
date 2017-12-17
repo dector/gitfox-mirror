@@ -1,6 +1,7 @@
 package ru.terrakok.gitlabclient.model.interactor.profile
 
 import io.reactivex.Single
+import ru.terrakok.gitlabclient.entity.app.user.MyUserInfo
 import ru.terrakok.gitlabclient.model.repository.profile.ProfileRepository
 import javax.inject.Inject
 

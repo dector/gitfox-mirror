@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.entity.app
+package ru.terrakok.gitlabclient.entity.app.event
 
 import ru.terrakok.gitlabclient.entity.Author
 import ru.terrakok.gitlabclient.entity.Project
@@ -8,9 +8,9 @@ import java.util.*
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 19.11.17.
  */
-data class FullEventInfo(
+data class AppEventInfo(
         val action: EventAction,
-        val target: FullEventTarget,
+        val target: AppEventTarget,
         val author: Author,
         val createdAt: Date,
         val project: Project?,

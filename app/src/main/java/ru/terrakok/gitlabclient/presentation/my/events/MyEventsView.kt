@@ -4,7 +4,7 @@ import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
-import ru.terrakok.gitlabclient.entity.app.FullEventInfo
+import ru.terrakok.gitlabclient.entity.app.event.AppEventInfo
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 15.06.17.
@@ -16,7 +16,7 @@ interface MyEventsView : MvpView {
     fun showPageProgress(show: Boolean)
     fun showEmptyView(show: Boolean)
     fun showEmptyError(show: Boolean, message: String?)
-    fun showEvents(show: Boolean, events: List<FullEventInfo>)
+    fun showEvents(show: Boolean, events: List<AppEventInfo>)
 
     @StateStrategyType(OneExecutionStateStrategy::class)
     fun showMessage(message: String)
