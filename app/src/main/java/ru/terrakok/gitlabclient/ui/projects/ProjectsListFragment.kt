@@ -7,6 +7,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.hannesdorfmann.adapterdelegates3.ListDelegationAdapter
 import kotlinx.android.synthetic.main.layout_base_list.*
+import kotlinx.android.synthetic.main.layout_zero.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.extension.visible
@@ -16,6 +17,7 @@ import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectListMode
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.ui.global.ZeroViewHolder
 import ru.terrakok.gitlabclient.ui.global.list.ListItem
 import ru.terrakok.gitlabclient.ui.global.list.ProgressAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.ProjectAdapterDelegate
@@ -37,6 +39,7 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
     }
 
     private val adapter = ProjectsAdapter()
+    private var zeroViewHolder: ZeroViewHolder? = null
 
     override val layoutRes = R.layout.fragment_projects
 
@@ -66,6 +69,7 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
         recyclerView.adapter = adapter
 
         swipeToRefresh.setOnRefreshListener { presenter.refreshProjects() }
+        zeroViewHolder = ZeroViewHolder(zeroLayout, { presenter.refreshProjects() })
     }
 
     override fun showRefreshProgress(show: Boolean) {
@@ -81,11 +85,13 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
     }
 
     override fun showEmptyView(show: Boolean) {
-        //todo
+        if (show) zeroViewHolder?.showEmptyData()
+        else zeroViewHolder?.hide()
     }
 
     override fun showEmptyError(show: Boolean, message: String?) {
-        if (show && message != null) showSnackMessage(message)
+        if (show) zeroViewHolder?.showEmptyError(message)
+        else zeroViewHolder?.hide()
     }
 
     override fun showProjects(show: Boolean, projects: List<Project>) {
