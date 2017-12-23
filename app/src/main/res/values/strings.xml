@@ -2,7 +2,8 @@
     <string name="app_name">GitFox</string>
     <string name="cancel">Cancel</string>
     <string name="share_to">Share to</string>
-    <string name="ok">ok</string>
+    <string name="ok">OK</string>
+    <string name="refresh">Refresh</string>
 
     <!--Main screen-->
     <string name="gitlab_activity">Activity</string>
@@ -107,6 +108,12 @@
     <string name="merge_request_merged">Merged</string>
     <string name="merge_request_closed">Closed</string>
     <string name="merge_request_item_opened_at_by_author" formatted="false">opened %s by %s</string>
+
+    <!--Zero screen-->
+    <string name="empty_error">Oops!</string>
+    <string name="empty_error_description">Something went wrong.\nPlease try again later.</string>
+    <string name="empty_data">Empty data</string>
+    <string name="empty_data_description">You have not data yet.\nPlease try again later.</string>
 
     <!--Calligraphy Config-->
     <string name="font_main_regular">fonts/Roboto-Regular.ttf</string>
