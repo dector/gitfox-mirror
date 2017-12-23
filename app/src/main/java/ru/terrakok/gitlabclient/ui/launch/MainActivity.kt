@@ -25,6 +25,7 @@ import ru.terrakok.gitlabclient.ui.auth.AuthActivity
 import ru.terrakok.gitlabclient.ui.drawer.NavigationDrawerFragment
 import ru.terrakok.gitlabclient.ui.global.BaseActivity
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.ui.libraries.LibrariesFragment
 import ru.terrakok.gitlabclient.ui.main.MainFragment
 import ru.terrakok.gitlabclient.ui.project.ProjectInfoFragment
 import ru.terrakok.gitlabclient.ui.projects.ProjectsContainerFragment
@@ -110,6 +111,7 @@ class MainActivity : BaseActivity(), LaunchView {
             Screens.PROJECTS_SCREEN -> ProjectsContainerFragment()
             Screens.PROJECT_INFO_SCREEN -> ProjectInfoFragment.createNewInstance(data as Long)
             Screens.ABOUT_SCREEN -> AboutFragment()
+            Screens.APP_LIBRARIES_SCREEN -> LibrariesFragment()
             else -> null
         }
     }
@@ -146,8 +148,8 @@ class MainActivity : BaseActivity(), LaunchView {
     }
 
     private fun isNavDrawerAvailableForFragment(currentFragment: Fragment) = when (currentFragment) {
-        is MainFragment -> true
-        is ProjectsContainerFragment -> true
+        is MainFragment,
+        is ProjectsContainerFragment,
         is AboutFragment -> true
         else -> false
     }

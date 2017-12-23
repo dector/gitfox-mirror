@@ -31,6 +31,12 @@
     <string name="about_open_source_libraries">Open Source Libraries</string>
     <string name="about_authors">Authors</string>
 
+    <!--License name-->
+    <string name="library_license_MIT">MIT</string>
+    <string name="library_license_APACHE_2">Apache 2.0</string>
+    <string name="library_license_CUSTOM">Custom license</string>
+    <string name="library_license_NONE">None</string>
+
     <!--Projects screen-->
     <string name="projects_title">Projects</string>
     <string name="my_projects_title">My projects</string>
