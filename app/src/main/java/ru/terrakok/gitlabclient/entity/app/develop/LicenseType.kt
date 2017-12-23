@@ -5,5 +5,7 @@ package ru.terrakok.gitlabclient.entity.app.develop
  */
 enum class LicenseType {
     MIT,
-    APACHE_2
+    APACHE_2,
+    CUSTOM,
+    NONE
 }

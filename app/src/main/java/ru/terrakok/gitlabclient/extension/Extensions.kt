@@ -25,6 +25,7 @@ import org.joda.time.DateTimeZone
 import org.joda.time.format.DateTimeFormat
 import retrofit2.HttpException
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.entity.app.develop.LicenseType
 import ru.terrakok.gitlabclient.entity.app.event.AppEventTarget
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.model.system.ResourceManager
@@ -171,6 +172,13 @@ fun EventAction.getIcon() = when (this) {
     EventAction.OPENED, EventAction.REOPENED -> R.drawable.ic_event_reopened_24dp
     EventAction.PUSHED, EventAction.PUSHED_NEW, EventAction.PUSHED_TO -> R.drawable.ic_event_pushed_24dp
     EventAction.UPDATED -> R.drawable.ic_event_updated_24dp
+}
+
+fun LicenseType.getHumanName(resources: Resources) = when (this) {
+    LicenseType.MIT -> resources.getString(R.string.library_license_MIT)
+    LicenseType.APACHE_2 -> resources.getString(R.string.library_license_APACHE_2)
+    LicenseType.CUSTOM -> resources.getString(R.string.library_license_CUSTOM)
+    LicenseType.NONE -> resources.getString(R.string.library_license_NONE)
 }
 
 fun Fragment.sendEmail(email: String?) {

@@ -45,7 +45,7 @@ class AboutPresenter @Inject constructor(
         compositeDisposable.dispose()
     }
 
-    fun onShowLibrariesClicked() {}
+    fun onShowLibrariesClicked() = router.navigateTo(Screens.APP_LIBRARIES_SCREEN)
 
     fun onDeveloperClicked(id: Long) = router.navigateTo(Screens.USER_INFO_SCREEN, id)
 
