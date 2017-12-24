@@ -11,6 +11,7 @@ import android.webkit.WebViewClient
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_auth.*
+import ru.terrakok.gitlabclient.BuildConfig
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.presentation.auth.AuthPresenter
 import ru.terrakok.gitlabclient.presentation.auth.AuthView
@@ -21,26 +22,44 @@ import toothpick.Toothpick
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 27.03.17
  */
-class AuthFragment : BaseFragment(), AuthView {
+class AuthFragment : BaseFragment(), AuthView, CustomServerAuthFragment.OnClickListener {
 
     override val layoutRes = R.layout.fragment_auth
+    override val customLogin = { url: String, token: String -> presenter.loginOnCustomServer(url, token) }
 
     @InjectPresenter lateinit var presenter: AuthPresenter
 
     @ProvidePresenter
     fun providePresenter(): AuthPresenter {
         return Toothpick
-                .openScope(DI.APP_SCOPE)
+                .openScope(DI.SERVER_SCOPE)
                 .getInstance(AuthPresenter::class.java)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        toolbar.setNavigationOnClickListener { presenter.onBackPressed() }
+        toolbar.apply {
+            setNavigationOnClickListener { presenter.onBackPressed() }
+            inflateMenu(R.menu.custom_auth_menu)
+            setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.customAuthAction -> CustomServerAuthFragment().show(childFragmentManager, null)
+                }
+                true
+            }
+        }
 
-        CookieManager.getInstance().removeAllCookie()
-        webView.settings.javaScriptEnabled = true
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            CookieManager.getInstance().removeAllCookies(null)
+        } else {
+            CookieManager.getInstance().removeAllCookie()
+        }
+
+        with(webView.settings) {
+            javaScriptEnabled = true
+            userAgentString = BuildConfig.WEB_AUTH_USER_AGENT
+        }
 
         webView.setWebViewClient(object : WebViewClient() {
 

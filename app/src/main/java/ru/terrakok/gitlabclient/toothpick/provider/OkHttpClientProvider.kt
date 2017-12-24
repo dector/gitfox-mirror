@@ -6,6 +6,7 @@ import ru.terrakok.gitlabclient.BuildConfig
 import ru.terrakok.gitlabclient.model.data.auth.AuthHolder
 import ru.terrakok.gitlabclient.model.data.server.interceptor.AuthHeaderInterceptor
 import ru.terrakok.gitlabclient.model.data.server.interceptor.CurlLoggingInterceptor
+import ru.terrakok.gitlabclient.model.data.server.interceptor.ErrorResponseInterceptor
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Provider
@@ -19,6 +20,7 @@ class OkHttpClientProvider @Inject constructor(authData: AuthHolder) : Provider<
     init {
         val httpClientBuilder = OkHttpClient.Builder()
         httpClientBuilder.addNetworkInterceptor(AuthHeaderInterceptor(authData))
+        httpClientBuilder.addNetworkInterceptor(ErrorResponseInterceptor())
         httpClientBuilder.readTimeout(30, TimeUnit.SECONDS)
         if (BuildConfig.DEBUG) {
             val httpLoggingInterceptor = HttpLoggingInterceptor()

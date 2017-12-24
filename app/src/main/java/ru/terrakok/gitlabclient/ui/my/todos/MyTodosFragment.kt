@@ -48,7 +48,7 @@ class MyTodosFragment : BaseFragment(), MyTodoListView {
             init {
                 bind(PrimitiveWrapper::class.java)
                         .withName(TodoListPendingState::class.java)
-                        .toInstance(PrimitiveWrapper(arguments.get(ARG_MODE_IS_PENDING)))
+                        .toInstance(PrimitiveWrapper(arguments?.get(ARG_MODE_IS_PENDING)))
             }
         })
 

@@ -2,15 +2,14 @@ package ru.terrakok.gitlabclient.presentation.projects
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
-import io.reactivex.disposables.Disposable
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.Screens
-import ru.terrakok.gitlabclient.extension.userMessage
+import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.model.interactor.projects.MainProjectsListInteractor
-import ru.terrakok.gitlabclient.model.system.ResourceManager
+import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
+import ru.terrakok.gitlabclient.presentation.global.Paginator
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectListMode
-import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -22,7 +21,7 @@ class ProjectsListPresenter @Inject constructor(
         @ProjectListMode private val modeWrapper: PrimitiveWrapper<Int>,
         private val router: Router,
         private val mainProjectsListInteractor: MainProjectsListInteractor,
-        private val resourceManager: ResourceManager
+        private val errorHandler: ErrorHandler
 ) : MvpPresenter<ProjectsListView>() {
 
     companion object {
@@ -32,42 +31,47 @@ class ProjectsListPresenter @Inject constructor(
     }
 
     private val mode = modeWrapper.value
-    private var currentPage = 0
-    private var disposable: Disposable? = null
 
     override fun onFirstViewAttach() {
-        requestFirstPage()
+        refreshProjects()
     }
 
-    private fun requestProjects(page: Int) {
-        Timber.d("requestProjects: $page")
+    private val paginator = Paginator(
+            { getProjectsSingle(it) },
+            object : Paginator.ViewController<Project> {
+                override fun showEmptyProgress(show: Boolean) {
+                    viewState.showEmptyProgress(show)
+                }
 
-        if (page == 1) {
-            disposable?.dispose()
-            disposable = null
-        }
+                override fun showEmptyError(show: Boolean, error: Throwable?) {
+                    if (error != null) {
+                        errorHandler.proceed(error, { viewState.showEmptyError(show, it) })
+                    } else {
+                        viewState.showEmptyError(show, null)
+                    }
+                }
 
-        if (disposable == null) {
-            disposable = getProjectsSingle(page)
-                    .doOnSubscribe { if (page == 1) viewState.showProgress(true) else viewState.showPageProgress(true) }
-                    .doOnEvent { _, _ -> if (page == 1) viewState.showProgress(false) else viewState.showPageProgress(false) }
-                    .doOnEvent { _, _ -> disposable = null }
-                    .subscribe(
-                            { projects ->
-                                Timber.d("getProjects: ${projects.size}")
-                                if (projects.isNotEmpty()) {
-                                    currentPage = page
-                                    if (page == 1) viewState.clearData()
-                                    viewState.setNewData(projects)
-                                }
-                            },
-                            { error ->
-                                Timber.e("getProjects: $error")
-                                viewState.showMessage(error.userMessage(resourceManager))
-                            }
-                    )
-        }
-    }
+                override fun showErrorMessage(error: Throwable) {
+                    errorHandler.proceed(error, { viewState.showMessage(it) })
+                }
+
+                override fun showEmptyView(show: Boolean) {
+                    viewState.showEmptyView(show)
+                }
+
+                override fun showData(show: Boolean, data: List<Project>) {
+                    viewState.showProjects(show, data)
+                }
+
+                override fun showRefreshProgress(show: Boolean) {
+                    viewState.showRefreshProgress(show)
+                }
+
+                override fun showPageProgress(show: Boolean) {
+                    viewState.showPageProgress(show)
+                }
+            }
+    )
 
     private fun getProjectsSingle(page: Int) = when (mode) {
         STARRED_PROJECTS -> mainProjectsListInteractor.getStarredProjects(page)
@@ -76,12 +80,13 @@ class ProjectsListPresenter @Inject constructor(
     }
 
     override fun onDestroy() {
-        disposable?.dispose()
+        super.onDestroy()
+        paginator.release()
     }
 
-    fun requestFirstPage() = requestProjects(1)
-    fun requestNextPage() = requestProjects(currentPage + 1)
+    fun refreshProjects() = paginator.refresh()
+    fun loadNextProjectsPage() = paginator.loadNewPage()
 
-    fun onProjectClicked(id: Long) = router.navigateTo(Screens.PROJECT_SCREEN, id)
+    fun onProjectClicked(id: Long) = router.navigateTo(Screens.PROJECT_INFO_SCREEN, id)
     fun onBackPressed() = router.exit()
 }

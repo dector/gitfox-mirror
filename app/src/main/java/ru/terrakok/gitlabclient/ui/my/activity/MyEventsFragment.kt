@@ -8,16 +8,18 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.hannesdorfmann.adapterdelegates3.ListDelegationAdapter
 import kotlinx.android.synthetic.main.fragment_my_activity.*
 import kotlinx.android.synthetic.main.layout_base_list.*
+import kotlinx.android.synthetic.main.layout_zero.*
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.event.Event
+import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.my.events.MyEventsPresenter
 import ru.terrakok.gitlabclient.presentation.my.events.MyEventsView
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import ru.terrakok.gitlabclient.ui.global.list.EventAdapterDelegate
+import ru.terrakok.gitlabclient.ui.global.ZeroViewHolder
 import ru.terrakok.gitlabclient.ui.global.list.ListItem
 import ru.terrakok.gitlabclient.ui.global.list.ProgressAdapterDelegate
+import ru.terrakok.gitlabclient.ui.global.list.TargetHeaderAdapterDelegate
 import toothpick.Toothpick
 
 /**
@@ -26,7 +28,8 @@ import toothpick.Toothpick
 class MyEventsFragment : BaseFragment(), MyEventsView {
     override val layoutRes = R.layout.fragment_my_activity
 
-    private val adapter = EventsAdapter()
+    private val adapter = TargetsAdapter()
+    private var zeroViewHolder: ZeroViewHolder? = null
 
     @InjectPresenter lateinit var presenter: MyEventsPresenter
 
@@ -47,6 +50,7 @@ class MyEventsFragment : BaseFragment(), MyEventsView {
 
         swipeToRefresh.setOnRefreshListener { presenter.refreshEvents() }
         toolbar.setNavigationOnClickListener { presenter.onMenuClick() }
+        zeroViewHolder = ZeroViewHolder(zeroLayout, { presenter.refreshEvents() })
     }
 
     override fun showRefreshProgress(show: Boolean) {
@@ -66,15 +70,16 @@ class MyEventsFragment : BaseFragment(), MyEventsView {
     }
 
     override fun showEmptyView(show: Boolean) {
-        //todo
+        if (show) zeroViewHolder?.showEmptyData()
+        else zeroViewHolder?.hide()
     }
 
     override fun showEmptyError(show: Boolean, message: String?) {
-        //todo
-        if (show && message != null) showSnackMessage(message)
+        if (show) zeroViewHolder?.showEmptyError(message)
+        else zeroViewHolder?.hide()
     }
 
-    override fun showEvents(show: Boolean, events: List<Event>) {
+    override fun showEvents(show: Boolean, events: List<TargetHeader>) {
         recyclerView.visible(show)
         recyclerView.post { adapter.setData(events) }
     }
@@ -83,18 +88,18 @@ class MyEventsFragment : BaseFragment(), MyEventsView {
         showSnackMessage(message)
     }
 
-    inner class EventsAdapter : ListDelegationAdapter<MutableList<ListItem>>() {
+    inner class TargetsAdapter : ListDelegationAdapter<MutableList<ListItem>>() {
         init {
             items = mutableListOf()
-            delegatesManager.addDelegate(EventAdapterDelegate({ presenter.onEventClick(it) }))
+            delegatesManager.addDelegate(TargetHeaderAdapterDelegate({ presenter.onItemClick(it) }))
             delegatesManager.addDelegate(ProgressAdapterDelegate())
         }
 
-        fun setData(events: List<Event>) {
+        fun setData(events: List<TargetHeader>) {
             val progress = isProgress()
 
             items.clear()
-            items.addAll(events.map { ListItem.EventItem(it) })
+            items.addAll(events.map { ListItem.TargetHeaderItem(it) })
             if (progress) items.add(ListItem.ProgressItem())
 
             notifyDataSetChanged()

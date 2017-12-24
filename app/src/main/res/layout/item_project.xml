@@ -4,53 +4,46 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="72dp"
+    android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground">
 
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="72dp"/>
-
-    <include
-        layout="@layout/layout_avatar"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_margin="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <ImageView
+        android:id="@+id/avatarImageView"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/default_img"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/guideline"
         app:layout_constraintTop_toTopOf="parent"/>
 
     <ImageView
         android:id="@+id/publicIV"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_margin="6dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="28dp"
         android:background="@drawable/circle"
         android:padding="3dp"
         android:tint="@color/white"
-        app:backgroundTint="@color/colorPrimary"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/guideline"
+        app:layout_constraintLeft_toLeftOf="@id/avatarImageView"
+        app:layout_constraintTop_toTopOf="@id/avatarImageView"
         app:srcCompat="@drawable/ic_globe_18dp"/>
 
     <TextView
         android:id="@+id/titleTV"
+        style="@style/TextTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginRight="8dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="0dp"
         android:ellipsize="end"
         android:lines="1"
-        android:textColor="@color/primary_text"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/descriptionTV"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintLeft_toRightOf="@+id/guideline"
+        app:layout_constraintLeft_toRightOf="@+id/avatarImageView"
         app:layout_constraintRight_toLeftOf="@+id/starIcon"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/avatarImageView"
         app:layout_constraintVertical_chainStyle="packed"
         tools:text="Title"/>
 
@@ -58,8 +51,8 @@
         android:id="@+id/starIcon"
         android:layout_width="18dp"
         android:layout_height="18dp"
-        android:layout_marginRight="8dp"
-        android:tint="@color/white"
+        android:layout_marginEnd="8dp"
+        android:tint="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="@+id/titleTV"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintRight_toLeftOf="@+id/starsTV"
@@ -70,9 +63,9 @@
         android:id="@+id/starsTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="8dp"
+        android:layout_marginEnd="16dp"
         android:lines="1"
-        android:textColor="@color/primary_text"
+        android:textColor="@color/colorPrimary"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/titleTV"
         app:layout_constraintRight_toRightOf="parent"
@@ -81,15 +74,29 @@
 
     <TextView
         android:id="@+id/descriptionTV"
+        style="@style/TextBody"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginRight="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="0dp"
         android:ellipsize="end"
         android:maxLines="2"
-        android:textColor="@color/secondary_text"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="@+id/titleTV"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleTV"
         tools:text="Description"/>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/divider_size"
+        android:layout_marginTop="12dp"
+        android:background="@color/divider"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="@+id/titleTV"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/publicIV"
+        app:layout_constraintVertical_bias="0.0"/>
 </android.support.constraint.ConstraintLayout>

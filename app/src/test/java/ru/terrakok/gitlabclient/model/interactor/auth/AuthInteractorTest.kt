@@ -1,15 +1,13 @@
 package ru.terrakok.gitlabclient.model.interactor.auth
 
-import io.reactivex.Completable
-import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.observers.TestObserver
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentMatchers
-import org.mockito.Mockito
 import org.mockito.Mockito.*
-import ru.terrakok.gitlabclient.model.data.server.ServerConfig
+import ru.terrakok.gitlabclient.entity.TokenData
 import ru.terrakok.gitlabclient.model.repository.auth.AuthRepository
 
 /**
@@ -21,27 +19,18 @@ class AuthInteractorTest {
     private lateinit var interactor: AuthInteractor
     private lateinit var authRepo: AuthRepository
 
-    private val REDIRECT_URI = "app://url/"
     private val HASH = "some_hash_here"
-    private val EMPTY_STRING = ""
+    private val OAUTH_PARAMS = OAuthParams("appId", "appKey", "redirect_url")
 
     @Before
     fun setUp() {
         authRepo = mock(AuthRepository::class.java)
-        `when`(authRepo.getSignState()).thenReturn(Observable.just(true))
-
-        val serverConf = Mockito.mock(ServerConfig::class.java)
-        `when`(serverConf.AUTH_REDIRECT_URI).thenReturn(REDIRECT_URI)
-        `when`(serverConf.APP_ID).thenReturn(EMPTY_STRING)
-        `when`(serverConf.APP_KEY).thenReturn(EMPTY_STRING)
-        `when`(serverConf.SERVER_URL).thenReturn(EMPTY_STRING)
-
-        interactor = AuthInteractor(serverConf, authRepo, HASH)
+        interactor = AuthInteractor("some server path", "some default server path", authRepo, HASH, OAUTH_PARAMS)
     }
 
     @Test
     fun check_oauth_redirect() {
-        val testUrl = REDIRECT_URI + "somepath"
+        val testUrl = OAUTH_PARAMS.redirectUrl + "somepath"
         val result = interactor.checkOAuthRedirect(testUrl)
         Assert.assertTrue(result)
     }
@@ -55,78 +44,48 @@ class AuthInteractorTest {
 
     @Test
     fun check_logout_cleans_token() {
-        `when`(authRepo.clearToken()).thenReturn(Completable.complete())
-
-        val testObserver: TestObserver<Void> = interactor.logout().test()
-        testObserver.awaitTerminalEvent()
-
-        verify(authRepo).clearToken()
-        testObserver
-                .assertNoErrors()
-                .assertNoValues()
+        interactor.logout()
+        verify(authRepo).clearAuthData()
     }
 
     @Test
     fun is_signed_in() {
-        `when`(authRepo.getSignState()).thenReturn(Observable.just(true, false))
+        `when`(authRepo.isSignedIn).thenReturn(true)
+        val result = interactor.isSignedIn()
 
-        val testObserver: TestObserver<Boolean> = interactor.isSignedIn().test()
-        testObserver.awaitTerminalEvent()
-
-        verify(authRepo).getSignState()
-        testObserver
-                .assertNoErrors()
-                .assertValueCount(1)
-                .assertValue(true)
+        verify(authRepo).isSignedIn
+        Assert.assertTrue(result)
     }
 
     @Test
-    fun is_signed_in_error() {
-        val error = RuntimeException("test error")
+    fun is_not_signed_in() {
+        `when`(authRepo.isSignedIn).thenReturn(false)
+        val result = interactor.isSignedIn()
 
-        `when`(authRepo.getSignState()).thenReturn(Observable.error(error))
-
-        val testObserver: TestObserver<Boolean> = interactor.isSignedIn().test()
-        testObserver.awaitTerminalEvent()
-
-        verify(authRepo).getSignState()
-        testObserver
-                .assertError(error)
-                .assertNoValues()
-    }
-
-    @Test
-    fun is_signed_in_no_values() {
-        `when`(authRepo.getSignState()).thenReturn(Observable.empty())
-
-        val testObserver: TestObserver<Boolean> = interactor.isSignedIn().test()
-        testObserver.awaitTerminalEvent()
-
-        verify(authRepo).getSignState()
-        testObserver
-                .assertNoValues()
-                .assertError(Throwable::class.java)
+        verify(authRepo).isSignedIn
+        Assert.assertFalse(result)
     }
 
     @Test
     fun refresh_token_correct_oauth() {
         val code = "helloReader"
         val testUrl = "http://something.com/test?code=" + code + "&state=happiness" + HASH
+        val tokenData = TokenData("", "", "", 0L, "")
 
-        `when`(authRepo.refreshServerToken(
+        `when`(authRepo.requestOAuthToken(
                 ArgumentMatchers.anyString(),
                 ArgumentMatchers.anyString(),
                 ArgumentMatchers.anyString(),
-                ArgumentMatchers.anyString())).thenReturn(Completable.complete())
+                ArgumentMatchers.anyString())).thenReturn(Single.just(tokenData))
 
         val testObserver: TestObserver<Void> = interactor.login(testUrl).test()
         testObserver.awaitTerminalEvent()
 
-        verify(authRepo).refreshServerToken(
-                EMPTY_STRING,
-                EMPTY_STRING,
+        verify(authRepo).requestOAuthToken(
+                OAUTH_PARAMS.appId,
+                OAUTH_PARAMS.appKey,
                 code,
-                REDIRECT_URI)
+                OAUTH_PARAMS.redirectUrl)
 
         testObserver
                 .assertNoValues()

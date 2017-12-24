@@ -1,5 +1,6 @@
 package ru.terrakok.gitlabclient.ui.launch
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
@@ -20,12 +21,15 @@ import ru.terrakok.gitlabclient.presentation.launch.LaunchView
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.toothpick.module.MainActivityModule
 import ru.terrakok.gitlabclient.ui.about.AboutFragment
-import ru.terrakok.gitlabclient.ui.auth.AuthFragment
+import ru.terrakok.gitlabclient.ui.auth.AuthActivity
 import ru.terrakok.gitlabclient.ui.drawer.NavigationDrawerFragment
 import ru.terrakok.gitlabclient.ui.global.BaseActivity
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.ui.libraries.LibrariesFragment
 import ru.terrakok.gitlabclient.ui.main.MainFragment
 import ru.terrakok.gitlabclient.ui.project.ProjectInfoFragment
+import ru.terrakok.gitlabclient.ui.projects.ProjectsContainerFragment
+import ru.terrakok.gitlabclient.ui.user.UserActivity
 import toothpick.Toothpick
 import javax.inject.Inject
 
@@ -35,24 +39,32 @@ class MainActivity : BaseActivity(), LaunchView {
 
     private var menuStateDisposable: Disposable? = null
 
+    override val layoutRes = R.layout.activity_main
+
+    private val currentFragment
+        get() = supportFragmentManager.findFragmentById(R.id.mainContainer) as BaseFragment?
+
+    private val drawerFragment
+        get() = supportFragmentManager.findFragmentById(R.id.navDrawerContainer) as NavigationDrawerFragment?
+
     @InjectPresenter lateinit var presenter: LaunchPresenter
 
     @ProvidePresenter
     fun providePresenter(): LaunchPresenter {
         return Toothpick
-                .openScope(DI.APP_SCOPE)
+                .openScope(DI.SERVER_SCOPE)
                 .getInstance(LaunchPresenter::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
 
-        val scope = Toothpick.openScopes(DI.APP_SCOPE, DI.MAIN_ACTIVITY_SCOPE)
-        scope.installModules(MainActivityModule())
-        Toothpick.inject(this, scope)
+        Toothpick.openScopes(DI.SERVER_SCOPE, DI.MAIN_ACTIVITY_SCOPE).apply {
+            installModules(MainActivityModule())
+            Toothpick.inject(this@MainActivity, this)
+        }
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
     }
 
     override fun onResumeFragments() {
@@ -72,6 +84,15 @@ class MainActivity : BaseActivity(), LaunchView {
         if (isFinishing) Toothpick.closeScope(DI.MAIN_ACTIVITY_SCOPE)
     }
 
+    override fun initMainScreen() {
+        supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.mainContainer, MainFragment())
+                .replace(R.id.navDrawerContainer, NavigationDrawerFragment())
+                .commitNow()
+        updateNavDrawer()
+    }
+
     private val navigator = object : SupportAppNavigator(this, R.id.mainContainer) {
 
         override fun applyCommand(command: Command?) {
@@ -79,13 +100,18 @@ class MainActivity : BaseActivity(), LaunchView {
             updateNavDrawer()
         }
 
-        override fun createActivityIntent(screenKey: String?, data: Any?) = null
+        override fun createActivityIntent(screenKey: String?, data: Any?): Intent? = when (screenKey) {
+            Screens.AUTH_SCREEN -> Intent(this@MainActivity, AuthActivity::class.java)
+            Screens.USER_INFO_SCREEN -> UserActivity.getStartIntent(data as Long, this@MainActivity)
+            else -> null
+        }
 
         override fun createFragment(screenKey: String?, data: Any?): Fragment? = when (screenKey) {
-            Screens.AUTH_SCREEN -> AuthFragment()
             Screens.MAIN_SCREEN -> MainFragment()
-            Screens.PROJECT_SCREEN -> ProjectInfoFragment.createNewInstance(data as Long)
+            Screens.PROJECTS_SCREEN -> ProjectsContainerFragment()
+            Screens.PROJECT_INFO_SCREEN -> ProjectInfoFragment.createNewInstance(data as Long)
             Screens.ABOUT_SCREEN -> AboutFragment()
+            Screens.APP_LIBRARIES_SCREEN -> LibrariesFragment()
             else -> null
         }
     }
@@ -109,18 +135,21 @@ class MainActivity : BaseActivity(), LaunchView {
     private fun updateNavDrawer() {
         supportFragmentManager.executePendingTransactions()
 
-        val drawerFragment = supportFragmentManager.findFragmentById(R.id.navigationDrawer) as NavigationDrawerFragment
-        supportFragmentManager.findFragmentById(R.id.mainContainer)?.let {
-            when (it) {
-                is MainFragment -> drawerFragment.onScreenChanged(NavigationDrawerView.MenuItem.PROJECTS)
-                is AboutFragment -> drawerFragment.onScreenChanged(NavigationDrawerView.MenuItem.ABOUT)
+        drawerFragment?.let { drawerFragment ->
+            currentFragment?.let {
+                when (it) {
+                    is MainFragment -> drawerFragment.onScreenChanged(NavigationDrawerView.MenuItem.ACTIVITY)
+                    is ProjectsContainerFragment -> drawerFragment.onScreenChanged(NavigationDrawerView.MenuItem.PROJECTS)
+                    is AboutFragment -> drawerFragment.onScreenChanged(NavigationDrawerView.MenuItem.ABOUT)
+                }
+                enableNavDrawer(isNavDrawerAvailableForFragment(it))
             }
-            enableNavDrawer(isNavDrawerAvailableForFragment(it))
         }
     }
 
     private fun isNavDrawerAvailableForFragment(currentFragment: Fragment) = when (currentFragment) {
-        is MainFragment -> true
+        is MainFragment,
+        is ProjectsContainerFragment,
         is AboutFragment -> true
         else -> false
     }
@@ -130,12 +159,7 @@ class MainActivity : BaseActivity(), LaunchView {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             openNavDrawer(false)
         } else {
-            val fragment = supportFragmentManager.findFragmentById(R.id.mainContainer)
-            if (fragment is BaseFragment) {
-                fragment.onBackPressed()
-            } else {
-                presenter.onBackPressed()
-            }
+            currentFragment?.onBackPressed() ?: presenter.onBackPressed()
         }
     }
 }

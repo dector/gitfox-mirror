@@ -23,3 +23,10 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# We use ProGuard only for minify
+-keep class ru.terrakok.** { *; }
+
+-dontwarn com.roughike.bottombar.VerticalScrollingBehavior$ScrollDirection
+-dontwarn org.codehaus.mojo.animal_sniffer.*
+-dontwarn org.joda.convert.*

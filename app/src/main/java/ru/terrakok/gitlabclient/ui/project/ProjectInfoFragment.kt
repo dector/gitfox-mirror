@@ -34,12 +34,12 @@ class ProjectInfoFragment : BaseFragment(), ProjectInfoView {
     @ProvidePresenter
     fun providePresenter(): ProjectInfoPresenter {
         val scopeName = "project info scope"
-        val scope = Toothpick.openScopes(DI.APP_SCOPE, scopeName)
+        val scope = Toothpick.openScopes(DI.MAIN_ACTIVITY_SCOPE, scopeName)
         scope.installModules(object : Module() {
             init {
                 bind(PrimitiveWrapper::class.java)
                         .withName(ProjectId::class.java)
-                        .toInstance(PrimitiveWrapper(arguments.getLong(ARG_PROJECT_ID)))
+                        .toInstance(PrimitiveWrapper(arguments?.getLong(ARG_PROJECT_ID)))
             }
         })
         return scope.getInstance(ProjectInfoPresenter::class.java).also {

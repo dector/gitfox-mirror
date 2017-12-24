@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">GitFox</string>
+    <string name="cancel">Cancel</string>
+    <string name="share_to">Share to</string>
+    <string name="ok">OK</string>
+    <string name="refresh">Refresh</string>
+    <string name="at">at</string>
 
     <!--Main screen-->
     <string name="gitlab_activity">Activity</string>
@@ -11,10 +16,28 @@
     <string name="auth_title">Authorization</string>
     <string name="invalid_hash">Invalid auth response!</string>
     <string name="auth_error">Unknown error! Try again later</string>
+    <string name="custom_auth_menu">Access token authorization</string>
+    <string name="custom_authorization">Enter your access token</string>
+    <string name="server_path">Url:</string>
+    <string name="server_path_hint">https://gitlab.com/</string>
+    <string name="private_token">Token:</string>
+    <string name="private_token_hint">abcdefg1234</string>
+    <string name="login">Login</string>
+    <string name="invalid_server_url">Invalid server path!</string>
+    <string name="empty_token">Empty token!</string>
 
     <!--About screen-->
     <string name="about_title">About</string>
-    <string name="version" formatted="false">Version: %s</string>
+    <string name="about_info">Info</string>
+    <string name="about_feedback">Write feedback</string>
+    <string name="about_open_source_libraries">Open Source Libraries</string>
+    <string name="about_authors">Authors</string>
+
+    <!--License name-->
+    <string name="library_license_MIT">MIT</string>
+    <string name="library_license_APACHE_2">Apache 2.0</string>
+    <string name="library_license_CUSTOM">Custom license</string>
+    <string name="library_license_NONE">None</string>
 
     <!--Projects screen-->
     <string name="projects_title">Projects</string>
@@ -28,6 +51,8 @@
     <string name="groups_item">Groups</string>
     <string name="settings_item">Settings</string>
     <string name="about_item">About</string>
+    <string name="exit">exit</string>
+    <string name="logout_question">Logout?</string>
 
     <!--Error messages todo-->
     <string name="unknown_error">Unknown error</string>
@@ -43,8 +68,8 @@
     <string name="server_error_error">500 Server Error</string>
 
     <!--My Issues screen-->
-    <string name="opened">Opened</string>
-    <string name="closed">Closed</string>
+    <string name="issues_created_by_me">Created</string>
+    <string name="issues_assigned_by_me">Assigned</string>
     <string name="by_author" formatted="false">by %s</string>
     <string name="sharp_id" formatted="false">#%d</string>
     <string name="time_sec" formatted="false">%d sec</string>
@@ -54,11 +79,43 @@
     <string name="time_ago" formatted="false">%s ago</string>
 
     <!--My Events Screen-->
-    <string name="event_target_type_issue">issue</string>
-    <string name="event_target_type_note">issue</string>
-    <string name="event_target_type_diff_note">issue</string>
-    <string name="event_target_type_mr">merge request</string>
-    <string name="event_target_type_milestone">milestone</string>
+    <string name="full_event_target_project">project</string>
+    <string name="full_event_target_issue">issue</string>
+    <string name="full_event_target_merge_request">merge request</string>
+    <string name="full_event_target_commit">commit</string>
+    <string name="full_event_target_snippet">snippet</string>
+    <string name="full_event_target_milestone">milestone</string>
+    <string name="full_event_target_branch">branch</string>
+    <string name="full_event_target_tag">tag</string>
+    <string name="event_action_closed">closed</string>
+    <string name="event_action_commented_on">commented on</string>
+    <string name="event_action_created">created</string>
+    <string name="event_action_pushed_to">pushed to</string>
+    <string name="event_action_pushed_new">pushed new</string>
+    <string name="event_action_deleted">deleted</string>
+    <string name="event_action_accepted">accepted</string>
+    <string name="event_action_joined">joined</string>
+    <string name="event_action_updated">updated</string>
+    <string name="event_action_reopened">reopened</string>
+    <string name="event_action_pushed">pushed</string>
+    <string name="event_action_commented">commented</string>
+    <string name="event_action_destroyed">destroyed</string>
+    <string name="event_action_expired">expired</string>
+    <string name="event_action_opened">opened</string>
+    <string name="event_action_left">left</string>
+    <string name="event_action_merged">merged</string>
+
+    <!--My Merge Requests Screen-->
+    <string name="merge_request_opened">Opened</string>
+    <string name="merge_request_merged">Merged</string>
+    <string name="merge_request_closed">Closed</string>
+    <string name="merge_request_item_opened_at_by_author" formatted="false">opened %s by %s</string>
+
+    <!--Zero screen-->
+    <string name="empty_error">Oops!</string>
+    <string name="empty_error_description">Something went wrong.\nPlease try again later.</string>
+    <string name="empty_data">Empty data</string>
+    <string name="empty_data_description">You have not data yet.\nPlease try again later.</string>
 
     <!--My Todos Screen-->
     <string name="my_todos_pending">Pending</string>

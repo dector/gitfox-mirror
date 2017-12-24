@@ -2,10 +2,10 @@ package ru.terrakok.gitlabclient.presentation.my.events
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
-import ru.terrakok.gitlabclient.entity.event.Event
-import ru.terrakok.gitlabclient.extension.userMessage
+import ru.terrakok.cicerone.Router
+import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.model.interactor.event.EventInteractor
-import ru.terrakok.gitlabclient.model.system.ResourceManager
+import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 import javax.inject.Inject
@@ -16,8 +16,9 @@ import javax.inject.Inject
 @InjectViewState
 class MyEventsPresenter @Inject constructor(
         private val eventInteractor: EventInteractor,
-        private val resourceManager: ResourceManager,
-        private val menuController: GlobalMenuController
+        private val menuController: GlobalMenuController,
+        private val errorHandler: ErrorHandler,
+        private val router: Router
 ) : MvpPresenter<MyEventsView>() {
 
     override fun onFirstViewAttach() {
@@ -27,24 +28,28 @@ class MyEventsPresenter @Inject constructor(
 
     private val paginator = Paginator(
             { eventInteractor.getEvents(it) },
-            object : Paginator.ViewController<Event> {
+            object : Paginator.ViewController<TargetHeader> {
                 override fun showEmptyProgress(show: Boolean) {
                     viewState.showEmptyProgress(show)
                 }
 
                 override fun showEmptyError(show: Boolean, error: Throwable?) {
-                    viewState.showEmptyError(show, error?.userMessage(resourceManager))
+                    if (error != null) {
+                        errorHandler.proceed(error, { viewState.showEmptyError(show, it) })
+                    } else {
+                        viewState.showEmptyError(show, null)
+                    }
                 }
 
                 override fun showErrorMessage(error: Throwable) {
-                    viewState.showMessage(error.userMessage(resourceManager))
+                    errorHandler.proceed(error, { viewState.showMessage(it) })
                 }
 
                 override fun showEmptyView(show: Boolean) {
                     viewState.showEmptyView(show)
                 }
 
-                override fun showData(show: Boolean, data: List<Event>) {
+                override fun showData(show: Boolean, data: List<TargetHeader>) {
                     viewState.showEvents(show, data)
                 }
 
@@ -59,7 +64,7 @@ class MyEventsPresenter @Inject constructor(
     )
 
     fun onMenuClick() = menuController.open()
-    fun onEventClick(event: Event) {}
+    fun onItemClick(item: TargetHeader) {}
     fun refreshEvents() = paginator.refresh()
     fun loadNextEventsPage() = paginator.loadNewPage()
 

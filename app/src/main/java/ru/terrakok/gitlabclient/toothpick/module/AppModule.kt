@@ -1,36 +1,25 @@
 package ru.terrakok.gitlabclient.toothpick.module
 
 import android.content.Context
-import com.google.gson.Gson
-import okhttp3.OkHttpClient
+import android.content.res.AssetManager
 import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
+import ru.terrakok.gitlabclient.BuildConfig
+import ru.terrakok.gitlabclient.entity.app.develop.AppInfo
 import ru.terrakok.gitlabclient.model.data.auth.AuthHolder
-import ru.terrakok.gitlabclient.model.data.server.GitlabApi
-import ru.terrakok.gitlabclient.model.data.server.ServerConfig
 import ru.terrakok.gitlabclient.model.data.storage.Prefs
-import ru.terrakok.gitlabclient.model.interactor.auth.AuthInteractor
-import ru.terrakok.gitlabclient.model.interactor.event.EventInteractor
-import ru.terrakok.gitlabclient.model.interactor.issue.IssuesInteractor
-import ru.terrakok.gitlabclient.model.interactor.profile.MyProfileInteractor
-import ru.terrakok.gitlabclient.model.interactor.project.ProjectInteractor
-import ru.terrakok.gitlabclient.model.interactor.projects.MainProjectsListInteractor
-import ru.terrakok.gitlabclient.model.interactor.todo.TodoListInteractor
-import ru.terrakok.gitlabclient.model.repository.auth.AuthRepository
-import ru.terrakok.gitlabclient.model.repository.event.EventRepository
-import ru.terrakok.gitlabclient.model.repository.issue.IssueRepository
-import ru.terrakok.gitlabclient.model.repository.profile.ProfileRepository
-import ru.terrakok.gitlabclient.model.repository.project.ProjectRepository
-import ru.terrakok.gitlabclient.model.repository.todo.TodoRepository
+import ru.terrakok.gitlabclient.model.data.storage.RawAppData
+import ru.terrakok.gitlabclient.model.interactor.app.AppInfoInteractor
+import ru.terrakok.gitlabclient.model.interactor.project.Base64Tools
+import ru.terrakok.gitlabclient.model.interactor.project.MarkDownConverter
+import ru.terrakok.gitlabclient.model.repository.app.AppInfoRepository
 import ru.terrakok.gitlabclient.model.system.AppSchedulers
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
-import ru.terrakok.gitlabclient.toothpick.provider.ApiProvider
-import ru.terrakok.gitlabclient.toothpick.provider.GsonProvider
-import ru.terrakok.gitlabclient.toothpick.provider.OkHttpClientProvider
 import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultPageSize
+import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultServerPath
 import toothpick.config.Module
 
 /**
@@ -40,45 +29,33 @@ class AppModule(context: Context) : Module() {
     init {
         //Global
         bind(Context::class.java).toInstance(context)
+        bind(String::class.java).withName(DefaultServerPath::class.java).toInstance(BuildConfig.ORIGIN_GITLAB_ENDPOINT)
         bind(PrimitiveWrapper::class.java).withName(DefaultPageSize::class.java).toInstance(PrimitiveWrapper(20))
         bind(SchedulersProvider::class.java).toInstance(AppSchedulers())
         bind(ResourceManager::class.java).singletonInScope()
-
-        //Network
-        bind(Gson::class.java).toProvider(GsonProvider::class.java).singletonInScope()
-        bind(OkHttpClient::class.java).toProvider(OkHttpClientProvider::class.java).singletonInScope()
-        bind(ServerConfig::class.java).toInstance(ServerConfig())
-        bind(GitlabApi::class.java).toProvider(ApiProvider::class.java).singletonInScope()
-
-        //Auth
-        bind(AuthHolder::class.java).to(Prefs::class.java).singletonInScope()
-        bind(AuthRepository::class.java).singletonInScope()
-        bind(AuthInteractor::class.java).singletonInScope()
+        bind(MarkDownConverter::class.java).toInstance(MarkDownConverter())
+        bind(Base64Tools::class.java).toInstance(Base64Tools())
+        bind(AssetManager::class.java).toInstance(context.assets)
+        bind(RawAppData::class.java)
 
         //Navigation
         val cicerone = Cicerone.create()
         bind(Router::class.java).toInstance(cicerone.router)
         bind(NavigatorHolder::class.java).toInstance(cicerone.navigatorHolder)
 
-        //Profile
-        bind(ProfileRepository::class.java)
-        bind(MyProfileInteractor::class.java)
+        //Auth
+        bind(AuthHolder::class.java).to(Prefs::class.java).singletonInScope()
 
-        //Project
-        bind(ProjectRepository::class.java)
-        bind(MainProjectsListInteractor::class.java)
-        bind(ProjectInteractor::class.java)
-
-        //Issue
-        bind(IssueRepository::class.java)
-        bind(IssuesInteractor::class.java)
-
-        //Event
-        bind(EventRepository::class.java)
-        bind(EventInteractor::class.java)
-
-        //Todos
-        bind(TodoRepository::class.java)
-        bind(TodoListInteractor::class.java)
+        //AppInfo
+        bind(AppInfo::class.java).toInstance(AppInfo(
+                BuildConfig.VERSION_NAME,
+                BuildConfig.VERSION_CODE,
+                BuildConfig.APP_DESCRIPTION,
+                BuildConfig.VERSION_UID.take(8),
+                BuildConfig.APP_HOME_PAGE,
+                BuildConfig.FEEDBACK_URL
+        ))
+        bind(AppInfoRepository::class.java)
+        bind(AppInfoInteractor::class.java)
     }
 }

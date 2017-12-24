@@ -4,12 +4,11 @@ import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import io.reactivex.disposables.CompositeDisposable
 import ru.terrakok.cicerone.Router
-import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.extension.addTo
 import ru.terrakok.gitlabclient.model.interactor.auth.AuthInteractor
 import ru.terrakok.gitlabclient.model.system.ResourceManager
-import timber.log.Timber
+import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import javax.inject.Inject
 
 /**
@@ -19,7 +18,8 @@ import javax.inject.Inject
 class AuthPresenter @Inject constructor(
         private val router: Router,
         private val authInteractor: AuthInteractor,
-        private val resourceManager: ResourceManager
+        private val resourceManager: ResourceManager,
+        private val errorHandler: ErrorHandler
 ) : MvpPresenter<AuthView>() {
 
     private var compositeDisposable = CompositeDisposable()
@@ -41,13 +41,8 @@ class AuthPresenter @Inject constructor(
                 .doOnSubscribe { viewState.showProgress(true) }
                 .doAfterTerminate { viewState.showProgress(false) }
                 .subscribe(
-                        {
-                            router.replaceScreen(Screens.MAIN_SCREEN)
-                        },
-                        { error ->
-                            Timber.e("Auth error: $error")
-                            viewState.showMessage(resourceManager.getString(R.string.auth_error))
-                        }
+                        { router.newRootScreen(Screens.MAIN_SCREEN) },
+                        { errorHandler.proceed(it, { viewState.showMessage(it) }) }
                 ).addTo(compositeDisposable)
     }
 
@@ -59,6 +54,14 @@ class AuthPresenter @Inject constructor(
             viewState.loadUrl(url)
             return false
         }
+    }
+
+    fun loginOnCustomServer(url: String, token: String) {
+        authInteractor.login(url, token)
+                .subscribe(
+                        { router.newRootScreen(Screens.MAIN_SCREEN) },
+                        { errorHandler.proceed(it, { viewState.showMessage(it) }) }
+                ).addTo(compositeDisposable)
     }
 
     fun onBackPressed() = router.exit()

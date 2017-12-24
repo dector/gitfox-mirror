@@ -7,6 +7,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.hannesdorfmann.adapterdelegates3.ListDelegationAdapter
 import kotlinx.android.synthetic.main.layout_base_list.*
+import kotlinx.android.synthetic.main.layout_zero.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.target.issue.Issue
 import ru.terrakok.gitlabclient.extension.visible
@@ -14,6 +15,7 @@ import ru.terrakok.gitlabclient.presentation.my.issues.MyIssuesPresenter
 import ru.terrakok.gitlabclient.presentation.my.issues.MyIssuesView
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.ui.global.ZeroViewHolder
 import ru.terrakok.gitlabclient.ui.global.list.IssueAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.ListItem
 import ru.terrakok.gitlabclient.ui.global.list.ProgressAdapterDelegate
@@ -26,15 +28,16 @@ import toothpick.config.Module
 class MyIssuesFragment : BaseFragment(), MyIssuesView {
 
     companion object {
-        private val ARG_MODE_IS_OPENED = "arg_mode_is_opened"
+        private val ARG_MODE_CREATED_BY_ME = "arg_mode_created_by_me"
 
-        fun newInstance(isOpened: Boolean) = MyIssuesFragment().apply {
-            arguments = Bundle().apply { putBoolean(ARG_MODE_IS_OPENED, isOpened) }
+        fun newInstance(createdByMe: Boolean) = MyIssuesFragment().apply {
+            arguments = Bundle().apply { putBoolean(ARG_MODE_CREATED_BY_ME, createdByMe) }
         }
     }
 
     override val layoutRes = R.layout.fragment_my_issues
     private val adapter = IssuesAdapter()
+    private var zeroViewHolder: ZeroViewHolder? = null
 
     @InjectPresenter lateinit var presenter: MyIssuesPresenter
 
@@ -45,7 +48,9 @@ class MyIssuesFragment : BaseFragment(), MyIssuesView {
         scope.installModules(object : Module() {
             init {
                 bind(MyIssuesPresenter.InitParams::class.java)
-                        .toInstance(MyIssuesPresenter.InitParams(arguments.getBoolean(ARG_MODE_IS_OPENED)))
+                        .toInstance(
+                                MyIssuesPresenter.InitParams(arguments?.getBoolean(ARG_MODE_CREATED_BY_ME) ?: true)
+                        )
             }
         })
 
@@ -64,6 +69,7 @@ class MyIssuesFragment : BaseFragment(), MyIssuesView {
         }
 
         swipeToRefresh.setOnRefreshListener { presenter.refreshIssues() }
+        zeroViewHolder = ZeroViewHolder(zeroLayout, { presenter.refreshIssues() })
     }
 
     override fun showRefreshProgress(show: Boolean) {
@@ -83,12 +89,13 @@ class MyIssuesFragment : BaseFragment(), MyIssuesView {
     }
 
     override fun showEmptyView(show: Boolean) {
-        //todo
+        if (show) zeroViewHolder?.showEmptyData()
+        else zeroViewHolder?.hide()
     }
 
     override fun showEmptyError(show: Boolean, message: String?) {
-        //todo
-        if (show && message != null) showSnackMessage(message)
+        if (show) zeroViewHolder?.showEmptyError(message)
+        else zeroViewHolder?.hide()
     }
 
     override fun showIssues(show: Boolean, issues: List<Issue>) {
