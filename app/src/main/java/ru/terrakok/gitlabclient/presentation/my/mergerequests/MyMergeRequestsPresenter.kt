@@ -3,18 +3,18 @@ package ru.terrakok.gitlabclient.presentation.my.mergerequests
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
-import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
-import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestListInteractor
+import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestsInteractor
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 import javax.inject.Inject
 
 @InjectViewState
-class MyMergeRequestListPresenter @Inject constructor(
-        private val mrState: MergeRequestState,
-        private val interactor: MergeRequestListInteractor,
+class MyMergeRequestsPresenter @Inject constructor(
+        private val initParams: InitParams,
+        private val interactor: MergeRequestsInteractor,
         private val errorHandler: ErrorHandler
 ) : MvpPresenter<MyMergeRequestListView>() {
+    data class InitParams(val createdByMe: Boolean)
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -22,7 +22,7 @@ class MyMergeRequestListPresenter @Inject constructor(
     }
 
     private val paginator = Paginator(
-            { interactor.getMyMergeRequests(mrState, it) },
+            { interactor.getMyMergeRequests(initParams.createdByMe, it) },
             object : Paginator.ViewController<TargetHeader> {
                 override fun showEmptyProgress(show: Boolean) {
                     viewState.showEmptyProgress(show)

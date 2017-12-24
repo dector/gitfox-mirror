@@ -8,10 +8,9 @@ import kotlinx.android.synthetic.main.layout_base_list.*
 import kotlinx.android.synthetic.main.layout_zero.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
-import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
 import ru.terrakok.gitlabclient.extension.visible
-import ru.terrakok.gitlabclient.presentation.my.mergerequests.MyMergeRequestListPresenter
 import ru.terrakok.gitlabclient.presentation.my.mergerequests.MyMergeRequestListView
+import ru.terrakok.gitlabclient.presentation.my.mergerequests.MyMergeRequestsPresenter
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.ZeroViewHolder
@@ -25,16 +24,16 @@ import toothpick.config.Module
 class MyMergeRequestsFragment : BaseFragment(), MyMergeRequestListView {
 
     companion object {
-        private val ARG_STATE = "arg_state"
+        private val ARG_MODE_CREATED_BY_ME = "arg_mode_created_by_me"
 
-        fun newInstance(state: MergeRequestState) = MyMergeRequestsFragment().apply {
-            arguments = Bundle().apply { putSerializable(ARG_STATE, state) }
+        fun newInstance(createdByMe: Boolean) = MyMergeRequestsFragment().apply {
+            arguments = Bundle().apply { putBoolean(ARG_MODE_CREATED_BY_ME, createdByMe) }
         }
     }
 
     override val layoutRes = R.layout.fragment_my_merge_requests
 
-    @InjectPresenter lateinit var presenter: MyMergeRequestListPresenter
+    @InjectPresenter lateinit var presenter: MyMergeRequestsPresenter
 
     private val adapter: TargetsAdapter by lazy {
         TargetsAdapter(
@@ -45,17 +44,19 @@ class MyMergeRequestsFragment : BaseFragment(), MyMergeRequestListView {
     private var zeroViewHolder: ZeroViewHolder? = null
 
     @ProvidePresenter
-    fun providePresenter(): MyMergeRequestListPresenter {
-        val scopeName = "MyMergeRequestListScope_${hashCode()}"
+    fun providePresenter(): MyMergeRequestsPresenter {
+        val scopeName = "MyMergeRequestsScope_${hashCode()}"
         val scope = Toothpick.openScopes(DI.MAIN_ACTIVITY_SCOPE, scopeName)
         scope.installModules(object : Module() {
             init {
-                bind(MergeRequestState::class.java)
-                        .toInstance(arguments?.getSerializable(ARG_STATE) as MergeRequestState)
+                bind(MyMergeRequestsPresenter.InitParams::class.java)
+                        .toInstance(MyMergeRequestsPresenter.InitParams(
+                                arguments?.getBoolean(ARG_MODE_CREATED_BY_ME) ?: true
+                        ))
             }
         })
 
-        return scope.getInstance(MyMergeRequestListPresenter::class.java).also {
+        return scope.getInstance(MyMergeRequestsPresenter::class.java).also {
             Toothpick.closeScope(scopeName)
         }
     }
