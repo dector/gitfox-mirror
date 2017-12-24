@@ -4,6 +4,7 @@
     <string name="share_to">Share to</string>
     <string name="ok">OK</string>
     <string name="refresh">Refresh</string>
+    <string name="at">at</string>
 
     <!--Main screen-->
     <string name="gitlab_activity">Activity</string>
@@ -85,6 +86,7 @@
     <string name="full_event_target_snippet">snippet</string>
     <string name="full_event_target_milestone">milestone</string>
     <string name="full_event_target_branch">branch</string>
+    <string name="full_event_target_tag">tag</string>
     <string name="event_action_closed">closed</string>
     <string name="event_action_commented_on">commented on</string>
     <string name="event_action_created">created</string>

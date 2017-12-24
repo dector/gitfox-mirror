@@ -2,7 +2,8 @@ package ru.terrakok.gitlabclient.presentation.my.events
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
-import ru.terrakok.gitlabclient.entity.app.event.AppEventInfo
+import ru.terrakok.cicerone.Router
+import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.model.interactor.event.EventInteractor
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
@@ -16,7 +17,8 @@ import javax.inject.Inject
 class MyEventsPresenter @Inject constructor(
         private val eventInteractor: EventInteractor,
         private val menuController: GlobalMenuController,
-        private val errorHandler: ErrorHandler
+        private val errorHandler: ErrorHandler,
+        private val router: Router
 ) : MvpPresenter<MyEventsView>() {
 
     override fun onFirstViewAttach() {
@@ -26,7 +28,7 @@ class MyEventsPresenter @Inject constructor(
 
     private val paginator = Paginator(
             { eventInteractor.getEvents(it) },
-            object : Paginator.ViewController<AppEventInfo> {
+            object : Paginator.ViewController<TargetHeader> {
                 override fun showEmptyProgress(show: Boolean) {
                     viewState.showEmptyProgress(show)
                 }
@@ -47,7 +49,7 @@ class MyEventsPresenter @Inject constructor(
                     viewState.showEmptyView(show)
                 }
 
-                override fun showData(show: Boolean, data: List<AppEventInfo>) {
+                override fun showData(show: Boolean, data: List<TargetHeader>) {
                     viewState.showEvents(show, data)
                 }
 
@@ -62,7 +64,7 @@ class MyEventsPresenter @Inject constructor(
     )
 
     fun onMenuClick() = menuController.open()
-    fun onEventClick(event: AppEventInfo) {}
+    fun onItemClick(item: TargetHeader) {}
     fun refreshEvents() = paginator.refresh()
     fun loadNextEventsPage() = paginator.loadNewPage()
 

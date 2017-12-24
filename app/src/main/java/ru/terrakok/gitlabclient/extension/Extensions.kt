@@ -26,7 +26,9 @@ import org.joda.time.format.DateTimeFormat
 import retrofit2.HttpException
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.develop.LicenseType
-import ru.terrakok.gitlabclient.entity.app.event.AppEventTarget
+import ru.terrakok.gitlabclient.entity.app.target.AppTarget
+import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderIcon
+import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderTitle
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import timber.log.Timber
@@ -129,14 +131,15 @@ fun Fragment.shareText(text: String?) {
     }
 }
 
-fun AppEventTarget.getHumanName(resources: Resources) = when (this) {
-    AppEventTarget.PROJECT -> resources.getString(R.string.full_event_target_project)
-    AppEventTarget.ISSUE -> resources.getString(R.string.full_event_target_issue)
-    AppEventTarget.MERGE_REQUEST -> resources.getString(R.string.full_event_target_merge_request)
-    AppEventTarget.BRANCH -> resources.getString(R.string.full_event_target_branch)
-    AppEventTarget.COMMIT -> resources.getString(R.string.full_event_target_commit)
-    AppEventTarget.MILESTONE -> resources.getString(R.string.full_event_target_milestone)
-    AppEventTarget.SNIPPET -> resources.getString(R.string.full_event_target_snippet)
+fun AppTarget.getHumanName(resources: Resources) = when (this) {
+    AppTarget.PROJECT -> resources.getString(R.string.full_event_target_project)
+    AppTarget.ISSUE -> resources.getString(R.string.full_event_target_issue)
+    AppTarget.MERGE_REQUEST -> resources.getString(R.string.full_event_target_merge_request)
+    AppTarget.BRANCH -> resources.getString(R.string.full_event_target_branch)
+    AppTarget.TAG -> resources.getString(R.string.full_event_target_branch)
+    AppTarget.COMMIT -> resources.getString(R.string.full_event_target_commit)
+    AppTarget.MILESTONE -> resources.getString(R.string.full_event_target_milestone)
+    AppTarget.SNIPPET -> resources.getString(R.string.full_event_target_snippet)
 }
 
 fun EventAction.getHumanName(resources: Resources) = when (this) {
@@ -160,18 +163,25 @@ fun EventAction.getHumanName(resources: Resources) = when (this) {
 }
 
 @DrawableRes
-fun EventAction.getIcon() = when (this) {
-    EventAction.CREATED -> R.drawable.ic_event_created_24dp
-    EventAction.JOINED -> R.drawable.ic_event_joined_24dp
-    EventAction.COMMENTED_ON, EventAction.COMMENTED -> R.drawable.ic_event_commented_24dp
-    EventAction.MERGED, EventAction.ACCEPTED -> R.drawable.ic_event_merged_24dp
-    EventAction.CLOSED -> R.drawable.ic_event_closed_24dp
-    EventAction.DELETED, EventAction.DESTROYED -> R.drawable.ic_event_destroyed_24dp
-    EventAction.EXPIRED -> R.drawable.ic_event_expired_24dp
-    EventAction.LEFT -> R.drawable.ic_event_left_24dp
-    EventAction.OPENED, EventAction.REOPENED -> R.drawable.ic_event_reopened_24dp
-    EventAction.PUSHED, EventAction.PUSHED_NEW, EventAction.PUSHED_TO -> R.drawable.ic_event_pushed_24dp
-    EventAction.UPDATED -> R.drawable.ic_event_updated_24dp
+fun TargetHeaderIcon.getIcon() = when (this) {
+    TargetHeaderIcon.CREATED -> R.drawable.ic_event_created_24dp
+    TargetHeaderIcon.JOINED -> R.drawable.ic_event_joined_24dp
+    TargetHeaderIcon.COMMENTED  -> R.drawable.ic_event_commented_24dp
+    TargetHeaderIcon.MERGED  -> R.drawable.ic_event_merged_24dp
+    TargetHeaderIcon.CLOSED -> R.drawable.ic_event_closed_24dp
+    TargetHeaderIcon.DESTROYED  -> R.drawable.ic_event_destroyed_24dp
+    TargetHeaderIcon.EXPIRED -> R.drawable.ic_event_expired_24dp
+    TargetHeaderIcon.LEFT -> R.drawable.ic_event_left_24dp
+    TargetHeaderIcon.REOPENED  -> R.drawable.ic_event_reopened_24dp
+    TargetHeaderIcon.PUSHED  -> R.drawable.ic_event_pushed_24dp
+    TargetHeaderIcon.UPDATED -> R.drawable.ic_event_updated_24dp
+    TargetHeaderIcon.NONE -> R.drawable.ic_event_created_24dp
+}
+
+fun TargetHeaderTitle.getHumanName(resources: Resources) = when(this) {
+    is TargetHeaderTitle.Event -> {
+        "$userName ${action.getHumanName(resources)} $targetName ${resources.getString(R.string.at)} $projectName"
+    }
 }
 
 fun LicenseType.getHumanName(resources: Resources) = when (this) {

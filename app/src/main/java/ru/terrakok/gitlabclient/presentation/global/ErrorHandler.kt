@@ -29,7 +29,7 @@ class ErrorHandler @Inject constructor(
     }
 
     fun proceed(error: Throwable, messageListener: (String) -> Unit = {}) {
-        Timber.e("Error: $error")
+        Timber.e(error)
         if (error is ServerError) {
             when (error.errorCode) {
                 401 -> authErrorRelay.accept(true)

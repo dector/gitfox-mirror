@@ -4,9 +4,12 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import ru.terrakok.gitlabclient.entity.Project
+import ru.terrakok.gitlabclient.entity.PushDataRefType
 import ru.terrakok.gitlabclient.entity.Sort
-import ru.terrakok.gitlabclient.entity.app.event.AppEventInfo
-import ru.terrakok.gitlabclient.entity.app.event.AppEventTarget
+import ru.terrakok.gitlabclient.entity.app.target.AppTarget
+import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
+import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderIcon
+import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderTitle
 import ru.terrakok.gitlabclient.entity.event.Event
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.event.EventTarget
@@ -38,7 +41,7 @@ class EventRepository @Inject constructor(
             sort: Sort? = null,
             page: Int,
             pageSize: Int = defaultPageSize
-    ) = api
+    ): Single<List<TargetHeader>> = api
             .getEvents(
                     action,
                     targetType,
@@ -52,12 +55,12 @@ class EventRepository @Inject constructor(
                 Single.zip(
                         Single.just(events),
                         getDistinctProjects(events),
-                        BiFunction<List<Event>, Map<Long, Project>, List<AppEventInfo>> { sourceEvents, projects ->
-                            val fullEventInfos = mutableListOf<AppEventInfo>()
+                        BiFunction<List<Event>, Map<Long, Project>, List<TargetHeader>> { sourceEvents, projects ->
+                            val items = mutableListOf<TargetHeader>()
                             sourceEvents.forEach {
-                                fullEventInfos.add(getFullEventInfo(it, projects[it.projectId]))
+                                items.add(getTargetHeader(it, projects[it.projectId]?.nameWithNamespace ?: "project"))
                             }
-                            return@BiFunction fullEventInfos
+                            return@BiFunction items
                         }
                 )
             }
@@ -71,59 +74,84 @@ class EventRepository @Inject constructor(
                 .toMap { it.id }
     }
 
-    private fun getFullEventInfo(event: Event, project: Project?): AppEventInfo {
-        return AppEventInfo(
-                event.actionName,
-                getFullEventTarget(event),
+    private fun getTargetHeader(event: Event, projectName: String):TargetHeader {
+        val targetData = getTarget(event)
+        return TargetHeader(
                 event.author,
-                event.createdAt,
-                project,
+                getIcon(event.actionName),
+                TargetHeaderTitle.Event(
+                        event.authorUsername ?: "user",
+                        event.actionName,
+                        targetData.name,
+                        projectName
+                ),
                 getBody(event),
-                event.targetId ?: event.projectId
+                event.createdAt,
+                targetData.target,
+                targetData.id
         )
     }
 
-    private fun getFullEventTarget(event: Event): AppEventTarget {
-        return if (event.targetType != null) {
+    private fun getIcon(action: EventAction) = when (action) {
+        EventAction.CREATED -> TargetHeaderIcon.CREATED
+        EventAction.JOINED -> TargetHeaderIcon.JOINED
+        EventAction.COMMENTED_ON,
+        EventAction.COMMENTED -> TargetHeaderIcon.COMMENTED
+        EventAction.MERGED,
+        EventAction.ACCEPTED -> TargetHeaderIcon.MERGED
+        EventAction.CLOSED -> TargetHeaderIcon.CLOSED
+        EventAction.DELETED,
+        EventAction.DESTROYED -> TargetHeaderIcon.DESTROYED
+        EventAction.EXPIRED -> TargetHeaderIcon.EXPIRED
+        EventAction.LEFT -> TargetHeaderIcon.LEFT
+        EventAction.OPENED,
+        EventAction.REOPENED -> TargetHeaderIcon.REOPENED
+        EventAction.PUSHED,
+        EventAction.PUSHED_NEW,
+        EventAction.PUSHED_TO -> TargetHeaderIcon.PUSHED
+        EventAction.UPDATED -> TargetHeaderIcon.UPDATED
+    }
+
+    private fun getTarget(event: Event): TargetData =
             when (event.targetType) {
-                EventTargetType.ISSUE -> AppEventTarget.ISSUE
-                EventTargetType.MERGE_REQUEST -> AppEventTarget.MERGE_REQUEST
-                EventTargetType.MILESTONE -> AppEventTarget.MILESTONE
-                EventTargetType.DIFF_NOTE -> AppEventTarget.COMMIT
+                EventTargetType.ISSUE -> TargetData(AppTarget.ISSUE, "${AppTarget.ISSUE} #${event.targetIid!!}", event.targetId!!)
+                EventTargetType.MERGE_REQUEST -> TargetData(AppTarget.MERGE_REQUEST, "${AppTarget.MERGE_REQUEST} !${event.targetIid!!}", event.targetId!!)
+                EventTargetType.MILESTONE -> TargetData(AppTarget.MILESTONE, "${AppTarget.MILESTONE} ${event.targetIid!!}", event.targetId!!)
+                EventTargetType.SNIPPET -> TargetData(AppTarget.SNIPPET, "${AppTarget.SNIPPET} ${event.targetIid!!}", event.targetId!!)
+                EventTargetType.DIFF_NOTE,
                 EventTargetType.NOTE -> {
                     when (event.note!!.noteableType) {
-                        EventTargetType.ISSUE -> AppEventTarget.ISSUE
-                        EventTargetType.MERGE_REQUEST -> AppEventTarget.MERGE_REQUEST
-                        EventTargetType.MILESTONE -> AppEventTarget.MILESTONE
-                        EventTargetType.SNIPPET -> AppEventTarget.SNIPPET
+                        EventTargetType.ISSUE -> TargetData(AppTarget.ISSUE, "${AppTarget.ISSUE} #${event.note.noteableIid}", event.note.noteableId)
+                        EventTargetType.MERGE_REQUEST -> TargetData(AppTarget.MERGE_REQUEST, "${AppTarget.MERGE_REQUEST} !${event.note.noteableIid}", event.note.noteableId)
+                        EventTargetType.MILESTONE -> TargetData(AppTarget.MILESTONE, "${AppTarget.MILESTONE} ${event.note.noteableIid}", event.note.noteableId)
+                        EventTargetType.SNIPPET -> TargetData(AppTarget.SNIPPET, "${AppTarget.SNIPPET} ${event.note.noteableIid}", event.note.noteableId)
                         else -> throw IllegalArgumentException("Unsupported noteable target type: ${event.note.noteableType}.")
                     }
                 }
-                else -> throw IllegalArgumentException("Unsupported event target type: ${event.targetType}.")
+                else -> {
+                    if (event.pushData != null) {
+                        when (event.pushData.refType) {
+                            PushDataRefType.BRANCH -> TargetData(AppTarget.PROJECT, "${AppTarget.BRANCH} ${event.pushData.ref}", event.projectId)
+                            PushDataRefType.TAG -> TargetData(AppTarget.PROJECT, "${AppTarget.TAG} ${event.pushData.ref}", event.projectId)
+                        }
+                    } else {
+                        TargetData(AppTarget.PROJECT, "${AppTarget.PROJECT} ${event.projectId}", event.projectId)
+                    }
+                }
             }
-        } else {
-            when {
-                event.actionName == EventAction.JOINED -> AppEventTarget.PROJECT
-                event.actionName == EventAction.CREATED -> AppEventTarget.PROJECT
-                event.actionName == EventAction.LEFT -> AppEventTarget.PROJECT
-                event.pushData != null -> AppEventTarget.BRANCH
-                else -> throw IllegalArgumentException("Unsupported event action name: ${event.actionName}.")
-            }
-        }
+
+    private fun getBody(event: Event) = when (event.targetType) {
+        EventTargetType.NOTE,
+        EventTargetType.DIFF_NOTE -> event.note?.body
+        EventTargetType.ISSUE,
+        EventTargetType.MERGE_REQUEST,
+        EventTargetType.MILESTONE -> event.targetTitle
+        else -> event.pushData?.commitTitle
     }
 
-    private fun getBody(event: Event): String? {
-        return if (event.targetType != null) {
-            when (event.targetType) {
-                EventTargetType.NOTE -> event.note!!.body
-                EventTargetType.ISSUE -> event.targetTitle
-                EventTargetType.MERGE_REQUEST -> event.targetTitle
-                EventTargetType.MILESTONE -> event.targetTitle
-                EventTargetType.DIFF_NOTE -> event.note!!.body
-                else -> null
-            }
-        } else {
-            event.pushData?.commitTitle
-        }
-    }
+    private data class TargetData(
+            val target: AppTarget,
+            val name: String,
+            val id: Long
+    )
 }
