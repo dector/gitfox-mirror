@@ -2,23 +2,19 @@ package ru.terrakok.gitlabclient.ui.my.issues
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.hannesdorfmann.adapterdelegates3.ListDelegationAdapter
 import kotlinx.android.synthetic.main.layout_base_list.*
 import kotlinx.android.synthetic.main.layout_zero.*
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.Issue
+import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.my.issues.MyIssuesPresenter
 import ru.terrakok.gitlabclient.presentation.my.issues.MyIssuesView
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.ZeroViewHolder
-import ru.terrakok.gitlabclient.ui.global.list.IssueAdapterDelegate
-import ru.terrakok.gitlabclient.ui.global.list.ListItem
-import ru.terrakok.gitlabclient.ui.global.list.ProgressAdapterDelegate
+import ru.terrakok.gitlabclient.ui.my.TargetsAdapter
 import toothpick.Toothpick
 import toothpick.config.Module
 
@@ -36,10 +32,16 @@ class MyIssuesFragment : BaseFragment(), MyIssuesView {
     }
 
     override val layoutRes = R.layout.fragment_my_issues
-    private val adapter = IssuesAdapter()
-    private var zeroViewHolder: ZeroViewHolder? = null
 
     @InjectPresenter lateinit var presenter: MyIssuesPresenter
+
+    private val adapter: TargetsAdapter by lazy {
+        TargetsAdapter(
+                { presenter.onIssueClick(it) },
+                { presenter.loadNextIssuesPage() }
+        )
+    }
+    private var zeroViewHolder: ZeroViewHolder? = null
 
     @ProvidePresenter
     fun providePresenter(): MyIssuesPresenter {
@@ -98,47 +100,12 @@ class MyIssuesFragment : BaseFragment(), MyIssuesView {
         else zeroViewHolder?.hide()
     }
 
-    override fun showIssues(show: Boolean, issues: List<Issue>) {
+    override fun showIssues(show: Boolean, issues: List<TargetHeader>) {
         recyclerView.visible(show)
         recyclerView.post { adapter.setData(issues) }
     }
 
     override fun showMessage(message: String) {
         showSnackMessage(message)
-    }
-
-    inner class IssuesAdapter : ListDelegationAdapter<MutableList<ListItem>>() {
-        init {
-            items = mutableListOf()
-            delegatesManager.addDelegate(IssueAdapterDelegate({ presenter.onIssueClick(it) }))
-            delegatesManager.addDelegate(ProgressAdapterDelegate())
-        }
-
-        fun setData(issues: List<Issue>) {
-            val progress = isProgress()
-
-            items.clear()
-            items.addAll(issues.map { ListItem.IssueItem(it) })
-            if (progress) items.add(ListItem.ProgressItem())
-
-            notifyDataSetChanged()
-        }
-
-        fun showProgress(isVisible: Boolean) {
-            val currentProgress = isProgress()
-
-            if (isVisible && !currentProgress) items.add(ListItem.ProgressItem())
-            else if (!isVisible && currentProgress) items.remove(items.last())
-
-            notifyDataSetChanged()
-        }
-
-        private fun isProgress() = items.isNotEmpty() && items.last() is ListItem.ProgressItem
-
-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int, payloads: MutableList<Any?>?) {
-            super.onBindViewHolder(holder, position, payloads)
-
-            if (position == items.size - 10) presenter.loadNextIssuesPage()
-        }
     }
 }
