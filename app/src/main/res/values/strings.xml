@@ -5,6 +5,8 @@
     <string name="ok">OK</string>
     <string name="refresh">Refresh</string>
     <string name="at">at</string>
+    <string name="you">you</string>
+    <string name="yourself">yourself</string>
 
     <!--Main screen-->
     <string name="gitlab_activity">Activity</string>
@@ -119,6 +121,12 @@
     <!--My Todos Screen-->
     <string name="my_todos_pending">Pending</string>
     <string name="my_todos_done">Done</string>
+    <string name="todo_action_assigned">assigned</string>
+    <string name="todo_action_mentioned">mentioned</string>
+    <string name="todo_action_build_failed">build failed</string>
+    <string name="todo_action_marked">marked</string>
+    <string name="todo_action_approval_required">approval required</string>
+    <string name="todo_action_directly_addressed">directly addressed</string>
 
     <!--Calligraphy Config-->
     <string name="font_main_regular">fonts/Roboto-Regular.ttf</string>

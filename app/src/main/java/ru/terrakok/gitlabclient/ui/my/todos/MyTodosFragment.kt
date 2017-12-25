@@ -2,13 +2,11 @@ package ru.terrakok.gitlabclient.ui.my.todos
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.hannesdorfmann.adapterdelegates3.ListDelegationAdapter
 import kotlinx.android.synthetic.main.layout_base_list.*
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.todo.Todo
+import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.my.todos.MyTodoListView
 import ru.terrakok.gitlabclient.presentation.my.todos.MyTodosPresenter
@@ -16,9 +14,8 @@ import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.TodoListPendingState
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import ru.terrakok.gitlabclient.ui.global.list.ListItem
-import ru.terrakok.gitlabclient.ui.global.list.ProgressAdapterDelegate
-import ru.terrakok.gitlabclient.ui.global.list.TodoAdapterDelegate
+import ru.terrakok.gitlabclient.ui.global.ZeroViewHolder
+import ru.terrakok.gitlabclient.ui.my.TargetsAdapter
 import toothpick.Toothpick
 import toothpick.config.Module
 
@@ -36,7 +33,14 @@ class MyTodosFragment : BaseFragment(), MyTodoListView {
     }
 
     override val layoutRes = R.layout.fragment_my_todos
-    private val adapter = TodosAdapter()
+
+    private val adapter: TargetsAdapter by lazy {
+        TargetsAdapter(
+                { presenter.onTodoClick(it) },
+                { presenter.loadNextTodosPage() }
+        )
+    }
+    private var zeroViewHolder: ZeroViewHolder? = null
 
     @InjectPresenter lateinit var presenter: MyTodosPresenter
 
@@ -86,55 +90,21 @@ class MyTodosFragment : BaseFragment(), MyTodoListView {
     }
 
     override fun showEmptyView(show: Boolean) {
-        // todo
+        if (show) zeroViewHolder?.showEmptyData()
+        else zeroViewHolder?.hide()
     }
 
     override fun showEmptyError(show: Boolean, message: String?) {
-        //todo
-        if (show && message != null) showSnackMessage(message)
+        if (show) zeroViewHolder?.showEmptyError(message)
+        else zeroViewHolder?.hide()
     }
 
-    override fun showTodos(show: Boolean, todos: List<Todo>) {
+    override fun showTodos(show: Boolean, todos: List<TargetHeader>) {
         recyclerView.visible(show)
         recyclerView.post { adapter.setData(todos) }
     }
 
     override fun showMessage(message: String) {
         showSnackMessage(message)
-    }
-
-    private inner class TodosAdapter : ListDelegationAdapter<MutableList<ListItem>>() {
-        init {
-            items = mutableListOf()
-            delegatesManager.addDelegate(TodoAdapterDelegate({ presenter.onTodoClick(it) }))
-            delegatesManager.addDelegate(ProgressAdapterDelegate())
-        }
-
-        fun setData(todos: List<Todo>) {
-            val progress = isProgress()
-
-            items.clear()
-            items.addAll(todos.map { ListItem.TodoItem(it) })
-            if (progress) items.add(ListItem.ProgressItem())
-
-            notifyDataSetChanged()
-        }
-
-        fun showProgress(isVisible: Boolean) {
-            val currentProgress = isProgress()
-
-            if (isVisible && !currentProgress) items.add(ListItem.ProgressItem())
-            else if (!isVisible && currentProgress) items.remove(items.last())
-
-            notifyDataSetChanged()
-        }
-
-        private fun isProgress() = items.isNotEmpty() && items.last() is ListItem.ProgressItem
-
-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int, payloads: MutableList<Any?>?) {
-            super.onBindViewHolder(holder, position, payloads)
-
-            if (position == items.size - 10) presenter.loadNextTodosPage()
-        }
     }
 }

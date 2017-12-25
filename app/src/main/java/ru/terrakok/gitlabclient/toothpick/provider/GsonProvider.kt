@@ -4,12 +4,13 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import ru.terrakok.gitlabclient.entity.todo.Todo
 import ru.terrakok.gitlabclient.entity.todo.TodoDeserializer
+import javax.inject.Inject
 import javax.inject.Provider
 
 /**
  * @author Eugene Shapovalov (CraggyHaggy). Date: 14.09.17
  */
-class GsonProvider : Provider<Gson> {
+class GsonProvider @Inject constructor() : Provider<Gson> {
 
     override fun get(): Gson =
             GsonBuilder()

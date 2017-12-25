@@ -2,7 +2,7 @@ package ru.terrakok.gitlabclient.presentation.my.todos
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
-import ru.terrakok.gitlabclient.entity.todo.Todo
+import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.extension.userMessage
 import ru.terrakok.gitlabclient.model.interactor.todo.TodoListInteractor
 import ru.terrakok.gitlabclient.model.system.ResourceManager
@@ -30,7 +30,7 @@ class MyTodosPresenter @Inject constructor(
 
     private val paginator = Paginator(
             { todoListInteractor.getMyTodos(isPending, it) },
-            object : Paginator.ViewController<Todo> {
+            object : Paginator.ViewController<TargetHeader> {
                 override fun showEmptyProgress(show: Boolean) {
                     viewState.showEmptyProgress(show)
                 }
@@ -43,7 +43,7 @@ class MyTodosPresenter @Inject constructor(
                     viewState.showEmptyView(show)
                 }
 
-                override fun showData(show: Boolean, data: List<Todo>) {
+                override fun showData(show: Boolean, data: List<TargetHeader>) {
                     viewState.showTodos(show, data)
                 }
 
@@ -61,7 +61,7 @@ class MyTodosPresenter @Inject constructor(
             }
     )
 
-    fun onTodoClick(todo: Todo) {}
+    fun onTodoClick(item: TargetHeader) {}
     fun refreshTodos() = paginator.refresh()
     fun loadNextTodosPage() = paginator.loadNewPage()
 
