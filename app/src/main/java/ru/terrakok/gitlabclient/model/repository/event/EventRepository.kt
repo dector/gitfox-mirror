@@ -56,11 +56,7 @@ class EventRepository @Inject constructor(
                         Single.just(events),
                         getDistinctProjects(events),
                         BiFunction<List<Event>, Map<Long, Project>, List<TargetHeader>> { sourceEvents, projects ->
-                            val items = mutableListOf<TargetHeader>()
-                            sourceEvents.forEach {
-                                items.add(getTargetHeader(it, projects[it.projectId]?.nameWithNamespace ?: "project"))
-                            }
-                            return@BiFunction items
+                            sourceEvents.map { getTargetHeader(it, projects[it.projectId]?.nameWithNamespace ?: "project") }
                         }
                 )
             }

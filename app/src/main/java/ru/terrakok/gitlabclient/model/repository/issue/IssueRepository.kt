@@ -43,11 +43,7 @@ class IssueRepository @Inject constructor(
                         Single.just(issues),
                         getDistinctProjects(issues),
                         BiFunction<List<Issue>, Map<Long, Project>, List<TargetHeader>> { sourceIssues, projects ->
-                            val items = mutableListOf<TargetHeader>()
-                            sourceIssues.forEach {
-                                items.add(getTargetHeader(it, projects[it.projectId]?.nameWithNamespace ?: "project"))
-                            }
-                            return@BiFunction items
+                            sourceIssues.map { getTargetHeader(it, projects[it.projectId]?.nameWithNamespace ?: "project") }
                         }
                 )
             }

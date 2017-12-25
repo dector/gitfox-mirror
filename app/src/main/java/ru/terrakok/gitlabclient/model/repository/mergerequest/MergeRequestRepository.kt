@@ -54,11 +54,7 @@ class MergeRequestRepository @Inject constructor(
                         Single.just(mrs),
                         getDistinctProjects(mrs),
                         BiFunction<List<MergeRequest>, Map<Long, Project>, List<TargetHeader>> { sourceMrs, projects ->
-                            val items = mutableListOf<TargetHeader>()
-                            sourceMrs.forEach {
-                                items.add(getTargetHeader(it, projects[it.projectId]?.nameWithNamespace ?: "project"))
-                            }
-                            return@BiFunction items
+                            sourceMrs.map { getTargetHeader(it, projects[it.projectId]?.nameWithNamespace ?: "project") }
                         }
                 )
             }
