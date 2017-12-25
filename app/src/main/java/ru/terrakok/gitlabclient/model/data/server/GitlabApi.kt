@@ -13,7 +13,6 @@ import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestViewType
 import ru.terrakok.gitlabclient.entity.target.TargetState
 import ru.terrakok.gitlabclient.entity.target.TargetType
-import ru.terrakok.gitlabclient.entity.target.issue.Issue
 import ru.terrakok.gitlabclient.entity.todo.Todo
 import ru.terrakok.gitlabclient.entity.todo.TodoAction
 import ru.terrakok.gitlabclient.entity.todo.TodoState

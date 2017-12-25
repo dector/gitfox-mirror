@@ -2,10 +2,8 @@ package ru.terrakok.gitlabclient.ui.my.activity
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.hannesdorfmann.adapterdelegates3.ListDelegationAdapter
 import kotlinx.android.synthetic.main.fragment_my_activity.*
 import kotlinx.android.synthetic.main.layout_base_list.*
 import kotlinx.android.synthetic.main.layout_zero.*
@@ -17,9 +15,7 @@ import ru.terrakok.gitlabclient.presentation.my.events.MyEventsView
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.ZeroViewHolder
-import ru.terrakok.gitlabclient.ui.global.list.ListItem
-import ru.terrakok.gitlabclient.ui.global.list.ProgressAdapterDelegate
-import ru.terrakok.gitlabclient.ui.global.list.TargetHeaderAdapterDelegate
+import ru.terrakok.gitlabclient.ui.my.TargetsAdapter
 import toothpick.Toothpick
 
 /**
@@ -28,16 +24,21 @@ import toothpick.Toothpick
 class MyEventsFragment : BaseFragment(), MyEventsView {
     override val layoutRes = R.layout.fragment_my_activity
 
-    private val adapter = TargetsAdapter()
-    private var zeroViewHolder: ZeroViewHolder? = null
-
     @InjectPresenter lateinit var presenter: MyEventsPresenter
+
+    private val adapter: TargetsAdapter by lazy {
+        TargetsAdapter(
+                { presenter.onItemClick(it) },
+                { presenter.loadNextEventsPage() }
+        )
+    }
+    private var zeroViewHolder: ZeroViewHolder? = null
 
     @ProvidePresenter
     fun providePresenter(): MyEventsPresenter =
-        Toothpick
-                .openScope(DI.MAIN_ACTIVITY_SCOPE)
-                .getInstance(MyEventsPresenter::class.java)
+            Toothpick
+                    .openScope(DI.MAIN_ACTIVITY_SCOPE)
+                    .getInstance(MyEventsPresenter::class.java)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -86,40 +87,5 @@ class MyEventsFragment : BaseFragment(), MyEventsView {
 
     override fun showMessage(message: String) {
         showSnackMessage(message)
-    }
-
-    inner class TargetsAdapter : ListDelegationAdapter<MutableList<ListItem>>() {
-        init {
-            items = mutableListOf()
-            delegatesManager.addDelegate(TargetHeaderAdapterDelegate({ presenter.onItemClick(it) }))
-            delegatesManager.addDelegate(ProgressAdapterDelegate())
-        }
-
-        fun setData(events: List<TargetHeader>) {
-            val progress = isProgress()
-
-            items.clear()
-            items.addAll(events.map { ListItem.TargetHeaderItem(it) })
-            if (progress) items.add(ListItem.ProgressItem())
-
-            notifyDataSetChanged()
-        }
-
-        fun showProgress(isVisible: Boolean) {
-            val currentProgress = isProgress()
-
-            if (isVisible && !currentProgress) items.add(ListItem.ProgressItem())
-            else if (!isVisible && currentProgress) items.remove(items.last())
-
-            notifyDataSetChanged()
-        }
-
-        private fun isProgress() = items.isNotEmpty() && items.last() is ListItem.ProgressItem
-
-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int, payloads: MutableList<Any?>?) {
-            super.onBindViewHolder(holder, position, payloads)
-
-            if (position == items.size - 10) presenter.loadNextEventsPage()
-        }
     }
 }

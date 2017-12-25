@@ -1,23 +1,24 @@
 package ru.terrakok.gitlabclient.entity.mergerequest
 
 import com.google.gson.annotations.SerializedName
+import ru.terrakok.gitlabclient.entity.Author
 import ru.terrakok.gitlabclient.entity.Milestone
 import ru.terrakok.gitlabclient.entity.User
 import java.util.*
 
 data class MergeRequest(
-        @SerializedName("id") val id: Int,
-        @SerializedName("iid") val iid: Int,
-        @SerializedName("created_at") val createdAt: Date?,
+        @SerializedName("id") val id: Long,
+        @SerializedName("iid") val iid: Long,
+        @SerializedName("created_at") val createdAt: Date,
         @SerializedName("updated_at") val updatedAt: Date?,
         @SerializedName("target_branch") val targetBranch: String?,
         @SerializedName("source_branch") val sourceBranch: String?,
-        @SerializedName("project_id") val projectId: Int,
+        @SerializedName("project_id") val projectId: Long,
         @SerializedName("title") val title: String?,
         @SerializedName("state") val state: String?,
         @SerializedName("upvotes") val upvotes: Int,
         @SerializedName("downvotes") val downvotes: Int,
-        @SerializedName("author") val author: User?,
+        @SerializedName("author") val author: Author,
         @SerializedName("assignee") val assignee: User?,
         @SerializedName("source_project_id") val sourceProjectId: Int,
         @SerializedName("target_project_id") val targetProjectId: Int,

@@ -2,7 +2,7 @@ package ru.terrakok.gitlabclient.presentation.my.issues
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
-import ru.terrakok.gitlabclient.entity.target.issue.Issue
+import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.model.interactor.issue.IssuesInteractor
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.Paginator
@@ -26,7 +26,7 @@ class MyIssuesPresenter @Inject constructor(
 
     private val paginator = Paginator(
             { issuesInteractor.getMyIssues(initParams.createdByMe, it) },
-            object : Paginator.ViewController<Issue> {
+            object : Paginator.ViewController<TargetHeader> {
                 override fun showEmptyProgress(show: Boolean) {
                     viewState.showEmptyProgress(show)
                 }
@@ -47,7 +47,7 @@ class MyIssuesPresenter @Inject constructor(
                     viewState.showEmptyView(show)
                 }
 
-                override fun showData(show: Boolean, data: List<Issue>) {
+                override fun showData(show: Boolean, data: List<TargetHeader>) {
                     viewState.showIssues(show, data)
                 }
 
@@ -61,7 +61,7 @@ class MyIssuesPresenter @Inject constructor(
             }
     )
 
-    fun onIssueClick(issue: Issue) {}
+    fun onIssueClick(item: TargetHeader) {}
     fun refreshIssues() = paginator.refresh()
     fun loadNextIssuesPage() = paginator.loadNewPage()
 

@@ -106,9 +106,8 @@
     <string name="event_action_merged">merged</string>
 
     <!--My Merge Requests Screen-->
-    <string name="merge_request_opened">Opened</string>
-    <string name="merge_request_merged">Merged</string>
-    <string name="merge_request_closed">Closed</string>
+    <string name="merge_request_created_by_me">Created</string>
+    <string name="merge_request_assigned_by_me">Assigned</string>
     <string name="merge_request_item_opened_at_by_author" formatted="false">opened %s by %s</string>
 
     <!--Zero screen-->

@@ -4,7 +4,7 @@ import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
-import ru.terrakok.gitlabclient.entity.target.issue.Issue
+import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 15.06.17.
@@ -16,7 +16,7 @@ interface MyIssuesView : MvpView {
     fun showPageProgress(show: Boolean)
     fun showEmptyView(show: Boolean)
     fun showEmptyError(show: Boolean, message: String?)
-    fun showIssues(show: Boolean, issues: List<Issue>)
+    fun showIssues(show: Boolean, issues: List<TargetHeader>)
 
     @StateStrategyType(OneExecutionStateStrategy::class)
     fun showMessage(message: String)
