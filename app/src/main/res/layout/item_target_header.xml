@@ -52,6 +52,16 @@
         app:layout_constraintTop_toBottomOf="@id/titleTextView"
         tools:text="I am having the exact same issue when installing 9.4 from source. I can login via LDAP but I cannot login as the default …"/>
 
+    <com.google.android.flexbox.FlexboxLayout
+        android:id="@+id/badgesContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        app:flexWrap="wrap"
+        app:layout_constraintLeft_toLeftOf="@id/titleTextView"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/descriptionTextView"/>
+
     <TextView
         android:id="@+id/dateTextView"
         android:layout_width="wrap_content"
@@ -60,8 +70,24 @@
         android:textColor="@color/silver"
         android:textSize="14sp"
         app:layout_constraintLeft_toLeftOf="@id/titleTextView"
-        app:layout_constraintTop_toBottomOf="@+id/descriptionTextView"
+        app:layout_constraintTop_toBottomOf="@+id/badgesContainer"
         tools:text="29 min ago"/>
+
+    <TextView
+        android:id="@+id/commentsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:drawablePadding="4dp"
+        android:drawableStart="@drawable/ic_event_commented_24dp"
+        android:drawableTint="@color/colorPrimary"
+        android:gravity="top"
+        android:textColor="@color/colorPrimary"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:layout_constraintBaseline_toBaselineOf="@id/dateTextView"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:text="29"/>
 
     <View
         android:layout_width="0dp"

@@ -6,10 +6,7 @@ import io.reactivex.functions.BiFunction
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.PushDataRefType
 import ru.terrakok.gitlabclient.entity.Sort
-import ru.terrakok.gitlabclient.entity.app.target.AppTarget
-import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
-import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderIcon
-import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderTitle
+import ru.terrakok.gitlabclient.entity.app.target.*
 import ru.terrakok.gitlabclient.entity.event.Event
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.event.EventTarget
@@ -56,7 +53,7 @@ class EventRepository @Inject constructor(
                         Single.just(events),
                         getDistinctProjects(events),
                         BiFunction<List<Event>, Map<Long, Project>, List<TargetHeader>> { sourceEvents, projects ->
-                            sourceEvents.map { getTargetHeader(it, projects[it.projectId]?.nameWithNamespace ?: "project") }
+                            sourceEvents.map { getTargetHeader(it, projects[it.projectId]) }
                         }
                 )
             }
@@ -70,21 +67,26 @@ class EventRepository @Inject constructor(
                 .toMap { it.id }
     }
 
-    private fun getTargetHeader(event: Event, projectName: String):TargetHeader {
+    private fun getTargetHeader(event: Event, project: Project?): TargetHeader {
         val targetData = getTarget(event)
+        val badges = mutableListOf<TargetBadge>()
+        project?.let { badges.add(TargetBadge.Text(it.name, AppTarget.PROJECT, it.id)) }
+        badges.add(TargetBadge.Text(event.author.username, AppTarget.USER, event.author.id))
+
         return TargetHeader(
                 event.author,
                 getIcon(event.actionName),
                 TargetHeaderTitle.Event(
-                        event.authorUsername ?: "user",
+                        event.author.name,
                         event.actionName,
                         targetData.name,
-                        projectName
+                        project?.nameWithNamespace ?: ""
                 ),
                 getBody(event),
                 event.createdAt,
                 targetData.target,
-                targetData.id
+                targetData.id,
+                badges
         )
     }
 

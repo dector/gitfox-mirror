@@ -16,7 +16,7 @@ data class Issue(
         @SerializedName("title") val title: String?,
         @SerializedName("created_at") val createdAt: Date,
         @SerializedName("labels") val labels: List<String>,
-        @SerializedName("user_notes_count") val userNotesCount: Long,
+        @SerializedName("user_notes_count") val userNotesCount: Int,
         @SerializedName("due_date") val dueDate: String?,
         @SerializedName("web_url") val webUrl: String?,
         @SerializedName("confidential") val confidential: Boolean

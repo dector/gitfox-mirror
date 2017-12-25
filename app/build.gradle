@@ -103,6 +103,8 @@ dependencies {
     compile 'com.airbnb.android:lottie:2.1.0'
     //Date
     compile 'joda-time:joda-time:2.9.9'
+    //FlexBox Layout
+    compile 'com.google.android:flexbox:0.3.1'
 
     //JUnit
     testCompile "junit:junit:4.12"

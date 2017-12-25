@@ -4,10 +4,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import ru.terrakok.gitlabclient.entity.*
-import ru.terrakok.gitlabclient.entity.app.target.AppTarget
-import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
-import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderIcon
-import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderTitle
+import ru.terrakok.gitlabclient.entity.app.target.*
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
@@ -43,7 +40,7 @@ class IssueRepository @Inject constructor(
                         Single.just(issues),
                         getDistinctProjects(issues),
                         BiFunction<List<Issue>, Map<Long, Project>, List<TargetHeader>> { sourceIssues, projects ->
-                            sourceIssues.map { getTargetHeader(it, projects[it.projectId]?.nameWithNamespace ?: "project") }
+                            sourceIssues.map { getTargetHeader(it, projects[it.projectId]!!) }
                         }
                 )
             }
@@ -57,18 +54,26 @@ class IssueRepository @Inject constructor(
                 .toMap { it.id }
     }
 
-    private fun getTargetHeader(issue: Issue, projectName: String) = TargetHeader(
-            issue.author,
-            TargetHeaderIcon.NONE,
-            TargetHeaderTitle.Event(
-                    issue.author.username ?: issue.author.name ?: "user",
-                    EventAction.CREATED,
-                    "${AppTarget.ISSUE} #${issue.iid}",
-                    projectName
-            ),
-            issue.title,
-            issue.createdAt,
-            AppTarget.ISSUE,
-            issue.id
-    )
+    private fun getTargetHeader(issue: Issue, project: Project): TargetHeader {
+        val badges = mutableListOf<TargetBadge>()
+        badges.add(TargetBadge.Text(project.name, AppTarget.PROJECT, project.id))
+        badges.add(TargetBadge.Text(issue.author.username, AppTarget.USER, issue.author.id))
+        badges.add(TargetBadge.Comments(issue.userNotesCount))
+
+        return TargetHeader(
+                issue.author,
+                TargetHeaderIcon.NONE,
+                TargetHeaderTitle.Event(
+                        issue.author.name,
+                        EventAction.CREATED,
+                        "${AppTarget.ISSUE} #${issue.iid}",
+                        project.nameWithNamespace
+                ),
+                issue.title,
+                issue.createdAt,
+                AppTarget.ISSUE,
+                issue.id,
+                badges
+        )
+    }
 }
