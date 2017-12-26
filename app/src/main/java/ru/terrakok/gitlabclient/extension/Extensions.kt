@@ -182,7 +182,6 @@ fun TargetHeaderTitle.getHumanName(resources: Resources) = when (this) {
     }
     is TargetHeaderTitle.Todo -> {
         val actionName = action.getHumanName(resources)
-        val atProject = "${resources.getString(R.string.at)} $projectName"
         val author = if (isAuthorCurrentUser) {
             resources.getString(R.string.you).capitalize()
         } else {
@@ -200,17 +199,18 @@ fun TargetHeaderTitle.getHumanName(resources: Resources) = when (this) {
 
         when (action) {
             TodoAction.ASSIGNED -> {
-                "$author $actionName $targetName $atProject to $assignee"
+                "$author $actionName $targetName ${resources.getString(R.string.at)} $projectName ${resources.getString(R.string.to)} $assignee"
             }
-            TodoAction.DIRECTLY_ADDRESSED, TodoAction.MENTIONED -> {
-                "$author $actionName $assignee on $targetName $atProject"
+            TodoAction.DIRECTLY_ADDRESSED,
+            TodoAction.MENTIONED -> {
+                "$author $actionName $assignee ${resources.getString(R.string.on)} $targetName ${resources.getString(R.string.at)} $projectName"
             }
             TodoAction.MARKED -> {
-                "$author added a todo for $targetName $atProject"
+                "$author $actionName ${resources.getString(R.string.for_str)} $targetName ${resources.getString(R.string.at)} $projectName"
             }
             else -> {
                 Timber.e("Unsupported template for todo action=$actionName.")
-                "$author $actionName $targetName $assignee $atProject"
+                "$author $actionName $targetName $assignee ${resources.getString(R.string.at)}"
             }
         }
     }

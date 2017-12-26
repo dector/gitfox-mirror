@@ -5,6 +5,9 @@
     <string name="ok">OK</string>
     <string name="refresh">Refresh</string>
     <string name="at">at</string>
+    <string name="to">to</string>
+    <string name="on">on</string>
+    <string name="for_str">for</string>
     <string name="you">you</string>
     <string name="yourself">yourself</string>
 
@@ -125,7 +128,7 @@
     <string name="todo_action_assigned">assigned</string>
     <string name="todo_action_mentioned">mentioned</string>
     <string name="todo_action_build_failed">build failed</string>
-    <string name="todo_action_marked">marked</string>
+    <string name="todo_action_marked">added a todo</string>
     <string name="todo_action_approval_required">approval required</string>
     <string name="todo_action_directly_addressed">directly addressed</string>
 

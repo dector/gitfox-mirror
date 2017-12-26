@@ -2,10 +2,7 @@ package ru.terrakok.gitlabclient.model.repository.todo
 
 import ru.terrakok.gitlabclient.entity.Assignee
 import ru.terrakok.gitlabclient.entity.User
-import ru.terrakok.gitlabclient.entity.app.target.AppTarget
-import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
-import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderIcon
-import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderTitle
+import ru.terrakok.gitlabclient.entity.app.target.*
 import ru.terrakok.gitlabclient.entity.app.user.MyUserInfo
 import ru.terrakok.gitlabclient.entity.target.TargetType
 import ru.terrakok.gitlabclient.entity.todo.Todo
@@ -38,53 +35,47 @@ class TodoRepository @Inject constructor(
             pageSize: Int = defaultPageSize
     ) = api
             .getTodos(action, authorId, projectId, state, targetType, page, pageSize)
-            .map { todos ->
-                val items = mutableListOf<TargetHeader>()
-                todos.forEach {
-                    items.add(getTargetHeader(it, myUserInfo.user))
-                }
-                return@map items.toList()
-            }
+            .map { todos -> todos.map { getTargetHeader(it, myUserInfo.user) } }
             .subscribeOn(schedulers.io())
             .observeOn(schedulers.ui())
 
-    private fun getTargetHeader(todo: Todo, currentUser: User?): TargetHeader {
-        val assignee = getAssignee(todo, currentUser)
-        val appTarget = when (todo.targetType) {
-            TargetType.MERGE_REQUEST -> AppTarget.MERGE_REQUEST
-            TargetType.ISSUE -> AppTarget.ISSUE
-        }
-
-        return TargetHeader(
-                todo.author,
-                TargetHeaderIcon.NONE,
-                TargetHeaderTitle.Todo(
-                        todo.author.let { it.name ?: it.username } ?: "user",
-                        assignee?.let { it.name ?: it.username },
-                        todo.actionName,
-                        when (todo.targetType) {
-                            TargetType.MERGE_REQUEST -> "${AppTarget.MERGE_REQUEST} !${todo.target.iid}"
-                            TargetType.ISSUE -> "${AppTarget.ISSUE} #${todo.target.iid}"
-                        },
-                        todo.project.nameWithNamespace ?: "project",
-                        todo.author.id == currentUser?.id,
-                        assignee?.id == currentUser?.id
-                ),
-                todo.body,
-                todo.createdAt,
-                appTarget,
-                todo.target.id
-        )
-    }
-
-    private fun getAssignee(todo: Todo, currentUser: User?): Assignee? {
-        return if (todo.actionName != TodoAction.MARKED) {
-            currentUser?.let {
+    private fun getTargetHeader(todo: Todo, currentUser: User): TargetHeader {
+        val assignee = if (todo.actionName != TodoAction.MARKED) {
+            currentUser.let {
                 Assignee(it.id, it.state, it.name, it.webUrl, it.avatarUrl, it.username)
             }
         } else {
             null
         }
+        val appTarget = when (todo.targetType) {
+            TargetType.MERGE_REQUEST -> AppTarget.MERGE_REQUEST
+            TargetType.ISSUE -> AppTarget.ISSUE
+        }
+        val targetName = when (todo.targetType) {
+            TargetType.MERGE_REQUEST -> "${AppTarget.MERGE_REQUEST} !${todo.target.iid}"
+            TargetType.ISSUE -> "${AppTarget.ISSUE} #${todo.target.iid}"
+        }
+        val badges = mutableListOf<TargetBadge>()
+        badges.add(TargetBadge.Text(todo.project.name, AppTarget.PROJECT, todo.project.id))
+
+        return TargetHeader(
+                todo.author,
+                TargetHeaderIcon.NONE,
+                TargetHeaderTitle.Todo(
+                        todo.author.name,
+                        assignee?.name,
+                        todo.actionName,
+                        targetName,
+                        todo.project.nameWithNamespace,
+                        todo.author.id == currentUser.id,
+                        assignee?.id == currentUser.id
+                ),
+                todo.body,
+                todo.createdAt,
+                appTarget,
+                todo.target.id,
+                badges
+        )
     }
 
     fun markPendingTodoAsDone(id: Int) = api.markPendingTodoAsDone(id)
