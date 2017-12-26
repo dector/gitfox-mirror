@@ -18,6 +18,30 @@
     "role": "developer"
   },
   {
+    "name": "Artur Badretdinov",
+    "avatarUrl": "https://secure.gravatar.com/avatar/b438c8b238c833812f6eadebce50063f?s=180&d=identicon",
+    "gitlabId": 559497,
+    "role": "developer"
+  },
+  {
+    "name": "Ilya Gulya",
+    "avatarUrl": "https://secure.gravatar.com/avatar/1d1e894eef93d49b58aa3b39230d94dc?s=180&d=identicon",
+    "gitlabId": 1446627,
+    "role": "developer"
+  },
+  {
+    "name": "Vitalii Dmitriev",
+    "avatarUrl": "https://assets.gitlab-static.net/uploads/-/system/user/avatar/1396844/avatar.png",
+    "gitlabId": 1396844,
+    "role": "developer"
+  },
+  {
+    "name": "Eugene Tereshkov",
+    "avatarUrl": "https://assets.gitlab-static.net/uploads/-/system/user/avatar/1601949/avatar.png",
+    "gitlabId": 1601949,
+    "role": "developer"
+  },
+  {
     "name": "Ilyas Gaifullin",
     "avatarUrl": "https://mir-s3-cdn-cf.behance.net/user/230/e0e22a1584077.581bca76bcad5.jpeg",
     "role": "designer"
