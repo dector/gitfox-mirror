@@ -81,6 +81,7 @@
     <string name="time_ago" formatted="false">%s ago</string>
 
     <!--My Events Screen-->
+    <string name="full_event_target_user">user</string>
     <string name="full_event_target_project">project</string>
     <string name="full_event_target_issue">issue</string>
     <string name="full_event_target_merge_request">merge request</string>

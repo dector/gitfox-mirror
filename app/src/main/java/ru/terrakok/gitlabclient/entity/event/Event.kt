@@ -20,7 +20,7 @@ data class Event(
         @SerializedName("target_title") val targetTitle: String?,
         @SerializedName("created_at") val createdAt: Date,
         @SerializedName("author") val author: Author,
-        @SerializedName("author_username") val authorUsername: String?,
+        @SerializedName("author_username") val authorUsername: String,
         @SerializedName("push_data") val pushData: PushData?,
         @SerializedName("note") val note: Note?
 )

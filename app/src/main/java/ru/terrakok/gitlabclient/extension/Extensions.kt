@@ -26,7 +26,6 @@ import org.joda.time.format.DateTimeFormat
 import retrofit2.HttpException
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.develop.LicenseType
-import ru.terrakok.gitlabclient.entity.app.target.AppTarget
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderIcon
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderTitle
 import ru.terrakok.gitlabclient.entity.event.EventAction
@@ -130,17 +129,6 @@ fun Fragment.shareText(text: String?) {
                 getString(R.string.share_to)
         ))
     }
-}
-
-fun AppTarget.getHumanName(resources: Resources) = when (this) {
-    AppTarget.PROJECT -> resources.getString(R.string.full_event_target_project)
-    AppTarget.ISSUE -> resources.getString(R.string.full_event_target_issue)
-    AppTarget.MERGE_REQUEST -> resources.getString(R.string.full_event_target_merge_request)
-    AppTarget.BRANCH -> resources.getString(R.string.full_event_target_branch)
-    AppTarget.TAG -> resources.getString(R.string.full_event_target_branch)
-    AppTarget.COMMIT -> resources.getString(R.string.full_event_target_commit)
-    AppTarget.MILESTONE -> resources.getString(R.string.full_event_target_milestone)
-    AppTarget.SNIPPET -> resources.getString(R.string.full_event_target_snippet)
 }
 
 fun EventAction.getHumanName(resources: Resources) = when (this) {
