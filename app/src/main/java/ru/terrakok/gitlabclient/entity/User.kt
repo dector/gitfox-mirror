@@ -5,9 +5,9 @@ import java.util.*
 
 data class User(
         @SerializedName("id") val id: Long,
-        @SerializedName("username") val username: String?,
+        @SerializedName("username") val username: String,
         @SerializedName("email") val email: String?,
-        @SerializedName("name") val name: String?,
+        @SerializedName("name") val name: String,
         @SerializedName("state") val state: String?,
         @SerializedName("avatar_url") val avatarUrl: String?,
         @SerializedName("web_url") val webUrl: String?,

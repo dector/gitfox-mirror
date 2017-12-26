@@ -6,10 +6,7 @@ import io.reactivex.functions.BiFunction
 import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.Sort
-import ru.terrakok.gitlabclient.entity.app.target.AppTarget
-import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
-import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderIcon
-import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderTitle
+import ru.terrakok.gitlabclient.entity.app.target.*
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestScope
@@ -54,11 +51,7 @@ class MergeRequestRepository @Inject constructor(
                         Single.just(mrs),
                         getDistinctProjects(mrs),
                         BiFunction<List<MergeRequest>, Map<Long, Project>, List<TargetHeader>> { sourceMrs, projects ->
-                            val items = mutableListOf<TargetHeader>()
-                            sourceMrs.forEach {
-                                items.add(getTargetHeader(it, projects[it.projectId]?.nameWithNamespace ?: "project"))
-                            }
-                            return@BiFunction items
+                            sourceMrs.map { getTargetHeader(it, projects[it.projectId]!!) }
                         }
                 )
             }
@@ -72,18 +65,26 @@ class MergeRequestRepository @Inject constructor(
                 .toMap { it.id }
     }
 
-    private fun getTargetHeader(mr: MergeRequest, projectName: String) = TargetHeader(
-            mr.author,
-            TargetHeaderIcon.NONE,
-            TargetHeaderTitle.Event(
-                    mr.author.username ?: mr.author.name ?: "user",
-                    EventAction.CREATED,
-                    "${AppTarget.MERGE_REQUEST} !${mr.iid}",
-                    projectName
-            ),
-            mr.title,
-            mr.createdAt,
-            AppTarget.ISSUE,
-            mr.id
-    )
+    private fun getTargetHeader(mr: MergeRequest, project: Project): TargetHeader {
+        val badges = mutableListOf<TargetBadge>()
+        badges.add(TargetBadge.Text(project.name, AppTarget.PROJECT, project.id))
+        badges.add(TargetBadge.Text(mr.author.username, AppTarget.USER, mr.author.id))
+        badges.add(TargetBadge.Comments(mr.userNotesCount))
+
+        return TargetHeader(
+                mr.author,
+                TargetHeaderIcon.NONE,
+                TargetHeaderTitle.Event(
+                        mr.author.name,
+                        EventAction.CREATED,
+                        "${AppTarget.MERGE_REQUEST} !${mr.iid}",
+                        project.nameWithNamespace
+                ),
+                mr.title,
+                mr.createdAt,
+                AppTarget.ISSUE,
+                mr.id,
+                badges
+        )
+    }
 }

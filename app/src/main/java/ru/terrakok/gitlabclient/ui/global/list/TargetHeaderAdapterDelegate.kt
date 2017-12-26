@@ -4,8 +4,10 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegate
+import kotlinx.android.synthetic.main.item_target_badge.view.*
 import kotlinx.android.synthetic.main.item_target_header.view.*
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.entity.app.target.TargetBadge
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderIcon
 import ru.terrakok.gitlabclient.extension.*
@@ -48,6 +50,19 @@ class TargetHeaderAdapterDelegate(
 
             view.descriptionTextView.visible(item.body != null)
             view.iconImageView.visible(item.icon != TargetHeaderIcon.NONE)
+
+            view.commentsTextView.visible(false)
+            view.badgesContainer.removeAllViews()
+            item.badges.forEach { badge ->
+                if (badge is TargetBadge.Text) {
+                    val v = view.badgesContainer.inflate(R.layout.item_target_badge, false)
+                    v.textTextView.text = badge.text
+                    view.badgesContainer.addView(v)
+                } else if (badge is TargetBadge.Comments) {
+                    view.commentsTextView.text = badge.count.toString()
+                    view.commentsTextView.visible(true)
+                }
+            }
         }
     }
 }

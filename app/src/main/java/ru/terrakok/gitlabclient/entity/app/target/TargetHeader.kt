@@ -13,5 +13,6 @@ data class TargetHeader(
         val body: String?,
         val date: Date,
         val target: AppTarget,
-        val targetId: Long
+        val targetId: Long,
+        val badges: List<TargetBadge>
 )

@@ -5,6 +5,7 @@ import java.util.*
 
 data class Owner (
         @SerializedName("id") val id: Long,
-        @SerializedName("name") val name: String?,
+        @SerializedName("name") val name: String,
+        @SerializedName("username") val username: String,
         @SerializedName("created_at") val createdAt: Date?
 )

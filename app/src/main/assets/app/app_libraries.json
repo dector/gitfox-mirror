@@ -78,5 +78,10 @@
     "name": "JodaOrg / Joda-time",
     "url": "https://github.com/JodaOrg/joda-time",
     "license": "APACHE_2"
+  },
+  {
+    "name": "Google / Flexbox-layout",
+    "url": "https://github.com/google/flexbox-layout",
+    "license": "APACHE_2"
   }
 ]
