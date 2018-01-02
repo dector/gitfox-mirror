@@ -37,13 +37,15 @@ class ProjectAdapterDelegate(private val clickListener: (Project) -> Unit) : Ada
 
         fun bind(project: Project) {
             this.project = project
-            view.titleTV.text = project.nameWithNamespace
+            view.titleTextView.text = project.nameWithNamespace
 
-            view.descriptionTV.visibility = if (project.description.isNullOrEmpty()) View.GONE else View.VISIBLE
-            view.descriptionTV.text = project.description
+            view.descriptionTextView.visibility = if (project.description.isNullOrEmpty()) View.GONE else View.VISIBLE
+            view.descriptionTextView.text = project.description
 
-            view.starsTV.text = project.starCount.toString()
-            view.publicIV.setImageResource(when (project.visibility) {
+            view.starsTextView.text = project.starCount.toString()
+            view.forksTextView.text = project.forksCount.toString()
+
+            view.iconImageView.setImageResource(when (project.visibility) {
                 Visibility.PRIVATE -> R.drawable.ic_lock_white_18dp
                 Visibility.INTERNAL -> R.drawable.ic_security_white_24dp
                 else -> R.drawable.ic_globe_18dp
