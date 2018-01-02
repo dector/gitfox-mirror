@@ -59,7 +59,7 @@ class UserActivity : BaseActivity() {
     override fun onDestroy() {
         super.onDestroy()
 
-        if (isFinishing) Toothpick.closeScope(DI.PROJECT_SCOPE)
+        if (isFinishing) Toothpick.closeScope(DI.USER_SCOPE)
     }
 
     private val navigator = object : SupportAppNavigator(this, R.id.container) {
