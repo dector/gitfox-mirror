@@ -27,7 +27,7 @@ import ru.terrakok.gitlabclient.ui.global.BaseActivity
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.libraries.LibrariesFragment
 import ru.terrakok.gitlabclient.ui.main.MainFragment
-import ru.terrakok.gitlabclient.ui.project.ProjectInfoFragment
+import ru.terrakok.gitlabclient.ui.project.ProjectActivity
 import ru.terrakok.gitlabclient.ui.projects.ProjectsContainerFragment
 import ru.terrakok.gitlabclient.ui.user.UserActivity
 import toothpick.Toothpick
@@ -103,13 +103,13 @@ class MainActivity : BaseActivity(), LaunchView {
         override fun createActivityIntent(screenKey: String?, data: Any?): Intent? = when (screenKey) {
             Screens.AUTH_SCREEN -> Intent(this@MainActivity, AuthActivity::class.java)
             Screens.USER_INFO_SCREEN -> UserActivity.getStartIntent(data as Long, this@MainActivity)
+            Screens.PROJECT_INFO_SCREEN -> ProjectActivity.getStartIntent(data as Long, this@MainActivity)
             else -> null
         }
 
         override fun createFragment(screenKey: String?, data: Any?): Fragment? = when (screenKey) {
             Screens.MAIN_SCREEN -> MainFragment()
             Screens.PROJECTS_SCREEN -> ProjectsContainerFragment()
-            Screens.PROJECT_INFO_SCREEN -> ProjectInfoFragment.createNewInstance(data as Long)
             Screens.ABOUT_SCREEN -> AboutFragment()
             Screens.APP_LIBRARIES_SCREEN -> LibrariesFragment()
             else -> null

@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.ui.user
+package ru.terrakok.gitlabclient.ui.project
 
 import android.content.Context
 import android.content.Intent
@@ -11,9 +11,9 @@ import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
-import ru.terrakok.gitlabclient.toothpick.qualifier.UserId
+import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
 import ru.terrakok.gitlabclient.ui.global.BaseActivity
-import ru.terrakok.gitlabclient.ui.user.info.UserInfoFragment
+import ru.terrakok.gitlabclient.ui.project.info.ProjectInfoFragment
 import toothpick.Toothpick
 import toothpick.config.Module
 import javax.inject.Inject
@@ -21,28 +21,28 @@ import javax.inject.Inject
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 25.11.17.
  */
-class UserActivity : BaseActivity() {
+class ProjectActivity : BaseActivity() {
     @Inject lateinit var navigationHolder: NavigatorHolder
 
     override val layoutRes = R.layout.activity_container
-    private val userId get() = intent.getLongExtra(ARG_USER_ID, 0)
+    private val projectId get() = intent.getLongExtra(ARG_PROJECT_ID, 0)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Toothpick.inject(this, Toothpick.openScope(DI.APP_SCOPE))
         super.onCreate(savedInstanceState)
 
-        Toothpick.openScopes(DI.SERVER_SCOPE, DI.USER_SCOPE).apply {
+        Toothpick.openScopes(DI.SERVER_SCOPE, DI.PROJECT_SCOPE).apply {
             installModules(object : Module() {
                 init {
                     bind(PrimitiveWrapper::class.java)
-                            .withName(UserId::class.java)
-                            .toInstance(PrimitiveWrapper(userId))
+                            .withName(ProjectId::class.java)
+                            .toInstance(PrimitiveWrapper(projectId))
                 }
             })
         }
 
         if (savedInstanceState == null) {
-            navigator.applyCommand(Replace(Screens.USER_INFO_SCREEN, userId))
+            navigator.applyCommand(Replace(Screens.PROJECT_INFO_SCREEN, projectId))
         }
     }
 
@@ -67,16 +67,16 @@ class UserActivity : BaseActivity() {
         override fun createActivityIntent(screenKey: String?, data: Any?) = null
 
         override fun createFragment(screenKey: String?, data: Any?): Fragment? = when (screenKey) {
-            Screens.USER_INFO_SCREEN -> UserInfoFragment()
+            Screens.PROJECT_INFO_SCREEN -> ProjectInfoFragment()
             else -> null
         }
     }
 
     companion object {
-        private val ARG_USER_ID = "arg_user_id"
-        fun getStartIntent(userId: Long, context: Context) =
-                Intent(context, UserActivity::class.java).apply {
-                    putExtra(ARG_USER_ID, userId)
+        private val ARG_PROJECT_ID = "arg_project_id"
+        fun getStartIntent(projectId: Long, context: Context) =
+                Intent(context, ProjectActivity::class.java).apply {
+                    putExtra(ARG_PROJECT_ID, projectId)
                 }
     }
 }
