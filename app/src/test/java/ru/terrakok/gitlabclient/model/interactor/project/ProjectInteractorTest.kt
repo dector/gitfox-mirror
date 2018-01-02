@@ -22,7 +22,7 @@ class ProjectInteractorTest {
     fun get_single_project() {
         val projectId = 42L
         val testProject = Project(projectId, null, "", Visibility.PUBLIC, null, null,
-                null, null, null, null, null, "", null, false,
+                null, null, null, "", "", "", "", false,
                 0L, false, false, false, false, false, null, null, 0L, null, null, false, null, false,
                 0L, 0L, null, false, null, false, false, false)
 

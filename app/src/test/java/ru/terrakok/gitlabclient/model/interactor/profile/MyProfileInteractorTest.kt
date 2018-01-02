@@ -25,7 +25,7 @@ class MyProfileInteractorTest {
 
     @Before
     fun setUp() {
-        testUser = User(1L, null, null, null, null, null,
+        testUser = User(1L, "", null, "", null, null,
                 null, Date(), false, null, null, null, null, null,
                 null, null, Date(), Date(), 0L, 0L, Date(), null, false, false, false, false)
         testServer = "Test server"
