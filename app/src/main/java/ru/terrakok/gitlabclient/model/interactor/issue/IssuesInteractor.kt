@@ -1,6 +1,6 @@
 package ru.terrakok.gitlabclient.model.interactor.issue
 
-import ru.terrakok.gitlabclient.entity.IssueScope
+import ru.terrakok.gitlabclient.entity.issue.IssueScope
 import ru.terrakok.gitlabclient.model.repository.issue.IssueRepository
 import javax.inject.Inject
 

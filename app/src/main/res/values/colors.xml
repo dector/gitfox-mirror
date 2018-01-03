@@ -15,4 +15,13 @@
     <color name="silver">#6A8398</color>
     <color name="lightGrey">#f1f1f1</color>
 
+    <color name="green">#5AC54F</color>
+    <color name="lightGreen">#EEF9ED</color>
+
+    <color name="red">#F23117</color>
+    <color name="lightRed">#FDEAE7</color>
+
+    <color name="blue">#17d1f2</color>
+    <color name="lightBlue">#e7fafd</color>
+
 </resources>

@@ -67,9 +67,17 @@ class MergeRequestRepository @Inject constructor(
 
     private fun getTargetHeader(mr: MergeRequest, project: Project): TargetHeader {
         val badges = mutableListOf<TargetBadge>()
+        badges.add(TargetBadge.Status(when(mr.state) {
+            MergeRequestState.OPENED -> TargetBadgeStatus.OPENED
+            MergeRequestState.CLOSED -> TargetBadgeStatus.CLOSED
+            MergeRequestState.MERGED -> TargetBadgeStatus.MERGED
+        }))
         badges.add(TargetBadge.Text(project.name, AppTarget.PROJECT, project.id))
         badges.add(TargetBadge.Text(mr.author.username, AppTarget.USER, mr.author.id))
-        badges.add(TargetBadge.Comments(mr.userNotesCount))
+        badges.add(TargetBadge.Icon(TargetBadgeIcon.COMMENTS, mr.userNotesCount))
+        badges.add(TargetBadge.Icon(TargetBadgeIcon.UP_VOTES, mr.upvotes))
+        badges.add(TargetBadge.Icon(TargetBadgeIcon.DOWN_VOTES, mr.downvotes))
+        mr.labels.forEach { label -> badges.add(TargetBadge.Text(label)) }
 
         return TargetHeader(
                 mr.author,
@@ -84,6 +92,7 @@ class MergeRequestRepository @Inject constructor(
                 mr.createdAt,
                 AppTarget.ISSUE,
                 mr.id,
+                TargetInternal(mr.projectId, mr.iid),
                 badges
         )
     }

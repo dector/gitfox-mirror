@@ -3,9 +3,14 @@ package ru.terrakok.gitlabclient.model.repository.issue
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
-import ru.terrakok.gitlabclient.entity.*
+import ru.terrakok.gitlabclient.entity.OrderBy
+import ru.terrakok.gitlabclient.entity.Project
+import ru.terrakok.gitlabclient.entity.Sort
 import ru.terrakok.gitlabclient.entity.app.target.*
 import ru.terrakok.gitlabclient.entity.event.EventAction
+import ru.terrakok.gitlabclient.entity.issue.Issue
+import ru.terrakok.gitlabclient.entity.issue.IssueScope
+import ru.terrakok.gitlabclient.entity.issue.IssueState
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
@@ -56,9 +61,16 @@ class IssueRepository @Inject constructor(
 
     private fun getTargetHeader(issue: Issue, project: Project): TargetHeader {
         val badges = mutableListOf<TargetBadge>()
+        badges.add(TargetBadge.Status(when(issue.state) {
+            IssueState.OPENED -> TargetBadgeStatus.OPENED
+            IssueState.CLOSED -> TargetBadgeStatus.CLOSED
+        }))
         badges.add(TargetBadge.Text(project.name, AppTarget.PROJECT, project.id))
         badges.add(TargetBadge.Text(issue.author.username, AppTarget.USER, issue.author.id))
-        badges.add(TargetBadge.Comments(issue.userNotesCount))
+        badges.add(TargetBadge.Icon(TargetBadgeIcon.COMMENTS, issue.userNotesCount))
+        badges.add(TargetBadge.Icon(TargetBadgeIcon.UP_VOTES, issue.upvotes))
+        badges.add(TargetBadge.Icon(TargetBadgeIcon.DOWN_VOTES, issue.downvotes))
+        issue.labels.forEach { label -> badges.add(TargetBadge.Text(label)) }
 
         return TargetHeader(
                 issue.author,
@@ -73,6 +85,7 @@ class IssueRepository @Inject constructor(
                 issue.createdAt,
                 AppTarget.ISSUE,
                 issue.id,
+                TargetInternal(issue.projectId, issue.iid),
                 badges
         )
     }

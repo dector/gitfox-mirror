@@ -5,15 +5,22 @@ package ru.terrakok.gitlabclient.entity.app.target
  */
 sealed class TargetBadge(
         val target: AppTarget?,
-        val targetId: Long?
+        val targetId: Long?,
+        val internal: TargetInternal?
 ) {
     class Text(
             val text: String,
             target: AppTarget? = null,
-            targetId: Long? = null
-    ) : TargetBadge(target, targetId)
+            targetId: Long? = null,
+            internal: TargetInternal? = null
+    ) : TargetBadge(target, targetId, internal)
 
-    class Comments(
+    class Icon(
+            val icon: TargetBadgeIcon,
             val count: Int
-    ) : TargetBadge(null, null)
+    ) : TargetBadge(null, null, null)
+
+    class Status(
+            val status: TargetBadgeStatus
+    ) : TargetBadge(null, null, null)
 }

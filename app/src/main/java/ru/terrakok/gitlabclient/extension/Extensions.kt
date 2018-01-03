@@ -26,6 +26,7 @@ import org.joda.time.format.DateTimeFormat
 import retrofit2.HttpException
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.develop.LicenseType
+import ru.terrakok.gitlabclient.entity.app.target.TargetBadgeStatus
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderIcon
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderTitle
 import ru.terrakok.gitlabclient.entity.event.EventAction
@@ -177,6 +178,18 @@ fun LicenseType.getHumanName(resources: Resources) = when (this) {
     LicenseType.APACHE_2 -> resources.getString(R.string.library_license_APACHE_2)
     LicenseType.CUSTOM -> resources.getString(R.string.library_license_CUSTOM)
     LicenseType.NONE -> resources.getString(R.string.library_license_NONE)
+}
+
+fun TargetBadgeStatus.getHumanName(resources: Resources) = when (this) {
+    TargetBadgeStatus.OPENED -> resources.getString(R.string.target_status_opened)
+    TargetBadgeStatus.CLOSED -> resources.getString(R.string.target_status_closed)
+    TargetBadgeStatus.MERGED -> resources.getString(R.string.target_status_merged)
+}
+
+fun TargetBadgeStatus.getBadgeColors(resources: Resources) = when (this) {
+    TargetBadgeStatus.OPENED -> Pair(resources.color(R.color.green), resources.color(R.color.lightGreen))
+    TargetBadgeStatus.CLOSED -> Pair(resources.color(R.color.red), resources.color(R.color.lightRed))
+    TargetBadgeStatus.MERGED -> Pair(resources.color(R.color.blue), resources.color(R.color.lightBlue))
 }
 
 fun Fragment.sendEmail(email: String?) {

@@ -1,13 +1,16 @@
 package ru.terrakok.gitlabclient.ui.global.list
 
+import android.content.res.Resources
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegate
 import kotlinx.android.synthetic.main.item_target_badge.view.*
 import kotlinx.android.synthetic.main.item_target_header.view.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.target.TargetBadge
+import ru.terrakok.gitlabclient.entity.app.target.TargetBadgeIcon
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderIcon
 import ru.terrakok.gitlabclient.extension.*
@@ -36,6 +39,10 @@ class TargetHeaderAdapterDelegate(
 
         init {
             view.setOnClickListener { clickListener(item) }
+
+            (1..5).forEach {
+                view.badgesContainer.inflate(R.layout.item_target_badge, true)
+            }
         }
 
         fun bind(item: TargetHeader) {
@@ -51,16 +58,69 @@ class TargetHeaderAdapterDelegate(
             view.descriptionTextView.visible(item.body != null)
             view.iconImageView.visible(item.icon != TargetHeaderIcon.NONE)
 
+            bindBadges(item.badges, res)
+        }
+
+        private fun bindBadges(badges: List<TargetBadge>, res: Resources) {
             view.commentsTextView.visible(false)
-            view.badgesContainer.removeAllViews()
-            item.badges.forEach { badge ->
-                if (badge is TargetBadge.Text) {
-                    val v = view.badgesContainer.inflate(R.layout.item_target_badge, false)
-                    v.textTextView.text = badge.text
-                    view.badgesContainer.addView(v)
-                } else if (badge is TargetBadge.Comments) {
-                    view.commentsTextView.text = badge.count.toString()
-                    view.commentsTextView.visible(true)
+            view.commitsTextView.visible(false)
+            view.upVotesTextView.visible(false)
+            view.downVotesTextView.visible(false)
+
+            val badgeViewsCount = view.badgesContainer.childCount
+            val textBadgesCount = badges.count { it !is TargetBadge.Icon }
+            if (textBadgesCount > badgeViewsCount) {
+                (1..textBadgesCount - badgeViewsCount).forEach {
+                    view.badgesContainer.inflate(R.layout.item_target_badge, true)
+                }
+            }
+
+            (0 until view.badgesContainer.childCount).forEach { i ->
+                view.badgesContainer.getChildAt(i).visible(false)
+            }
+
+            var i = 0
+            badges.forEach { badge ->
+                when (badge) {
+                    is TargetBadge.Text -> {
+                        val badgeView = view.badgesContainer.getChildAt(i) as TextView
+                        badgeView.textTextView.text = badge.text
+                        badgeView.textTextView.setTextColor(res.color(R.color.colorPrimary))
+                        badgeView.textTextView.setBackgroundColor(res.color(R.color.colorPrimaryLight))
+                        badgeView.visible(true)
+                        i++
+                    }
+                    is TargetBadge.Status -> {
+                        val badgeView = view.badgesContainer.getChildAt(i) as TextView
+                        badgeView.textTextView.text = badge.status.getHumanName(res)
+                        val (textColor, bgColor) = badge.status.getBadgeColors(res)
+                        badgeView.textTextView.setTextColor(textColor)
+                        badgeView.textTextView.setBackgroundColor(bgColor)
+                        badgeView.visible(true)
+                        i++
+                    }
+                    is TargetBadge.Icon -> {
+                        if (badge.count > 0) {
+                            when (badge.icon) {
+                                TargetBadgeIcon.COMMENTS -> {
+                                    view.commentsTextView.text = badge.count.toString()
+                                    view.commentsTextView.visible(true)
+                                }
+                                TargetBadgeIcon.COMMITS -> {
+                                    view.commitsTextView.text = badge.count.toString()
+                                    view.commitsTextView.visible(true)
+                                }
+                                TargetBadgeIcon.UP_VOTES -> {
+                                    view.upVotesTextView.text = badge.count.toString()
+                                    view.upVotesTextView.visible(true)
+                                }
+                                TargetBadgeIcon.DOWN_VOTES -> {
+                                    view.downVotesTextView.text = badge.count.toString()
+                                    view.downVotesTextView.visible(true)
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

@@ -6,6 +6,9 @@ import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.entity.event.Event
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.event.EventTarget
+import ru.terrakok.gitlabclient.entity.issue.Issue
+import ru.terrakok.gitlabclient.entity.issue.IssueScope
+import ru.terrakok.gitlabclient.entity.issue.IssueState
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestScope
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
