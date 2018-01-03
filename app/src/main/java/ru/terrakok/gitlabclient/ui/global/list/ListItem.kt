@@ -9,7 +9,7 @@ import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
  */
 sealed class ListItem {
     class ProgressItem : ListItem()
-    class ProjectItem(val project: Project) : ListItem()
-    class AppLibraryItem(val item: AppLibrary) : ListItem()
-    class TargetHeaderItem(val item: TargetHeader) : ListItem()
+    data class ProjectItem(val project: Project) : ListItem()
+    data class AppLibraryItem(val item: AppLibrary) : ListItem()
+    data class TargetHeaderItem(val item: TargetHeader) : ListItem()
 }
