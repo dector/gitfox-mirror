@@ -47,7 +47,8 @@ interface GitlabApi {
 
     @GET("$API_PATH/projects/{id}")
     fun getProject(
-            @Path("id") id: Long
+            @Path("id") id: Long,
+            @Query("statistics") statistics: Boolean = true
     ): Single<Project>
 
     @GET("$API_PATH/projects/{id}/repository/files/{file_path}")

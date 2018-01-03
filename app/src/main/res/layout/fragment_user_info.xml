@@ -33,7 +33,8 @@
                     android:layout_height="48dp"
                     android:layout_margin="16dp"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:src="@drawable/default_img"/>
 
                 <TextView
                     android:id="@+id/usernameTextView"
