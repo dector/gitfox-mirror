@@ -15,4 +15,8 @@ object Screens {
     const val APP_LIBRARIES_SCREEN = "app libraries screen"
 
     const val USER_INFO_SCREEN = "user info screen"
+
+    const val MR_INFO_SCREEN = "merge request info screen"
+
+    const val ISSUE_INFO_SCREEN = "issue info screen"
 }

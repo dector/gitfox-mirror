@@ -4,6 +4,7 @@ import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
+import ru.terrakok.gitlabclient.extension.openInfo
 import ru.terrakok.gitlabclient.model.interactor.event.EventInteractor
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
@@ -64,7 +65,7 @@ class MyEventsPresenter @Inject constructor(
     )
 
     fun onMenuClick() = menuController.open()
-    fun onItemClick(item: TargetHeader) {}
+    fun onItemClick(item: TargetHeader) = item.openInfo(router)
     fun refreshEvents() = paginator.refresh()
     fun loadNextEventsPage() = paginator.loadNewPage()
 

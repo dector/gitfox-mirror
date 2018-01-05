@@ -24,6 +24,8 @@
         <activity android:name=".ui.auth.AuthActivity"/>
         <activity android:name=".ui.user.UserActivity"/>
         <activity android:name=".ui.project.ProjectActivity"/>
+        <activity android:name=".ui.mergerequest.MergeRequestActivity"/>
+        <activity android:name=".ui.issue.IssueActivity"/>
     </application>
 
 </manifest>

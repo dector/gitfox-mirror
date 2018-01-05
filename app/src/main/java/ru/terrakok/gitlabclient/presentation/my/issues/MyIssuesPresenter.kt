@@ -2,7 +2,9 @@ package ru.terrakok.gitlabclient.presentation.my.issues
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
+import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
+import ru.terrakok.gitlabclient.extension.openInfo
 import ru.terrakok.gitlabclient.model.interactor.issue.IssuesInteractor
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.Paginator
@@ -15,7 +17,8 @@ import javax.inject.Inject
 class MyIssuesPresenter @Inject constructor(
         private val initParams: InitParams,
         private val issuesInteractor: IssuesInteractor,
-        private val errorHandler: ErrorHandler
+        private val errorHandler: ErrorHandler,
+        private val router: Router
 ) : MvpPresenter<MyIssuesView>() {
     data class InitParams(val createdByMe: Boolean)
 
@@ -61,7 +64,7 @@ class MyIssuesPresenter @Inject constructor(
             }
     )
 
-    fun onIssueClick(item: TargetHeader) {}
+    fun onIssueClick(item: TargetHeader) = item.openInfo(router)
     fun refreshIssues() = paginator.refresh()
     fun loadNextIssuesPage() = paginator.loadNewPage()
 

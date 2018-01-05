@@ -24,11 +24,11 @@ import io.reactivex.disposables.Disposable
 import org.joda.time.DateTimeZone
 import org.joda.time.format.DateTimeFormat
 import retrofit2.HttpException
+import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.app.develop.LicenseType
-import ru.terrakok.gitlabclient.entity.app.target.TargetBadgeStatus
-import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderIcon
-import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderTitle
+import ru.terrakok.gitlabclient.entity.app.target.*
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import timber.log.Timber
@@ -227,4 +227,31 @@ fun ImageView.loadRoundedImage(
                     }
                 }
             })
+}
+
+fun TargetHeader.openInfo(router: Router) {
+    when(target) {
+        AppTarget.PROJECT -> {
+            router.navigateTo(Screens.PROJECT_INFO_SCREEN, targetId)
+        }
+        AppTarget.USER -> {
+            router.navigateTo(Screens.USER_INFO_SCREEN, targetId)
+        }
+        AppTarget.MERGE_REQUEST -> {
+            internal?.let { targetInternal ->
+                router.navigateTo(
+                        Screens.MR_INFO_SCREEN,
+                        Pair(targetInternal.targetIid, targetInternal.projectId)
+                )
+            }
+        }
+        AppTarget.ISSUE -> {
+            internal?.let { targetInternal ->
+                router.navigateTo(
+                        Screens.MR_INFO_SCREEN,
+                        Pair(targetInternal.targetIid, targetInternal.projectId)
+                )
+            }
+        }
+    }
 }

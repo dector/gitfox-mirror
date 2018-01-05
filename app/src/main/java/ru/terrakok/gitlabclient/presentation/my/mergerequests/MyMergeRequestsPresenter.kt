@@ -2,7 +2,9 @@ package ru.terrakok.gitlabclient.presentation.my.mergerequests
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
+import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
+import ru.terrakok.gitlabclient.extension.openInfo
 import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestsInteractor
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.Paginator
@@ -12,7 +14,8 @@ import javax.inject.Inject
 class MyMergeRequestsPresenter @Inject constructor(
         private val initParams: InitParams,
         private val interactor: MergeRequestsInteractor,
-        private val errorHandler: ErrorHandler
+        private val errorHandler: ErrorHandler,
+        private val router: Router
 ) : MvpPresenter<MyMergeRequestListView>() {
     data class InitParams(val createdByMe: Boolean)
 
@@ -58,7 +61,7 @@ class MyMergeRequestsPresenter @Inject constructor(
             }
     )
 
-    fun onMergeRequestClick(mergeRequest: TargetHeader) {}
+    fun onMergeRequestClick(item: TargetHeader) = item.openInfo(router)
     fun refreshMergeRequests() = paginator.refresh()
     fun loadNextMergeRequestsPage() = paginator.loadNewPage()
 
