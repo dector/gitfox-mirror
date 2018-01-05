@@ -3,6 +3,7 @@ package ru.terrakok.gitlabclient.presentation.my.mergerequests
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import ru.terrakok.cicerone.Router
+import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.extension.openInfo
 import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestsInteractor
@@ -62,6 +63,7 @@ class MyMergeRequestsPresenter @Inject constructor(
     )
 
     fun onMergeRequestClick(item: TargetHeader) = item.openInfo(router)
+    fun onUserClick(userId: Long) = router.navigateTo(Screens.USER_INFO_SCREEN, userId)
     fun refreshMergeRequests() = paginator.refresh()
     fun loadNextMergeRequestsPage() = paginator.loadNewPage()
 

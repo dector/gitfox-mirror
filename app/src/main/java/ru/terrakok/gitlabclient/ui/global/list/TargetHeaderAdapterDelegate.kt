@@ -19,6 +19,7 @@ import ru.terrakok.gitlabclient.extension.*
  * @author Konstantin Tskhovrebov (aka terrakok) on 18.06.17.
  */
 class TargetHeaderAdapterDelegate(
+        private val avatarClickListener: (Long) -> Unit,
         private val clickListener: (TargetHeader) -> Unit
 ) : AdapterDelegate<MutableList<ListItem>>() {
 
@@ -26,7 +27,7 @@ class TargetHeaderAdapterDelegate(
             items[position] is ListItem.TargetHeaderItem
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder =
-            TargetHeaderViewHolder(parent.inflate(R.layout.item_target_header), clickListener)
+            TargetHeaderViewHolder(parent.inflate(R.layout.item_target_header), avatarClickListener, clickListener)
 
     override fun onBindViewHolder(items: MutableList<ListItem>,
                                   position: Int,
@@ -34,11 +35,16 @@ class TargetHeaderAdapterDelegate(
                                   payloads: MutableList<Any>) =
             (viewHolder as TargetHeaderViewHolder).bind((items[position] as ListItem.TargetHeaderItem).item)
 
-    private class TargetHeaderViewHolder(val view: View, clickListener: (TargetHeader) -> Unit) : RecyclerView.ViewHolder(view) {
+    private class TargetHeaderViewHolder(
+            private val view: View,
+            private val avatarClickListener: (Long) -> Unit,
+            private val clickListener: (TargetHeader) -> Unit
+    ) : RecyclerView.ViewHolder(view) {
         private lateinit var item: TargetHeader
 
         init {
             view.setOnClickListener { clickListener(item) }
+            view.avatarImageView.setOnClickListener { avatarClickListener(item.author.id) }
 
             (1..5).forEach {
                 view.badgesContainer.inflate(R.layout.item_target_badge, true)

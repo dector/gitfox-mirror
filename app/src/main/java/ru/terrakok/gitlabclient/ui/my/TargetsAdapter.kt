@@ -10,12 +10,13 @@ import ru.terrakok.gitlabclient.ui.global.list.ProgressAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.TargetHeaderAdapterDelegate
 
 class TargetsAdapter(
+        userClickListener: (Long) -> Unit,
         clickListener: (TargetHeader) -> Unit,
         private val nextListener: () -> Unit
 ) : ListDelegationAdapter<MutableList<ListItem>>() {
     init {
         items = mutableListOf()
-        delegatesManager.addDelegate(TargetHeaderAdapterDelegate(clickListener))
+        delegatesManager.addDelegate(TargetHeaderAdapterDelegate(userClickListener, clickListener))
         delegatesManager.addDelegate(ProgressAdapterDelegate())
     }
 

@@ -3,6 +3,7 @@ package ru.terrakok.gitlabclient.presentation.my.issues
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import ru.terrakok.cicerone.Router
+import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.extension.openInfo
 import ru.terrakok.gitlabclient.model.interactor.issue.IssuesInteractor
@@ -65,6 +66,7 @@ class MyIssuesPresenter @Inject constructor(
     )
 
     fun onIssueClick(item: TargetHeader) = item.openInfo(router)
+    fun onUserClick(userId: Long) = router.navigateTo(Screens.USER_INFO_SCREEN, userId)
     fun refreshIssues() = paginator.refresh()
     fun loadNextIssuesPage() = paginator.loadNewPage()
 
