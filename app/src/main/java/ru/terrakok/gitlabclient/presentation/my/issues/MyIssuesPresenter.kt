@@ -6,7 +6,7 @@ import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.extension.openInfo
-import ru.terrakok.gitlabclient.model.interactor.issue.IssuesInteractor
+import ru.terrakok.gitlabclient.model.interactor.issue.IssueInteractor
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 import javax.inject.Inject
@@ -17,7 +17,7 @@ import javax.inject.Inject
 @InjectViewState
 class MyIssuesPresenter @Inject constructor(
         private val initParams: InitParams,
-        private val issuesInteractor: IssuesInteractor,
+        private val issueInteractor: IssueInteractor,
         private val errorHandler: ErrorHandler,
         private val router: Router
 ) : MvpPresenter<MyIssuesView>() {
@@ -29,7 +29,7 @@ class MyIssuesPresenter @Inject constructor(
     }
 
     private val paginator = Paginator(
-            { issuesInteractor.getMyIssues(initParams.createdByMe, it) },
+            { issueInteractor.getMyIssues(initParams.createdByMe, it) },
             object : Paginator.ViewController<TargetHeader> {
                 override fun showEmptyProgress(show: Boolean) {
                     viewState.showEmptyProgress(show)

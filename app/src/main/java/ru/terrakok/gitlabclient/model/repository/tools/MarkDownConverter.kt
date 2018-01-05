@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.model.interactor.project
+package ru.terrakok.gitlabclient.model.repository.tools
 
 import com.commonsware.cwac.anddown.AndDown
 

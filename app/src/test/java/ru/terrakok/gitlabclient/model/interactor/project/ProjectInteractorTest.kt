@@ -10,6 +10,8 @@ import ru.terrakok.gitlabclient.entity.File
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.Visibility
 import ru.terrakok.gitlabclient.model.repository.project.ProjectRepository
+import ru.terrakok.gitlabclient.model.repository.tools.Base64Tools
+import ru.terrakok.gitlabclient.model.repository.tools.MarkDownConverter
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 28.05.17.

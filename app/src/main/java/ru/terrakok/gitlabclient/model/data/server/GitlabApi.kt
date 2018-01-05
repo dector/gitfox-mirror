@@ -108,7 +108,7 @@ interface GitlabApi {
     ): Single<List<MergeRequest>>
 
     fun getProjectMergeRequests(
-            @Path("project_id") projectId: Int,
+            @Path("project_id") projectId: Long,
             @Query("state") state: MergeRequestState?,
             @Query("milestone") milestone: String?,
             @Query("view") viewType: MergeRequestViewType?,
@@ -127,8 +127,8 @@ interface GitlabApi {
 
     @GET("$API_PATH/projects/{project_id}/merge_requests/{merge_request_id}")
     fun getMergeRequest(
-            @Path("project_id") projectId: Int,
-            @Path("merge_request_id") mergeRequestId: Int
+            @Path("project_id") projectId: Long,
+            @Path("merge_request_id") mergeRequestId: Long
     ): Single<MergeRequest>
 
     @GET("$API_PATH/users/{user_id}")

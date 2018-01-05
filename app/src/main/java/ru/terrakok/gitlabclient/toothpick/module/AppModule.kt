@@ -11,9 +11,9 @@ import ru.terrakok.gitlabclient.model.data.auth.AuthHolder
 import ru.terrakok.gitlabclient.model.data.storage.Prefs
 import ru.terrakok.gitlabclient.model.data.storage.RawAppData
 import ru.terrakok.gitlabclient.model.interactor.app.AppInfoInteractor
-import ru.terrakok.gitlabclient.model.interactor.project.Base64Tools
-import ru.terrakok.gitlabclient.model.interactor.project.MarkDownConverter
 import ru.terrakok.gitlabclient.model.repository.app.AppInfoRepository
+import ru.terrakok.gitlabclient.model.repository.tools.Base64Tools
+import ru.terrakok.gitlabclient.model.repository.tools.MarkDownConverter
 import ru.terrakok.gitlabclient.model.system.AppSchedulers
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider

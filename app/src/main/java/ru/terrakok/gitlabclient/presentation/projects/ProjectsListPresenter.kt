@@ -5,7 +5,7 @@ import com.arellomobile.mvp.MvpPresenter
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.Project
-import ru.terrakok.gitlabclient.model.interactor.projects.MainProjectsListInteractor
+import ru.terrakok.gitlabclient.model.interactor.project.ProjectInteractor
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
@@ -20,7 +20,7 @@ import javax.inject.Inject
 class ProjectsListPresenter @Inject constructor(
         @ProjectListMode private val modeWrapper: PrimitiveWrapper<Int>,
         private val router: Router,
-        private val mainProjectsListInteractor: MainProjectsListInteractor,
+        private val interactor: ProjectInteractor,
         private val errorHandler: ErrorHandler
 ) : MvpPresenter<ProjectsListView>() {
 
@@ -74,9 +74,9 @@ class ProjectsListPresenter @Inject constructor(
     )
 
     private fun getProjectsSingle(page: Int) = when (mode) {
-        STARRED_PROJECTS -> mainProjectsListInteractor.getStarredProjects(page)
-        MY_PROJECTS -> mainProjectsListInteractor.getMyProjects(page)
-        else -> mainProjectsListInteractor.getMainProjects(page)
+        STARRED_PROJECTS -> interactor.getStarredProjects(page)
+        MY_PROJECTS -> interactor.getMyProjects(page)
+        else -> interactor.getMainProjects(page)
     }
 
     override fun onDestroy() {

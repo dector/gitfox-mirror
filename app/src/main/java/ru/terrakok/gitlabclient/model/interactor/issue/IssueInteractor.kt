@@ -7,7 +7,7 @@ import javax.inject.Inject
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 15.06.17.
  */
-class IssuesInteractor @Inject constructor(
+class IssueInteractor @Inject constructor(
         private val issueRepository: IssueRepository
 ) {
     fun getMyIssues(

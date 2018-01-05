@@ -96,4 +96,12 @@ class MergeRequestRepository @Inject constructor(
                 badges
         )
     }
+
+    fun getMergeRequest(
+            projectId: Long,
+            mergeRequestId: Long
+    ) = api
+            .getMergeRequest(projectId, mergeRequestId)
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
 }

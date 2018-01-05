@@ -6,7 +6,7 @@ import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.extension.openInfo
-import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestsInteractor
+import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestInteractor
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 import javax.inject.Inject
@@ -14,7 +14,7 @@ import javax.inject.Inject
 @InjectViewState
 class MyMergeRequestsPresenter @Inject constructor(
         private val initParams: InitParams,
-        private val interactor: MergeRequestsInteractor,
+        private val interactor: MergeRequestInteractor,
         private val errorHandler: ErrorHandler,
         private val router: Router
 ) : MvpPresenter<MyMergeRequestListView>() {
