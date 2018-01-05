@@ -29,6 +29,7 @@ import ru.terrakok.gitlabclient.entity.app.develop.LicenseType
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderIcon
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderTitle
 import ru.terrakok.gitlabclient.entity.event.EventAction
+import ru.terrakok.gitlabclient.entity.todo.TodoAction
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import timber.log.Timber
 import java.io.IOException
@@ -154,21 +155,64 @@ fun EventAction.getHumanName(resources: Resources) = when (this) {
 fun TargetHeaderIcon.getIcon() = when (this) {
     TargetHeaderIcon.CREATED -> R.drawable.ic_event_created_24dp
     TargetHeaderIcon.JOINED -> R.drawable.ic_event_joined_24dp
-    TargetHeaderIcon.COMMENTED  -> R.drawable.ic_event_commented_24dp
-    TargetHeaderIcon.MERGED  -> R.drawable.ic_event_merged_24dp
+    TargetHeaderIcon.COMMENTED -> R.drawable.ic_event_commented_24dp
+    TargetHeaderIcon.MERGED -> R.drawable.ic_event_merged_24dp
     TargetHeaderIcon.CLOSED -> R.drawable.ic_event_closed_24dp
-    TargetHeaderIcon.DESTROYED  -> R.drawable.ic_event_destroyed_24dp
+    TargetHeaderIcon.DESTROYED -> R.drawable.ic_event_destroyed_24dp
     TargetHeaderIcon.EXPIRED -> R.drawable.ic_event_expired_24dp
     TargetHeaderIcon.LEFT -> R.drawable.ic_event_left_24dp
-    TargetHeaderIcon.REOPENED  -> R.drawable.ic_event_reopened_24dp
-    TargetHeaderIcon.PUSHED  -> R.drawable.ic_event_pushed_24dp
+    TargetHeaderIcon.REOPENED -> R.drawable.ic_event_reopened_24dp
+    TargetHeaderIcon.PUSHED -> R.drawable.ic_event_pushed_24dp
     TargetHeaderIcon.UPDATED -> R.drawable.ic_event_updated_24dp
     TargetHeaderIcon.NONE -> R.drawable.ic_event_created_24dp
 }
 
-fun TargetHeaderTitle.getHumanName(resources: Resources) = when(this) {
+fun TodoAction.getHumanName(resources: Resources): String = when (this) {
+    TodoAction.APPROVAL_REQUIRED -> resources.getString(R.string.todo_action_approval_required)
+    TodoAction.ASSIGNED -> resources.getString(R.string.todo_action_assigned)
+    TodoAction.BUILD_FAILED -> resources.getString(R.string.todo_action_build_failed)
+    TodoAction.DIRECTLY_ADDRESSED -> resources.getString(R.string.todo_action_directly_addressed)
+    TodoAction.MARKED -> resources.getString(R.string.todo_action_marked)
+    TodoAction.MENTIONED -> resources.getString(R.string.todo_action_mentioned)
+}
+
+fun TargetHeaderTitle.getHumanName(resources: Resources) = when (this) {
     is TargetHeaderTitle.Event -> {
         "$userName ${action.getHumanName(resources)} $targetName ${resources.getString(R.string.at)} $projectName"
+    }
+    is TargetHeaderTitle.Todo -> {
+        val actionName = action.getHumanName(resources)
+        val author = if (isAuthorCurrentUser) {
+            resources.getString(R.string.you).capitalize()
+        } else {
+            authorUserName
+        }
+        val assignee = if (isAssigneeCurrentUser) {
+            if (isAuthorCurrentUser) {
+                resources.getString(R.string.yourself)
+            } else {
+                resources.getString(R.string.you)
+            }
+        } else {
+            assigneeUserName
+        }
+
+        when (action) {
+            TodoAction.ASSIGNED -> {
+                "$author $actionName $targetName ${resources.getString(R.string.at)} $projectName ${resources.getString(R.string.to)} $assignee"
+            }
+            TodoAction.DIRECTLY_ADDRESSED,
+            TodoAction.MENTIONED -> {
+                "$author $actionName $assignee ${resources.getString(R.string.on)} $targetName ${resources.getString(R.string.at)} $projectName"
+            }
+            TodoAction.MARKED -> {
+                "$author $actionName ${resources.getString(R.string.for_str)} $targetName ${resources.getString(R.string.at)} $projectName"
+            }
+            else -> {
+                Timber.e("Unsupported template for todo action=$actionName.")
+                "$author $actionName $targetName $assignee ${resources.getString(R.string.at)}"
+            }
+        }
     }
 }
 

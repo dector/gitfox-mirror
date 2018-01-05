@@ -1,7 +1,6 @@
 package ru.terrakok.gitlabclient.toothpick.module
 
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.interactor.auth.AuthInteractor
@@ -12,6 +11,7 @@ import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestsInter
 import ru.terrakok.gitlabclient.model.interactor.profile.MyProfileInteractor
 import ru.terrakok.gitlabclient.model.interactor.project.ProjectInteractor
 import ru.terrakok.gitlabclient.model.interactor.projects.MainProjectsListInteractor
+import ru.terrakok.gitlabclient.model.interactor.todo.TodoListInteractor
 import ru.terrakok.gitlabclient.model.interactor.user.UserInteractor
 import ru.terrakok.gitlabclient.model.repository.auth.AuthRepository
 import ru.terrakok.gitlabclient.model.repository.event.EventRepository
@@ -19,9 +19,11 @@ import ru.terrakok.gitlabclient.model.repository.issue.IssueRepository
 import ru.terrakok.gitlabclient.model.repository.mergerequest.MergeRequestRepository
 import ru.terrakok.gitlabclient.model.repository.profile.ProfileRepository
 import ru.terrakok.gitlabclient.model.repository.project.ProjectRepository
+import ru.terrakok.gitlabclient.model.repository.todo.TodoRepository
 import ru.terrakok.gitlabclient.model.repository.user.UserRepository
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.toothpick.provider.ApiProvider
+import ru.terrakok.gitlabclient.toothpick.provider.GsonProvider
 import ru.terrakok.gitlabclient.toothpick.provider.OkHttpClientProvider
 import ru.terrakok.gitlabclient.toothpick.qualifier.ServerPath
 import toothpick.config.Module
@@ -33,7 +35,7 @@ class ServerModule(serverUrl: String) : Module() {
     init {
         //Network
         bind(String::class.java).withName(ServerPath::class.java).toInstance(serverUrl)
-        bind(Gson::class.java).toInstance(GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create())
+        bind(Gson::class.java).toProvider(GsonProvider::class.java).singletonInScope()
         bind(OkHttpClient::class.java).toProvider(OkHttpClientProvider::class.java).singletonInScope()
         bind(GitlabApi::class.java).toProvider(ApiProvider::class.java).singletonInScope()
 
@@ -74,5 +76,9 @@ class ServerModule(serverUrl: String) : Module() {
         //User info
         bind(UserRepository::class.java)
         bind(UserInteractor::class.java)
+
+        //Todos
+        bind(TodoRepository::class.java)
+        bind(TodoListInteractor::class.java)
     }
 }
