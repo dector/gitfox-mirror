@@ -24,10 +24,11 @@ import io.reactivex.disposables.Disposable
 import org.joda.time.DateTimeZone
 import org.joda.time.format.DateTimeFormat
 import retrofit2.HttpException
+import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.app.develop.LicenseType
-import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderIcon
-import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderTitle
+import ru.terrakok.gitlabclient.entity.app.target.*
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.todo.TodoAction
 import ru.terrakok.gitlabclient.model.system.ResourceManager
@@ -223,6 +224,18 @@ fun LicenseType.getHumanName(resources: Resources) = when (this) {
     LicenseType.NONE -> resources.getString(R.string.library_license_NONE)
 }
 
+fun TargetBadgeStatus.getHumanName(resources: Resources) = when (this) {
+    TargetBadgeStatus.OPENED -> resources.getString(R.string.target_status_opened)
+    TargetBadgeStatus.CLOSED -> resources.getString(R.string.target_status_closed)
+    TargetBadgeStatus.MERGED -> resources.getString(R.string.target_status_merged)
+}
+
+fun TargetBadgeStatus.getBadgeColors(resources: Resources) = when (this) {
+    TargetBadgeStatus.OPENED -> Pair(resources.color(R.color.green), resources.color(R.color.lightGreen))
+    TargetBadgeStatus.CLOSED -> Pair(resources.color(R.color.red), resources.color(R.color.lightRed))
+    TargetBadgeStatus.MERGED -> Pair(resources.color(R.color.blue), resources.color(R.color.lightBlue))
+}
+
 fun Fragment.sendEmail(email: String?) {
     if (email != null) {
         startActivity(Intent.createChooser(
@@ -258,4 +271,31 @@ fun ImageView.loadRoundedImage(
                     }
                 }
             })
+}
+
+fun TargetHeader.openInfo(router: Router) {
+    when(target) {
+        AppTarget.PROJECT -> {
+            router.navigateTo(Screens.PROJECT_INFO_SCREEN, targetId)
+        }
+        AppTarget.USER -> {
+            router.navigateTo(Screens.USER_INFO_SCREEN, targetId)
+        }
+        AppTarget.MERGE_REQUEST -> {
+            internal?.let { targetInternal ->
+                router.navigateTo(
+                        Screens.MR_INFO_SCREEN,
+                        Pair(targetInternal.targetIid, targetInternal.projectId)
+                )
+            }
+        }
+        AppTarget.ISSUE -> {
+            internal?.let { targetInternal ->
+                router.navigateTo(
+                        Screens.MR_INFO_SCREEN,
+                        Pair(targetInternal.targetIid, targetInternal.projectId)
+                )
+            }
+        }
+    }
 }

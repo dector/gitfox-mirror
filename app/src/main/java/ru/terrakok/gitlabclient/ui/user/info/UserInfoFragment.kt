@@ -13,11 +13,8 @@ import ru.terrakok.gitlabclient.extension.tryOpenLink
 import ru.terrakok.gitlabclient.presentation.user.UserInfoPresenter
 import ru.terrakok.gitlabclient.presentation.user.UserInfoView
 import ru.terrakok.gitlabclient.toothpick.DI
-import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
-import ru.terrakok.gitlabclient.toothpick.qualifier.UserId
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import toothpick.Toothpick
-import toothpick.config.Module
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 25.11.17.
@@ -30,20 +27,10 @@ class UserInfoFragment : BaseFragment(), UserInfoView {
     @InjectPresenter lateinit var presenter: UserInfoPresenter
 
     @ProvidePresenter
-    fun providePresenter(): UserInfoPresenter {
-        val scopeName = "UserInfoFragment_${hashCode()}"
-        val scope = Toothpick.openScopes(DI.SERVER_SCOPE, scopeName)
-        scope.installModules(object : Module() {
-            init {
-                bind(PrimitiveWrapper::class.java)
-                        .withName(UserId::class.java)
-                        .toInstance(PrimitiveWrapper(arguments?.getLong(ARG_USER_ID)))
-            }
-        })
-        return scope.getInstance(UserInfoPresenter::class.java).also {
-            Toothpick.closeScope(scopeName)
-        }
-    }
+    fun providePresenter(): UserInfoPresenter =
+            Toothpick
+                    .openScope(DI.USER_SCOPE)
+                    .getInstance(UserInfoPresenter::class.java)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -92,14 +79,5 @@ class UserInfoFragment : BaseFragment(), UserInfoView {
 
     override fun showMessage(msg: String) {
         showSnackMessage(msg)
-    }
-
-    companion object {
-        private val ARG_USER_ID = "arg_user_id"
-        fun createNewInstance(userId: Long) = UserInfoFragment().apply {
-            arguments = Bundle().apply {
-                putLong(ARG_USER_ID, userId)
-            }
-        }
     }
 }

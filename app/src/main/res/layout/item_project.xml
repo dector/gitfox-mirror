@@ -18,85 +18,81 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
     <ImageView
-        android:id="@+id/publicIV"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="28dp"
+        android:id="@+id/iconImageView"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
         android:background="@drawable/circle"
-        android:padding="3dp"
-        android:tint="@color/white"
+        android:padding="2dp"
         app:layout_constraintLeft_toLeftOf="@id/avatarImageView"
         app:layout_constraintTop_toTopOf="@id/avatarImageView"
-        app:srcCompat="@drawable/ic_globe_18dp"/>
+        app:tint="@color/white"
+        tools:src="@drawable/ic_security_white_24dp"/>
 
     <TextView
-        android:id="@+id/titleTV"
+        android:id="@+id/titleTextView"
         style="@style/TextTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginRight="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="0dp"
-        android:ellipsize="end"
-        android:lines="1"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintLeft_toRightOf="@+id/avatarImageView"
-        app:layout_constraintRight_toLeftOf="@+id/starIcon"
-        app:layout_constraintTop_toTopOf="@+id/avatarImageView"
-        app:layout_constraintVertical_chainStyle="packed"
-        tools:text="Title"/>
-
-    <ImageView
-        android:id="@+id/starIcon"
-        android:layout_width="18dp"
-        android:layout_height="18dp"
-        android:layout_marginEnd="8dp"
-        android:tint="@color/colorPrimary"
-        app:layout_constraintBottom_toBottomOf="@+id/titleTV"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintRight_toLeftOf="@+id/starsTV"
-        app:layout_constraintTop_toTopOf="@+id/titleTV"
-        app:srcCompat="@drawable/ic_star_black_24dp"/>
-
-    <TextView
-        android:id="@+id/starsTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:lines="1"
-        android:textColor="@color/colorPrimary"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="@+id/titleTV"
+        android:layout_marginStart="16dp"
+        app:layout_constraintLeft_toRightOf="@id/avatarImageView"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/titleTV"
-        tools:text="1 200"/>
+        app:layout_constraintTop_toTopOf="@id/avatarImageView"
+        tools:text="GitLab Community Edition by Annabel Dunstone Gray"/>
 
     <TextView
-        android:id="@+id/descriptionTV"
+        android:id="@+id/descriptionTextView"
         style="@style/TextBody"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="0dp"
-        android:ellipsize="end"
-        android:maxLines="2"
+        android:layout_marginTop="4dp"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="@+id/titleTV"
+        app:layout_constraintLeft_toLeftOf="@id/titleTextView"
+        app:layout_constraintRight_toRightOf="@id/titleTextView"
+        app:layout_constraintTop_toBottomOf="@id/titleTextView"
+        tools:text="I am having the exact same issue when installing 9.4 from source. I can login via LDAP but I cannot login as the default …"/>
+
+    <TextView
+        android:id="@+id/starsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        android:drawablePadding="4dp"
+        android:drawableStart="@drawable/ic_star_black_24dp"
+        android:drawableTint="@color/colorPrimary"
+        android:gravity="center_vertical|end"
+        android:textColor="@color/colorPrimary"
+        android:textSize="14sp"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleTV"
-        tools:text="Description"/>
+        app:layout_constraintTop_toBottomOf="@+id/descriptionTextView"
+        tools:text="2911"/>
+
+    <TextView
+        android:id="@+id/forksTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        android:drawablePadding="4dp"
+        android:drawableStart="@drawable/ic_fork"
+        android:drawableTint="@color/colorPrimary"
+        android:gravity="center_vertical|end"
+        android:textColor="@color/colorPrimary"
+        android:textSize="14sp"
+        app:layout_constraintRight_toLeftOf="@+id/starsTextView"
+        app:layout_constraintTop_toBottomOf="@+id/descriptionTextView"
+        tools:text="2900"/>
 
     <View
-        android:id="@+id/divider"
         android:layout_width="0dp"
         android:layout_height="@dimen/divider_size"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="10dp"
         android:background="@color/divider"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="@+id/titleTV"
+        app:layout_constraintLeft_toLeftOf="@id/titleTextView"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/publicIV"
-        app:layout_constraintVertical_bias="0.0"/>
+        app:layout_constraintTop_toBottomOf="@id/starsTextView"/>
+
 </android.support.constraint.ConstraintLayout>

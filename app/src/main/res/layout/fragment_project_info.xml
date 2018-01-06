@@ -1,55 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         style="@style/ToolbarStyle"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:navigationIcon="@drawable/ic_arrow_back_24dp"/>
+        app:navigationIcon="@drawable/ic_arrow_back_24dp"
+        tools:title="Username"/>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-        <TextView
-            android:id="@+id/starsCountTV"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:drawableLeft="@drawable/ic_star_black_24dp"
-            android:drawablePadding="8dp"
-            android:drawableTint="@color/colorPrimary"
-            android:gravity="center_vertical"
-            android:padding="16dp"
-            android:textColor="@color/colorPrimary"
-            tools:text="1200"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/forksCountTV"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:drawableLeft="@drawable/ic_fork"
-            android:drawablePadding="8dp"
-            android:drawableTint="@color/colorPrimary"
-            android:gravity="center_vertical"
-            android:padding="16dp"
-            android:textColor="@color/colorPrimary"
-            tools:text="1200"/>
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-    </LinearLayout>
+                <ImageView
+                    android:id="@+id/avatarImageView"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_margin="16dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:src="@drawable/default_img"/>
 
-    <WebView
-        android:id="@+id/markdownView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+                <ImageView
+                    android:id="@+id/iconImageView"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="32dp"
+                    android:background="@drawable/circle"
+                    android:padding="2dp"
+                    app:layout_constraintLeft_toLeftOf="@id/avatarImageView"
+                    app:layout_constraintTop_toTopOf="@id/avatarImageView"
+                    app:tint="@color/white"
+                    tools:src="@drawable/ic_security_white_24dp"/>
+
+                <TextView
+                    android:id="@+id/titleTextView"
+                    fontPath="@string/font_main_medium"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/primary_text"
+                    android:textSize="16sp"
+                    app:layout_constraintLeft_toRightOf="@+id/avatarImageView"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/avatarImageView"
+                    tools:text="GitLab Community Edition"/>
+
+                <TextView
+                    android:id="@+id/forksTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:drawablePadding="4dp"
+                    android:drawableStart="@drawable/ic_fork"
+                    android:drawableTint="@color/colorPrimary"
+                    android:gravity="center_vertical|end"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="16sp"
+                    app:layout_constraintLeft_toLeftOf="@id/titleTextView"
+                    app:layout_constraintTop_toBottomOf="@id/titleTextView"
+                    tools:text="2312"/>
+
+                <TextView
+                    android:id="@+id/starsTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="4dp"
+                    android:drawablePadding="4dp"
+                    android:drawableStart="@drawable/ic_star_black_24dp"
+                    android:drawableTint="@color/colorPrimary"
+                    android:gravity="center_vertical|end"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="16sp"
+                    app:layout_constraintLeft_toRightOf="@id/forksTextView"
+                    app:layout_constraintTop_toBottomOf="@id/titleTextView"
+                    tools:text="2312"/>
+
+                <TextView
+                    android:id="@+id/descriptionTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:textColor="@color/secondary_text"
+                    android:textSize="14sp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/avatarImageView"
+                    tools:text="GitLab Community Edition (CE) is an open source end-to-end software development platform with built-in version control, issue tracking, code review, CI/CD, and more. Self-host GitLab CE on your own servers, in a container, or on a cloud provider."/>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/divider_size"
+                    android:layout_marginTop="16dp"
+                    android:background="@color/divider"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/descriptionTextView"/>
+
+            </android.support.constraint.ConstraintLayout>
+
+            <WebView
+                android:id="@+id/webView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/lightGrey"/>
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>

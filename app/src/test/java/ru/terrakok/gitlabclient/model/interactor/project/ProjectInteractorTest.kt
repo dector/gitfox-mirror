@@ -10,6 +10,8 @@ import ru.terrakok.gitlabclient.entity.File
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.Visibility
 import ru.terrakok.gitlabclient.model.repository.project.ProjectRepository
+import ru.terrakok.gitlabclient.model.repository.tools.Base64Tools
+import ru.terrakok.gitlabclient.model.repository.tools.MarkDownConverter
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 28.05.17.
@@ -22,7 +24,7 @@ class ProjectInteractorTest {
     fun get_single_project() {
         val projectId = 42L
         val testProject = Project(projectId, null, "", Visibility.PUBLIC, null, null,
-                null, null, null, null, null, "", null, false,
+                null, null, null, "", "", "", "", false,
                 0L, false, false, false, false, false, null, null, 0L, null, null, false, null, false,
                 0L, 0L, null, false, null, false, false, false)
 

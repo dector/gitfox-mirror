@@ -28,6 +28,7 @@ class MyEventsFragment : BaseFragment(), MyEventsView {
 
     private val adapter: TargetsAdapter by lazy {
         TargetsAdapter(
+                { presenter.onUserClick(it) },
                 { presenter.onItemClick(it) },
                 { presenter.loadNextEventsPage() }
         )

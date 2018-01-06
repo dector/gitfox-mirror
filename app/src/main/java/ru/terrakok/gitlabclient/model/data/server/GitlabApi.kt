@@ -7,11 +7,13 @@ import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.entity.event.Event
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.event.EventTarget
+import ru.terrakok.gitlabclient.entity.issue.Issue
+import ru.terrakok.gitlabclient.entity.issue.IssueScope
+import ru.terrakok.gitlabclient.entity.issue.IssueState
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestScope
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestViewType
-import ru.terrakok.gitlabclient.entity.target.TargetState
 import ru.terrakok.gitlabclient.entity.target.TargetType
 import ru.terrakok.gitlabclient.entity.todo.Todo
 import ru.terrakok.gitlabclient.entity.todo.TodoAction
@@ -53,7 +55,8 @@ interface GitlabApi {
 
     @GET("$API_PATH/projects/{id}")
     fun getProject(
-            @Path("id") id: Long
+            @Path("id") id: Long,
+            @Query("statistics") statistics: Boolean = true
     ): Single<Project>
 
     @GET("$API_PATH/projects/{id}/repository/files/{file_path}")
@@ -69,7 +72,7 @@ interface GitlabApi {
     @GET("$API_PATH/issues")
     fun getMyIssues(
             @Query("scope") scope: IssueScope?,
-            @Query("state") state: TargetState?,
+            @Query("state") state: IssueState?,
             @Query("labels") labels: String?,
             @Query("milestone") milestone: String?,
             @Query("iids") iids: Array<Long>?,
@@ -110,7 +113,7 @@ interface GitlabApi {
     ): Single<List<MergeRequest>>
 
     fun getProjectMergeRequests(
-            @Path("project_id") projectId: Int,
+            @Path("project_id") projectId: Long,
             @Query("state") state: MergeRequestState?,
             @Query("milestone") milestone: String?,
             @Query("view") viewType: MergeRequestViewType?,
@@ -129,8 +132,8 @@ interface GitlabApi {
 
     @GET("$API_PATH/projects/{project_id}/merge_requests/{merge_request_id}")
     fun getMergeRequest(
-            @Path("project_id") projectId: Int,
-            @Path("merge_request_id") mergeRequestId: Int
+            @Path("project_id") projectId: Long,
+            @Path("merge_request_id") mergeRequestId: Long
     ): Single<MergeRequest>
 
     @GET("$API_PATH/users/{user_id}")

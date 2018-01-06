@@ -5,7 +5,7 @@ import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestScope
 import ru.terrakok.gitlabclient.model.repository.mergerequest.MergeRequestRepository
 import javax.inject.Inject
 
-class MergeRequestsInteractor @Inject constructor(
+class MergeRequestInteractor @Inject constructor(
         private val mergeRequestRepository: MergeRequestRepository
 ) {
     fun getMyMergeRequests(
@@ -17,4 +17,9 @@ class MergeRequestsInteractor @Inject constructor(
                     page = page,
                     orderBy = OrderBy.UPDATED_AT
             )
+
+    fun getMergeRequest(
+            projectId: Long,
+            mergeRequestId: Long
+    ) = mergeRequestRepository.getMergeRequest(projectId, mergeRequestId)
 }

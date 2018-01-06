@@ -10,9 +10,12 @@ import ru.terrakok.cicerone.commands.Replace
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.toothpick.DI
+import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
+import ru.terrakok.gitlabclient.toothpick.qualifier.UserId
 import ru.terrakok.gitlabclient.ui.global.BaseActivity
 import ru.terrakok.gitlabclient.ui.user.info.UserInfoFragment
 import toothpick.Toothpick
+import toothpick.config.Module
 import javax.inject.Inject
 
 /**
@@ -22,11 +25,21 @@ class UserActivity : BaseActivity() {
     @Inject lateinit var navigationHolder: NavigatorHolder
 
     override val layoutRes = R.layout.activity_container
-    private val userId by lazy { intent.getLongExtra(ARG_USER_ID, 0) }
+    private val userId get() = intent.getLongExtra(ARG_USER_ID, 0)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Toothpick.inject(this, Toothpick.openScope(DI.APP_SCOPE))
         super.onCreate(savedInstanceState)
+
+        Toothpick.openScopes(DI.SERVER_SCOPE, DI.USER_SCOPE).apply {
+            installModules(object : Module() {
+                init {
+                    bind(PrimitiveWrapper::class.java)
+                            .withName(UserId::class.java)
+                            .toInstance(PrimitiveWrapper(userId))
+                }
+            })
+        }
 
         if (savedInstanceState == null) {
             navigator.applyCommand(Replace(Screens.USER_INFO_SCREEN, userId))
@@ -43,12 +56,18 @@ class UserActivity : BaseActivity() {
         super.onPause()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+
+        if (isFinishing) Toothpick.closeScope(DI.USER_SCOPE)
+    }
+
     private val navigator = object : SupportAppNavigator(this, R.id.container) {
 
         override fun createActivityIntent(screenKey: String?, data: Any?) = null
 
         override fun createFragment(screenKey: String?, data: Any?): Fragment? = when (screenKey) {
-            Screens.USER_INFO_SCREEN -> UserInfoFragment.createNewInstance(data as Long)
+            Screens.USER_INFO_SCREEN -> UserInfoFragment()
             else -> null
         }
     }

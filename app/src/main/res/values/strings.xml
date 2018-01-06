@@ -93,6 +93,7 @@
     <string name="full_event_target_milestone">milestone</string>
     <string name="full_event_target_branch">branch</string>
     <string name="full_event_target_tag">tag</string>
+
     <string name="event_action_closed">closed</string>
     <string name="event_action_commented_on">commented on</string>
     <string name="event_action_created">created</string>
@@ -110,6 +111,10 @@
     <string name="event_action_opened">opened</string>
     <string name="event_action_left">left</string>
     <string name="event_action_merged">merged</string>
+
+    <string name="target_status_opened">Opened</string>
+    <string name="target_status_closed">Closed</string>
+    <string name="target_status_merged">Merged</string>
 
     <!--My Merge Requests Screen-->
     <string name="merge_request_created_by_me">Created</string>
