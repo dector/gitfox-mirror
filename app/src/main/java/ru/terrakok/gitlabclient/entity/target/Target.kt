@@ -20,11 +20,11 @@ abstract class Target {
     @SerializedName("labels") private val _labels: List<String>? = null
     @SerializedName("milestone") val milestone: Milestone? = null
     @SerializedName("assignees") private val _assignees: List<Assignee>? = null
-    @SerializedName("author") val author: Author? = null
+    @SerializedName("author") val _author: Author? = null
     @SerializedName("assignee") val assignee: Assignee? = null
-    @SerializedName("user_notes_count") private val _userNotesCount: Long? = null
-    @SerializedName("upvotes") private val _upVotes: Long? = null
-    @SerializedName("downvotes") private val _downVotes: Long? = null
+    @SerializedName("user_notes_count") private val _userNotesCount: Int? = null
+    @SerializedName("upvotes") private val _upVotes: Int? = null
+    @SerializedName("downvotes") private val _downVotes: Int? = null
     @SerializedName("web_url") val webUrl: String? = null
     @SerializedName("subscribed") private val _subscribed: Boolean? = null
     @SerializedName("time_stats") val timeStats: TimeStats? = null
@@ -40,6 +40,7 @@ abstract class Target {
     val upVotes get() = _upVotes!!
     val downVotes get() = _downVotes!!
     val subscribed get() = _subscribed!!
+    val author get() = _author!!
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

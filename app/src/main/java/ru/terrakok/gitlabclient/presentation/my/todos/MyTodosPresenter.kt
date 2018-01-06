@@ -2,10 +2,12 @@ package ru.terrakok.gitlabclient.presentation.my.todos
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
+import ru.terrakok.cicerone.Router
+import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
-import ru.terrakok.gitlabclient.extension.userMessage
+import ru.terrakok.gitlabclient.extension.openInfo
 import ru.terrakok.gitlabclient.model.interactor.todo.TodoListInteractor
-import ru.terrakok.gitlabclient.model.system.ResourceManager
+import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.TodoListPendingState
@@ -18,7 +20,8 @@ import javax.inject.Inject
 class MyTodosPresenter @Inject constructor(
         private @TodoListPendingState val pendingStateWrapper: PrimitiveWrapper<Boolean>,
         private val todoListInteractor: TodoListInteractor,
-        private val resourceManager: ResourceManager
+        private val errorHandler: ErrorHandler,
+        private val router: Router
 ) : MvpPresenter<MyTodoListView>() {
 
     private val isPending = pendingStateWrapper.value
@@ -36,7 +39,11 @@ class MyTodosPresenter @Inject constructor(
                 }
 
                 override fun showEmptyError(show: Boolean, error: Throwable?) {
-                    viewState.showEmptyError(show, error?.userMessage(resourceManager))
+                    if (error != null) {
+                        errorHandler.proceed(error, { viewState.showEmptyError(show, it) })
+                    } else {
+                        viewState.showEmptyError(show, null)
+                    }
                 }
 
                 override fun showEmptyView(show: Boolean) {
@@ -48,7 +55,7 @@ class MyTodosPresenter @Inject constructor(
                 }
 
                 override fun showErrorMessage(error: Throwable) {
-                    viewState.showMessage(error.userMessage(resourceManager))
+                    errorHandler.proceed(error, { viewState.showMessage(it) })
                 }
 
                 override fun showRefreshProgress(show: Boolean) {
@@ -61,7 +68,8 @@ class MyTodosPresenter @Inject constructor(
             }
     )
 
-    fun onTodoClick(item: TargetHeader) {}
+    fun onTodoClick(item: TargetHeader) = item.openInfo(router)
+    fun onUserClick(userId: Long) = router.navigateTo(Screens.USER_INFO_SCREEN, userId)
     fun refreshTodos() = paginator.refresh()
     fun loadNextTodosPage() = paginator.loadNewPage()
 

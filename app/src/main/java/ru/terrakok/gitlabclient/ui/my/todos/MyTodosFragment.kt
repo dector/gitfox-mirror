@@ -36,6 +36,7 @@ class MyTodosFragment : BaseFragment(), MyTodoListView {
 
     private val adapter: TargetsAdapter by lazy {
         TargetsAdapter(
+                { presenter.onUserClick(it) },
                 { presenter.onTodoClick(it) },
                 { presenter.loadNextTodosPage() }
         )

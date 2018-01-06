@@ -4,6 +4,7 @@ import ru.terrakok.gitlabclient.entity.Assignee
 import ru.terrakok.gitlabclient.entity.User
 import ru.terrakok.gitlabclient.entity.app.target.*
 import ru.terrakok.gitlabclient.entity.app.user.MyUserInfo
+import ru.terrakok.gitlabclient.entity.target.TargetState
 import ru.terrakok.gitlabclient.entity.target.TargetType
 import ru.terrakok.gitlabclient.entity.todo.Todo
 import ru.terrakok.gitlabclient.entity.todo.TodoAction
@@ -40,6 +41,7 @@ class TodoRepository @Inject constructor(
             .observeOn(schedulers.ui())
 
     private fun getTargetHeader(todo: Todo, currentUser: User): TargetHeader {
+        val target = todo.target
         val assignee = if (todo.actionName != TodoAction.MARKED) {
             currentUser.let {
                 Assignee(it.id, it.state, it.name, it.webUrl, it.avatarUrl, it.username)
@@ -52,10 +54,16 @@ class TodoRepository @Inject constructor(
             TargetType.ISSUE -> AppTarget.ISSUE
         }
         val targetName = when (todo.targetType) {
-            TargetType.MERGE_REQUEST -> "${AppTarget.MERGE_REQUEST} !${todo.target.iid}"
-            TargetType.ISSUE -> "${AppTarget.ISSUE} #${todo.target.iid}"
+            TargetType.MERGE_REQUEST -> "${AppTarget.MERGE_REQUEST} !${target.iid}"
+            TargetType.ISSUE -> "${AppTarget.ISSUE} #${target.iid}"
         }
         val badges = mutableListOf<TargetBadge>()
+        badges.add(TargetBadge.Status(when (target.state) {
+            TargetState.OPENED -> TargetBadgeStatus.OPENED
+            TargetState.CLOSED -> TargetBadgeStatus.CLOSED
+            TargetState.MERGED -> TargetBadgeStatus.MERGED
+        }))
+        badges.add(TargetBadge.Text(todo.author.username, AppTarget.USER, todo.author.id))
         badges.add(TargetBadge.Text(todo.project.name, AppTarget.PROJECT, todo.project.id))
 
         return TargetHeader(
@@ -73,7 +81,8 @@ class TodoRepository @Inject constructor(
                 todo.body,
                 todo.createdAt,
                 appTarget,
-                todo.target.id,
+                target.id,
+                TargetInternal(target.projectId, target.iid),
                 badges
         )
     }
