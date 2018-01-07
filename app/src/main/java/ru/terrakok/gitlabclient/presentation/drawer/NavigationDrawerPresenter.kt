@@ -1,15 +1,13 @@
 package ru.terrakok.gitlabclient.presentation.drawer
 
 import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
-import io.reactivex.disposables.CompositeDisposable
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.Screens
-import ru.terrakok.gitlabclient.extension.addTo
 import ru.terrakok.gitlabclient.model.interactor.auth.AuthInteractor
 import ru.terrakok.gitlabclient.model.interactor.profile.MyProfileInteractor
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem.*
+import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
 import javax.inject.Inject
@@ -24,22 +22,19 @@ class NavigationDrawerPresenter @Inject constructor(
         private val authInteractor: AuthInteractor,
         private val myProfileInteractor: MyProfileInteractor,
         private val errorHandler: ErrorHandler
-) : MvpPresenter<NavigationDrawerView>() {
+) : BasePresenter<NavigationDrawerView>() {
 
     private var currentSelectedItem: MenuItem? = null
-    private val compositeDisposable = CompositeDisposable()
 
     override fun onFirstViewAttach() {
-        subscribeOnProfileUpdates()
-    }
+        super.onFirstViewAttach()
 
-    private fun subscribeOnProfileUpdates() {
         myProfileInteractor.getMyProfile()
                 .subscribe(
                         { viewState.showUserInfo(it) },
                         { errorHandler.proceed(it) }
                 )
-                .addTo(compositeDisposable)
+                .connect()
     }
 
     fun onScreenChanged(item: MenuItem) {
@@ -66,8 +61,4 @@ class NavigationDrawerPresenter @Inject constructor(
     }
 
     fun onUserClick(id: Long) = router.navigateTo(Screens.USER_INFO_SCREEN, id)
-
-    override fun onDestroy() {
-        compositeDisposable.dispose()
-    }
 }

@@ -1,11 +1,9 @@
 package ru.terrakok.gitlabclient.presentation.libraries
 
 import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
-import io.reactivex.disposables.CompositeDisposable
 import ru.terrakok.cicerone.Router
-import ru.terrakok.gitlabclient.extension.addTo
 import ru.terrakok.gitlabclient.model.interactor.app.AppInfoInteractor
+import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -16,9 +14,7 @@ import javax.inject.Inject
 class LibrariesPresenter @Inject constructor(
         private val router: Router,
         private val appInfoInteractor: AppInfoInteractor
-) : MvpPresenter<LibrariesView>() {
-
-    private val compositeDisposable = CompositeDisposable()
+) : BasePresenter<LibrariesView>() {
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -29,12 +25,7 @@ class LibrariesPresenter @Inject constructor(
                         { viewState.showLibraries(it) },
                         { Timber.e("getAppLibraries error: $it") }
                 )
-                .addTo(compositeDisposable)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        compositeDisposable.dispose()
+                .connect()
     }
 
     fun onBackPressed() = router.exit()

@@ -1,11 +1,9 @@
 package ru.terrakok.gitlabclient.presentation.mergerequest
 
-import com.arellomobile.mvp.MvpPresenter
-import io.reactivex.disposables.CompositeDisposable
 import ru.terrakok.cicerone.Router
-import ru.terrakok.gitlabclient.extension.addTo
 import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestInteractor
 import ru.terrakok.gitlabclient.model.interactor.utils.UtilsInteractor
+import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.MergeRequestId
@@ -22,13 +20,14 @@ class MergeRequestInfoPresenter @Inject constructor(
         private val interactor: MergeRequestInteractor,
         private val utils: UtilsInteractor,
         private val errorHandler: ErrorHandler
-) : MvpPresenter<MergeRequestInfoView>() {
+) : BasePresenter<MergeRequestInfoView>() {
 
-    private val compositeDisposable = CompositeDisposable()
     private val projectId = projectIdWrapper.value
     private val mrId = mrIdWrapper.value
 
     override fun onFirstViewAttach() {
+        super.onFirstViewAttach()
+
         interactor.getMergeRequest(projectId, mrId)
                 .flatMap { mr ->
                     utils
@@ -41,11 +40,7 @@ class MergeRequestInfoPresenter @Inject constructor(
                         { (mr, description) -> viewState.showMergeRequest(mr, description) },
                         { errorHandler.proceed(it, { viewState.showMessage(it) }) }
                 )
-                .addTo(compositeDisposable)
-    }
-
-    override fun onDestroy() {
-        compositeDisposable.dispose()
+                .connect()
     }
 
     fun onBackPressed() = router.exit()

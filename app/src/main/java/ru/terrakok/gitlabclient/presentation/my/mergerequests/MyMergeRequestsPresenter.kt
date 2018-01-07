@@ -1,12 +1,12 @@
 package ru.terrakok.gitlabclient.presentation.my.mergerequests
 
 import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.extension.openInfo
 import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestInteractor
+import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 import javax.inject.Inject
@@ -17,11 +17,12 @@ class MyMergeRequestsPresenter @Inject constructor(
         private val interactor: MergeRequestInteractor,
         private val errorHandler: ErrorHandler,
         private val router: Router
-) : MvpPresenter<MyMergeRequestListView>() {
+) : BasePresenter<MyMergeRequestListView>() {
     data class InitParams(val createdByMe: Boolean)
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
+
         refreshMergeRequests()
     }
 

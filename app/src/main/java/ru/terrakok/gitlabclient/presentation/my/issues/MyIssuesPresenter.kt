@@ -1,12 +1,12 @@
 package ru.terrakok.gitlabclient.presentation.my.issues
 
 import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.extension.openInfo
 import ru.terrakok.gitlabclient.model.interactor.issue.IssueInteractor
+import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 import javax.inject.Inject
@@ -20,11 +20,12 @@ class MyIssuesPresenter @Inject constructor(
         private val issueInteractor: IssueInteractor,
         private val errorHandler: ErrorHandler,
         private val router: Router
-) : MvpPresenter<MyIssuesView>() {
+) : BasePresenter<MyIssuesView>() {
     data class InitParams(val createdByMe: Boolean)
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
+
         refreshIssues()
     }
 

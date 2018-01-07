@@ -1,12 +1,12 @@
 package ru.terrakok.gitlabclient.presentation.my.todos
 
 import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.extension.openInfo
 import ru.terrakok.gitlabclient.model.interactor.todo.TodoListInteractor
+import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
@@ -22,12 +22,13 @@ class MyTodosPresenter @Inject constructor(
         private val todoListInteractor: TodoListInteractor,
         private val errorHandler: ErrorHandler,
         private val router: Router
-) : MvpPresenter<MyTodoListView>() {
+) : BasePresenter<MyTodoListView>() {
 
     private val isPending = pendingStateWrapper.value
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
+
         refreshTodos()
     }
 

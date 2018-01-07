@@ -1,7 +1,7 @@
 package ru.terrakok.gitlabclient.presentation.main
 
-import com.arellomobile.mvp.MvpPresenter
 import ru.terrakok.cicerone.Router
+import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import javax.inject.Inject
 
 /**
@@ -9,7 +9,7 @@ import javax.inject.Inject
  */
 class MainPresenter @Inject constructor(
         private val router: Router
-) : MvpPresenter<MainView>() {
+) : BasePresenter<MainView>() {
 
     fun onBackPressed() = router.exit()
 }

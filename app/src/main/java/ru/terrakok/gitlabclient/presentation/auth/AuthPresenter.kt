@@ -1,13 +1,10 @@
 package ru.terrakok.gitlabclient.presentation.auth
 
 import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
-import io.reactivex.disposables.CompositeDisposable
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.Screens
-import ru.terrakok.gitlabclient.extension.addTo
 import ru.terrakok.gitlabclient.model.interactor.auth.AuthInteractor
-import ru.terrakok.gitlabclient.model.system.ResourceManager
+import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import javax.inject.Inject
 
@@ -18,18 +15,13 @@ import javax.inject.Inject
 class AuthPresenter @Inject constructor(
         private val router: Router,
         private val authInteractor: AuthInteractor,
-        private val resourceManager: ResourceManager,
         private val errorHandler: ErrorHandler
-) : MvpPresenter<AuthView>() {
-
-    private var compositeDisposable = CompositeDisposable()
+) : BasePresenter<AuthView>() {
 
     override fun onFirstViewAttach() {
-        startAuthorization()
-    }
+        super.onFirstViewAttach()
 
-    override fun onDestroy() {
-        compositeDisposable.dispose()
+        startAuthorization()
     }
 
     private fun startAuthorization() {
@@ -43,7 +35,7 @@ class AuthPresenter @Inject constructor(
                 .subscribe(
                         { router.newRootScreen(Screens.MAIN_SCREEN) },
                         { errorHandler.proceed(it, { viewState.showMessage(it) }) }
-                ).addTo(compositeDisposable)
+                ).connect()
     }
 
     fun onRedirect(url: String): Boolean {
@@ -61,7 +53,7 @@ class AuthPresenter @Inject constructor(
                 .subscribe(
                         { router.newRootScreen(Screens.MAIN_SCREEN) },
                         { errorHandler.proceed(it, { viewState.showMessage(it) }) }
-                ).addTo(compositeDisposable)
+                ).connect()
     }
 
     fun onBackPressed() = router.exit()

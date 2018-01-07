@@ -1,12 +1,12 @@
 package ru.terrakok.gitlabclient.presentation.my.events
 
 import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.extension.openInfo
 import ru.terrakok.gitlabclient.model.interactor.event.EventInteractor
+import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
 import ru.terrakok.gitlabclient.presentation.global.Paginator
@@ -21,10 +21,11 @@ class MyEventsPresenter @Inject constructor(
         private val menuController: GlobalMenuController,
         private val errorHandler: ErrorHandler,
         private val router: Router
-) : MvpPresenter<MyEventsView>() {
+) : BasePresenter<MyEventsView>() {
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
+
         refreshEvents()
     }
 

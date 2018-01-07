@@ -1,11 +1,9 @@
 package ru.terrakok.gitlabclient.presentation.project
 
 import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
-import io.reactivex.disposables.CompositeDisposable
 import ru.terrakok.cicerone.Router
-import ru.terrakok.gitlabclient.extension.addTo
 import ru.terrakok.gitlabclient.model.interactor.project.ProjectInteractor
+import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
@@ -20,12 +18,13 @@ class ProjectInfoPresenter @Inject constructor(
         private val router: Router,
         private val projectInteractor: ProjectInteractor,
         private val errorHandler: ErrorHandler
-) : MvpPresenter<ProjectInfoView>() {
+) : BasePresenter<ProjectInfoView>() {
 
-    private val compositeDisposable = CompositeDisposable()
     private val projectId = projectIdWrapper.value
 
     override fun onFirstViewAttach() {
+        super.onFirstViewAttach()
+
         projectInteractor.getProject(projectId)
                 .doOnSuccess { project -> viewState.showProjectInfo(project) }
                 .flatMap { project ->
@@ -37,11 +36,7 @@ class ProjectInfoPresenter @Inject constructor(
                         { viewState.showReadmeFile(it) },
                         { errorHandler.proceed(it, { viewState.showMessage(it) }) }
                 )
-                .addTo(compositeDisposable)
-    }
-
-    override fun onDestroy() {
-        compositeDisposable.dispose()
+                .connect()
     }
 
     fun onBackPressed() = router.exit()

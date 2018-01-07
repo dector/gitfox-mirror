@@ -1,11 +1,11 @@
 package ru.terrakok.gitlabclient.presentation.projects
 
 import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.model.interactor.project.ProjectInteractor
+import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
@@ -22,7 +22,7 @@ class ProjectsListPresenter @Inject constructor(
         private val router: Router,
         private val interactor: ProjectInteractor,
         private val errorHandler: ErrorHandler
-) : MvpPresenter<ProjectsListView>() {
+) : BasePresenter<ProjectsListView>() {
 
     companion object {
         const val MAIN_PROJECTS = 0
@@ -33,6 +33,8 @@ class ProjectsListPresenter @Inject constructor(
     private val mode = modeWrapper.value
 
     override fun onFirstViewAttach() {
+        super.onFirstViewAttach()
+
         refreshProjects()
     }
 
