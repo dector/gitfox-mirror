@@ -1,5 +1,6 @@
 package ru.terrakok.gitlabclient.model.data.server
 
+import io.reactivex.Completable
 import io.reactivex.Single
 import retrofit2.http.*
 import ru.terrakok.gitlabclient.entity.*
@@ -13,6 +14,10 @@ import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestScope
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestViewType
+import ru.terrakok.gitlabclient.entity.target.TargetType
+import ru.terrakok.gitlabclient.entity.todo.Todo
+import ru.terrakok.gitlabclient.entity.todo.TodoAction
+import ru.terrakok.gitlabclient.entity.todo.TodoState
 import java.util.*
 
 /**
@@ -135,4 +140,23 @@ interface GitlabApi {
     fun getUser(
             @Path("user_id") userId: Long
     ): Single<User>
+
+    @GET("$API_PATH/todos")
+    fun getTodos(
+            @Query("action") action: TodoAction?,
+            @Query("author_id") authorId: Long?,
+            @Query("project_id") projectId: Long?,
+            @Query("state") state: TodoState?,
+            @Query("type") targetType: TargetType?,
+            @Query("page") page: Int,
+            @Query("per_page") pageSize: Int
+    ): Single<List<Todo>>
+
+    @POST("$API_PATH/todos/{id}/mark_as_done")
+    fun markPendingTodoAsDone(
+            @Path("id") id: Int
+    ): Single<Todo>
+
+    @POST("$API_PATH/todos/mark_as_done")
+    fun markAllPendingTodosAsDone(): Completable
 }
