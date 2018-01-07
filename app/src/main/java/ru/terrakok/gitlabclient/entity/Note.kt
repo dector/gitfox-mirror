@@ -12,6 +12,6 @@ data class Note(
         @SerializedName("updated_at") val updatedAt: Date?,
         @SerializedName("system") val isSystem: Boolean,
         @SerializedName("noteable_id") val noteableId: Long,
-        @SerializedName("noteable_type") val noteableType: EventTargetType,
+        @SerializedName("noteable_type") val noteableType: EventTargetType?,
         @SerializedName("noteable_iid") val noteableIid: Long
 )
