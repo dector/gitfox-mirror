@@ -1,5 +1,6 @@
 package ru.terrakok.gitlabclient.ui.auth
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -27,7 +28,7 @@ class AuthActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         if (savedInstanceState == null) {
-            navigator.applyCommand(Replace(Screens.AUTH_SCREEN, null))
+            navigator.applyCommands(arrayOf(Replace(Screens.AUTH_SCREEN, null)))
         }
     }
 
@@ -43,7 +44,7 @@ class AuthActivity : BaseActivity() {
 
     private val navigator = object : SupportAppNavigator(this, R.id.container) {
 
-        override fun createActivityIntent(screenKey: String?, data: Any?): Intent? = when (screenKey) {
+        override fun createActivityIntent(context: Context?, screenKey: String?, data: Any?): Intent? = when (screenKey) {
             Screens.MAIN_SCREEN -> Intent(this@AuthActivity, MainActivity::class.java)
             else -> null
         }

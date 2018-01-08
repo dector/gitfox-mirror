@@ -1,5 +1,6 @@
 package ru.terrakok.gitlabclient.ui.launch
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -97,12 +98,12 @@ class MainActivity : BaseActivity(), LaunchView {
 
     private val navigator = object : SupportAppNavigator(this, R.id.mainContainer) {
 
-        override fun applyCommand(command: Command?) {
-            super.applyCommand(command)
+        override fun applyCommands(commands: Array<out Command>?) {
+            super.applyCommands(commands)
             updateNavDrawer()
         }
 
-        override fun createActivityIntent(screenKey: String?, data: Any?): Intent? = when (screenKey) {
+        override fun createActivityIntent(context: Context?, screenKey: String?, data: Any?): Intent? = when (screenKey) {
             Screens.AUTH_SCREEN -> {
                 Intent(this@MainActivity, AuthActivity::class.java)
             }

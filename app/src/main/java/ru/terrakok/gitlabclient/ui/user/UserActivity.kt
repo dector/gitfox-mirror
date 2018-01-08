@@ -42,7 +42,7 @@ class UserActivity : BaseActivity() {
         }
 
         if (savedInstanceState == null) {
-            navigator.applyCommand(Replace(Screens.USER_INFO_SCREEN, userId))
+            navigator.applyCommands(arrayOf(Replace(Screens.USER_INFO_SCREEN, userId)))
         }
     }
 
@@ -64,7 +64,7 @@ class UserActivity : BaseActivity() {
 
     private val navigator = object : SupportAppNavigator(this, R.id.container) {
 
-        override fun createActivityIntent(screenKey: String?, data: Any?) = null
+        override fun createActivityIntent(context: Context?, screenKey: String?, data: Any?) = null
 
         override fun createFragment(screenKey: String?, data: Any?): Fragment? = when (screenKey) {
             Screens.USER_INFO_SCREEN -> UserInfoFragment()

@@ -42,7 +42,7 @@ class ProjectActivity : BaseActivity() {
         }
 
         if (savedInstanceState == null) {
-            navigator.applyCommand(Replace(Screens.PROJECT_INFO_SCREEN, null))
+            navigator.applyCommands(arrayOf(Replace(Screens.PROJECT_INFO_SCREEN, null)))
         }
     }
 
@@ -64,7 +64,7 @@ class ProjectActivity : BaseActivity() {
 
     private val navigator = object : SupportAppNavigator(this, R.id.container) {
 
-        override fun createActivityIntent(screenKey: String?, data: Any?) = null
+        override fun createActivityIntent(context: Context?, screenKey: String?, data: Any?) = null
 
         override fun createFragment(screenKey: String?, data: Any?): Fragment? = when (screenKey) {
             Screens.PROJECT_INFO_SCREEN -> ProjectInfoFragment()

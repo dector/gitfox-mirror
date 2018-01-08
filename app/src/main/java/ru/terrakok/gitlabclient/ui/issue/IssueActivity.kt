@@ -65,7 +65,7 @@ class IssueActivity : BaseActivity() {
 
     private val navigator = object : SupportAppNavigator(this, R.id.container) {
 
-        override fun createActivityIntent(screenKey: String?, data: Any?) = null
+        override fun createActivityIntent(context: Context?, screenKey: String?, data: Any?) = null
 
         override fun createFragment(screenKey: String?, data: Any?) = null
     }
