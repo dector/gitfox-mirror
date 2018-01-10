@@ -127,6 +127,7 @@ class EventRepository @Inject constructor(
                         EventTargetType.MERGE_REQUEST -> TargetData(AppTarget.MERGE_REQUEST, "${AppTarget.MERGE_REQUEST} !${event.note.noteableIid}", event.note.noteableId)
                         EventTargetType.MILESTONE -> TargetData(AppTarget.MILESTONE, "${AppTarget.MILESTONE} ${event.note.noteableIid}", event.note.noteableId)
                         EventTargetType.SNIPPET -> TargetData(AppTarget.SNIPPET, "${AppTarget.SNIPPET} ${event.note.noteableIid}", event.note.noteableId)
+                        null -> TargetData(AppTarget.COMMIT, "${AppTarget.COMMIT} ${event.note.id}", event.note.id)
                         else -> throw IllegalArgumentException("Unsupported noteable target type: ${event.note.noteableType}.")
                     }
                 }
