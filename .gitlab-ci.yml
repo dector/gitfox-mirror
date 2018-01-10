@@ -20,7 +20,6 @@ unitTests:
   script:
     - ./gradlew test
   only:
-    - develop
     - release
     - master
 
