@@ -23,6 +23,8 @@ abstract class BaseFragment : MvpAppCompatFragment() {
             = inflater.inflate(layoutRes, container, false)
 
     protected fun showProgressDialog(progress: Boolean) {
+        if (!isAdded) return
+
         val fragment = childFragmentManager.findFragmentByTag(PROGRESS_TAG)
         if (fragment != null && !progress) {
             (fragment as ProgressDialog).dismissAllowingStateLoss()
