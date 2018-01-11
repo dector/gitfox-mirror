@@ -32,13 +32,13 @@ abstract class FlowNavigator(
         }
     }
 
-    private fun startFlow(flowKey: String, data: Any?) {
+    protected open fun startFlow(flowKey: String, data: Any?) {
         createFlowIntent(flowKey, data)?.let { intent ->
             activity.startActivityForResult(intent, getRequestCodeForFlow(flowKey))
         }
     }
 
-    private fun finishFlow(data: Any?) {
+    protected open fun finishFlow(data: Any?) {
         activity.setResult(Activity.RESULT_OK, createFlowResult(data))
         activity.finish()
     }

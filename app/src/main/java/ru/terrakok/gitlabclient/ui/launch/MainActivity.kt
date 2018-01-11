@@ -100,6 +100,11 @@ class MainActivity : BaseActivity(), LaunchView {
 
         override fun createFlowIntent(flowKey: String, data: Any?) = getFlowIntent(flowKey, data)
 
+        override fun startFlow(flowKey: String, data: Any?) {
+            super.startFlow(flowKey, data)
+            if (flowKey == Screens.AUTH_FLOW) finish()
+        }
+
         override fun createFragment(screenKey: String?, data: Any?): Fragment? = when (screenKey) {
             Screens.MAIN_SCREEN -> MainFragment()
             Screens.PROJECTS_SCREEN -> ProjectsContainerFragment()
