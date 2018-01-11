@@ -69,12 +69,12 @@ class IssueActivity : BaseActivity() {
     }
 
     companion object {
-        private val ARG_ISSUE_ID = "arg_issue_id"
         private val ARG_PROJECT_ID = "arg_project_id"
-        fun getStartIntent(issueId: Long, projectId: Long, context: Context) =
+        private val ARG_ISSUE_ID = "arg_issue_id"
+        fun getStartIntent(projectId: Long, issueId: Long, context: Context) =
                 Intent(context, IssueActivity::class.java).apply {
-                    putExtra(ARG_ISSUE_ID, issueId)
                     putExtra(ARG_PROJECT_ID, projectId)
+                    putExtra(ARG_ISSUE_ID, issueId)
                 }
     }
 }

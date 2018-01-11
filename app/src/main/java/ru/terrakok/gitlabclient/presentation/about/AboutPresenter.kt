@@ -4,6 +4,7 @@ import com.arellomobile.mvp.InjectViewState
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.model.interactor.app.AppInfoInteractor
+import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
 import timber.log.Timber
@@ -14,7 +15,7 @@ import javax.inject.Inject
  */
 @InjectViewState
 class AboutPresenter @Inject constructor(
-        private val router: Router,
+        private val router: FlowRouter,
         private val menuController: GlobalMenuController,
         private val appInfoInteractor: AppInfoInteractor
 ) : BasePresenter<AboutView>() {
@@ -40,7 +41,7 @@ class AboutPresenter @Inject constructor(
 
     fun onShowLibrariesClicked() = router.navigateTo(Screens.APP_LIBRARIES_SCREEN)
 
-    fun onDeveloperClicked(id: Long) = router.navigateTo(Screens.USER_INFO_SCREEN, id)
+    fun onDeveloperClicked(id: Long) = router.startFlow(Screens.USER_FLOW, id)
 
     fun onMenuPressed() = menuController.open()
     fun onBackPressed() = router.exit()

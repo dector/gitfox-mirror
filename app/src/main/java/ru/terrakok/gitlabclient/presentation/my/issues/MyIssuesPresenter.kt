@@ -6,6 +6,7 @@ import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.extension.openInfo
 import ru.terrakok.gitlabclient.model.interactor.issue.IssueInteractor
+import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.Paginator
@@ -19,7 +20,7 @@ class MyIssuesPresenter @Inject constructor(
         private val initParams: InitParams,
         private val issueInteractor: IssueInteractor,
         private val errorHandler: ErrorHandler,
-        private val router: Router
+        private val router: FlowRouter
 ) : BasePresenter<MyIssuesView>() {
     data class InitParams(val createdByMe: Boolean)
 
@@ -67,7 +68,7 @@ class MyIssuesPresenter @Inject constructor(
     )
 
     fun onIssueClick(item: TargetHeader) = item.openInfo(router)
-    fun onUserClick(userId: Long) = router.navigateTo(Screens.USER_INFO_SCREEN, userId)
+    fun onUserClick(userId: Long) = router.startFlow(Screens.USER_FLOW, userId)
     fun refreshIssues() = paginator.refresh()
     fun loadNextIssuesPage() = paginator.loadNewPage()
 

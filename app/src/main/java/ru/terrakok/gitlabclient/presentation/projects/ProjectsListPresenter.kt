@@ -5,6 +5,7 @@ import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.model.interactor.project.ProjectInteractor
+import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.Paginator
@@ -19,7 +20,7 @@ import javax.inject.Inject
 @InjectViewState
 class ProjectsListPresenter @Inject constructor(
         @ProjectListMode private val modeWrapper: PrimitiveWrapper<Int>,
-        private val router: Router,
+        private val router: FlowRouter,
         private val interactor: ProjectInteractor,
         private val errorHandler: ErrorHandler
 ) : BasePresenter<ProjectsListView>() {
@@ -89,6 +90,6 @@ class ProjectsListPresenter @Inject constructor(
     fun refreshProjects() = paginator.refresh()
     fun loadNextProjectsPage() = paginator.loadNewPage()
 
-    fun onProjectClicked(id: Long) = router.navigateTo(Screens.PROJECT_INFO_SCREEN, id)
+    fun onProjectClicked(id: Long) = router.startFlow(Screens.PROJECT_FLOW, id)
     fun onBackPressed() = router.exit()
 }

@@ -69,12 +69,12 @@ class MergeRequestActivity : BaseActivity() {
     }
 
     companion object {
-        private val ARG_MR_ID = "arg_mr_id"
         private val ARG_PROJECT_ID = "arg_project_id"
-        fun getStartIntent(mrId: Long, projectId: Long, context: Context) =
+        private val ARG_MR_ID = "arg_mr_id"
+        fun getStartIntent(projectId: Long, mrId: Long, context: Context) =
                 Intent(context, MergeRequestActivity::class.java).apply {
-                    putExtra(ARG_MR_ID, mrId)
                     putExtra(ARG_PROJECT_ID, projectId)
+                    putExtra(ARG_MR_ID, mrId)
                 }
     }
 }

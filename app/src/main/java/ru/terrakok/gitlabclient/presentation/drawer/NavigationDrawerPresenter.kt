@@ -5,6 +5,7 @@ import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.model.interactor.auth.AuthInteractor
 import ru.terrakok.gitlabclient.model.interactor.profile.MyProfileInteractor
+import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem.*
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
@@ -17,7 +18,7 @@ import javax.inject.Inject
  */
 @InjectViewState
 class NavigationDrawerPresenter @Inject constructor(
-        private val router: Router,
+        private val router: FlowRouter,
         private val menuController: GlobalMenuController,
         private val authInteractor: AuthInteractor,
         private val myProfileInteractor: MyProfileInteractor,
@@ -57,8 +58,8 @@ class NavigationDrawerPresenter @Inject constructor(
     fun onLogoutClick() {
         menuController.close()
         authInteractor.logout()
-        router.newRootScreen(Screens.AUTH_SCREEN)
+        router.startFlow(Screens.AUTH_FLOW)
     }
 
-    fun onUserClick(id: Long) = router.navigateTo(Screens.USER_INFO_SCREEN, id)
+    fun onUserClick(id: Long) = router.startFlow(Screens.USER_FLOW, id)
 }

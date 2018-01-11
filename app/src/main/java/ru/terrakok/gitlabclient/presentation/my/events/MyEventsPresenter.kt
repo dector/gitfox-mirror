@@ -6,6 +6,7 @@ import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.extension.openInfo
 import ru.terrakok.gitlabclient.model.interactor.event.EventInteractor
+import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
@@ -20,7 +21,7 @@ class MyEventsPresenter @Inject constructor(
         private val eventInteractor: EventInteractor,
         private val menuController: GlobalMenuController,
         private val errorHandler: ErrorHandler,
-        private val router: Router
+        private val router: FlowRouter
 ) : BasePresenter<MyEventsView>() {
 
     override fun onFirstViewAttach() {
@@ -68,7 +69,7 @@ class MyEventsPresenter @Inject constructor(
 
     fun onMenuClick() = menuController.open()
     fun onItemClick(item: TargetHeader) = item.openInfo(router)
-    fun onUserClick(userId: Long) = router.navigateTo(Screens.USER_INFO_SCREEN, userId)
+    fun onUserClick(userId: Long) = router.startFlow(Screens.USER_FLOW, userId)
     fun refreshEvents() = paginator.refresh()
     fun loadNextEventsPage() = paginator.loadNewPage()
 

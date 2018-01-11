@@ -1,11 +1,11 @@
 package ru.terrakok.gitlabclient.presentation.my.todos
 
 import com.arellomobile.mvp.InjectViewState
-import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.extension.openInfo
 import ru.terrakok.gitlabclient.model.interactor.todo.TodoListInteractor
+import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.Paginator
@@ -21,7 +21,7 @@ class MyTodosPresenter @Inject constructor(
         private @TodoListPendingState val pendingStateWrapper: PrimitiveWrapper<Boolean>,
         private val todoListInteractor: TodoListInteractor,
         private val errorHandler: ErrorHandler,
-        private val router: Router
+        private val router: FlowRouter
 ) : BasePresenter<MyTodoListView>() {
 
     private val isPending = pendingStateWrapper.value
@@ -70,7 +70,7 @@ class MyTodosPresenter @Inject constructor(
     )
 
     fun onTodoClick(item: TargetHeader) = item.openInfo(router)
-    fun onUserClick(userId: Long) = router.navigateTo(Screens.USER_INFO_SCREEN, userId)
+    fun onUserClick(userId: Long) = router.startFlow(Screens.USER_FLOW, userId)
     fun refreshTodos() = paginator.refresh()
     fun loadNextTodosPage() = paginator.loadNewPage()
 

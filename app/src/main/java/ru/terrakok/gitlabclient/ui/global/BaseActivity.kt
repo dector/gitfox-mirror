@@ -35,12 +35,12 @@ abstract class BaseActivity : MvpAppCompatActivity() {
         Screens.PROJECT_FLOW -> ProjectActivity.getStartIntent(data as Long, this)
         Screens.USER_FLOW -> UserActivity.getStartIntent(data as Long, this)
         Screens.MR_FLOW -> {
-            val (mrId, projectId) = data as Pair<Long, Long>
-            MergeRequestActivity.getStartIntent(mrId, projectId, this)
+            val (projectId, mrId) = data as Pair<Long, Long>
+            MergeRequestActivity.getStartIntent(projectId, mrId, this)
         }
         Screens.ISSUE_FLOW -> {
-            val (issueId, projectId) = data as Pair<Long, Long>
-            IssueActivity.getStartIntent(issueId, projectId, this)
+            val (projectId, issueId) = data as Pair<Long, Long>
+            IssueActivity.getStartIntent(projectId, issueId, this)
         }
         else -> null
     }
