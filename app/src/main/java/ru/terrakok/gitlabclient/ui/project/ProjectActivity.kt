@@ -5,10 +5,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import ru.terrakok.cicerone.NavigatorHolder
-import ru.terrakok.cicerone.android.SupportAppNavigator
-import ru.terrakok.cicerone.commands.Replace
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
+import ru.terrakok.gitlabclient.model.system.flow.FlowNavigator
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
@@ -42,7 +41,7 @@ class ProjectActivity : BaseActivity() {
         }
 
         if (savedInstanceState == null) {
-            navigator.applyCommands(arrayOf(Replace(Screens.PROJECT_INFO_SCREEN, null)))
+            navigator.setLaunchScreen(Screens.PROJECT_INFO_SCREEN, null)
         }
     }
 
@@ -62,9 +61,7 @@ class ProjectActivity : BaseActivity() {
         if (isFinishing) Toothpick.closeScope(DI.PROJECT_SCOPE)
     }
 
-    private val navigator = object : SupportAppNavigator(this, R.id.container) {
-
-        override fun createActivityIntent(context: Context?, screenKey: String?, data: Any?) = null
+    private val navigator = object : FlowNavigator(this, R.id.container) {
 
         override fun createFragment(screenKey: String?, data: Any?): Fragment? = when (screenKey) {
             Screens.PROJECT_INFO_SCREEN -> ProjectInfoFragment()
