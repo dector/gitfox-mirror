@@ -44,11 +44,6 @@ class AuthActivity : BaseActivity() {
 
         override fun createFlowIntent(flowKey: String, data: Any?) = getFlowIntent(flowKey, data)
 
-        override fun startFlow(flowKey: String, data: Any?) {
-            super.startFlow(flowKey, data)
-            if (flowKey == Screens.MAIN_FLOW) finish()
-        }
-
         override fun createFragment(screenKey: String?, data: Any?): Fragment? = when (screenKey) {
             Screens.AUTH_SCREEN -> AuthFragment()
             else -> null
@@ -56,6 +51,9 @@ class AuthActivity : BaseActivity() {
     }
 
     companion object {
-        fun getStartIntent(context: Context) = Intent(context, AuthActivity::class.java)
+        fun getStartIntent(context: Context) =
+                Intent(context, AuthActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                }
     }
 }
