@@ -5,6 +5,7 @@ import android.support.v7.widget.LinearLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.layout_base_list.*
+import kotlinx.android.synthetic.main.layout_zero.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.extension.visible
@@ -72,6 +73,7 @@ class MyTodosFragment : BaseFragment(), MyTodoListView {
         }
 
         swipeToRefresh.setOnRefreshListener { presenter.refreshTodos() }
+        zeroViewHolder = ZeroViewHolder(zeroLayout, { presenter.refreshTodos() })
     }
 
     override fun showRefreshProgress(show: Boolean) {
