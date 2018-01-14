@@ -1,7 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.my.issues
 
 import com.arellomobile.mvp.InjectViewState
-import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.extension.openInfo
@@ -22,7 +21,7 @@ class MyIssuesPresenter @Inject constructor(
         private val errorHandler: ErrorHandler,
         private val router: FlowRouter
 ) : BasePresenter<MyIssuesView>() {
-    data class InitParams(val createdByMe: Boolean)
+    data class InitParams(val createdByMe: Boolean, val onlyOpened: Boolean)
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -31,7 +30,7 @@ class MyIssuesPresenter @Inject constructor(
     }
 
     private val paginator = Paginator(
-            { issueInteractor.getMyIssues(initParams.createdByMe, it) },
+            { issueInteractor.getMyIssues(initParams.createdByMe, initParams.onlyOpened, it) },
             object : Paginator.ViewController<TargetHeader> {
                 override fun showEmptyProgress(show: Boolean) {
                     viewState.showEmptyProgress(show)

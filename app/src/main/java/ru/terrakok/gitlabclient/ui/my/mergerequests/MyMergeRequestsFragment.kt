@@ -52,7 +52,8 @@ class MyMergeRequestsFragment : BaseFragment(), MyMergeRequestListView {
             init {
                 bind(MyMergeRequestsPresenter.InitParams::class.java)
                         .toInstance(MyMergeRequestsPresenter.InitParams(
-                                arguments?.getBoolean(ARG_MODE_CREATED_BY_ME) ?: true
+                                arguments?.getBoolean(ARG_MODE_CREATED_BY_ME) ?: true,
+                                true
                         ))
             }
         })

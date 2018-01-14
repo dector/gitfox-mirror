@@ -1,6 +1,8 @@
 package ru.terrakok.gitlabclient.model.interactor.issue
 
+import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.entity.issue.IssueScope
+import ru.terrakok.gitlabclient.entity.issue.IssueState
 import ru.terrakok.gitlabclient.model.repository.issue.IssueRepository
 import javax.inject.Inject
 
@@ -12,10 +14,13 @@ class IssueInteractor @Inject constructor(
 ) {
     fun getMyIssues(
             createdByMe: Boolean,
+            onlyOpened: Boolean,
             page: Int
     ) = issueRepository
             .getMyIssues(
                     scope = if (createdByMe) IssueScope.CREATED_BY_ME else IssueScope.ASSIGNED_BY_ME,
+                    state = if (onlyOpened) IssueState.OPENED else null,
+                    orderBy = OrderBy.UPDATED_AT,
                     page = page
             )
 }

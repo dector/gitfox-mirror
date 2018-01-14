@@ -52,7 +52,7 @@ class MyIssuesFragment : BaseFragment(), MyIssuesView {
             init {
                 bind(MyIssuesPresenter.InitParams::class.java)
                         .toInstance(
-                                MyIssuesPresenter.InitParams(arguments?.getBoolean(ARG_MODE_CREATED_BY_ME) ?: true)
+                                MyIssuesPresenter.InitParams(arguments?.getBoolean(ARG_MODE_CREATED_BY_ME) ?: true, true)
                         )
             }
         })
