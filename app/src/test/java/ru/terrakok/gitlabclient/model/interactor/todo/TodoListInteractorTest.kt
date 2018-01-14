@@ -6,9 +6,8 @@ import org.junit.Before
 import org.junit.Test
 import ru.terrakok.gitlabclient.entity.User
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
-import ru.terrakok.gitlabclient.entity.app.user.MyUserInfo
 import ru.terrakok.gitlabclient.entity.todo.TodoState
-import ru.terrakok.gitlabclient.model.interactor.profile.MyProfileInteractor
+import ru.terrakok.gitlabclient.model.repository.profile.ProfileRepository
 import ru.terrakok.gitlabclient.model.repository.todo.TodoRepository
 
 /**
@@ -18,22 +17,22 @@ class TodoListInteractorTest {
 
     private lateinit var interactor: TodoListInteractor
     private lateinit var todoRepository: TodoRepository
-    private lateinit var myProfileInteractor: MyProfileInteractor
+    private lateinit var profileRepository: ProfileRepository
 
     private val page = 0
     private val error = RuntimeException()
-    private val myUserInfo = MyUserInfo(mock<User>(), "https://gitlab.com")
+    private val currentUser = mock<User>()
 
     @Before
     fun setUp() {
         todoRepository = mock()
-        myProfileInteractor = mock()
-        interactor = TodoListInteractor(todoRepository, myProfileInteractor)
+        profileRepository = mock()
+        interactor = TodoListInteractor(todoRepository, profileRepository)
     }
 
     @Test
     fun getMyPendingTodos_success() {
-        whenever(myProfileInteractor.getMyProfile()).thenReturn(Single.just(myUserInfo))
+        whenever(profileRepository.getMyProfile()).thenReturn(Single.just(currentUser))
         whenever(todoRepository.getTodos(any(), anyOrNull(), anyOrNull(), anyOrNull(),
                 anyOrNull(), anyOrNull(), any(), any())).thenReturn(getTodos())
 
@@ -41,7 +40,7 @@ class TodoListInteractorTest {
         observer.awaitTerminalEvent()
 
         verify(todoRepository).getTodos(
-                eq(myUserInfo),
+                eq(currentUser),
                 eq(null),
                 eq(null),
                 eq(null),
@@ -50,7 +49,7 @@ class TodoListInteractorTest {
                 eq(page),
                 any()
         )
-        verify(myProfileInteractor).getMyProfile()
+        verify(profileRepository).getMyProfile()
         observer
                 .assertValueCount(1)
                 .assertNoErrors()
@@ -59,7 +58,7 @@ class TodoListInteractorTest {
 
     @Test
     fun getMyPendingTodos_errorFromTodoRepository() {
-        whenever(myProfileInteractor.getMyProfile()).thenReturn(Single.just(myUserInfo))
+        whenever(profileRepository.getMyProfile()).thenReturn(Single.just(currentUser))
         whenever(todoRepository.getTodos(any(), anyOrNull(), anyOrNull(), anyOrNull(),
                 anyOrNull(), anyOrNull(), any(), any())).thenReturn(Single.error(error))
 
@@ -67,7 +66,7 @@ class TodoListInteractorTest {
         observer.awaitTerminalEvent()
 
         verify(todoRepository).getTodos(
-                eq(myUserInfo),
+                eq(currentUser),
                 eq(null),
                 eq(null),
                 eq(null),
@@ -76,7 +75,7 @@ class TodoListInteractorTest {
                 eq(page),
                 any()
         )
-        verify(myProfileInteractor).getMyProfile()
+        verify(profileRepository).getMyProfile()
         observer
                 .assertNoValues()
                 .assertError(error)
@@ -84,12 +83,12 @@ class TodoListInteractorTest {
 
     @Test
     fun getMyPendingTodos_errorFromMyProfileInteractor() {
-        whenever(myProfileInteractor.getMyProfile()).thenReturn(Single.error(error))
+        whenever(profileRepository.getMyProfile()).thenReturn(Single.error(error))
 
         val observer = interactor.getMyTodos(true, page).test()
         observer.awaitTerminalEvent()
 
-        verify(myProfileInteractor).getMyProfile()
+        verify(profileRepository).getMyProfile()
         observer
                 .assertNoValues()
                 .assertError(error)
@@ -97,7 +96,7 @@ class TodoListInteractorTest {
 
     @Test
     fun getMyDoneTodos_success() {
-        whenever(myProfileInteractor.getMyProfile()).thenReturn(Single.just(myUserInfo))
+        whenever(profileRepository.getMyProfile()).thenReturn(Single.just(currentUser))
         whenever(todoRepository.getTodos(any(), anyOrNull(), anyOrNull(), anyOrNull(),
                 anyOrNull(), anyOrNull(), any(), any())).thenReturn(getTodos())
 
@@ -105,7 +104,7 @@ class TodoListInteractorTest {
         observer.awaitTerminalEvent()
 
         verify(todoRepository).getTodos(
-                eq(myUserInfo),
+                eq(currentUser),
                 eq(null),
                 eq(null),
                 eq(null),
@@ -114,7 +113,7 @@ class TodoListInteractorTest {
                 eq(page),
                 any()
         )
-        verify(myProfileInteractor).getMyProfile()
+        verify(profileRepository).getMyProfile()
         observer
                 .assertValueCount(1)
                 .assertNoErrors()
@@ -123,7 +122,7 @@ class TodoListInteractorTest {
 
     @Test
     fun getMyDoneTodos_errorFromTodoRepository() {
-        whenever(myProfileInteractor.getMyProfile()).thenReturn(Single.just(myUserInfo))
+        whenever(profileRepository.getMyProfile()).thenReturn(Single.just(currentUser))
         whenever(todoRepository.getTodos(any(), anyOrNull(), anyOrNull(), anyOrNull(),
                 anyOrNull(), anyOrNull(), any(), any())).thenReturn(Single.error(error))
 
@@ -131,7 +130,7 @@ class TodoListInteractorTest {
         observer.awaitTerminalEvent()
 
         verify(todoRepository).getTodos(
-                eq(myUserInfo),
+                eq(currentUser),
                 eq(null),
                 eq(null),
                 eq(null),
@@ -140,7 +139,7 @@ class TodoListInteractorTest {
                 eq(page),
                 any()
         )
-        verify(myProfileInteractor).getMyProfile()
+        verify(profileRepository).getMyProfile()
         observer
                 .assertNoValues()
                 .assertError(error)
@@ -148,12 +147,12 @@ class TodoListInteractorTest {
 
     @Test
     fun getMyDoneTodos_errorFromMyProfileInteractor() {
-        whenever(myProfileInteractor.getMyProfile()).thenReturn(Single.error(error))
+        whenever(profileRepository.getMyProfile()).thenReturn(Single.error(error))
 
         val observer = interactor.getMyTodos(false, page).test()
         observer.awaitTerminalEvent()
 
-        verify(myProfileInteractor).getMyProfile()
+        verify(profileRepository).getMyProfile()
         observer
                 .assertNoValues()
                 .assertError(error)

@@ -1,7 +1,7 @@
 package ru.terrakok.gitlabclient.model.interactor.todo
 
 import ru.terrakok.gitlabclient.entity.todo.TodoState
-import ru.terrakok.gitlabclient.model.interactor.profile.MyProfileInteractor
+import ru.terrakok.gitlabclient.model.repository.profile.ProfileRepository
 import ru.terrakok.gitlabclient.model.repository.todo.TodoRepository
 import javax.inject.Inject
 
@@ -10,16 +10,16 @@ import javax.inject.Inject
  */
 class TodoListInteractor @Inject constructor(
         private val todoRepository: TodoRepository,
-        private val myProfileInteractor: MyProfileInteractor
+        private val profileRepository: ProfileRepository
 ) {
     fun getMyTodos(
             isPending: Boolean,
             page: Int
-    ) = myProfileInteractor
+    ) = profileRepository
             .getMyProfile()
-            .flatMap { myUserInfo ->
+            .flatMap { currentUser ->
                 todoRepository.getTodos(
-                        myUserInfo = myUserInfo,
+                        currentUser = currentUser,
                         state = if (isPending) TodoState.PENDING else TodoState.DONE,
                         page = page
                 )

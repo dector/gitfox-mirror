@@ -3,7 +3,6 @@ package ru.terrakok.gitlabclient.model.repository.todo
 import ru.terrakok.gitlabclient.entity.Assignee
 import ru.terrakok.gitlabclient.entity.User
 import ru.terrakok.gitlabclient.entity.app.target.*
-import ru.terrakok.gitlabclient.entity.app.user.MyUserInfo
 import ru.terrakok.gitlabclient.entity.target.TargetState
 import ru.terrakok.gitlabclient.entity.target.TargetType
 import ru.terrakok.gitlabclient.entity.todo.Todo
@@ -26,7 +25,7 @@ class TodoRepository @Inject constructor(
     private val defaultPageSize = defaultPageSizeWrapper.value
 
     fun getTodos(
-            myUserInfo: MyUserInfo,
+            currentUser: User,
             action: TodoAction? = null,
             authorId: Long? = null,
             projectId: Long? = null,
@@ -36,7 +35,7 @@ class TodoRepository @Inject constructor(
             pageSize: Int = defaultPageSize
     ) = api
             .getTodos(action, authorId, projectId, state, targetType, page, pageSize)
-            .map { todos -> todos.map { getTargetHeader(it, myUserInfo.user) } }
+            .map { todos -> todos.map { getTargetHeader(it, currentUser) } }
             .subscribeOn(schedulers.io())
             .observeOn(schedulers.ui())
 
