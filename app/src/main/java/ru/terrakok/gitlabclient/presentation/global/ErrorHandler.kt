@@ -8,6 +8,7 @@ import ru.terrakok.gitlabclient.model.data.server.ServerError
 import ru.terrakok.gitlabclient.model.interactor.auth.AuthInteractor
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
+import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -16,7 +17,7 @@ import javax.inject.Inject
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 03.11.17.
  */
 class ErrorHandler @Inject constructor(
-        private val router: Router,
+        private val router: FlowRouter,
         private val authInteractor: AuthInteractor,
         private val resourceManager: ResourceManager,
         private val schedulers: SchedulersProvider
@@ -49,6 +50,6 @@ class ErrorHandler @Inject constructor(
 
     private fun logout() {
         authInteractor.logout()
-        router.newRootScreen(Screens.AUTH_SCREEN)
+        router.startFlow(Screens.AUTH_FLOW)
     }
 }

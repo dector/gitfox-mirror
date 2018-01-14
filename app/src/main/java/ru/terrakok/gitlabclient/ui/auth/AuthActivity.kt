@@ -5,13 +5,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import ru.terrakok.cicerone.NavigatorHolder
-import ru.terrakok.cicerone.android.SupportAppNavigator
-import ru.terrakok.cicerone.commands.Replace
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
+import ru.terrakok.gitlabclient.model.system.flow.FlowNavigator
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseActivity
-import ru.terrakok.gitlabclient.ui.launch.MainActivity
 import toothpick.Toothpick
 import javax.inject.Inject
 
@@ -28,7 +26,7 @@ class AuthActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         if (savedInstanceState == null) {
-            navigator.applyCommands(arrayOf(Replace(Screens.AUTH_SCREEN, null)))
+            navigator.setLaunchScreen(Screens.AUTH_SCREEN, null)
         }
     }
 
@@ -42,16 +40,20 @@ class AuthActivity : BaseActivity() {
         super.onPause()
     }
 
-    private val navigator = object : SupportAppNavigator(this, R.id.container) {
+    private val navigator = object : FlowNavigator(this, R.id.container) {
 
-        override fun createActivityIntent(context: Context?, screenKey: String?, data: Any?): Intent? = when (screenKey) {
-            Screens.MAIN_SCREEN -> Intent(this@AuthActivity, MainActivity::class.java)
-            else -> null
-        }
+        override fun createFlowIntent(flowKey: String, data: Any?) = getFlowIntent(flowKey, data)
 
         override fun createFragment(screenKey: String?, data: Any?): Fragment? = when (screenKey) {
             Screens.AUTH_SCREEN -> AuthFragment()
             else -> null
         }
+    }
+
+    companion object {
+        fun getStartIntent(context: Context) =
+                Intent(context, AuthActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                }
     }
 }

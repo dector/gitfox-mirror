@@ -32,6 +32,7 @@ import ru.terrakok.gitlabclient.entity.app.target.*
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.todo.TodoAction
 import ru.terrakok.gitlabclient.model.system.ResourceManager
+import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import timber.log.Timber
 import java.io.IOException
 import java.util.*
@@ -273,27 +274,27 @@ fun ImageView.loadRoundedImage(
             })
 }
 
-fun TargetHeader.openInfo(router: Router) {
+fun TargetHeader.openInfo(router: FlowRouter) {
     when(target) {
         AppTarget.PROJECT -> {
-            router.navigateTo(Screens.PROJECT_INFO_SCREEN, targetId)
+            router.startFlow(Screens.PROJECT_FLOW, targetId)
         }
         AppTarget.USER -> {
-            router.navigateTo(Screens.USER_INFO_SCREEN, targetId)
+            router.startFlow(Screens.USER_FLOW, targetId)
         }
         AppTarget.MERGE_REQUEST -> {
             internal?.let { targetInternal ->
-                router.navigateTo(
-                        Screens.MR_INFO_SCREEN,
-                        Pair(targetInternal.targetIid, targetInternal.projectId)
+                router.startFlow(
+                        Screens.MR_FLOW,
+                        Pair(targetInternal.projectId, targetInternal.targetIid)
                 )
             }
         }
         AppTarget.ISSUE -> {
             internal?.let { targetInternal ->
-                router.navigateTo(
-                        Screens.MR_INFO_SCREEN,
-                        Pair(targetInternal.targetIid, targetInternal.projectId)
+                router.startFlow(
+                        Screens.MR_FLOW,
+                        Pair(targetInternal.projectId, targetInternal.targetIid)
                 )
             }
         }

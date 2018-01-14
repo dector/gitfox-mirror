@@ -4,6 +4,7 @@ import com.arellomobile.mvp.InjectViewState
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.model.interactor.auth.AuthInteractor
+import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import javax.inject.Inject
 
@@ -12,7 +13,7 @@ import javax.inject.Inject
  */
 @InjectViewState
 class LaunchPresenter @Inject constructor(
-        private val router: Router,
+        private val router: FlowRouter,
         private val authInteractor: AuthInteractor
 ) : BasePresenter<LaunchView>() {
 
@@ -20,7 +21,7 @@ class LaunchPresenter @Inject constructor(
         super.onFirstViewAttach()
 
         if (authInteractor.isSignedIn()) viewState.initMainScreen()
-        else router.newRootScreen(Screens.AUTH_SCREEN)
+        else router.startFlow(Screens.AUTH_FLOW)
     }
 
     fun onBackPressed() = router.finishChain()

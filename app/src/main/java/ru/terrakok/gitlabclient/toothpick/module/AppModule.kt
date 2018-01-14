@@ -17,6 +17,7 @@ import ru.terrakok.gitlabclient.model.repository.tools.MarkDownConverter
 import ru.terrakok.gitlabclient.model.system.AppSchedulers
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
+import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultPageSize
 import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultServerPath
@@ -39,8 +40,9 @@ class AppModule(context: Context) : Module() {
         bind(RawAppData::class.java)
 
         //Navigation
-        val cicerone = Cicerone.create()
+        val cicerone = Cicerone.create(FlowRouter())
         bind(Router::class.java).toInstance(cicerone.router)
+        bind(FlowRouter::class.java).toInstance(cicerone.router)
         bind(NavigatorHolder::class.java).toInstance(cicerone.navigatorHolder)
 
         //Auth

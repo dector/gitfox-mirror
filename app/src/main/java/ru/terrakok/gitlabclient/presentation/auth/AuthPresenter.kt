@@ -4,6 +4,7 @@ import com.arellomobile.mvp.InjectViewState
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.model.interactor.auth.AuthInteractor
+import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import javax.inject.Inject
@@ -13,7 +14,7 @@ import javax.inject.Inject
  */
 @InjectViewState
 class AuthPresenter @Inject constructor(
-        private val router: Router,
+        private val router: FlowRouter,
         private val authInteractor: AuthInteractor,
         private val errorHandler: ErrorHandler
 ) : BasePresenter<AuthView>() {
@@ -33,7 +34,7 @@ class AuthPresenter @Inject constructor(
                 .doOnSubscribe { viewState.showProgress(true) }
                 .doAfterTerminate { viewState.showProgress(false) }
                 .subscribe(
-                        { router.newRootScreen(Screens.MAIN_SCREEN) },
+                        { router.startFlow(Screens.MAIN_FLOW) },
                         { errorHandler.proceed(it, { viewState.showMessage(it) }) }
                 ).connect()
     }
@@ -51,7 +52,7 @@ class AuthPresenter @Inject constructor(
     fun loginOnCustomServer(url: String, token: String) {
         authInteractor.login(url, token)
                 .subscribe(
-                        { router.newRootScreen(Screens.MAIN_SCREEN) },
+                        { router.startFlow(Screens.MAIN_FLOW) },
                         { errorHandler.proceed(it, { viewState.showMessage(it) }) }
                 ).connect()
     }

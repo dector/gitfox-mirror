@@ -6,6 +6,7 @@ import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.extension.openInfo
 import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestInteractor
+import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.Paginator
@@ -16,7 +17,7 @@ class MyMergeRequestsPresenter @Inject constructor(
         private val initParams: InitParams,
         private val interactor: MergeRequestInteractor,
         private val errorHandler: ErrorHandler,
-        private val router: Router
+        private val router: FlowRouter
 ) : BasePresenter<MyMergeRequestListView>() {
     data class InitParams(val createdByMe: Boolean)
 
@@ -64,7 +65,7 @@ class MyMergeRequestsPresenter @Inject constructor(
     )
 
     fun onMergeRequestClick(item: TargetHeader) = item.openInfo(router)
-    fun onUserClick(userId: Long) = router.navigateTo(Screens.USER_INFO_SCREEN, userId)
+    fun onUserClick(userId: Long) = router.startFlow(Screens.USER_FLOW, userId)
     fun refreshMergeRequests() = paginator.refresh()
     fun loadNextMergeRequestsPage() = paginator.loadNewPage()
 

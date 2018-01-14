@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import ru.terrakok.cicerone.NavigatorHolder
-import ru.terrakok.cicerone.android.SupportAppNavigator
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.model.system.flow.FlowNavigator
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.MergeRequestId
@@ -43,7 +43,7 @@ class MergeRequestActivity : BaseActivity() {
         }
 
         if (savedInstanceState == null) {
-            //navigator.applyCommand(Replace(Screens.MR_INFO_SCREEN, null))
+            //navigator.setLaunchScreen(Screens.MR_INFO_SCREEN, null)
         }
     }
 
@@ -63,20 +63,18 @@ class MergeRequestActivity : BaseActivity() {
         if (isFinishing) Toothpick.closeScope(DI.MERGE_REQUEST_SCOPE)
     }
 
-    private val navigator = object : SupportAppNavigator(this, R.id.container) {
-
-        override fun createActivityIntent(context: Context?, screenKey: String?, data: Any?) = null
+    private val navigator = object : FlowNavigator(this, R.id.container) {
 
         override fun createFragment(screenKey: String?, data: Any?) = null
     }
 
     companion object {
-        private val ARG_MR_ID = "arg_mr_id"
         private val ARG_PROJECT_ID = "arg_project_id"
-        fun getStartIntent(mrId: Long, projectId: Long, context: Context) =
+        private val ARG_MR_ID = "arg_mr_id"
+        fun getStartIntent(projectId: Long, mrId: Long, context: Context) =
                 Intent(context, MergeRequestActivity::class.java).apply {
-                    putExtra(ARG_MR_ID, mrId)
                     putExtra(ARG_PROJECT_ID, projectId)
+                    putExtra(ARG_MR_ID, mrId)
                 }
     }
 }

@@ -11,10 +11,10 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.terrakok.cicerone.NavigatorHolder
-import ru.terrakok.cicerone.android.SupportAppNavigator
 import ru.terrakok.cicerone.commands.Command
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
+import ru.terrakok.gitlabclient.model.system.flow.FlowNavigator
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
 import ru.terrakok.gitlabclient.presentation.launch.LaunchPresenter
@@ -22,17 +22,12 @@ import ru.terrakok.gitlabclient.presentation.launch.LaunchView
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.toothpick.module.MainActivityModule
 import ru.terrakok.gitlabclient.ui.about.AboutFragment
-import ru.terrakok.gitlabclient.ui.auth.AuthActivity
 import ru.terrakok.gitlabclient.ui.drawer.NavigationDrawerFragment
 import ru.terrakok.gitlabclient.ui.global.BaseActivity
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import ru.terrakok.gitlabclient.ui.issue.IssueActivity
 import ru.terrakok.gitlabclient.ui.libraries.LibrariesFragment
 import ru.terrakok.gitlabclient.ui.main.MainFragment
-import ru.terrakok.gitlabclient.ui.mergerequest.MergeRequestActivity
-import ru.terrakok.gitlabclient.ui.project.ProjectActivity
 import ru.terrakok.gitlabclient.ui.projects.ProjectsContainerFragment
-import ru.terrakok.gitlabclient.ui.user.UserActivity
 import toothpick.Toothpick
 import javax.inject.Inject
 
@@ -96,33 +91,14 @@ class MainActivity : BaseActivity(), LaunchView {
         updateNavDrawer()
     }
 
-    private val navigator = object : SupportAppNavigator(this, R.id.mainContainer) {
+    private val navigator = object : FlowNavigator(this, R.id.mainContainer) {
 
         override fun applyCommands(commands: Array<out Command>?) {
             super.applyCommands(commands)
             updateNavDrawer()
         }
 
-        override fun createActivityIntent(context: Context?, screenKey: String?, data: Any?): Intent? = when (screenKey) {
-            Screens.AUTH_SCREEN -> {
-                Intent(this@MainActivity, AuthActivity::class.java)
-            }
-            Screens.USER_INFO_SCREEN -> {
-                UserActivity.getStartIntent(data as Long, this@MainActivity)
-            }
-            Screens.PROJECT_INFO_SCREEN -> {
-                ProjectActivity.getStartIntent(data as Long, this@MainActivity)
-            }
-            Screens.MR_INFO_SCREEN -> {
-                val (mrId, projectId) = data as Pair<Long, Long>
-                MergeRequestActivity.getStartIntent(mrId, projectId, this@MainActivity)
-            }
-            Screens.ISSUE_INFO_SCREEN -> {
-                val (issueId, projectId) = data as Pair<Long, Long>
-                IssueActivity.getStartIntent(issueId, projectId, this@MainActivity)
-            }
-            else -> null
-        }
+        override fun createFlowIntent(flowKey: String, data: Any?) = getFlowIntent(flowKey, data)
 
         override fun createFragment(screenKey: String?, data: Any?): Fragment? = when (screenKey) {
             Screens.MAIN_SCREEN -> MainFragment()
@@ -178,5 +154,12 @@ class MainActivity : BaseActivity(), LaunchView {
         } else {
             currentFragment?.onBackPressed() ?: presenter.onBackPressed()
         }
+    }
+
+    companion object {
+        fun getStartIntent(context: Context) =
+                Intent(context, MainActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                }
     }
 }
