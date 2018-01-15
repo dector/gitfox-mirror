@@ -1,7 +1,6 @@
 package ru.terrakok.gitlabclient.ui.projects
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentPagerAdapter
 import kotlinx.android.synthetic.main.fragment_my_issues_container.*
 import ru.terrakok.cicerone.Router
@@ -39,21 +38,20 @@ class ProjectsContainerFragment : BaseFragment() {
     }
 
     private inner class ProjectsPagesAdapter : FragmentPagerAdapter(childFragmentManager) {
-        private val pages = listOf<Fragment>(
-                ProjectsListFragment.newInstance(ProjectsListPresenter.MAIN_PROJECTS),
-                ProjectsListFragment.newInstance(ProjectsListPresenter.MY_PROJECTS),
-                ProjectsListFragment.newInstance(ProjectsListPresenter.STARRED_PROJECTS)
-        )
-        private val pageTitles = listOf<String>(
-                getString(R.string.all_projects_title),
-                getString(R.string.my_projects_title),
-                getString(R.string.starred_projects_title)
-        )
+        override fun getItem(position: Int) = when (position) {
+            0 -> ProjectsListFragment.newInstance(ProjectsListPresenter.MAIN_PROJECTS)
+            1 -> ProjectsListFragment.newInstance(ProjectsListPresenter.MY_PROJECTS)
+            2 -> ProjectsListFragment.newInstance(ProjectsListPresenter.STARRED_PROJECTS)
+            else -> null
+        }
 
-        override fun getItem(position: Int) = pages[position]
+        override fun getCount() = 3
 
-        override fun getCount() = pages.size
-
-        override fun getPageTitle(position: Int) = pageTitles[position]
+        override fun getPageTitle(position: Int) = when (position) {
+            0 -> getString(R.string.all_projects_title)
+            1 -> getString(R.string.my_projects_title)
+            2 -> getString(R.string.starred_projects_title)
+            else -> null
+        }
     }
 }

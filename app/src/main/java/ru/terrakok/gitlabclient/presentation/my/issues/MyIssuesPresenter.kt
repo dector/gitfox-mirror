@@ -1,7 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.my.issues
 
 import com.arellomobile.mvp.InjectViewState
-import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.extension.openInfo
@@ -17,12 +16,14 @@ import javax.inject.Inject
  */
 @InjectViewState
 class MyIssuesPresenter @Inject constructor(
-        private val initParams: InitParams,
+        initFilter: Filter,
         private val issueInteractor: IssueInteractor,
         private val errorHandler: ErrorHandler,
         private val router: FlowRouter
 ) : BasePresenter<MyIssuesView>() {
-    data class InitParams(val createdByMe: Boolean)
+    data class Filter(val createdByMe: Boolean, val onlyOpened: Boolean)
+
+    private var filter = initFilter
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -31,7 +32,7 @@ class MyIssuesPresenter @Inject constructor(
     }
 
     private val paginator = Paginator(
-            { issueInteractor.getMyIssues(initParams.createdByMe, it) },
+            { issueInteractor.getMyIssues(filter.createdByMe, filter.onlyOpened, it) },
             object : Paginator.ViewController<TargetHeader> {
                 override fun showEmptyProgress(show: Boolean) {
                     viewState.showEmptyProgress(show)
@@ -66,6 +67,13 @@ class MyIssuesPresenter @Inject constructor(
                 }
             }
     )
+
+    fun applyNewFilter(filter: Filter) {
+        if (this.filter != filter) {
+            this.filter = filter
+            paginator.restart()
+        }
+    }
 
     fun onIssueClick(item: TargetHeader) = item.openInfo(router)
     fun onUserClick(userId: Long) = router.startFlow(Screens.USER_FLOW, userId)

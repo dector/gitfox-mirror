@@ -25,10 +25,15 @@ class MyIssuesFragment : BaseFragment(), MyIssuesView {
 
     companion object {
         private val ARG_MODE_CREATED_BY_ME = "arg_mode_created_by_me"
+        private val ARG_MODE_ONLY_OPENED = "arg_mode_only opened"
 
-        fun newInstance(createdByMe: Boolean) = MyIssuesFragment().apply {
-            arguments = Bundle().apply { putBoolean(ARG_MODE_CREATED_BY_ME, createdByMe) }
-        }
+        fun newInstance(createdByMe: Boolean, onlyOpened: Boolean) =
+                MyIssuesFragment().apply {
+                    arguments = Bundle().apply {
+                        putBoolean(ARG_MODE_CREATED_BY_ME, createdByMe)
+                        putBoolean(ARG_MODE_ONLY_OPENED, onlyOpened)
+                    }
+                }
     }
 
     override val layoutRes = R.layout.fragment_my_issues
@@ -50,9 +55,12 @@ class MyIssuesFragment : BaseFragment(), MyIssuesView {
         val scope = Toothpick.openScopes(DI.MAIN_ACTIVITY_SCOPE, scopeName)
         scope.installModules(object : Module() {
             init {
-                bind(MyIssuesPresenter.InitParams::class.java)
+                bind(MyIssuesPresenter.Filter::class.java)
                         .toInstance(
-                                MyIssuesPresenter.InitParams(arguments?.getBoolean(ARG_MODE_CREATED_BY_ME) ?: true)
+                                MyIssuesPresenter.Filter(
+                                        arguments?.getBoolean(ARG_MODE_CREATED_BY_ME) ?: true,
+                                        arguments?.getBoolean(ARG_MODE_ONLY_OPENED) ?: false
+                                )
                         )
             }
         })
@@ -73,6 +81,13 @@ class MyIssuesFragment : BaseFragment(), MyIssuesView {
 
         swipeToRefresh.setOnRefreshListener { presenter.refreshIssues() }
         zeroViewHolder = ZeroViewHolder(zeroLayout, { presenter.refreshIssues() })
+    }
+
+    fun showOnlyOpened(onlyOpened: Boolean) {
+        presenter.applyNewFilter(MyIssuesPresenter.Filter(
+                arguments?.getBoolean(ARG_MODE_CREATED_BY_ME) ?: true,
+                onlyOpened
+        ))
     }
 
     override fun showRefreshProgress(show: Boolean) {

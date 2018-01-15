@@ -19,6 +19,13 @@ abstract class BaseFragment : MvpAppCompatFragment() {
 
     abstract val layoutRes: Int
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        savedInstanceState?.let { restoreState(it) }
+    }
+
+    open protected fun restoreState(state: Bundle) {}
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?)
             = inflater.inflate(layoutRes, container, false)
 

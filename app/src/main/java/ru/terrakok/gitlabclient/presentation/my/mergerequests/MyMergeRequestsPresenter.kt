@@ -1,7 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.my.mergerequests
 
 import com.arellomobile.mvp.InjectViewState
-import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.extension.openInfo
@@ -14,12 +13,14 @@ import javax.inject.Inject
 
 @InjectViewState
 class MyMergeRequestsPresenter @Inject constructor(
-        private val initParams: InitParams,
+        initFilter: Filter,
         private val interactor: MergeRequestInteractor,
         private val errorHandler: ErrorHandler,
         private val router: FlowRouter
 ) : BasePresenter<MyMergeRequestListView>() {
-    data class InitParams(val createdByMe: Boolean)
+    data class Filter(val createdByMe: Boolean, val onlyOpened: Boolean)
+
+    private var filter = initFilter
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -28,7 +29,7 @@ class MyMergeRequestsPresenter @Inject constructor(
     }
 
     private val paginator = Paginator(
-            { interactor.getMyMergeRequests(initParams.createdByMe, it) },
+            { interactor.getMyMergeRequests(filter.createdByMe, filter.onlyOpened, it) },
             object : Paginator.ViewController<TargetHeader> {
                 override fun showEmptyProgress(show: Boolean) {
                     viewState.showEmptyProgress(show)
@@ -63,6 +64,13 @@ class MyMergeRequestsPresenter @Inject constructor(
                 }
             }
     )
+
+    fun applyNewFilter(filter: Filter) {
+        if (this.filter != filter) {
+            this.filter = filter
+            paginator.restart()
+        }
+    }
 
     fun onMergeRequestClick(item: TargetHeader) = item.openInfo(router)
     fun onUserClick(userId: Long) = router.startFlow(Screens.USER_FLOW, userId)

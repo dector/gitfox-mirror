@@ -2,6 +2,7 @@ package ru.terrakok.gitlabclient.model.interactor.mergerequest
 
 import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestScope
+import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
 import ru.terrakok.gitlabclient.model.repository.mergerequest.MergeRequestRepository
 import javax.inject.Inject
 
@@ -10,12 +11,14 @@ class MergeRequestInteractor @Inject constructor(
 ) {
     fun getMyMergeRequests(
             createdByMe: Boolean,
+            onlyOpened: Boolean,
             page: Int
     ) = mergeRequestRepository
             .getMergeRequests(
                     scope = if (createdByMe) MergeRequestScope.CREATED_BY_ME else MergeRequestScope.ASSIGNED_TO_ME,
-                    page = page,
-                    orderBy = OrderBy.UPDATED_AT
+                    state = if (onlyOpened) MergeRequestState.OPENED else null,
+                    orderBy = OrderBy.UPDATED_AT,
+                    page = page
             )
 
     fun getMergeRequest(

@@ -1,7 +1,9 @@
 <resources>
+    <!--common-->
     <string name="app_name">GitFox</string>
     <string name="cancel">Cancel</string>
     <string name="share_to">Share to</string>
+    <string name="only_opened">Only opened</string>
     <string name="ok">OK</string>
     <string name="refresh">Refresh</string>
     <string name="at">at</string>
