@@ -4,10 +4,7 @@ import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.RequiresApi
-import android.webkit.CookieManager
-import android.webkit.WebResourceRequest
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_auth.*
@@ -61,7 +58,7 @@ class AuthFragment : BaseFragment(), AuthView, CustomServerAuthFragment.OnClickL
             userAgentString = BuildConfig.WEB_AUTH_USER_AGENT
         }
 
-        webView.setWebViewClient(object : WebViewClient() {
+        webView.webViewClient = object : WebViewClient() {
 
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 showProgressDialog(true)
@@ -85,8 +82,21 @@ class AuthFragment : BaseFragment(), AuthView, CustomServerAuthFragment.OnClickL
             private fun overrideUrlLoading(view: WebView, url: String): Boolean {
                 return presenter.onRedirect(url)
             }
-        })
+
+            override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
+                super.onReceivedError(view, request, error)
+                clearWebView()
+                toolbar.setTitle(R.string.waiting_network)
+            }
+        }
     }
+
+    private fun clearWebView() = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+        webView.clearView()
+    } else {
+        webView.loadUrl("")
+    }
+
 
     override fun loadUrl(url: String) {
         webView.loadUrl(url)

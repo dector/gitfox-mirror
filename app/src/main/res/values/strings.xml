@@ -116,6 +116,8 @@
     <string name="target_status_closed">Closed</string>
     <string name="target_status_merged">Merged</string>
 
+    <string name="waiting_network">Waiting for network…</string>
+
     <!--My Merge Requests Screen-->
     <string name="merge_request_created_by_me">Created</string>
     <string name="merge_request_assigned_by_me">Assigned</string>
