@@ -21,6 +21,11 @@
         <item name="fontPath">@string/font_main_medium</item>
     </style>
 
+    <style name="PopupToolbarTheme" parent="ThemeOverlay.AppCompat.Light">
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColor">@color/primary_text</item>
+    </style>
+
     <style name="ProgressDialogTheme" parent="ThemeOverlay.AppCompat.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
@@ -30,6 +35,7 @@
         <item name="android:background">@color/colorPrimary</item>
         <item name="android:theme">@style/ToolbarTheme</item>
         <item name="android:elevation">8dp</item>
+        <item name="popupTheme">@style/PopupToolbarTheme</item>
     </style>
 
     <style name="TextHeadline" parent="TextAppearance.AppCompat.Headline">

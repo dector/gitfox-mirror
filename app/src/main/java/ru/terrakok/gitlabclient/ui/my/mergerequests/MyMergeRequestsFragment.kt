@@ -25,10 +25,15 @@ class MyMergeRequestsFragment : BaseFragment(), MyMergeRequestListView {
 
     companion object {
         private val ARG_MODE_CREATED_BY_ME = "arg_mode_created_by_me"
+        private val ARG_MODE_ONLY_OPENED = "arg_mode_only opened"
 
-        fun newInstance(createdByMe: Boolean) = MyMergeRequestsFragment().apply {
-            arguments = Bundle().apply { putBoolean(ARG_MODE_CREATED_BY_ME, createdByMe) }
-        }
+        fun newInstance(createdByMe: Boolean, onlyOpened: Boolean) =
+                MyMergeRequestsFragment().apply {
+                    arguments = Bundle().apply {
+                        putBoolean(ARG_MODE_CREATED_BY_ME, createdByMe)
+                        putBoolean(ARG_MODE_ONLY_OPENED, onlyOpened)
+                    }
+                }
     }
 
     override val layoutRes = R.layout.fragment_my_merge_requests
@@ -50,10 +55,10 @@ class MyMergeRequestsFragment : BaseFragment(), MyMergeRequestListView {
         val scope = Toothpick.openScopes(DI.MAIN_ACTIVITY_SCOPE, scopeName)
         scope.installModules(object : Module() {
             init {
-                bind(MyMergeRequestsPresenter.InitParams::class.java)
-                        .toInstance(MyMergeRequestsPresenter.InitParams(
+                bind(MyMergeRequestsPresenter.Filter::class.java)
+                        .toInstance(MyMergeRequestsPresenter.Filter(
                                 arguments?.getBoolean(ARG_MODE_CREATED_BY_ME) ?: true,
-                                true
+                                arguments?.getBoolean(ARG_MODE_ONLY_OPENED) ?: false
                         ))
             }
         })
@@ -74,6 +79,13 @@ class MyMergeRequestsFragment : BaseFragment(), MyMergeRequestListView {
 
         swipeToRefresh.setOnRefreshListener { presenter.refreshMergeRequests() }
         zeroViewHolder = ZeroViewHolder(zeroLayout, { presenter.refreshMergeRequests() })
+    }
+
+    fun showOnlyOpened(onlyOpened: Boolean) {
+        presenter.applyNewFilter(MyMergeRequestsPresenter.Filter(
+                arguments?.getBoolean(ARG_MODE_CREATED_BY_ME) ?: true,
+                onlyOpened
+        ))
     }
 
     override fun showRefreshProgress(show: Boolean) {

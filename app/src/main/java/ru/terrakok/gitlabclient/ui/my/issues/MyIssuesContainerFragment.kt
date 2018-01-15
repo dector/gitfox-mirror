@@ -19,6 +19,7 @@ class MyIssuesContainerFragment : BaseFragment() {
     override val layoutRes = R.layout.fragment_my_issues_container
 
     private val adapter: MyIssuesPagesAdapter by lazy { MyIssuesPagesAdapter() }
+    private var showOnlyOpened = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Toothpick.inject(this, Toothpick.openScope(DI.MAIN_ACTIVITY_SCOPE))
@@ -28,24 +29,54 @@ class MyIssuesContainerFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        toolbar.setNavigationOnClickListener { menuController.open() }
+        with(toolbar) {
+            setNavigationOnClickListener { menuController.open() }
+            inflateMenu(R.menu.my_issues_menu)
+            setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.onlyOpenedAction -> {
+                        showOnlyOpened = !showOnlyOpened
+                        item.isChecked = showOnlyOpened
+                        childFragmentManager.fragments.forEach {
+                            (it as? MyIssuesFragment)?.showOnlyOpened(showOnlyOpened)
+                        }
+                    }
+                }
+                true
+            }
+            menu.findItem(R.id.onlyOpenedAction)?.isChecked = showOnlyOpened
+        }
+
         viewPager.adapter = adapter
     }
 
+    override fun restoreState(state: Bundle) {
+        super.restoreState(state)
+        showOnlyOpened = state.getBoolean(STATE_ONLY_OPENED)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(STATE_ONLY_OPENED, showOnlyOpened)
+    }
+
     private inner class MyIssuesPagesAdapter : FragmentPagerAdapter(childFragmentManager) {
-        private val pages = listOf(
-                MyIssuesFragment.newInstance(true),
-                MyIssuesFragment.newInstance(false)
-        )
-        private val pageTitles = listOf(
-                getString(R.string.issues_created_by_me),
-                getString(R.string.issues_assigned_by_me)
-        )
+        override fun getItem(position: Int) = when (position) {
+            0 -> MyIssuesFragment.newInstance(true, showOnlyOpened)
+            1 -> MyIssuesFragment.newInstance(false, showOnlyOpened)
+            else -> null
+        }
 
-        override fun getItem(position: Int) = pages[position]
+        override fun getCount() = 2
 
-        override fun getCount() = pages.size
+        override fun getPageTitle(position: Int) = when (position) {
+            0 -> getString(R.string.issues_created_by_me)
+            1 -> getString(R.string.issues_assigned_by_me)
+            else -> null
+        }
+    }
 
-        override fun getPageTitle(position: Int) = pageTitles[position]
+    companion object {
+        private const val STATE_ONLY_OPENED = "state_only_opened"
     }
 }
