@@ -59,6 +59,7 @@ ext {
     moxyVersion = "1.4.6"
     toothpickVersion = "1.0.6"
     retrofitVersion = "2.2.0"
+    leakCanaryVersion = "1.5.4"
 }
 
 dependencies {
@@ -105,6 +106,10 @@ dependencies {
     compile 'joda-time:joda-time:2.9.9'
     //FlexBox Layout
     compile 'com.google.android:flexbox:0.3.1'
+
+    //LeakCanary
+    debugCompile "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
+    releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
 
     //JUnit
     testCompile "junit:junit:4.12"

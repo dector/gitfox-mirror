@@ -1,6 +1,7 @@
 package ru.terrakok.gitlabclient
 
 import android.app.Application
+import com.squareup.leakcanary.LeakCanary
 import ru.terrakok.gitlabclient.model.data.auth.AuthHolder
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.toothpick.module.AppModule
@@ -20,10 +21,22 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
 
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            // see: https://github.com/square/leakcanary
+            return
+        }
+
+        initLeakCanary()
         initLogger()
         initToothpick()
         initAppScope()
         initCalligraphy()
+    }
+
+    private fun initLeakCanary() {
+        LeakCanary.install(this)
     }
 
     private fun initLogger() {
