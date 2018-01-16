@@ -10,6 +10,7 @@
     <string name="for_str">for</string>
     <string name="you">you</string>
     <string name="yourself">yourself</string>
+    <string name="waiting_network">Waiting for network…</string>
 
     <!--Main screen-->
     <string name="gitlab_activity">Activity</string>
@@ -115,8 +116,6 @@
     <string name="target_status_opened">Opened</string>
     <string name="target_status_closed">Closed</string>
     <string name="target_status_merged">Merged</string>
-
-    <string name="waiting_network">Waiting for network…</string>
 
     <!--My Merge Requests Screen-->
     <string name="merge_request_created_by_me">Created</string>

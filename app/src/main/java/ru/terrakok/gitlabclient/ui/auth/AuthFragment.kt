@@ -8,12 +8,15 @@ import android.webkit.*
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_auth.*
+import kotlinx.android.synthetic.main.layout_zero.*
 import ru.terrakok.gitlabclient.BuildConfig
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.auth.AuthPresenter
 import ru.terrakok.gitlabclient.presentation.auth.AuthView
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.ui.global.ZeroViewHolder
 import toothpick.Toothpick
 
 /**
@@ -32,6 +35,8 @@ class AuthFragment : BaseFragment(), AuthView, CustomServerAuthFragment.OnClickL
                 .openScope(DI.SERVER_SCOPE)
                 .getInstance(AuthPresenter::class.java)
     }
+
+    private var zeroViewHolder: ZeroViewHolder? = null
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -62,6 +67,7 @@ class AuthFragment : BaseFragment(), AuthView, CustomServerAuthFragment.OnClickL
 
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 showProgressDialog(true)
+                showEmptyView(false)
                 super.onPageStarted(view, url, favicon)
             }
 
@@ -86,20 +92,30 @@ class AuthFragment : BaseFragment(), AuthView, CustomServerAuthFragment.OnClickL
             override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
                 super.onReceivedError(view, request, error)
                 clearWebView()
-                toolbar.setTitle(R.string.waiting_network)
+                showEmptyView(true)
             }
         }
+
+        zeroViewHolder = ZeroViewHolder(zeroLayout, { presenter.startAuthorization() })
     }
 
-    private fun clearWebView() = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-        webView.clearView()
-    } else {
-        webView.loadUrl("")
+    fun showEmptyView(show: Boolean) {
+        if (show)
+            zeroViewHolder?.showEmptyError()
+        else
+            zeroViewHolder?.hide()
     }
-
 
     override fun loadUrl(url: String) {
         webView.loadUrl(url)
+    }
+
+    private fun clearWebView() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            webView.clearView()
+        } else {
+            webView.loadUrl("about:blank")
+        }
     }
 
     override fun showProgress(isVisible: Boolean) {
