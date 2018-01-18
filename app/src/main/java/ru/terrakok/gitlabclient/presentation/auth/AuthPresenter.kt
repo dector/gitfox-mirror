@@ -24,7 +24,7 @@ class AuthPresenter @Inject constructor(
         startAuthorization()
     }
 
-    fun startAuthorization() {
+    private fun startAuthorization() {
         viewState.loadUrl(authInteractor.oauthUrl)
     }
 
@@ -38,12 +38,22 @@ class AuthPresenter @Inject constructor(
                 ).connect()
     }
 
-    fun onRedirect(url: String) = if (authInteractor.checkOAuthRedirect(url)) {
-        requestToken(url)
-        true
-    } else {
-        viewState.loadUrl(url)
-        false
+    fun onRedirect(url: String): Boolean {
+        if (authInteractor.checkOAuthRedirect(url)) {
+            requestToken(url)
+            return true
+        } else {
+            viewState.loadUrl(url)
+            return false
+        }
+    }
+
+    fun onError() {
+        viewState.showEmptyView(true)
+    }
+
+    fun refresh() {
+        startAuthorization()
     }
 
     fun loginOnCustomServer(url: String, token: String) {

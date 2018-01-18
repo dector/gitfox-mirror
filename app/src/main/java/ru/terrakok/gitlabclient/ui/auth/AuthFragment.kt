@@ -26,6 +26,7 @@ class AuthFragment : BaseFragment(), AuthView, CustomServerAuthFragment.OnClickL
 
     override val layoutRes = R.layout.fragment_auth
     override val customLogin = { url: String, token: String -> presenter.loginOnCustomServer(url, token) }
+    private var zeroViewHolder: ZeroViewHolder? = null
 
     @InjectPresenter lateinit var presenter: AuthPresenter
 
@@ -35,8 +36,6 @@ class AuthFragment : BaseFragment(), AuthView, CustomServerAuthFragment.OnClickL
                 .openScope(DI.SERVER_SCOPE)
                 .getInstance(AuthPresenter::class.java)
     }
-
-    private var zeroViewHolder: ZeroViewHolder? = null
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -63,7 +62,7 @@ class AuthFragment : BaseFragment(), AuthView, CustomServerAuthFragment.OnClickL
             userAgentString = BuildConfig.WEB_AUTH_USER_AGENT
         }
 
-        webView.webViewClient = object : WebViewClient() {
+        webView.setWebViewClient(object : WebViewClient() {
 
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 showProgressDialog(true)
@@ -91,31 +90,20 @@ class AuthFragment : BaseFragment(), AuthView, CustomServerAuthFragment.OnClickL
 
             override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
                 super.onReceivedError(view, request, error)
-                clearWebView()
-                showEmptyView(true)
+                presenter.onError()
             }
-        }
+        })
 
-        zeroViewHolder = ZeroViewHolder(zeroLayout, { presenter.startAuthorization() })
+        zeroViewHolder = ZeroViewHolder(zeroLayout, { presenter.refresh() })
     }
 
-    fun showEmptyView(show: Boolean) {
-        if (show)
-            zeroViewHolder?.showEmptyError()
-        else
-            zeroViewHolder?.hide()
+    override fun showEmptyView(show: Boolean) {
+        zeroViewHolder?.apply { if (show) showEmptyError() else hide() }
+        webView.visible(!show)
     }
 
     override fun loadUrl(url: String) {
         webView.loadUrl(url)
-    }
-
-    private fun clearWebView() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            webView.clearView()
-        } else {
-            webView.loadUrl("about:blank")
-        }
     }
 
     override fun showProgress(isVisible: Boolean) {
