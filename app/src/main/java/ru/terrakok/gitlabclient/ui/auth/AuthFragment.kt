@@ -90,14 +90,14 @@ class AuthFragment : BaseFragment(), AuthView, CustomServerAuthFragment.OnClickL
 
             override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
                 super.onReceivedError(view, request, error)
-                presenter.onError()
+                showEmptyView(true)
             }
         })
 
         zeroViewHolder = ZeroViewHolder(zeroLayout, { presenter.refresh() })
     }
 
-    override fun showEmptyView(show: Boolean) {
+    private fun showEmptyView(show: Boolean) {
         zeroViewHolder?.apply { if (show) showEmptyError() else hide() }
         webView.visible(!show)
     }

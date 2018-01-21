@@ -15,7 +15,4 @@ interface AuthView : MvpView {
 
     @StateStrategyType(OneExecutionStateStrategy::class)
     fun showMessage(message: String)
-
-//    fun clearWebView()
-    fun showEmptyView(show: Boolean)
 }

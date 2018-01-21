@@ -48,10 +48,6 @@ class AuthPresenter @Inject constructor(
         }
     }
 
-    fun onError() {
-        viewState.showEmptyView(true)
-    }
-
     fun refresh() {
         startAuthorization()
     }
