@@ -4,19 +4,19 @@ import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.RequiresApi
-import android.webkit.CookieManager
-import android.webkit.WebResourceRequest
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_auth.*
+import kotlinx.android.synthetic.main.layout_zero.*
 import ru.terrakok.gitlabclient.BuildConfig
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.auth.AuthPresenter
 import ru.terrakok.gitlabclient.presentation.auth.AuthView
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.ui.global.ZeroViewHolder
 import toothpick.Toothpick
 
 /**
@@ -26,6 +26,7 @@ class AuthFragment : BaseFragment(), AuthView, CustomServerAuthFragment.OnClickL
 
     override val layoutRes = R.layout.fragment_auth
     override val customLogin = { url: String, token: String -> presenter.loginOnCustomServer(url, token) }
+    private var zeroViewHolder: ZeroViewHolder? = null
 
     @InjectPresenter lateinit var presenter: AuthPresenter
 
@@ -65,6 +66,7 @@ class AuthFragment : BaseFragment(), AuthView, CustomServerAuthFragment.OnClickL
 
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 showProgressDialog(true)
+                showEmptyView(false)
                 super.onPageStarted(view, url, favicon)
             }
 
@@ -85,7 +87,19 @@ class AuthFragment : BaseFragment(), AuthView, CustomServerAuthFragment.OnClickL
             private fun overrideUrlLoading(view: WebView, url: String): Boolean {
                 return presenter.onRedirect(url)
             }
+
+            override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
+                super.onReceivedError(view, request, error)
+                showEmptyView(true)
+            }
         })
+
+        zeroViewHolder = ZeroViewHolder(zeroLayout, { presenter.refresh() })
+    }
+
+    private fun showEmptyView(show: Boolean) {
+        zeroViewHolder?.apply { if (show) showEmptyError() else hide() }
+        webView.visible(!show)
     }
 
     override fun loadUrl(url: String) {

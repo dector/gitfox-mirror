@@ -49,6 +49,10 @@ class AuthPresenter @Inject constructor(
         }
     }
 
+    fun refresh() {
+        startAuthorization()
+    }
+
     fun loginOnCustomServer(url: String, token: String) {
         authInteractor.login(url, token)
                 .subscribe(
