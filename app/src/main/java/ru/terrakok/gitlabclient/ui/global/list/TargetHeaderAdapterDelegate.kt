@@ -67,6 +67,7 @@ class TargetHeaderAdapterDelegate(
             val res = view.resources
             view.titleTextView.text = item.title.getHumanName(res)
             Markwon.setMarkdown(view.descriptionTextView, mdConfig, item.body ?: "")
+            view.descriptionTextView.movementMethod = null //disable internal link click
             view.avatarImageView.loadRoundedImage(item.author.avatarUrl)
             view.iconImageView.setImageResource(item.icon.getIcon())
             view.dateTextView.text = item.date.humanTime(res)

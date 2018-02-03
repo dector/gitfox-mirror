@@ -89,7 +89,7 @@ class EventRepository @Inject constructor(
                 event.createdAt,
                 targetData.target,
                 targetData.id,
-                if (event.targetIid != null) TargetInternal(event.projectId, event.targetIid) else null,
+                getTargetInternal(event),
                 badges
         )
     }
@@ -142,6 +142,25 @@ class EventRepository @Inject constructor(
                     }
                 }
             }
+
+    private fun getTargetInternal(event: Event): TargetInternal? =
+        when (event.targetType) {
+            EventTargetType.DIFF_NOTE,
+            EventTargetType.NOTE -> {
+                if (event.note?.noteableIid != null) {
+                    TargetInternal(event.projectId, event.note.noteableIid)
+                } else {
+                    null
+                }
+            }
+            else -> {
+                if (event.targetIid != null) {
+                    TargetInternal(event.projectId, event.targetIid)
+                } else {
+                    null
+                }
+            }
+        }
 
     private fun getBody(event: Event) = when (event.targetType) {
         EventTargetType.NOTE,

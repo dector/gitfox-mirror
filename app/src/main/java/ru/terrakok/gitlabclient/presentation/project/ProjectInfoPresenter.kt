@@ -5,6 +5,7 @@ import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.model.interactor.project.ProjectInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
+import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
 import javax.inject.Inject
@@ -17,6 +18,7 @@ class ProjectInfoPresenter @Inject constructor(
         @ProjectId private val projectIdWrapper: PrimitiveWrapper<Long>,
         private val router: Router,
         private val projectInteractor: ProjectInteractor,
+        private val mdConverter: MarkDownConverter,
         private val errorHandler: ErrorHandler
 ) : BasePresenter<ProjectInfoView>() {
 
@@ -28,7 +30,9 @@ class ProjectInfoPresenter @Inject constructor(
         projectInteractor.getProject(projectId)
                 .doOnSuccess { project -> viewState.showProjectInfo(project) }
                 .flatMap { project ->
-                    projectInteractor.getProjectReadmeHtml(project.id, project.defaultBranch)
+                    projectInteractor
+                            .getProjectReadme(project.id, project.defaultBranch)
+                            .flatMap { mdConverter.markdownToHtml(it) }
                 }
                 .doOnSubscribe { viewState.showProgress(true) }
                 .doAfterTerminate { viewState.showProgress(false) }

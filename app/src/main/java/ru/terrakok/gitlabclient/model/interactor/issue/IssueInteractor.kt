@@ -1,6 +1,8 @@
 package ru.terrakok.gitlabclient.model.interactor.issue
 
+import io.reactivex.Single
 import ru.terrakok.gitlabclient.entity.OrderBy
+import ru.terrakok.gitlabclient.entity.issue.Issue
 import ru.terrakok.gitlabclient.entity.issue.IssueScope
 import ru.terrakok.gitlabclient.entity.issue.IssueState
 import ru.terrakok.gitlabclient.model.repository.issue.IssueRepository
@@ -23,4 +25,9 @@ class IssueInteractor @Inject constructor(
                     orderBy = OrderBy.UPDATED_AT,
                     page = page
             )
+
+    fun getIssue(
+            projectId: Long,
+            mergeRequestId: Long
+    ) = Single.never<Issue>()
 }

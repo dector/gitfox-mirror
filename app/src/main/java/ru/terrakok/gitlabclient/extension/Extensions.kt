@@ -281,7 +281,7 @@ fun TargetHeader.openInfo(router: FlowRouter) {
         AppTarget.ISSUE -> {
             internal?.let { targetInternal ->
                 router.startFlow(
-                        Screens.MR_FLOW,
+                        Screens.ISSUE_FLOW,
                         Pair(targetInternal.projectId, targetInternal.targetIid)
                 )
             }

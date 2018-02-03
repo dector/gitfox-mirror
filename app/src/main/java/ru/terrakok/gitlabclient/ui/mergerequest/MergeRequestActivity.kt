@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.model.system.flow.FlowNavigator
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
@@ -43,7 +44,7 @@ class MergeRequestActivity : BaseActivity() {
         }
 
         if (savedInstanceState == null) {
-            //navigator.setLaunchScreen(Screens.MR_INFO_SCREEN, null)
+            navigator.setLaunchScreen(Screens.MR_INFO_SCREEN, null)
         }
     }
 
@@ -65,7 +66,10 @@ class MergeRequestActivity : BaseActivity() {
 
     private val navigator = object : FlowNavigator(this, R.id.container) {
 
-        override fun createFragment(screenKey: String?, data: Any?) = null
+        override fun createFragment(screenKey: String?, data: Any?) = when(screenKey) {
+            Screens.MR_INFO_SCREEN -> MergeRequestInfoFragment()
+            else -> null
+        }
     }
 
     companion object {

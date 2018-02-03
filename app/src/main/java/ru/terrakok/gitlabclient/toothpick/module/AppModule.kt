@@ -13,11 +13,11 @@ import ru.terrakok.gitlabclient.model.data.storage.RawAppData
 import ru.terrakok.gitlabclient.model.interactor.app.AppInfoInteractor
 import ru.terrakok.gitlabclient.model.repository.app.AppInfoRepository
 import ru.terrakok.gitlabclient.model.repository.tools.Base64Tools
-import ru.terrakok.gitlabclient.model.repository.tools.MarkDownConverter
 import ru.terrakok.gitlabclient.model.system.AppSchedulers
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
+import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultPageSize
 import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultServerPath
@@ -34,7 +34,7 @@ class AppModule(context: Context) : Module() {
         bind(PrimitiveWrapper::class.java).withName(DefaultPageSize::class.java).toInstance(PrimitiveWrapper(20))
         bind(SchedulersProvider::class.java).toInstance(AppSchedulers())
         bind(ResourceManager::class.java).singletonInScope()
-        bind(MarkDownConverter::class.java).toInstance(MarkDownConverter())
+        bind(MarkDownConverter::class.java).singletonInScope()
         bind(Base64Tools::class.java).toInstance(Base64Tools())
         bind(AssetManager::class.java).toInstance(context.assets)
         bind(RawAppData::class.java)
