@@ -286,5 +286,12 @@ fun TargetHeader.openInfo(router: FlowRouter) {
                 )
             }
         }
+        else -> {
+            internal?.let { targetInternal ->
+                Timber.i("Temporary open project flow")
+                //todo
+                router.startFlow(Screens.PROJECT_FLOW, targetInternal.projectId)
+            }
+        }
     }
 }
