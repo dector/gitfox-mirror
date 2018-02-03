@@ -88,8 +88,8 @@ class Paginator<T>(
                 currentData.clear()
                 currentData.addAll(data)
                 currentPage = FIRST_PAGE
-                viewController.showEmptyProgress(false)
                 viewController.showData(true, currentData)
+                viewController.showEmptyProgress(false)
             } else {
                 currentState = EMPTY_DATA()
                 viewController.showEmptyProgress(false)

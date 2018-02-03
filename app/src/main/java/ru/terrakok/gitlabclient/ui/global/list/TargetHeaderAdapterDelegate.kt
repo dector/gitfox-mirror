@@ -1,6 +1,5 @@
 package ru.terrakok.gitlabclient.ui.global.list
 
-import android.content.res.Resources
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +7,9 @@ import android.widget.TextView
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegate
 import kotlinx.android.synthetic.main.item_target_badge.view.*
 import kotlinx.android.synthetic.main.item_target_header.view.*
+import ru.noties.markwon.Markwon
+import ru.noties.markwon.SpannableConfiguration
+import ru.noties.markwon.spans.SpannableTheme
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.target.TargetBadge
 import ru.terrakok.gitlabclient.entity.app.target.TargetBadgeIcon
@@ -21,19 +23,19 @@ import ru.terrakok.gitlabclient.extension.*
 class TargetHeaderAdapterDelegate(
         private val avatarClickListener: (Long) -> Unit,
         private val clickListener: (TargetHeader) -> Unit
-) : AdapterDelegate<MutableList<ListItem>>() {
+) : AdapterDelegate<MutableList<Any>>() {
 
-    override fun isForViewType(items: MutableList<ListItem>, position: Int) =
-            items[position] is ListItem.TargetHeaderItem
+    override fun isForViewType(items: MutableList<Any>, position: Int) =
+            items[position] is TargetHeader
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder =
             TargetHeaderViewHolder(parent.inflate(R.layout.item_target_header), avatarClickListener, clickListener)
 
-    override fun onBindViewHolder(items: MutableList<ListItem>,
+    override fun onBindViewHolder(items: MutableList<Any>,
                                   position: Int,
                                   viewHolder: RecyclerView.ViewHolder,
                                   payloads: MutableList<Any>) =
-            (viewHolder as TargetHeaderViewHolder).bind((items[position] as ListItem.TargetHeaderItem).item)
+            (viewHolder as TargetHeaderViewHolder).bind(items[position] as TargetHeader)
 
     private class TargetHeaderViewHolder(
             private val view: View,
@@ -41,6 +43,7 @@ class TargetHeaderAdapterDelegate(
             private val clickListener: (TargetHeader) -> Unit
     ) : RecyclerView.ViewHolder(view) {
         private lateinit var item: TargetHeader
+        private val mdConfig: SpannableConfiguration
 
         init {
             view.setOnClickListener { clickListener(item) }
@@ -49,6 +52,13 @@ class TargetHeaderAdapterDelegate(
             (1..5).forEach {
                 view.badgesContainer.inflate(R.layout.item_target_badge, true)
             }
+
+            val mdTheme = SpannableTheme.builderWithDefaults(view.context)
+                    .codeBackgroundColor(view.context.color(R.color.beige))
+                    .build()
+            mdConfig = SpannableConfiguration.builder(view.context)
+                    .theme(mdTheme)
+                    .build()
         }
 
         fun bind(item: TargetHeader) {
@@ -56,7 +66,7 @@ class TargetHeaderAdapterDelegate(
 
             val res = view.resources
             view.titleTextView.text = item.title.getHumanName(res)
-            view.descriptionTextView.text = item.body
+            Markwon.setMarkdown(view.descriptionTextView, mdConfig, item.body ?: "")
             view.avatarImageView.loadRoundedImage(item.author.avatarUrl)
             view.iconImageView.setImageResource(item.icon.getIcon())
             view.dateTextView.text = item.date.humanTime(res)
@@ -64,10 +74,10 @@ class TargetHeaderAdapterDelegate(
             view.descriptionTextView.visible(item.body != null)
             view.iconImageView.visible(item.icon != TargetHeaderIcon.NONE)
 
-            bindBadges(item.badges, res)
+            bindBadges(item.badges)
         }
 
-        private fun bindBadges(badges: List<TargetBadge>, res: Resources) {
+        private fun bindBadges(badges: List<TargetBadge>) {
             view.commentsTextView.visible(false)
             view.commitsTextView.visible(false)
             view.upVotesTextView.visible(false)
@@ -91,15 +101,15 @@ class TargetHeaderAdapterDelegate(
                     is TargetBadge.Text -> {
                         val badgeView = view.badgesContainer.getChildAt(i) as TextView
                         badgeView.textTextView.text = badge.text
-                        badgeView.textTextView.setTextColor(res.color(R.color.colorPrimary))
-                        badgeView.textTextView.setBackgroundColor(res.color(R.color.colorPrimaryLight))
+                        badgeView.textTextView.setTextColor(view.context.color(R.color.colorPrimary))
+                        badgeView.textTextView.setBackgroundColor(view.context.color(R.color.colorPrimaryLight))
                         badgeView.visible(true)
                         i++
                     }
                     is TargetBadge.Status -> {
                         val badgeView = view.badgesContainer.getChildAt(i) as TextView
-                        badgeView.textTextView.text = badge.status.getHumanName(res)
-                        val (textColor, bgColor) = badge.status.getBadgeColors(res)
+                        badgeView.textTextView.text = badge.status.getHumanName(view.resources)
+                        val (textColor, bgColor) = badge.status.getBadgeColors(view.context)
                         badgeView.textTextView.setTextColor(textColor)
                         badgeView.textTextView.setBackgroundColor(bgColor)
                         badgeView.visible(true)

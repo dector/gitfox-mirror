@@ -10,15 +10,15 @@ import ru.terrakok.gitlabclient.extension.inflate
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 18.06.17.
  */
-class ProgressAdapterDelegate : AdapterDelegate<MutableList<ListItem>>() {
+class ProgressAdapterDelegate : AdapterDelegate<MutableList<Any>>() {
 
-    override fun isForViewType(items: MutableList<ListItem>, position: Int) =
-            items[position] is ListItem.ProgressItem
+    override fun isForViewType(items: MutableList<Any>, position: Int) =
+            items[position] is ProgressItem
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder =
             ProgressViewHolder(parent.inflate(R.layout.item_progress))
 
-    override fun onBindViewHolder(items: MutableList<ListItem>,
+    override fun onBindViewHolder(items: MutableList<Any>,
                                   position: Int,
                                   viewHolder: RecyclerView.ViewHolder,
                                   payloads: MutableList<Any>) {}

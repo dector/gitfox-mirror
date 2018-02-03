@@ -6,10 +6,10 @@ import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
-import android.os.Build
 import android.support.annotation.DrawableRes
 import android.support.annotation.LayoutRes
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.view.LayoutInflater
 import android.view.View
@@ -19,12 +19,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.BitmapImageViewTarget
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import org.joda.time.DateTimeZone
 import org.joda.time.format.DateTimeFormat
 import retrofit2.HttpException
-import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.app.develop.LicenseType
@@ -40,16 +37,7 @@ import java.util.*
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 03.03.17
  */
-fun Resources.color(colorRes: Int) =
-        if (Build.VERSION.SDK_INT >= 23) {
-            this.getColor(colorRes, null)
-        } else {
-            this.getColor(colorRes)
-        }
-
-fun Disposable.addTo(compositeDisposable: CompositeDisposable) {
-    compositeDisposable.add(this)
-}
+fun Context.color(colorRes: Int) = ContextCompat.getColor(this, colorRes)
 
 fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachToRoot: Boolean = false): View {
     return LayoutInflater.from(context).inflate(layoutRes, this, attachToRoot)
@@ -231,10 +219,10 @@ fun TargetBadgeStatus.getHumanName(resources: Resources) = when (this) {
     TargetBadgeStatus.MERGED -> resources.getString(R.string.target_status_merged)
 }
 
-fun TargetBadgeStatus.getBadgeColors(resources: Resources) = when (this) {
-    TargetBadgeStatus.OPENED -> Pair(resources.color(R.color.green), resources.color(R.color.lightGreen))
-    TargetBadgeStatus.CLOSED -> Pair(resources.color(R.color.red), resources.color(R.color.lightRed))
-    TargetBadgeStatus.MERGED -> Pair(resources.color(R.color.blue), resources.color(R.color.lightBlue))
+fun TargetBadgeStatus.getBadgeColors(context: Context) = when (this) {
+    TargetBadgeStatus.OPENED -> Pair(context.color(R.color.green), context.color(R.color.lightGreen))
+    TargetBadgeStatus.CLOSED -> Pair(context.color(R.color.red), context.color(R.color.lightRed))
+    TargetBadgeStatus.MERGED -> Pair(context.color(R.color.blue), context.color(R.color.lightBlue))
 }
 
 fun Fragment.sendEmail(email: String?) {

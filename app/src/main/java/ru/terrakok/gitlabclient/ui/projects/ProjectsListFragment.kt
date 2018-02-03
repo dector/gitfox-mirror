@@ -18,8 +18,8 @@ import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectListMode
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.ZeroViewHolder
-import ru.terrakok.gitlabclient.ui.global.list.ListItem
 import ru.terrakok.gitlabclient.ui.global.list.ProgressAdapterDelegate
+import ru.terrakok.gitlabclient.ui.global.list.ProgressItem
 import ru.terrakok.gitlabclient.ui.global.list.ProjectAdapterDelegate
 import toothpick.Toothpick
 import toothpick.config.Module
@@ -109,7 +109,7 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
 
     override fun onBackPressed() = presenter.onBackPressed()
 
-    inner class ProjectsAdapter : ListDelegationAdapter<MutableList<ListItem>>() {
+    inner class ProjectsAdapter : ListDelegationAdapter<MutableList<Any>>() {
         init {
             items = mutableListOf()
             delegatesManager.addDelegate(ProjectAdapterDelegate({ presenter.onProjectClicked(it.id) }))
@@ -120,8 +120,8 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
             val progress = isProgress()
 
             items.clear()
-            items.addAll(projects.map { ListItem.ProjectItem(it) })
-            if (progress) items.add(ListItem.ProgressItem())
+            items.addAll(projects)
+            if (progress) items.add(ProgressItem())
 
             notifyDataSetChanged()
         }
@@ -129,13 +129,13 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
         fun showProgress(isVisible: Boolean) {
             val currentProgress = isProgress()
 
-            if (isVisible && !currentProgress) items.add(ListItem.ProgressItem())
+            if (isVisible && !currentProgress) items.add(ProgressItem())
             else if (!isVisible && currentProgress) items.remove(items.last())
 
             notifyDataSetChanged()
         }
 
-        private fun isProgress() = items.isNotEmpty() && items.last() is ListItem.ProgressItem
+        private fun isProgress() = items.isNotEmpty() && items.last() is ProgressItem
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int, payloads: MutableList<Any?>?) {
             super.onBindViewHolder(holder, position, payloads)

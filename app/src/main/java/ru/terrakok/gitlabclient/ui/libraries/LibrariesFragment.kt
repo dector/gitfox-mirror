@@ -14,7 +14,6 @@ import ru.terrakok.gitlabclient.presentation.libraries.LibrariesView
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.list.AppLibraryAdapterDelegate
-import ru.terrakok.gitlabclient.ui.global.list.ListItem
 import toothpick.Toothpick
 
 /**
@@ -52,15 +51,15 @@ class LibrariesFragment : BaseFragment(), LibrariesView {
         presenter.onBackPressed()
     }
 
-    private inner class LibraryAdapter : ListDelegationAdapter<MutableList<ListItem>>() {
+    private inner class LibraryAdapter : ListDelegationAdapter<MutableList<Any>>() {
         init {
             items = mutableListOf()
             delegatesManager.addDelegate(AppLibraryAdapterDelegate({ tryOpenLink(it.url) }))
         }
 
-        fun setData(projects: List<AppLibrary>) {
+        fun setData(libraries: List<AppLibrary>) {
             items.clear()
-            items.addAll(projects.map { ListItem.AppLibraryItem(it) })
+            items.addAll(libraries)
 
             notifyDataSetChanged()
         }

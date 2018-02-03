@@ -13,19 +13,19 @@ import ru.terrakok.gitlabclient.extension.inflate
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 18.06.17.
  */
-class AppLibraryAdapterDelegate(private val clickListener: (AppLibrary) -> Unit) : AdapterDelegate<MutableList<ListItem>>() {
+class AppLibraryAdapterDelegate(private val clickListener: (AppLibrary) -> Unit) : AdapterDelegate<MutableList<Any>>() {
 
-    override fun isForViewType(items: MutableList<ListItem>, position: Int) =
-            items[position] is ListItem.AppLibraryItem
+    override fun isForViewType(items: MutableList<Any>, position: Int) =
+            items[position] is AppLibrary
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder =
             AppLibraryViewHolder(parent.inflate(R.layout.item_app_library), clickListener)
 
-    override fun onBindViewHolder(items: MutableList<ListItem>,
+    override fun onBindViewHolder(items: MutableList<Any>,
                                   position: Int,
                                   viewHolder: RecyclerView.ViewHolder,
                                   payloads: MutableList<Any>) =
-            (viewHolder as AppLibraryViewHolder).bind((items[position] as ListItem.AppLibraryItem).item)
+            (viewHolder as AppLibraryViewHolder).bind(items[position] as AppLibrary)
 
     private class AppLibraryViewHolder(val view: View, clickListener: (AppLibrary) -> Unit) : RecyclerView.ViewHolder(view) {
         private lateinit var appLibrary: AppLibrary

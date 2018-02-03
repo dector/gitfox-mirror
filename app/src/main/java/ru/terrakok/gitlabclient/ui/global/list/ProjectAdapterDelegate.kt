@@ -14,19 +14,19 @@ import ru.terrakok.gitlabclient.extension.loadRoundedImage
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 18.06.17.
  */
-class ProjectAdapterDelegate(private val clickListener: (Project) -> Unit) : AdapterDelegate<MutableList<ListItem>>() {
+class ProjectAdapterDelegate(private val clickListener: (Project) -> Unit) : AdapterDelegate<MutableList<Any>>() {
 
-    override fun isForViewType(items: MutableList<ListItem>, position: Int) =
-            items[position] is ListItem.ProjectItem
+    override fun isForViewType(items: MutableList<Any>, position: Int) =
+            items[position] is Project
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder =
             ProjectViewHolder(parent.inflate(R.layout.item_project), clickListener)
 
-    override fun onBindViewHolder(items: MutableList<ListItem>,
+    override fun onBindViewHolder(items: MutableList<Any>,
                                   position: Int,
                                   viewHolder: RecyclerView.ViewHolder,
                                   payloads: MutableList<Any>) =
-            (viewHolder as ProjectViewHolder).bind((items[position] as ListItem.ProjectItem).project)
+            (viewHolder as ProjectViewHolder).bind(items[position] as Project)
 
     private class ProjectViewHolder(val view: View, clickListener: (Project) -> Unit) : RecyclerView.ViewHolder(view) {
         private lateinit var project: Project

@@ -1,6 +1,9 @@
 package ru.terrakok.gitlabclient
 
 import android.app.Application
+import android.graphics.Color
+import ru.noties.markwon.SpannableConfiguration
+import ru.noties.markwon.spans.SpannableTheme
 import ru.terrakok.gitlabclient.model.data.auth.AuthHolder
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.toothpick.module.AppModule
@@ -24,6 +27,7 @@ class App : Application() {
         initToothpick()
         initAppScope()
         initCalligraphy()
+        initMarkwon()
     }
 
     private fun initLogger() {
@@ -57,5 +61,15 @@ class App : Application() {
                 .setDefaultFontPath(getString(R.string.font_main_regular))
                 .setFontAttrId(R.attr.fontPath)
                 .build())
+    }
+
+    private fun initMarkwon() {
+        val theme = SpannableTheme.builderWithDefaults(this)
+                .codeTextColor(Color.parseColor("#C0341D"))
+                .codeBackgroundColor(Color.parseColor("#FCEDEA"))
+                .build()
+        SpannableConfiguration.builder(this)
+                .theme(theme)
+                .build()
     }
 }

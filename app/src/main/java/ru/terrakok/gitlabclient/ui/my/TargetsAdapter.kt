@@ -5,15 +5,15 @@ import android.support.v7.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates3.ListDelegationAdapter
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.ui.global.list.DiffCallback
-import ru.terrakok.gitlabclient.ui.global.list.ListItem
 import ru.terrakok.gitlabclient.ui.global.list.ProgressAdapterDelegate
+import ru.terrakok.gitlabclient.ui.global.list.ProgressItem
 import ru.terrakok.gitlabclient.ui.global.list.TargetHeaderAdapterDelegate
 
 class TargetsAdapter(
         userClickListener: (Long) -> Unit,
         clickListener: (TargetHeader) -> Unit,
         private val nextListener: () -> Unit
-) : ListDelegationAdapter<MutableList<ListItem>>() {
+) : ListDelegationAdapter<MutableList<Any>>() {
     init {
         items = mutableListOf()
         delegatesManager.addDelegate(TargetHeaderAdapterDelegate(userClickListener, clickListener))
@@ -25,8 +25,8 @@ class TargetsAdapter(
         val progress = isProgress()
 
         items.clear()
-        items.addAll(events.map { ListItem.TargetHeaderItem(it) })
-        if (progress) items.add(ListItem.ProgressItem())
+        items.addAll(events)
+        if (progress) items.add(ProgressItem())
 
         //yes, on main thread...
         DiffUtil
@@ -38,16 +38,16 @@ class TargetsAdapter(
         val oldData = items.toList()
         val currentProgress = isProgress()
 
-        if (isVisible && !currentProgress) items.add(ListItem.ProgressItem())
-        else if (!isVisible && currentProgress) items.remove(items.last())
-
-        //yes, on main thread...
-        DiffUtil
-                .calculateDiff(DiffCallback(items, oldData), false)
-                .dispatchUpdatesTo(this)
+        if (isVisible && !currentProgress) {
+            items.add(ProgressItem())
+            notifyItemInserted(items.lastIndex)
+        } else if (!isVisible && currentProgress) {
+            items.remove(items.last())
+            notifyItemRemoved(oldData.lastIndex)
+        }
     }
 
-    private fun isProgress() = items.isNotEmpty() && items.last() is ListItem.ProgressItem
+    private fun isProgress() = items.isNotEmpty() && items.last() is ProgressItem
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int, payloads: MutableList<Any?>?) {
         super.onBindViewHolder(holder, position, payloads)
