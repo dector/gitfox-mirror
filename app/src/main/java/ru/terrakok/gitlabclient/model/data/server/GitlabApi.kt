@@ -83,6 +83,12 @@ interface GitlabApi {
             @Query("per_page") pageSize: Int
     ): Single<List<Issue>>
 
+    @GET("$API_PATH/projects/{project_id}/issues/{issue_id}")
+    fun getIssue(
+            @Path("project_id") projectId: Long,
+            @Path("issue_id") issueId: Long
+    ): Single<Issue>
+
     @GET("$API_PATH/events")
     fun getEvents(
             @Query("action") action: EventAction?,

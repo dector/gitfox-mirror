@@ -89,4 +89,12 @@ class IssueRepository @Inject constructor(
                 badges
         )
     }
+
+    fun getIssue(
+            projectId: Long,
+            issueId: Long
+    ) = api
+            .getIssue(projectId, issueId)
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
 }

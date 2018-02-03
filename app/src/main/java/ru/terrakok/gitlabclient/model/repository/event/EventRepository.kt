@@ -149,6 +149,8 @@ class EventRepository @Inject constructor(
             EventTargetType.NOTE -> {
                 if (event.note?.noteableIid != null) {
                     TargetInternal(event.projectId, event.note.noteableIid)
+                } else if (event.targetIid != null) {
+                    TargetInternal(event.projectId, event.targetIid)
                 } else {
                     null
                 }
