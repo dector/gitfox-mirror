@@ -139,6 +139,12 @@
     <string name="todo_action_approval_required">approval required</string>
     <string name="todo_action_directly_addressed">directly addressed</string>
 
+    <!--Merge Request Info screen-->
+    <string name="merge_request_info_subtitle" formatted="false">%s by %s %s</string>
+
+    <!--Issue Info screen-->
+    <string name="issue_info_subtitle" formatted="false">%s by %s %s</string>
+
     <!--Calligraphy Config-->
     <string name="font_main_regular">fonts/Roboto-Regular.ttf</string>
     <string name="font_main_medium">fonts/Roboto-Medium.ttf</string>
