@@ -165,4 +165,20 @@ interface GitlabApi {
 
     @POST("$API_PATH/todos/mark_as_done")
     fun markAllPendingTodosAsDone(): Completable
+
+    @GET("$API_PATH/projects/{project_id}/issues/{issue_id}/notes")
+    fun getIssueNotes(
+            @Path("project_id") projectId: Long,
+            @Path("issue_id") issueId: Long,
+            @Query("order_by") orderBy: OrderBy?,
+            @Query("sort") sort: Sort?
+    ): Single<List<Note>>
+
+    @GET("$API_PATH/projects/{project_id}/merge_requests/{merge_request_id}/notes")
+    fun getMergeRequestNotes(
+            @Path("project_id") projectId: Long,
+            @Path("merge_request_id") mergeRequestId: Long,
+            @Query("order_by") orderBy: OrderBy?,
+            @Query("sort") sort: Sort?
+    ): Single<List<Note>>
 }

@@ -104,4 +104,14 @@ class MergeRequestRepository @Inject constructor(
             .getMergeRequest(projectId, mergeRequestId)
             .subscribeOn(schedulers.io())
             .observeOn(schedulers.ui())
+
+    fun getMergeRequestNotes(
+            projectId: Long,
+            mergeRequestId: Long,
+            orderBy: OrderBy? = null,
+            sort: Sort? = null
+    ) = api
+            .getMergeRequestNotes(projectId, mergeRequestId, orderBy, sort)
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
 }
