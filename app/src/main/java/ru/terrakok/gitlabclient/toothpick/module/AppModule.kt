@@ -2,11 +2,17 @@ package ru.terrakok.gitlabclient.toothpick.module
 
 import android.content.Context
 import android.content.res.AssetManager
+import org.commonmark.parser.Parser
+import org.commonmark.renderer.html.HtmlRenderer
+import ru.noties.markwon.SpannableConfiguration
+import ru.noties.markwon.spans.SpannableTheme
 import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.BuildConfig
+import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.develop.AppInfo
+import ru.terrakok.gitlabclient.extension.color
 import ru.terrakok.gitlabclient.model.data.auth.AuthHolder
 import ru.terrakok.gitlabclient.model.data.storage.Prefs
 import ru.terrakok.gitlabclient.model.data.storage.RawAppData
@@ -34,10 +40,20 @@ class AppModule(context: Context) : Module() {
         bind(PrimitiveWrapper::class.java).withName(DefaultPageSize::class.java).toInstance(PrimitiveWrapper(20))
         bind(SchedulersProvider::class.java).toInstance(AppSchedulers())
         bind(ResourceManager::class.java).singletonInScope()
-        bind(MarkDownConverter::class.java).singletonInScope()
         bind(Base64Tools::class.java).toInstance(Base64Tools())
         bind(AssetManager::class.java).toInstance(context.assets)
         bind(RawAppData::class.java)
+
+        bind(MarkDownConverter.Config::class.java).toInstance(MarkDownConverter.Config(
+                Parser.builder().build(),
+                HtmlRenderer.builder().build(),
+                SpannableConfiguration.builder(context)
+                        .theme(SpannableTheme.builderWithDefaults(context)
+                                .codeBackgroundColor(context.color(R.color.beige))
+                                .build())
+                        .build()
+        ))
+        bind(MarkDownConverter::class.java).singletonInScope()
 
         //Navigation
         val cicerone = Cicerone.create(FlowRouter())

@@ -8,8 +8,6 @@ import com.hannesdorfmann.adapterdelegates3.AdapterDelegate
 import kotlinx.android.synthetic.main.item_target_badge.view.*
 import kotlinx.android.synthetic.main.item_target_header.view.*
 import ru.noties.markwon.Markwon
-import ru.noties.markwon.SpannableConfiguration
-import ru.noties.markwon.spans.SpannableTheme
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.target.TargetBadge
 import ru.terrakok.gitlabclient.entity.app.target.TargetBadgeIcon
@@ -43,7 +41,6 @@ class TargetHeaderAdapterDelegate(
             private val clickListener: (TargetHeader) -> Unit
     ) : RecyclerView.ViewHolder(view) {
         private lateinit var item: TargetHeader
-        private val mdConfig: SpannableConfiguration
 
         init {
             view.setOnClickListener { clickListener(item) }
@@ -52,13 +49,6 @@ class TargetHeaderAdapterDelegate(
             (1..5).forEach {
                 view.badgesContainer.inflate(R.layout.item_target_badge, true)
             }
-
-            val mdTheme = SpannableTheme.builderWithDefaults(view.context)
-                    .codeBackgroundColor(view.context.color(R.color.beige))
-                    .build()
-            mdConfig = SpannableConfiguration.builder(view.context)
-                    .theme(mdTheme)
-                    .build()
         }
 
         fun bind(item: TargetHeader) {
@@ -66,7 +56,7 @@ class TargetHeaderAdapterDelegate(
 
             val res = view.resources
             view.titleTextView.text = item.title.getHumanName(res)
-            Markwon.setMarkdown(view.descriptionTextView, mdConfig, item.body ?: "")
+            Markwon.setText(view.descriptionTextView, item.body ?: "")
             view.descriptionTextView.movementMethod = null //disable internal link click
             view.avatarImageView.loadRoundedImage(item.author.avatarUrl)
             view.iconImageView.setImageResource(item.icon.getIcon())

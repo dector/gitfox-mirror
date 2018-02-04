@@ -8,6 +8,7 @@ import ru.terrakok.gitlabclient.model.interactor.todo.TodoListInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
+import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.TodoListPendingState
@@ -18,8 +19,9 @@ import javax.inject.Inject
  */
 @InjectViewState
 class MyTodosPresenter @Inject constructor(
-        private @TodoListPendingState val pendingStateWrapper: PrimitiveWrapper<Boolean>,
+        @TodoListPendingState private val pendingStateWrapper: PrimitiveWrapper<Boolean>,
         private val todoListInteractor: TodoListInteractor,
+        private val mdConverter: MarkDownConverter,
         private val errorHandler: ErrorHandler,
         private val router: FlowRouter
 ) : BasePresenter<MyTodoListView>() {
@@ -33,7 +35,17 @@ class MyTodosPresenter @Inject constructor(
     }
 
     private val paginator = Paginator(
-            { todoListInteractor.getMyTodos(isPending, it) },
+            {
+                todoListInteractor.getMyTodos(isPending, it)
+                        .toObservable()
+                        .flatMapIterable { it }
+                        .flatMap { item ->
+                            mdConverter.markdownToSpannable(item.body.toString())
+                                    .map { md -> item.copy(body = md) }
+                                    .toObservable()
+                        }
+                        .toList()
+            },
             object : Paginator.ViewController<TargetHeader> {
                 override fun showEmptyProgress(show: Boolean) {
                     viewState.showEmptyProgress(show)

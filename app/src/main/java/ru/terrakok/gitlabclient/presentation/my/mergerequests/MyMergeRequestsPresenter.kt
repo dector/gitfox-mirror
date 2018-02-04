@@ -8,6 +8,7 @@ import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestIntera
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
+import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 import javax.inject.Inject
 
@@ -15,6 +16,7 @@ import javax.inject.Inject
 class MyMergeRequestsPresenter @Inject constructor(
         initFilter: Filter,
         private val interactor: MergeRequestInteractor,
+        private val mdConverter: MarkDownConverter,
         private val errorHandler: ErrorHandler,
         private val router: FlowRouter
 ) : BasePresenter<MyMergeRequestListView>() {
@@ -29,7 +31,17 @@ class MyMergeRequestsPresenter @Inject constructor(
     }
 
     private val paginator = Paginator(
-            { interactor.getMyMergeRequests(filter.createdByMe, filter.onlyOpened, it) },
+            {
+                interactor.getMyMergeRequests(filter.createdByMe, filter.onlyOpened, it)
+                        .toObservable()
+                        .flatMapIterable { it }
+                        .flatMap { item ->
+                            mdConverter.markdownToSpannable(item.body.toString())
+                                    .map { md -> item.copy(body = md) }
+                                    .toObservable()
+                        }
+                        .toList()
+            },
             object : Paginator.ViewController<TargetHeader> {
                 override fun showEmptyProgress(show: Boolean) {
                     viewState.showEmptyProgress(show)
