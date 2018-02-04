@@ -4,6 +4,7 @@ import android.os.Bundle
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_issue_info.*
+import ru.noties.markwon.Markwon
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.issue.IssueState
 import ru.terrakok.gitlabclient.extension.color
@@ -60,7 +61,7 @@ class IssueInfoFragment : BaseFragment(), IssueInfoView {
             }
         }
         avatarImageView.loadRoundedImage(issue.author.avatarUrl, context)
-        descriptionWebView.loadData(issueInfo.htmlDescription, "text/html", "UTF-8")
+        Markwon.setText(descriptionTextView, issueInfo.mdDescription)
     }
 
     override fun showProgress(show: Boolean) {

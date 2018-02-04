@@ -16,7 +16,7 @@ import ru.terrakok.gitlabclient.toothpick.qualifier.MergeRequestId
 import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
 import javax.inject.Inject
 
-private typealias MergeRequestLinker = BiFunction<Pair<MergeRequest, String>, Project, MergeRequestInfoView.MergeRequestInfo>
+private typealias MergeRequestLinker = BiFunction<Pair<MergeRequest, CharSequence>, Project, MergeRequestInfoView.MergeRequestInfo>
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 05.01.18.
@@ -44,7 +44,7 @@ class MergeRequestInfoPresenter @Inject constructor(
                                 .getMergeRequest(projectId, mrId)
                                 .flatMap { mr ->
                                     mdConverter
-                                            .markdownToHtml(mr.description ?: "")
+                                            .markdownToSpannable(mr.description ?: "")
                                             .map { Pair(mr, it) }
                                 },
                         projectInteractor.getProject(projectId),
