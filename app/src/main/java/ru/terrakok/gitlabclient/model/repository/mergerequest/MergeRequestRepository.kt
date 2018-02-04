@@ -90,7 +90,7 @@ class MergeRequestRepository @Inject constructor(
                 ),
                 mr.title,
                 mr.createdAt,
-                AppTarget.ISSUE,
+                AppTarget.MERGE_REQUEST,
                 mr.id,
                 TargetInternal(mr.projectId, mr.iid),
                 badges

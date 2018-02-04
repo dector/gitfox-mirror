@@ -61,7 +61,7 @@ class IssueActivity : BaseActivity() {
     override fun onDestroy() {
         super.onDestroy()
 
-        if (isFinishing) Toothpick.closeScope(DI.MERGE_REQUEST_SCOPE)
+        if (isFinishing) Toothpick.closeScope(DI.ISSUE_SCOPE)
     }
 
     private val navigator = object : FlowNavigator(this, R.id.container) {
