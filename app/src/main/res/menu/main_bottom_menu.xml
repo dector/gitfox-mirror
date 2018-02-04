@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/tab_activity"
+        android:icon="@drawable/ic_activity"
+        android:title="@string/gitlab_activity"/>
+
+    <item
+        android:id="@+id/tab_issue"
+        android:icon="@drawable/ic_issues"
+        android:title="@string/gitlab_issue"/>
+
+    <item
+        android:id="@+id/tab_merge"
+        android:icon="@drawable/ic_merge"
+        android:title="@string/gitlab_merge"/>
+
+    <item
+        android:id="@+id/tab_todo"
+        android:icon="@drawable/ic_todo"
+        android:title="@string/gitlab_todo"/>
+</menu>

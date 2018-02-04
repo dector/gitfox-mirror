@@ -4,6 +4,7 @@ import android.os.Bundle
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_project_info.*
+import ru.noties.markwon.Markwon
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.Visibility
@@ -66,8 +67,8 @@ class ProjectInfoFragment : BaseFragment(), ProjectInfoView {
         showProgressDialog(show)
     }
 
-    override fun showReadmeFile(html: String) {
-        webView.loadData(html, "text/html", "UTF-8")
+    override fun showReadmeFile(mdReadme: CharSequence) {
+        Markwon.setText(readmeTextView, mdReadme)
     }
 
     override fun showMessage(message: String) {

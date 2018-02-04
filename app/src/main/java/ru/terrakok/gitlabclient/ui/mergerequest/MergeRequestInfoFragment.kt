@@ -4,6 +4,7 @@ import android.os.Bundle
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_mr_info.*
+import ru.noties.markwon.Markwon
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
 import ru.terrakok.gitlabclient.extension.color
@@ -65,7 +66,7 @@ class MergeRequestInfoFragment : BaseFragment(), MergeRequestInfoView {
             }
         }
         avatarImageView.loadRoundedImage(mergeRequest.author.avatarUrl, context)
-        descriptionWebView.loadData(mrInfo.htmlDescription, "text/html", "UTF-8")
+        Markwon.setText(descriptionTextView, mrInfo.mdDescription)
     }
 
     override fun showProgress(show: Boolean) {

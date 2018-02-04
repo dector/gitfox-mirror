@@ -32,7 +32,7 @@ class ProjectInfoPresenter @Inject constructor(
                 .flatMap { project ->
                     projectInteractor
                             .getProjectReadme(project.id, project.defaultBranch)
-                            .flatMap { mdConverter.markdownToHtml(it) }
+                            .flatMap { mdConverter.markdownToSpannable(it) }
                 }
                 .doOnSubscribe { viewState.showProgress(true) }
                 .doAfterTerminate { viewState.showProgress(false) }

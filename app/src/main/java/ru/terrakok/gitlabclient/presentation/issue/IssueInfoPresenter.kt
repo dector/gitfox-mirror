@@ -16,7 +16,7 @@ import ru.terrakok.gitlabclient.toothpick.qualifier.IssueId
 import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
 import javax.inject.Inject
 
-private typealias IssueLinker = BiFunction<Pair<Issue, String>, Project, IssueInfoView.IssueInfo>
+private typealias IssueLinker = BiFunction<Pair<Issue, CharSequence>, Project, IssueInfoView.IssueInfo>
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 05.01.18.
@@ -44,7 +44,7 @@ class IssueInfoPresenter @Inject constructor(
                                 .getIssue(projectId, issueId)
                                 .flatMap { issue ->
                                     mdConverter
-                                            .markdownToHtml(issue.description ?: "")
+                                            .markdownToSpannable(issue.description ?: "")
                                             .map { Pair(issue, it) }
                                 },
                         projectInteractor.getProject(projectId),

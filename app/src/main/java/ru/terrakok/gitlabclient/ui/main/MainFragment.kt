@@ -3,8 +3,10 @@ package ru.terrakok.gitlabclient.ui.main
 import android.os.Bundle
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter
 import kotlinx.android.synthetic.main.fragment_main.*
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.extension.color
 import ru.terrakok.gitlabclient.presentation.main.MainPresenter
 import ru.terrakok.gitlabclient.presentation.main.MainView
 import ru.terrakok.gitlabclient.toothpick.DI
@@ -12,8 +14,6 @@ import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.my.activity.MyEventsFragment
 import ru.terrakok.gitlabclient.ui.my.issues.MyIssuesContainerFragment
 import ru.terrakok.gitlabclient.ui.my.mergerequests.MyMergeRequestsContainerFragment
-import ru.terrakok.gitlabclient.ui.my.todos.MyTodosFragment
-import ru.terrakok.gitlabclient.ui.my.mergerequests.MyMergeRequestsFragment
 import ru.terrakok.gitlabclient.ui.my.todos.MyTodosContainerFragment
 import toothpick.Toothpick
 
@@ -31,7 +31,8 @@ class MainFragment : BaseFragment(), MainView {
             tabIdToFragmentTag(R.id.tab_todo)
     )
 
-    @InjectPresenter lateinit var presenter: MainPresenter
+    @InjectPresenter
+    lateinit var presenter: MainPresenter
 
     @ProvidePresenter
     fun providePresenter(): MainPresenter {
@@ -53,12 +54,24 @@ class MainFragment : BaseFragment(), MainView {
                     .add(R.id.mainScreenContainer, tabs[tabKeys[2]], tabKeys[2])
                     .add(R.id.mainScreenContainer, tabs[tabKeys[3]], tabKeys[3])
                     .commit()
-            bottomBar.selectTabAtPosition(0, false)
+            showTab(0)
+            bottomBar.setCurrentItem(0, false)
         } else {
             tabs = findFragments()
         }
 
-        bottomBar.setOnTabSelectListener { showTab(it) }
+        AHBottomNavigationAdapter(activity, R.menu.main_bottom_menu).apply {
+            setupWithBottomNavigation(bottomBar)
+        }
+        with(bottomBar) {
+            accentColor = context.color(R.color.colorPrimary)
+            inactiveColor = context.color(R.color.silver)
+
+            setOnTabSelectedListener { position, wasSelected ->
+                if (!wasSelected) postDelayed({ showTab(position) }, 150)
+                true
+            }
+        }
     }
 
     private fun createNewFragments(): HashMap<String, BaseFragment> = hashMapOf(
@@ -75,13 +88,13 @@ class MainFragment : BaseFragment(), MainView {
             tabKeys[3] to childFragmentManager.findFragmentByTag(tabKeys[3]) as BaseFragment
     )
 
-    private fun showTab(id: Int) {
+    private fun showTab(position: Int) {
         childFragmentManager.beginTransaction()
-                .detach(tabs[tabIdToFragmentTag(R.id.tab_activity)])
-                .detach(tabs[tabIdToFragmentTag(R.id.tab_issue)])
-                .detach(tabs[tabIdToFragmentTag(R.id.tab_merge)])
-                .detach(tabs[tabIdToFragmentTag(R.id.tab_todo)])
-                .attach(tabs[tabIdToFragmentTag(id)])
+                .detach(tabs[tabKeys[0]])
+                .detach(tabs[tabKeys[1]])
+                .detach(tabs[tabKeys[2]])
+                .detach(tabs[tabKeys[3]])
+                .attach(tabs[tabKeys[position]])
                 .commit()
     }
 

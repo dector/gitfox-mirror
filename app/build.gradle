@@ -96,7 +96,7 @@ dependencies {
     //Markdown to HTML converter
     compile 'ru.noties:markwon:1.0.3'
     //Bottom navigation bar
-    compile 'com.roughike:bottom-bar:2.3.1'
+    compile 'com.aurelhubert:ahbottomnavigation:2.1.0'
     //Custom fonts
     compile 'uk.co.chrisjenx:calligraphy:2.3.0'
     //Lottie

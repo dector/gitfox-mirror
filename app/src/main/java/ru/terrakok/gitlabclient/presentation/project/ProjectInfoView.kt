@@ -13,7 +13,7 @@ import ru.terrakok.gitlabclient.entity.Project
 interface ProjectInfoView : MvpView {
     fun showProjectInfo(project: Project)
     fun showProgress(show: Boolean)
-    fun showReadmeFile(html: String)
+    fun showReadmeFile(mdReadme: CharSequence)
 
     @StateStrategyType(OneExecutionStateStrategy::class)
     fun showMessage(message: String)
