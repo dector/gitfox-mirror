@@ -97,4 +97,14 @@ class IssueRepository @Inject constructor(
             .getIssue(projectId, issueId)
             .subscribeOn(schedulers.io())
             .observeOn(schedulers.ui())
+
+    fun getIssueNotes(
+            projectId: Long,
+            issueId: Long,
+            orderBy: OrderBy? = null,
+            sort: Sort? = null
+    ) = api
+            .getIssueNotes(projectId, issueId, orderBy, sort)
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
 }

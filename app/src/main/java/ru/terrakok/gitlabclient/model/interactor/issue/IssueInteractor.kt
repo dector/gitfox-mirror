@@ -28,4 +28,9 @@ class IssueInteractor @Inject constructor(
             projectId: Long,
             issueId: Long
     ) = issueRepository.getIssue(projectId, issueId)
+
+    fun getIssueNotes(
+            projectId: Long,
+            issueId: Long
+    ) = issueRepository.getIssueNotes(projectId, issueId)
 }
