@@ -1,25 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         style="@style/ToolbarStyle"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark"
         app:navigationIcon="@drawable/ic_arrow_back_24dp"
         tools:subtitle="GitFox"
-        tools:title="#56" />
+        tools:title="#56"/>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="16dp"
         android:fillViewport="true">
 
         <android.support.constraint.ConstraintLayout
@@ -31,8 +29,10 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
                 app:layout_constraintLeft_toLeftOf="parent"
-                tools:src="@drawable/default_img" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@drawable/default_img"/>
 
             <TextView
                 android:id="@+id/titleTextView"
@@ -46,7 +46,7 @@
                 app:layout_constraintLeft_toRightOf="@id/avatarImageView"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="@id/avatarImageView"
-                tools:text="Issue title" />
+                tools:text="Issue title"/>
 
             <ImageView
                 android:id="@+id/stateImageView"
@@ -55,7 +55,7 @@
                 android:layout_marginTop="6dp"
                 app:layout_constraintStart_toStartOf="@id/titleTextView"
                 app:layout_constraintTop_toBottomOf="@id/titleTextView"
-                tools:src="@drawable/circle" />
+                tools:src="@drawable/circle"/>
 
             <TextView
                 android:id="@+id/subtitleTextView"
@@ -69,7 +69,7 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintStart_toEndOf="@id/stateImageView"
                 app:layout_constraintTop_toBottomOf="@id/titleTextView"
-                tools:text="Opened by CraggyHaggy 3d ago" />
+                tools:text="Opened by CraggyHaggy 3d ago"/>
 
             <View
                 android:id="@+id/divider"
@@ -79,18 +79,17 @@
                 android:background="@color/divider"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/subtitleTextView" />
+                app:layout_constraintTop_toBottomOf="@+id/subtitleTextView"/>
 
             <WebView
                 android:id="@+id/descriptionWebView"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
+                android:background="@color/lightGrey"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/divider" />
+                app:layout_constraintTop_toBottomOf="@+id/divider"/>
 
         </android.support.constraint.ConstraintLayout>
 
