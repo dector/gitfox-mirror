@@ -5,6 +5,10 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_issue_info.*
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.entity.issue.IssueState
+import ru.terrakok.gitlabclient.extension.color
+import ru.terrakok.gitlabclient.extension.humanTime
+import ru.terrakok.gitlabclient.extension.loadRoundedImage
 import ru.terrakok.gitlabclient.presentation.issue.IssueInfoPresenter
 import ru.terrakok.gitlabclient.presentation.issue.IssueInfoView
 import ru.terrakok.gitlabclient.toothpick.DI
@@ -31,7 +35,32 @@ class IssueInfoFragment : BaseFragment(), IssueInfoView {
     }
 
     override fun showIssue(issueInfo: IssueInfoView.IssueInfo) {
-        toolbar.title = issueInfo.issue.id.toString()
+        val issue = issueInfo.issue
+        val project = issueInfo.project
+
+        toolbar.title = "#${issue.iid}"
+        toolbar.subtitle = project.name
+        titleTextView.text = issue.title
+        stateImageView.setImageResource(R.drawable.circle)
+        // TODO: issue info (Display action user name for the CLOSED states).
+        // Wait for https://gitlab.com/gitlab-org/gitlab-ce/issues/41967
+        when (issue.state) {
+            IssueState.OPENED -> {
+                stateImageView.setColorFilter(context!!.color(R.color.green))
+                subtitleTextView.text = String.format(
+                        getString(R.string.issue_info_subtitle),
+                        getString(R.string.target_status_opened),
+                        issue.author.name,
+                        issue.createdAt.humanTime(resources)
+                )
+            }
+            IssueState.CLOSED -> {
+                stateImageView.setColorFilter(context!!.color(R.color.red))
+                subtitleTextView.text = getString(R.string.target_status_closed)
+            }
+        }
+        avatarImageView.loadRoundedImage(issue.author.avatarUrl, context)
+        descriptionWebView.loadData(issueInfo.htmlDescription, "text/html", "UTF-8")
     }
 
     override fun showProgress(show: Boolean) {
