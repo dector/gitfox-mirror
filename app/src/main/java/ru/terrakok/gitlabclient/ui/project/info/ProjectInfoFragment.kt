@@ -46,29 +46,31 @@ class ProjectInfoFragment : BaseFragment(), ProjectInfoView {
         }
     }
 
-    override fun showProjectInfo(project: Project) {
+    override fun showProject(project: Project, mdReadme: CharSequence) {
         this.project = project
-        
+
         toolbar.title = project.name
         titleTextView.text = project.nameWithNamespace
         descriptionTextView.text = project.description
+
         avatarImageView.loadRoundedImage(project.avatarUrl, context)
+        iconImageView.setBackgroundResource(R.drawable.circle)
         iconImageView.setImageResource(when (project.visibility) {
             Visibility.PRIVATE -> R.drawable.ic_lock_white_18dp
             Visibility.INTERNAL -> R.drawable.ic_security_white_24dp
             else -> R.drawable.ic_globe_18dp
         })
 
+        starsTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_star_black_24dp, 0, 0, 0)
         starsTextView.text = project.starCount.toString()
+        forksTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_fork, 0, 0, 0)
         forksTextView.text = project.forksCount.toString()
+
+        Markwon.setText(readmeTextView, mdReadme)
     }
 
     override fun showProgress(show: Boolean) {
         showProgressDialog(show)
-    }
-
-    override fun showReadmeFile(mdReadme: CharSequence) {
-        Markwon.setText(readmeTextView, mdReadme)
     }
 
     override fun showMessage(message: String) {

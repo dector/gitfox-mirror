@@ -27,17 +27,19 @@ class ProjectInfoPresenter @Inject constructor(
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
-        projectInteractor.getProject(projectId)
-                .doOnSuccess { project -> viewState.showProjectInfo(project) }
+        projectInteractor
+                .getProject(projectId)
                 .flatMap { project ->
                     projectInteractor
                             .getProjectReadme(project.id, project.defaultBranch)
+                            .onErrorReturn { "" }
                             .flatMap { mdConverter.markdownToSpannable(it) }
+                            .map { mdReadme -> Pair(project, mdReadme) }
                 }
                 .doOnSubscribe { viewState.showProgress(true) }
                 .doAfterTerminate { viewState.showProgress(false) }
                 .subscribe(
-                        { viewState.showReadmeFile(it) },
+                        { (project, mdReadme) -> viewState.showProject(project, mdReadme) },
                         { errorHandler.proceed(it, { viewState.showMessage(it) }) }
                 )
                 .connect()

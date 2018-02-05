@@ -42,8 +42,16 @@ class ProjectInteractor @Inject constructor(
     fun getProject(id: Long) = projectRepository.getProject(id)
 
     fun getProjectReadme(id: Long, branchName: String) =
-            projectRepository.getFile(id, "README.md", branchName)
-                    .observeOn(schedulers.computation())
-                    .map { file -> base64Tools.decode(file.content) }
-                    .observeOn(schedulers.ui())
+            projectRepository.getRepositoryTree(projectId = id, branchName = branchName)
+                    .flattenAsObservable { treeNodes -> treeNodes }
+                    .filter({ repositoryTreeNode ->
+                        repositoryTreeNode.name.toLowerCase().contains("readme.md")
+                    })
+                    .firstOrError()
+                    .flatMap { treeNode ->
+                        projectRepository.getFile(id, treeNode.name, branchName)
+                                .observeOn(schedulers.computation())
+                                .map { file -> base64Tools.decode(file.content) }
+                                .observeOn(schedulers.ui())
+                    }
 }
