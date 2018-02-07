@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName
 data class RepositoryTreeNode(
         @SerializedName("id") val id: String,
         @SerializedName("name") val name: String,
-        @SerializedName("type") val type: String,
+        @SerializedName("type") val type: RepositoryTreeNodeType,
         @SerializedName("path") val path: String,
         @SerializedName("mode") val mode: String
 )

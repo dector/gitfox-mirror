@@ -15,6 +15,10 @@ class ProjectInteractor @Inject constructor(
         private val base64Tools: Base64Tools
 ) {
 
+    companion object {
+        private val README_FILE_NAME = "readme.md"
+    }
+
     fun getMainProjects(page: Int) = projectRepository
             .getProjectsList(
                     page = page,
@@ -43,11 +47,10 @@ class ProjectInteractor @Inject constructor(
 
     fun getProjectReadme(id: Long, branchName: String) =
             projectRepository.getRepositoryTree(projectId = id, branchName = branchName)
-                    .flattenAsObservable { treeNodes -> treeNodes }
-                    .filter({ repositoryTreeNode ->
-                        repositoryTreeNode.name.toLowerCase().contains("readme.md")
-                    })
-                    .firstOrError()
+                    .map { treeNodes ->
+                        treeNodes.find { it.name.contains(README_FILE_NAME, true) }
+                                ?: throw NoSuchElementException("$README_FILE_NAME not found!")
+                    }
                     .flatMap { treeNode ->
                         projectRepository.getFile(id, treeNode.name, branchName)
                                 .observeOn(schedulers.computation())

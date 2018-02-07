@@ -1,6 +1,7 @@
 package ru.terrakok.gitlabclient.presentation.project
 
 import com.arellomobile.mvp.InjectViewState
+import io.reactivex.Single
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.model.interactor.project.ProjectInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
@@ -32,7 +33,12 @@ class ProjectInfoPresenter @Inject constructor(
                 .flatMap { project ->
                     projectInteractor
                             .getProjectReadme(project.id, project.defaultBranch)
-                            .onErrorReturn { "" }
+                            .onErrorResumeNext { throwable ->
+                                when (throwable) {
+                                    is NoSuchElementException -> Single.just("")
+                                    else -> Single.error(throwable)
+                                }
+                            }
                             .flatMap { mdConverter.markdownToSpannable(it) }
                             .map { mdReadme -> Pair(project, mdReadme) }
                 }
