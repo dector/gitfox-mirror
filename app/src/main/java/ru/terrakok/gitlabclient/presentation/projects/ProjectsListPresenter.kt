@@ -1,7 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.projects
 
 import com.arellomobile.mvp.InjectViewState
-import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.model.interactor.project.ProjectInteractor
@@ -90,6 +89,6 @@ class ProjectsListPresenter @Inject constructor(
     fun refreshProjects() = paginator.refresh()
     fun loadNextProjectsPage() = paginator.loadNewPage()
 
-    fun onProjectClicked(id: Long) = router.startFlow(Screens.PROJECT_FLOW, id)
+    fun onProjectClicked(id: Long, name: String) = router.startFlow(Screens.PROJECT_FLOW, Pair(id, name))
     fun onBackPressed() = router.exit()
 }

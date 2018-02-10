@@ -11,8 +11,8 @@ import ru.terrakok.gitlabclient.model.system.flow.FlowNavigator
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
+import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectName
 import ru.terrakok.gitlabclient.ui.global.BaseActivity
-import ru.terrakok.gitlabclient.ui.project.info.ProjectInfoFragment
 import toothpick.Toothpick
 import toothpick.config.Module
 import javax.inject.Inject
@@ -25,6 +25,7 @@ class ProjectActivity : BaseActivity() {
 
     override val layoutRes = R.layout.activity_container
     private val projectId get() = intent.getLongExtra(ARG_PROJECT_ID, 0)
+    private val projectName get() = intent.getStringExtra(ARG_PROJECT_NAME)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Toothpick.inject(this, Toothpick.openScope(DI.APP_SCOPE))
@@ -36,12 +37,15 @@ class ProjectActivity : BaseActivity() {
                     bind(PrimitiveWrapper::class.java)
                             .withName(ProjectId::class.java)
                             .toInstance(PrimitiveWrapper(projectId))
+                    bind(PrimitiveWrapper::class.java)
+                            .withName(ProjectName::class.java)
+                            .toInstance(PrimitiveWrapper(projectName))
                 }
             })
         }
 
         if (savedInstanceState == null) {
-            navigator.setLaunchScreen(Screens.PROJECT_INFO_SCREEN, null)
+            navigator.setLaunchScreen(Screens.PROJECT_SCREEN, null)
         }
     }
 
@@ -64,16 +68,18 @@ class ProjectActivity : BaseActivity() {
     private val navigator = object : FlowNavigator(this, R.id.container) {
 
         override fun createFragment(screenKey: String?, data: Any?): Fragment? = when (screenKey) {
-            Screens.PROJECT_INFO_SCREEN -> ProjectInfoFragment()
+            Screens.PROJECT_SCREEN -> ProjectFragment()
             else -> null
         }
     }
 
     companion object {
         private val ARG_PROJECT_ID = "arg_project_id"
-        fun getStartIntent(projectId: Long, context: Context) =
+        private val ARG_PROJECT_NAME = "arg_project_name"
+        fun getStartIntent(projectId: Long, projectName: String, context: Context) =
                 Intent(context, ProjectActivity::class.java).apply {
                     putExtra(ARG_PROJECT_ID, projectId)
+                    putExtra(ARG_PROJECT_NAME, projectName)
                 }
     }
 }

@@ -32,7 +32,10 @@ abstract class BaseActivity : MvpAppCompatActivity() {
     protected fun getFlowIntent(flowKey: String, data: Any?): Intent? = when (flowKey) {
         Screens.AUTH_FLOW -> AuthActivity.getStartIntent(this)
         Screens.MAIN_FLOW -> MainActivity.getStartIntent(this)
-        Screens.PROJECT_FLOW -> ProjectActivity.getStartIntent(data as Long, this)
+        Screens.PROJECT_FLOW -> {
+            val (projectId, projectName) = data as Pair<Long, String>
+            ProjectActivity.getStartIntent(projectId, projectName, this)
+        }
         Screens.USER_FLOW -> UserActivity.getStartIntent(data as Long, this)
         Screens.MR_FLOW -> {
             val (projectId, mrId) = data as Pair<Long, Long>

@@ -168,7 +168,7 @@ fun TodoAction.getHumanName(resources: Resources): String = when (this) {
 
 fun TargetHeaderTitle.getHumanName(resources: Resources) = when (this) {
     is TargetHeaderTitle.Event -> {
-        "$userName ${action.getHumanName(resources)} $targetName ${resources.getString(R.string.at)} $projectName"
+        "$userName ${action.getHumanName(resources)} $targetName ${resources.getString(R.string.at)} $projectNameWithNamespace"
     }
     is TargetHeaderTitle.Todo -> {
         val actionName = action.getHumanName(resources)
@@ -263,9 +263,10 @@ fun ImageView.loadRoundedImage(
 }
 
 fun TargetHeader.openInfo(router: FlowRouter) {
-    when(target) {
+    when (target) {
         AppTarget.PROJECT -> {
-            router.startFlow(Screens.PROJECT_FLOW, targetId)
+            val title = title as TargetHeaderTitle.Event
+            router.startFlow(Screens.PROJECT_FLOW, Pair(targetId, title.projectName))
         }
         AppTarget.USER -> {
             router.startFlow(Screens.USER_FLOW, targetId)
