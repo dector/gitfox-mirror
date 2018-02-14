@@ -12,6 +12,7 @@
     <string name="for_str">for</string>
     <string name="you">you</string>
     <string name="yourself">yourself</string>
+    <string name="loading">loading…</string>
 
     <!--Main screen-->
     <string name="gitlab_activity">Activity</string>

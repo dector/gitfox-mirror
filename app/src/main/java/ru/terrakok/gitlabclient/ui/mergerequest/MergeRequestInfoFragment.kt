@@ -6,9 +6,10 @@ import kotlinx.android.synthetic.main.fragment_mr_info.*
 import ru.noties.markwon.Markwon
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
-import ru.terrakok.gitlabclient.extension.color
 import ru.terrakok.gitlabclient.extension.humanTime
 import ru.terrakok.gitlabclient.extension.loadRoundedImage
+import ru.terrakok.gitlabclient.extension.tint
+import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.mergerequest.info.MergeRequestInfoPresenter
 import ru.terrakok.gitlabclient.presentation.mergerequest.info.MergeRequestInfoView
 import ru.terrakok.gitlabclient.toothpick.DI
@@ -33,17 +34,15 @@ class MergeRequestInfoFragment : BaseFragment(), MergeRequestInfoView {
     override fun showInfo(mrInfo: MergeRequestInfoView.MergeRequestInfo) {
         val mergeRequest = mrInfo.mr
 
-        (parentFragment as? ToolbarConfigurator)?.let { toolbarConfigurator ->
-            toolbarConfigurator.setTitle("!${mergeRequest.iid}", mrInfo.project.nameWithNamespace)
-        }
+        (parentFragment as? ToolbarConfigurator)
+                ?.setTitle("!${mergeRequest.iid}", mrInfo.project.nameWithNamespace)
 
         titleTextView.text = mergeRequest.title
-        stateImageView.setImageResource(R.drawable.circle)
         // TODO: merge request info (Display action user name for the MERGED/CLOSED states).
         // Wait for https://gitlab.com/gitlab-org/gitlab-ce/issues/41905.
         when (mergeRequest.state) {
             MergeRequestState.OPENED -> {
-                stateImageView.setColorFilter(context!!.color(R.color.green))
+                stateImageView.tint(R.color.green)
                 subtitleTextView.text = String.format(
                         getString(R.string.merge_request_info_subtitle),
                         getString(R.string.target_status_opened),
@@ -52,11 +51,11 @@ class MergeRequestInfoFragment : BaseFragment(), MergeRequestInfoView {
                 )
             }
             MergeRequestState.MERGED -> {
-                stateImageView.setColorFilter(context!!.color(R.color.blue))
+                stateImageView.tint(R.color.blue)
                 subtitleTextView.text = getString(R.string.target_status_merged)
             }
             MergeRequestState.CLOSED -> {
-                stateImageView.setColorFilter(context!!.color(R.color.red))
+                stateImageView.tint(R.color.red)
                 subtitleTextView.text = getString(R.string.target_status_closed)
             }
         }
@@ -65,6 +64,7 @@ class MergeRequestInfoFragment : BaseFragment(), MergeRequestInfoView {
     }
 
     override fun showProgress(show: Boolean) {
+        view?.visible(!show)
         showProgressDialog(show)
     }
 
