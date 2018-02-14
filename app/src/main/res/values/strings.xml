@@ -140,6 +140,8 @@
     <string name="todo_action_directly_addressed">directly addressed</string>
 
     <!--Merge Request Info screen-->
+    <string name="merge_request_info_tab">Details</string>
+    <string name="merge_request_discussion_tab">Discussion</string>
     <string name="merge_request_info_subtitle" formatted="false">%s by %s %s</string>
 
     <!--Issue Info screen-->

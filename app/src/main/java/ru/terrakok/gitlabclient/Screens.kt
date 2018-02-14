@@ -20,7 +20,7 @@ object Screens {
     const val USER_INFO_SCREEN = "user info screen"
 
     const val MR_FLOW = "mr flow"
-    const val MR_INFO_SCREEN = "mr info screen"
+    const val MR_SCREEN = "mr screen"
 
     const val ISSUE_FLOW = "issue flow"
     const val ISSUE_INFO_SCREEN = "issue info screen"

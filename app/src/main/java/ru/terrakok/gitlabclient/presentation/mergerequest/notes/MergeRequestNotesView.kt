@@ -1,20 +1,19 @@
-package ru.terrakok.gitlabclient.presentation.mergerequest
+package ru.terrakok.gitlabclient.presentation.mergerequest.notes
 
 import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
-import ru.terrakok.gitlabclient.entity.Project
-import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
+import ru.terrakok.gitlabclient.entity.Note
 
 /**
- * @author Konstantin Tskhovrebov (aka terrakok) on 27.04.17.
+ * Created by Konstantin Tskhovrebov (aka @terrakok) on 12.02.18.
  */
 @StateStrategyType(AddToEndSingleStrategy::class)
-interface MergeRequestInfoView : MvpView {
-    data class MergeRequestInfo(val mr: MergeRequest, val project: Project, val mdDescription: CharSequence)
+interface MergeRequestNotesView : MvpView {
+    data class NoteWithFormattedBody(val note: Note, val body: CharSequence)
 
-    fun showMergeRequest(mrInfo: MergeRequestInfo)
+    fun showNotes(notes: List<NoteWithFormattedBody>)
     fun showProgress(show: Boolean)
 
     @StateStrategyType(OneExecutionStateStrategy::class)

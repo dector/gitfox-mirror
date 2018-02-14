@@ -1,6 +1,5 @@
 package ru.terrakok.gitlabclient.ui.mergerequest
 
-import android.os.Bundle
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_mr_info.*
@@ -10,8 +9,8 @@ import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
 import ru.terrakok.gitlabclient.extension.color
 import ru.terrakok.gitlabclient.extension.humanTime
 import ru.terrakok.gitlabclient.extension.loadRoundedImage
-import ru.terrakok.gitlabclient.presentation.mergerequest.MergeRequestInfoPresenter
-import ru.terrakok.gitlabclient.presentation.mergerequest.MergeRequestInfoView
+import ru.terrakok.gitlabclient.presentation.mergerequest.info.MergeRequestInfoPresenter
+import ru.terrakok.gitlabclient.presentation.mergerequest.info.MergeRequestInfoView
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import toothpick.Toothpick
@@ -31,17 +30,13 @@ class MergeRequestInfoFragment : BaseFragment(), MergeRequestInfoView {
             Toothpick.openScope(DI.MERGE_REQUEST_SCOPE)
                     .getInstance(MergeRequestInfoPresenter::class.java)
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        toolbar.setNavigationOnClickListener { presenter.onBackPressed() }
-    }
-
-    override fun showMergeRequest(mrInfo: MergeRequestInfoView.MergeRequestInfo) {
+    override fun showInfo(mrInfo: MergeRequestInfoView.MergeRequestInfo) {
         val mergeRequest = mrInfo.mr
-        val project = mrInfo.project
 
-        toolbar.title = "!${mergeRequest.iid}"
-        toolbar.subtitle = project.name
+        (parentFragment as? ToolbarConfigurator)?.let { toolbarConfigurator ->
+            toolbarConfigurator.setTitle("!${mergeRequest.iid}", mrInfo.project.nameWithNamespace)
+        }
+
         titleTextView.text = mergeRequest.title
         stateImageView.setImageResource(R.drawable.circle)
         // TODO: merge request info (Display action user name for the MERGED/CLOSED states).
@@ -77,8 +72,7 @@ class MergeRequestInfoFragment : BaseFragment(), MergeRequestInfoView {
         showSnackMessage(message)
     }
 
-    override fun onBackPressed() {
-        presenter.onBackPressed()
+    interface ToolbarConfigurator {
+        fun setTitle(title: String, subTitle: String)
     }
-
 }

@@ -1,9 +1,8 @@
-package ru.terrakok.gitlabclient.presentation.mergerequest
+package ru.terrakok.gitlabclient.presentation.mergerequest.info
 
 import com.arellomobile.mvp.InjectViewState
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
-import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
 import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestInteractor
@@ -23,9 +22,8 @@ private typealias MergeRequestLinker = BiFunction<Pair<MergeRequest, CharSequenc
  */
 @InjectViewState
 class MergeRequestInfoPresenter @Inject constructor(
-        @ProjectId private val projectIdWrapper: PrimitiveWrapper<Long>,
-        @MergeRequestId private val mrIdWrapper: PrimitiveWrapper<Long>,
-        private val router: Router,
+        @ProjectId projectIdWrapper: PrimitiveWrapper<Long>,
+        @MergeRequestId mrIdWrapper: PrimitiveWrapper<Long>,
         private val mrInteractor: MergeRequestInteractor,
         private val projectInteractor: ProjectInteractor,
         private val mdConverter: MarkDownConverter,
@@ -53,11 +51,9 @@ class MergeRequestInfoPresenter @Inject constructor(
                 .doOnSubscribe { viewState.showProgress(true) }
                 .doAfterTerminate { viewState.showProgress(false) }
                 .subscribe(
-                        { viewState.showMergeRequest(it) },
+                        { viewState.showInfo(it) },
                         { errorHandler.proceed(it, { viewState.showMessage(it) }) }
                 )
                 .connect()
     }
-
-    fun onBackPressed() = router.exit()
 }

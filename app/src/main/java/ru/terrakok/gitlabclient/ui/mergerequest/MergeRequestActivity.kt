@@ -44,7 +44,7 @@ class MergeRequestActivity : BaseActivity() {
         }
 
         if (savedInstanceState == null) {
-            navigator.setLaunchScreen(Screens.MR_INFO_SCREEN, null)
+            navigator.setLaunchScreen(Screens.MR_SCREEN, null)
         }
     }
 
@@ -67,14 +67,14 @@ class MergeRequestActivity : BaseActivity() {
     private val navigator = object : FlowNavigator(this, R.id.container) {
 
         override fun createFragment(screenKey: String?, data: Any?) = when(screenKey) {
-            Screens.MR_INFO_SCREEN -> MergeRequestInfoFragment()
+            Screens.MR_SCREEN -> MergeRequestFragment()
             else -> null
         }
     }
 
     companion object {
-        private val ARG_PROJECT_ID = "arg_project_id"
-        private val ARG_MR_ID = "arg_mr_id"
+        private const val ARG_PROJECT_ID = "arg_project_id"
+        private const val ARG_MR_ID = "arg_mr_id"
         fun getStartIntent(projectId: Long, mrId: Long, context: Context) =
                 Intent(context, MergeRequestActivity::class.java).apply {
                     putExtra(ARG_PROJECT_ID, projectId)
