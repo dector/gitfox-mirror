@@ -35,7 +35,7 @@ class MergeRequestInfoFragment : BaseFragment(), MergeRequestInfoView {
         val mergeRequest = mrInfo.mr
 
         (parentFragment as? ToolbarConfigurator)
-                ?.setTitle("!${mergeRequest.iid}", mrInfo.project.nameWithNamespace)
+                ?.setTitle("!${mergeRequest.iid}", mrInfo.project.name)
 
         titleTextView.text = mergeRequest.title
         // TODO: merge request info (Display action user name for the MERGED/CLOSED states).

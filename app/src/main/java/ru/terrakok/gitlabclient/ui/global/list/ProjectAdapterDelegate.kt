@@ -20,37 +20,39 @@ class ProjectAdapterDelegate(private val clickListener: (Project) -> Unit) : Ada
             items[position] is Project
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder =
-            ProjectViewHolder(parent.inflate(R.layout.item_project), clickListener)
+            ViewHolder(parent.inflate(R.layout.item_project))
 
     override fun onBindViewHolder(items: MutableList<Any>,
                                   position: Int,
                                   viewHolder: RecyclerView.ViewHolder,
                                   payloads: MutableList<Any>) =
-            (viewHolder as ProjectViewHolder).bind(items[position] as Project)
+            (viewHolder as ViewHolder).bind(items[position] as Project)
 
-    private class ProjectViewHolder(val view: View, clickListener: (Project) -> Unit) : RecyclerView.ViewHolder(view) {
+    private inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private lateinit var project: Project
 
         init {
-            view.setOnClickListener { clickListener.invoke(project) }
+            view.setOnClickListener { clickListener(project) }
         }
 
         fun bind(project: Project) {
             this.project = project
-            view.titleTextView.text = project.nameWithNamespace
+            with(itemView) {
+                titleTextView.text = project.nameWithNamespace
 
-            view.descriptionTextView.visibility = if (project.description.isNullOrEmpty()) View.GONE else View.VISIBLE
-            view.descriptionTextView.text = project.description
+                descriptionTextView.visibility = if (project.description.isNullOrEmpty()) View.GONE else View.VISIBLE
+                descriptionTextView.text = project.description
 
-            view.starsTextView.text = project.starCount.toString()
-            view.forksTextView.text = project.forksCount.toString()
+                starsTextView.text = project.starCount.toString()
+                forksTextView.text = project.forksCount.toString()
 
-            view.iconImageView.setImageResource(when (project.visibility) {
-                Visibility.PRIVATE -> R.drawable.ic_lock_white_18dp
-                Visibility.INTERNAL -> R.drawable.ic_security_white_24dp
-                else -> R.drawable.ic_globe_18dp
-            })
-            view.avatarImageView.loadRoundedImage(project.avatarUrl)
+                iconImageView.setImageResource(when (project.visibility) {
+                    Visibility.PRIVATE -> R.drawable.ic_lock_white_18dp
+                    Visibility.INTERNAL -> R.drawable.ic_security_white_24dp
+                    else -> R.drawable.ic_globe_18dp
+                })
+                avatarImageView.loadRoundedImage(project.avatarUrl)
+            }
         }
     }
 }

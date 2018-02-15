@@ -44,9 +44,9 @@ class MergeRequestFragment : BaseFragment(), MergeRequestInfoFragment.ToolbarCon
     }
 
     private inner class MergeRequestPagesAdapter : FragmentPagerAdapter(childFragmentManager) {
-        override fun getItem(position: Int) = when (position) {
+        override fun getItem(position: Int): BaseFragment? = when (position) {
             0 -> MergeRequestInfoFragment()
-            1 -> MergeRequestInfoFragment()
+            1 -> MergeRequestNotesFragment()
             else -> null
         }
 
