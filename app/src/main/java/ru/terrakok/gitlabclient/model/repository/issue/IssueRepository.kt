@@ -79,8 +79,7 @@ class IssueRepository @Inject constructor(
                         issue.author.name,
                         EventAction.CREATED,
                         "${AppTarget.ISSUE} #${issue.iid}",
-                        project.name,
-                        project.nameWithNamespace
+                        project.name
                 ),
                 issue.title,
                 issue.createdAt,

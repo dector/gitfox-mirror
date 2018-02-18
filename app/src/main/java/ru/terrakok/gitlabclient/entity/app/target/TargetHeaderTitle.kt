@@ -11,8 +11,7 @@ sealed class TargetHeaderTitle {
             val userName: String,
             val action: EventAction,
             val targetName: String,
-            val projectName: String,
-            val projectNameWithNamespace: String
+            val projectName: String
     ) : TargetHeaderTitle()
 
     data class Todo(

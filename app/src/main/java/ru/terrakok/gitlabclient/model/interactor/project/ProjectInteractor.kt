@@ -15,10 +15,6 @@ class ProjectInteractor @Inject constructor(
         private val base64Tools: Base64Tools
 ) {
 
-    companion object {
-        private val README_FILE_NAME = "readme.md"
-    }
-
     fun getMainProjects(page: Int) = projectRepository
             .getProjectsList(
                     page = page,
@@ -45,6 +41,15 @@ class ProjectInteractor @Inject constructor(
 
     fun getProject(id: Long) = projectRepository.getProject(id)
 
+    /**
+     * Returns the project readme file at the specified project and branch.
+     * The project readme is searched ignoring case.
+     *
+     * @param id project id
+     * @param branchName project branch name to search readme
+     * @return decoded project readme as String
+     * @throws NoSuchElementException if project readme with name {@value README_FILE_NAME} not found.
+     */
     fun getProjectReadme(id: Long, branchName: String) =
             projectRepository.getRepositoryTree(projectId = id, branchName = branchName)
                     .map { treeNodes ->
@@ -57,4 +62,8 @@ class ProjectInteractor @Inject constructor(
                                 .map { file -> base64Tools.decode(file.content) }
                                 .observeOn(schedulers.ui())
                     }
+
+    companion object {
+        private const val README_FILE_NAME = "readme.md"
+    }
 }

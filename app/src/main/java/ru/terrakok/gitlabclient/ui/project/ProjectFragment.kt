@@ -1,21 +1,17 @@
 package ru.terrakok.gitlabclient.ui.project
 
 import android.os.Bundle
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter
 import kotlinx.android.synthetic.main.fragment_project.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.extension.color
-import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.project.info.ProjectInfoFragment
-import toothpick.Toothpick
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 10.02.18.
  */
-class ProjectFragment : BaseFragment(), ProjectView {
+class ProjectFragment : BaseFragment() {
 
     override val layoutRes: Int = R.layout.fragment_project
 
@@ -27,16 +23,6 @@ class ProjectFragment : BaseFragment(), ProjectView {
     )
 
     private fun tabIdToFragmentTag(id: Int) = "tab_$id"
-
-    @InjectPresenter
-    lateinit var presenter: ProjectPresenter
-
-    @ProvidePresenter
-    fun providePresenter(): ProjectPresenter {
-        return Toothpick
-                .openScope(DI.PROJECT_SCOPE)
-                .getInstance(ProjectPresenter::class.java)
-    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -63,7 +49,6 @@ class ProjectFragment : BaseFragment(), ProjectView {
                 true
             }
         }
-        toolbar.setNavigationOnClickListener { presenter.onBackPressed() }
     }
 
     private fun createNewFragments(): HashMap<String, BaseFragment> = hashMapOf(
@@ -79,9 +64,5 @@ class ProjectFragment : BaseFragment(), ProjectView {
                 .detach(tabs[tabKeys[0]])
                 .attach(tabs[tabKeys[position]])
                 .commit()
-    }
-
-    override fun setProjectName(name: String) {
-        toolbar.title = name
     }
 }
