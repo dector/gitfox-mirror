@@ -111,10 +111,8 @@ class MainActivity : BaseActivity(), LaunchView {
 
     //region nav drawer
     private fun openNavDrawer(open: Boolean) {
-        drawerLayout.postDelayed({
-            if (open) drawerLayout.openDrawer(GravityCompat.START)
-            else drawerLayout.closeDrawer(GravityCompat.START)
-        }, 150)
+        if (open) drawerLayout.openDrawer(GravityCompat.START)
+        else drawerLayout.closeDrawer(GravityCompat.START)
     }
 
     private fun enableNavDrawer(enable: Boolean) {
