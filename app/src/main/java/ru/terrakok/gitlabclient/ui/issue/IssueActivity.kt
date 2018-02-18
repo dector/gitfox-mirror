@@ -40,7 +40,7 @@ class IssueActivity : BaseActivity() {
         }
 
         if (savedInstanceState == null) {
-            navigator.setLaunchScreen(Screens.ISSUE_INFO_SCREEN, null)
+            navigator.setLaunchScreen(Screens.ISSUE_SCREEN, null)
         }
     }
 
@@ -53,7 +53,7 @@ class IssueActivity : BaseActivity() {
     override val navigator = object : FlowNavigator(this, R.id.container) {
 
         override fun createFragment(screenKey: String?, data: Any?) = when(screenKey) {
-            Screens.ISSUE_INFO_SCREEN -> IssueInfoFragment()
+            Screens.ISSUE_SCREEN -> IssueFragment()
             else -> null
         }
     }

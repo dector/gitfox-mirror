@@ -1,9 +1,8 @@
-package ru.terrakok.gitlabclient.presentation.issue
+package ru.terrakok.gitlabclient.presentation.issue.info
 
 import com.arellomobile.mvp.InjectViewState
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
-import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.issue.Issue
 import ru.terrakok.gitlabclient.model.interactor.issue.IssueInteractor
@@ -25,7 +24,6 @@ private typealias IssueLinker = BiFunction<Pair<Issue, CharSequence>, Project, I
 class IssueInfoPresenter @Inject constructor(
         @ProjectId private val projectIdWrapper: PrimitiveWrapper<Long>,
         @IssueId private val issueIdWrapper: PrimitiveWrapper<Long>,
-        private val router: Router,
         private val issueInteractor: IssueInteractor,
         private val projectInteractor: ProjectInteractor,
         private val mdConverter: MarkDownConverter,
@@ -58,6 +56,4 @@ class IssueInfoPresenter @Inject constructor(
                 )
                 .connect()
     }
-
-    fun onBackPressed() = router.exit()
 }

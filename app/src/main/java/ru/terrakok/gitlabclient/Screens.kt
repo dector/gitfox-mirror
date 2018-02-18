@@ -32,7 +32,7 @@ object Screens {
     const val MR_SCREEN = "mr screen"
 
     const val ISSUE_FLOW = "issue flow"
-    const val ISSUE_INFO_SCREEN = "issue info screen"
+    const val ISSUE_SCREEN = "issue screen"
 
     fun getFlowIntent(context: Context, flowKey: String, data: Any?): Intent? = when (flowKey) {
         Screens.AUTH_FLOW -> AuthActivity.getStartIntent(context)
