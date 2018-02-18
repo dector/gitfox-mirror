@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.presentation.mergerequest
+package ru.terrakok.gitlabclient.presentation.mergerequest.info
 
 import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
@@ -14,7 +14,7 @@ import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
 interface MergeRequestInfoView : MvpView {
     data class MergeRequestInfo(val mr: MergeRequest, val project: Project, val mdDescription: CharSequence)
 
-    fun showMergeRequest(mrInfo: MergeRequestInfo)
+    fun showInfo(mrInfo: MergeRequestInfo)
     fun showProgress(show: Boolean)
 
     @StateStrategyType(OneExecutionStateStrategy::class)

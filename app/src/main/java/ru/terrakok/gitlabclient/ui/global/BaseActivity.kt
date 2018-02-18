@@ -1,24 +1,21 @@
 package ru.terrakok.gitlabclient.ui.global
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import com.arellomobile.mvp.MvpAppCompatActivity
-import ru.terrakok.gitlabclient.Screens
-import ru.terrakok.gitlabclient.ui.auth.AuthActivity
-import ru.terrakok.gitlabclient.ui.issue.IssueActivity
-import ru.terrakok.gitlabclient.ui.launch.MainActivity
-import ru.terrakok.gitlabclient.ui.mergerequest.MergeRequestActivity
-import ru.terrakok.gitlabclient.ui.project.ProjectActivity
-import ru.terrakok.gitlabclient.ui.user.UserActivity
+import ru.terrakok.cicerone.Navigator
+import ru.terrakok.cicerone.NavigatorHolder
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
+import javax.inject.Inject
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 26.03.17.
  */
 abstract class BaseActivity : MvpAppCompatActivity() {
+    @Inject lateinit var navigatorHolder: NavigatorHolder
 
-    abstract val layoutRes: Int
+    protected abstract val layoutRes: Int
+    protected abstract val navigator: Navigator
 
     override fun attachBaseContext(newBase: Context?) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase))
@@ -28,20 +25,14 @@ abstract class BaseActivity : MvpAppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(layoutRes)
     }
-    
-    protected fun getFlowIntent(flowKey: String, data: Any?): Intent? = when (flowKey) {
-        Screens.AUTH_FLOW -> AuthActivity.getStartIntent(this)
-        Screens.MAIN_FLOW -> MainActivity.getStartIntent(this)
-        Screens.PROJECT_FLOW -> ProjectActivity.getStartIntent(data as Long, this)
-        Screens.USER_FLOW -> UserActivity.getStartIntent(data as Long, this)
-        Screens.MR_FLOW -> {
-            val (projectId, mrId) = data as Pair<Long, Long>
-            MergeRequestActivity.getStartIntent(projectId, mrId, this)
-        }
-        Screens.ISSUE_FLOW -> {
-            val (projectId, issueId) = data as Pair<Long, Long>
-            IssueActivity.getStartIntent(projectId, issueId, this)
-        }
-        else -> null
+
+    override fun onResumeFragments() {
+        super.onResumeFragments()
+        navigatorHolder.setNavigator(navigator)
+    }
+
+    override fun onPause() {
+        navigatorHolder.removeNavigator()
+        super.onPause()
     }
 }

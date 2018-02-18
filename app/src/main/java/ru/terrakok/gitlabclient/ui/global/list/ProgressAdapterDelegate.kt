@@ -16,12 +16,12 @@ class ProgressAdapterDelegate : AdapterDelegate<MutableList<Any>>() {
             items[position] is ProgressItem
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder =
-            ProgressViewHolder(parent.inflate(R.layout.item_progress))
+            ViewHolder(parent.inflate(R.layout.item_progress))
 
     override fun onBindViewHolder(items: MutableList<Any>,
                                   position: Int,
                                   viewHolder: RecyclerView.ViewHolder,
                                   payloads: MutableList<Any>) {}
 
-    private class ProgressViewHolder(view: View) : RecyclerView.ViewHolder(view)
+    private inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
 }

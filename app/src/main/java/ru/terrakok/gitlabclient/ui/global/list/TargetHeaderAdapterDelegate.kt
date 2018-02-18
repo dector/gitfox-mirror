@@ -27,19 +27,15 @@ class TargetHeaderAdapterDelegate(
             items[position] is TargetHeader
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder =
-            TargetHeaderViewHolder(parent.inflate(R.layout.item_target_header), avatarClickListener, clickListener)
+            ViewHolder(parent.inflate(R.layout.item_target_header))
 
     override fun onBindViewHolder(items: MutableList<Any>,
                                   position: Int,
                                   viewHolder: RecyclerView.ViewHolder,
                                   payloads: MutableList<Any>) =
-            (viewHolder as TargetHeaderViewHolder).bind(items[position] as TargetHeader)
+            (viewHolder as ViewHolder).bind(items[position] as TargetHeader)
 
-    private class TargetHeaderViewHolder(
-            private val view: View,
-            private val avatarClickListener: (Long) -> Unit,
-            private val clickListener: (TargetHeader) -> Unit
-    ) : RecyclerView.ViewHolder(view) {
+    private inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private lateinit var item: TargetHeader
 
         init {
@@ -53,77 +49,79 @@ class TargetHeaderAdapterDelegate(
 
         fun bind(item: TargetHeader) {
             this.item = item
+            with(itemView) {
+                titleTextView.text = item.title.getHumanName(resources)
+                Markwon.setText(descriptionTextView, item.body ?: "")
+                descriptionTextView.movementMethod = null //disable internal link click
+                avatarImageView.loadRoundedImage(item.author.avatarUrl)
+                iconImageView.setImageResource(item.icon.getIcon())
+                dateTextView.text = item.date.humanTime(resources)
 
-            val res = view.resources
-            view.titleTextView.text = item.title.getHumanName(res)
-            Markwon.setText(view.descriptionTextView, item.body ?: "")
-            view.descriptionTextView.movementMethod = null //disable internal link click
-            view.avatarImageView.loadRoundedImage(item.author.avatarUrl)
-            view.iconImageView.setImageResource(item.icon.getIcon())
-            view.dateTextView.text = item.date.humanTime(res)
+                descriptionTextView.visible(item.body != null)
+                iconImageView.visible(item.icon != TargetHeaderIcon.NONE)
 
-            view.descriptionTextView.visible(item.body != null)
-            view.iconImageView.visible(item.icon != TargetHeaderIcon.NONE)
-
-            bindBadges(item.badges)
+                bindBadges(item.badges)
+            }
         }
 
         private fun bindBadges(badges: List<TargetBadge>) {
-            view.commentsTextView.visible(false)
-            view.commitsTextView.visible(false)
-            view.upVotesTextView.visible(false)
-            view.downVotesTextView.visible(false)
+            with(itemView) {
+                commentsTextView.visible(false)
+                commitsTextView.visible(false)
+                upVotesTextView.visible(false)
+                downVotesTextView.visible(false)
 
-            val badgeViewsCount = view.badgesContainer.childCount
-            val textBadgesCount = badges.count { it !is TargetBadge.Icon }
-            if (textBadgesCount > badgeViewsCount) {
-                (1..textBadgesCount - badgeViewsCount).forEach {
-                    view.badgesContainer.inflate(R.layout.item_target_badge, true)
+                val badgeViewsCount = badgesContainer.childCount
+                val textBadgesCount = badges.count { it !is TargetBadge.Icon }
+                if (textBadgesCount > badgeViewsCount) {
+                    (1..textBadgesCount - badgeViewsCount).forEach {
+                        badgesContainer.inflate(R.layout.item_target_badge, true)
+                    }
                 }
-            }
 
-            (0 until view.badgesContainer.childCount).forEach { i ->
-                view.badgesContainer.getChildAt(i).visible(false)
-            }
+                (0 until badgesContainer.childCount).forEach { i ->
+                    badgesContainer.getChildAt(i).visible(false)
+                }
 
-            var i = 0
-            badges.forEach { badge ->
-                when (badge) {
-                    is TargetBadge.Text -> {
-                        val badgeView = view.badgesContainer.getChildAt(i) as TextView
-                        badgeView.textTextView.text = badge.text
-                        badgeView.textTextView.setTextColor(view.context.color(R.color.colorPrimary))
-                        badgeView.textTextView.setBackgroundColor(view.context.color(R.color.colorPrimaryLight))
-                        badgeView.visible(true)
-                        i++
-                    }
-                    is TargetBadge.Status -> {
-                        val badgeView = view.badgesContainer.getChildAt(i) as TextView
-                        badgeView.textTextView.text = badge.status.getHumanName(view.resources)
-                        val (textColor, bgColor) = badge.status.getBadgeColors(view.context)
-                        badgeView.textTextView.setTextColor(textColor)
-                        badgeView.textTextView.setBackgroundColor(bgColor)
-                        badgeView.visible(true)
-                        i++
-                    }
-                    is TargetBadge.Icon -> {
-                        if (badge.count > 0) {
-                            when (badge.icon) {
-                                TargetBadgeIcon.COMMENTS -> {
-                                    view.commentsTextView.text = badge.count.toString()
-                                    view.commentsTextView.visible(true)
-                                }
-                                TargetBadgeIcon.COMMITS -> {
-                                    view.commitsTextView.text = badge.count.toString()
-                                    view.commitsTextView.visible(true)
-                                }
-                                TargetBadgeIcon.UP_VOTES -> {
-                                    view.upVotesTextView.text = badge.count.toString()
-                                    view.upVotesTextView.visible(true)
-                                }
-                                TargetBadgeIcon.DOWN_VOTES -> {
-                                    view.downVotesTextView.text = badge.count.toString()
-                                    view.downVotesTextView.visible(true)
+                var i = 0
+                badges.forEach { badge ->
+                    when (badge) {
+                        is TargetBadge.Text -> {
+                            val badgeView = badgesContainer.getChildAt(i) as TextView
+                            badgeView.textTextView.text = badge.text
+                            badgeView.textTextView.setTextColor(context.color(R.color.colorPrimary))
+                            badgeView.textTextView.setBackgroundColor(context.color(R.color.colorPrimaryLight))
+                            badgeView.visible(true)
+                            i++
+                        }
+                        is TargetBadge.Status -> {
+                            val badgeView = badgesContainer.getChildAt(i) as TextView
+                            badgeView.textTextView.text = badge.status.getHumanName(resources)
+                            val (textColor, bgColor) = badge.status.getBadgeColors(context)
+                            badgeView.textTextView.setTextColor(textColor)
+                            badgeView.textTextView.setBackgroundColor(bgColor)
+                            badgeView.visible(true)
+                            i++
+                        }
+                        is TargetBadge.Icon -> {
+                            if (badge.count > 0) {
+                                when (badge.icon) {
+                                    TargetBadgeIcon.COMMENTS -> {
+                                        commentsTextView.text = badge.count.toString()
+                                        commentsTextView.visible(true)
+                                    }
+                                    TargetBadgeIcon.COMMITS -> {
+                                        commitsTextView.text = badge.count.toString()
+                                        commitsTextView.visible(true)
+                                    }
+                                    TargetBadgeIcon.UP_VOTES -> {
+                                        upVotesTextView.text = badge.count.toString()
+                                        upVotesTextView.visible(true)
+                                    }
+                                    TargetBadgeIcon.DOWN_VOTES -> {
+                                        downVotesTextView.text = badge.count.toString()
+                                        downVotesTextView.visible(true)
+                                    }
                                 }
                             }
                         }

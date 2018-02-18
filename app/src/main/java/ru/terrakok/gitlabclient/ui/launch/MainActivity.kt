@@ -10,7 +10,6 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_main.*
-import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.commands.Command
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
@@ -32,7 +31,6 @@ import toothpick.Toothpick
 import javax.inject.Inject
 
 class MainActivity : BaseActivity(), LaunchView {
-    @Inject lateinit var navigationHolder: NavigatorHolder
     @Inject lateinit var menuController: GlobalMenuController
 
     private var menuStateDisposable: Disposable? = null
@@ -45,7 +43,8 @@ class MainActivity : BaseActivity(), LaunchView {
     private val drawerFragment
         get() = supportFragmentManager.findFragmentById(R.id.navDrawerContainer) as NavigationDrawerFragment?
 
-    @InjectPresenter lateinit var presenter: LaunchPresenter
+    @InjectPresenter
+    lateinit var presenter: LaunchPresenter
 
     @ProvidePresenter
     fun providePresenter(): LaunchPresenter {
@@ -68,12 +67,10 @@ class MainActivity : BaseActivity(), LaunchView {
     override fun onResumeFragments() {
         super.onResumeFragments()
         menuStateDisposable = menuController.state.subscribe { openNavDrawer(it) }
-        navigationHolder.setNavigator(navigator)
     }
 
     override fun onPause() {
         menuStateDisposable?.dispose()
-        navigationHolder.removeNavigator()
         super.onPause()
     }
 
@@ -91,14 +88,15 @@ class MainActivity : BaseActivity(), LaunchView {
         updateNavDrawer()
     }
 
-    private val navigator = object : FlowNavigator(this, R.id.mainContainer) {
+    override val navigator = object : FlowNavigator(this, R.id.mainContainer) {
 
         override fun applyCommands(commands: Array<out Command>?) {
             super.applyCommands(commands)
             updateNavDrawer()
         }
 
-        override fun createFlowIntent(flowKey: String, data: Any?) = getFlowIntent(flowKey, data)
+        override fun createFlowIntent(flowKey: String, data: Any?) =
+                Screens.getFlowIntent(this@MainActivity, flowKey, data)
 
         override fun createFragment(screenKey: String?, data: Any?): Fragment? = when (screenKey) {
             Screens.MAIN_SCREEN -> MainFragment()
