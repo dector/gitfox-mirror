@@ -7,7 +7,6 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.hannesdorfmann.adapterdelegates3.ListDelegationAdapter
 import kotlinx.android.synthetic.main.layout_base_list.*
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.global.NoteWithFormattedBody
 import ru.terrakok.gitlabclient.presentation.mergerequest.notes.MergeRequestNotesPresenter
 import ru.terrakok.gitlabclient.presentation.mergerequest.notes.MergeRequestNotesView
@@ -43,6 +42,8 @@ class MergeRequestNotesFragment : BaseFragment(), MergeRequestNotesView {
             addItemDecoration(SimpleDividerDecorator(context))
             adapter = this@MergeRequestNotesFragment.adapter
         }
+
+        swipeToRefresh.setOnRefreshListener { presenter.refresh() }
     }
 
     override fun showNotes(notes: List<NoteWithFormattedBody>) {
@@ -50,7 +51,7 @@ class MergeRequestNotesFragment : BaseFragment(), MergeRequestNotesView {
     }
 
     override fun showProgress(show: Boolean) {
-        fullscreenProgressView.visible(show)
+        swipeToRefresh.isRefreshing = show
     }
 
     override fun showMessage(message: String) {

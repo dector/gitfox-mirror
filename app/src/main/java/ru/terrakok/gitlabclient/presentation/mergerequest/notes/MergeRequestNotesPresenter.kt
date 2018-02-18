@@ -29,6 +29,10 @@ class MergeRequestNotesPresenter @Inject constructor(
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
+        requestNotes()
+    }
+
+    private fun requestNotes() {
         mrInteractor.getMergeRequestNotes(projectId, mrId)
                 .toObservable()
                 .flatMapIterable { it }
@@ -46,4 +50,6 @@ class MergeRequestNotesPresenter @Inject constructor(
                 )
                 .connect()
     }
+
+    fun refresh() = requestNotes()
 }
