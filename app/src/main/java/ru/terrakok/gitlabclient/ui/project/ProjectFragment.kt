@@ -27,16 +27,6 @@ class ProjectFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        if (savedInstanceState == null) {
-            tabs = createNewFragments()
-            childFragmentManager.beginTransaction()
-                    .add(R.id.projectScreenContainer, tabs[tabKeys[0]], tabKeys[0])
-                    .commit()
-            showTab(0)
-            bottomBar.setCurrentItem(0, false)
-        } else {
-            tabs = findFragments()
-        }
         AHBottomNavigationAdapter(activity, R.menu.project_bottom_menu).apply {
             setupWithBottomNavigation(bottomBar)
         }
@@ -45,10 +35,27 @@ class ProjectFragment : BaseFragment() {
             inactiveColor = context.color(R.color.silver)
 
             setOnTabSelectedListener { position, wasSelected ->
-                if (!wasSelected) postDelayed({ showTab(position) }, 150)
+                if (!wasSelected) showTab(position, currentItem)
                 true
             }
         }
+
+        if (savedInstanceState == null) {
+            tabs = createNewFragments()
+            childFragmentManager.beginTransaction()
+                    .add(R.id.projectScreenContainer, tabs[tabKeys[0]], tabKeys[0])
+                    .commitNow()
+            bottomBar.setCurrentItem(0, false)
+        } else {
+            tabs = findFragments()
+        }
+    }
+
+    private fun showTab(newItem: Int, oldItem: Int) {
+        childFragmentManager.beginTransaction()
+                .hide(tabs[tabKeys[oldItem]])
+                .show(tabs[tabKeys[newItem]])
+                .commit()
     }
 
     private fun createNewFragments(): HashMap<String, BaseFragment> = hashMapOf(
@@ -58,11 +65,4 @@ class ProjectFragment : BaseFragment() {
     private fun findFragments(): HashMap<String, BaseFragment> = hashMapOf(
             tabKeys[0] to childFragmentManager.findFragmentByTag(tabKeys[0]) as BaseFragment
     )
-
-    private fun showTab(position: Int) {
-        childFragmentManager.beginTransaction()
-                .detach(tabs[tabKeys[0]])
-                .attach(tabs[tabKeys[position]])
-                .commit()
-    }
 }
