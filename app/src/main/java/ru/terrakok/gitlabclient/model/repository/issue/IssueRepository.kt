@@ -102,7 +102,7 @@ class IssueRepository @Inject constructor(
             projectId: Long,
             issueId: Long,
             orderBy: OrderBy? = null,
-            sort: Sort? = null
+            sort: Sort? = Sort.ASC
     ) = api
             .getIssueNotes(projectId, issueId, orderBy, sort)
             .subscribeOn(schedulers.io())

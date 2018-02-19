@@ -109,7 +109,7 @@ class MergeRequestRepository @Inject constructor(
             projectId: Long,
             mergeRequestId: Long,
             orderBy: OrderBy? = null,
-            sort: Sort? = null
+            sort: Sort? = Sort.ASC
     ) = api
             .getMergeRequestNotes(projectId, mergeRequestId, orderBy, sort)
             .subscribeOn(schedulers.io())

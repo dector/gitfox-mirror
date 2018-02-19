@@ -46,20 +46,6 @@ class MainFragment : BaseFragment(), MainView {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        if (savedInstanceState == null) {
-            tabs = createNewFragments()
-            childFragmentManager.beginTransaction()
-                    .add(R.id.mainScreenContainer, tabs[tabKeys[0]], tabKeys[0])
-                    .add(R.id.mainScreenContainer, tabs[tabKeys[1]], tabKeys[1])
-                    .add(R.id.mainScreenContainer, tabs[tabKeys[2]], tabKeys[2])
-                    .add(R.id.mainScreenContainer, tabs[tabKeys[3]], tabKeys[3])
-                    .commit()
-            showTab(0)
-            bottomBar.setCurrentItem(0, false)
-        } else {
-            tabs = findFragments()
-        }
-
         AHBottomNavigationAdapter(activity, R.menu.main_bottom_menu).apply {
             setupWithBottomNavigation(bottomBar)
         }
@@ -68,10 +54,33 @@ class MainFragment : BaseFragment(), MainView {
             inactiveColor = context.color(R.color.silver)
 
             setOnTabSelectedListener { position, wasSelected ->
-                if (!wasSelected) postDelayed({ showTab(position) }, 150)
+                if (!wasSelected) showTab(position, currentItem)
                 true
             }
         }
+
+        if (savedInstanceState == null) {
+            tabs = createNewFragments()
+            childFragmentManager.beginTransaction()
+                    .add(R.id.mainScreenContainer, tabs[tabKeys[0]], tabKeys[0])
+                    .add(R.id.mainScreenContainer, tabs[tabKeys[1]], tabKeys[1])
+                    .add(R.id.mainScreenContainer, tabs[tabKeys[2]], tabKeys[2])
+                    .add(R.id.mainScreenContainer, tabs[tabKeys[3]], tabKeys[3])
+                    .hide(tabs[tabKeys[1]])
+                    .hide(tabs[tabKeys[2]])
+                    .hide(tabs[tabKeys[3]])
+                    .commitNow()
+            bottomBar.setCurrentItem(0, false)
+        } else {
+            tabs = findFragments()
+        }
+    }
+
+    private fun showTab(newItem: Int, oldItem: Int) {
+        childFragmentManager.beginTransaction()
+                .hide(tabs[tabKeys[oldItem]])
+                .show(tabs[tabKeys[newItem]])
+                .commit()
     }
 
     private fun createNewFragments(): HashMap<String, BaseFragment> = hashMapOf(
@@ -87,16 +96,6 @@ class MainFragment : BaseFragment(), MainView {
             tabKeys[2] to childFragmentManager.findFragmentByTag(tabKeys[2]) as BaseFragment,
             tabKeys[3] to childFragmentManager.findFragmentByTag(tabKeys[3]) as BaseFragment
     )
-
-    private fun showTab(position: Int) {
-        childFragmentManager.beginTransaction()
-                .detach(tabs[tabKeys[0]])
-                .detach(tabs[tabKeys[1]])
-                .detach(tabs[tabKeys[2]])
-                .detach(tabs[tabKeys[3]])
-                .attach(tabs[tabKeys[position]])
-                .commit()
-    }
 
     override fun onBackPressed() = presenter.onBackPressed()
 }

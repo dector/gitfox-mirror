@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ProgressBar
 import ru.terrakok.gitlabclient.R
 
 /**
@@ -18,6 +17,7 @@ class ProgressDialog : DialogFragment() {
         isCancelable = false
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?)
-            = ProgressBar(context)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
+        LayoutInflater.from(context).inflate(R.layout.fragment_progress, null)
+
 }
