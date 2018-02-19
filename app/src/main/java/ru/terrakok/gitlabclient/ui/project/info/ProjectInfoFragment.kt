@@ -55,8 +55,12 @@ class ProjectInfoFragment : BaseFragment(), ProjectInfoView {
     override fun showProject(project: Project, mdReadme: CharSequence) {
         this.project = project
 
+        constraintView.visible(true)
+
         titleTextView.text = project.nameWithNamespace
         descriptionTextView.text = project.description
+        starsTextView.text = project.starCount.toString()
+        forksTextView.text = project.forksCount.toString()
 
         avatarImageView.loadRoundedImage(project.avatarUrl, context)
         iconImageView.setBackgroundResource(R.drawable.circle)
@@ -65,12 +69,6 @@ class ProjectInfoFragment : BaseFragment(), ProjectInfoView {
             Visibility.INTERNAL -> R.drawable.ic_security_white_24dp
             else -> R.drawable.ic_globe_18dp
         })
-        divider.visible(true)
-
-        starsTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_star_black_24dp, 0, 0, 0)
-        starsTextView.text = project.starCount.toString()
-        forksTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_fork, 0, 0, 0)
-        forksTextView.text = project.forksCount.toString()
 
         Markwon.setText(readmeTextView, mdReadme)
     }

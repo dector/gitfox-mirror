@@ -28,7 +28,7 @@ class ProjectInfoPresenter @Inject constructor(
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
-        viewState.setToolbarTitle(projectId.toString(10))
+        viewState.setToolbarTitle(projectId.toString())
 
         projectInteractor
                 .getProject(projectId)
