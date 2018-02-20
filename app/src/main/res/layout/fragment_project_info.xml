@@ -24,11 +24,9 @@
             android:layout_height="wrap_content">
 
             <android.support.constraint.ConstraintLayout
-                android:id="@+id/constraintView"
+                android:id="@+id/projectInfoLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone"
-                tools:visibility="visible">
+                android:layout_height="match_parent">
 
                 <ImageView
                     android:id="@+id/avatarImageView"

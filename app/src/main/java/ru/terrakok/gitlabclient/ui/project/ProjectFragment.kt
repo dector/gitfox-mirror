@@ -43,7 +43,7 @@ class ProjectFragment : BaseFragment() {
         if (savedInstanceState == null) {
             tabs = createNewFragments()
             childFragmentManager.beginTransaction()
-                    .add(R.id.projectScreenContainer, tabs[tabKeys[0]], tabKeys[0])
+                    .add(R.id.container, tabs[tabKeys[0]], tabKeys[0])
                     .commitNow()
             bottomBar.setCurrentItem(0, false)
         } else {

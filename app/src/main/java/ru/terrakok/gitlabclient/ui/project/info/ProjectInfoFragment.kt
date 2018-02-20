@@ -48,15 +48,10 @@ class ProjectInfoFragment : BaseFragment(), ProjectInfoView {
         }
     }
 
-    override fun setToolbarTitle(title: String) {
-        toolbar.title = title
-    }
-
     override fun showProject(project: Project, mdReadme: CharSequence) {
         this.project = project
 
-        constraintView.visible(true)
-
+        toolbar.title = project.name
         titleTextView.text = project.nameWithNamespace
         descriptionTextView.text = project.description
         starsTextView.text = project.starCount.toString()
@@ -75,6 +70,7 @@ class ProjectInfoFragment : BaseFragment(), ProjectInfoView {
 
     override fun showProgress(show: Boolean) {
         fullscreenProgressView.visible(show)
+        projectInfoLayout.visible(!show)
     }
 
     override fun showMessage(message: String) {

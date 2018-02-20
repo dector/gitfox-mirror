@@ -1,5 +1,6 @@
 package ru.terrakok.gitlabclient.model.interactor.project
 
+import io.reactivex.Single
 import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.model.repository.project.ProjectRepository
 import ru.terrakok.gitlabclient.model.repository.tools.Base64Tools
@@ -42,19 +43,18 @@ class ProjectInteractor @Inject constructor(
     fun getProject(id: Long) = projectRepository.getProject(id)
 
     /**
-     * Returns the project readme file at the specified project and branch.
-     * The project readme is searched ignoring case.
+     * Returns [Single] with the project readme file decoded as [String]
+     * at the specified project and branch. The project readme is searched ignoring case.
      *
-     * @param id project id
-     * @param branchName project branch name to search readme
-     * @return decoded project readme as String
-     * @throws NoSuchElementException if project readme with name {@value README_FILE_NAME} not found.
+     * @param id project id.
+     * @param branchName project branch name to search readme.
+     * @return [Single] with readme decoded as [String].
+     * @throws NoSuchElementException if project readme with name [README_FILE_NAME] not found.
      */
     fun getProjectReadme(id: Long, branchName: String) =
             projectRepository.getRepositoryTree(projectId = id, branchName = branchName)
                     .map { treeNodes ->
-                        treeNodes.find { it.name.contains(README_FILE_NAME, true) }
-                                ?: throw NoSuchElementException("$README_FILE_NAME not found!")
+                        treeNodes.first { it.name.contains(README_FILE_NAME, true) }
                     }
                     .flatMap { treeNode ->
                         projectRepository.getFile(id, treeNode.name, branchName)

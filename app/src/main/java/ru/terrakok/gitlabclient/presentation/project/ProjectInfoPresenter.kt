@@ -28,8 +28,6 @@ class ProjectInfoPresenter @Inject constructor(
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
-        viewState.setToolbarTitle(projectId.toString())
-
         projectInteractor
                 .getProject(projectId)
                 .flatMap { project ->
@@ -47,10 +45,7 @@ class ProjectInfoPresenter @Inject constructor(
                 .doOnSubscribe { viewState.showProgress(true) }
                 .doAfterTerminate { viewState.showProgress(false) }
                 .subscribe(
-                        { (project, mdReadme) ->
-                            viewState.setToolbarTitle(project.name)
-                            viewState.showProject(project, mdReadme)
-                        },
+                        { (project, mdReadme) -> viewState.showProject(project, mdReadme) },
                         { errorHandler.proceed(it, { viewState.showMessage(it) }) }
                 )
                 .connect()
