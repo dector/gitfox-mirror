@@ -1,7 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.projects
 
 import com.arellomobile.mvp.InjectViewState
-import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.model.interactor.project.ProjectInteractor

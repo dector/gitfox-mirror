@@ -83,7 +83,7 @@ class EventRepository @Inject constructor(
                         event.author.name,
                         event.actionName,
                         targetData.name,
-                        project?.nameWithNamespace ?: ""
+                        project?.name ?: ""
                 ),
                 getBody(event),
                 event.createdAt,

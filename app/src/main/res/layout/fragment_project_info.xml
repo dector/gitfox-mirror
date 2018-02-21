@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -12,21 +12,21 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         app:navigationIcon="@drawable/ic_arrow_back_24dp"
-        tools:title="Username"/>
+        tools:title="GitFox" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
             <android.support.constraint.ConstraintLayout
+                android:id="@+id/projectInfoLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent">
 
                 <ImageView
                     android:id="@+id/avatarImageView"
@@ -35,7 +35,7 @@
                     android:layout_margin="16dp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:src="@drawable/default_img"/>
+                    tools:src="@drawable/default_img" />
 
                 <ImageView
                     android:id="@+id/iconImageView"
@@ -43,12 +43,11 @@
                     android:layout_height="18dp"
                     android:layout_marginStart="32dp"
                     android:layout_marginTop="32dp"
-                    android:background="@drawable/circle"
                     android:padding="2dp"
                     app:layout_constraintLeft_toLeftOf="@id/avatarImageView"
                     app:layout_constraintTop_toTopOf="@id/avatarImageView"
                     app:tint="@color/white"
-                    tools:src="@drawable/ic_security_white_24dp"/>
+                    tools:src="@drawable/ic_security_white_24dp" />
 
                 <TextView
                     android:id="@+id/titleTextView"
@@ -64,7 +63,7 @@
                     app:layout_constraintLeft_toRightOf="@+id/avatarImageView"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/avatarImageView"
-                    tools:text="GitLab Community Edition"/>
+                    tools:text="GitLab Community Edition" />
 
                 <TextView
                     android:id="@+id/forksTextView"
@@ -79,7 +78,7 @@
                     android:textSize="16sp"
                     app:layout_constraintLeft_toLeftOf="@id/titleTextView"
                     app:layout_constraintTop_toBottomOf="@id/titleTextView"
-                    tools:text="2312"/>
+                    tools:text="34" />
 
                 <TextView
                     android:id="@+id/starsTextView"
@@ -95,7 +94,7 @@
                     android:textSize="16sp"
                     app:layout_constraintLeft_toRightOf="@id/forksTextView"
                     app:layout_constraintTop_toBottomOf="@id/titleTextView"
-                    tools:text="2312"/>
+                    tools:text="68" />
 
                 <TextView
                     android:id="@+id/descriptionTextView"
@@ -109,26 +108,38 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/avatarImageView"
-                    tools:text="GitLab Community Edition (CE) is an open source end-to-end software development platform with built-in version control, issue tracking, code review, CI/CD, and more. Self-host GitLab CE on your own servers, in a container, or on a cloud provider."/>
+                    tools:text="GitLab Community Edition (CE) is an open source end-to-end software development platform with built-in version control, issue tracking, code review, CI/CD, and more. Self-host GitLab CE on your own servers, in a container, or on a cloud provider." />
 
                 <View
+                    android:id="@+id/divider"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/divider_size"
                     android:layout_marginTop="16dp"
                     android:background="@color/divider"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/descriptionTextView"/>
+                    app:layout_constraintTop_toBottomOf="@+id/descriptionTextView" />
+
+                <TextView
+                    android:id="@+id/readmeTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:linksClickable="true"
+                    android:padding="16dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/divider" />
 
             </android.support.constraint.ConstraintLayout>
 
-            <TextView
-                android:id="@+id/readmeTextView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="16dp"/>
+            <include
+                android:id="@+id/fullscreenProgressView"
+                layout="@layout/layout_gitlab_progress"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center" />
 
-        </LinearLayout>
+        </FrameLayout>
 
     </ScrollView>
 

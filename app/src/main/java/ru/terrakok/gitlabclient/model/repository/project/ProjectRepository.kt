@@ -61,4 +61,14 @@ class ProjectRepository @Inject constructor(
             .getFile(projectId, path, branchName)
             .subscribeOn(schedulers.io())
             .observeOn(schedulers.ui())
+
+    fun getRepositoryTree(
+            projectId: Long,
+            path: String? = null,
+            branchName: String? = null,
+            recursive: Boolean? = null
+    ) = api
+            .getRepositoryTree(projectId, path, branchName, recursive)
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
 }

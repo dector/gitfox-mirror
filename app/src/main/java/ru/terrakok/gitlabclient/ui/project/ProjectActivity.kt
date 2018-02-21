@@ -11,7 +11,6 @@ import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
 import ru.terrakok.gitlabclient.ui.global.BaseActivity
-import ru.terrakok.gitlabclient.ui.project.info.ProjectInfoFragment
 import toothpick.Toothpick
 import toothpick.config.Module
 
@@ -38,7 +37,7 @@ class ProjectActivity : BaseActivity() {
         }
 
         if (savedInstanceState == null) {
-            navigator.setLaunchScreen(Screens.PROJECT_INFO_SCREEN, null)
+            navigator.setLaunchScreen(Screens.PROJECT_SCREEN, null)
         }
     }
 
@@ -51,7 +50,7 @@ class ProjectActivity : BaseActivity() {
     override val navigator = object : FlowNavigator(this, R.id.container) {
 
         override fun createFragment(screenKey: String?, data: Any?): Fragment? = when (screenKey) {
-            Screens.PROJECT_INFO_SCREEN -> ProjectInfoFragment()
+            Screens.PROJECT_SCREEN -> ProjectFragment()
             else -> null
         }
     }

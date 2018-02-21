@@ -23,7 +23,7 @@ object Screens {
     const val APP_LIBRARIES_SCREEN = "app libraries screen"
 
     const val PROJECT_FLOW = "project flow"
-    const val PROJECT_INFO_SCREEN = "project info screen"
+    const val PROJECT_SCREEN = "project screen"
 
     const val USER_FLOW = "user flow"
     const val USER_INFO_SCREEN = "user info screen"

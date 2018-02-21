@@ -114,7 +114,7 @@ fun ImageView.loadRoundedImage(
 }
 
 fun TargetHeader.openInfo(router: FlowRouter) {
-    when(target) {
+    when (target) {
         AppTarget.PROJECT -> {
             router.startFlow(Screens.PROJECT_FLOW, targetId)
         }

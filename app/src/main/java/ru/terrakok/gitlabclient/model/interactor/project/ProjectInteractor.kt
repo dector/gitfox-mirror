@@ -1,5 +1,6 @@
 package ru.terrakok.gitlabclient.model.interactor.project
 
+import io.reactivex.Single
 import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.model.repository.project.ProjectRepository
 import ru.terrakok.gitlabclient.model.repository.tools.Base64Tools
@@ -41,9 +42,28 @@ class ProjectInteractor @Inject constructor(
 
     fun getProject(id: Long) = projectRepository.getProject(id)
 
+    /**
+     * Returns [Single] with the project readme file decoded as [String]
+     * at the specified project and branch. The project readme is searched ignoring case.
+     *
+     * @param id project id.
+     * @param branchName project branch name to search readme.
+     * @return [Single] with readme decoded as [String].
+     * @throws NoSuchElementException if project readme with name [README_FILE_NAME] not found.
+     */
     fun getProjectReadme(id: Long, branchName: String) =
-            projectRepository.getFile(id, "README.md", branchName)
-                    .observeOn(schedulers.computation())
-                    .map { file -> base64Tools.decode(file.content) }
-                    .observeOn(schedulers.ui())
+            projectRepository.getRepositoryTree(projectId = id, branchName = branchName)
+                    .map { treeNodes ->
+                        treeNodes.first { it.name.contains(README_FILE_NAME, true) }
+                    }
+                    .flatMap { treeNode ->
+                        projectRepository.getFile(id, treeNode.name, branchName)
+                                .observeOn(schedulers.computation())
+                                .map { file -> base64Tools.decode(file.content) }
+                                .observeOn(schedulers.ui())
+                    }
+
+    companion object {
+        private const val README_FILE_NAME = "readme.md"
+    }
 }

@@ -66,6 +66,14 @@ interface GitlabApi {
             @Query("ref") branchName: String
     ): Single<File>
 
+    @GET("$API_PATH/projects/{id}/repository/tree")
+    fun getRepositoryTree(
+            @Path("id") id: Long,
+            @Query("path") path: String?,
+            @Query("ref") branchName: String?,
+            @Query("recursive") recursive: Boolean?
+    ): Single<List<RepositoryTreeNode>>
+
     @GET("$API_PATH/user")
     fun getMyUser(): Single<User>
 
