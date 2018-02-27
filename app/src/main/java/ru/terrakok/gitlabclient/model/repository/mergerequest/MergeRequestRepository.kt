@@ -3,6 +3,7 @@ package ru.terrakok.gitlabclient.model.repository.mergerequest
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
+import org.threeten.bp.LocalDateTime
 import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.Sort
@@ -16,7 +17,6 @@ import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultPageSize
-import java.util.*
 import javax.inject.Inject
 
 class MergeRequestRepository @Inject constructor(
@@ -31,8 +31,8 @@ class MergeRequestRepository @Inject constructor(
             milestone: String? = null,
             viewType: MergeRequestViewType? = null,
             labels: String? = null,
-            createdBefore: Date? = null,
-            createdAfter: Date? = null,
+            createdBefore: LocalDateTime? = null,
+            createdAfter: LocalDateTime? = null,
             scope: MergeRequestScope? = null,
             authorId: Int? = null,
             assigneeId: Int? = null,

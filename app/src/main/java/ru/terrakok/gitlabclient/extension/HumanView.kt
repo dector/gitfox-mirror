@@ -3,8 +3,8 @@ package ru.terrakok.gitlabclient.extension
 import android.content.Context
 import android.content.res.Resources
 import android.support.annotation.DrawableRes
-import org.joda.time.DateTimeZone
-import org.joda.time.format.DateTimeFormat
+import org.threeten.bp.Duration
+import org.threeten.bp.LocalDateTime
 import retrofit2.HttpException
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.develop.LicenseType
@@ -16,7 +16,6 @@ import ru.terrakok.gitlabclient.entity.todo.TodoAction
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import timber.log.Timber
 import java.io.IOException
-import java.util.*
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 14.02.18.
@@ -39,21 +38,15 @@ fun Throwable.userMessage(resourceManager: ResourceManager) = when (this) {
     else -> resourceManager.getString(R.string.unknown_error)
 }
 
-private val DATE_FORMAT = DateTimeFormat.forPattern("dd.MM.yyyy")
-fun Date.humanTime(resources: Resources): String {
-    val localMillis = DateTimeZone.getDefault().convertUTCToLocal(this.time)
-    val timeDelta = (System.currentTimeMillis() - localMillis) / 1000L
+fun LocalDateTime.humanTime(resources: Resources): String {
+    val delta = Duration.between(this, LocalDateTime.now()).seconds
     val timeStr =
-            if (timeDelta < 60) {
-                resources.getString(R.string.time_sec, timeDelta)
-            } else if (timeDelta < 60 * 60) {
-                resources.getString(R.string.time_min, timeDelta / 60)
-            } else if (timeDelta < 60 * 60 * 24) {
-                resources.getString(R.string.time_hour, timeDelta / (60 * 60))
-            } else if (timeDelta < 60 * 60 * 24 * 7) {
-                resources.getString(R.string.time_day, timeDelta / (60 * 60 * 24))
-            } else {
-                return DATE_FORMAT.print(localMillis)
+            when {
+                delta < 60 -> resources.getString(R.string.time_sec, delta)
+                delta < 60 * 60 -> resources.getString(R.string.time_min, delta / 60)
+                delta < 60 * 60 * 24 -> resources.getString(R.string.time_hour, delta / (60 * 60))
+                delta < 60 * 60 * 24 * 7 -> resources.getString(R.string.time_day, delta / (60 * 60 * 24))
+                else -> return this.toLocalDate().toString()
             }
 
     return resources.getString(R.string.time_ago, timeStr)

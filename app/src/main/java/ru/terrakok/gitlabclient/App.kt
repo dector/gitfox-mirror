@@ -2,6 +2,7 @@ package ru.terrakok.gitlabclient
 
 import android.app.Application
 import android.graphics.Color
+import com.jakewharton.threetenabp.AndroidThreeTen
 import ru.noties.markwon.SpannableConfiguration
 import ru.noties.markwon.spans.SpannableTheme
 import ru.terrakok.gitlabclient.model.data.auth.AuthHolder
@@ -28,6 +29,7 @@ class App : Application() {
         initAppScope()
         initCalligraphy()
         initMarkwon()
+        initThreetenABP()
     }
 
     private fun initLogger() {
@@ -71,5 +73,9 @@ class App : Application() {
         SpannableConfiguration.builder(this)
                 .theme(theme)
                 .build()
+    }
+
+    private fun initThreetenABP() {
+        AndroidThreeTen.init(this)
     }
 }

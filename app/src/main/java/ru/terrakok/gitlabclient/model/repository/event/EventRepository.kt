@@ -3,6 +3,7 @@ package ru.terrakok.gitlabclient.model.repository.event
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
+import org.threeten.bp.LocalDateTime
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.PushDataRefType
 import ru.terrakok.gitlabclient.entity.Sort
@@ -16,7 +17,6 @@ import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultPageSize
 import java.text.SimpleDateFormat
-import java.util.*
 import javax.inject.Inject
 
 /**
@@ -33,8 +33,8 @@ class EventRepository @Inject constructor(
     fun getEvents(
             action: EventAction? = null,
             targetType: EventTarget? = null,
-            beforeDay: Date? = null,
-            afterDay: Date? = null,
+            beforeDay: LocalDateTime? = null,
+            afterDay: LocalDateTime? = null,
             sort: Sort? = null,
             page: Int,
             pageSize: Int = defaultPageSize
@@ -122,13 +122,17 @@ class EventRepository @Inject constructor(
                 EventTargetType.SNIPPET -> TargetData(AppTarget.SNIPPET, "${AppTarget.SNIPPET} ${event.targetIid!!}", event.targetId!!)
                 EventTargetType.DIFF_NOTE,
                 EventTargetType.NOTE -> {
-                    when (event.note!!.noteableType) {
-                        EventTargetType.ISSUE -> TargetData(AppTarget.ISSUE, "${AppTarget.ISSUE} #${event.note.noteableIid}", event.note.noteableId)
-                        EventTargetType.MERGE_REQUEST -> TargetData(AppTarget.MERGE_REQUEST, "${AppTarget.MERGE_REQUEST} !${event.note.noteableIid}", event.note.noteableId)
-                        EventTargetType.MILESTONE -> TargetData(AppTarget.MILESTONE, "${AppTarget.MILESTONE} ${event.note.noteableIid}", event.note.noteableId)
-                        EventTargetType.SNIPPET -> TargetData(AppTarget.SNIPPET, "${AppTarget.SNIPPET} ${event.note.noteableIid}", event.note.noteableId)
-                        null -> TargetData(AppTarget.COMMIT, "${AppTarget.COMMIT} ${event.note.id}", event.note.id)
-                        else -> throw IllegalArgumentException("Unsupported noteable target type: ${event.note.noteableType}.")
+                    if (event.note != null) {
+                        when (event.note.noteableType) {
+                            EventTargetType.ISSUE -> TargetData(AppTarget.ISSUE, "${AppTarget.ISSUE} #${event.note.noteableIid}", event.note.noteableId)
+                            EventTargetType.MERGE_REQUEST -> TargetData(AppTarget.MERGE_REQUEST, "${AppTarget.MERGE_REQUEST} !${event.note.noteableIid}", event.note.noteableId)
+                            EventTargetType.MILESTONE -> TargetData(AppTarget.MILESTONE, "${AppTarget.MILESTONE} ${event.note.noteableIid}", event.note.noteableId)
+                            EventTargetType.SNIPPET -> TargetData(AppTarget.SNIPPET, "${AppTarget.SNIPPET} ${event.note.noteableIid}", event.note.noteableId)
+                            null -> TargetData(AppTarget.COMMIT, "${AppTarget.COMMIT} ${event.note.id}", event.note.id)
+                            else -> throw IllegalArgumentException("Unsupported noteable target type: ${event.note.noteableType}.")
+                        }
+                    } else {
+                        throw IllegalArgumentException("Unsupported event type: $event.")
                     }
                 }
                 else -> {

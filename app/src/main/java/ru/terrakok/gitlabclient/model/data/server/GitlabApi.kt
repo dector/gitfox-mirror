@@ -2,6 +2,7 @@ package ru.terrakok.gitlabclient.model.data.server
 
 import io.reactivex.Completable
 import io.reactivex.Single
+import org.threeten.bp.LocalDateTime
 import retrofit2.http.*
 import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.entity.event.Event
@@ -18,7 +19,6 @@ import ru.terrakok.gitlabclient.entity.target.TargetType
 import ru.terrakok.gitlabclient.entity.todo.Todo
 import ru.terrakok.gitlabclient.entity.todo.TodoAction
 import ru.terrakok.gitlabclient.entity.todo.TodoState
-import java.util.*
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 28.03.17
@@ -114,8 +114,8 @@ interface GitlabApi {
             @Query("milestone") milestone: String?,
             @Query("view") viewType: MergeRequestViewType?,
             @Query("labels") labels: String?,
-            @Query("created_before") createdBefore: Date?,
-            @Query("created_after") createdAfter: Date?,
+            @Query("created_before") createdBefore: LocalDateTime?,
+            @Query("created_after") createdAfter: LocalDateTime?,
             @Query("scope") scope: MergeRequestScope?,
             @Query("author_id") authorId: Int?,
             @Query("assignee_id") assigneeId: Int?,
@@ -132,8 +132,8 @@ interface GitlabApi {
             @Query("milestone") milestone: String?,
             @Query("view") viewType: MergeRequestViewType?,
             @Query("labels") labels: String?,
-            @Query("created_before") createdBefore: Date?,
-            @Query("created_after") createdAfter: Date?,
+            @Query("created_before") createdBefore: LocalDateTime?,
+            @Query("created_after") createdAfter: LocalDateTime?,
             @Query("scope") scope: MergeRequestScope?,
             @Query("author_id") authorId: Int?,
             @Query("assignee_id") assigneeId: Int?,

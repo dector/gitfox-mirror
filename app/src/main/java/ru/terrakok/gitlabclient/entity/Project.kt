@@ -1,7 +1,7 @@
 package ru.terrakok.gitlabclient.entity
 
 import com.google.gson.annotations.SerializedName
-import java.util.*
+import org.threeten.bp.LocalDateTime
 
 data class Project(
         @SerializedName("id") val id: Long,
@@ -24,8 +24,8 @@ data class Project(
         @SerializedName("wiki_enabled") val wikiEnabled: Boolean,
         @SerializedName("snippets_enabled") val snippetsEnabled: Boolean,
         @SerializedName("container_registry_enabled") val containerRegistryEnabled: Boolean,
-        @SerializedName("created_at") val createdAt: Date?,
-        @SerializedName("last_activity_at") val lastActivityAt: Date?,
+        @SerializedName("created_at") val createdAt: LocalDateTime?,
+        @SerializedName("last_activity_at") val lastActivityAt: LocalDateTime?,
         @SerializedName("creator_id") val creatorId: Long,
         @SerializedName("namespace") val namespace: Namespace?,
         @SerializedName("permissions") val permissions: Permissions?,

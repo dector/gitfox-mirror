@@ -1,10 +1,10 @@
 package ru.terrakok.gitlabclient.entity.issue
 
 import com.google.gson.annotations.SerializedName
+import org.threeten.bp.LocalDateTime
 import ru.terrakok.gitlabclient.entity.Assignee
 import ru.terrakok.gitlabclient.entity.Author
 import ru.terrakok.gitlabclient.entity.Milestone
-import java.util.*
 
 data class Issue(
         @SerializedName("id") val id: Long,
@@ -15,12 +15,12 @@ data class Issue(
         @SerializedName("milestone") val milestone: Milestone?,
         @SerializedName("project_id") val projectId: Long,
         @SerializedName("assignees") val assignees: List<Assignee>,
-        @SerializedName("updated_at") val updatedAt: Date?,
+        @SerializedName("updated_at") val updatedAt: LocalDateTime?,
         @SerializedName("title") val title: String?,
-        @SerializedName("created_at") val createdAt: Date,
+        @SerializedName("created_at") val createdAt: LocalDateTime,
         @SerializedName("labels") val labels: List<String>,
         @SerializedName("user_notes_count") val userNotesCount: Int,
-        @SerializedName("due_date") val dueDate: Date?,
+        @SerializedName("due_date") val dueDate: LocalDateTime?,
         @SerializedName("web_url") val webUrl: String?,
         @SerializedName("confidential") val confidential: Boolean,
         @SerializedName("upvotes") val upvotes: Int,

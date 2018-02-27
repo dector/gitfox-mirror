@@ -1,10 +1,10 @@
 package ru.terrakok.gitlabclient.entity.target
 
 import com.google.gson.annotations.SerializedName
+import org.threeten.bp.LocalDateTime
 import ru.terrakok.gitlabclient.entity.Assignee
 import ru.terrakok.gitlabclient.entity.Author
 import ru.terrakok.gitlabclient.entity.Milestone
-import java.util.*
 
 /**
  * @author Eugene Shapovalov (CraggyHaggy). Date: 13.09.17
@@ -15,8 +15,8 @@ abstract class Target {
     @SerializedName("project_id") private val _projectId: Long? = null
     @SerializedName("title") private val _title: String? = null
     @SerializedName("state") private val _state: TargetState? = null
-    @SerializedName("updated_at") val updatedAt: Date? = null
-    @SerializedName("created_at") val createdAt: Date? = null
+    @SerializedName("updated_at") val updatedAt: LocalDateTime? = null
+    @SerializedName("created_at") val createdAt: LocalDateTime? = null
     @SerializedName("labels") private val _labels: List<String>? = null
     @SerializedName("milestone") val milestone: Milestone? = null
     @SerializedName("assignees") private val _assignees: List<Assignee>? = null

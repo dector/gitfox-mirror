@@ -137,7 +137,7 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
 
         private fun isProgress() = items.isNotEmpty() && items.last() is ProgressItem
 
-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int, payloads: MutableList<Any?>?) {
+        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: MutableList<Any?>) {
             super.onBindViewHolder(holder, position, payloads)
 
             if (position == items.size - 10) presenter.loadNextProjectsPage()
