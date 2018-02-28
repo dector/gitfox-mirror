@@ -38,7 +38,7 @@
 
                 <TextView
                     android:id="@+id/usernameTextView"
-                    fontPath="@string/font_main_medium"
+                    app:fontFamily="@font/roboto_medium"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"

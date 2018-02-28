@@ -96,8 +96,6 @@ dependencies {
     implementation 'ru.noties:markwon:1.0.3'
     //Bottom navigation bar
     implementation 'com.aurelhubert:ahbottomnavigation:2.1.0'
-    //Custom fonts
-    implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
     //Lottie
     implementation 'com.airbnb.android:lottie:2.1.0'
     //Date

@@ -14,7 +14,6 @@ import toothpick.Toothpick
 import toothpick.configuration.Configuration
 import toothpick.registries.FactoryRegistryLocator
 import toothpick.registries.MemberInjectorRegistryLocator
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 26.03.17.
@@ -27,7 +26,6 @@ class App : Application() {
         initLogger()
         initToothpick()
         initAppScope()
-        initCalligraphy()
         initMarkwon()
         initThreetenABP()
     }
@@ -56,13 +54,6 @@ class App : Application() {
         val authHolder = appScope.getInstance(AuthHolder::class.java)
         val serverScope = Toothpick.openScopes(DI.APP_SCOPE, DI.SERVER_SCOPE)
         serverScope.installModules(ServerModule(authHolder.serverPath))
-    }
-
-    private fun initCalligraphy() {
-        CalligraphyConfig.initDefault(CalligraphyConfig.Builder()
-                .setDefaultFontPath(getString(R.string.font_main_regular))
-                .setFontAttrId(R.attr.fontPath)
-                .build())
     }
 
     private fun initMarkwon() {
