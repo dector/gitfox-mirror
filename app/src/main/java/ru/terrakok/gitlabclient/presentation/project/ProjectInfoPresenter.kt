@@ -50,6 +50,4 @@ class ProjectInfoPresenter @Inject constructor(
                 )
                 .connect()
     }
-
-    fun onBackPressed() = router.exit()
 }

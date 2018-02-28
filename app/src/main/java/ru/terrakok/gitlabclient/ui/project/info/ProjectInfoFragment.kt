@@ -1,6 +1,5 @@
 package ru.terrakok.gitlabclient.ui.project.info
 
-import android.os.Bundle
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_project_info.*
@@ -9,7 +8,6 @@ import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.Visibility
 import ru.terrakok.gitlabclient.extension.loadRoundedImage
-import ru.terrakok.gitlabclient.extension.shareText
 import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.project.ProjectInfoPresenter
 import ru.terrakok.gitlabclient.presentation.project.ProjectInfoView
@@ -26,32 +24,17 @@ class ProjectInfoFragment : BaseFragment(), ProjectInfoView {
 
     @InjectPresenter lateinit var presenter: ProjectInfoPresenter
 
-    private var project: Project? = null
-
     @ProvidePresenter
     fun providePresenter(): ProjectInfoPresenter =
             Toothpick
                     .openScopes(DI.PROJECT_SCOPE)
                     .getInstance(ProjectInfoPresenter::class.java)
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        toolbar.setNavigationOnClickListener { presenter.onBackPressed() }
-
-        toolbar.inflateMenu(R.menu.share_menu)
-        toolbar.setOnMenuItemClickListener { item ->
-            when (item.itemId) {
-                R.id.shareAction -> shareText(project?.webUrl)
-            }
-            true
-        }
-    }
-
     override fun showProject(project: Project, mdReadme: CharSequence) {
-        this.project = project
-
-        toolbar.title = project.name
+        (parentFragment as? ProjectInfoFragment.ToolbarConfigurator)?.apply {
+            setTitle(project.name)
+            setShareUrl(project.webUrl)
+        }
         titleTextView.text = project.nameWithNamespace
         descriptionTextView.text = project.description
         starsTextView.text = project.starCount.toString()
@@ -69,7 +52,7 @@ class ProjectInfoFragment : BaseFragment(), ProjectInfoView {
     }
 
     override fun showProgress(show: Boolean) {
-        fullscreenProgressView.visible(show)
+        showProgressDialog(show)
         projectInfoLayout.visible(!show)
     }
 
@@ -77,5 +60,8 @@ class ProjectInfoFragment : BaseFragment(), ProjectInfoView {
         showSnackMessage(message)
     }
 
-    override fun onBackPressed() = presenter.onBackPressed()
+    interface ToolbarConfigurator {
+        fun setTitle(title: String)
+        fun setShareUrl(url: String?)
+    }
 }
