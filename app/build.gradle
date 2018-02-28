@@ -57,6 +57,7 @@ ext {
     moxyVersion = "1.4.6"
     toothpickVersion = "1.0.6"
     retrofitVersion = "2.2.0"
+    markwonVersion = "1.0.3"
 }
 
 dependencies {
@@ -93,7 +94,8 @@ dependencies {
     //Image load and cache
     implementation "com.github.bumptech.glide:glide:3.8.0"
     //Markdown to HTML converter
-    implementation 'ru.noties:markwon:1.0.3'
+    implementation "ru.noties:markwon:$markwonVersion"
+    implementation "ru.noties:markwon-image-loader:$markwonVersion"
     //Bottom navigation bar
     implementation 'com.aurelhubert:ahbottomnavigation:2.1.0'
     //Lottie
