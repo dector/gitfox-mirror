@@ -81,7 +81,7 @@ class IssueRepository @Inject constructor(
                         "${AppTarget.ISSUE} #${issue.iid}",
                         project.name
                 ),
-                issue.title,
+                issue.title ?: "",
                 issue.createdAt,
                 AppTarget.ISSUE,
                 issue.id,

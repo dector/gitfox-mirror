@@ -88,7 +88,7 @@ class MergeRequestRepository @Inject constructor(
                         "${AppTarget.MERGE_REQUEST} !${mr.iid}",
                         project.name
                 ),
-                mr.title,
+                mr.title ?: "",
                 mr.createdAt,
                 AppTarget.MERGE_REQUEST,
                 mr.id,
