@@ -4,6 +4,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import org.threeten.bp.LocalDateTime
+import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.PushDataRefType
 import ru.terrakok.gitlabclient.entity.Sort
@@ -16,7 +17,6 @@ import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultPageSize
-import java.text.SimpleDateFormat
 import javax.inject.Inject
 
 /**
@@ -28,23 +28,24 @@ class EventRepository @Inject constructor(
         @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
-    private val dayFormat = SimpleDateFormat("yyyy-MM-dd")
 
     fun getEvents(
             action: EventAction? = null,
             targetType: EventTarget? = null,
             beforeDay: LocalDateTime? = null,
             afterDay: LocalDateTime? = null,
-            sort: Sort? = null,
+            sort: Sort? = Sort.DESC,
+            orderBy: OrderBy = OrderBy.UPDATED_AT,
             page: Int,
             pageSize: Int = defaultPageSize
     ): Single<List<TargetHeader>> = api
             .getEvents(
                     action,
                     targetType,
-                    beforeDay?.run { dayFormat.format(this) },
-                    afterDay?.run { dayFormat.format(this) },
+                    beforeDay?.run { this.toLocalDate().toString() },
+                    afterDay?.run { this.toLocalDate().toString() },
                     sort,
+                    orderBy,
                     page,
                     pageSize
             )
@@ -85,7 +86,7 @@ class EventRepository @Inject constructor(
                         targetData.name,
                         project?.name ?: ""
                 ),
-                getBody(event),
+                getBody(event) ?: "",
                 event.createdAt,
                 targetData.target,
                 targetData.id,

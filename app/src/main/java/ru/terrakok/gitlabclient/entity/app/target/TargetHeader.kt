@@ -10,7 +10,7 @@ data class TargetHeader(
         val author: Author,
         val icon: TargetHeaderIcon,
         val title: TargetHeaderTitle,
-        val body: CharSequence?,
+        val body: CharSequence,
         val date: LocalDateTime,
         val target: AppTarget,
         val targetId: Long,

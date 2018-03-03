@@ -104,6 +104,7 @@ interface GitlabApi {
             @Query("before") beforeDay: String?,
             @Query("after") afterDay: String?,
             @Query("sort") sort: Sort?,
+            @Query("order_by") orderBy: OrderBy?,
             @Query("page") page: Int,
             @Query("per_page") pageSize: Int
     ): Single<List<Event>>
