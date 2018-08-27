@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.ui.project.info
+package ru.terrakok.gitlabclient.ui.project
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -9,8 +9,8 @@ import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.Visibility
 import ru.terrakok.gitlabclient.extension.loadRoundedImage
 import ru.terrakok.gitlabclient.extension.visible
-import ru.terrakok.gitlabclient.presentation.project.ProjectInfoPresenter
-import ru.terrakok.gitlabclient.presentation.project.ProjectInfoView
+import ru.terrakok.gitlabclient.presentation.project.info.ProjectInfoPresenter
+import ru.terrakok.gitlabclient.presentation.project.info.ProjectInfoView
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import toothpick.Toothpick
@@ -22,7 +22,8 @@ class ProjectInfoFragment : BaseFragment(), ProjectInfoView {
 
     override val layoutRes = R.layout.fragment_project_info
 
-    @InjectPresenter lateinit var presenter: ProjectInfoPresenter
+    @InjectPresenter
+    lateinit var presenter: ProjectInfoPresenter
 
     @ProvidePresenter
     fun providePresenter(): ProjectInfoPresenter =
@@ -31,7 +32,7 @@ class ProjectInfoFragment : BaseFragment(), ProjectInfoView {
                     .getInstance(ProjectInfoPresenter::class.java)
 
     override fun showProject(project: Project, mdReadme: CharSequence) {
-        (parentFragment as? ProjectInfoFragment.ToolbarConfigurator)?.apply {
+        (parentFragment as? ToolbarConfigurator)?.apply {
             setTitle(project.name)
             setShareUrl(project.webUrl)
         }
@@ -42,11 +43,13 @@ class ProjectInfoFragment : BaseFragment(), ProjectInfoView {
 
         avatarImageView.loadRoundedImage(project.avatarUrl, context)
         iconImageView.setBackgroundResource(R.drawable.circle)
-        iconImageView.setImageResource(when (project.visibility) {
-            Visibility.PRIVATE -> R.drawable.ic_lock_white_18dp
-            Visibility.INTERNAL -> R.drawable.ic_security_white_24dp
-            else -> R.drawable.ic_globe_18dp
-        })
+        iconImageView.setImageResource(
+            when (project.visibility) {
+                Visibility.PRIVATE -> R.drawable.ic_lock_white_18dp
+                Visibility.INTERNAL -> R.drawable.ic_security_white_24dp
+                else -> R.drawable.ic_globe_18dp
+            }
+        )
 
         Markwon.setText(readmeTextView, mdReadme)
     }

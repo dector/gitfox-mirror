@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.presentation.project
+package ru.terrakok.gitlabclient.presentation.project.info
 
 import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
@@ -11,6 +11,7 @@ import ru.terrakok.gitlabclient.entity.Project
  */
 @StateStrategyType(AddToEndSingleStrategy::class)
 interface ProjectInfoView : MvpView {
+
     fun showProject(project: Project, mdReadme: CharSequence)
     fun showProgress(show: Boolean)
 

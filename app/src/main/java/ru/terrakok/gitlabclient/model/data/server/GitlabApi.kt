@@ -2,8 +2,21 @@ package ru.terrakok.gitlabclient.model.data.server
 
 import io.reactivex.Completable
 import io.reactivex.Single
-import retrofit2.http.*
-import ru.terrakok.gitlabclient.entity.*
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
+import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.Path
+import retrofit2.http.Query
+import ru.terrakok.gitlabclient.entity.File
+import ru.terrakok.gitlabclient.entity.Note
+import ru.terrakok.gitlabclient.entity.OrderBy
+import ru.terrakok.gitlabclient.entity.Project
+import ru.terrakok.gitlabclient.entity.RepositoryTreeNode
+import ru.terrakok.gitlabclient.entity.Sort
+import ru.terrakok.gitlabclient.entity.TokenData
+import ru.terrakok.gitlabclient.entity.User
+import ru.terrakok.gitlabclient.entity.Visibility
 import ru.terrakok.gitlabclient.entity.event.Event
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.event.EventTarget
@@ -18,7 +31,7 @@ import ru.terrakok.gitlabclient.entity.target.TargetType
 import ru.terrakok.gitlabclient.entity.todo.Todo
 import ru.terrakok.gitlabclient.entity.todo.TodoAction
 import ru.terrakok.gitlabclient.entity.todo.TodoState
-import java.util.*
+import java.util.Date
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 28.03.17
@@ -91,6 +104,21 @@ interface GitlabApi {
             @Query("per_page") pageSize: Int
     ): Single<List<Issue>>
 
+    @GET("$API_PATH/projects/{project_id}/issues")
+    fun getIssues(
+            @Path("project_id") projectId: Long,
+            @Query("scope") scope: IssueScope?,
+            @Query("state") state: IssueState?,
+            @Query("labels") labels: String?,
+            @Query("milestone") milestone: String?,
+            @Query("iids") iids: Array<Long>?,
+            @Query("order_by") orderBy: OrderBy?,
+            @Query("sort") sort: Sort?,
+            @Query("search") search: String?,
+            @Query("page") page: Int,
+            @Query("per_page") pageSize: Int
+    ): Single<List<Issue>>
+
     @GET("$API_PATH/projects/{project_id}/issues/{issue_id}")
     fun getIssue(
             @Path("project_id") projectId: Long,
@@ -109,7 +137,7 @@ interface GitlabApi {
     ): Single<List<Event>>
 
     @GET("$API_PATH/merge_requests")
-    fun getMergeRequests(
+    fun getMyMergeRequests(
             @Query("state") state: MergeRequestState?,
             @Query("milestone") milestone: String?,
             @Query("view") viewType: MergeRequestViewType?,
@@ -126,7 +154,8 @@ interface GitlabApi {
             @Query("per_page") pageSize: Int
     ): Single<List<MergeRequest>>
 
-    fun getProjectMergeRequests(
+    @GET("$API_PATH/projects/{project_id}/merge_requests")
+    fun getMergeRequests(
             @Path("project_id") projectId: Long,
             @Query("state") state: MergeRequestState?,
             @Query("milestone") milestone: String?,

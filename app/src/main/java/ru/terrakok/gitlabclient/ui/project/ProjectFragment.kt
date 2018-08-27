@@ -1,6 +1,7 @@
 package ru.terrakok.gitlabclient.ui.project
 
 import android.os.Bundle
+import android.util.TypedValue
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter
 import kotlinx.android.synthetic.main.fragment_project.*
 import ru.terrakok.cicerone.Router
@@ -9,7 +10,7 @@ import ru.terrakok.gitlabclient.extension.color
 import ru.terrakok.gitlabclient.extension.shareText
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import ru.terrakok.gitlabclient.ui.project.info.ProjectInfoFragment
+import ru.terrakok.gitlabclient.ui.project.issues.ProjectIssuesContainerFragment
 import toothpick.Toothpick
 import javax.inject.Inject
 
@@ -20,15 +21,16 @@ class ProjectFragment : BaseFragment(), ProjectInfoFragment.ToolbarConfigurator 
 
     override val layoutRes: Int = R.layout.fragment_project
 
-    @Inject lateinit var router: Router
+    @Inject
+    lateinit var router: Router
 
     private var shareUrl: String? = null
 
     private lateinit var tabs: HashMap<String, BaseFragment>
     private val tabKeys = listOf(
-            tabIdToFragmentTag(R.id.tab_info),
-            tabIdToFragmentTag(R.id.tab_issue),
-            tabIdToFragmentTag(R.id.tab_merge_request)
+        tabIdToFragmentTag(R.id.tab_info),
+        tabIdToFragmentTag(R.id.tab_issue),
+        tabIdToFragmentTag(R.id.tab_merge_request)
     )
 
     private fun tabIdToFragmentTag(id: Int) = "tab_$id"
@@ -57,7 +59,10 @@ class ProjectFragment : BaseFragment(), ProjectInfoFragment.ToolbarConfigurator 
             inactiveColor = context.color(R.color.silver)
 
             setOnTabSelectedListener { position, wasSelected ->
-                if (!wasSelected) showTab(position, currentItem)
+                if (!wasSelected) {
+                    setToolbarElevation(position)
+                    showTab(position, currentItem)
+                }
                 true
             }
         }
@@ -66,8 +71,11 @@ class ProjectFragment : BaseFragment(), ProjectInfoFragment.ToolbarConfigurator 
             tabs = createNewFragments()
             childFragmentManager.beginTransaction()
                     .add(R.id.container, tabs[tabKeys[0]], tabKeys[0])
+                    .add(R.id.container, tabs[tabKeys[1]], tabKeys[1])
+                    .hide(tabs[tabKeys[1]])
                     .commitNow()
             bottomBar.setCurrentItem(0, false)
+            setToolbarElevation(0)
         } else {
             tabs = findFragments()
         }
@@ -81,12 +89,26 @@ class ProjectFragment : BaseFragment(), ProjectInfoFragment.ToolbarConfigurator 
     }
 
     private fun createNewFragments(): HashMap<String, BaseFragment> = hashMapOf(
-            tabKeys[0] to ProjectInfoFragment()
+        tabKeys[0] to ProjectInfoFragment(),
+        tabKeys[1] to ProjectIssuesContainerFragment()
     )
 
     private fun findFragments(): HashMap<String, BaseFragment> = hashMapOf(
-            tabKeys[0] to childFragmentManager.findFragmentByTag(tabKeys[0]) as BaseFragment
+        tabKeys[0] to childFragmentManager.findFragmentByTag(tabKeys[0]) as BaseFragment,
+        tabKeys[1] to childFragmentManager.findFragmentByTag(tabKeys[1]) as BaseFragment
     )
+
+    private fun setToolbarElevation(tabItem: Int) {
+        if (tabItem == 0) {
+            toolbar.elevation = TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                8f,
+                resources.displayMetrics
+            )
+        } else {
+            toolbar.elevation = 0f
+        }
+    }
 
     override fun setTitle(title: String) {
         toolbar.title = title
