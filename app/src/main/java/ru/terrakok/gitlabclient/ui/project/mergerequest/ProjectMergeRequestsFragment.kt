@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.ui.project.issues
+package ru.terrakok.gitlabclient.ui.project.mergerequest
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -8,12 +8,12 @@ import kotlinx.android.synthetic.main.layout_base_list.*
 import kotlinx.android.synthetic.main.layout_zero.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
-import ru.terrakok.gitlabclient.entity.issue.IssueState
+import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
 import ru.terrakok.gitlabclient.extension.getEnum
 import ru.terrakok.gitlabclient.extension.putEnum
 import ru.terrakok.gitlabclient.extension.visible
-import ru.terrakok.gitlabclient.presentation.project.issues.ProjectIssuesPresenter
-import ru.terrakok.gitlabclient.presentation.project.issues.ProjectIssuesView
+import ru.terrakok.gitlabclient.presentation.project.mergerequest.ProjectMergeRequestsPresenter
+import ru.terrakok.gitlabclient.presentation.project.mergerequest.ProjectMergeRequestsView
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.ZeroViewHolder
@@ -22,27 +22,27 @@ import toothpick.Toothpick
 import toothpick.config.Module
 
 /**
- * @author Eugene Shapovalov (CraggyHaggy). Date: 27.08.18
+ * @author Eugene Shapovalov (CraggyHaggy). Date: 28.08.18
  */
-class ProjectIssuesFragment : BaseFragment(), ProjectIssuesView {
+class ProjectMergeRequestsFragment : BaseFragment(), ProjectMergeRequestsView {
 
-    override val layoutRes = R.layout.fragment_project_issues
+    override val layoutRes = R.layout.fragment_my_merge_requests
 
     @InjectPresenter
-    lateinit var presenter: ProjectIssuesPresenter
+    lateinit var presenter: ProjectMergeRequestsPresenter
 
     @ProvidePresenter
-    fun providePresenter(): ProjectIssuesPresenter {
-        val scopeName = "ProjectIssuesScope_${hashCode()}"
+    fun providePresenter(): ProjectMergeRequestsPresenter {
+        val scopeName = "ProjectMergeRequestsScope_${hashCode()}"
         val scope = Toothpick.openScopes(DI.PROJECT_SCOPE, scopeName)
         scope.installModules(object : Module() {
             init {
-                bind(IssueState::class.java)
-                        .toInstance(arguments!!.getEnum<IssueState>(ARG_ISSUE_STATE))
+                bind(MergeRequestState::class.java)
+                        .toInstance(arguments!!.getEnum<MergeRequestState>(ARG_MERGE_REQUEST_STATE))
             }
         })
 
-        return scope.getInstance(ProjectIssuesPresenter::class.java).also {
+        return scope.getInstance(ProjectMergeRequestsPresenter::class.java).also {
             Toothpick.closeScope(scopeName)
         }
     }
@@ -50,8 +50,8 @@ class ProjectIssuesFragment : BaseFragment(), ProjectIssuesView {
     private val adapter: TargetsAdapter by lazy {
         TargetsAdapter(
             { presenter.onUserClick(it) },
-            { presenter.onIssueClick(it) },
-            { presenter.loadNextIssuesPage() }
+            { presenter.onMergeRequestClick(it) },
+            { presenter.loadNextMergeRequestsPage() }
         )
     }
     private var zeroViewHolder: ZeroViewHolder? = null
@@ -59,8 +59,8 @@ class ProjectIssuesFragment : BaseFragment(), ProjectIssuesView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (arguments?.getEnum<IssueState>(ARG_ISSUE_STATE) == null) {
-            throw IllegalArgumentException("Provide issue state as args.")
+        if (arguments?.getEnum<MergeRequestState>(ARG_MERGE_REQUEST_STATE) == null) {
+            throw IllegalArgumentException("Provide merge request state as args.")
         }
     }
 
@@ -70,11 +70,11 @@ class ProjectIssuesFragment : BaseFragment(), ProjectIssuesView {
         recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true)
-            adapter = this@ProjectIssuesFragment.adapter
+            adapter = this@ProjectMergeRequestsFragment.adapter
         }
 
-        swipeToRefresh.setOnRefreshListener { presenter.refreshIssues() }
-        zeroViewHolder = ZeroViewHolder(zeroLayout, { presenter.refreshIssues() })
+        swipeToRefresh.setOnRefreshListener { presenter.refreshMergeRequests() }
+        zeroViewHolder = ZeroViewHolder(zeroLayout, { presenter.refreshMergeRequests() })
     }
 
     override fun showRefreshProgress(show: Boolean) {
@@ -103,9 +103,9 @@ class ProjectIssuesFragment : BaseFragment(), ProjectIssuesView {
         else zeroViewHolder?.hide()
     }
 
-    override fun showIssues(show: Boolean, issues: List<TargetHeader>) {
+    override fun showMergeRequests(show: Boolean, mergeRequests: List<TargetHeader>) {
         recyclerView.visible(show)
-        recyclerView.post { adapter.setData(issues) }
+        recyclerView.post { adapter.setData(mergeRequests) }
     }
 
     override fun showMessage(message: String) {
@@ -113,12 +113,12 @@ class ProjectIssuesFragment : BaseFragment(), ProjectIssuesView {
     }
 
     companion object {
-        private const val ARG_ISSUE_STATE = "arg issue state"
+        private const val ARG_MERGE_REQUEST_STATE = "arg merge request state"
 
-        fun newInstance(issueState: IssueState) =
-                ProjectIssuesFragment().apply {
+        fun newInstance(mergeRequestState: MergeRequestState) =
+                ProjectMergeRequestsFragment().apply {
                     arguments = Bundle().apply {
-                        putEnum(ARG_ISSUE_STATE, issueState)
+                        putEnum(ARG_MERGE_REQUEST_STATE, mergeRequestState)
                     }
                 }
     }

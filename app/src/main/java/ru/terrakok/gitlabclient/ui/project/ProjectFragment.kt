@@ -11,6 +11,7 @@ import ru.terrakok.gitlabclient.extension.shareText
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.project.issues.ProjectIssuesContainerFragment
+import ru.terrakok.gitlabclient.ui.project.mergerequest.ProjectMergeRequestsContainerFragment
 import toothpick.Toothpick
 import javax.inject.Inject
 
@@ -72,7 +73,9 @@ class ProjectFragment : BaseFragment(), ProjectInfoFragment.ToolbarConfigurator 
             childFragmentManager.beginTransaction()
                     .add(R.id.container, tabs[tabKeys[0]], tabKeys[0])
                     .add(R.id.container, tabs[tabKeys[1]], tabKeys[1])
+                    .add(R.id.container, tabs[tabKeys[2]], tabKeys[2])
                     .hide(tabs[tabKeys[1]])
+                    .hide(tabs[tabKeys[2]])
                     .commitNow()
             bottomBar.setCurrentItem(0, false)
             setToolbarElevation(0)
@@ -90,12 +93,14 @@ class ProjectFragment : BaseFragment(), ProjectInfoFragment.ToolbarConfigurator 
 
     private fun createNewFragments(): HashMap<String, BaseFragment> = hashMapOf(
         tabKeys[0] to ProjectInfoFragment(),
-        tabKeys[1] to ProjectIssuesContainerFragment()
+        tabKeys[1] to ProjectIssuesContainerFragment(),
+        tabKeys[2] to ProjectMergeRequestsContainerFragment()
     )
 
     private fun findFragments(): HashMap<String, BaseFragment> = hashMapOf(
         tabKeys[0] to childFragmentManager.findFragmentByTag(tabKeys[0]) as BaseFragment,
-        tabKeys[1] to childFragmentManager.findFragmentByTag(tabKeys[1]) as BaseFragment
+        tabKeys[1] to childFragmentManager.findFragmentByTag(tabKeys[1]) as BaseFragment,
+        tabKeys[2] to childFragmentManager.findFragmentByTag(tabKeys[2]) as BaseFragment
     )
 
     private fun setToolbarElevation(tabItem: Int) {

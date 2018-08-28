@@ -7,27 +7,40 @@ import ru.terrakok.gitlabclient.model.repository.mergerequest.MergeRequestReposi
 import javax.inject.Inject
 
 class MergeRequestInteractor @Inject constructor(
-        private val mergeRequestRepository: MergeRequestRepository
+    private val mergeRequestRepository: MergeRequestRepository
 ) {
+
     fun getMyMergeRequests(
-            createdByMe: Boolean,
-            onlyOpened: Boolean,
-            page: Int
+        createdByMe: Boolean,
+        onlyOpened: Boolean,
+        page: Int
+    ) = mergeRequestRepository
+            .getMyMergeRequests(
+                scope = if (createdByMe) MergeRequestScope.CREATED_BY_ME else MergeRequestScope.ASSIGNED_TO_ME,
+                state = if (onlyOpened) MergeRequestState.OPENED else null,
+                orderBy = OrderBy.UPDATED_AT,
+                page = page
+            )
+
+    fun getMergeRequests(
+        projectId: Long,
+        mergeRequestState: MergeRequestState,
+        page: Int
     ) = mergeRequestRepository
             .getMergeRequests(
-                    scope = if (createdByMe) MergeRequestScope.CREATED_BY_ME else MergeRequestScope.ASSIGNED_TO_ME,
-                    state = if (onlyOpened) MergeRequestState.OPENED else null,
-                    orderBy = OrderBy.UPDATED_AT,
-                    page = page
+                projectId = projectId,
+                state = mergeRequestState,
+                orderBy = OrderBy.UPDATED_AT,
+                page = page
             )
 
     fun getMergeRequest(
-            projectId: Long,
-            mergeRequestId: Long
+        projectId: Long,
+        mergeRequestId: Long
     ) = mergeRequestRepository.getMergeRequest(projectId, mergeRequestId)
 
     fun getMergeRequestNotes(
-            projectId: Long,
-            mergeRequestId: Long
+        projectId: Long,
+        mergeRequestId: Long
     ) = mergeRequestRepository.getMergeRequestNotes(projectId, mergeRequestId)
 }
