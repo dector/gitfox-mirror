@@ -39,9 +39,8 @@ class ProjectIssuesPresenter @Inject constructor(
     private val paginator = Paginator(
         {
             issueInteractor.getIssues(projectId, issueState, it)
-                    .toObservable()
-                    .flatMapIterable { it }
-                    .flatMap { item ->
+                    .flattenAsObservable { it }
+                    .concatMap { item ->
                         mdConverter.markdownToSpannable(item.body.toString())
                                 .map { md -> item.copy(body = md) }
                                 .toObservable()

@@ -34,9 +34,8 @@ class IssueNotesPresenter @Inject constructor(
 
     private fun requestNotes() {
         issueInteractor.getIssueNotes(projectId, issueId)
-                .toObservable()
-                .flatMapIterable { it }
-                .flatMap { note ->
+                .flattenAsObservable { it }
+                .concatMap { note ->
                     mdConverter.markdownToSpannable(note.body)
                             .map { NoteWithFormattedBody(note, it) }
                             .toObservable()
