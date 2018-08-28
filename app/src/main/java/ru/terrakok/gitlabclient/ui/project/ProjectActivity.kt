@@ -20,6 +20,7 @@ import toothpick.config.Module
 class ProjectActivity : BaseActivity() {
 
     override val layoutRes = R.layout.activity_container
+
     private val projectId get() = intent.getLongExtra(ARG_PROJECT_ID, 0)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,6 +50,9 @@ class ProjectActivity : BaseActivity() {
 
     override val navigator = object : FlowNavigator(this, R.id.container) {
 
+        override fun createFlowIntent(flowKey: String, data: Any?) =
+                Screens.getFlowIntent(this@ProjectActivity, flowKey, data)
+
         override fun createFragment(screenKey: String?, data: Any?): Fragment? = when (screenKey) {
             Screens.PROJECT_SCREEN -> ProjectFragment()
             else -> null
@@ -56,7 +60,8 @@ class ProjectActivity : BaseActivity() {
     }
 
     companion object {
-        private val ARG_PROJECT_ID = "arg_project_id"
+        private const val ARG_PROJECT_ID = "arg_project_id"
+
         fun getStartIntent(projectId: Long, context: Context) =
                 Intent(context, ProjectActivity::class.java).apply {
                     putExtra(ARG_PROJECT_ID, projectId)
