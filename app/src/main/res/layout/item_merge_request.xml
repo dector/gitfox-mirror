@@ -48,7 +48,7 @@
 
     <TextView
         android:id="@+id/mergeRequestIdTextView"
-        fontPath="@string/font_main_medium"
+        app:fontFamily="@font/roboto_medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -61,7 +61,7 @@
 
     <TextView
         android:id="@+id/mergeRequestOpenedAtByAuthorTextView"
-        fontPath="@string/font_main_medium"
+        app:fontFamily="@font/roboto_medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
@@ -74,7 +74,7 @@
 
     <TextView
         android:id="@+id/mergeRequestMessagesCountTextView"
-        fontPath="@string/font_main_medium"
+        app:fontFamily="@font/roboto_medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"

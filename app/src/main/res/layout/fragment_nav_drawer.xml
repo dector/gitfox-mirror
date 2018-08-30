@@ -44,7 +44,7 @@
             android:maxLines="1"
             android:textColor="@color/white"
             android:textSize="14sp"
-            fontPath="@string/font_main_medium"
+            app:fontFamily="@font/roboto_medium"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -102,7 +102,7 @@
                 android:text="@string/activity_item"
                 android:textColor="@color/primary_text"
                 android:textSize="14sp"
-                fontPath="@string/font_main_medium" />
+                app:fontFamily="@font/roboto_medium" />
 
             <TextView
                 android:id="@+id/projectsMI"
@@ -116,7 +116,7 @@
                 android:text="@string/projects_item"
                 android:textColor="@color/primary_text"
                 android:textSize="14sp"
-                fontPath="@string/font_main_medium" />
+                app:fontFamily="@font/roboto_medium" />
 
             <View
                 android:layout_width="match_parent"
@@ -137,7 +137,7 @@
                 android:text="@string/about_item"
                 android:textColor="@color/primary_text"
                 android:textSize="14sp"
-                fontPath="@string/font_main_medium" />
+                app:fontFamily="@font/roboto_medium" />
         </LinearLayout>
     </android.support.constraint.ConstraintLayout>
 </ScrollView>

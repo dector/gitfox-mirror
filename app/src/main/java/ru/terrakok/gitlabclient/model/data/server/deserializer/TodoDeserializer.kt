@@ -1,17 +1,20 @@
-package ru.terrakok.gitlabclient.entity.todo
+package ru.terrakok.gitlabclient.model.data.server.deserializer
 
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonParseException
+import org.threeten.bp.LocalDateTime
 import ru.terrakok.gitlabclient.entity.Author
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.target.Target
 import ru.terrakok.gitlabclient.entity.target.TargetType
 import ru.terrakok.gitlabclient.entity.target.issue.Issue
 import ru.terrakok.gitlabclient.entity.target.mergerequest.MergeRequest
+import ru.terrakok.gitlabclient.entity.todo.Todo
+import ru.terrakok.gitlabclient.entity.todo.TodoAction
+import ru.terrakok.gitlabclient.entity.todo.TodoState
 import java.lang.reflect.Type
-import java.util.*
 
 /**
  * @author Eugene Shapovalov (CraggyHaggy). Date: 13.09.17
@@ -48,7 +51,7 @@ class TodoDeserializer : JsonDeserializer<Todo> {
                 jsonObject.get("target_url").asString,
                 jsonObject.get("body").asString,
                 context.deserialize<TodoState>(jsonObject.get("state"), TodoState::class.java),
-                context.deserialize<Date>(jsonObject.get("created_at"), Date::class.java)
+                context.deserialize<LocalDateTime>(jsonObject.get("created_at"), LocalDateTime::class.java)
         )
     } else {
         throw JsonParseException("Configure Gson in GsonProvider.")

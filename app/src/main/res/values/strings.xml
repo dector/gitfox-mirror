@@ -152,8 +152,4 @@
     <string name="menu_project_info">Info</string>
     <string name="menu_project_issue">Issues</string>
     <string name="menu_project_merge_request">Merge Requests</string>
-
-    <!--Calligraphy Config-->
-    <string name="font_main_regular">fonts/Roboto-Regular.ttf</string>
-    <string name="font_main_medium">fonts/Roboto-Medium.ttf</string>
 </resources>

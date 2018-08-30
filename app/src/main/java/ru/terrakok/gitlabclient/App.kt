@@ -2,6 +2,7 @@ package ru.terrakok.gitlabclient
 
 import android.app.Application
 import android.graphics.Color
+import com.jakewharton.threetenabp.AndroidThreeTen
 import ru.noties.markwon.SpannableConfiguration
 import ru.noties.markwon.spans.SpannableTheme
 import ru.terrakok.gitlabclient.model.data.auth.AuthHolder
@@ -13,7 +14,6 @@ import toothpick.Toothpick
 import toothpick.configuration.Configuration
 import toothpick.registries.FactoryRegistryLocator
 import toothpick.registries.MemberInjectorRegistryLocator
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 26.03.17.
@@ -26,8 +26,8 @@ class App : Application() {
         initLogger()
         initToothpick()
         initAppScope()
-        initCalligraphy()
         initMarkwon()
+        initThreetenABP()
     }
 
     private fun initLogger() {
@@ -56,13 +56,6 @@ class App : Application() {
         serverScope.installModules(ServerModule(authHolder.serverPath))
     }
 
-    private fun initCalligraphy() {
-        CalligraphyConfig.initDefault(CalligraphyConfig.Builder()
-                .setDefaultFontPath(getString(R.string.font_main_regular))
-                .setFontAttrId(R.attr.fontPath)
-                .build())
-    }
-
     private fun initMarkwon() {
         val theme = SpannableTheme.builderWithDefaults(this)
                 .codeTextColor(Color.parseColor("#C0341D"))
@@ -71,5 +64,9 @@ class App : Application() {
         SpannableConfiguration.builder(this)
                 .theme(theme)
                 .build()
+    }
+
+    private fun initThreetenABP() {
+        AndroidThreeTen.init(this)
     }
 }

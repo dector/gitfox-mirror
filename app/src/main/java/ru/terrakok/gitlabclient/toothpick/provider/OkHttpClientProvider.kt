@@ -1,5 +1,7 @@
 package ru.terrakok.gitlabclient.toothpick.provider
 
+import android.content.Context
+import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import ru.terrakok.gitlabclient.BuildConfig
@@ -14,22 +16,24 @@ import javax.inject.Provider
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 20.06.17.
  */
-class OkHttpClientProvider @Inject constructor(authData: AuthHolder) : Provider<OkHttpClient> {
-    private val httpClient: OkHttpClient
+class OkHttpClientProvider @Inject constructor(
+        private val authData: AuthHolder,
+        private val context: Context
+) : Provider<OkHttpClient> {
 
-    init {
-        val httpClientBuilder = OkHttpClient.Builder()
-        httpClientBuilder.addNetworkInterceptor(AuthHeaderInterceptor(authData))
-        httpClientBuilder.addNetworkInterceptor(ErrorResponseInterceptor())
-        httpClientBuilder.readTimeout(30, TimeUnit.SECONDS)
+    override fun get() = with(OkHttpClient.Builder()) {
+        cache(Cache(context.cacheDir, 20 * 1024))
+        connectTimeout(30, TimeUnit.SECONDS)
+        readTimeout(30, TimeUnit.SECONDS)
+
+        addNetworkInterceptor(AuthHeaderInterceptor(authData))
+        addNetworkInterceptor(ErrorResponseInterceptor())
         if (BuildConfig.DEBUG) {
-            val httpLoggingInterceptor = HttpLoggingInterceptor()
-            httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
-            httpClientBuilder.addNetworkInterceptor(httpLoggingInterceptor)
-            httpClientBuilder.addNetworkInterceptor(CurlLoggingInterceptor())
+            addNetworkInterceptor(
+                    HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
+            )
+            addNetworkInterceptor(CurlLoggingInterceptor())
         }
-        httpClient = httpClientBuilder.build()
+        build()
     }
-
-    override fun get() = httpClient
 }

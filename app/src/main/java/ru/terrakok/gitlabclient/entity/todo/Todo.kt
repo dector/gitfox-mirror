@@ -1,10 +1,10 @@
 package ru.terrakok.gitlabclient.entity.todo
 
+import org.threeten.bp.LocalDateTime
 import ru.terrakok.gitlabclient.entity.Author
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.target.Target
 import ru.terrakok.gitlabclient.entity.target.TargetType
-import java.util.*
 
 /**
  * @author Eugene Shapovalov (CraggyHaggy). Date: 11.09.17
@@ -19,5 +19,5 @@ data class Todo(
         val targetUrl: String,
         val body: String,
         val state: TodoState,
-        val createdAt: Date
+        val createdAt: LocalDateTime
 )

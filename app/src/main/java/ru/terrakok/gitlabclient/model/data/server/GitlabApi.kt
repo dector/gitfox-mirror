@@ -2,6 +2,7 @@ package ru.terrakok.gitlabclient.model.data.server
 
 import io.reactivex.Completable
 import io.reactivex.Single
+import org.threeten.bp.LocalDateTime
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -31,7 +32,6 @@ import ru.terrakok.gitlabclient.entity.target.TargetType
 import ru.terrakok.gitlabclient.entity.todo.Todo
 import ru.terrakok.gitlabclient.entity.todo.TodoAction
 import ru.terrakok.gitlabclient.entity.todo.TodoState
-import java.util.Date
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 28.03.17
@@ -132,6 +132,7 @@ interface GitlabApi {
             @Query("before") beforeDay: String?,
             @Query("after") afterDay: String?,
             @Query("sort") sort: Sort?,
+            @Query("order_by") orderBy: OrderBy?,
             @Query("page") page: Int,
             @Query("per_page") pageSize: Int
     ): Single<List<Event>>
@@ -142,8 +143,8 @@ interface GitlabApi {
             @Query("milestone") milestone: String?,
             @Query("view") viewType: MergeRequestViewType?,
             @Query("labels") labels: String?,
-            @Query("created_before") createdBefore: Date?,
-            @Query("created_after") createdAfter: Date?,
+            @Query("created_before") createdBefore: LocalDateTime?,
+            @Query("created_after") createdAfter: LocalDateTime?,
             @Query("scope") scope: MergeRequestScope?,
             @Query("author_id") authorId: Int?,
             @Query("assignee_id") assigneeId: Int?,
@@ -161,8 +162,8 @@ interface GitlabApi {
             @Query("milestone") milestone: String?,
             @Query("view") viewType: MergeRequestViewType?,
             @Query("labels") labels: String?,
-            @Query("created_before") createdBefore: Date?,
-            @Query("created_after") createdAfter: Date?,
+            @Query("created_before") createdBefore: LocalDateTime?,
+            @Query("created_after") createdAfter: LocalDateTime?,
             @Query("scope") scope: MergeRequestScope?,
             @Query("author_id") authorId: Int?,
             @Query("assignee_id") assigneeId: Int?,
