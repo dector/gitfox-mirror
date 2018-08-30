@@ -14,21 +14,25 @@ import ru.terrakok.gitlabclient.presentation.global.NoteWithFormattedBody
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 18.06.17.
  */
-class SystemNoteAdapterDelegate(private val clickListener: (Note) -> Unit) : AdapterDelegate<MutableList<Any>>() {
+class SystemNoteAdapterDelegate(
+    private val clickListener: (Note) -> Unit
+) : AdapterDelegate<MutableList<NoteWithFormattedBody>>() {
 
-    override fun isForViewType(items: MutableList<Any>, position: Int) =
-            with(items[position]) { this is NoteWithFormattedBody && this.note.isSystem }
+    override fun isForViewType(items: MutableList<NoteWithFormattedBody>, position: Int) =
+            items[position].note.isSystem
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder =
             ViewHolder(parent.inflate(R.layout.item_system_note))
 
-    override fun onBindViewHolder(items: MutableList<Any>,
-                                  position: Int,
-                                  viewHolder: RecyclerView.ViewHolder,
-                                  payloads: MutableList<Any>) =
-            (viewHolder as ViewHolder).bind(items[position] as NoteWithFormattedBody)
+    override fun onBindViewHolder(
+        items: MutableList<NoteWithFormattedBody>,
+        position: Int,
+        viewHolder: RecyclerView.ViewHolder,
+        payloads: MutableList<Any>
+    ) = (viewHolder as ViewHolder).bind(items[position])
 
     private inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+
         private lateinit var note: Note
 
         init {
