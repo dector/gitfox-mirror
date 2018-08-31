@@ -22,12 +22,13 @@ class IssueInfoFragment : BaseFragment(), IssueInfoView {
 
     override val layoutRes = R.layout.fragment_issue_info
 
-    @InjectPresenter lateinit var presenter: IssueInfoPresenter
+    @InjectPresenter
+    lateinit var presenter: IssueInfoPresenter
 
     @ProvidePresenter
     fun providePresenter() =
-        Toothpick.openScope(DI.ISSUE_SCOPE)
-                .getInstance(IssueInfoPresenter::class.java)
+            Toothpick.openScope(DI.ISSUE_SCOPE)
+                    .getInstance(IssueInfoPresenter::class.java)
 
     override fun showIssue(issueInfo: IssueInfoView.IssueInfo) {
         val issue = issueInfo.issue
@@ -37,21 +38,28 @@ class IssueInfoFragment : BaseFragment(), IssueInfoView {
 
         titleTextView.text = issue.title
         stateImageView.setImageResource(R.drawable.circle)
-        // TODO: issue info (Display action user name for the CLOSED states).
-        // Wait for https://gitlab.com/gitlab-org/gitlab-ce/issues/41967
         when (issue.state) {
             IssueState.OPENED -> {
                 stateImageView.setColorFilter(context!!.color(R.color.green))
                 subtitleTextView.text = String.format(
-                        getString(R.string.issue_info_subtitle),
-                        getString(R.string.target_status_opened),
-                        issue.author.name,
-                        issue.createdAt.humanTime(resources)
+                    getString(R.string.issue_info_subtitle),
+                    getString(R.string.target_status_opened),
+                    issue.author.name,
+                    issue.createdAt.humanTime(resources)
                 )
             }
             IssueState.CLOSED -> {
                 stateImageView.setColorFilter(context!!.color(R.color.red))
-                subtitleTextView.text = getString(R.string.target_status_closed)
+                subtitleTextView.text = if (issue.closedBy != null && issue.closedAt != null) {
+                    String.format(
+                        getString(R.string.issue_info_subtitle),
+                        getString(R.string.target_status_closed),
+                        issue.closedBy.name,
+                        issue.closedAt.humanTime(resources)
+                    )
+                } else {
+                    getString(R.string.target_status_closed)
+                }
             }
         }
         avatarImageView.loadRoundedImage(issue.author.avatarUrl, context)
