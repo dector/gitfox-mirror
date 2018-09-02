@@ -16,11 +16,11 @@ import javax.inject.Inject
  */
 @InjectViewState
 class ProjectInfoPresenter @Inject constructor(
-        @ProjectId private val projectIdWrapper: PrimitiveWrapper<Long>,
-        private val router: Router,
-        private val projectInteractor: ProjectInteractor,
-        private val mdConverter: MarkDownConverter,
-        private val errorHandler: ErrorHandler
+    @ProjectId private val projectIdWrapper: PrimitiveWrapper<Long>,
+    private val router: Router,
+    private val projectInteractor: ProjectInteractor,
+    private val mdConverter: MarkDownConverter,
+    private val errorHandler: ErrorHandler
 ) : BasePresenter<ProjectInfoView>() {
 
     private val projectId = projectIdWrapper.value
@@ -29,26 +29,26 @@ class ProjectInfoPresenter @Inject constructor(
         super.onFirstViewAttach()
 
         projectInteractor
-                .getProject(projectId)
-                .flatMap { project ->
-                    projectInteractor
-                            .getProjectReadme(project.id, project.defaultBranch)
-                            .onErrorResumeNext { throwable ->
-                                when (throwable) {
-                                    is NoSuchElementException -> Single.just("")
-                                    else -> Single.error(throwable)
-                                }
-                            }
-                            .flatMap { mdConverter.markdownToSpannable(it) }
-                            .map { mdReadme -> Pair(project, mdReadme) }
-                }
-                .doOnSubscribe { viewState.showProgress(true) }
-                .doAfterTerminate { viewState.showProgress(false) }
-                .subscribe(
-                        { (project, mdReadme) -> viewState.showProject(project, mdReadme) },
-                        { errorHandler.proceed(it, { viewState.showMessage(it) }) }
-                )
-                .connect()
+            .getProject(projectId)
+            .flatMap { project ->
+                projectInteractor
+                    .getProjectReadme(project.id, project.defaultBranch)
+                    .onErrorResumeNext { throwable ->
+                        when (throwable) {
+                            is NoSuchElementException -> Single.just("")
+                            else -> Single.error(throwable)
+                        }
+                    }
+                    .flatMap { mdConverter.markdownToSpannable(it) }
+                    .map { mdReadme -> Pair(project, mdReadme) }
+            }
+            .doOnSubscribe { viewState.showProgress(true) }
+            .doAfterTerminate { viewState.showProgress(false) }
+            .subscribe(
+                { (project, mdReadme) -> viewState.showProject(project, mdReadme) },
+                { errorHandler.proceed(it, { viewState.showMessage(it) }) }
+            )
+            .connect()
     }
 
     fun onBackPressed() = router.exit()

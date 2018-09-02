@@ -13,15 +13,17 @@ import ru.terrakok.cicerone.commands.Replace
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 10.01.18.
  */
 abstract class FlowNavigator(
-        val activity: FragmentActivity,
-        containerId: Int
+    val activity: FragmentActivity,
+    containerId: Int
 ) : SupportFragmentNavigator(activity.supportFragmentManager, containerId) {
 
     fun setLaunchScreen(screenKey: String, data: Any? = null) {
-        applyCommands(arrayOf(
+        applyCommands(
+            arrayOf(
                 BackTo(null),
                 Replace(screenKey, data)
-        ))
+            )
+        )
     }
 
     override fun applyCommand(command: Command?) {

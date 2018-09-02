@@ -14,7 +14,8 @@ import javax.inject.Inject
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 16.07.17.
  */
 class MyIssuesContainerFragment : BaseFragment() {
-    @Inject lateinit var menuController: GlobalMenuController
+    @Inject
+    lateinit var menuController: GlobalMenuController
 
     override val layoutRes = R.layout.fragment_my_issues_container
 

@@ -30,8 +30,8 @@ class MergeRequestNotesFragment : BaseFragment(), MergeRequestNotesView {
 
     @ProvidePresenter
     fun providePresenter() =
-            Toothpick.openScope(DI.MERGE_REQUEST_SCOPE)
-                    .getInstance(MergeRequestNotesPresenter::class.java)
+        Toothpick.openScope(DI.MERGE_REQUEST_SCOPE)
+            .getInstance(MergeRequestNotesPresenter::class.java)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

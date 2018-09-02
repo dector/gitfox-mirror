@@ -9,19 +9,19 @@ import javax.inject.Inject
  * @author Eugene Shapovalov (CraggyHaggy). Date: 21.09.17
  */
 class TodoListInteractor @Inject constructor(
-        private val todoRepository: TodoRepository,
-        private val profileRepository: ProfileRepository
+    private val todoRepository: TodoRepository,
+    private val profileRepository: ProfileRepository
 ) {
     fun getMyTodos(
-            isPending: Boolean,
-            page: Int
+        isPending: Boolean,
+        page: Int
     ) = profileRepository
-            .getMyProfile()
-            .flatMap { currentUser ->
-                todoRepository.getTodos(
-                        currentUser = currentUser,
-                        state = if (isPending) TodoState.PENDING else TodoState.DONE,
-                        page = page
-                )
-            }
+        .getMyProfile()
+        .flatMap { currentUser ->
+            todoRepository.getTodos(
+                currentUser = currentUser,
+                state = if (isPending) TodoState.PENDING else TodoState.DONE,
+                page = page
+            )
+        }
 }

@@ -32,13 +32,14 @@ class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView, ConfirmDi
         presenter.onMenuItemClick(view.tag as MenuItem)
     }
 
-    @InjectPresenter lateinit var presenter: NavigationDrawerPresenter
+    @InjectPresenter
+    lateinit var presenter: NavigationDrawerPresenter
 
     @ProvidePresenter
     fun providePresenter(): NavigationDrawerPresenter {
         return Toothpick
-                .openScope(DI.MAIN_ACTIVITY_SCOPE)
-                .getInstance(NavigationDrawerPresenter::class.java)
+            .openScope(DI.MAIN_ACTIVITY_SCOPE)
+            .getInstance(NavigationDrawerPresenter::class.java)
     }
 
 
@@ -54,12 +55,12 @@ class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView, ConfirmDi
 
         logoutIV.setOnClickListener {
             ConfirmDialog
-                    .newInstants(
-                            msg = getString(R.string.logout_question),
-                            positive = getString(R.string.exit),
-                            tag = CONFIRM_LOGOUT_TAG
-                    )
-                    .show(childFragmentManager, CONFIRM_LOGOUT_TAG)
+                .newInstants(
+                    msg = getString(R.string.logout_question),
+                    positive = getString(R.string.exit),
+                    tag = CONFIRM_LOGOUT_TAG
+                )
+                .show(childFragmentManager, CONFIRM_LOGOUT_TAG)
         }
 
         activityMI.tag = ACTIVITY
@@ -89,8 +90,8 @@ class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView, ConfirmDi
 
     override fun selectMenuItem(item: MenuItem) {
         (0 until navDrawerMenuContainer.childCount)
-                .map { navDrawerMenuContainer.getChildAt(it) }
-                .forEach { menuItem -> menuItem.tag?.let { menuItem.isSelected = it == item } }
+            .map { navDrawerMenuContainer.getChildAt(it) }
+            .forEach { menuItem -> menuItem.tag?.let { menuItem.isSelected = it == item } }
     }
 
     fun onScreenChanged(item: MenuItem) {

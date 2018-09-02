@@ -10,9 +10,9 @@ import ru.terrakok.gitlabclient.ui.global.list.ProgressItem
 import ru.terrakok.gitlabclient.ui.global.list.TargetHeaderAdapterDelegate
 
 class TargetsAdapter(
-        userClickListener: (Long) -> Unit,
-        clickListener: (TargetHeader) -> Unit,
-        private val nextListener: () -> Unit
+    userClickListener: (Long) -> Unit,
+    clickListener: (TargetHeader) -> Unit,
+    private val nextListener: () -> Unit
 ) : ListDelegationAdapter<MutableList<Any>>() {
     init {
         items = mutableListOf()
@@ -30,8 +30,8 @@ class TargetsAdapter(
 
         //yes, on main thread...
         DiffUtil
-                .calculateDiff(DiffCallback(items, oldData), false)
-                .dispatchUpdatesTo(this)
+            .calculateDiff(DiffCallback(items, oldData), false)
+            .dispatchUpdatesTo(this)
     }
 
     fun showProgress(isVisible: Boolean) {

@@ -14,17 +14,17 @@ import javax.inject.Provider
  * @author Konstantin Tskhovrebov (aka terrakok) on 20.06.17.
  */
 class ApiProvider @Inject constructor(
-        private val okHttpClient: OkHttpClient,
-        private val gson: Gson,
-        @ServerPath private val serverPath: String
+    private val okHttpClient: OkHttpClient,
+    private val gson: Gson,
+    @ServerPath private val serverPath: String
 ) : Provider<GitlabApi> {
 
     override fun get() =
-            Retrofit.Builder()
-                    .addConverterFactory(GsonConverterFactory.create(gson))
-                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .client(okHttpClient)
-                    .baseUrl(serverPath)
-                    .build()
-                    .create(GitlabApi::class.java)
+        Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .client(okHttpClient)
+            .baseUrl(serverPath)
+            .build()
+            .create(GitlabApi::class.java)
 }

@@ -25,10 +25,10 @@ class MainFragment : BaseFragment(), MainView {
 
     private lateinit var tabs: HashMap<String, BaseFragment>
     private val tabKeys = listOf(
-            tabIdToFragmentTag(R.id.tab_activity),
-            tabIdToFragmentTag(R.id.tab_issue),
-            tabIdToFragmentTag(R.id.tab_merge),
-            tabIdToFragmentTag(R.id.tab_todo)
+        tabIdToFragmentTag(R.id.tab_activity),
+        tabIdToFragmentTag(R.id.tab_issue),
+        tabIdToFragmentTag(R.id.tab_merge),
+        tabIdToFragmentTag(R.id.tab_todo)
     )
 
     @InjectPresenter
@@ -37,8 +37,8 @@ class MainFragment : BaseFragment(), MainView {
     @ProvidePresenter
     fun providePresenter(): MainPresenter {
         return Toothpick
-                .openScope(DI.APP_SCOPE)
-                .getInstance(MainPresenter::class.java)
+            .openScope(DI.APP_SCOPE)
+            .getInstance(MainPresenter::class.java)
     }
 
     private fun tabIdToFragmentTag(id: Int) = "tab_$id"
@@ -62,14 +62,14 @@ class MainFragment : BaseFragment(), MainView {
         if (savedInstanceState == null) {
             tabs = createNewFragments()
             childFragmentManager.beginTransaction()
-                    .add(R.id.mainScreenContainer, tabs[tabKeys[0]], tabKeys[0])
-                    .add(R.id.mainScreenContainer, tabs[tabKeys[1]], tabKeys[1])
-                    .add(R.id.mainScreenContainer, tabs[tabKeys[2]], tabKeys[2])
-                    .add(R.id.mainScreenContainer, tabs[tabKeys[3]], tabKeys[3])
-                    .hide(tabs[tabKeys[1]])
-                    .hide(tabs[tabKeys[2]])
-                    .hide(tabs[tabKeys[3]])
-                    .commitNow()
+                .add(R.id.mainScreenContainer, tabs[tabKeys[0]], tabKeys[0])
+                .add(R.id.mainScreenContainer, tabs[tabKeys[1]], tabKeys[1])
+                .add(R.id.mainScreenContainer, tabs[tabKeys[2]], tabKeys[2])
+                .add(R.id.mainScreenContainer, tabs[tabKeys[3]], tabKeys[3])
+                .hide(tabs[tabKeys[1]])
+                .hide(tabs[tabKeys[2]])
+                .hide(tabs[tabKeys[3]])
+                .commitNow()
             bottomBar.setCurrentItem(0, false)
         } else {
             tabs = findFragments()
@@ -78,23 +78,23 @@ class MainFragment : BaseFragment(), MainView {
 
     private fun showTab(newItem: Int, oldItem: Int) {
         childFragmentManager.beginTransaction()
-                .hide(tabs[tabKeys[oldItem]])
-                .show(tabs[tabKeys[newItem]])
-                .commit()
+            .hide(tabs[tabKeys[oldItem]])
+            .show(tabs[tabKeys[newItem]])
+            .commit()
     }
 
     private fun createNewFragments(): HashMap<String, BaseFragment> = hashMapOf(
-            tabKeys[0] to MyEventsFragment(),
-            tabKeys[1] to MyIssuesContainerFragment(),
-            tabKeys[2] to MyMergeRequestsContainerFragment(),
-            tabKeys[3] to MyTodosContainerFragment()
+        tabKeys[0] to MyEventsFragment(),
+        tabKeys[1] to MyIssuesContainerFragment(),
+        tabKeys[2] to MyMergeRequestsContainerFragment(),
+        tabKeys[3] to MyTodosContainerFragment()
     )
 
     private fun findFragments(): HashMap<String, BaseFragment> = hashMapOf(
-            tabKeys[0] to childFragmentManager.findFragmentByTag(tabKeys[0]) as BaseFragment,
-            tabKeys[1] to childFragmentManager.findFragmentByTag(tabKeys[1]) as BaseFragment,
-            tabKeys[2] to childFragmentManager.findFragmentByTag(tabKeys[2]) as BaseFragment,
-            tabKeys[3] to childFragmentManager.findFragmentByTag(tabKeys[3]) as BaseFragment
+        tabKeys[0] to childFragmentManager.findFragmentByTag(tabKeys[0]) as BaseFragment,
+        tabKeys[1] to childFragmentManager.findFragmentByTag(tabKeys[1]) as BaseFragment,
+        tabKeys[2] to childFragmentManager.findFragmentByTag(tabKeys[2]) as BaseFragment,
+        tabKeys[3] to childFragmentManager.findFragmentByTag(tabKeys[3]) as BaseFragment
     )
 
     override fun onBackPressed() = presenter.onBackPressed()

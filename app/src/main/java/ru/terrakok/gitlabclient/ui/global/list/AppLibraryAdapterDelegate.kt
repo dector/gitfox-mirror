@@ -16,16 +16,18 @@ import ru.terrakok.gitlabclient.extension.inflate
 class AppLibraryAdapterDelegate(private val clickListener: (AppLibrary) -> Unit) : AdapterDelegate<MutableList<Any>>() {
 
     override fun isForViewType(items: MutableList<Any>, position: Int) =
-            items[position] is AppLibrary
+        items[position] is AppLibrary
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder =
-            ViewHolder(parent.inflate(R.layout.item_app_library))
+        ViewHolder(parent.inflate(R.layout.item_app_library))
 
-    override fun onBindViewHolder(items: MutableList<Any>,
-                                  position: Int,
-                                  viewHolder: RecyclerView.ViewHolder,
-                                  payloads: MutableList<Any>) =
-            (viewHolder as ViewHolder).bind(items[position] as AppLibrary)
+    override fun onBindViewHolder(
+        items: MutableList<Any>,
+        position: Int,
+        viewHolder: RecyclerView.ViewHolder,
+        payloads: MutableList<Any>
+    ) =
+        (viewHolder as ViewHolder).bind(items[position] as AppLibrary)
 
     private inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private lateinit var appLibrary: AppLibrary

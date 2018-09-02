@@ -1,7 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.global
 
 import com.jakewharton.rxrelay2.PublishRelay
-import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.extension.userMessage
 import ru.terrakok.gitlabclient.model.data.server.ServerError
@@ -17,10 +16,10 @@ import javax.inject.Inject
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 03.11.17.
  */
 class ErrorHandler @Inject constructor(
-        private val router: FlowRouter,
-        private val authInteractor: AuthInteractor,
-        private val resourceManager: ResourceManager,
-        private val schedulers: SchedulersProvider
+    private val router: FlowRouter,
+    private val authInteractor: AuthInteractor,
+    private val resourceManager: ResourceManager,
+    private val schedulers: SchedulersProvider
 ) {
 
     private val authErrorRelay = PublishRelay.create<Boolean>()
@@ -43,9 +42,9 @@ class ErrorHandler @Inject constructor(
 
     private fun subscribeOnAuthErrors() {
         authErrorRelay
-                .throttleFirst(50, TimeUnit.MILLISECONDS)
-                .observeOn(schedulers.ui())
-                .subscribe { logout() }
+            .throttleFirst(50, TimeUnit.MILLISECONDS)
+            .observeOn(schedulers.ui())
+            .subscribe { logout() }
     }
 
     private fun logout() {

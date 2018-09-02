@@ -14,8 +14,10 @@ import javax.inject.Inject
 
 
 class ProjectsContainerFragment : BaseFragment() {
-    @Inject lateinit var menuController: GlobalMenuController
-    @Inject lateinit var router: Router
+    @Inject
+    lateinit var menuController: GlobalMenuController
+    @Inject
+    lateinit var router: Router
 
     override val layoutRes = R.layout.fragment_projects_container
 

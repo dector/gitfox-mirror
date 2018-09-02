@@ -15,7 +15,8 @@ import javax.inject.Inject
  */
 class MyTodosContainerFragment : BaseFragment() {
 
-    @Inject lateinit var menuController: GlobalMenuController
+    @Inject
+    lateinit var menuController: GlobalMenuController
 
     private val adapter: MyTodosPagerAdapter by lazy { MyTodosPagerAdapter() }
 

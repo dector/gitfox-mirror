@@ -15,27 +15,28 @@ import javax.inject.Inject
  * @author Konstantin Tskhovrebov (aka terrakok) on 23.04.17.
  */
 class AuthInteractor(
-        private val serverPath: String,
-        private val defaultServerPath: String,
-        private val authRepository: AuthRepository,
-        private val hash: String,
-        private val oauthParams: OAuthParams) {
+    private val serverPath: String,
+    private val defaultServerPath: String,
+    private val authRepository: AuthRepository,
+    private val hash: String,
+    private val oauthParams: OAuthParams
+) {
 
     @Inject constructor(
-            @ServerPath serverPath: String,
-            @DefaultServerPath defaultServerPath: String,
-            authRepository: AuthRepository,
-            oauthParams: OAuthParams
+        @ServerPath serverPath: String,
+        @DefaultServerPath defaultServerPath: String,
+        authRepository: AuthRepository,
+        oauthParams: OAuthParams
     ) : this(
-            serverPath,
-            defaultServerPath,
-            authRepository,
-            UUID.randomUUID().toString(),
-            oauthParams
+        serverPath,
+        defaultServerPath,
+        authRepository,
+        UUID.randomUUID().toString(),
+        oauthParams
     )
 
     val oauthUrl = "${serverPath}oauth/authorize?client_id=${oauthParams.appId}" +
-            "&redirect_uri=${oauthParams.redirectUrl}&response_type=code&state=$hash"
+        "&redirect_uri=${oauthParams.redirectUrl}&response_type=code&state=$hash"
 
 
     fun checkOAuthRedirect(url: String) = url.indexOf(oauthParams.redirectUrl) == 0
@@ -43,23 +44,23 @@ class AuthInteractor(
     fun isSignedIn() = authRepository.isSignedIn
 
     fun login(oauthRedirect: String) =
-            Completable.defer {
-                if (oauthRedirect.contains(hash)) {
-                    authRepository
-                            .requestOAuthToken(
-                                    oauthParams.appId,
-                                    oauthParams.appKey,
-                                    getQueryParameterFromUri(oauthRedirect, PARAMETER_CODE),
-                                    oauthParams.redirectUrl
-                            )
-                            .doOnSuccess {
-                                authRepository.saveAuthData(it.token, serverPath, true)
-                            }
-                            .toCompletable()
-                } else {
-                    Completable.error(RuntimeException("Not valid oauth hash!"))
-                }
+        Completable.defer {
+            if (oauthRedirect.contains(hash)) {
+                authRepository
+                    .requestOAuthToken(
+                        oauthParams.appId,
+                        oauthParams.appKey,
+                        getQueryParameterFromUri(oauthRedirect, PARAMETER_CODE),
+                        oauthParams.redirectUrl
+                    )
+                    .doOnSuccess {
+                        authRepository.saveAuthData(it.token, serverPath, true)
+                    }
+                    .toCompletable()
+            } else {
+                Completable.error(RuntimeException("Not valid oauth hash!"))
             }
+        }
 
     fun login(customServerPath: String, privateToken: String) = Completable.fromAction {
         var serverPath = customServerPath
@@ -93,8 +94,8 @@ class AuthInteractor(
         if (serverPath != newServerPath) {
             Toothpick.closeScope(DI.SERVER_SCOPE)
             Toothpick
-                    .openScopes(DI.APP_SCOPE, DI.SERVER_SCOPE)
-                    .installModules(ServerModule(newServerPath))
+                .openScopes(DI.APP_SCOPE, DI.SERVER_SCOPE)
+                .installModules(ServerModule(newServerPath))
         }
     }
 

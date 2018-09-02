@@ -37,14 +37,15 @@ class MyTodosFragment : BaseFragment(), MyTodoListView {
 
     private val adapter: TargetsAdapter by lazy {
         TargetsAdapter(
-                { presenter.onUserClick(it) },
-                { presenter.onTodoClick(it) },
-                { presenter.loadNextTodosPage() }
+            { presenter.onUserClick(it) },
+            { presenter.onTodoClick(it) },
+            { presenter.loadNextTodosPage() }
         )
     }
     private var zeroViewHolder: ZeroViewHolder? = null
 
-    @InjectPresenter lateinit var presenter: MyTodosPresenter
+    @InjectPresenter
+    lateinit var presenter: MyTodosPresenter
 
     @ProvidePresenter
     fun providePresenter(): MyTodosPresenter {
@@ -53,8 +54,8 @@ class MyTodosFragment : BaseFragment(), MyTodoListView {
         scope.installModules(object : Module() {
             init {
                 bind(PrimitiveWrapper::class.java)
-                        .withName(TodoListPendingState::class.java)
-                        .toInstance(PrimitiveWrapper(arguments?.get(ARG_MODE_IS_PENDING)))
+                    .withName(TodoListPendingState::class.java)
+                    .toInstance(PrimitiveWrapper(arguments?.get(ARG_MODE_IS_PENDING)))
             }
         })
 

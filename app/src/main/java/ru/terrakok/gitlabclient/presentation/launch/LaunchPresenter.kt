@@ -1,7 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.launch
 
 import com.arellomobile.mvp.InjectViewState
-import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.model.interactor.auth.AuthInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
@@ -13,8 +12,8 @@ import javax.inject.Inject
  */
 @InjectViewState
 class LaunchPresenter @Inject constructor(
-        private val router: FlowRouter,
-        private val authInteractor: AuthInteractor
+    private val router: FlowRouter,
+    private val authInteractor: AuthInteractor
 ) : BasePresenter<LaunchView>() {
 
     override fun onFirstViewAttach() {

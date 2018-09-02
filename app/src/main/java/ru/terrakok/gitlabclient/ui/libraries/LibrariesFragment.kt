@@ -24,13 +24,14 @@ class LibrariesFragment : BaseFragment(), LibrariesView {
 
     private val adapter: LibraryAdapter by lazy { LibraryAdapter() }
 
-    @InjectPresenter lateinit var presenter: LibrariesPresenter
+    @InjectPresenter
+    lateinit var presenter: LibrariesPresenter
 
     @ProvidePresenter
     fun providePresenter(): LibrariesPresenter =
-            Toothpick
-                    .openScope(DI.SERVER_SCOPE)
-                    .getInstance(LibrariesPresenter::class.java)
+        Toothpick
+            .openScope(DI.SERVER_SCOPE)
+            .getInstance(LibrariesPresenter::class.java)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

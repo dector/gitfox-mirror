@@ -11,7 +11,8 @@ import toothpick.Toothpick
 import javax.inject.Inject
 
 class MyMergeRequestsContainerFragment : BaseFragment() {
-    @Inject lateinit var menuController: GlobalMenuController
+    @Inject
+    lateinit var menuController: GlobalMenuController
 
     override val layoutRes = R.layout.fragment_my_merge_requests_container
 

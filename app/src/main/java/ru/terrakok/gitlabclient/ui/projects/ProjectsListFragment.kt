@@ -43,7 +43,8 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
 
     override val layoutRes = R.layout.fragment_projects
 
-    @InjectPresenter lateinit var presenter: ProjectsListPresenter
+    @InjectPresenter
+    lateinit var presenter: ProjectsListPresenter
 
     @ProvidePresenter
     fun createPresenter(): ProjectsListPresenter {
@@ -52,8 +53,8 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
         scope.installModules(object : Module() {
             init {
                 bind(PrimitiveWrapper::class.java)
-                        .withName(ProjectListMode::class.java)
-                        .toInstance(PrimitiveWrapper(arguments?.getInt(ARG_MODE)))
+                    .withName(ProjectListMode::class.java)
+                    .toInstance(PrimitiveWrapper(arguments?.getInt(ARG_MODE)))
             }
         })
         return scope.getInstance(ProjectsListPresenter::class.java).also {

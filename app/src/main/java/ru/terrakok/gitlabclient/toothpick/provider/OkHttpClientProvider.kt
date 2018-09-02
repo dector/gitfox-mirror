@@ -17,8 +17,8 @@ import javax.inject.Provider
  * @author Konstantin Tskhovrebov (aka terrakok) on 20.06.17.
  */
 class OkHttpClientProvider @Inject constructor(
-        private val authData: AuthHolder,
-        private val context: Context
+    private val authData: AuthHolder,
+    private val context: Context
 ) : Provider<OkHttpClient> {
 
     override fun get() = with(OkHttpClient.Builder()) {
@@ -30,7 +30,7 @@ class OkHttpClientProvider @Inject constructor(
         addNetworkInterceptor(ErrorResponseInterceptor())
         if (BuildConfig.DEBUG) {
             addNetworkInterceptor(
-                    HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
+                HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
             )
             addNetworkInterceptor(CurlLoggingInterceptor())
         }

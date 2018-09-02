@@ -31,8 +31,8 @@ class UserActivity : BaseActivity() {
             installModules(object : Module() {
                 init {
                     bind(PrimitiveWrapper::class.java)
-                            .withName(UserId::class.java)
-                            .toInstance(PrimitiveWrapper(userId))
+                        .withName(UserId::class.java)
+                        .toInstance(PrimitiveWrapper(userId))
                 }
             })
         }
@@ -59,8 +59,8 @@ class UserActivity : BaseActivity() {
     companion object {
         private val ARG_USER_ID = "arg_user_id"
         fun getStartIntent(userId: Long, context: Context) =
-                Intent(context, UserActivity::class.java).apply {
-                    putExtra(ARG_USER_ID, userId)
-                }
+            Intent(context, UserActivity::class.java).apply {
+                putExtra(ARG_USER_ID, userId)
+            }
     }
 }

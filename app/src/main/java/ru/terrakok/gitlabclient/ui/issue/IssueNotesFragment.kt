@@ -30,8 +30,8 @@ class IssueNotesFragment : BaseFragment(), IssueNotesView {
 
     @ProvidePresenter
     fun providePresenter() =
-            Toothpick.openScope(DI.ISSUE_SCOPE)
-                    .getInstance(IssueNotesPresenter::class.java)
+        Toothpick.openScope(DI.ISSUE_SCOPE)
+            .getInstance(IssueNotesPresenter::class.java)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

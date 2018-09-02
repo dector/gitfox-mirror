@@ -31,11 +31,11 @@ class MergeRequestActivity : BaseActivity() {
             installModules(object : Module() {
                 init {
                     bind(PrimitiveWrapper::class.java)
-                            .withName(MergeRequestId::class.java)
-                            .toInstance(PrimitiveWrapper(mrId))
+                        .withName(MergeRequestId::class.java)
+                        .toInstance(PrimitiveWrapper(mrId))
                     bind(PrimitiveWrapper::class.java)
-                            .withName(ProjectId::class.java)
-                            .toInstance(PrimitiveWrapper(projectId))
+                        .withName(ProjectId::class.java)
+                        .toInstance(PrimitiveWrapper(projectId))
                 }
             })
         }
@@ -53,7 +53,7 @@ class MergeRequestActivity : BaseActivity() {
 
     override val navigator = object : FlowNavigator(this, R.id.container) {
 
-        override fun createFragment(screenKey: String?, data: Any?) = when(screenKey) {
+        override fun createFragment(screenKey: String?, data: Any?) = when (screenKey) {
             Screens.MR_SCREEN -> MergeRequestFragment()
             else -> null
         }
@@ -63,9 +63,9 @@ class MergeRequestActivity : BaseActivity() {
         private const val ARG_PROJECT_ID = "arg_project_id"
         private const val ARG_MR_ID = "arg_mr_id"
         fun getStartIntent(projectId: Long, mrId: Long, context: Context) =
-                Intent(context, MergeRequestActivity::class.java).apply {
-                    putExtra(ARG_PROJECT_ID, projectId)
-                    putExtra(ARG_MR_ID, mrId)
-                }
+            Intent(context, MergeRequestActivity::class.java).apply {
+                putExtra(ARG_PROJECT_ID, projectId)
+                putExtra(ARG_MR_ID, mrId)
+            }
     }
 }

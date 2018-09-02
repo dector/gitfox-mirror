@@ -10,7 +10,8 @@ import javax.inject.Inject
  * @author Konstantin Tskhovrebov (aka terrakok) on 26.03.17.
  */
 abstract class BaseActivity : MvpAppCompatActivity() {
-    @Inject lateinit var navigatorHolder: NavigatorHolder
+    @Inject
+    lateinit var navigatorHolder: NavigatorHolder
 
     protected abstract val layoutRes: Int
     protected abstract val navigator: Navigator

@@ -47,14 +47,16 @@ class AppModule(context: Context) : Module() {
         bind(AuthHolder::class.java).to(Prefs::class.java).singletonInScope()
 
         //AppInfo
-        bind(AppInfo::class.java).toInstance(AppInfo(
+        bind(AppInfo::class.java).toInstance(
+            AppInfo(
                 BuildConfig.VERSION_NAME,
                 BuildConfig.VERSION_CODE,
                 BuildConfig.APP_DESCRIPTION,
                 BuildConfig.VERSION_UID.take(8),
                 BuildConfig.APP_HOME_PAGE,
                 BuildConfig.FEEDBACK_URL
-        ))
+            )
+        )
         bind(AppInfoRepository::class.java)
         bind(AppInfoInteractor::class.java)
     }

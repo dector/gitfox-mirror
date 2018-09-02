@@ -16,11 +16,11 @@ import javax.inject.Inject
  */
 @InjectViewState
 class IssueNotesPresenter @Inject constructor(
-        @ProjectId projectIdWrapper: PrimitiveWrapper<Long>,
-        @IssueId issueIdWrapper: PrimitiveWrapper<Long>,
-        private val issueInteractor: IssueInteractor,
-        private val mdConverter: MarkDownConverter,
-        private val errorHandler: ErrorHandler
+    @ProjectId projectIdWrapper: PrimitiveWrapper<Long>,
+    @IssueId issueIdWrapper: PrimitiveWrapper<Long>,
+    private val issueInteractor: IssueInteractor,
+    private val mdConverter: MarkDownConverter,
+    private val errorHandler: ErrorHandler
 ) : BasePresenter<IssueNotesView>() {
 
     private val projectId = projectIdWrapper.value
@@ -34,21 +34,21 @@ class IssueNotesPresenter @Inject constructor(
 
     private fun requestNotes() {
         issueInteractor.getIssueNotes(projectId, issueId)
-                .toObservable()
-                .flatMapIterable { it }
-                .flatMap { note ->
-                    mdConverter.markdownToSpannable(note.body)
-                            .map { NoteWithFormattedBody(note, it) }
-                            .toObservable()
-                }
-                .toList()
-                .doOnSubscribe { viewState.showProgress(true) }
-                .doAfterTerminate { viewState.showProgress(false) }
-                .subscribe(
-                        { viewState.showNotes(it) },
-                        { errorHandler.proceed(it, { viewState.showMessage(it) }) }
-                )
-                .connect()
+            .toObservable()
+            .flatMapIterable { it }
+            .flatMap { note ->
+                mdConverter.markdownToSpannable(note.body)
+                    .map { NoteWithFormattedBody(note, it) }
+                    .toObservable()
+            }
+            .toList()
+            .doOnSubscribe { viewState.showProgress(true) }
+            .doAfterTerminate { viewState.showProgress(false) }
+            .subscribe(
+                { viewState.showNotes(it) },
+                { errorHandler.proceed(it, { viewState.showMessage(it) }) }
+            )
+            .connect()
     }
 
     fun refresh() = requestNotes()

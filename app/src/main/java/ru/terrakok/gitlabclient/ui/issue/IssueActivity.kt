@@ -30,11 +30,11 @@ class IssueActivity : BaseActivity() {
             installModules(object : Module() {
                 init {
                     bind(PrimitiveWrapper::class.java)
-                            .withName(IssueId::class.java)
-                            .toInstance(PrimitiveWrapper(issueId))
+                        .withName(IssueId::class.java)
+                        .toInstance(PrimitiveWrapper(issueId))
                     bind(PrimitiveWrapper::class.java)
-                            .withName(ProjectId::class.java)
-                            .toInstance(PrimitiveWrapper(projectId))
+                        .withName(ProjectId::class.java)
+                        .toInstance(PrimitiveWrapper(projectId))
                 }
             })
         }
@@ -52,7 +52,7 @@ class IssueActivity : BaseActivity() {
 
     override val navigator = object : FlowNavigator(this, R.id.container) {
 
-        override fun createFragment(screenKey: String?, data: Any?) = when(screenKey) {
+        override fun createFragment(screenKey: String?, data: Any?) = when (screenKey) {
             Screens.ISSUE_SCREEN -> IssueFragment()
             else -> null
         }
@@ -62,9 +62,9 @@ class IssueActivity : BaseActivity() {
         private val ARG_PROJECT_ID = "arg_project_id"
         private val ARG_ISSUE_ID = "arg_issue_id"
         fun getStartIntent(projectId: Long, issueId: Long, context: Context) =
-                Intent(context, IssueActivity::class.java).apply {
-                    putExtra(ARG_PROJECT_ID, projectId)
-                    putExtra(ARG_ISSUE_ID, issueId)
-                }
+            Intent(context, IssueActivity::class.java).apply {
+                putExtra(ARG_PROJECT_ID, projectId)
+                putExtra(ARG_ISSUE_ID, issueId)
+            }
     }
 }

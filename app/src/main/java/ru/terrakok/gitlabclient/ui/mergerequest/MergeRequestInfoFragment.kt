@@ -28,14 +28,14 @@ class MergeRequestInfoFragment : BaseFragment(), MergeRequestInfoView {
 
     @ProvidePresenter
     fun providePresenter() =
-            Toothpick.openScope(DI.MERGE_REQUEST_SCOPE)
-                    .getInstance(MergeRequestInfoPresenter::class.java)
+        Toothpick.openScope(DI.MERGE_REQUEST_SCOPE)
+            .getInstance(MergeRequestInfoPresenter::class.java)
 
     override fun showInfo(mrInfo: MergeRequestInfoView.MergeRequestInfo) {
         val mergeRequest = mrInfo.mr
 
         (parentFragment as? ToolbarConfigurator)
-                ?.setTitle("!${mergeRequest.iid}", mrInfo.project.name)
+            ?.setTitle("!${mergeRequest.iid}", mrInfo.project.name)
 
         titleTextView.text = mergeRequest.title
         // TODO: merge request info (Display action user name for the MERGED/CLOSED states).
@@ -44,10 +44,10 @@ class MergeRequestInfoFragment : BaseFragment(), MergeRequestInfoView {
             MergeRequestState.OPENED -> {
                 stateImageView.tint(R.color.green)
                 subtitleTextView.text = String.format(
-                        getString(R.string.merge_request_info_subtitle),
-                        getString(R.string.target_status_opened),
-                        mergeRequest.author.name,
-                        mergeRequest.createdAt.humanTime(resources)
+                    getString(R.string.merge_request_info_subtitle),
+                    getString(R.string.target_status_opened),
+                    mergeRequest.author.name,
+                    mergeRequest.createdAt.humanTime(resources)
                 )
             }
             MergeRequestState.MERGED -> {

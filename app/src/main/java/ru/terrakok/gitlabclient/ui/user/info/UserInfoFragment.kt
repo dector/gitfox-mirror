@@ -24,13 +24,14 @@ class UserInfoFragment : BaseFragment(), UserInfoView {
     override val layoutRes = R.layout.fragment_user_info
     private var user: User? = null
 
-    @InjectPresenter lateinit var presenter: UserInfoPresenter
+    @InjectPresenter
+    lateinit var presenter: UserInfoPresenter
 
     @ProvidePresenter
     fun providePresenter(): UserInfoPresenter =
-            Toothpick
-                    .openScope(DI.USER_SCOPE)
-                    .getInstance(UserInfoPresenter::class.java)
+        Toothpick
+            .openScope(DI.USER_SCOPE)
+            .getInstance(UserInfoPresenter::class.java)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

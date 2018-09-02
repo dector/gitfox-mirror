@@ -28,23 +28,24 @@ class MyMergeRequestsFragment : BaseFragment(), MyMergeRequestListView {
         private val ARG_MODE_ONLY_OPENED = "arg_mode_only opened"
 
         fun newInstance(createdByMe: Boolean, onlyOpened: Boolean) =
-                MyMergeRequestsFragment().apply {
-                    arguments = Bundle().apply {
-                        putBoolean(ARG_MODE_CREATED_BY_ME, createdByMe)
-                        putBoolean(ARG_MODE_ONLY_OPENED, onlyOpened)
-                    }
+            MyMergeRequestsFragment().apply {
+                arguments = Bundle().apply {
+                    putBoolean(ARG_MODE_CREATED_BY_ME, createdByMe)
+                    putBoolean(ARG_MODE_ONLY_OPENED, onlyOpened)
                 }
+            }
     }
 
     override val layoutRes = R.layout.fragment_my_merge_requests
 
-    @InjectPresenter lateinit var presenter: MyMergeRequestsPresenter
+    @InjectPresenter
+    lateinit var presenter: MyMergeRequestsPresenter
 
     private val adapter: TargetsAdapter by lazy {
         TargetsAdapter(
-                { presenter.onUserClick(it) },
-                { presenter.onMergeRequestClick(it) },
-                { presenter.loadNextMergeRequestsPage() }
+            { presenter.onUserClick(it) },
+            { presenter.onMergeRequestClick(it) },
+            { presenter.loadNextMergeRequestsPage() }
         )
     }
     private var zeroViewHolder: ZeroViewHolder? = null
@@ -56,10 +57,12 @@ class MyMergeRequestsFragment : BaseFragment(), MyMergeRequestListView {
         scope.installModules(object : Module() {
             init {
                 bind(MyMergeRequestsPresenter.Filter::class.java)
-                        .toInstance(MyMergeRequestsPresenter.Filter(
-                                arguments?.getBoolean(ARG_MODE_CREATED_BY_ME) ?: true,
-                                arguments?.getBoolean(ARG_MODE_ONLY_OPENED) ?: false
-                        ))
+                    .toInstance(
+                        MyMergeRequestsPresenter.Filter(
+                            arguments?.getBoolean(ARG_MODE_CREATED_BY_ME) ?: true,
+                            arguments?.getBoolean(ARG_MODE_ONLY_OPENED) ?: false
+                        )
+                    )
             }
         })
 
@@ -82,10 +85,12 @@ class MyMergeRequestsFragment : BaseFragment(), MyMergeRequestListView {
     }
 
     fun showOnlyOpened(onlyOpened: Boolean) {
-        presenter.applyNewFilter(MyMergeRequestsPresenter.Filter(
+        presenter.applyNewFilter(
+            MyMergeRequestsPresenter.Filter(
                 arguments?.getBoolean(ARG_MODE_CREATED_BY_ME) ?: true,
                 onlyOpened
-        ))
+            )
+        )
     }
 
     override fun showRefreshProgress(show: Boolean) {

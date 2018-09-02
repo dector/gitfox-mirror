@@ -58,12 +58,12 @@ class App : Application() {
 
     private fun initMarkwon() {
         val theme = SpannableTheme.builderWithDefaults(this)
-                .codeTextColor(Color.parseColor("#C0341D"))
-                .codeBackgroundColor(Color.parseColor("#FCEDEA"))
-                .build()
+            .codeTextColor(Color.parseColor("#C0341D"))
+            .codeBackgroundColor(Color.parseColor("#FCEDEA"))
+            .build()
         SpannableConfiguration.builder(this)
-                .theme(theme)
-                .build()
+            .theme(theme)
+            .build()
     }
 
     private fun initThreetenABP() {

@@ -28,13 +28,14 @@ class AuthFragment : BaseFragment(), AuthView, CustomServerAuthFragment.OnClickL
     override val customLogin = { url: String, token: String -> presenter.loginOnCustomServer(url, token) }
     private var zeroViewHolder: ZeroViewHolder? = null
 
-    @InjectPresenter lateinit var presenter: AuthPresenter
+    @InjectPresenter
+    lateinit var presenter: AuthPresenter
 
     @ProvidePresenter
     fun providePresenter(): AuthPresenter {
         return Toothpick
-                .openScope(DI.SERVER_SCOPE)
-                .getInstance(AuthPresenter::class.java)
+            .openScope(DI.SERVER_SCOPE)
+            .getInstance(AuthPresenter::class.java)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

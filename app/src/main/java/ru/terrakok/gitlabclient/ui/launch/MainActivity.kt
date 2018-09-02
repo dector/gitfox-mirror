@@ -31,7 +31,8 @@ import toothpick.Toothpick
 import javax.inject.Inject
 
 class MainActivity : BaseActivity(), LaunchView {
-    @Inject lateinit var menuController: GlobalMenuController
+    @Inject
+    lateinit var menuController: GlobalMenuController
 
     private var menuStateDisposable: Disposable? = null
 
@@ -49,8 +50,8 @@ class MainActivity : BaseActivity(), LaunchView {
     @ProvidePresenter
     fun providePresenter(): LaunchPresenter {
         return Toothpick
-                .openScope(DI.SERVER_SCOPE)
-                .getInstance(LaunchPresenter::class.java)
+            .openScope(DI.SERVER_SCOPE)
+            .getInstance(LaunchPresenter::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,10 +82,10 @@ class MainActivity : BaseActivity(), LaunchView {
 
     override fun initMainScreen() {
         supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.mainContainer, MainFragment())
-                .replace(R.id.navDrawerContainer, NavigationDrawerFragment())
-                .commitNow()
+            .beginTransaction()
+            .replace(R.id.mainContainer, MainFragment())
+            .replace(R.id.navDrawerContainer, NavigationDrawerFragment())
+            .commitNow()
         updateNavDrawer()
     }
 
@@ -96,7 +97,7 @@ class MainActivity : BaseActivity(), LaunchView {
         }
 
         override fun createFlowIntent(flowKey: String, data: Any?) =
-                Screens.getFlowIntent(this@MainActivity, flowKey, data)
+            Screens.getFlowIntent(this@MainActivity, flowKey, data)
 
         override fun createFragment(screenKey: String?, data: Any?): Fragment? = when (screenKey) {
             Screens.MAIN_SCREEN -> MainFragment()
@@ -115,9 +116,9 @@ class MainActivity : BaseActivity(), LaunchView {
 
     private fun enableNavDrawer(enable: Boolean) {
         drawerLayout.setDrawerLockMode(
-                if (enable) DrawerLayout.LOCK_MODE_UNLOCKED
-                else DrawerLayout.LOCK_MODE_LOCKED_CLOSED,
-                GravityCompat.START
+            if (enable) DrawerLayout.LOCK_MODE_UNLOCKED
+            else DrawerLayout.LOCK_MODE_LOCKED_CLOSED,
+            GravityCompat.START
         )
     }
 
@@ -154,8 +155,8 @@ class MainActivity : BaseActivity(), LaunchView {
 
     companion object {
         fun getStartIntent(context: Context) =
-                Intent(context, MainActivity::class.java).apply {
-                    flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                }
+            Intent(context, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+            }
     }
 }

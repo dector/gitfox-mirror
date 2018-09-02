@@ -8,7 +8,7 @@ import javax.inject.Inject
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 02.04.17
  */
 class MainPresenter @Inject constructor(
-        private val router: Router
+    private val router: Router
 ) : BasePresenter<MainView>() {
 
     fun onBackPressed() = router.exit()

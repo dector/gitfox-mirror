@@ -28,23 +28,24 @@ class MyIssuesFragment : BaseFragment(), MyIssuesView {
         private val ARG_MODE_ONLY_OPENED = "arg_mode_only opened"
 
         fun newInstance(createdByMe: Boolean, onlyOpened: Boolean) =
-                MyIssuesFragment().apply {
-                    arguments = Bundle().apply {
-                        putBoolean(ARG_MODE_CREATED_BY_ME, createdByMe)
-                        putBoolean(ARG_MODE_ONLY_OPENED, onlyOpened)
-                    }
+            MyIssuesFragment().apply {
+                arguments = Bundle().apply {
+                    putBoolean(ARG_MODE_CREATED_BY_ME, createdByMe)
+                    putBoolean(ARG_MODE_ONLY_OPENED, onlyOpened)
                 }
+            }
     }
 
     override val layoutRes = R.layout.fragment_my_issues
 
-    @InjectPresenter lateinit var presenter: MyIssuesPresenter
+    @InjectPresenter
+    lateinit var presenter: MyIssuesPresenter
 
     private val adapter: TargetsAdapter by lazy {
         TargetsAdapter(
-                { presenter.onUserClick(it) },
-                { presenter.onIssueClick(it) },
-                { presenter.loadNextIssuesPage() }
+            { presenter.onUserClick(it) },
+            { presenter.onIssueClick(it) },
+            { presenter.loadNextIssuesPage() }
         )
     }
     private var zeroViewHolder: ZeroViewHolder? = null
@@ -56,12 +57,12 @@ class MyIssuesFragment : BaseFragment(), MyIssuesView {
         scope.installModules(object : Module() {
             init {
                 bind(MyIssuesPresenter.Filter::class.java)
-                        .toInstance(
-                                MyIssuesPresenter.Filter(
-                                        arguments?.getBoolean(ARG_MODE_CREATED_BY_ME) ?: true,
-                                        arguments?.getBoolean(ARG_MODE_ONLY_OPENED) ?: false
-                                )
+                    .toInstance(
+                        MyIssuesPresenter.Filter(
+                            arguments?.getBoolean(ARG_MODE_CREATED_BY_ME) ?: true,
+                            arguments?.getBoolean(ARG_MODE_ONLY_OPENED) ?: false
                         )
+                    )
             }
         })
 
@@ -84,10 +85,12 @@ class MyIssuesFragment : BaseFragment(), MyIssuesView {
     }
 
     fun showOnlyOpened(onlyOpened: Boolean) {
-        presenter.applyNewFilter(MyIssuesPresenter.Filter(
+        presenter.applyNewFilter(
+            MyIssuesPresenter.Filter(
                 arguments?.getBoolean(ARG_MODE_CREATED_BY_ME) ?: true,
                 onlyOpened
-        ))
+            )
+        )
     }
 
     override fun showRefreshProgress(show: Boolean) {

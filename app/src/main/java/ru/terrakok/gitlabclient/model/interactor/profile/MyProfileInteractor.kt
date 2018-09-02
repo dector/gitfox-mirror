@@ -10,12 +10,12 @@ import javax.inject.Inject
  */
 
 class MyProfileInteractor @Inject constructor(
-        private val profileRepository: ProfileRepository
+    private val profileRepository: ProfileRepository
 ) {
 
     fun getMyProfile(): Single<MyUserInfo> =
-            profileRepository
-                    .getMyProfile()
-                    .map { MyUserInfo(it, profileRepository.getMyServerName()) }
+        profileRepository
+            .getMyProfile()
+            .map { MyUserInfo(it, profileRepository.getMyServerName()) }
 
 }

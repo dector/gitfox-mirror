@@ -17,9 +17,9 @@ class ProjectFragment : BaseFragment() {
 
     private lateinit var tabs: HashMap<String, BaseFragment>
     private val tabKeys = listOf(
-            tabIdToFragmentTag(R.id.tab_info),
-            tabIdToFragmentTag(R.id.tab_issue),
-            tabIdToFragmentTag(R.id.tab_merge_request)
+        tabIdToFragmentTag(R.id.tab_info),
+        tabIdToFragmentTag(R.id.tab_issue),
+        tabIdToFragmentTag(R.id.tab_merge_request)
     )
 
     private fun tabIdToFragmentTag(id: Int) = "tab_$id"
@@ -43,8 +43,8 @@ class ProjectFragment : BaseFragment() {
         if (savedInstanceState == null) {
             tabs = createNewFragments()
             childFragmentManager.beginTransaction()
-                    .add(R.id.container, tabs[tabKeys[0]], tabKeys[0])
-                    .commitNow()
+                .add(R.id.container, tabs[tabKeys[0]], tabKeys[0])
+                .commitNow()
             bottomBar.setCurrentItem(0, false)
         } else {
             tabs = findFragments()
@@ -53,16 +53,16 @@ class ProjectFragment : BaseFragment() {
 
     private fun showTab(newItem: Int, oldItem: Int) {
         childFragmentManager.beginTransaction()
-                .hide(tabs[tabKeys[oldItem]])
-                .show(tabs[tabKeys[newItem]])
-                .commit()
+            .hide(tabs[tabKeys[oldItem]])
+            .show(tabs[tabKeys[newItem]])
+            .commit()
     }
 
     private fun createNewFragments(): HashMap<String, BaseFragment> = hashMapOf(
-            tabKeys[0] to ProjectInfoFragment()
+        tabKeys[0] to ProjectInfoFragment()
     )
 
     private fun findFragments(): HashMap<String, BaseFragment> = hashMapOf(
-            tabKeys[0] to childFragmentManager.findFragmentByTag(tabKeys[0]) as BaseFragment
+        tabKeys[0] to childFragmentManager.findFragmentByTag(tabKeys[0]) as BaseFragment
     )
 }

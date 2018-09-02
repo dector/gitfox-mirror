@@ -27,7 +27,7 @@ abstract class BaseFragment : MvpAppCompatFragment() {
     open protected fun restoreState(state: Bundle) {}
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
-            inflater.inflate(layoutRes, container, false)
+        inflater.inflate(layoutRes, container, false)
 
     protected fun showProgressDialog(progress: Boolean) {
         if (!isAdded) return

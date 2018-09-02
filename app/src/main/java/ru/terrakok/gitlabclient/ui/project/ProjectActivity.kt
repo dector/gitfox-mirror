@@ -30,8 +30,8 @@ class ProjectActivity : BaseActivity() {
             installModules(object : Module() {
                 init {
                     bind(PrimitiveWrapper::class.java)
-                            .withName(ProjectId::class.java)
-                            .toInstance(PrimitiveWrapper(projectId))
+                        .withName(ProjectId::class.java)
+                        .toInstance(PrimitiveWrapper(projectId))
                 }
             })
         }
@@ -58,8 +58,8 @@ class ProjectActivity : BaseActivity() {
     companion object {
         private val ARG_PROJECT_ID = "arg_project_id"
         fun getStartIntent(projectId: Long, context: Context) =
-                Intent(context, ProjectActivity::class.java).apply {
-                    putExtra(ARG_PROJECT_ID, projectId)
-                }
+            Intent(context, ProjectActivity::class.java).apply {
+                putExtra(ARG_PROJECT_ID, projectId)
+            }
     }
 }

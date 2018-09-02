@@ -29,7 +29,7 @@ class AuthActivity : BaseActivity() {
     override val navigator = object : FlowNavigator(this, R.id.container) {
 
         override fun createFlowIntent(flowKey: String, data: Any?) =
-                Screens.getFlowIntent(this@AuthActivity, flowKey, data)
+            Screens.getFlowIntent(this@AuthActivity, flowKey, data)
 
         override fun createFragment(screenKey: String?, data: Any?): Fragment? = when (screenKey) {
             Screens.AUTH_SCREEN -> AuthFragment()
@@ -39,8 +39,8 @@ class AuthActivity : BaseActivity() {
 
     companion object {
         fun getStartIntent(context: Context) =
-                Intent(context, AuthActivity::class.java).apply {
-                    flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                }
+            Intent(context, AuthActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+            }
     }
 }

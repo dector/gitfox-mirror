@@ -18,12 +18,12 @@ class ConfirmDialog : DialogFragment() {
     private val dialogTag: String get() = arguments?.getString(TAG) ?: "ConfirmDialog tag"
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-            AlertDialog.Builder(context!!).apply {
-                title?.let { setTitle(title) }
-                setMessage(msg)
-                setPositiveButton(positive) { _, _ -> clickListener?.dialogConfirm(dialogTag) }
-                setNegativeButton(negative) { _, _ -> dismiss() }
-            }.create()
+        AlertDialog.Builder(context!!).apply {
+            title?.let { setTitle(title) }
+            setMessage(msg)
+            setPositiveButton(positive) { _, _ -> clickListener?.dialogConfirm(dialogTag) }
+            setNegativeButton(negative) { _, _ -> dismiss() }
+        }.create()
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -48,21 +48,21 @@ class ConfirmDialog : DialogFragment() {
         private const val TAG = "tag"
 
         fun newInstants(
-                title: String? = null,
-                msg: String,
-                positive: String? = null,
-                negative: String? = null,
-                tag: String
+            title: String? = null,
+            msg: String,
+            positive: String? = null,
+            negative: String? = null,
+            tag: String
         ) =
-                ConfirmDialog().apply {
-                    arguments = Bundle().apply {
-                        putString(TITLE, title)
-                        putString(MSG, msg)
-                        putString(POSITIVE_TEXT, positive)
-                        putString(NEGATIVE_TEXT, negative)
-                        putString(TAG, tag)
-                    }
+            ConfirmDialog().apply {
+                arguments = Bundle().apply {
+                    putString(TITLE, title)
+                    putString(MSG, msg)
+                    putString(POSITIVE_TEXT, positive)
+                    putString(NEGATIVE_TEXT, negative)
+                    putString(TAG, tag)
                 }
+            }
     }
 
     interface OnClickListener {
