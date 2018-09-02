@@ -2,13 +2,10 @@ package ru.terrakok.gitlabclient.extension
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.support.annotation.LayoutRes
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +13,7 @@ import android.webkit.URLUtil
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.BitmapImageViewTarget
+import com.bumptech.glide.request.RequestOptions
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.app.target.AppTarget
@@ -47,70 +44,64 @@ fun TextView.showTextOrHide(str: String?) {
 fun Fragment.tryOpenLink(link: String?, basePath: String? = "https://google.com/search?q=") {
     if (link != null) {
         try {
-            startActivity(Intent(
+            startActivity(
+                Intent(
                     Intent.ACTION_VIEW,
                     when {
                         URLUtil.isValidUrl(link) -> Uri.parse(link)
                         else -> Uri.parse(basePath + link)
                     }
-            ))
+                )
+            )
         } catch (e: Exception) {
             Timber.e("tryOpenLink error: $e")
-            startActivity(Intent(
+            startActivity(
+                Intent(
                     Intent.ACTION_VIEW,
                     Uri.parse("https://google.com/search?q=$link")
-            ))
+                )
+            )
         }
     }
 }
 
 fun Fragment.shareText(text: String?) {
     text?.let {
-        startActivity(Intent.createChooser(
+        startActivity(
+            Intent.createChooser(
                 Intent(Intent.ACTION_SEND).apply {
                     type = "text/plain"
                     putExtra(Intent.EXTRA_TEXT, text)
                 },
                 getString(R.string.share_to)
-        ))
+            )
+        )
     }
 }
 
 fun Fragment.sendEmail(email: String?) {
     if (email != null) {
-        startActivity(Intent.createChooser(
+        startActivity(
+            Intent.createChooser(
                 Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", email, null)),
                 null
-        ))
+            )
+        )
     }
 }
 
 fun ImageView.loadRoundedImage(
-        url: String?,
-        ctx: Context? = null
+    url: String?,
+    ctx: Context? = null
 ) {
     Glide.with(ctx ?: context)
-            .load(url)
-            .asBitmap()
-            .centerCrop()
-            .into(object : BitmapImageViewTarget(this) {
-                override fun onLoadStarted(placeholder: Drawable?) {
-                    setImageResource(R.drawable.default_img)
-                }
-
-                override fun onLoadFailed(e: java.lang.Exception?, errorDrawable: Drawable?) {
-                    setImageResource(R.drawable.default_img)
-                }
-
-                override fun setResource(resource: Bitmap?) {
-                    resource?.let {
-                        RoundedBitmapDrawableFactory.create(view.resources, it).run {
-                            this.isCircular = true
-                            setImageDrawable(this)
-                        }
-                    }
-                }
-            })
+        .load(url)
+        .apply(RequestOptions().apply {
+            placeholder(R.drawable.default_img)
+            error(R.drawable.default_img)
+        })
+        .apply(RequestOptions.circleCropTransform())
+        .into(this)
 }
 
 fun TargetHeader.openInfo(router: FlowRouter) {
@@ -124,16 +115,16 @@ fun TargetHeader.openInfo(router: FlowRouter) {
         AppTarget.MERGE_REQUEST -> {
             internal?.let { targetInternal ->
                 router.startFlow(
-                        Screens.MR_FLOW,
-                        Pair(targetInternal.projectId, targetInternal.targetIid)
+                    Screens.MR_FLOW,
+                    Pair(targetInternal.projectId, targetInternal.targetIid)
                 )
             }
         }
         AppTarget.ISSUE -> {
             internal?.let { targetInternal ->
                 router.startFlow(
-                        Screens.ISSUE_FLOW,
-                        Pair(targetInternal.projectId, targetInternal.targetIid)
+                    Screens.ISSUE_FLOW,
+                    Pair(targetInternal.projectId, targetInternal.targetIid)
                 )
             }
         }
