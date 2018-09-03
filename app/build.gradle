@@ -57,7 +57,7 @@ ext {
     moxyVersion = "1.4.6"
     toothpickVersion = "1.0.6"
     retrofitVersion = "2.2.0"
-    markwonVersion = "1.0.3"
+    markwonVersion = "1.1.1"
 }
 
 dependencies {

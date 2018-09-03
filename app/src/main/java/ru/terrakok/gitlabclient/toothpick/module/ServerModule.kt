@@ -22,6 +22,7 @@ import ru.terrakok.gitlabclient.model.repository.todo.TodoRepository
 import ru.terrakok.gitlabclient.model.repository.user.UserRepository
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
+import ru.terrakok.gitlabclient.presentation.global.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.toothpick.provider.ApiProvider
 import ru.terrakok.gitlabclient.toothpick.provider.GsonProvider
 import ru.terrakok.gitlabclient.toothpick.provider.MarkDownConverterProvider
@@ -40,6 +41,7 @@ class ServerModule(serverUrl: String) : Module() {
         bind(OkHttpClient::class.java).toProvider(OkHttpClientProvider::class.java).providesSingletonInScope()
         bind(GitlabApi::class.java).toProvider(ApiProvider::class.java).providesSingletonInScope()
         bind(MarkDownConverter::class.java).toProvider(MarkDownConverterProvider::class.java).providesSingletonInScope()
+        bind(MarkDownUrlResolver::class.java).singletonInScope()
 
         //Auth
         //todo: before release change and move to private config

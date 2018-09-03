@@ -3,14 +3,13 @@ package ru.terrakok.gitlabclient.toothpick.provider
 import android.content.Context
 import okhttp3.OkHttpClient
 import ru.noties.markwon.SpannableConfiguration
-import ru.noties.markwon.UrlProcessor
+import ru.noties.markwon.UrlProcessorRelativeToAbsolute
 import ru.noties.markwon.il.AsyncDrawableLoader
 import ru.noties.markwon.spans.SpannableTheme
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.extension.color
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
-import java.net.URI
 import java.util.concurrent.Executors
 import javax.inject.Inject
 import javax.inject.Provider
@@ -29,6 +28,7 @@ class MarkDownConverterProvider @Inject constructor(
             .builderWithDefaults(context)
             .codeBackgroundColor(context.color(R.color.beige))
             .build()
+
     private val asyncDrawableLoader
         get() = AsyncDrawableLoader.builder()
             .client(httpClient)
@@ -36,14 +36,7 @@ class MarkDownConverterProvider @Inject constructor(
             .resources(context.resources)
             .build()
 
-    private val hostHolder = MarkDownConverter.ImageHostHolder("")
-    private val urlProcessor = UrlProcessor { destination ->
-        try {
-            if (URI(destination).scheme.isNotEmpty()) return@UrlProcessor destination
-        } catch (e: Exception) {
-        }
-        return@UrlProcessor hostHolder.url + destination
-    }
+    private val urlProcessor = UrlProcessorRelativeToAbsolute("https://gitlab.com/")
 
     private val spannableConfig
         get() = SpannableConfiguration.builder(context)
@@ -54,7 +47,6 @@ class MarkDownConverterProvider @Inject constructor(
 
     override fun get() = MarkDownConverter(
         spannableConfig,
-        hostHolder,
         schedulers
     )
 }

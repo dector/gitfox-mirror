@@ -15,6 +15,7 @@ import ru.terrakok.gitlabclient.entity.event.EventTarget
 import ru.terrakok.gitlabclient.entity.event.EventTargetType
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
+import ru.terrakok.gitlabclient.presentation.global.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultPageSize
 import javax.inject.Inject
@@ -25,7 +26,8 @@ import javax.inject.Inject
 class EventRepository @Inject constructor(
     private val api: GitlabApi,
     private val schedulers: SchedulersProvider,
-    @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>
+    @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>,
+    private val markDownUrlResolver: MarkDownUrlResolver
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
 
@@ -86,7 +88,7 @@ class EventRepository @Inject constructor(
                 targetData.name,
                 project?.name ?: ""
             ),
-            getBody(event) ?: "",
+            getBody(event, project) ?: "",
             event.createdAt,
             targetData.target,
             targetData.id,
@@ -209,9 +211,15 @@ class EventRepository @Inject constructor(
             }
         }
 
-    private fun getBody(event: Event) = when (event.targetType) {
+    private fun getBody(event: Event, project: Project?) = when (event.targetType) {
         EventTargetType.NOTE,
-        EventTargetType.DIFF_NOTE -> event.note?.body
+        EventTargetType.DIFF_NOTE -> {
+            if (event.note != null && project != null) {
+                markDownUrlResolver.resolve(event.note.body, project)
+            } else {
+                null
+            }
+        }
         EventTargetType.ISSUE,
         EventTargetType.MERGE_REQUEST,
         EventTargetType.MILESTONE -> event.targetTitle

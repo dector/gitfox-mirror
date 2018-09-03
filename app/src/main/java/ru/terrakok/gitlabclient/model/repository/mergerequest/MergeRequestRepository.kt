@@ -4,6 +4,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import org.threeten.bp.LocalDateTime
+import ru.terrakok.gitlabclient.entity.Note
 import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.Sort
@@ -15,6 +16,7 @@ import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestViewType
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
+import ru.terrakok.gitlabclient.presentation.global.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultPageSize
 import javax.inject.Inject
@@ -22,7 +24,8 @@ import javax.inject.Inject
 class MergeRequestRepository @Inject constructor(
     private val api: GitlabApi,
     private val schedulers: SchedulersProvider,
-    @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>
+    @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>,
+    private val markDownUrlResolver: MarkDownUrlResolver
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
 
@@ -114,8 +117,25 @@ class MergeRequestRepository @Inject constructor(
         mergeRequestId: Long,
         orderBy: OrderBy? = null,
         sort: Sort? = Sort.ASC
-    ) = api
-        .getMergeRequestNotes(projectId, mergeRequestId, orderBy, sort)
-        .subscribeOn(schedulers.io())
-        .observeOn(schedulers.ui())
+    ) =
+        Single
+            .zip(
+                api.getProject(projectId),
+                api.getMergeRequestNotes(projectId, mergeRequestId, orderBy, sort),
+                BiFunction<Project, List<Note>, List<Note>> { project, notes ->
+                    ArrayList(notes).apply {
+                        val iterator = listIterator()
+                        while (iterator.hasNext()) {
+                            val note = iterator.next()
+                            val resolved = markDownUrlResolver.resolve(note.body, project)
+
+                            if (resolved != note.body) {
+                                iterator.set(note.copy(body = resolved))
+                            }
+                        }
+                    }
+                }
+            )
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
 }
