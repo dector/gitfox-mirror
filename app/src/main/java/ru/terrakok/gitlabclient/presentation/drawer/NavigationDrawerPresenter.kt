@@ -60,5 +60,8 @@ class NavigationDrawerPresenter @Inject constructor(
         router.newRootFlow(Screens.AUTH_FLOW)
     }
 
-    fun onUserClick(id: Long) = router.startFlow(Screens.USER_FLOW, id)
+    fun onUserClick(id: Long) {
+        menuController.close()
+        router.startFlow(Screens.USER_FLOW, id)
+    }
 }

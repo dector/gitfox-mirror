@@ -14,13 +14,13 @@ import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuIte
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem.*
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import ru.terrakok.gitlabclient.ui.global.ConfirmDialog
+import ru.terrakok.gitlabclient.ui.global.MessageDialogFragment
 import toothpick.Toothpick
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 04.04.17
  */
-class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView, ConfirmDialog.OnClickListener {
+class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView, MessageDialogFragment.OnClickListener {
     override val layoutRes = R.layout.fragment_nav_drawer
     private var userId: Long? = null
 
@@ -44,13 +44,12 @@ class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView, ConfirmDi
         avatarImageView.setOnClickListener { userId?.let { presenter.onUserClick(it) } }
 
         logoutIV.setOnClickListener {
-            ConfirmDialog
-                .newInstants(
-                    msg = getString(R.string.logout_question),
-                    positive = getString(R.string.exit),
-                    tag = CONFIRM_LOGOUT_TAG
-                )
-                .show(childFragmentManager, CONFIRM_LOGOUT_TAG)
+            MessageDialogFragment.create(
+                message = getString(R.string.logout_question),
+                positive = getString(R.string.exit),
+                negative = getString(R.string.cancel),
+                tag = CONFIRM_LOGOUT_TAG
+            ).show(childFragmentManager, CONFIRM_LOGOUT_TAG)
         }
 
         activityMI.tag = ACTIVITY
@@ -88,7 +87,7 @@ class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView, ConfirmDi
         presenter.onScreenChanged(item)
     }
 
-    override fun dialogConfirm(tag: String) {
+    override fun dialogPositiveClicked(tag: String) {
         when (tag) {
             CONFIRM_LOGOUT_TAG -> presenter.onLogoutClick()
         }
