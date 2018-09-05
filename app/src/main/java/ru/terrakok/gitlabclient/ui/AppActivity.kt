@@ -71,7 +71,7 @@ class AppActivity : MvpAppCompatActivity(), MvpView {
                 nextFragment: Fragment?,
                 fragmentTransaction: FragmentTransaction
             ) {
-                //fix incorrect order lifecycle callback of MainFragment
+                //fix incorrect order lifecycle callback of MainFlowFragment
                 fragmentTransaction.setReorderingAllowed(true)
             }
         }

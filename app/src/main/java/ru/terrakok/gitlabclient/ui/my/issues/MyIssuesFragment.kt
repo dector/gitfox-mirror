@@ -24,19 +24,6 @@ import toothpick.config.Module
  */
 class MyIssuesFragment : BaseFragment(), MyIssuesView {
 
-    companion object {
-        private val ARG_MODE_CREATED_BY_ME = "arg_mode_created_by_me"
-        private val ARG_MODE_ONLY_OPENED = "arg_mode_only opened"
-
-        fun newInstance(createdByMe: Boolean, onlyOpened: Boolean) =
-            MyIssuesFragment().apply {
-                arguments = Bundle().apply {
-                    putBoolean(ARG_MODE_CREATED_BY_ME, createdByMe)
-                    putBoolean(ARG_MODE_ONLY_OPENED, onlyOpened)
-                }
-            }
-    }
-
     override val layoutRes = R.layout.fragment_my_issues
 
     @InjectPresenter
@@ -127,5 +114,18 @@ class MyIssuesFragment : BaseFragment(), MyIssuesView {
 
     override fun showMessage(message: String) {
         showSnackMessage(message)
+    }
+
+    companion object {
+        private const val ARG_MODE_CREATED_BY_ME = "arg_mode_created_by_me"
+        private const val ARG_MODE_ONLY_OPENED = "arg_mode_only opened"
+
+        fun create(createdByMe: Boolean, onlyOpened: Boolean) =
+            MyIssuesFragment().apply {
+                arguments = Bundle().apply {
+                    putBoolean(ARG_MODE_CREATED_BY_ME, createdByMe)
+                    putBoolean(ARG_MODE_ONLY_OPENED, onlyOpened)
+                }
+            }
     }
 }

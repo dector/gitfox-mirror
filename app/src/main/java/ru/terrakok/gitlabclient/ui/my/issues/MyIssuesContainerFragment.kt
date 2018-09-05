@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.support.v4.app.FragmentPagerAdapter
 import kotlinx.android.synthetic.main.fragment_my_issues_container.*
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.Screens
+import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
@@ -14,6 +16,10 @@ import javax.inject.Inject
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 16.07.17.
  */
 class MyIssuesContainerFragment : BaseFragment() {
+
+    @Inject
+    lateinit var router: FlowRouter
+
     @Inject
     lateinit var menuController: GlobalMenuController
 
@@ -59,10 +65,14 @@ class MyIssuesContainerFragment : BaseFragment() {
         outState.putBoolean(STATE_ONLY_OPENED, showOnlyOpened)
     }
 
+    override fun onBackPressed() {
+        router.exit()
+    }
+
     private inner class MyIssuesPagesAdapter : FragmentPagerAdapter(childFragmentManager) {
         override fun getItem(position: Int) = when (position) {
-            0 -> MyIssuesFragment.newInstance(true, showOnlyOpened)
-            1 -> MyIssuesFragment.newInstance(false, showOnlyOpened)
+            0 -> Screens.createFragment(Screens.MY_ISSUES_SCREEN, Pair(true, showOnlyOpened))
+            1 -> Screens.createFragment(Screens.MY_ISSUES_SCREEN, Pair(false, showOnlyOpened))
             else -> null
         }
 

@@ -26,14 +26,6 @@ import toothpick.config.Module
  */
 class MyTodosFragment : BaseFragment(), MyTodoListView {
 
-    companion object {
-        private val ARG_MODE_IS_PENDING = "arg_mode_is_pending"
-
-        fun newInstance(isPending: Boolean) = MyTodosFragment().apply {
-            arguments = Bundle().apply { putBoolean(ARG_MODE_IS_PENDING, isPending) }
-        }
-    }
-
     override val layoutRes = R.layout.fragment_my_todos
 
     private val adapter: TargetsAdapter by lazy {
@@ -111,5 +103,13 @@ class MyTodosFragment : BaseFragment(), MyTodoListView {
 
     override fun showMessage(message: String) {
         showSnackMessage(message)
+    }
+
+    companion object {
+        private const val ARG_MODE_IS_PENDING = "arg_mode_is_pending"
+
+        fun create(isPending: Boolean) = MyTodosFragment().apply {
+            arguments = Bundle().apply { putBoolean(ARG_MODE_IS_PENDING, isPending) }
+        }
     }
 }

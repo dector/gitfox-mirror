@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v4.app.FragmentPagerAdapter
 import kotlinx.android.synthetic.main.fragment_my_issues_container.*
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
 import ru.terrakok.gitlabclient.presentation.projects.ProjectsListPresenter
@@ -41,9 +42,9 @@ class ProjectsContainerFragment : BaseFragment() {
 
     private inner class ProjectsPagesAdapter : FragmentPagerAdapter(childFragmentManager) {
         override fun getItem(position: Int) = when (position) {
-            0 -> ProjectsListFragment.newInstance(ProjectsListPresenter.MAIN_PROJECTS)
-            1 -> ProjectsListFragment.newInstance(ProjectsListPresenter.MY_PROJECTS)
-            2 -> ProjectsListFragment.newInstance(ProjectsListPresenter.STARRED_PROJECTS)
+            0 -> Screens.createFragment(Screens.PROJECTS_SCREEN, ProjectsListPresenter.MAIN_PROJECTS)
+            1 -> Screens.createFragment(Screens.PROJECTS_SCREEN, ProjectsListPresenter.MY_PROJECTS)
+            2 -> Screens.createFragment(Screens.PROJECTS_SCREEN, ProjectsListPresenter.STARRED_PROJECTS)
             else -> null
         }
 

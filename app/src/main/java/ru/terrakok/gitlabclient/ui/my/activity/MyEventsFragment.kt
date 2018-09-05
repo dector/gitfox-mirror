@@ -91,4 +91,8 @@ class MyEventsFragment : BaseFragment(), MyEventsView {
     override fun showMessage(message: String) {
         showSnackMessage(message)
     }
+
+    override fun onBackPressed() {
+        presenter.onBackPressed()
+    }
 }

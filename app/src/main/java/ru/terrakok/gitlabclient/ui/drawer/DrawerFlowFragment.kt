@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.ui.launch
+package ru.terrakok.gitlabclient.ui.drawer
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -24,9 +24,8 @@ import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.toothpick.module.FlowNavigationModule
 import ru.terrakok.gitlabclient.toothpick.module.GlobalMenuModule
 import ru.terrakok.gitlabclient.ui.about.AboutFragment
-import ru.terrakok.gitlabclient.ui.drawer.NavigationDrawerFragment
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import ru.terrakok.gitlabclient.ui.main.MainFragment
+import ru.terrakok.gitlabclient.ui.main.MainFlowFragment
 import ru.terrakok.gitlabclient.ui.projects.ProjectsContainerFragment
 import toothpick.Toothpick
 import javax.inject.Inject
@@ -81,7 +80,7 @@ class DrawerFlowFragment : BaseFragment(), MvpView {
                 nextFragment: Fragment?,
                 fragmentTransaction: FragmentTransaction
             ) {
-                //fix incorrect order lifecycle callback of MainFragment
+                //fix incorrect order lifecycle callback of MainFlowFragment
                 fragmentTransaction.setReorderingAllowed(true)
             }
         }
@@ -97,7 +96,7 @@ class DrawerFlowFragment : BaseFragment(), MvpView {
                 .replace(R.id.navDrawerContainer, NavigationDrawerFragment())
                 .commitNow()
 
-            navigator.setLaunchScreen(Screens.MAIN_SCREEN)
+            navigator.setLaunchScreen(Screens.MAIN_FLOW)
         }
     }
 
@@ -134,7 +133,7 @@ class DrawerFlowFragment : BaseFragment(), MvpView {
         drawerFragment?.let { drawerFragment ->
             currentFragment?.let {
                 when (it) {
-                    is MainFragment -> drawerFragment.onScreenChanged(NavigationDrawerView.MenuItem.ACTIVITY)
+                    is MainFlowFragment -> drawerFragment.onScreenChanged(NavigationDrawerView.MenuItem.ACTIVITY)
                     is ProjectsContainerFragment -> drawerFragment.onScreenChanged(NavigationDrawerView.MenuItem.PROJECTS)
                     is AboutFragment -> drawerFragment.onScreenChanged(NavigationDrawerView.MenuItem.ABOUT)
                 }

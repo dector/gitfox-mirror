@@ -36,7 +36,7 @@ class ProjectFlowFragment : FlowFragment(), MvpView {
         initScope()
         super.onCreate(savedInstanceState)
         if (childFragmentManager.fragments.isEmpty()) {
-            navigator.setLaunchScreen(Screens.PROJECT_SCREEN, null)
+            navigator.setLaunchScreen(Screens.PROJECT_MAIN_FLOW, null)
         }
     }
 

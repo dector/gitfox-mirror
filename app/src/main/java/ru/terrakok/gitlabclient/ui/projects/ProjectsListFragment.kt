@@ -29,15 +29,6 @@ import toothpick.config.Module
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 29.03.17
  */
 class ProjectsListFragment : BaseFragment(), ProjectsListView {
-    companion object {
-        private val ARG_MODE = "plf_mode"
-
-        fun newInstance(mode: Int) = ProjectsListFragment().apply {
-            arguments = Bundle().apply {
-                putInt(ARG_MODE, mode)
-            }
-        }
-    }
 
     private val adapter = ProjectsAdapter()
     private var zeroViewHolder: ZeroViewHolder? = null
@@ -143,6 +134,16 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
             super.onBindViewHolder(holder, position, payloads)
 
             if (position == items.size - 10) presenter.loadNextProjectsPage()
+        }
+    }
+
+    companion object {
+        private const val ARG_MODE = "plf_mode"
+
+        fun create(mode: Int) = ProjectsListFragment().apply {
+            arguments = Bundle().apply {
+                putInt(ARG_MODE, mode)
+            }
         }
     }
 }

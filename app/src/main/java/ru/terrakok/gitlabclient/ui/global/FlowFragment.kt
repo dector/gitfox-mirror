@@ -39,7 +39,7 @@ abstract class FlowFragment : BaseFragment() {
                 nextFragment: Fragment?,
                 fragmentTransaction: FragmentTransaction
             ) {
-                //fix incorrect order lifecycle callback of MainFragment
+                //fix incorrect order lifecycle callback of MainFlowFragment
                 fragmentTransaction.setReorderingAllowed(true)
             }
         }
