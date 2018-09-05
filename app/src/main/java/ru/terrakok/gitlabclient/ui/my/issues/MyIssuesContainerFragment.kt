@@ -23,7 +23,7 @@ class MyIssuesContainerFragment : BaseFragment() {
     private var showOnlyOpened = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Toothpick.inject(this, Toothpick.openScope(DI.MAIN_ACTIVITY_SCOPE))
+        Toothpick.inject(this, Toothpick.openScope(DI.DRAWER_FLOW_SCOPE))
         super.onCreate(savedInstanceState)
     }
 

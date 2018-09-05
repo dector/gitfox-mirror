@@ -65,4 +65,8 @@ class ProjectFragment : BaseFragment() {
     private fun findFragments(): HashMap<String, BaseFragment> = hashMapOf(
         tabKeys[0] to childFragmentManager.findFragmentByTag(tabKeys[0]) as BaseFragment
     )
+
+    override fun onBackPressed() {
+        (childFragmentManager.findFragmentById(R.id.container) as? BaseFragment)?.onBackPressed()
+    }
 }

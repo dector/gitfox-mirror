@@ -23,7 +23,7 @@ class MyTodosContainerFragment : BaseFragment() {
     override val layoutRes = R.layout.fragment_my_todos_container
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Toothpick.inject(this, Toothpick.openScope(DI.MAIN_ACTIVITY_SCOPE))
+        Toothpick.inject(this, Toothpick.openScope(DI.DRAWER_FLOW_SCOPE))
         super.onCreate(savedInstanceState)
     }
 

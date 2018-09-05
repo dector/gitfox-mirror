@@ -49,7 +49,7 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
     @ProvidePresenter
     fun createPresenter(): ProjectsListPresenter {
         val scopeName = "projects list scope"
-        val scope = Toothpick.openScopes(DI.MAIN_ACTIVITY_SCOPE, scopeName)
+        val scope = Toothpick.openScopes(DI.DRAWER_FLOW_SCOPE, scopeName)
         scope.installModules(object : Module() {
             init {
                 bind(PrimitiveWrapper::class.java)

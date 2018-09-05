@@ -3,8 +3,8 @@ package ru.terrakok.gitlabclient.ui.mergerequest
 import android.os.Bundle
 import android.support.v4.app.FragmentPagerAdapter
 import kotlinx.android.synthetic.main.fragment_mr.*
-import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import toothpick.Toothpick
@@ -18,12 +18,12 @@ class MergeRequestFragment : BaseFragment(), MergeRequestInfoFragment.ToolbarCon
     override val layoutRes = R.layout.fragment_mr
 
     @Inject
-    lateinit var router: Router
+    lateinit var router: FlowRouter
 
     private val adapter by lazy { MergeRequestPagesAdapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Toothpick.inject(this, Toothpick.openScope(DI.MERGE_REQUEST_SCOPE))
+        Toothpick.inject(this, Toothpick.openScope(DI.MERGE_REQUEST_FLOW_SCOPE))
         super.onCreate(savedInstanceState)
     }
 

@@ -1,26 +1,22 @@
 package ru.terrakok.gitlabclient.ui.main
 
 import android.os.Bundle
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter
 import kotlinx.android.synthetic.main.fragment_main.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.extension.color
-import ru.terrakok.gitlabclient.presentation.main.MainPresenter
-import ru.terrakok.gitlabclient.presentation.main.MainView
-import ru.terrakok.gitlabclient.toothpick.DI
+import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.my.activity.MyEventsFragment
 import ru.terrakok.gitlabclient.ui.my.issues.MyIssuesContainerFragment
 import ru.terrakok.gitlabclient.ui.my.mergerequests.MyMergeRequestsContainerFragment
 import ru.terrakok.gitlabclient.ui.my.todos.MyTodosContainerFragment
-import toothpick.Toothpick
+import javax.inject.Inject
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 02.04.17
  */
-class MainFragment : BaseFragment(), MainView {
+class MainFragment : BaseFragment() {
     override val layoutRes = R.layout.fragment_main
 
     private lateinit var tabs: HashMap<String, BaseFragment>
@@ -31,15 +27,8 @@ class MainFragment : BaseFragment(), MainView {
         tabIdToFragmentTag(R.id.tab_todo)
     )
 
-    @InjectPresenter
-    lateinit var presenter: MainPresenter
-
-    @ProvidePresenter
-    fun providePresenter(): MainPresenter {
-        return Toothpick
-            .openScope(DI.APP_SCOPE)
-            .getInstance(MainPresenter::class.java)
-    }
+    @Inject
+    lateinit var router: FlowRouter
 
     private fun tabIdToFragmentTag(id: Int) = "tab_$id"
 
@@ -97,5 +86,7 @@ class MainFragment : BaseFragment(), MainView {
         tabKeys[3] to childFragmentManager.findFragmentByTag(tabKeys[3]) as BaseFragment
     )
 
-    override fun onBackPressed() = presenter.onBackPressed()
+    override fun onBackPressed() {
+        router.exit()
+    }
 }

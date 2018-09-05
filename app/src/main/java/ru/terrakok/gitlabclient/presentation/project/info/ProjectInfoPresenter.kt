@@ -1,9 +1,9 @@
-package ru.terrakok.gitlabclient.presentation.project
+package ru.terrakok.gitlabclient.presentation.project.info
 
 import com.arellomobile.mvp.InjectViewState
 import io.reactivex.Single
-import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.model.interactor.project.ProjectInteractor
+import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
@@ -17,7 +17,7 @@ import javax.inject.Inject
 @InjectViewState
 class ProjectInfoPresenter @Inject constructor(
     @ProjectId private val projectIdWrapper: PrimitiveWrapper<Long>,
-    private val router: Router,
+    private val router: FlowRouter,
     private val projectInteractor: ProjectInteractor,
     private val mdConverter: MarkDownConverter,
     private val errorHandler: ErrorHandler

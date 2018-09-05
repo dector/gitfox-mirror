@@ -50,7 +50,7 @@ class MyTodosFragment : BaseFragment(), MyTodoListView {
     @ProvidePresenter
     fun providePresenter(): MyTodosPresenter {
         val scopeName = "MyTodoListScope_${hashCode()}"
-        val scope = Toothpick.openScopes(DI.MAIN_ACTIVITY_SCOPE, scopeName)
+        val scope = Toothpick.openScopes(DI.DRAWER_FLOW_SCOPE, scopeName)
         scope.installModules(object : Module() {
             init {
                 bind(PrimitiveWrapper::class.java)

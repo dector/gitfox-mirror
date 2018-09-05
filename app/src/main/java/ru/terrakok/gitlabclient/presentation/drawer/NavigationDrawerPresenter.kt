@@ -57,7 +57,7 @@ class NavigationDrawerPresenter @Inject constructor(
     fun onLogoutClick() {
         menuController.close()
         authInteractor.logout()
-        router.startFlow(Screens.AUTH_FLOW)
+        router.newRootFlow(Screens.AUTH_FLOW)
     }
 
     fun onUserClick(id: Long) = router.startFlow(Screens.USER_FLOW, id)

@@ -39,7 +39,7 @@ class MyEventsFragment : BaseFragment(), MyEventsView {
     @ProvidePresenter
     fun providePresenter(): MyEventsPresenter =
         Toothpick
-            .openScope(DI.MAIN_ACTIVITY_SCOPE)
+            .openScope(DI.DRAWER_FLOW_SCOPE)
             .getInstance(MyEventsPresenter::class.java)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

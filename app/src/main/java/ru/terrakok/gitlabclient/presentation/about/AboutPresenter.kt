@@ -38,7 +38,7 @@ class AboutPresenter @Inject constructor(
             .connect()
     }
 
-    fun onShowLibrariesClicked() = router.navigateTo(Screens.APP_LIBRARIES_SCREEN)
+    fun onShowLibrariesClicked() = router.startFlow(Screens.APP_LIBRARIES_FLOW)
 
     fun onDeveloperClicked(id: Long) = router.startFlow(Screens.USER_FLOW, id)
 

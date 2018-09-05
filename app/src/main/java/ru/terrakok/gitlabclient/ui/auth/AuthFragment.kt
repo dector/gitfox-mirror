@@ -34,7 +34,7 @@ class AuthFragment : BaseFragment(), AuthView, CustomServerAuthFragment.OnClickL
     @ProvidePresenter
     fun providePresenter(): AuthPresenter {
         return Toothpick
-            .openScope(DI.SERVER_SCOPE)
+            .openScope(DI.AUTH_FLOW_SCOPE)
             .getInstance(AuthPresenter::class.java)
     }
 

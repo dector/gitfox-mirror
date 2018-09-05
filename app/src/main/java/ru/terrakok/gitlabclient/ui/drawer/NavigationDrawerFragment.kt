@@ -1,6 +1,5 @@
 package ru.terrakok.gitlabclient.ui.drawer
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -16,7 +15,6 @@ import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuIte
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.ConfirmDialog
-import ru.terrakok.gitlabclient.ui.launch.MainActivity
 import toothpick.Toothpick
 
 /**
@@ -24,8 +22,6 @@ import toothpick.Toothpick
  */
 class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView, ConfirmDialog.OnClickListener {
     override val layoutRes = R.layout.fragment_nav_drawer
-    private var mainActivity: MainActivity? = null
-
     private var userId: Long? = null
 
     private val itemClickListener = { view: View ->
@@ -38,14 +34,8 @@ class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView, ConfirmDi
     @ProvidePresenter
     fun providePresenter(): NavigationDrawerPresenter {
         return Toothpick
-            .openScope(DI.MAIN_ACTIVITY_SCOPE)
+            .openScope(DI.DRAWER_FLOW_SCOPE)
             .getInstance(NavigationDrawerPresenter::class.java)
-    }
-
-
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-        mainActivity = activity as MainActivity
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -105,6 +95,6 @@ class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView, ConfirmDi
     }
 
     private companion object {
-        private val CONFIRM_LOGOUT_TAG = "confirm_logout_tag"
+        private const val CONFIRM_LOGOUT_TAG = "confirm_logout_tag"
     }
 }

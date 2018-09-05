@@ -28,7 +28,7 @@ class MergeRequestInfoFragment : BaseFragment(), MergeRequestInfoView {
 
     @ProvidePresenter
     fun providePresenter() =
-        Toothpick.openScope(DI.MERGE_REQUEST_SCOPE)
+        Toothpick.openScope(DI.MERGE_REQUEST_FLOW_SCOPE)
             .getInstance(MergeRequestInfoPresenter::class.java)
 
     override fun showInfo(mrInfo: MergeRequestInfoView.MergeRequestInfo) {

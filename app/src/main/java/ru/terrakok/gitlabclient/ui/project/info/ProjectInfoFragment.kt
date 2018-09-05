@@ -11,8 +11,8 @@ import ru.terrakok.gitlabclient.entity.Visibility
 import ru.terrakok.gitlabclient.extension.loadRoundedImage
 import ru.terrakok.gitlabclient.extension.shareText
 import ru.terrakok.gitlabclient.extension.visible
-import ru.terrakok.gitlabclient.presentation.project.ProjectInfoPresenter
-import ru.terrakok.gitlabclient.presentation.project.ProjectInfoView
+import ru.terrakok.gitlabclient.presentation.project.info.ProjectInfoPresenter
+import ru.terrakok.gitlabclient.presentation.project.info.ProjectInfoView
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import toothpick.Toothpick
@@ -32,7 +32,7 @@ class ProjectInfoFragment : BaseFragment(), ProjectInfoView {
     @ProvidePresenter
     fun providePresenter(): ProjectInfoPresenter =
         Toothpick
-            .openScopes(DI.PROJECT_SCOPE)
+            .openScopes(DI.PROJECT_FLOW_SCOPE)
             .getInstance(ProjectInfoPresenter::class.java)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

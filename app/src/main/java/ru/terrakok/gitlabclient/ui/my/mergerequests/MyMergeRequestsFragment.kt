@@ -53,7 +53,7 @@ class MyMergeRequestsFragment : BaseFragment(), MyMergeRequestListView {
     @ProvidePresenter
     fun providePresenter(): MyMergeRequestsPresenter {
         val scopeName = "MyMergeRequestsScope_${hashCode()}"
-        val scope = Toothpick.openScopes(DI.MAIN_ACTIVITY_SCOPE, scopeName)
+        val scope = Toothpick.openScopes(DI.DRAWER_FLOW_SCOPE, scopeName)
         scope.installModules(object : Module() {
             init {
                 bind(MyMergeRequestsPresenter.Filter::class.java)

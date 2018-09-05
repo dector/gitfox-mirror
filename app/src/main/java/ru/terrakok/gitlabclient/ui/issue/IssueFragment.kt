@@ -3,8 +3,8 @@ package ru.terrakok.gitlabclient.ui.issue
 import android.os.Bundle
 import android.support.v4.app.FragmentPagerAdapter
 import kotlinx.android.synthetic.main.fragment_mr.*
-import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import toothpick.Toothpick
@@ -18,12 +18,12 @@ class IssueFragment : BaseFragment(), IssueInfoFragment.ToolbarConfigurator {
     override val layoutRes = R.layout.fragment_issue
 
     @Inject
-    lateinit var router: Router
+    lateinit var router: FlowRouter
 
     private val adapter by lazy { IssuePagesAdapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Toothpick.inject(this, Toothpick.openScope(DI.ISSUE_SCOPE))
+        Toothpick.inject(this, Toothpick.openScope(DI.ISSUE_FLOW_SCOPE))
         super.onCreate(savedInstanceState)
     }
 
