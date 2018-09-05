@@ -2,8 +2,10 @@ package ru.terrakok.gitlabclient.extension
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.support.annotation.LayoutRes
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
@@ -147,5 +149,14 @@ fun TargetHeader.openInfo(router: FlowRouter) {
                 router.startFlow(Screens.PROJECT_FLOW, targetInternal.projectId)
             }
         }
+    }
+}
+
+fun Fragment.showSnackMessage(message: String) {
+    view?.let {
+        val snackbar = Snackbar.make(it, message, Snackbar.LENGTH_LONG)
+        val messageTextView = snackbar.view.findViewById<TextView>(android.support.design.R.id.snackbar_text)
+        messageTextView.setTextColor(Color.WHITE)
+        snackbar.show()
     }
 }

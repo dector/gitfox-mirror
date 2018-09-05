@@ -29,6 +29,9 @@ class MyIssuesContainerFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        savedInstanceState?.let { state ->
+            showOnlyOpened = state.getBoolean(STATE_ONLY_OPENED)
+        }
 
         with(toolbar) {
             setNavigationOnClickListener { menuController.open() }
@@ -49,11 +52,6 @@ class MyIssuesContainerFragment : BaseFragment() {
         }
 
         viewPager.adapter = adapter
-    }
-
-    override fun restoreState(state: Bundle) {
-        super.restoreState(state)
-        showOnlyOpened = state.getBoolean(STATE_ONLY_OPENED)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

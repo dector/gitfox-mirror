@@ -6,10 +6,7 @@ import kotlinx.android.synthetic.main.fragment_mr_info.*
 import ru.noties.markwon.Markwon
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
-import ru.terrakok.gitlabclient.extension.humanTime
-import ru.terrakok.gitlabclient.extension.loadRoundedImage
-import ru.terrakok.gitlabclient.extension.tint
-import ru.terrakok.gitlabclient.extension.visible
+import ru.terrakok.gitlabclient.extension.*
 import ru.terrakok.gitlabclient.presentation.mergerequest.info.MergeRequestInfoPresenter
 import ru.terrakok.gitlabclient.presentation.mergerequest.info.MergeRequestInfoView
 import ru.terrakok.gitlabclient.toothpick.DI

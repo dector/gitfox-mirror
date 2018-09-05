@@ -9,6 +9,7 @@ import kotlinx.android.synthetic.main.layout_base_list.*
 import kotlinx.android.synthetic.main.layout_zero.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
+import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.my.events.MyEventsPresenter
 import ru.terrakok.gitlabclient.presentation.my.events.MyEventsView

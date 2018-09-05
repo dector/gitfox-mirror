@@ -9,6 +9,7 @@ import ru.terrakok.gitlabclient.entity.issue.IssueState
 import ru.terrakok.gitlabclient.extension.color
 import ru.terrakok.gitlabclient.extension.humanTime
 import ru.terrakok.gitlabclient.extension.loadRoundedImage
+import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.presentation.issue.info.IssueInfoPresenter
 import ru.terrakok.gitlabclient.presentation.issue.info.IssueInfoView
 import ru.terrakok.gitlabclient.toothpick.DI

@@ -10,6 +10,7 @@ import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.Visibility
 import ru.terrakok.gitlabclient.extension.loadRoundedImage
 import ru.terrakok.gitlabclient.extension.shareText
+import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.project.info.ProjectInfoPresenter
 import ru.terrakok.gitlabclient.presentation.project.info.ProjectInfoView
