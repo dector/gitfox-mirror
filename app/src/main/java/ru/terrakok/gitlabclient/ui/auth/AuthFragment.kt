@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.fragment_auth.*
 import kotlinx.android.synthetic.main.layout_zero.*
 import ru.terrakok.gitlabclient.BuildConfig
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.auth.AuthPresenter
 import ru.terrakok.gitlabclient.presentation.auth.AuthView
@@ -34,7 +35,7 @@ class AuthFragment : BaseFragment(), AuthView, CustomServerAuthFragment.OnClickL
     @ProvidePresenter
     fun providePresenter(): AuthPresenter {
         return Toothpick
-            .openScope(DI.SERVER_SCOPE)
+            .openScope(DI.AUTH_FLOW_SCOPE)
             .getInstance(AuthPresenter::class.java)
     }
 

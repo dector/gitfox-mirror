@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.support.v4.app.FragmentPagerAdapter
 import kotlinx.android.synthetic.main.fragment_my_merge_requests_container.*
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.Screens
+import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
@@ -11,6 +13,10 @@ import toothpick.Toothpick
 import javax.inject.Inject
 
 class MyMergeRequestsContainerFragment : BaseFragment() {
+
+    @Inject
+    lateinit var router: FlowRouter
+
     @Inject
     lateinit var menuController: GlobalMenuController
 
@@ -20,12 +26,15 @@ class MyMergeRequestsContainerFragment : BaseFragment() {
     private var showOnlyOpened = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Toothpick.inject(this, Toothpick.openScope(DI.MAIN_ACTIVITY_SCOPE))
+        Toothpick.inject(this, Toothpick.openScope(DI.DRAWER_FLOW_SCOPE))
         super.onCreate(savedInstanceState)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        savedInstanceState?.let { state ->
+            showOnlyOpened = state.getBoolean(STATE_ONLY_OPENED)
+        }
 
         with(toolbar) {
             setNavigationOnClickListener { menuController.open() }
@@ -49,20 +58,19 @@ class MyMergeRequestsContainerFragment : BaseFragment() {
         viewPager.adapter = adapter
     }
 
-    override fun restoreState(state: Bundle) {
-        super.restoreState(state)
-        showOnlyOpened = state.getBoolean(STATE_ONLY_OPENED)
-    }
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putBoolean(STATE_ONLY_OPENED, showOnlyOpened)
     }
 
+    override fun onBackPressed() {
+        router.exit()
+    }
+
     private inner class MyMergeRequestsPagesAdapter : FragmentPagerAdapter(childFragmentManager) {
         override fun getItem(position: Int) = when (position) {
-            0 -> MyMergeRequestsFragment.newInstance(true, showOnlyOpened)
-            1 -> MyMergeRequestsFragment.newInstance(false, showOnlyOpened)
+            0 -> Screens.createFragment(Screens.MY_MR_SCREEN, Pair(true, showOnlyOpened))
+            1 -> Screens.createFragment(Screens.MY_MR_SCREEN, Pair(false, showOnlyOpened))
             else -> null
         }
 

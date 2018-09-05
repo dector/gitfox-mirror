@@ -1,8 +1,8 @@
-package ru.terrakok.gitlabclient.presentation.user
+package ru.terrakok.gitlabclient.presentation.user.info
 
 import com.arellomobile.mvp.InjectViewState
-import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.model.interactor.user.UserInteractor
+import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
@@ -15,7 +15,7 @@ import javax.inject.Inject
 @InjectViewState
 class UserInfoPresenter @Inject constructor(
     private val userInteractor: UserInteractor,
-    private val router: Router,
+    private val router: FlowRouter,
     private val errorHandler: ErrorHandler,
     @UserId userIdWrapper: PrimitiveWrapper<Long>
 ) : BasePresenter<UserInfoView>() {

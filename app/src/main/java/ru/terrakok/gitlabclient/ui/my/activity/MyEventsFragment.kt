@@ -9,6 +9,7 @@ import kotlinx.android.synthetic.main.layout_base_list.*
 import kotlinx.android.synthetic.main.layout_zero.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
+import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.my.events.MyEventsPresenter
 import ru.terrakok.gitlabclient.presentation.my.events.MyEventsView
@@ -39,7 +40,7 @@ class MyEventsFragment : BaseFragment(), MyEventsView {
     @ProvidePresenter
     fun providePresenter(): MyEventsPresenter =
         Toothpick
-            .openScope(DI.MAIN_ACTIVITY_SCOPE)
+            .openScope(DI.DRAWER_FLOW_SCOPE)
             .getInstance(MyEventsPresenter::class.java)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -89,5 +90,9 @@ class MyEventsFragment : BaseFragment(), MyEventsView {
 
     override fun showMessage(message: String) {
         showSnackMessage(message)
+    }
+
+    override fun onBackPressed() {
+        presenter.onBackPressed()
     }
 }

@@ -47,8 +47,8 @@ class NavigationDrawerPresenter @Inject constructor(
         menuController.close()
         if (item != currentSelectedItem) {
             when (item) {
-                ACTIVITY -> router.newRootScreen(Screens.MAIN_SCREEN)
-                PROJECTS -> router.newRootScreen(Screens.PROJECTS_SCREEN)
+                ACTIVITY -> router.newRootScreen(Screens.MAIN_FLOW)
+                PROJECTS -> router.newRootScreen(Screens.PROJECTS_CONTAINER_SCREEN)
                 ABOUT -> router.newRootScreen(Screens.ABOUT_SCREEN)
             }
         }
@@ -57,8 +57,11 @@ class NavigationDrawerPresenter @Inject constructor(
     fun onLogoutClick() {
         menuController.close()
         authInteractor.logout()
-        router.startFlow(Screens.AUTH_FLOW)
+        router.newRootFlow(Screens.AUTH_FLOW)
     }
 
-    fun onUserClick(id: Long) = router.startFlow(Screens.USER_FLOW, id)
+    fun onUserClick(id: Long) {
+        menuController.close()
+        router.startFlow(Screens.USER_FLOW, id)
+    }
 }

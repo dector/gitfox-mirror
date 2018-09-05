@@ -33,7 +33,7 @@ class AuthPresenter @Inject constructor(
             .doOnSubscribe { viewState.showProgress(true) }
             .doAfterTerminate { viewState.showProgress(false) }
             .subscribe(
-                { router.startFlow(Screens.MAIN_FLOW) },
+                { router.newRootFlow(Screens.DRAWER_FLOW) },
                 { errorHandler.proceed(it, { viewState.showMessage(it) }) }
             ).connect()
     }
@@ -55,7 +55,7 @@ class AuthPresenter @Inject constructor(
     fun loginOnCustomServer(url: String, token: String) {
         authInteractor.login(url, token)
             .subscribe(
-                { router.startFlow(Screens.MAIN_FLOW) },
+                { router.newRootFlow(Screens.DRAWER_FLOW) },
                 { errorHandler.proceed(it, { viewState.showMessage(it) }) }
             ).connect()
     }

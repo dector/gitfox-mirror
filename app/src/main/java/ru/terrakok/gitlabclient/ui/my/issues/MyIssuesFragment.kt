@@ -8,6 +8,7 @@ import kotlinx.android.synthetic.main.layout_base_list.*
 import kotlinx.android.synthetic.main.layout_zero.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
+import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.my.issues.MyIssuesPresenter
 import ru.terrakok.gitlabclient.presentation.my.issues.MyIssuesView
@@ -22,19 +23,6 @@ import toothpick.config.Module
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 13.06.17
  */
 class MyIssuesFragment : BaseFragment(), MyIssuesView {
-
-    companion object {
-        private val ARG_MODE_CREATED_BY_ME = "arg_mode_created_by_me"
-        private val ARG_MODE_ONLY_OPENED = "arg_mode_only opened"
-
-        fun newInstance(createdByMe: Boolean, onlyOpened: Boolean) =
-            MyIssuesFragment().apply {
-                arguments = Bundle().apply {
-                    putBoolean(ARG_MODE_CREATED_BY_ME, createdByMe)
-                    putBoolean(ARG_MODE_ONLY_OPENED, onlyOpened)
-                }
-            }
-    }
 
     override val layoutRes = R.layout.fragment_my_issues
 
@@ -53,7 +41,7 @@ class MyIssuesFragment : BaseFragment(), MyIssuesView {
     @ProvidePresenter
     fun providePresenter(): MyIssuesPresenter {
         val scopeName = "MyIssuesScope_${hashCode()}"
-        val scope = Toothpick.openScopes(DI.MAIN_ACTIVITY_SCOPE, scopeName)
+        val scope = Toothpick.openScopes(DI.DRAWER_FLOW_SCOPE, scopeName)
         scope.installModules(object : Module() {
             init {
                 bind(MyIssuesPresenter.Filter::class.java)
@@ -126,5 +114,18 @@ class MyIssuesFragment : BaseFragment(), MyIssuesView {
 
     override fun showMessage(message: String) {
         showSnackMessage(message)
+    }
+
+    companion object {
+        private const val ARG_MODE_CREATED_BY_ME = "arg_mode_created_by_me"
+        private const val ARG_MODE_ONLY_OPENED = "arg_mode_only opened"
+
+        fun create(createdByMe: Boolean, onlyOpened: Boolean) =
+            MyIssuesFragment().apply {
+                arguments = Bundle().apply {
+                    putBoolean(ARG_MODE_CREATED_BY_ME, createdByMe)
+                    putBoolean(ARG_MODE_ONLY_OPENED, onlyOpened)
+                }
+            }
     }
 }

@@ -79,6 +79,7 @@ class MyEventsPresenter @Inject constructor(
     fun onUserClick(userId: Long) = router.startFlow(Screens.USER_FLOW, userId)
     fun refreshEvents() = paginator.refresh()
     fun loadNextEventsPage() = paginator.loadNewPage()
+    fun onBackPressed() = router.exit()
 
     override fun onDestroy() {
         super.onDestroy()

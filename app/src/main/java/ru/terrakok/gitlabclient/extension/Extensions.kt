@@ -2,8 +2,10 @@ package ru.terrakok.gitlabclient.extension
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.support.annotation.LayoutRes
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
@@ -14,6 +16,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import ru.terrakok.cicerone.Navigator
+import ru.terrakok.cicerone.commands.BackTo
+import ru.terrakok.cicerone.commands.Replace
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.app.target.AppTarget
@@ -24,6 +29,15 @@ import timber.log.Timber
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 03.03.17
  */
+fun Navigator.setLaunchScreen(screenKey: String, data: Any? = null) {
+    applyCommands(
+        arrayOf(
+            BackTo(null),
+            Replace(screenKey, data)
+        )
+    )
+}
+
 fun Context.color(colorRes: Int) = ContextCompat.getColor(this, colorRes)
 
 fun ImageView.tint(colorRes: Int) = this.setColorFilter(this.context.color(colorRes))
@@ -135,5 +149,14 @@ fun TargetHeader.openInfo(router: FlowRouter) {
                 router.startFlow(Screens.PROJECT_FLOW, targetInternal.projectId)
             }
         }
+    }
+}
+
+fun Fragment.showSnackMessage(message: String) {
+    view?.let {
+        val snackbar = Snackbar.make(it, message, Snackbar.LENGTH_LONG)
+        val messageTextView = snackbar.view.findViewById<TextView>(android.support.design.R.id.snackbar_text)
+        messageTextView.setTextColor(Color.WHITE)
+        snackbar.show()
     }
 }

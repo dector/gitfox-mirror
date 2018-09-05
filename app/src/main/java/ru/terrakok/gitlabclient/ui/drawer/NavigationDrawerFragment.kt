@@ -1,6 +1,5 @@
 package ru.terrakok.gitlabclient.ui.drawer
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -15,17 +14,14 @@ import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuIte
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem.*
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import ru.terrakok.gitlabclient.ui.global.ConfirmDialog
-import ru.terrakok.gitlabclient.ui.launch.MainActivity
+import ru.terrakok.gitlabclient.ui.global.MessageDialogFragment
 import toothpick.Toothpick
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 04.04.17
  */
-class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView, ConfirmDialog.OnClickListener {
+class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView, MessageDialogFragment.OnClickListener {
     override val layoutRes = R.layout.fragment_nav_drawer
-    private var mainActivity: MainActivity? = null
-
     private var userId: Long? = null
 
     private val itemClickListener = { view: View ->
@@ -38,14 +34,8 @@ class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView, ConfirmDi
     @ProvidePresenter
     fun providePresenter(): NavigationDrawerPresenter {
         return Toothpick
-            .openScope(DI.MAIN_ACTIVITY_SCOPE)
+            .openScope(DI.DRAWER_FLOW_SCOPE)
             .getInstance(NavigationDrawerPresenter::class.java)
-    }
-
-
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-        mainActivity = activity as MainActivity
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -54,13 +44,12 @@ class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView, ConfirmDi
         avatarImageView.setOnClickListener { userId?.let { presenter.onUserClick(it) } }
 
         logoutIV.setOnClickListener {
-            ConfirmDialog
-                .newInstants(
-                    msg = getString(R.string.logout_question),
-                    positive = getString(R.string.exit),
-                    tag = CONFIRM_LOGOUT_TAG
-                )
-                .show(childFragmentManager, CONFIRM_LOGOUT_TAG)
+            MessageDialogFragment.create(
+                message = getString(R.string.logout_question),
+                positive = getString(R.string.exit),
+                negative = getString(R.string.cancel),
+                tag = CONFIRM_LOGOUT_TAG
+            ).show(childFragmentManager, CONFIRM_LOGOUT_TAG)
         }
 
         activityMI.tag = ACTIVITY
@@ -98,13 +87,13 @@ class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView, ConfirmDi
         presenter.onScreenChanged(item)
     }
 
-    override fun dialogConfirm(tag: String) {
+    override fun dialogPositiveClicked(tag: String) {
         when (tag) {
             CONFIRM_LOGOUT_TAG -> presenter.onLogoutClick()
         }
     }
 
     private companion object {
-        private val CONFIRM_LOGOUT_TAG = "confirm_logout_tag"
+        private const val CONFIRM_LOGOUT_TAG = "confirm_logout_tag"
     }
 }
