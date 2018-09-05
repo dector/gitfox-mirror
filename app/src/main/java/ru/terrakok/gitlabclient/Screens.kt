@@ -2,11 +2,13 @@ package ru.terrakok.gitlabclient
 
 import android.content.Intent
 import android.net.Uri
+import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.about.AboutFragment
 import ru.terrakok.gitlabclient.ui.auth.AuthFlowFragment
 import ru.terrakok.gitlabclient.ui.auth.AuthFragment
 import ru.terrakok.gitlabclient.ui.drawer.DrawerFlowFragment
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.ui.global.StubFragment
 import ru.terrakok.gitlabclient.ui.issue.IssueFlowFragment
 import ru.terrakok.gitlabclient.ui.issue.IssueFragment
 import ru.terrakok.gitlabclient.ui.issue.IssueInfoFragment
@@ -134,6 +136,8 @@ object Screens {
             Screens.PROJECT_FLOW -> ProjectFlowFragment.create(data as Long)
             Screens.PROJECT_MAIN_FLOW -> ProjectMainFlowFragment()
             Screens.PROJECT_INFO_SCREEN -> ProjectInfoFragment()
+            Screens.PROJECT_ISSUES_SCREEN -> StubFragment.create(DI.PROJECT_FLOW_SCOPE)
+            Screens.PROJECT_MR_SCREEN -> StubFragment.create(DI.PROJECT_FLOW_SCOPE)
 
             Screens.MR_FLOW -> {
                 val (projectId, mrId) = data as Pair<Long, Long>
