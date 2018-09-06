@@ -22,7 +22,7 @@ import ru.terrakok.gitlabclient.model.repository.todo.TodoRepository
 import ru.terrakok.gitlabclient.model.repository.user.UserRepository
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
-import ru.terrakok.gitlabclient.presentation.global.MarkDownUrlResolver
+import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.toothpick.provider.ApiProvider
 import ru.terrakok.gitlabclient.toothpick.provider.GsonProvider
 import ru.terrakok.gitlabclient.toothpick.provider.MarkDownConverterProvider
