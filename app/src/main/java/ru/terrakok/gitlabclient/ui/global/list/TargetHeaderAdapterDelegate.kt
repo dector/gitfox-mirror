@@ -19,21 +19,23 @@ import ru.terrakok.gitlabclient.extension.*
  * @author Konstantin Tskhovrebov (aka terrakok) on 18.06.17.
  */
 class TargetHeaderAdapterDelegate(
-        private val avatarClickListener: (Long) -> Unit,
-        private val clickListener: (TargetHeader) -> Unit
+    private val avatarClickListener: (Long) -> Unit,
+    private val clickListener: (TargetHeader) -> Unit
 ) : AdapterDelegate<MutableList<Any>>() {
 
     override fun isForViewType(items: MutableList<Any>, position: Int) =
-            items[position] is TargetHeader
+        items[position] is TargetHeader
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder =
-            ViewHolder(parent.inflate(R.layout.item_target_header))
+        ViewHolder(parent.inflate(R.layout.item_target_header))
 
-    override fun onBindViewHolder(items: MutableList<Any>,
-                                  position: Int,
-                                  viewHolder: RecyclerView.ViewHolder,
-                                  payloads: MutableList<Any>) =
-            (viewHolder as ViewHolder).bind(items[position] as TargetHeader)
+    override fun onBindViewHolder(
+        items: MutableList<Any>,
+        position: Int,
+        viewHolder: RecyclerView.ViewHolder,
+        payloads: MutableList<Any>
+    ) =
+        (viewHolder as ViewHolder).bind(items[position] as TargetHeader)
 
     private inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private lateinit var item: TargetHeader

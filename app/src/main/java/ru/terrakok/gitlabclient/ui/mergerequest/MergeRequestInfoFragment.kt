@@ -6,10 +6,7 @@ import kotlinx.android.synthetic.main.fragment_mr_info.*
 import ru.noties.markwon.Markwon
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
-import ru.terrakok.gitlabclient.extension.humanTime
-import ru.terrakok.gitlabclient.extension.loadRoundedImage
-import ru.terrakok.gitlabclient.extension.tint
-import ru.terrakok.gitlabclient.extension.visible
+import ru.terrakok.gitlabclient.extension.*
 import ru.terrakok.gitlabclient.presentation.mergerequest.info.MergeRequestInfoPresenter
 import ru.terrakok.gitlabclient.presentation.mergerequest.info.MergeRequestInfoView
 import ru.terrakok.gitlabclient.toothpick.DI
@@ -28,14 +25,14 @@ class MergeRequestInfoFragment : BaseFragment(), MergeRequestInfoView {
 
     @ProvidePresenter
     fun providePresenter() =
-            Toothpick.openScope(DI.MERGE_REQUEST_SCOPE)
-                    .getInstance(MergeRequestInfoPresenter::class.java)
+        Toothpick.openScope(DI.MERGE_REQUEST_FLOW_SCOPE)
+            .getInstance(MergeRequestInfoPresenter::class.java)
 
     override fun showInfo(mrInfo: MergeRequestInfoView.MergeRequestInfo) {
         val mergeRequest = mrInfo.mr
 
         (parentFragment as? ToolbarConfigurator)
-                ?.setTitle("!${mergeRequest.iid}", mrInfo.project.name)
+            ?.setTitle("!${mergeRequest.iid}", mrInfo.project.name)
 
         titleTextView.text = mergeRequest.title
         when (mergeRequest.state) {
@@ -51,30 +48,30 @@ class MergeRequestInfoFragment : BaseFragment(), MergeRequestInfoView {
             MergeRequestState.MERGED -> {
                 stateImageView.tint(R.color.blue)
                 subtitleTextView.text =
-                        if (mergeRequest.mergedBy != null && mergeRequest.mergedAt != null) {
-                            String.format(
-                                getString(R.string.issue_info_subtitle),
-                                getString(R.string.target_status_merged),
-                                mergeRequest.mergedBy.name,
-                                mergeRequest.mergedAt.humanTime(resources)
-                            )
-                        } else {
-                            getString(R.string.target_status_merged)
-                        }
+                    if (mergeRequest.mergedBy != null && mergeRequest.mergedAt != null) {
+                        String.format(
+                            getString(R.string.issue_info_subtitle),
+                            getString(R.string.target_status_merged),
+                            mergeRequest.mergedBy.name,
+                            mergeRequest.mergedAt.humanTime(resources)
+                        )
+                    } else {
+                        getString(R.string.target_status_merged)
+                    }
             }
             MergeRequestState.CLOSED -> {
                 stateImageView.tint(R.color.red)
                 subtitleTextView.text =
-                        if (mergeRequest.closedBy != null && mergeRequest.closedAt != null) {
-                            String.format(
-                                getString(R.string.issue_info_subtitle),
-                                getString(R.string.target_status_closed),
-                                mergeRequest.closedBy.name,
-                                mergeRequest.closedAt.humanTime(resources)
-                            )
-                        } else {
-                            getString(R.string.target_status_closed)
-                        }
+                    if (mergeRequest.closedBy != null && mergeRequest.closedAt != null) {
+                        String.format(
+                            getString(R.string.issue_info_subtitle),
+                            getString(R.string.target_status_closed),
+                            mergeRequest.closedBy.name,
+                            mergeRequest.closedAt.humanTime(resources)
+                        )
+                    } else {
+                        getString(R.string.target_status_closed)
+                    }
             }
         }
         avatarImageView.loadRoundedImage(mergeRequest.author.avatarUrl, context)

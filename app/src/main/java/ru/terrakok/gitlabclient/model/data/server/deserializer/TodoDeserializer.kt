@@ -22,36 +22,36 @@ import java.lang.reflect.Type
 class TodoDeserializer : JsonDeserializer<Todo> {
 
     override fun deserialize(
-            json: JsonElement?,
-            typeOfT: Type?,
-            context: JsonDeserializationContext?
+        json: JsonElement?,
+        typeOfT: Type?,
+        context: JsonDeserializationContext?
     ) = if (json != null && context != null) {
         val jsonObject = json.asJsonObject
         val targetType = context.deserialize<TargetType>(
-                jsonObject.get("target_type"),
-                TargetType::class.java
+            jsonObject.get("target_type"),
+            TargetType::class.java
         )
         Todo(
-                jsonObject.get("id").asLong,
-                context.deserialize<Project>(jsonObject.get("project"), Project::class.java),
-                context.deserialize<Author>(jsonObject.get("author"), Author::class.java),
-                context.deserialize<TodoAction>(
-                        jsonObject.get("action_name"),
-                        TodoAction::class.java
-                ),
-                targetType,
-                context.deserialize<Target>(
-                        jsonObject.get("target"),
-                        when (targetType) {
-                            TargetType.ISSUE -> Issue::class.java
-                            TargetType.MERGE_REQUEST -> MergeRequest::class.java
-                            else -> throw JsonParseException("See target_type in GitLab Todo API.")
-                        }
-                ),
-                jsonObject.get("target_url").asString,
-                jsonObject.get("body").asString,
-                context.deserialize<TodoState>(jsonObject.get("state"), TodoState::class.java),
-                context.deserialize<LocalDateTime>(jsonObject.get("created_at"), LocalDateTime::class.java)
+            jsonObject.get("id").asLong,
+            context.deserialize<Project>(jsonObject.get("project"), Project::class.java),
+            context.deserialize<Author>(jsonObject.get("author"), Author::class.java),
+            context.deserialize<TodoAction>(
+                jsonObject.get("action_name"),
+                TodoAction::class.java
+            ),
+            targetType,
+            context.deserialize<Target>(
+                jsonObject.get("target"),
+                when (targetType) {
+                    TargetType.ISSUE -> Issue::class.java
+                    TargetType.MERGE_REQUEST -> MergeRequest::class.java
+                    else -> throw JsonParseException("See target_type in GitLab Todo API.")
+                }
+            ),
+            jsonObject.get("target_url").asString,
+            jsonObject.get("body").asString,
+            context.deserialize<TodoState>(jsonObject.get("state"), TodoState::class.java),
+            context.deserialize<LocalDateTime>(jsonObject.get("created_at"), LocalDateTime::class.java)
         )
     } else {
         throw JsonParseException("Configure Gson in GsonProvider.")

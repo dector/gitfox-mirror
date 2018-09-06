@@ -17,16 +17,18 @@ import ru.terrakok.gitlabclient.extension.loadRoundedImage
 class ProjectAdapterDelegate(private val clickListener: (Project) -> Unit) : AdapterDelegate<MutableList<Any>>() {
 
     override fun isForViewType(items: MutableList<Any>, position: Int) =
-            items[position] is Project
+        items[position] is Project
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder =
-            ViewHolder(parent.inflate(R.layout.item_project))
+        ViewHolder(parent.inflate(R.layout.item_project))
 
-    override fun onBindViewHolder(items: MutableList<Any>,
-                                  position: Int,
-                                  viewHolder: RecyclerView.ViewHolder,
-                                  payloads: MutableList<Any>) =
-            (viewHolder as ViewHolder).bind(items[position] as Project)
+    override fun onBindViewHolder(
+        items: MutableList<Any>,
+        position: Int,
+        viewHolder: RecyclerView.ViewHolder,
+        payloads: MutableList<Any>
+    ) =
+        (viewHolder as ViewHolder).bind(items[position] as Project)
 
     private inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private lateinit var project: Project
@@ -46,11 +48,13 @@ class ProjectAdapterDelegate(private val clickListener: (Project) -> Unit) : Ada
                 starsTextView.text = project.starCount.toString()
                 forksTextView.text = project.forksCount.toString()
 
-                iconImageView.setImageResource(when (project.visibility) {
-                    Visibility.PRIVATE -> R.drawable.ic_lock_white_18dp
-                    Visibility.INTERNAL -> R.drawable.ic_security_white_24dp
-                    else -> R.drawable.ic_globe_18dp
-                })
+                iconImageView.setImageResource(
+                    when (project.visibility) {
+                        Visibility.PRIVATE -> R.drawable.ic_lock_white_18dp
+                        Visibility.INTERNAL -> R.drawable.ic_security_white_24dp
+                        else -> R.drawable.ic_globe_18dp
+                    }
+                )
                 avatarImageView.loadRoundedImage(project.avatarUrl)
             }
         }

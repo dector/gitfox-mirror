@@ -13,14 +13,14 @@ import ru.terrakok.gitlabclient.R
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 16.02.18.
  */
 class SimpleDividerDecorator(
-        private val dividerSizePx: Int,
-        dividerColor: Int
+    private val dividerSizePx: Int,
+    dividerColor: Int
 ) : RecyclerView.ItemDecoration() {
     private val paint = Paint().apply { color = dividerColor }
 
     constructor(context: Context) : this(
-            context.resources.getDimensionPixelSize(R.dimen.divider_size),
-            ContextCompat.getColor(context, R.color.divider)
+        context.resources.getDimensionPixelSize(R.dimen.divider_size),
+        ContextCompat.getColor(context, R.color.divider)
     )
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State?) {

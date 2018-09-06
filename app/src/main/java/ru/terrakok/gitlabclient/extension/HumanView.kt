@@ -41,13 +41,13 @@ fun Throwable.userMessage(resourceManager: ResourceManager) = when (this) {
 fun LocalDateTime.humanTime(resources: Resources): String {
     val delta = Duration.between(this, LocalDateTime.now()).seconds
     val timeStr =
-            when {
-                delta < 60 -> resources.getString(R.string.time_sec, delta)
-                delta < 60 * 60 -> resources.getString(R.string.time_min, delta / 60)
-                delta < 60 * 60 * 24 -> resources.getString(R.string.time_hour, delta / (60 * 60))
-                delta < 60 * 60 * 24 * 7 -> resources.getString(R.string.time_day, delta / (60 * 60 * 24))
-                else -> return this.toLocalDate().toString()
-            }
+        when {
+            delta < 60 -> resources.getString(R.string.time_sec, delta)
+            delta < 60 * 60 -> resources.getString(R.string.time_min, delta / 60)
+            delta < 60 * 60 * 24 -> resources.getString(R.string.time_hour, delta / (60 * 60))
+            delta < 60 * 60 * 24 * 7 -> resources.getString(R.string.time_day, delta / (60 * 60 * 24))
+            else -> return this.toLocalDate().toString()
+        }
 
     return resources.getString(R.string.time_ago, timeStr)
 }
@@ -120,7 +120,9 @@ fun TargetHeaderTitle.getHumanName(resources: Resources) = when (this) {
 
         when (action) {
             TodoAction.ASSIGNED -> {
-                "$author $actionName $targetName ${resources.getString(R.string.at)} $projectName ${resources.getString(R.string.to)} $assignee"
+                "$author $actionName $targetName ${resources.getString(R.string.at)} $projectName ${resources.getString(
+                    R.string.to
+                )} $assignee"
             }
             TodoAction.DIRECTLY_ADDRESSED,
             TodoAction.MENTIONED -> {

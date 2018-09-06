@@ -24,15 +24,16 @@ import toothpick.Toothpick
 class AboutFragment : BaseFragment(), AboutView {
     override val layoutRes = R.layout.fragment_about
 
-    @InjectPresenter lateinit var presenter: AboutPresenter
+    @InjectPresenter
+    lateinit var presenter: AboutPresenter
 
     private var supportUrl: String? = null
 
     @ProvidePresenter
     fun providePresenter(): AboutPresenter {
         return Toothpick
-                .openScope(DI.MAIN_ACTIVITY_SCOPE)
-                .getInstance(AboutPresenter::class.java)
+            .openScope(DI.DRAWER_FLOW_SCOPE)
+            .getInstance(AboutPresenter::class.java)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

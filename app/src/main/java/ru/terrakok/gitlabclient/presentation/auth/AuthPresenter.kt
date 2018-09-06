@@ -1,7 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.auth
 
 import com.arellomobile.mvp.InjectViewState
-import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.model.interactor.auth.AuthInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
@@ -14,9 +13,9 @@ import javax.inject.Inject
  */
 @InjectViewState
 class AuthPresenter @Inject constructor(
-        private val router: FlowRouter,
-        private val authInteractor: AuthInteractor,
-        private val errorHandler: ErrorHandler
+    private val router: FlowRouter,
+    private val authInteractor: AuthInteractor,
+    private val errorHandler: ErrorHandler
 ) : BasePresenter<AuthView>() {
 
     override fun onFirstViewAttach() {
@@ -31,12 +30,12 @@ class AuthPresenter @Inject constructor(
 
     private fun requestToken(url: String) {
         authInteractor.login(url)
-                .doOnSubscribe { viewState.showProgress(true) }
-                .doAfterTerminate { viewState.showProgress(false) }
-                .subscribe(
-                        { router.startFlow(Screens.MAIN_FLOW) },
-                        { errorHandler.proceed(it, { viewState.showMessage(it) }) }
-                ).connect()
+            .doOnSubscribe { viewState.showProgress(true) }
+            .doAfterTerminate { viewState.showProgress(false) }
+            .subscribe(
+                { router.newRootFlow(Screens.DRAWER_FLOW) },
+                { errorHandler.proceed(it, { viewState.showMessage(it) }) }
+            ).connect()
     }
 
     fun onRedirect(url: String): Boolean {
@@ -55,10 +54,10 @@ class AuthPresenter @Inject constructor(
 
     fun loginOnCustomServer(url: String, token: String) {
         authInteractor.login(url, token)
-                .subscribe(
-                        { router.startFlow(Screens.MAIN_FLOW) },
-                        { errorHandler.proceed(it, { viewState.showMessage(it) }) }
-                ).connect()
+            .subscribe(
+                { router.newRootFlow(Screens.DRAWER_FLOW) },
+                { errorHandler.proceed(it, { viewState.showMessage(it) }) }
+            ).connect()
     }
 
     fun onBackPressed() = router.exit()

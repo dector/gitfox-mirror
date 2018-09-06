@@ -6,12 +6,9 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_user_info.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.User
-import ru.terrakok.gitlabclient.extension.loadRoundedImage
-import ru.terrakok.gitlabclient.extension.shareText
-import ru.terrakok.gitlabclient.extension.showTextOrHide
-import ru.terrakok.gitlabclient.extension.tryOpenLink
-import ru.terrakok.gitlabclient.presentation.user.UserInfoPresenter
-import ru.terrakok.gitlabclient.presentation.user.UserInfoView
+import ru.terrakok.gitlabclient.extension.*
+import ru.terrakok.gitlabclient.presentation.user.info.UserInfoPresenter
+import ru.terrakok.gitlabclient.presentation.user.info.UserInfoView
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import toothpick.Toothpick
@@ -24,13 +21,14 @@ class UserInfoFragment : BaseFragment(), UserInfoView {
     override val layoutRes = R.layout.fragment_user_info
     private var user: User? = null
 
-    @InjectPresenter lateinit var presenter: UserInfoPresenter
+    @InjectPresenter
+    lateinit var presenter: UserInfoPresenter
 
     @ProvidePresenter
     fun providePresenter(): UserInfoPresenter =
-            Toothpick
-                    .openScope(DI.USER_SCOPE)
-                    .getInstance(UserInfoPresenter::class.java)
+        Toothpick
+            .openScope(DI.USER_FLOW_SCOPE)
+            .getInstance(UserInfoPresenter::class.java)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
