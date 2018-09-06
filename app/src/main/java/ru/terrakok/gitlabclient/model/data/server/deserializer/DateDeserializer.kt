@@ -16,9 +16,9 @@ class DateDeserializer : JsonDeserializer<LocalDateTime> {
     private val offset = TimeZone.getDefault().rawOffset / 1000L
 
     override fun deserialize(
-            json: JsonElement,
-            type: Type,
-            jsonDeserializationContext: JsonDeserializationContext
+        json: JsonElement,
+        type: Type,
+        jsonDeserializationContext: JsonDeserializationContext
     ): LocalDateTime {
         return ZonedDateTime.parse(json.asJsonPrimitive.asString).plusSeconds(offset).toLocalDateTime()
     }

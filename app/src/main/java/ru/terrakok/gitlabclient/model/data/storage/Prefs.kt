@@ -9,16 +9,15 @@ import javax.inject.Inject
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 28.03.17
  */
 class Prefs @Inject constructor(
-        private val context: Context,
-        @DefaultServerPath private val defaultServerPath: String
+    private val context: Context,
+    @DefaultServerPath private val defaultServerPath: String
 ) : AuthHolder {
     private val AUTH_DATA = "auth_data"
     private val KEY_TOKEN = "ad_token"
     private val KEY_SERVER_PATH = "ad_server_path"
     private val KEY_IS_OAUTH = "ad_is_oauth"
 
-    private fun getSharedPreferences(prefsName: String)
-            = context.getSharedPreferences(prefsName, Context.MODE_PRIVATE)
+    private fun getSharedPreferences(prefsName: String) = context.getSharedPreferences(prefsName, Context.MODE_PRIVATE)
 
     override var token: String?
         get() = getSharedPreferences(AUTH_DATA).getString(KEY_TOKEN, null)

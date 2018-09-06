@@ -8,6 +8,7 @@ import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.Visibility
 import ru.terrakok.gitlabclient.extension.loadRoundedImage
+import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.project.info.ProjectInfoPresenter
 import ru.terrakok.gitlabclient.presentation.project.info.ProjectInfoView
@@ -27,9 +28,9 @@ class ProjectInfoFragment : BaseFragment(), ProjectInfoView {
 
     @ProvidePresenter
     fun providePresenter(): ProjectInfoPresenter =
-            Toothpick
-                    .openScopes(DI.PROJECT_SCOPE)
-                    .getInstance(ProjectInfoPresenter::class.java)
+        Toothpick
+            .openScopes(DI.PROJECT_FLOW_SCOPE)
+            .getInstance(ProjectInfoPresenter::class.java)
 
     override fun showProject(project: Project, mdReadme: CharSequence) {
         (parentFragment as? ToolbarConfigurator)?.apply {

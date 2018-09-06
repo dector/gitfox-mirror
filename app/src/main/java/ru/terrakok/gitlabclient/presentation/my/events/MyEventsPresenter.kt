@@ -18,11 +18,11 @@ import javax.inject.Inject
  */
 @InjectViewState
 class MyEventsPresenter @Inject constructor(
-        private val eventInteractor: EventInteractor,
-        private val mdConverter: MarkDownConverter,
-        private val menuController: GlobalMenuController,
-        private val errorHandler: ErrorHandler,
-        private val router: FlowRouter
+    private val eventInteractor: EventInteractor,
+    private val mdConverter: MarkDownConverter,
+    private val menuController: GlobalMenuController,
+    private val errorHandler: ErrorHandler,
+    private val router: FlowRouter
 ) : BasePresenter<MyEventsView>() {
 
     override fun onFirstViewAttach() {
@@ -32,49 +32,49 @@ class MyEventsPresenter @Inject constructor(
     }
 
     private val paginator = Paginator(
-            {
-                eventInteractor.getEvents(it)
-                        .flattenAsObservable { it }
-                        .concatMap { item ->
-                            mdConverter.markdownToSpannable(item.body.toString())
-                                    .map { md -> item.copy(body = md) }
-                                    .toObservable()
-                        }
-                        .toList()
-            },
-            object : Paginator.ViewController<TargetHeader> {
-                override fun showEmptyProgress(show: Boolean) {
-                    viewState.showEmptyProgress(show)
+        {
+            eventInteractor.getEvents(it)
+                .flattenAsObservable { it }
+                .concatMap { item ->
+                    mdConverter.markdownToSpannable(item.body.toString())
+                        .map { md -> item.copy(body = md) }
+                        .toObservable()
                 }
+                .toList()
+        },
+        object : Paginator.ViewController<TargetHeader> {
+            override fun showEmptyProgress(show: Boolean) {
+                viewState.showEmptyProgress(show)
+            }
 
-                override fun showEmptyError(show: Boolean, error: Throwable?) {
-                    if (error != null) {
-                        errorHandler.proceed(error, { viewState.showEmptyError(show, it) })
-                    } else {
-                        viewState.showEmptyError(show, null)
-                    }
-                }
-
-                override fun showErrorMessage(error: Throwable) {
-                    errorHandler.proceed(error, { viewState.showMessage(it) })
-                }
-
-                override fun showEmptyView(show: Boolean) {
-                    viewState.showEmptyView(show)
-                }
-
-                override fun showData(show: Boolean, data: List<TargetHeader>) {
-                    viewState.showEvents(show, data)
-                }
-
-                override fun showRefreshProgress(show: Boolean) {
-                    viewState.showRefreshProgress(show)
-                }
-
-                override fun showPageProgress(show: Boolean) {
-                    viewState.showPageProgress(show)
+            override fun showEmptyError(show: Boolean, error: Throwable?) {
+                if (error != null) {
+                    errorHandler.proceed(error, { viewState.showEmptyError(show, it) })
+                } else {
+                    viewState.showEmptyError(show, null)
                 }
             }
+
+            override fun showErrorMessage(error: Throwable) {
+                errorHandler.proceed(error, { viewState.showMessage(it) })
+            }
+
+            override fun showEmptyView(show: Boolean) {
+                viewState.showEmptyView(show)
+            }
+
+            override fun showData(show: Boolean, data: List<TargetHeader>) {
+                viewState.showEvents(show, data)
+            }
+
+            override fun showRefreshProgress(show: Boolean) {
+                viewState.showRefreshProgress(show)
+            }
+
+            override fun showPageProgress(show: Boolean) {
+                viewState.showPageProgress(show)
+            }
+        }
     )
 
     fun onMenuClick() = menuController.open()
@@ -82,6 +82,7 @@ class MyEventsPresenter @Inject constructor(
     fun onUserClick(userId: Long) = router.startFlow(Screens.USER_FLOW, userId)
     fun refreshEvents() = paginator.refresh()
     fun loadNextEventsPage() = paginator.loadNewPage()
+    fun onBackPressed() = router.exit()
 
     override fun onDestroy() {
         super.onDestroy()

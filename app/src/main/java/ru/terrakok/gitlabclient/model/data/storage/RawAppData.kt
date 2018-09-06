@@ -13,8 +13,8 @@ import javax.inject.Inject
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 03.12.17.
  */
 class RawAppData @Inject constructor(
-        private val assets: AssetManager,
-        private val gson: Gson
+    private val assets: AssetManager,
+    private val gson: Gson
 ) {
 
     fun getAppLibraries(): Single<List<AppLibrary>> = fromAsset("app/app_libraries.json")

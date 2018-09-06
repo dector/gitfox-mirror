@@ -11,6 +11,7 @@ import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.entity.issue.IssueState
 import ru.terrakok.gitlabclient.extension.getEnum
 import ru.terrakok.gitlabclient.extension.putEnum
+import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.project.issues.ProjectIssuesPresenter
 import ru.terrakok.gitlabclient.presentation.project.issues.ProjectIssuesView
@@ -25,7 +26,6 @@ import toothpick.config.Module
  * @author Eugene Shapovalov (CraggyHaggy). Date: 27.08.18
  */
 class ProjectIssuesFragment : BaseFragment(), ProjectIssuesView {
-
     override val layoutRes = R.layout.fragment_project_issues
 
     @InjectPresenter
@@ -34,11 +34,11 @@ class ProjectIssuesFragment : BaseFragment(), ProjectIssuesView {
     @ProvidePresenter
     fun providePresenter(): ProjectIssuesPresenter {
         val scopeName = "ProjectIssuesScope_${hashCode()}"
-        val scope = Toothpick.openScopes(DI.PROJECT_SCOPE, scopeName)
+        val scope = Toothpick.openScopes(DI.PROJECT_FLOW_SCOPE, scopeName)
         scope.installModules(object : Module() {
             init {
                 bind(IssueState::class.java)
-                        .toInstance(arguments!!.getEnum<IssueState>(ARG_ISSUE_STATE))
+                    .toInstance(arguments!!.getEnum<IssueState>(ARG_ISSUE_STATE))
             }
         })
 
@@ -115,11 +115,11 @@ class ProjectIssuesFragment : BaseFragment(), ProjectIssuesView {
     companion object {
         private const val ARG_ISSUE_STATE = "arg issue state"
 
-        fun newInstance(issueState: IssueState) =
-                ProjectIssuesFragment().apply {
-                    arguments = Bundle().apply {
-                        putEnum(ARG_ISSUE_STATE, issueState)
-                    }
+        fun create(issueState: IssueState) =
+            ProjectIssuesFragment().apply {
+                arguments = Bundle().apply {
+                    putEnum(ARG_ISSUE_STATE, issueState)
                 }
+            }
     }
 }

@@ -7,8 +7,8 @@ import io.reactivex.disposables.Disposable
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 22.07.17.
  */
 class Paginator<T>(
-        private val requestFactory: (Int) -> Single<List<T>>,
-        private val viewController: ViewController<T>
+    private val requestFactory: (Int) -> Single<List<T>>,
+    private val viewController: ViewController<T>
 ) {
 
     interface ViewController<T> {
@@ -47,10 +47,10 @@ class Paginator<T>(
     private fun loadPage(page: Int) {
         disposable?.dispose()
         disposable = requestFactory.invoke(page)
-                .subscribe(
-                        { currentState.newData(it) },
-                        { currentState.fail(it) }
-                )
+            .subscribe(
+                { currentState.newData(it) },
+                { currentState.fail(it) }
+            )
     }
 
     private interface State<T> {

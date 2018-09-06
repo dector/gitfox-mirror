@@ -43,11 +43,13 @@ class ServerModule(serverUrl: String) : Module() {
 
         //Auth
         //todo: before release change and move to private config
-        bind(OAuthParams::class.java).toInstance(OAuthParams(
+        bind(OAuthParams::class.java).toInstance(
+            OAuthParams(
                 "808b7f51c6634294afd879edd75d5eaf55f1a75e7fe5bd91ca8b7140a5af639d",
                 "a9dd39c8d2e781b65814007ca0f8b555d34f79b4d30c9356c38bb7ad9909c6f3",
                 "app://gitlab.client/"
-        ))
+            )
+        )
         bind(AuthRepository::class.java).singletonInScope()
         bind(AuthInteractor::class.java).singletonInScope()
 

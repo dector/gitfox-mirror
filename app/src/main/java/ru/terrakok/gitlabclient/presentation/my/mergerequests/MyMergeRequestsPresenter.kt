@@ -14,11 +14,11 @@ import javax.inject.Inject
 
 @InjectViewState
 class MyMergeRequestsPresenter @Inject constructor(
-        initFilter: Filter,
-        private val interactor: MergeRequestInteractor,
-        private val mdConverter: MarkDownConverter,
-        private val errorHandler: ErrorHandler,
-        private val router: FlowRouter
+    initFilter: Filter,
+    private val interactor: MergeRequestInteractor,
+    private val mdConverter: MarkDownConverter,
+    private val errorHandler: ErrorHandler,
+    private val router: FlowRouter
 ) : BasePresenter<MyMergeRequestListView>() {
     data class Filter(val createdByMe: Boolean, val onlyOpened: Boolean)
 
@@ -31,49 +31,49 @@ class MyMergeRequestsPresenter @Inject constructor(
     }
 
     private val paginator = Paginator(
-            {
-                interactor.getMyMergeRequests(filter.createdByMe, filter.onlyOpened, it)
-                        .flattenAsObservable { it }
-                        .concatMap { item ->
-                            mdConverter.markdownToSpannable(item.body.toString())
-                                    .map { md -> item.copy(body = md) }
-                                    .toObservable()
-                        }
-                        .toList()
-            },
-            object : Paginator.ViewController<TargetHeader> {
-                override fun showEmptyProgress(show: Boolean) {
-                    viewState.showEmptyProgress(show)
+        {
+            interactor.getMyMergeRequests(filter.createdByMe, filter.onlyOpened, it)
+                .flattenAsObservable { it }
+                .concatMap { item ->
+                    mdConverter.markdownToSpannable(item.body.toString())
+                        .map { md -> item.copy(body = md) }
+                        .toObservable()
                 }
+                .toList()
+        },
+        object : Paginator.ViewController<TargetHeader> {
+            override fun showEmptyProgress(show: Boolean) {
+                viewState.showEmptyProgress(show)
+            }
 
-                override fun showEmptyError(show: Boolean, error: Throwable?) {
-                    if (error != null) {
-                        errorHandler.proceed(error, { viewState.showEmptyError(show, it) })
-                    } else {
-                        viewState.showEmptyError(show, null)
-                    }
-                }
-
-                override fun showErrorMessage(error: Throwable) {
-                    errorHandler.proceed(error, { viewState.showMessage(it) })
-                }
-
-                override fun showEmptyView(show: Boolean) {
-                    viewState.showEmptyView(show)
-                }
-
-                override fun showData(show: Boolean, data: List<TargetHeader>) {
-                    viewState.showMergeRequests(show, data)
-                }
-
-                override fun showRefreshProgress(show: Boolean) {
-                    viewState.showRefreshProgress(show)
-                }
-
-                override fun showPageProgress(show: Boolean) {
-                    viewState.showPageProgress(show)
+            override fun showEmptyError(show: Boolean, error: Throwable?) {
+                if (error != null) {
+                    errorHandler.proceed(error, { viewState.showEmptyError(show, it) })
+                } else {
+                    viewState.showEmptyError(show, null)
                 }
             }
+
+            override fun showErrorMessage(error: Throwable) {
+                errorHandler.proceed(error, { viewState.showMessage(it) })
+            }
+
+            override fun showEmptyView(show: Boolean) {
+                viewState.showEmptyView(show)
+            }
+
+            override fun showData(show: Boolean, data: List<TargetHeader>) {
+                viewState.showMergeRequests(show, data)
+            }
+
+            override fun showRefreshProgress(show: Boolean) {
+                viewState.showRefreshProgress(show)
+            }
+
+            override fun showPageProgress(show: Boolean) {
+                viewState.showPageProgress(show)
+            }
+        }
     )
 
     fun applyNewFilter(filter: Filter) {

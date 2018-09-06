@@ -15,8 +15,8 @@ import javax.inject.Provider
 class GsonProvider @Inject constructor() : Provider<Gson> {
 
     override fun get(): Gson =
-            GsonBuilder()
-                    .registerTypeAdapter(LocalDateTime::class.java, DateDeserializer())
-                    .registerTypeAdapter(Todo::class.java, TodoDeserializer())
-                    .create()
+        GsonBuilder()
+            .registerTypeAdapter(LocalDateTime::class.java, DateDeserializer())
+            .registerTypeAdapter(Todo::class.java, TodoDeserializer())
+            .create()
 }

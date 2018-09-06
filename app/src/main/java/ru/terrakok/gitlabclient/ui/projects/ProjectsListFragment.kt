@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.layout_base_list.*
 import kotlinx.android.synthetic.main.layout_zero.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Project
+import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.projects.ProjectsListPresenter
 import ru.terrakok.gitlabclient.presentation.projects.ProjectsListView
@@ -28,32 +29,24 @@ import toothpick.config.Module
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 29.03.17
  */
 class ProjectsListFragment : BaseFragment(), ProjectsListView {
-    companion object {
-        private val ARG_MODE = "plf_mode"
-
-        fun newInstance(mode: Int) = ProjectsListFragment().apply {
-            arguments = Bundle().apply {
-                putInt(ARG_MODE, mode)
-            }
-        }
-    }
 
     private val adapter = ProjectsAdapter()
     private var zeroViewHolder: ZeroViewHolder? = null
 
     override val layoutRes = R.layout.fragment_projects
 
-    @InjectPresenter lateinit var presenter: ProjectsListPresenter
+    @InjectPresenter
+    lateinit var presenter: ProjectsListPresenter
 
     @ProvidePresenter
     fun createPresenter(): ProjectsListPresenter {
         val scopeName = "projects list scope"
-        val scope = Toothpick.openScopes(DI.MAIN_ACTIVITY_SCOPE, scopeName)
+        val scope = Toothpick.openScopes(DI.DRAWER_FLOW_SCOPE, scopeName)
         scope.installModules(object : Module() {
             init {
                 bind(PrimitiveWrapper::class.java)
-                        .withName(ProjectListMode::class.java)
-                        .toInstance(PrimitiveWrapper(arguments?.getInt(ARG_MODE)))
+                    .withName(ProjectListMode::class.java)
+                    .toInstance(PrimitiveWrapper(arguments?.getInt(ARG_MODE)))
             }
         })
         return scope.getInstance(ProjectsListPresenter::class.java).also {
@@ -141,6 +134,16 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
             super.onBindViewHolder(holder, position, payloads)
 
             if (position == items.size - 10) presenter.loadNextProjectsPage()
+        }
+    }
+
+    companion object {
+        private const val ARG_MODE = "plf_mode"
+
+        fun create(mode: Int) = ProjectsListFragment().apply {
+            arguments = Bundle().apply {
+                putInt(ARG_MODE, mode)
+            }
         }
     }
 }

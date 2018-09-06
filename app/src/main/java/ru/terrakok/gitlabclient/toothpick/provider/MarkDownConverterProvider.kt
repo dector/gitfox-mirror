@@ -19,22 +19,22 @@ import javax.inject.Provider
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 28.02.18.
  */
 class MarkDownConverterProvider @Inject constructor(
-        private val context: Context,
-        private val httpClient: OkHttpClient,
-        private val schedulers: SchedulersProvider
+    private val context: Context,
+    private val httpClient: OkHttpClient,
+    private val schedulers: SchedulersProvider
 ) : Provider<MarkDownConverter> {
 
     private val spannableTheme
         get() = SpannableTheme
-                .builderWithDefaults(context)
-                .codeBackgroundColor(context.color(R.color.beige))
-                .build()
+            .builderWithDefaults(context)
+            .codeBackgroundColor(context.color(R.color.beige))
+            .build()
     private val asyncDrawableLoader
         get() = AsyncDrawableLoader.builder()
-                .client(httpClient)
-                .executorService(Executors.newCachedThreadPool())
-                .resources(context.resources)
-                .build()
+            .client(httpClient)
+            .executorService(Executors.newCachedThreadPool())
+            .resources(context.resources)
+            .build()
 
     private val hostHolder = MarkDownConverter.ImageHostHolder("")
     private val urlProcessor = UrlProcessor { destination ->
@@ -47,14 +47,14 @@ class MarkDownConverterProvider @Inject constructor(
 
     private val spannableConfig
         get() = SpannableConfiguration.builder(context)
-                .asyncDrawableLoader(asyncDrawableLoader)
-                .urlProcessor(urlProcessor)
-                .theme(spannableTheme)
-                .build()
+            .asyncDrawableLoader(asyncDrawableLoader)
+            .urlProcessor(urlProcessor)
+            .theme(spannableTheme)
+            .build()
 
     override fun get() = MarkDownConverter(
-            spannableConfig,
-            hostHolder,
-            schedulers
+        spannableConfig,
+        hostHolder,
+        schedulers
     )
 }

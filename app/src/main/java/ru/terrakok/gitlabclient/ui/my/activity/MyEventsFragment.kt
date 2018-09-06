@@ -9,6 +9,7 @@ import kotlinx.android.synthetic.main.layout_base_list.*
 import kotlinx.android.synthetic.main.layout_zero.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
+import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.my.events.MyEventsPresenter
 import ru.terrakok.gitlabclient.presentation.my.events.MyEventsView
@@ -24,22 +25,23 @@ import toothpick.Toothpick
 class MyEventsFragment : BaseFragment(), MyEventsView {
     override val layoutRes = R.layout.fragment_my_activity
 
-    @InjectPresenter lateinit var presenter: MyEventsPresenter
+    @InjectPresenter
+    lateinit var presenter: MyEventsPresenter
 
     private val adapter: TargetsAdapter by lazy {
         TargetsAdapter(
-                { presenter.onUserClick(it) },
-                { presenter.onItemClick(it) },
-                { presenter.loadNextEventsPage() }
+            { presenter.onUserClick(it) },
+            { presenter.onItemClick(it) },
+            { presenter.loadNextEventsPage() }
         )
     }
     private var zeroViewHolder: ZeroViewHolder? = null
 
     @ProvidePresenter
     fun providePresenter(): MyEventsPresenter =
-            Toothpick
-                    .openScope(DI.MAIN_ACTIVITY_SCOPE)
-                    .getInstance(MyEventsPresenter::class.java)
+        Toothpick
+            .openScope(DI.DRAWER_FLOW_SCOPE)
+            .getInstance(MyEventsPresenter::class.java)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -88,5 +90,9 @@ class MyEventsFragment : BaseFragment(), MyEventsView {
 
     override fun showMessage(message: String) {
         showSnackMessage(message)
+    }
+
+    override fun onBackPressed() {
+        presenter.onBackPressed()
     }
 }

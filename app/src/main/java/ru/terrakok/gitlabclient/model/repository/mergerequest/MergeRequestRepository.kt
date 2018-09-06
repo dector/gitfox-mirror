@@ -31,7 +31,6 @@ class MergeRequestRepository @Inject constructor(
     private val schedulers: SchedulersProvider,
     @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>
 ) {
-
     private val defaultPageSize = defaultPageSizeWrapper.value
 
     fun getMyMergeRequests(
@@ -50,21 +49,21 @@ class MergeRequestRepository @Inject constructor(
         page: Int,
         pageSize: Int = defaultPageSize
     ) = api
-            .getMyMergeRequests(
-                state, milestone, viewType, labels, createdBefore, createdAfter, scope,
-                authorId, assigneeId, meReactionEmoji, orderBy, sort, page, pageSize
+        .getMyMergeRequests(
+            state, milestone, viewType, labels, createdBefore, createdAfter, scope,
+            authorId, assigneeId, meReactionEmoji, orderBy, sort, page, pageSize
+        )
+        .flatMap { mrs ->
+            Single.zip(
+                Single.just(mrs),
+                getDistinctProjects(mrs),
+                BiFunction<List<MergeRequest>, Map<Long, Project>, List<TargetHeader>> { sourceMrs, projects ->
+                    sourceMrs.map { getTargetHeader(it, projects[it.projectId]!!) }
+                }
             )
-            .flatMap { mrs ->
-                Single.zip(
-                    Single.just(mrs),
-                    getDistinctProjects(mrs),
-                    BiFunction<List<MergeRequest>, Map<Long, Project>, List<TargetHeader>> { sourceMrs, projects ->
-                        sourceMrs.map { getTargetHeader(it, projects[it.projectId]!!) }
-                    }
-                )
-            }
-            .subscribeOn(schedulers.io())
-            .observeOn(schedulers.ui())
+        }
+        .subscribeOn(schedulers.io())
+        .observeOn(schedulers.ui())
 
     fun getMergeRequests(
         projectId: Long,
@@ -83,27 +82,27 @@ class MergeRequestRepository @Inject constructor(
         page: Int,
         pageSize: Int = defaultPageSize
     ) = api
-            .getMergeRequests(
-                projectId, state, milestone, viewType, labels, createdBefore, createdAfter,
-                scope, authorId, assigneeId, meReactionEmoji, orderBy, sort, page, pageSize
+        .getMergeRequests(
+            projectId, state, milestone, viewType, labels, createdBefore, createdAfter,
+            scope, authorId, assigneeId, meReactionEmoji, orderBy, sort, page, pageSize
+        )
+        .flatMap { mrs ->
+            Single.zip(
+                Single.just(mrs),
+                getDistinctProjects(mrs),
+                BiFunction<List<MergeRequest>, Map<Long, Project>, List<TargetHeader>> { sourceMrs, projects ->
+                    sourceMrs.map { getTargetHeader(it, projects[it.projectId]!!) }
+                }
             )
-            .flatMap { mrs ->
-                Single.zip(
-                    Single.just(mrs),
-                    getDistinctProjects(mrs),
-                    BiFunction<List<MergeRequest>, Map<Long, Project>, List<TargetHeader>> { sourceMrs, projects ->
-                        sourceMrs.map { getTargetHeader(it, projects[it.projectId]!!) }
-                    }
-                )
-            }
-            .subscribeOn(schedulers.io())
-            .observeOn(schedulers.ui())
+        }
+        .subscribeOn(schedulers.io())
+        .observeOn(schedulers.ui())
 
     private fun getDistinctProjects(mrs: List<MergeRequest>): Single<Map<Long, Project>> {
         return Observable.fromIterable(mrs)
-                .distinct { it.projectId }
-                .flatMapSingle { mr -> api.getProject(mr.projectId) }
-                .toMap { it.id }
+            .distinct { it.projectId }
+            .flatMapSingle { mr -> api.getProject(mr.projectId) }
+            .toMap { it.id }
     }
 
     private fun getTargetHeader(mr: MergeRequest, project: Project): TargetHeader {
@@ -146,9 +145,9 @@ class MergeRequestRepository @Inject constructor(
         projectId: Long,
         mergeRequestId: Long
     ) = api
-            .getMergeRequest(projectId, mergeRequestId)
-            .subscribeOn(schedulers.io())
-            .observeOn(schedulers.ui())
+        .getMergeRequest(projectId, mergeRequestId)
+        .subscribeOn(schedulers.io())
+        .observeOn(schedulers.ui())
 
     fun getMergeRequestNotes(
         projectId: Long,
@@ -156,7 +155,7 @@ class MergeRequestRepository @Inject constructor(
         orderBy: OrderBy? = null,
         sort: Sort? = Sort.ASC
     ) = api
-            .getMergeRequestNotes(projectId, mergeRequestId, orderBy, sort)
-            .subscribeOn(schedulers.io())
-            .observeOn(schedulers.ui())
+        .getMergeRequestNotes(projectId, mergeRequestId, orderBy, sort)
+        .subscribeOn(schedulers.io())
+        .observeOn(schedulers.ui())
 }

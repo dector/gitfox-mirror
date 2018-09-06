@@ -18,26 +18,26 @@ import javax.inject.Inject
  * @author Eugene Shapovalov (CraggyHaggy). Date: 20.09.17
  */
 class TodoRepository @Inject constructor(
-        private val api: GitlabApi,
-        private val schedulers: SchedulersProvider,
-        @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>
+    private val api: GitlabApi,
+    private val schedulers: SchedulersProvider,
+    @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
 
     fun getTodos(
-            currentUser: User,
-            action: TodoAction? = null,
-            authorId: Long? = null,
-            projectId: Long? = null,
-            state: TodoState? = null,
-            targetType: TargetType? = null,
-            page: Int,
-            pageSize: Int = defaultPageSize
+        currentUser: User,
+        action: TodoAction? = null,
+        authorId: Long? = null,
+        projectId: Long? = null,
+        state: TodoState? = null,
+        targetType: TargetType? = null,
+        page: Int,
+        pageSize: Int = defaultPageSize
     ) = api
-            .getTodos(action, authorId, projectId, state, targetType, page, pageSize)
-            .map { todos -> todos.map { getTargetHeader(it, currentUser) } }
-            .subscribeOn(schedulers.io())
-            .observeOn(schedulers.ui())
+        .getTodos(action, authorId, projectId, state, targetType, page, pageSize)
+        .map { todos -> todos.map { getTargetHeader(it, currentUser) } }
+        .subscribeOn(schedulers.io())
+        .observeOn(schedulers.ui())
 
     private fun getTargetHeader(todo: Todo, currentUser: User): TargetHeader {
         val target = todo.target
@@ -57,32 +57,36 @@ class TodoRepository @Inject constructor(
             TargetType.ISSUE -> "${AppTarget.ISSUE} #${target.iid}"
         }
         val badges = mutableListOf<TargetBadge>()
-        badges.add(TargetBadge.Status(when (target.state) {
-            TargetState.OPENED -> TargetBadgeStatus.OPENED
-            TargetState.CLOSED -> TargetBadgeStatus.CLOSED
-            TargetState.MERGED -> TargetBadgeStatus.MERGED
-        }))
+        badges.add(
+            TargetBadge.Status(
+                when (target.state) {
+                    TargetState.OPENED -> TargetBadgeStatus.OPENED
+                    TargetState.CLOSED -> TargetBadgeStatus.CLOSED
+                    TargetState.MERGED -> TargetBadgeStatus.MERGED
+                }
+            )
+        )
         badges.add(TargetBadge.Text(todo.author.username, AppTarget.USER, todo.author.id))
         badges.add(TargetBadge.Text(todo.project.name, AppTarget.PROJECT, todo.project.id))
 
         return TargetHeader(
-                todo.author,
-                TargetHeaderIcon.NONE,
-                TargetHeaderTitle.Todo(
-                        todo.author.name,
-                        assignee?.name,
-                        todo.actionName,
-                        targetName,
-                        todo.project.nameWithNamespace,
-                        todo.author.id == currentUser.id,
-                        assignee?.id == currentUser.id
-                ),
-                todo.body,
-                todo.createdAt,
-                appTarget,
-                target.id,
-                TargetInternal(target.projectId, target.iid),
-                badges
+            todo.author,
+            TargetHeaderIcon.NONE,
+            TargetHeaderTitle.Todo(
+                todo.author.name,
+                assignee?.name,
+                todo.actionName,
+                targetName,
+                todo.project.nameWithNamespace,
+                todo.author.id == currentUser.id,
+                assignee?.id == currentUser.id
+            ),
+            todo.body,
+            todo.createdAt,
+            appTarget,
+            target.id,
+            TargetInternal(target.projectId, target.iid),
+            badges
         )
     }
 

@@ -28,76 +28,80 @@ import javax.inject.Inject
  * @author Konstantin Tskhovrebov (aka terrakok) on 14.06.17.
  */
 class IssueRepository @Inject constructor(
-        private val api: GitlabApi,
-        private val schedulers: SchedulersProvider,
-        @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>
+    private val api: GitlabApi,
+    private val schedulers: SchedulersProvider,
+    @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
 
     fun getMyIssues(
-            scope: IssueScope? = null,
-            state: IssueState? = null,
-            labels: String? = null,
-            milestone: String? = null,
-            iids: Array<Long>? = null,
-            orderBy: OrderBy? = null,
-            sort: Sort? = null,
-            search: String? = null,
-            page: Int,
-            pageSize: Int = defaultPageSize
+        scope: IssueScope? = null,
+        state: IssueState? = null,
+        labels: String? = null,
+        milestone: String? = null,
+        iids: Array<Long>? = null,
+        orderBy: OrderBy? = null,
+        sort: Sort? = null,
+        search: String? = null,
+        page: Int,
+        pageSize: Int = defaultPageSize
     ) = api
-            .getMyIssues(scope, state, labels, milestone, iids, orderBy, sort, search, page, pageSize)
-            .flatMap { issues ->
-                Single.zip(
-                        Single.just(issues),
-                        getDistinctProjects(issues),
-                        BiFunction<List<Issue>, Map<Long, Project>, List<TargetHeader>> { sourceIssues, projects ->
-                            sourceIssues.map { getTargetHeader(it, projects[it.projectId]!!) }
-                        }
-                )
-            }
-            .subscribeOn(schedulers.io())
-            .observeOn(schedulers.ui())
+        .getMyIssues(scope, state, labels, milestone, iids, orderBy, sort, search, page, pageSize)
+        .flatMap { issues ->
+            Single.zip(
+                Single.just(issues),
+                getDistinctProjects(issues),
+                BiFunction<List<Issue>, Map<Long, Project>, List<TargetHeader>> { sourceIssues, projects ->
+                    sourceIssues.map { getTargetHeader(it, projects[it.projectId]!!) }
+                }
+            )
+        }
+        .subscribeOn(schedulers.io())
+        .observeOn(schedulers.ui())
 
     fun getIssues(
-            projectId: Long,
-            scope: IssueScope? = null,
-            state: IssueState? = null,
-            labels: String? = null,
-            milestone: String? = null,
-            iids: Array<Long>? = null,
-            orderBy: OrderBy? = null,
-            sort: Sort? = null,
-            search: String? = null,
-            page: Int,
-            pageSize: Int = defaultPageSize
+        projectId: Long,
+        scope: IssueScope? = null,
+        state: IssueState? = null,
+        labels: String? = null,
+        milestone: String? = null,
+        iids: Array<Long>? = null,
+        orderBy: OrderBy? = null,
+        sort: Sort? = null,
+        search: String? = null,
+        page: Int,
+        pageSize: Int = defaultPageSize
     ) = api
-            .getIssues(projectId, scope, state, labels, milestone, iids, orderBy, sort, search, page, pageSize)
-            .flatMap { issues ->
-                Single.zip(
-                        Single.just(issues),
-                        getDistinctProjects(issues),
-                        BiFunction<List<Issue>, Map<Long, Project>, List<TargetHeader>> { sourceIssues, projects ->
-                            sourceIssues.map { getTargetHeader(it, projects[it.projectId]!!) }
-                        }
-                )
-            }
-            .subscribeOn(schedulers.io())
-            .observeOn(schedulers.ui())
+        .getIssues(projectId, scope, state, labels, milestone, iids, orderBy, sort, search, page, pageSize)
+        .flatMap { issues ->
+            Single.zip(
+                Single.just(issues),
+                getDistinctProjects(issues),
+                BiFunction<List<Issue>, Map<Long, Project>, List<TargetHeader>> { sourceIssues, projects ->
+                    sourceIssues.map { getTargetHeader(it, projects[it.projectId]!!) }
+                }
+            )
+        }
+        .subscribeOn(schedulers.io())
+        .observeOn(schedulers.ui())
 
     private fun getDistinctProjects(events: List<Issue>): Single<Map<Long, Project>> {
         return Observable.fromIterable(events)
-                .distinct { it.projectId }
-                .flatMapSingle { issue -> api.getProject(issue.projectId) }
-                .toMap { it.id }
+            .distinct { it.projectId }
+            .flatMapSingle { issue -> api.getProject(issue.projectId) }
+            .toMap { it.id }
     }
 
     private fun getTargetHeader(issue: Issue, project: Project): TargetHeader {
         val badges = mutableListOf<TargetBadge>()
-        badges.add(TargetBadge.Status(when (issue.state) {
-            IssueState.OPENED -> TargetBadgeStatus.OPENED
-            IssueState.CLOSED -> TargetBadgeStatus.CLOSED
-        }))
+        badges.add(
+            TargetBadge.Status(
+                when (issue.state) {
+                    IssueState.OPENED -> TargetBadgeStatus.OPENED
+                    IssueState.CLOSED -> TargetBadgeStatus.CLOSED
+                }
+            )
+        )
         badges.add(TargetBadge.Text(project.name, AppTarget.PROJECT, project.id))
         badges.add(TargetBadge.Text(issue.author.username, AppTarget.USER, issue.author.id))
         badges.add(TargetBadge.Icon(TargetBadgeIcon.COMMENTS, issue.userNotesCount))
@@ -106,38 +110,38 @@ class IssueRepository @Inject constructor(
         issue.labels.forEach { label -> badges.add(TargetBadge.Text(label)) }
 
         return TargetHeader(
-                issue.author,
-                TargetHeaderIcon.NONE,
-                TargetHeaderTitle.Event(
-                        issue.author.name,
-                        EventAction.CREATED,
-                        "${AppTarget.ISSUE} #${issue.iid}",
-                        project.name
-                ),
-                issue.title ?: "",
-                issue.createdAt,
-                AppTarget.ISSUE,
-                issue.id,
-                TargetInternal(issue.projectId, issue.iid),
-                badges
+            issue.author,
+            TargetHeaderIcon.NONE,
+            TargetHeaderTitle.Event(
+                issue.author.name,
+                EventAction.CREATED,
+                "${AppTarget.ISSUE} #${issue.iid}",
+                project.name
+            ),
+            issue.title ?: "",
+            issue.createdAt,
+            AppTarget.ISSUE,
+            issue.id,
+            TargetInternal(issue.projectId, issue.iid),
+            badges
         )
     }
 
     fun getIssue(
-            projectId: Long,
-            issueId: Long
+        projectId: Long,
+        issueId: Long
     ) = api
-            .getIssue(projectId, issueId)
-            .subscribeOn(schedulers.io())
-            .observeOn(schedulers.ui())
+        .getIssue(projectId, issueId)
+        .subscribeOn(schedulers.io())
+        .observeOn(schedulers.ui())
 
     fun getIssueNotes(
-            projectId: Long,
-            issueId: Long,
-            orderBy: OrderBy? = null,
-            sort: Sort? = Sort.ASC
+        projectId: Long,
+        issueId: Long,
+        orderBy: OrderBy? = null,
+        sort: Sort? = Sort.ASC
     ) = api
-            .getIssueNotes(projectId, issueId, orderBy, sort)
-            .subscribeOn(schedulers.io())
-            .observeOn(schedulers.ui())
+        .getIssueNotes(projectId, issueId, orderBy, sort)
+        .subscribeOn(schedulers.io())
+        .observeOn(schedulers.ui())
 }

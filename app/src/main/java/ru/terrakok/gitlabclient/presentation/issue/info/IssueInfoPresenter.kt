@@ -22,12 +22,12 @@ private typealias IssueLinker = BiFunction<Pair<Issue, CharSequence>, Project, I
  */
 @InjectViewState
 class IssueInfoPresenter @Inject constructor(
-        @ProjectId private val projectIdWrapper: PrimitiveWrapper<Long>,
-        @IssueId private val issueIdWrapper: PrimitiveWrapper<Long>,
-        private val issueInteractor: IssueInteractor,
-        private val projectInteractor: ProjectInteractor,
-        private val mdConverter: MarkDownConverter,
-        private val errorHandler: ErrorHandler
+    @ProjectId private val projectIdWrapper: PrimitiveWrapper<Long>,
+    @IssueId private val issueIdWrapper: PrimitiveWrapper<Long>,
+    private val issueInteractor: IssueInteractor,
+    private val projectInteractor: ProjectInteractor,
+    private val mdConverter: MarkDownConverter,
+    private val errorHandler: ErrorHandler
 ) : BasePresenter<IssueInfoView>() {
 
     private val projectId = projectIdWrapper.value
@@ -37,23 +37,23 @@ class IssueInfoPresenter @Inject constructor(
         super.onFirstViewAttach()
 
         Single
-                .zip(
-                        issueInteractor
-                                .getIssue(projectId, issueId)
-                                .flatMap { issue ->
-                                    mdConverter
-                                            .markdownToSpannable(issue.description ?: "")
-                                            .map { Pair(issue, it) }
-                                },
-                        projectInteractor.getProject(projectId),
-                        IssueLinker { (issue, html), project -> IssueInfoView.IssueInfo(issue, project, html) }
-                )
-                .doOnSubscribe { viewState.showProgress(true) }
-                .doAfterTerminate { viewState.showProgress(false) }
-                .subscribe(
-                        { viewState.showIssue(it) },
-                        { errorHandler.proceed(it, { viewState.showMessage(it) }) }
-                )
-                .connect()
+            .zip(
+                issueInteractor
+                    .getIssue(projectId, issueId)
+                    .flatMap { issue ->
+                        mdConverter
+                            .markdownToSpannable(issue.description ?: "")
+                            .map { Pair(issue, it) }
+                    },
+                projectInteractor.getProject(projectId),
+                IssueLinker { (issue, html), project -> IssueInfoView.IssueInfo(issue, project, html) }
+            )
+            .doOnSubscribe { viewState.showProgress(true) }
+            .doAfterTerminate { viewState.showProgress(false) }
+            .subscribe(
+                { viewState.showIssue(it) },
+                { errorHandler.proceed(it, { viewState.showMessage(it) }) }
+            )
+            .connect()
     }
 }

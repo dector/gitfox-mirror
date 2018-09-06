@@ -7,7 +7,7 @@ import javax.inject.Inject
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 22.07.17.
  */
 class EventInteractor @Inject constructor(
-        private val eventRepository: EventRepository
+    private val eventRepository: EventRepository
 ) {
     fun getEvents(page: Int) = eventRepository.getEvents(page = page)
 }

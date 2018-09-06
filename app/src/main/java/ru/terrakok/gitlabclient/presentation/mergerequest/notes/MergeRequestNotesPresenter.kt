@@ -16,11 +16,11 @@ import javax.inject.Inject
  */
 @InjectViewState
 class MergeRequestNotesPresenter @Inject constructor(
-        @ProjectId projectIdWrapper: PrimitiveWrapper<Long>,
-        @MergeRequestId mrIdWrapper: PrimitiveWrapper<Long>,
-        private val mrInteractor: MergeRequestInteractor,
-        private val mdConverter: MarkDownConverter,
-        private val errorHandler: ErrorHandler
+    @ProjectId projectIdWrapper: PrimitiveWrapper<Long>,
+    @MergeRequestId mrIdWrapper: PrimitiveWrapper<Long>,
+    private val mrInteractor: MergeRequestInteractor,
+    private val mdConverter: MarkDownConverter,
+    private val errorHandler: ErrorHandler
 ) : BasePresenter<MergeRequestNotesView>() {
 
     private val projectId = projectIdWrapper.value
@@ -34,20 +34,20 @@ class MergeRequestNotesPresenter @Inject constructor(
 
     private fun requestNotes() {
         mrInteractor.getMergeRequestNotes(projectId, mrId)
-                .flattenAsObservable { it }
-                .concatMap { note ->
-                    mdConverter.markdownToSpannable(note.body)
-                            .map { NoteWithFormattedBody(note, it) }
-                            .toObservable()
-                }
-                .toList()
-                .doOnSubscribe { viewState.showProgress(true) }
-                .doAfterTerminate { viewState.showProgress(false) }
-                .subscribe(
-                        { viewState.showNotes(it) },
-                        { errorHandler.proceed(it, { viewState.showMessage(it) }) }
-                )
-                .connect()
+            .flattenAsObservable { it }
+            .concatMap { note ->
+                mdConverter.markdownToSpannable(note.body)
+                    .map { NoteWithFormattedBody(note, it) }
+                    .toObservable()
+            }
+            .toList()
+            .doOnSubscribe { viewState.showProgress(true) }
+            .doAfterTerminate { viewState.showProgress(false) }
+            .subscribe(
+                { viewState.showNotes(it) },
+                { errorHandler.proceed(it, { viewState.showMessage(it) }) }
+            )
+            .connect()
     }
 
     fun refresh() = requestNotes()

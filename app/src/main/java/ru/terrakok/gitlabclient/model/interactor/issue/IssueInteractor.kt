@@ -12,31 +12,30 @@ import javax.inject.Inject
 class IssueInteractor @Inject constructor(
     private val issueRepository: IssueRepository
 ) {
-
     fun getMyIssues(
         createdByMe: Boolean,
         onlyOpened: Boolean,
         page: Int
     ) = issueRepository
-            .getMyIssues(
-                scope = if (createdByMe) IssueScope.CREATED_BY_ME else IssueScope.ASSIGNED_BY_ME,
-                state = if (onlyOpened) IssueState.OPENED else null,
-                orderBy = OrderBy.UPDATED_AT,
-                page = page
-            )
+        .getMyIssues(
+            scope = if (createdByMe) IssueScope.CREATED_BY_ME else IssueScope.ASSIGNED_BY_ME,
+            state = if (onlyOpened) IssueState.OPENED else null,
+            orderBy = OrderBy.UPDATED_AT,
+            page = page
+        )
 
     fun getIssues(
         projectId: Long,
         issueState: IssueState?,
         page: Int
     ) = issueRepository
-            .getIssues(
-                projectId = projectId,
-                state = issueState,
-                scope = IssueScope.ALL,
-                orderBy = OrderBy.UPDATED_AT,
-                page = page
-            )
+        .getIssues(
+            projectId = projectId,
+            state = issueState,
+            scope = IssueScope.ALL,
+            orderBy = OrderBy.UPDATED_AT,
+            page = page
+        )
 
     fun getIssue(
         projectId: Long,

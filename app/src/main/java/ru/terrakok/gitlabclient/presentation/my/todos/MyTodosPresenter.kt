@@ -19,11 +19,11 @@ import javax.inject.Inject
  */
 @InjectViewState
 class MyTodosPresenter @Inject constructor(
-        @TodoListPendingState private val pendingStateWrapper: PrimitiveWrapper<Boolean>,
-        private val todoListInteractor: TodoListInteractor,
-        private val mdConverter: MarkDownConverter,
-        private val errorHandler: ErrorHandler,
-        private val router: FlowRouter
+    @TodoListPendingState private val pendingStateWrapper: PrimitiveWrapper<Boolean>,
+    private val todoListInteractor: TodoListInteractor,
+    private val mdConverter: MarkDownConverter,
+    private val errorHandler: ErrorHandler,
+    private val router: FlowRouter
 ) : BasePresenter<MyTodoListView>() {
 
     private val isPending = pendingStateWrapper.value
@@ -35,49 +35,49 @@ class MyTodosPresenter @Inject constructor(
     }
 
     private val paginator = Paginator(
-            {
-                todoListInteractor.getMyTodos(isPending, it)
-                        .flattenAsObservable { it }
-                        .concatMap { item ->
-                            mdConverter.markdownToSpannable(item.body.toString())
-                                    .map { md -> item.copy(body = md) }
-                                    .toObservable()
-                        }
-                        .toList()
-            },
-            object : Paginator.ViewController<TargetHeader> {
-                override fun showEmptyProgress(show: Boolean) {
-                    viewState.showEmptyProgress(show)
+        {
+            todoListInteractor.getMyTodos(isPending, it)
+                .flattenAsObservable { it }
+                .concatMap { item ->
+                    mdConverter.markdownToSpannable(item.body.toString())
+                        .map { md -> item.copy(body = md) }
+                        .toObservable()
                 }
+                .toList()
+        },
+        object : Paginator.ViewController<TargetHeader> {
+            override fun showEmptyProgress(show: Boolean) {
+                viewState.showEmptyProgress(show)
+            }
 
-                override fun showEmptyError(show: Boolean, error: Throwable?) {
-                    if (error != null) {
-                        errorHandler.proceed(error, { viewState.showEmptyError(show, it) })
-                    } else {
-                        viewState.showEmptyError(show, null)
-                    }
-                }
-
-                override fun showEmptyView(show: Boolean) {
-                    viewState.showEmptyView(show)
-                }
-
-                override fun showData(show: Boolean, data: List<TargetHeader>) {
-                    viewState.showTodos(show, data)
-                }
-
-                override fun showErrorMessage(error: Throwable) {
-                    errorHandler.proceed(error, { viewState.showMessage(it) })
-                }
-
-                override fun showRefreshProgress(show: Boolean) {
-                    viewState.showRefreshProgress(show)
-                }
-
-                override fun showPageProgress(show: Boolean) {
-                    viewState.showPageProgress(show)
+            override fun showEmptyError(show: Boolean, error: Throwable?) {
+                if (error != null) {
+                    errorHandler.proceed(error, { viewState.showEmptyError(show, it) })
+                } else {
+                    viewState.showEmptyError(show, null)
                 }
             }
+
+            override fun showEmptyView(show: Boolean) {
+                viewState.showEmptyView(show)
+            }
+
+            override fun showData(show: Boolean, data: List<TargetHeader>) {
+                viewState.showTodos(show, data)
+            }
+
+            override fun showErrorMessage(error: Throwable) {
+                errorHandler.proceed(error, { viewState.showMessage(it) })
+            }
+
+            override fun showRefreshProgress(show: Boolean) {
+                viewState.showRefreshProgress(show)
+            }
+
+            override fun showPageProgress(show: Boolean) {
+                viewState.showPageProgress(show)
+            }
+        }
     )
 
     fun onTodoClick(item: TargetHeader) = item.openInfo(router)

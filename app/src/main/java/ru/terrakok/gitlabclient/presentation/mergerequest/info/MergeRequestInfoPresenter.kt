@@ -22,12 +22,12 @@ private typealias MergeRequestLinker = BiFunction<Pair<MergeRequest, CharSequenc
  */
 @InjectViewState
 class MergeRequestInfoPresenter @Inject constructor(
-        @ProjectId projectIdWrapper: PrimitiveWrapper<Long>,
-        @MergeRequestId mrIdWrapper: PrimitiveWrapper<Long>,
-        private val mrInteractor: MergeRequestInteractor,
-        private val projectInteractor: ProjectInteractor,
-        private val mdConverter: MarkDownConverter,
-        private val errorHandler: ErrorHandler
+    @ProjectId projectIdWrapper: PrimitiveWrapper<Long>,
+    @MergeRequestId mrIdWrapper: PrimitiveWrapper<Long>,
+    private val mrInteractor: MergeRequestInteractor,
+    private val projectInteractor: ProjectInteractor,
+    private val mdConverter: MarkDownConverter,
+    private val errorHandler: ErrorHandler
 ) : BasePresenter<MergeRequestInfoView>() {
 
     private val projectId = projectIdWrapper.value
@@ -37,23 +37,23 @@ class MergeRequestInfoPresenter @Inject constructor(
         super.onFirstViewAttach()
 
         Single
-                .zip(
-                        mrInteractor
-                                .getMergeRequest(projectId, mrId)
-                                .flatMap { mr ->
-                                    mdConverter
-                                            .markdownToSpannable(mr.description ?: "")
-                                            .map { Pair(mr, it) }
-                                },
-                        projectInteractor.getProject(projectId),
-                        MergeRequestLinker { (mr, html), project -> MergeRequestInfoView.MergeRequestInfo(mr, project, html) }
-                )
-                .doOnSubscribe { viewState.showProgress(true) }
-                .doAfterTerminate { viewState.showProgress(false) }
-                .subscribe(
-                        { viewState.showInfo(it) },
-                        { errorHandler.proceed(it, { viewState.showMessage(it) }) }
-                )
-                .connect()
+            .zip(
+                mrInteractor
+                    .getMergeRequest(projectId, mrId)
+                    .flatMap { mr ->
+                        mdConverter
+                            .markdownToSpannable(mr.description ?: "")
+                            .map { Pair(mr, it) }
+                    },
+                projectInteractor.getProject(projectId),
+                MergeRequestLinker { (mr, html), project -> MergeRequestInfoView.MergeRequestInfo(mr, project, html) }
+            )
+            .doOnSubscribe { viewState.showProgress(true) }
+            .doAfterTerminate { viewState.showProgress(false) }
+            .subscribe(
+                { viewState.showInfo(it) },
+                { errorHandler.proceed(it, { viewState.showMessage(it) }) }
+            )
+            .connect()
     }
 }

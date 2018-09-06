@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.support.v4.app.FragmentPagerAdapter
 import kotlinx.android.synthetic.main.fragment_my_todos_container.*
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.Screens
+import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
@@ -15,14 +17,18 @@ import javax.inject.Inject
  */
 class MyTodosContainerFragment : BaseFragment() {
 
-    @Inject lateinit var menuController: GlobalMenuController
+    @Inject
+    lateinit var router: FlowRouter
+
+    @Inject
+    lateinit var menuController: GlobalMenuController
 
     private val adapter: MyTodosPagerAdapter by lazy { MyTodosPagerAdapter() }
 
     override val layoutRes = R.layout.fragment_my_todos_container
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Toothpick.inject(this, Toothpick.openScope(DI.MAIN_ACTIVITY_SCOPE))
+        Toothpick.inject(this, Toothpick.openScope(DI.DRAWER_FLOW_SCOPE))
         super.onCreate(savedInstanceState)
     }
 
@@ -33,10 +39,14 @@ class MyTodosContainerFragment : BaseFragment() {
         viewPager.adapter = adapter
     }
 
+    override fun onBackPressed() {
+        router.exit()
+    }
+
     private inner class MyTodosPagerAdapter : FragmentPagerAdapter(childFragmentManager) {
         override fun getItem(position: Int) = when (position) {
-            0 -> MyTodosFragment.newInstance(true)
-            1 -> MyTodosFragment.newInstance(false)
+            0 -> Screens.createFragment(Screens.MY_TODOS_SCREEN, true)
+            1 -> Screens.createFragment(Screens.MY_TODOS_SCREEN, false)
             else -> null
         }
 

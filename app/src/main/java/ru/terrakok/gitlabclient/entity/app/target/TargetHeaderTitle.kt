@@ -8,19 +8,19 @@ import ru.terrakok.gitlabclient.entity.todo.TodoAction
  */
 sealed class TargetHeaderTitle {
     data class Event(
-            val userName: String,
-            val action: EventAction,
-            val targetName: String,
-            val projectName: String
+        val userName: String,
+        val action: EventAction,
+        val targetName: String,
+        val projectName: String
     ) : TargetHeaderTitle()
 
     data class Todo(
-            val authorUserName: String,
-            val assigneeUserName: String?,
-            val action: TodoAction,
-            val targetName: String,
-            val projectName: String,
-            val isAuthorCurrentUser: Boolean,
-            val isAssigneeCurrentUser: Boolean
+        val authorUserName: String,
+        val assigneeUserName: String?,
+        val action: TodoAction,
+        val targetName: String,
+        val projectName: String,
+        val isAuthorCurrentUser: Boolean,
+        val isAssigneeCurrentUser: Boolean
     ) : TargetHeaderTitle()
 }

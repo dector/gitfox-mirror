@@ -1,8 +1,8 @@
-package ru.terrakok.gitlabclient.presentation.user
+package ru.terrakok.gitlabclient.presentation.user.info
 
 import com.arellomobile.mvp.InjectViewState
-import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.model.interactor.user.UserInteractor
+import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
@@ -14,10 +14,10 @@ import javax.inject.Inject
  */
 @InjectViewState
 class UserInfoPresenter @Inject constructor(
-        private val userInteractor: UserInteractor,
-        private val router: Router,
-        private val errorHandler: ErrorHandler,
-        @UserId userIdWrapper: PrimitiveWrapper<Long>
+    private val userInteractor: UserInteractor,
+    private val router: FlowRouter,
+    private val errorHandler: ErrorHandler,
+    @UserId userIdWrapper: PrimitiveWrapper<Long>
 ) : BasePresenter<UserInfoView>() {
     private val userId = userIdWrapper.value
 
@@ -25,14 +25,14 @@ class UserInfoPresenter @Inject constructor(
         super.onFirstViewAttach()
 
         userInteractor
-                .getUser(userId)
-                .doOnSubscribe { viewState.showProgress(true) }
-                .doAfterTerminate { viewState.showProgress(false) }
-                .subscribe(
-                        { viewState.showUser(it) },
-                        { errorHandler.proceed(it, { viewState.showMessage(it) }) }
-                )
-                .connect()
+            .getUser(userId)
+            .doOnSubscribe { viewState.showProgress(true) }
+            .doAfterTerminate { viewState.showProgress(false) }
+            .subscribe(
+                { viewState.showUser(it) },
+                { errorHandler.proceed(it, { viewState.showMessage(it) }) }
+            )
+            .connect()
     }
 
     fun onBackPressed() = router.exit()

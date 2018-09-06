@@ -23,49 +23,49 @@ import javax.inject.Inject
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 22.07.17.
  */
 class EventRepository @Inject constructor(
-        private val api: GitlabApi,
-        private val schedulers: SchedulersProvider,
-        @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>
+    private val api: GitlabApi,
+    private val schedulers: SchedulersProvider,
+    @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
 
     fun getEvents(
-            action: EventAction? = null,
-            targetType: EventTarget? = null,
-            beforeDay: LocalDateTime? = null,
-            afterDay: LocalDateTime? = null,
-            sort: Sort? = Sort.DESC,
-            orderBy: OrderBy = OrderBy.UPDATED_AT,
-            page: Int,
-            pageSize: Int = defaultPageSize
+        action: EventAction? = null,
+        targetType: EventTarget? = null,
+        beforeDay: LocalDateTime? = null,
+        afterDay: LocalDateTime? = null,
+        sort: Sort? = Sort.DESC,
+        orderBy: OrderBy = OrderBy.UPDATED_AT,
+        page: Int,
+        pageSize: Int = defaultPageSize
     ): Single<List<TargetHeader>> = api
-            .getEvents(
-                    action,
-                    targetType,
-                    beforeDay?.run { this.toLocalDate().toString() },
-                    afterDay?.run { this.toLocalDate().toString() },
-                    sort,
-                    orderBy,
-                    page,
-                    pageSize
+        .getEvents(
+            action,
+            targetType,
+            beforeDay?.run { this.toLocalDate().toString() },
+            afterDay?.run { this.toLocalDate().toString() },
+            sort,
+            orderBy,
+            page,
+            pageSize
+        )
+        .flatMap { events ->
+            Single.zip(
+                Single.just(events),
+                getDistinctProjects(events),
+                BiFunction<List<Event>, Map<Long, Project>, List<TargetHeader>> { sourceEvents, projects ->
+                    sourceEvents.map { getTargetHeader(it, projects[it.projectId]) }
+                }
             )
-            .flatMap { events ->
-                Single.zip(
-                        Single.just(events),
-                        getDistinctProjects(events),
-                        BiFunction<List<Event>, Map<Long, Project>, List<TargetHeader>> { sourceEvents, projects ->
-                            sourceEvents.map { getTargetHeader(it, projects[it.projectId]) }
-                        }
-                )
-            }
-            .subscribeOn(schedulers.io())
-            .observeOn(schedulers.ui())
+        }
+        .subscribeOn(schedulers.io())
+        .observeOn(schedulers.ui())
 
     private fun getDistinctProjects(events: List<Event>): Single<Map<Long, Project>> {
         return Observable.fromIterable(events)
-                .distinct { it.projectId }
-                .flatMapSingle { event -> api.getProject(event.projectId) }
-                .toMap { it.id }
+            .distinct { it.projectId }
+            .flatMapSingle { event -> api.getProject(event.projectId) }
+            .toMap { it.id }
     }
 
     private fun getTargetHeader(event: Event, project: Project?): TargetHeader {
@@ -78,20 +78,20 @@ class EventRepository @Inject constructor(
         }
 
         return TargetHeader(
-                event.author,
-                getIcon(event.actionName),
-                TargetHeaderTitle.Event(
-                        event.author.name,
-                        event.actionName,
-                        targetData.name,
-                        project?.name ?: ""
-                ),
-                getBody(event) ?: "",
-                event.createdAt,
-                targetData.target,
-                targetData.id,
-                getTargetInternal(event),
-                badges
+            event.author,
+            getIcon(event.actionName),
+            TargetHeaderTitle.Event(
+                event.author.name,
+                event.actionName,
+                targetData.name,
+                project?.name ?: ""
+            ),
+            getBody(event) ?: "",
+            event.createdAt,
+            targetData.target,
+            targetData.id,
+            getTargetInternal(event),
+            badges
         )
     }
 
@@ -116,37 +116,77 @@ class EventRepository @Inject constructor(
     }
 
     private fun getTarget(event: Event): TargetData =
-            when (event.targetType) {
-                EventTargetType.ISSUE -> TargetData(AppTarget.ISSUE, "${AppTarget.ISSUE} #${event.targetIid!!}", event.targetId!!)
-                EventTargetType.MERGE_REQUEST -> TargetData(AppTarget.MERGE_REQUEST, "${AppTarget.MERGE_REQUEST} !${event.targetIid!!}", event.targetId!!)
-                EventTargetType.MILESTONE -> TargetData(AppTarget.MILESTONE, "${AppTarget.MILESTONE} ${event.targetIid!!}", event.targetId!!)
-                EventTargetType.SNIPPET -> TargetData(AppTarget.SNIPPET, "${AppTarget.SNIPPET} ${event.targetIid!!}", event.targetId!!)
-                EventTargetType.DIFF_NOTE,
-                EventTargetType.NOTE -> {
-                    if (event.note != null) {
-                        when (event.note.noteableType) {
-                            EventTargetType.ISSUE -> TargetData(AppTarget.ISSUE, "${AppTarget.ISSUE} #${event.note.noteableIid}", event.note.noteableId)
-                            EventTargetType.MERGE_REQUEST -> TargetData(AppTarget.MERGE_REQUEST, "${AppTarget.MERGE_REQUEST} !${event.note.noteableIid}", event.note.noteableId)
-                            EventTargetType.MILESTONE -> TargetData(AppTarget.MILESTONE, "${AppTarget.MILESTONE} ${event.note.noteableIid}", event.note.noteableId)
-                            EventTargetType.SNIPPET -> TargetData(AppTarget.SNIPPET, "${AppTarget.SNIPPET} ${event.note.noteableIid}", event.note.noteableId)
-                            null -> TargetData(AppTarget.COMMIT, "${AppTarget.COMMIT} ${event.note.id}", event.note.id)
-                            else -> throw IllegalArgumentException("Unsupported noteable target type: ${event.note.noteableType}.")
-                        }
-                    } else {
-                        throw IllegalArgumentException("Unsupported event type: $event.")
+        when (event.targetType) {
+            EventTargetType.ISSUE -> TargetData(
+                AppTarget.ISSUE,
+                "${AppTarget.ISSUE} #${event.targetIid!!}",
+                event.targetId!!
+            )
+            EventTargetType.MERGE_REQUEST -> TargetData(
+                AppTarget.MERGE_REQUEST,
+                "${AppTarget.MERGE_REQUEST} !${event.targetIid!!}",
+                event.targetId!!
+            )
+            EventTargetType.MILESTONE -> TargetData(
+                AppTarget.MILESTONE,
+                "${AppTarget.MILESTONE} ${event.targetIid!!}",
+                event.targetId!!
+            )
+            EventTargetType.SNIPPET -> TargetData(
+                AppTarget.SNIPPET,
+                "${AppTarget.SNIPPET} ${event.targetIid!!}",
+                event.targetId!!
+            )
+            EventTargetType.DIFF_NOTE,
+            EventTargetType.NOTE -> {
+                if (event.note != null) {
+                    when (event.note.noteableType) {
+                        EventTargetType.ISSUE -> TargetData(
+                            AppTarget.ISSUE,
+                            "${AppTarget.ISSUE} #${event.note.noteableIid}",
+                            event.note.noteableId
+                        )
+                        EventTargetType.MERGE_REQUEST -> TargetData(
+                            AppTarget.MERGE_REQUEST,
+                            "${AppTarget.MERGE_REQUEST} !${event.note.noteableIid}",
+                            event.note.noteableId
+                        )
+                        EventTargetType.MILESTONE -> TargetData(
+                            AppTarget.MILESTONE,
+                            "${AppTarget.MILESTONE} ${event.note.noteableIid}",
+                            event.note.noteableId
+                        )
+                        EventTargetType.SNIPPET -> TargetData(
+                            AppTarget.SNIPPET,
+                            "${AppTarget.SNIPPET} ${event.note.noteableIid}",
+                            event.note.noteableId
+                        )
+                        null -> TargetData(AppTarget.COMMIT, "${AppTarget.COMMIT} ${event.note.id}", event.note.id)
+                        else -> throw IllegalArgumentException("Unsupported noteable target type: ${event.note.noteableType}.")
                     }
-                }
-                else -> {
-                    if (event.pushData != null) {
-                        when (event.pushData.refType) {
-                            PushDataRefType.BRANCH -> TargetData(AppTarget.PROJECT, "${AppTarget.BRANCH} ${event.pushData.ref}", event.projectId)
-                            PushDataRefType.TAG -> TargetData(AppTarget.PROJECT, "${AppTarget.TAG} ${event.pushData.ref}", event.projectId)
-                        }
-                    } else {
-                        TargetData(AppTarget.PROJECT, "${AppTarget.PROJECT} ${event.projectId}", event.projectId)
-                    }
+                } else {
+                    throw IllegalArgumentException("Unsupported event type: $event.")
                 }
             }
+            else -> {
+                if (event.pushData != null) {
+                    when (event.pushData.refType) {
+                        PushDataRefType.BRANCH -> TargetData(
+                            AppTarget.PROJECT,
+                            "${AppTarget.BRANCH} ${event.pushData.ref}",
+                            event.projectId
+                        )
+                        PushDataRefType.TAG -> TargetData(
+                            AppTarget.PROJECT,
+                            "${AppTarget.TAG} ${event.pushData.ref}",
+                            event.projectId
+                        )
+                    }
+                } else {
+                    TargetData(AppTarget.PROJECT, "${AppTarget.PROJECT} ${event.projectId}", event.projectId)
+                }
+            }
+        }
 
     private fun getTargetInternal(event: Event): TargetInternal? =
         when (event.targetType) {
@@ -179,8 +219,8 @@ class EventRepository @Inject constructor(
     }
 
     private data class TargetData(
-            val target: AppTarget,
-            val name: String,
-            val id: Long
+        val target: AppTarget,
+        val name: String,
+        val id: Long
     )
 }
