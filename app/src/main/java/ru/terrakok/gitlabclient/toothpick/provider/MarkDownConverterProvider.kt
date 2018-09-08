@@ -1,10 +1,13 @@
 package ru.terrakok.gitlabclient.toothpick.provider
 
 import android.content.Context
+import android.graphics.Rect
 import okhttp3.OkHttpClient
 import ru.noties.markwon.SpannableConfiguration
 import ru.noties.markwon.UrlProcessorRelativeToAbsolute
 import ru.noties.markwon.il.AsyncDrawableLoader
+import ru.noties.markwon.renderer.ImageSize
+import ru.noties.markwon.renderer.ImageSizeResolver
 import ru.noties.markwon.spans.SpannableTheme
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.extension.color
@@ -38,11 +41,39 @@ class MarkDownConverterProvider @Inject constructor(
 
     private val urlProcessor = UrlProcessorRelativeToAbsolute("https://gitlab.com/")
 
+    private val imageSizeResolver = object : ImageSizeResolver() {
+        override fun resolveImageSize(
+            imageSize: ImageSize?,
+            imageBounds: Rect,
+            canvasWidth: Int,
+            textSize: Float
+        ): Rect {
+            // This implementation was taken from SNAPSHOT @2.0,0.
+            // Post process bounds to fit canvasWidth (previously was inside AsyncDrawable)
+            // must be applied only if imageSize is null.
+            val rect: Rect
+            val w = imageBounds.width()
+            rect = if (w > canvasWidth) {
+                val reduceRatio = w.toFloat() / canvasWidth
+                Rect(
+                    0,
+                    0,
+                    canvasWidth,
+                    (imageBounds.height() / reduceRatio + .5f).toInt()
+                )
+            } else {
+                imageBounds
+            }
+            return rect
+        }
+    }
+
     private val spannableConfig
         get() = SpannableConfiguration.builder(context)
             .asyncDrawableLoader(asyncDrawableLoader)
             .urlProcessor(urlProcessor)
             .theme(spannableTheme)
+            .imageSizeResolver(imageSizeResolver)
             .build()
 
     override fun get() = MarkDownConverter(
