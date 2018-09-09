@@ -143,6 +143,8 @@ class TargetHeaderAdapterDelegate(
             }
         }
 
-        fun release() = Markwon.unscheduleDrawables(itemView.descriptionTextView)
+        fun release() {
+            Markwon.unscheduleDrawables(itemView.descriptionTextView)
+        }
     }
 }

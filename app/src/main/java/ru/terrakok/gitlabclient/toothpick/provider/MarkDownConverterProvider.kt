@@ -13,6 +13,7 @@ import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.extension.color
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
+import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultServerPath
 import java.util.concurrent.Executors
 import javax.inject.Inject
 import javax.inject.Provider
@@ -23,7 +24,8 @@ import javax.inject.Provider
 class MarkDownConverterProvider @Inject constructor(
     private val context: Context,
     private val httpClient: OkHttpClient,
-    private val schedulers: SchedulersProvider
+    private val schedulers: SchedulersProvider,
+    @DefaultServerPath private val defaultServerPath: String
 ) : Provider<MarkDownConverter> {
 
     private val spannableTheme
@@ -39,7 +41,7 @@ class MarkDownConverterProvider @Inject constructor(
             .resources(context.resources)
             .build()
 
-    private val urlProcessor = UrlProcessorRelativeToAbsolute("https://gitlab.com/")
+    private val urlProcessor = UrlProcessorRelativeToAbsolute(defaultServerPath)
 
     private val imageSizeResolver = object : ImageSizeResolver() {
         override fun resolveImageSize(

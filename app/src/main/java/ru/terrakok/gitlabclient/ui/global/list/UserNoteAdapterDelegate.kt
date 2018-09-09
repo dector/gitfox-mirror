@@ -60,6 +60,8 @@ class UserNoteAdapterDelegate(private val clickListener: (Note) -> Unit) : Adapt
             }
         }
 
-        fun release() = Markwon.unscheduleDrawables(itemView.descriptionTextView)
+        fun release() {
+            Markwon.unscheduleDrawables(itemView.descriptionTextView)
+        }
     }
 }
