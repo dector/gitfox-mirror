@@ -39,8 +39,6 @@ class IssueInfoFragment : BaseFragment(), IssueInfoView {
 
         titleTextView.text = issue.title
         stateImageView.setImageResource(R.drawable.circle)
-        // TODO: issue info (Display action user name for the CLOSED states).
-        // Wait for https://gitlab.com/gitlab-org/gitlab-ce/issues/41967
         when (issue.state) {
             IssueState.OPENED -> {
                 stateImageView.setColorFilter(context!!.color(R.color.green))
@@ -53,7 +51,16 @@ class IssueInfoFragment : BaseFragment(), IssueInfoView {
             }
             IssueState.CLOSED -> {
                 stateImageView.setColorFilter(context!!.color(R.color.red))
-                subtitleTextView.text = getString(R.string.target_status_closed)
+                subtitleTextView.text = if (issue.closedBy != null && issue.closedAt != null) {
+                    String.format(
+                        getString(R.string.issue_info_subtitle),
+                        getString(R.string.target_status_closed),
+                        issue.closedBy.name,
+                        issue.closedAt.humanTime(resources)
+                    )
+                } else {
+                    getString(R.string.target_status_closed)
+                }
             }
         }
         avatarImageView.loadRoundedImage(issue.author.avatarUrl, context)

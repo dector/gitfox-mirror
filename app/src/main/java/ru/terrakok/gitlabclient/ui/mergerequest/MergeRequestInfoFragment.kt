@@ -35,8 +35,6 @@ class MergeRequestInfoFragment : BaseFragment(), MergeRequestInfoView {
             ?.setTitle("!${mergeRequest.iid}", mrInfo.project.name)
 
         titleTextView.text = mergeRequest.title
-        // TODO: merge request info (Display action user name for the MERGED/CLOSED states).
-        // Wait for https://gitlab.com/gitlab-org/gitlab-ce/issues/41905.
         when (mergeRequest.state) {
             MergeRequestState.OPENED -> {
                 stateImageView.tint(R.color.green)
@@ -49,11 +47,31 @@ class MergeRequestInfoFragment : BaseFragment(), MergeRequestInfoView {
             }
             MergeRequestState.MERGED -> {
                 stateImageView.tint(R.color.blue)
-                subtitleTextView.text = getString(R.string.target_status_merged)
+                subtitleTextView.text =
+                    if (mergeRequest.mergedBy != null && mergeRequest.mergedAt != null) {
+                        String.format(
+                            getString(R.string.issue_info_subtitle),
+                            getString(R.string.target_status_merged),
+                            mergeRequest.mergedBy.name,
+                            mergeRequest.mergedAt.humanTime(resources)
+                        )
+                    } else {
+                        getString(R.string.target_status_merged)
+                    }
             }
             MergeRequestState.CLOSED -> {
                 stateImageView.tint(R.color.red)
-                subtitleTextView.text = getString(R.string.target_status_closed)
+                subtitleTextView.text =
+                    if (mergeRequest.closedBy != null && mergeRequest.closedAt != null) {
+                        String.format(
+                            getString(R.string.issue_info_subtitle),
+                            getString(R.string.target_status_closed),
+                            mergeRequest.closedBy.name,
+                            mergeRequest.closedAt.humanTime(resources)
+                        )
+                    } else {
+                        getString(R.string.target_status_closed)
+                    }
             }
         }
         avatarImageView.loadRoundedImage(mergeRequest.author.avatarUrl, context)
