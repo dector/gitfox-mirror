@@ -31,7 +31,7 @@ class MergeRequestInfoFragment : BaseFragment(), MergeRequestInfoView {
     override fun showInfo(mrInfo: MergeRequestInfoView.MergeRequestInfo) {
         val mergeRequest = mrInfo.mr
 
-        (parentFragment as? ToolbarConfigurator)
+        (parentFragment as? MergeRequestInfoToolbar)
             ?.setTitle("!${mergeRequest.iid}", mrInfo.project.name)
 
         titleTextView.text = mergeRequest.title
@@ -69,7 +69,7 @@ class MergeRequestInfoFragment : BaseFragment(), MergeRequestInfoView {
         showSnackMessage(message)
     }
 
-    interface ToolbarConfigurator {
+    interface MergeRequestInfoToolbar {
         fun setTitle(title: String, subTitle: String)
     }
 }

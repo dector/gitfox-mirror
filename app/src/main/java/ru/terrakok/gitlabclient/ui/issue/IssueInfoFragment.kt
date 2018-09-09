@@ -34,7 +34,7 @@ class IssueInfoFragment : BaseFragment(), IssueInfoView {
     override fun showIssue(issueInfo: IssueInfoView.IssueInfo) {
         val issue = issueInfo.issue
 
-        (parentFragment as? ToolbarConfigurator)
+        (parentFragment as? IssueInfoToolbar)
             ?.setTitle("#${issue.iid}", issueInfo.project.name)
 
         titleTextView.text = issue.title
@@ -68,7 +68,7 @@ class IssueInfoFragment : BaseFragment(), IssueInfoView {
         showSnackMessage(message)
     }
 
-    interface ToolbarConfigurator {
+    interface IssueInfoToolbar {
         fun setTitle(title: String, subTitle: String)
     }
 }

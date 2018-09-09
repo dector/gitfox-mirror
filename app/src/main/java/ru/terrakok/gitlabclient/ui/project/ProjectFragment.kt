@@ -17,7 +17,7 @@ import javax.inject.Inject
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 10.02.18.
  */
-class ProjectFragment : BaseFragment(), ProjectInfoFragment.ToolbarConfigurator {
+class ProjectFragment : BaseFragment(), ProjectInfoFragment.ProjectInfoToolbar {
     override val layoutRes: Int = R.layout.fragment_project
 
     private val currentTabFragment: BaseFragment?

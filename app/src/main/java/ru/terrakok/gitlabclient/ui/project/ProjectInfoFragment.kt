@@ -33,7 +33,7 @@ class ProjectInfoFragment : BaseFragment(), ProjectInfoView {
             .getInstance(ProjectInfoPresenter::class.java)
 
     override fun showProject(project: Project, mdReadme: CharSequence) {
-        (parentFragment as? ToolbarConfigurator)?.apply {
+        (parentFragment as? ProjectInfoToolbar)?.apply {
             setTitle(project.name)
             setShareUrl(project.webUrl)
         }
@@ -64,7 +64,7 @@ class ProjectInfoFragment : BaseFragment(), ProjectInfoView {
         showSnackMessage(message)
     }
 
-    interface ToolbarConfigurator {
+    interface ProjectInfoToolbar {
         fun setTitle(title: String)
         fun setShareUrl(url: String?)
     }

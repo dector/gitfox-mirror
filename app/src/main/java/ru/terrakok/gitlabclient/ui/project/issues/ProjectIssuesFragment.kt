@@ -9,8 +9,6 @@ import kotlinx.android.synthetic.main.layout_zero.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.entity.issue.IssueState
-import ru.terrakok.gitlabclient.extension.getEnum
-import ru.terrakok.gitlabclient.extension.putEnum
 import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.project.issues.ProjectIssuesPresenter
@@ -38,7 +36,7 @@ class ProjectIssuesFragment : BaseFragment(), ProjectIssuesView {
         scope.installModules(object : Module() {
             init {
                 bind(IssueState::class.java)
-                    .toInstance(arguments!!.getEnum<IssueState>(ARG_ISSUE_STATE))
+                    .toInstance(arguments!!.getSerializable(ARG_ISSUE_STATE) as IssueState)
             }
         })
 
@@ -59,7 +57,7 @@ class ProjectIssuesFragment : BaseFragment(), ProjectIssuesView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (arguments?.getEnum<IssueState>(ARG_ISSUE_STATE) == null) {
+        if (arguments?.getSerializable(ARG_ISSUE_STATE) == null) {
             throw IllegalArgumentException("Provide issue state as args.")
         }
     }
@@ -118,7 +116,7 @@ class ProjectIssuesFragment : BaseFragment(), ProjectIssuesView {
         fun create(issueState: IssueState) =
             ProjectIssuesFragment().apply {
                 arguments = Bundle().apply {
-                    putEnum(ARG_ISSUE_STATE, issueState)
+                    putSerializable(ARG_ISSUE_STATE, issueState)
                 }
             }
     }

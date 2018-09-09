@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
-import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
@@ -161,8 +160,3 @@ fun Fragment.showSnackMessage(message: String) {
         snackbar.show()
     }
 }
-
-inline fun <reified T : Enum<T>> Bundle.getEnum(key: String): T? = if (containsKey(key))
-    getInt(key).let { return@let enumValues<T>()[it] } else null
-
-fun <T : Enum<T>> Bundle.putEnum(key: String, value: T) = putInt(key, value.ordinal)

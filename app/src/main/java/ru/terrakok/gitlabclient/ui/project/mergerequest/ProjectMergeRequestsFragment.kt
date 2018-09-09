@@ -9,8 +9,6 @@ import kotlinx.android.synthetic.main.layout_zero.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
-import ru.terrakok.gitlabclient.extension.getEnum
-import ru.terrakok.gitlabclient.extension.putEnum
 import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.project.mergerequest.ProjectMergeRequestsPresenter
@@ -38,7 +36,7 @@ class ProjectMergeRequestsFragment : BaseFragment(), ProjectMergeRequestsView {
         scope.installModules(object : Module() {
             init {
                 bind(MergeRequestState::class.java)
-                        .toInstance(arguments!!.getEnum<MergeRequestState>(ARG_MERGE_REQUEST_STATE))
+                    .toInstance(arguments!!.getSerializable(ARG_MERGE_REQUEST_STATE) as MergeRequestState)
             }
         })
 
@@ -59,7 +57,7 @@ class ProjectMergeRequestsFragment : BaseFragment(), ProjectMergeRequestsView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (arguments?.getEnum<MergeRequestState>(ARG_MERGE_REQUEST_STATE) == null) {
+        if (arguments?.getSerializable(ARG_MERGE_REQUEST_STATE) == null) {
             throw IllegalArgumentException("Provide merge request state as args.")
         }
     }
@@ -116,10 +114,10 @@ class ProjectMergeRequestsFragment : BaseFragment(), ProjectMergeRequestsView {
         private const val ARG_MERGE_REQUEST_STATE = "arg merge request state"
 
         fun create(mergeRequestState: MergeRequestState) =
-                ProjectMergeRequestsFragment().apply {
-                    arguments = Bundle().apply {
-                        putEnum(ARG_MERGE_REQUEST_STATE, mergeRequestState)
-                    }
+            ProjectMergeRequestsFragment().apply {
+                arguments = Bundle().apply {
+                    putSerializable(ARG_MERGE_REQUEST_STATE, mergeRequestState)
                 }
+            }
     }
 }
