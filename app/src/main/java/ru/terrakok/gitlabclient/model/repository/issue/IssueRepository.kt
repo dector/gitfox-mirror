@@ -3,6 +3,7 @@ package ru.terrakok.gitlabclient.model.repository.issue
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
+import ru.terrakok.gitlabclient.entity.Note
 import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.Sort
@@ -12,6 +13,7 @@ import ru.terrakok.gitlabclient.entity.issue.Issue
 import ru.terrakok.gitlabclient.entity.issue.IssueScope
 import ru.terrakok.gitlabclient.entity.issue.IssueState
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
+import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultPageSize
@@ -23,7 +25,8 @@ import javax.inject.Inject
 class IssueRepository @Inject constructor(
     private val api: GitlabApi,
     private val schedulers: SchedulersProvider,
-    @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>
+    @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>,
+    private val markDownUrlResolver: MarkDownUrlResolver
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
 
@@ -40,6 +43,32 @@ class IssueRepository @Inject constructor(
         pageSize: Int = defaultPageSize
     ) = api
         .getMyIssues(scope, state, labels, milestone, iids, orderBy, sort, search, page, pageSize)
+        .flatMap { issues ->
+            Single.zip(
+                Single.just(issues),
+                getDistinctProjects(issues),
+                BiFunction<List<Issue>, Map<Long, Project>, List<TargetHeader>> { sourceIssues, projects ->
+                    sourceIssues.map { getTargetHeader(it, projects[it.projectId]!!) }
+                }
+            )
+        }
+        .subscribeOn(schedulers.io())
+        .observeOn(schedulers.ui())
+
+    fun getIssues(
+        projectId: Long,
+        scope: IssueScope? = null,
+        state: IssueState? = null,
+        labels: String? = null,
+        milestone: String? = null,
+        iids: Array<Long>? = null,
+        orderBy: OrderBy? = null,
+        sort: Sort? = null,
+        search: String? = null,
+        page: Int,
+        pageSize: Int = defaultPageSize
+    ) = api
+        .getIssues(projectId, scope, state, labels, milestone, iids, orderBy, sort, search, page, pageSize)
         .flatMap { issues ->
             Single.zip(
                 Single.just(issues),
@@ -105,11 +134,31 @@ class IssueRepository @Inject constructor(
     fun getIssueNotes(
         projectId: Long,
         issueId: Long
-    ) = api
-        .getIssueDiscussions(projectId, issueId)
-        .flattenAsObservable { it }
-        .concatMap { discussion -> Observable.fromIterable(discussion.notes) }
-        .toList()
+    ) = Single
+        .zip(
+            api.getProject(projectId),
+            getDiscussionNotes(projectId, issueId),
+            BiFunction<Project, List<Note>, List<Note>> { project, notes ->
+                ArrayList(notes).apply {
+                    val iterator = listIterator()
+                    while (iterator.hasNext()) {
+                        val note = iterator.next()
+                        val resolved = markDownUrlResolver.resolve(note.body, project)
+
+                        if (resolved != note.body) {
+                            iterator.set(note.copy(body = resolved))
+                        }
+                    }
+                }
+            }
+        )
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
+
+    private fun getDiscussionNotes(projectId: Long, issueId: Long) =
+        api
+            .getIssueDiscussions(projectId, issueId)
+            .flattenAsObservable { it }
+            .concatMap { discussion -> Observable.fromIterable(discussion.notes) }
+            .toList()
 }

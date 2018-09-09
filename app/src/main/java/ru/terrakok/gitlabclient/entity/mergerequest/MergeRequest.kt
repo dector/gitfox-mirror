@@ -34,5 +34,12 @@ data class MergeRequest(
     @SerializedName("force_remove_source_branch") val forceRemoveSourceBranch: Boolean,
     @SerializedName("web_url") val webUrl: String?,
     @SerializedName("time_stats") val timeStats: MergeRequestTimeStats?,
-    @SerializedName("labels") val labels: List<String>
+    @SerializedName("labels") val labels: List<String>,
+    // The closed_by attribute was introduced in GitLab 10.6.
+    // This value will only be present for merge requests which were closed/merged after GitLab 10.6
+    // and when the user account that closed/merged the issue still exists.
+    @SerializedName("closed_by") val closedBy: Author?,
+    @SerializedName("closed_at") val closedAt: LocalDateTime?,
+    @SerializedName("merged_by") val mergedBy: Author?,
+    @SerializedName("merged_at") val mergedAt: LocalDateTime?
 )

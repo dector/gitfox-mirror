@@ -4,6 +4,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import org.threeten.bp.LocalDateTime
+import ru.terrakok.gitlabclient.entity.Note
 import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.Sort
@@ -14,6 +15,7 @@ import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestScope
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestViewType
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
+import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultPageSize
@@ -22,11 +24,45 @@ import javax.inject.Inject
 class MergeRequestRepository @Inject constructor(
     private val api: GitlabApi,
     private val schedulers: SchedulersProvider,
-    @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>
+    @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>,
+    private val markDownUrlResolver: MarkDownUrlResolver
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
 
+    fun getMyMergeRequests(
+        state: MergeRequestState? = null,
+        milestone: String? = null,
+        viewType: MergeRequestViewType? = null,
+        labels: String? = null,
+        createdBefore: LocalDateTime? = null,
+        createdAfter: LocalDateTime? = null,
+        scope: MergeRequestScope? = null,
+        authorId: Int? = null,
+        assigneeId: Int? = null,
+        meReactionEmoji: String? = null,
+        orderBy: OrderBy? = null,
+        sort: Sort? = null,
+        page: Int,
+        pageSize: Int = defaultPageSize
+    ) = api
+        .getMyMergeRequests(
+            state, milestone, viewType, labels, createdBefore, createdAfter, scope,
+            authorId, assigneeId, meReactionEmoji, orderBy, sort, page, pageSize
+        )
+        .flatMap { mrs ->
+            Single.zip(
+                Single.just(mrs),
+                getDistinctProjects(mrs),
+                BiFunction<List<MergeRequest>, Map<Long, Project>, List<TargetHeader>> { sourceMrs, projects ->
+                    sourceMrs.map { getTargetHeader(it, projects[it.projectId]!!) }
+                }
+            )
+        }
+        .subscribeOn(schedulers.io())
+        .observeOn(schedulers.ui())
+
     fun getMergeRequests(
+        projectId: Long,
         state: MergeRequestState? = null,
         milestone: String? = null,
         viewType: MergeRequestViewType? = null,
@@ -43,8 +79,8 @@ class MergeRequestRepository @Inject constructor(
         pageSize: Int = defaultPageSize
     ) = api
         .getMergeRequests(
-            state, milestone, viewType, labels, createdBefore, createdAfter, scope,
-            authorId, assigneeId, meReactionEmoji, orderBy, sort, page, pageSize
+            projectId, state, milestone, viewType, labels, createdBefore, createdAfter,
+            scope, authorId, assigneeId, meReactionEmoji, orderBy, sort, page, pageSize
         )
         .flatMap { mrs ->
             Single.zip(
@@ -112,11 +148,31 @@ class MergeRequestRepository @Inject constructor(
     fun getMergeRequestNotes(
         projectId: Long,
         mergeRequestId: Long
-    ) = api
-        .getMergeRequestDiscussions(projectId, mergeRequestId)
-        .flattenAsObservable { it }
-        .concatMap { discussion -> Observable.fromIterable(discussion.notes) }
-        .toList()
+    ) = Single
+        .zip(
+            api.getProject(projectId),
+            getDiscussionNotes(projectId, mergeRequestId),
+            BiFunction<Project, List<Note>, List<Note>> { project, notes ->
+                ArrayList(notes).apply {
+                    val iterator = listIterator()
+                    while (iterator.hasNext()) {
+                        val note = iterator.next()
+                        val resolved = markDownUrlResolver.resolve(note.body, project)
+
+                        if (resolved != note.body) {
+                            iterator.set(note.copy(body = resolved))
+                        }
+                    }
+                }
+            }
+        )
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
+
+    private fun getDiscussionNotes(projectId: Long, mergeRequestId: Long) =
+        api
+            .getMergeRequestDiscussions(projectId, mergeRequestId)
+            .flattenAsObservable { it }
+            .concatMap { discussion -> Observable.fromIterable(discussion.notes) }
+            .toList()
 }

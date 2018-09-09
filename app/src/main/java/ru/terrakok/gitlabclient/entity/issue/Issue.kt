@@ -24,5 +24,10 @@ data class Issue(
     @SerializedName("web_url") val webUrl: String?,
     @SerializedName("confidential") val confidential: Boolean,
     @SerializedName("upvotes") val upvotes: Int,
-    @SerializedName("downvotes") val downvotes: Int
+    @SerializedName("downvotes") val downvotes: Int,
+    // The closed_by attribute was introduced in GitLab 10.6.
+    // This value will only be present for issues which were closed after GitLab 10.6 and
+    // when the user account that closed the issue still exists.
+    @SerializedName("closed_by") val closedBy: Author?,
+    @SerializedName("closed_at") val closedAt: LocalDateTime?
 )

@@ -34,9 +34,8 @@ class MergeRequestNotesPresenter @Inject constructor(
 
     private fun requestNotes() {
         mrInteractor.getMergeRequestNotes(projectId, mrId)
-            .toObservable()
-            .flatMapIterable { it }
-            .flatMap { note ->
+            .flattenAsObservable { it }
+            .concatMap { note ->
                 mdConverter.markdownToSpannable(note.body)
                     .map { NoteWithFormattedBody(note, it) }
                     .toObservable()

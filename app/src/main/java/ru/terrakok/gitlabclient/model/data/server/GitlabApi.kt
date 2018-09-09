@@ -91,6 +91,21 @@ interface GitlabApi {
         @Query("per_page") pageSize: Int
     ): Single<List<Issue>>
 
+    @GET("$API_PATH/projects/{project_id}/issues")
+    fun getIssues(
+        @Path("project_id") projectId: Long,
+        @Query("scope") scope: IssueScope?,
+        @Query("state") state: IssueState?,
+        @Query("labels") labels: String?,
+        @Query("milestone") milestone: String?,
+        @Query("iids") iids: Array<Long>?,
+        @Query("order_by") orderBy: OrderBy?,
+        @Query("sort") sort: Sort?,
+        @Query("search") search: String?,
+        @Query("page") page: Int,
+        @Query("per_page") pageSize: Int
+    ): Single<List<Issue>>
+
     @GET("$API_PATH/projects/{project_id}/issues/{issue_id}")
     fun getIssue(
         @Path("project_id") projectId: Long,
@@ -110,7 +125,7 @@ interface GitlabApi {
     ): Single<List<Event>>
 
     @GET("$API_PATH/merge_requests")
-    fun getMergeRequests(
+    fun getMyMergeRequests(
         @Query("state") state: MergeRequestState?,
         @Query("milestone") milestone: String?,
         @Query("view") viewType: MergeRequestViewType?,
@@ -127,7 +142,8 @@ interface GitlabApi {
         @Query("per_page") pageSize: Int
     ): Single<List<MergeRequest>>
 
-    fun getProjectMergeRequests(
+    @GET("$API_PATH/projects/{project_id}/merge_requests")
+    fun getMergeRequests(
         @Path("project_id") projectId: Long,
         @Query("state") state: MergeRequestState?,
         @Query("milestone") milestone: String?,

@@ -14,7 +14,7 @@ import javax.inject.Inject
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 14.02.18.
  */
-class MergeRequestFragment : BaseFragment(), MergeRequestInfoFragment.ToolbarConfigurator {
+class MergeRequestFragment : BaseFragment(), MergeRequestInfoFragment.MergeRequestInfoToolbar {
 
     override val layoutRes = R.layout.fragment_mr
 
