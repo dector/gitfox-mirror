@@ -10,16 +10,12 @@ import ru.terrakok.gitlabclient.model.system.SchedulersProvider
  */
 class MarkDownConverter(
     private val config: SpannableConfiguration,
-    private val imageHostHolder: ImageHostHolder,
     private val schedulers: SchedulersProvider
 ) {
-    class ImageHostHolder(var url: String)
 
-    fun markdownToSpannable(raw: String): Single<CharSequence> = Single
-        .fromCallable {
-            //                imageHostHolder.url = "" todo resolve image urls
-            Markwon.markdown(config, raw)
-        }
-        .subscribeOn(schedulers.computation())
-        .observeOn(schedulers.ui())
+    fun markdownToSpannable(raw: String): Single<CharSequence> =
+        Single
+            .fromCallable { Markwon.markdown(config, raw) }
+            .subscribeOn(schedulers.computation())
+            .observeOn(schedulers.ui())
 }

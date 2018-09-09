@@ -3,6 +3,7 @@ package ru.terrakok.gitlabclient.toothpick.module
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
+import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.model.interactor.auth.AuthInteractor
 import ru.terrakok.gitlabclient.model.interactor.auth.OAuthParams
 import ru.terrakok.gitlabclient.model.interactor.event.EventInteractor
@@ -40,6 +41,7 @@ class ServerModule(serverUrl: String) : Module() {
         bind(OkHttpClient::class.java).toProvider(OkHttpClientProvider::class.java).providesSingletonInScope()
         bind(GitlabApi::class.java).toProvider(ApiProvider::class.java).providesSingletonInScope()
         bind(MarkDownConverter::class.java).toProvider(MarkDownConverterProvider::class.java).providesSingletonInScope()
+        bind(MarkDownUrlResolver::class.java)
 
         //Auth
         //todo: before release change and move to private config
