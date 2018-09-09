@@ -18,10 +18,10 @@ import javax.inject.Inject
 
 @InjectViewState
 class ProjectsListPresenter @Inject constructor(
-        @ProjectListMode private val modeWrapper: PrimitiveWrapper<Int>,
-        private val router: FlowRouter,
-        private val interactor: ProjectInteractor,
-        private val errorHandler: ErrorHandler
+    @ProjectListMode private val modeWrapper: PrimitiveWrapper<Int>,
+    private val router: FlowRouter,
+    private val interactor: ProjectInteractor,
+    private val errorHandler: ErrorHandler
 ) : BasePresenter<ProjectsListView>() {
 
     companion object {
@@ -39,40 +39,40 @@ class ProjectsListPresenter @Inject constructor(
     }
 
     private val paginator = Paginator(
-            { getProjectsSingle(it) },
-            object : Paginator.ViewController<Project> {
-                override fun showEmptyProgress(show: Boolean) {
-                    viewState.showEmptyProgress(show)
-                }
+        { getProjectsSingle(it) },
+        object : Paginator.ViewController<Project> {
+            override fun showEmptyProgress(show: Boolean) {
+                viewState.showEmptyProgress(show)
+            }
 
-                override fun showEmptyError(show: Boolean, error: Throwable?) {
-                    if (error != null) {
-                        errorHandler.proceed(error, { viewState.showEmptyError(show, it) })
-                    } else {
-                        viewState.showEmptyError(show, null)
-                    }
-                }
-
-                override fun showErrorMessage(error: Throwable) {
-                    errorHandler.proceed(error, { viewState.showMessage(it) })
-                }
-
-                override fun showEmptyView(show: Boolean) {
-                    viewState.showEmptyView(show)
-                }
-
-                override fun showData(show: Boolean, data: List<Project>) {
-                    viewState.showProjects(show, data)
-                }
-
-                override fun showRefreshProgress(show: Boolean) {
-                    viewState.showRefreshProgress(show)
-                }
-
-                override fun showPageProgress(show: Boolean) {
-                    viewState.showPageProgress(show)
+            override fun showEmptyError(show: Boolean, error: Throwable?) {
+                if (error != null) {
+                    errorHandler.proceed(error, { viewState.showEmptyError(show, it) })
+                } else {
+                    viewState.showEmptyError(show, null)
                 }
             }
+
+            override fun showErrorMessage(error: Throwable) {
+                errorHandler.proceed(error, { viewState.showMessage(it) })
+            }
+
+            override fun showEmptyView(show: Boolean) {
+                viewState.showEmptyView(show)
+            }
+
+            override fun showData(show: Boolean, data: List<Project>) {
+                viewState.showProjects(show, data)
+            }
+
+            override fun showRefreshProgress(show: Boolean) {
+                viewState.showRefreshProgress(show)
+            }
+
+            override fun showPageProgress(show: Boolean) {
+                viewState.showPageProgress(show)
+            }
+        }
     )
 
     private fun getProjectsSingle(page: Int) = when (mode) {

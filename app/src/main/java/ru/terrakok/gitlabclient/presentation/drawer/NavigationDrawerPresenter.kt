@@ -1,7 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.drawer
 
 import com.arellomobile.mvp.InjectViewState
-import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.model.interactor.auth.AuthInteractor
 import ru.terrakok.gitlabclient.model.interactor.profile.MyProfileInteractor
@@ -18,11 +17,11 @@ import javax.inject.Inject
  */
 @InjectViewState
 class NavigationDrawerPresenter @Inject constructor(
-        private val router: FlowRouter,
-        private val menuController: GlobalMenuController,
-        private val authInteractor: AuthInteractor,
-        private val myProfileInteractor: MyProfileInteractor,
-        private val errorHandler: ErrorHandler
+    private val router: FlowRouter,
+    private val menuController: GlobalMenuController,
+    private val authInteractor: AuthInteractor,
+    private val myProfileInteractor: MyProfileInteractor,
+    private val errorHandler: ErrorHandler
 ) : BasePresenter<NavigationDrawerView>() {
 
     private var currentSelectedItem: MenuItem? = null
@@ -31,11 +30,11 @@ class NavigationDrawerPresenter @Inject constructor(
         super.onFirstViewAttach()
 
         myProfileInteractor.getMyProfile()
-                .subscribe(
-                        { viewState.showUserInfo(it) },
-                        { errorHandler.proceed(it) }
-                )
-                .connect()
+            .subscribe(
+                { viewState.showUserInfo(it) },
+                { errorHandler.proceed(it) }
+            )
+            .connect()
     }
 
     fun onScreenChanged(item: MenuItem) {
@@ -48,8 +47,8 @@ class NavigationDrawerPresenter @Inject constructor(
         menuController.close()
         if (item != currentSelectedItem) {
             when (item) {
-                ACTIVITY -> router.newRootScreen(Screens.MAIN_SCREEN)
-                PROJECTS -> router.newRootScreen(Screens.PROJECTS_SCREEN)
+                ACTIVITY -> router.newRootScreen(Screens.MAIN_FLOW)
+                PROJECTS -> router.newRootScreen(Screens.PROJECTS_CONTAINER_SCREEN)
                 ABOUT -> router.newRootScreen(Screens.ABOUT_SCREEN)
             }
         }
@@ -58,8 +57,11 @@ class NavigationDrawerPresenter @Inject constructor(
     fun onLogoutClick() {
         menuController.close()
         authInteractor.logout()
-        router.startFlow(Screens.AUTH_FLOW)
+        router.newRootFlow(Screens.AUTH_FLOW)
     }
 
-    fun onUserClick(id: Long) = router.startFlow(Screens.USER_FLOW, id)
+    fun onUserClick(id: Long) {
+        menuController.close()
+        router.startFlow(Screens.USER_FLOW, id)
+    }
 }

@@ -1,19 +1,19 @@
-package ru.terrakok.gitlabclient.presentation.project
+package ru.terrakok.gitlabclient.presentation.user.info
 
 import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
-import ru.terrakok.gitlabclient.entity.Project
+import ru.terrakok.gitlabclient.entity.User
 
 /**
- * @author Konstantin Tskhovrebov (aka terrakok) on 27.04.17.
+ * Created by Konstantin Tskhovrebov (aka @terrakok) on 25.11.17.
  */
 @StateStrategyType(AddToEndSingleStrategy::class)
-interface ProjectInfoView : MvpView {
-    fun showProject(project: Project, mdReadme: CharSequence)
+interface UserInfoView : MvpView {
+    fun showUser(user: User)
     fun showProgress(show: Boolean)
 
     @StateStrategyType(OneExecutionStateStrategy::class)
-    fun showMessage(message: String)
+    fun showMessage(msg: String)
 }

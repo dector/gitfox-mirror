@@ -8,7 +8,6 @@ import ru.terrakok.gitlabclient.model.data.server.ServerError
 import ru.terrakok.gitlabclient.model.interactor.auth.AuthInteractor
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
-import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -17,10 +16,10 @@ import javax.inject.Inject
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 03.11.17.
  */
 class ErrorHandler @Inject constructor(
-        private val router: FlowRouter,
-        private val authInteractor: AuthInteractor,
-        private val resourceManager: ResourceManager,
-        private val schedulers: SchedulersProvider
+    private val router: Router,
+    private val authInteractor: AuthInteractor,
+    private val resourceManager: ResourceManager,
+    private val schedulers: SchedulersProvider
 ) {
 
     private val authErrorRelay = PublishRelay.create<Boolean>()
@@ -43,13 +42,13 @@ class ErrorHandler @Inject constructor(
 
     private fun subscribeOnAuthErrors() {
         authErrorRelay
-                .throttleFirst(50, TimeUnit.MILLISECONDS)
-                .observeOn(schedulers.ui())
-                .subscribe { logout() }
+            .throttleFirst(50, TimeUnit.MILLISECONDS)
+            .observeOn(schedulers.ui())
+            .subscribe { logout() }
     }
 
     private fun logout() {
         authInteractor.logout()
-        router.startFlow(Screens.AUTH_FLOW)
+        router.newRootScreen(Screens.AUTH_FLOW)
     }
 }

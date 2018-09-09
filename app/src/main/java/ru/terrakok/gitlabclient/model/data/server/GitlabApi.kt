@@ -3,21 +3,8 @@ package ru.terrakok.gitlabclient.model.data.server
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.threeten.bp.LocalDateTime
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
-import retrofit2.http.Query
-import ru.terrakok.gitlabclient.entity.Discussion
-import ru.terrakok.gitlabclient.entity.File
-import ru.terrakok.gitlabclient.entity.OrderBy
-import ru.terrakok.gitlabclient.entity.Project
-import ru.terrakok.gitlabclient.entity.RepositoryTreeNode
-import ru.terrakok.gitlabclient.entity.Sort
-import ru.terrakok.gitlabclient.entity.TokenData
-import ru.terrakok.gitlabclient.entity.User
-import ru.terrakok.gitlabclient.entity.Visibility
+import retrofit2.http.*
+import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.entity.event.Event
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.event.EventTarget
@@ -37,7 +24,6 @@ import ru.terrakok.gitlabclient.entity.todo.TodoState
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 28.03.17
  */
 interface GitlabApi {
-
     companion object {
         const val API_PATH = "api/v4"
     }

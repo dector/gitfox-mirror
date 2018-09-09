@@ -8,6 +8,7 @@ import kotlinx.android.synthetic.main.layout_base_list.*
 import kotlinx.android.synthetic.main.layout_zero.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
+import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.my.todos.MyTodoListView
 import ru.terrakok.gitlabclient.presentation.my.todos.MyTodosPresenter
@@ -25,36 +26,29 @@ import toothpick.config.Module
  */
 class MyTodosFragment : BaseFragment(), MyTodoListView {
 
-    companion object {
-        private val ARG_MODE_IS_PENDING = "arg_mode_is_pending"
-
-        fun newInstance(isPending: Boolean) = MyTodosFragment().apply {
-            arguments = Bundle().apply { putBoolean(ARG_MODE_IS_PENDING, isPending) }
-        }
-    }
-
     override val layoutRes = R.layout.fragment_my_todos
 
     private val adapter: TargetsAdapter by lazy {
         TargetsAdapter(
-                { presenter.onUserClick(it) },
-                { presenter.onTodoClick(it) },
-                { presenter.loadNextTodosPage() }
+            { presenter.onUserClick(it) },
+            { presenter.onTodoClick(it) },
+            { presenter.loadNextTodosPage() }
         )
     }
     private var zeroViewHolder: ZeroViewHolder? = null
 
-    @InjectPresenter lateinit var presenter: MyTodosPresenter
+    @InjectPresenter
+    lateinit var presenter: MyTodosPresenter
 
     @ProvidePresenter
     fun providePresenter(): MyTodosPresenter {
         val scopeName = "MyTodoListScope_${hashCode()}"
-        val scope = Toothpick.openScopes(DI.MAIN_ACTIVITY_SCOPE, scopeName)
+        val scope = Toothpick.openScopes(DI.DRAWER_FLOW_SCOPE, scopeName)
         scope.installModules(object : Module() {
             init {
                 bind(PrimitiveWrapper::class.java)
-                        .withName(TodoListPendingState::class.java)
-                        .toInstance(PrimitiveWrapper(arguments?.get(ARG_MODE_IS_PENDING)))
+                    .withName(TodoListPendingState::class.java)
+                    .toInstance(PrimitiveWrapper(arguments?.get(ARG_MODE_IS_PENDING)))
             }
         })
 
@@ -109,5 +103,13 @@ class MyTodosFragment : BaseFragment(), MyTodoListView {
 
     override fun showMessage(message: String) {
         showSnackMessage(message)
+    }
+
+    companion object {
+        private const val ARG_MODE_IS_PENDING = "arg_mode_is_pending"
+
+        fun create(isPending: Boolean) = MyTodosFragment().apply {
+            arguments = Bundle().apply { putBoolean(ARG_MODE_IS_PENDING, isPending) }
+        }
     }
 }

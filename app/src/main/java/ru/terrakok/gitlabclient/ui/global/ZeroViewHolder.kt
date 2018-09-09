@@ -9,8 +9,8 @@ import ru.terrakok.gitlabclient.extension.visible
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 24.12.17.
  */
 class ZeroViewHolder(
-        private val view: ViewGroup,
-        private val refreshListener: () -> Unit = {}
+    private val view: ViewGroup,
+    private val refreshListener: () -> Unit = {}
 ) {
     private val res = view.resources
 

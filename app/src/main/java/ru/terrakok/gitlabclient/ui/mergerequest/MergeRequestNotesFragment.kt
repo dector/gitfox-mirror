@@ -6,6 +6,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.layout_base_list.*
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.presentation.global.NoteWithFormattedBody
 import ru.terrakok.gitlabclient.presentation.mergerequest.notes.MergeRequestNotesPresenter
 import ru.terrakok.gitlabclient.presentation.mergerequest.notes.MergeRequestNotesView
@@ -29,8 +30,8 @@ class MergeRequestNotesFragment : BaseFragment(), MergeRequestNotesView {
 
     @ProvidePresenter
     fun providePresenter() =
-            Toothpick.openScope(DI.MERGE_REQUEST_SCOPE)
-                    .getInstance(MergeRequestNotesPresenter::class.java)
+        Toothpick.openScope(DI.MERGE_REQUEST_FLOW_SCOPE)
+            .getInstance(MergeRequestNotesPresenter::class.java)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

@@ -6,14 +6,7 @@ import io.reactivex.functions.BiFunction
 import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.Sort
-import ru.terrakok.gitlabclient.entity.app.target.AppTarget
-import ru.terrakok.gitlabclient.entity.app.target.TargetBadge
-import ru.terrakok.gitlabclient.entity.app.target.TargetBadgeIcon
-import ru.terrakok.gitlabclient.entity.app.target.TargetBadgeStatus
-import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
-import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderIcon
-import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderTitle
-import ru.terrakok.gitlabclient.entity.app.target.TargetInternal
+import ru.terrakok.gitlabclient.entity.app.target.*
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.issue.Issue
 import ru.terrakok.gitlabclient.entity.issue.IssueScope
@@ -32,7 +25,6 @@ class IssueRepository @Inject constructor(
     private val schedulers: SchedulersProvider,
     @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>
 ) {
-
     private val defaultPageSize = defaultPageSizeWrapper.value
 
     fun getMyIssues(
@@ -47,35 +39,24 @@ class IssueRepository @Inject constructor(
         page: Int,
         pageSize: Int = defaultPageSize
     ) = api
-            .getMyIssues(
-                scope,
-                state,
-                labels,
-                milestone,
-                iids,
-                orderBy,
-                sort,
-                search,
-                page,
-                pageSize
+        .getMyIssues(scope, state, labels, milestone, iids, orderBy, sort, search, page, pageSize)
+        .flatMap { issues ->
+            Single.zip(
+                Single.just(issues),
+                getDistinctProjects(issues),
+                BiFunction<List<Issue>, Map<Long, Project>, List<TargetHeader>> { sourceIssues, projects ->
+                    sourceIssues.map { getTargetHeader(it, projects[it.projectId]!!) }
+                }
             )
-            .flatMap { issues ->
-                Single.zip(
-                    Single.just(issues),
-                    getDistinctProjects(issues),
-                    BiFunction<List<Issue>, Map<Long, Project>, List<TargetHeader>> { sourceIssues, projects ->
-                        sourceIssues.map { getTargetHeader(it, projects[it.projectId]!!) }
-                    }
-                )
-            }
-            .subscribeOn(schedulers.io())
-            .observeOn(schedulers.ui())
+        }
+        .subscribeOn(schedulers.io())
+        .observeOn(schedulers.ui())
 
     private fun getDistinctProjects(events: List<Issue>): Single<Map<Long, Project>> {
         return Observable.fromIterable(events)
-                .distinct { it.projectId }
-                .flatMapSingle { issue -> api.getProject(issue.projectId) }
-                .toMap { it.id }
+            .distinct { it.projectId }
+            .flatMapSingle { issue -> api.getProject(issue.projectId) }
+            .toMap { it.id }
     }
 
     private fun getTargetHeader(issue: Issue, project: Project): TargetHeader {
@@ -117,18 +98,18 @@ class IssueRepository @Inject constructor(
         projectId: Long,
         issueId: Long
     ) = api
-            .getIssue(projectId, issueId)
-            .subscribeOn(schedulers.io())
-            .observeOn(schedulers.ui())
+        .getIssue(projectId, issueId)
+        .subscribeOn(schedulers.io())
+        .observeOn(schedulers.ui())
 
     fun getIssueNotes(
         projectId: Long,
         issueId: Long
     ) = api
-            .getIssueDiscussions(projectId, issueId)
-            .flattenAsObservable { it }
-            .concatMap { discussion -> Observable.fromIterable(discussion.notes) }
-            .toList()
-            .subscribeOn(schedulers.io())
-            .observeOn(schedulers.ui())
+        .getIssueDiscussions(projectId, issueId)
+        .flattenAsObservable { it }
+        .concatMap { discussion -> Observable.fromIterable(discussion.notes) }
+        .toList()
+        .subscribeOn(schedulers.io())
+        .observeOn(schedulers.ui())
 }

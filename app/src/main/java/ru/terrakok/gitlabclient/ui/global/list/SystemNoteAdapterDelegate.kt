@@ -19,10 +19,10 @@ class SystemNoteAdapterDelegate(
 ) : AdapterDelegate<MutableList<NoteWithFormattedBody>>() {
 
     override fun isForViewType(items: MutableList<NoteWithFormattedBody>, position: Int) =
-            items[position].note.isSystem
+        items[position].note.isSystem
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder =
-            ViewHolder(parent.inflate(R.layout.item_system_note))
+        ViewHolder(parent.inflate(R.layout.item_system_note))
 
     override fun onBindViewHolder(
         items: MutableList<NoteWithFormattedBody>,
@@ -32,7 +32,6 @@ class SystemNoteAdapterDelegate(
     ) = (viewHolder as ViewHolder).bind(items[position])
 
     private inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
         private lateinit var note: Note
 
         init {

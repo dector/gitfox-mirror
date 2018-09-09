@@ -7,7 +7,7 @@ import javax.inject.Inject
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 03.12.17.
  */
 class AppInfoInteractor @Inject constructor(
-        private val appInfoRepository: AppInfoRepository
+    private val appInfoRepository: AppInfoRepository
 ) {
 
     fun getAppInfo() = appInfoRepository.getAppInfo()

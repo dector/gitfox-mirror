@@ -9,6 +9,7 @@ import ru.terrakok.gitlabclient.entity.issue.IssueState
 import ru.terrakok.gitlabclient.extension.color
 import ru.terrakok.gitlabclient.extension.humanTime
 import ru.terrakok.gitlabclient.extension.loadRoundedImage
+import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.presentation.issue.info.IssueInfoPresenter
 import ru.terrakok.gitlabclient.presentation.issue.info.IssueInfoView
 import ru.terrakok.gitlabclient.toothpick.DI
@@ -22,18 +23,19 @@ class IssueInfoFragment : BaseFragment(), IssueInfoView {
 
     override val layoutRes = R.layout.fragment_issue_info
 
-    @InjectPresenter lateinit var presenter: IssueInfoPresenter
+    @InjectPresenter
+    lateinit var presenter: IssueInfoPresenter
 
     @ProvidePresenter
     fun providePresenter() =
-        Toothpick.openScope(DI.ISSUE_SCOPE)
-                .getInstance(IssueInfoPresenter::class.java)
+        Toothpick.openScope(DI.ISSUE_FLOW_SCOPE)
+            .getInstance(IssueInfoPresenter::class.java)
 
     override fun showIssue(issueInfo: IssueInfoView.IssueInfo) {
         val issue = issueInfo.issue
 
         (parentFragment as? ToolbarConfigurator)
-                ?.setTitle("#${issue.iid}", issueInfo.project.name)
+            ?.setTitle("#${issue.iid}", issueInfo.project.name)
 
         titleTextView.text = issue.title
         stateImageView.setImageResource(R.drawable.circle)
@@ -43,10 +45,10 @@ class IssueInfoFragment : BaseFragment(), IssueInfoView {
             IssueState.OPENED -> {
                 stateImageView.setColorFilter(context!!.color(R.color.green))
                 subtitleTextView.text = String.format(
-                        getString(R.string.issue_info_subtitle),
-                        getString(R.string.target_status_opened),
-                        issue.author.name,
-                        issue.createdAt.humanTime(resources)
+                    getString(R.string.issue_info_subtitle),
+                    getString(R.string.target_status_opened),
+                    issue.author.name,
+                    issue.createdAt.humanTime(resources)
                 )
             }
             IssueState.CLOSED -> {

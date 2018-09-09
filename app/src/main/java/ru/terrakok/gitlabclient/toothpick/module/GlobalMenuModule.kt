@@ -6,7 +6,7 @@ import toothpick.config.Module
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 24.07.17.
  */
-class MainActivityModule : Module() {
+class GlobalMenuModule : Module() {
     init {
         bind(GlobalMenuController::class.java).toInstance(GlobalMenuController())
     }

@@ -6,6 +6,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.layout_base_list.*
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.presentation.global.NoteWithFormattedBody
 import ru.terrakok.gitlabclient.presentation.issue.notes.IssueNotesPresenter
 import ru.terrakok.gitlabclient.presentation.issue.notes.IssueNotesView
@@ -29,8 +30,8 @@ class IssueNotesFragment : BaseFragment(), IssueNotesView {
 
     @ProvidePresenter
     fun providePresenter() =
-            Toothpick.openScope(DI.ISSUE_SCOPE)
-                    .getInstance(IssueNotesPresenter::class.java)
+        Toothpick.openScope(DI.ISSUE_FLOW_SCOPE)
+            .getInstance(IssueNotesPresenter::class.java)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

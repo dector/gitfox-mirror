@@ -8,6 +8,7 @@ import kotlinx.android.synthetic.main.layout_base_list.*
 import kotlinx.android.synthetic.main.layout_zero.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
+import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.my.mergerequests.MyMergeRequestListView
 import ru.terrakok.gitlabclient.presentation.my.mergerequests.MyMergeRequestsPresenter
@@ -23,28 +24,16 @@ import toothpick.config.Module
  */
 class MyMergeRequestsFragment : BaseFragment(), MyMergeRequestListView {
 
-    companion object {
-        private val ARG_MODE_CREATED_BY_ME = "arg_mode_created_by_me"
-        private val ARG_MODE_ONLY_OPENED = "arg_mode_only opened"
-
-        fun newInstance(createdByMe: Boolean, onlyOpened: Boolean) =
-                MyMergeRequestsFragment().apply {
-                    arguments = Bundle().apply {
-                        putBoolean(ARG_MODE_CREATED_BY_ME, createdByMe)
-                        putBoolean(ARG_MODE_ONLY_OPENED, onlyOpened)
-                    }
-                }
-    }
-
     override val layoutRes = R.layout.fragment_my_merge_requests
 
-    @InjectPresenter lateinit var presenter: MyMergeRequestsPresenter
+    @InjectPresenter
+    lateinit var presenter: MyMergeRequestsPresenter
 
     private val adapter: TargetsAdapter by lazy {
         TargetsAdapter(
-                { presenter.onUserClick(it) },
-                { presenter.onMergeRequestClick(it) },
-                { presenter.loadNextMergeRequestsPage() }
+            { presenter.onUserClick(it) },
+            { presenter.onMergeRequestClick(it) },
+            { presenter.loadNextMergeRequestsPage() }
         )
     }
     private var zeroViewHolder: ZeroViewHolder? = null
@@ -52,14 +41,16 @@ class MyMergeRequestsFragment : BaseFragment(), MyMergeRequestListView {
     @ProvidePresenter
     fun providePresenter(): MyMergeRequestsPresenter {
         val scopeName = "MyMergeRequestsScope_${hashCode()}"
-        val scope = Toothpick.openScopes(DI.MAIN_ACTIVITY_SCOPE, scopeName)
+        val scope = Toothpick.openScopes(DI.DRAWER_FLOW_SCOPE, scopeName)
         scope.installModules(object : Module() {
             init {
                 bind(MyMergeRequestsPresenter.Filter::class.java)
-                        .toInstance(MyMergeRequestsPresenter.Filter(
-                                arguments?.getBoolean(ARG_MODE_CREATED_BY_ME) ?: true,
-                                arguments?.getBoolean(ARG_MODE_ONLY_OPENED) ?: false
-                        ))
+                    .toInstance(
+                        MyMergeRequestsPresenter.Filter(
+                            arguments?.getBoolean(ARG_MODE_CREATED_BY_ME) ?: true,
+                            arguments?.getBoolean(ARG_MODE_ONLY_OPENED) ?: false
+                        )
+                    )
             }
         })
 
@@ -82,10 +73,12 @@ class MyMergeRequestsFragment : BaseFragment(), MyMergeRequestListView {
     }
 
     fun showOnlyOpened(onlyOpened: Boolean) {
-        presenter.applyNewFilter(MyMergeRequestsPresenter.Filter(
+        presenter.applyNewFilter(
+            MyMergeRequestsPresenter.Filter(
                 arguments?.getBoolean(ARG_MODE_CREATED_BY_ME) ?: true,
                 onlyOpened
-        ))
+            )
+        )
     }
 
     override fun showRefreshProgress(show: Boolean) {
@@ -121,5 +114,18 @@ class MyMergeRequestsFragment : BaseFragment(), MyMergeRequestListView {
 
     override fun showMessage(message: String) {
         showSnackMessage(message)
+    }
+
+    companion object {
+        private const val ARG_MODE_CREATED_BY_ME = "arg_mode_created_by_me"
+        private const val ARG_MODE_ONLY_OPENED = "arg_mode_only opened"
+
+        fun create(createdByMe: Boolean, onlyOpened: Boolean) =
+            MyMergeRequestsFragment().apply {
+                arguments = Bundle().apply {
+                    putBoolean(ARG_MODE_CREATED_BY_ME, createdByMe)
+                    putBoolean(ARG_MODE_ONLY_OPENED, onlyOpened)
+                }
+            }
     }
 }

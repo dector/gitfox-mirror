@@ -17,11 +17,11 @@ import javax.inject.Inject
  */
 @InjectViewState
 class MyIssuesPresenter @Inject constructor(
-        initFilter: Filter,
-        private val issueInteractor: IssueInteractor,
-        private val mdConverter: MarkDownConverter,
-        private val errorHandler: ErrorHandler,
-        private val router: FlowRouter
+    initFilter: Filter,
+    private val issueInteractor: IssueInteractor,
+    private val mdConverter: MarkDownConverter,
+    private val errorHandler: ErrorHandler,
+    private val router: FlowRouter
 ) : BasePresenter<MyIssuesView>() {
     data class Filter(val createdByMe: Boolean, val onlyOpened: Boolean)
 
@@ -34,50 +34,50 @@ class MyIssuesPresenter @Inject constructor(
     }
 
     private val paginator = Paginator(
-            {
-                issueInteractor.getMyIssues(filter.createdByMe, filter.onlyOpened, it)
+        {
+            issueInteractor.getMyIssues(filter.createdByMe, filter.onlyOpened, it)
+                .toObservable()
+                .flatMapIterable { it }
+                .flatMap { item ->
+                    mdConverter.markdownToSpannable(item.body.toString())
+                        .map { md -> item.copy(body = md) }
                         .toObservable()
-                        .flatMapIterable { it }
-                        .flatMap { item ->
-                            mdConverter.markdownToSpannable(item.body.toString())
-                                    .map { md -> item.copy(body = md) }
-                                    .toObservable()
-                        }
-                        .toList()
-            },
-            object : Paginator.ViewController<TargetHeader> {
-                override fun showEmptyProgress(show: Boolean) {
-                    viewState.showEmptyProgress(show)
                 }
+                .toList()
+        },
+        object : Paginator.ViewController<TargetHeader> {
+            override fun showEmptyProgress(show: Boolean) {
+                viewState.showEmptyProgress(show)
+            }
 
-                override fun showEmptyError(show: Boolean, error: Throwable?) {
-                    if (error != null) {
-                        errorHandler.proceed(error, { viewState.showEmptyError(show, it) })
-                    } else {
-                        viewState.showEmptyError(show, null)
-                    }
-                }
-
-                override fun showErrorMessage(error: Throwable) {
-                    errorHandler.proceed(error, { viewState.showMessage(it) })
-                }
-
-                override fun showEmptyView(show: Boolean) {
-                    viewState.showEmptyView(show)
-                }
-
-                override fun showData(show: Boolean, data: List<TargetHeader>) {
-                    viewState.showIssues(show, data)
-                }
-
-                override fun showRefreshProgress(show: Boolean) {
-                    viewState.showRefreshProgress(show)
-                }
-
-                override fun showPageProgress(show: Boolean) {
-                    viewState.showPageProgress(show)
+            override fun showEmptyError(show: Boolean, error: Throwable?) {
+                if (error != null) {
+                    errorHandler.proceed(error, { viewState.showEmptyError(show, it) })
+                } else {
+                    viewState.showEmptyError(show, null)
                 }
             }
+
+            override fun showErrorMessage(error: Throwable) {
+                errorHandler.proceed(error, { viewState.showMessage(it) })
+            }
+
+            override fun showEmptyView(show: Boolean) {
+                viewState.showEmptyView(show)
+            }
+
+            override fun showData(show: Boolean, data: List<TargetHeader>) {
+                viewState.showIssues(show, data)
+            }
+
+            override fun showRefreshProgress(show: Boolean) {
+                viewState.showRefreshProgress(show)
+            }
+
+            override fun showPageProgress(show: Boolean) {
+                viewState.showPageProgress(show)
+            }
+        }
     )
 
     fun applyNewFilter(filter: Filter) {

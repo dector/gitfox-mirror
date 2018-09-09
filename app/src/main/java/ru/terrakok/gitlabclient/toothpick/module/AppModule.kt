@@ -16,7 +16,7 @@ import ru.terrakok.gitlabclient.model.repository.tools.Base64Tools
 import ru.terrakok.gitlabclient.model.system.AppSchedulers
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
-import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
+import ru.terrakok.gitlabclient.model.system.message.SystemMessageNotifier
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultPageSize
 import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultServerPath
@@ -36,25 +36,27 @@ class AppModule(context: Context) : Module() {
         bind(Base64Tools::class.java).toInstance(Base64Tools())
         bind(AssetManager::class.java).toInstance(context.assets)
         bind(RawAppData::class.java)
+        bind(SystemMessageNotifier::class.java).toInstance(SystemMessageNotifier())
 
         //Navigation
-        val cicerone = Cicerone.create(FlowRouter())
+        val cicerone = Cicerone.create()
         bind(Router::class.java).toInstance(cicerone.router)
-        bind(FlowRouter::class.java).toInstance(cicerone.router)
         bind(NavigatorHolder::class.java).toInstance(cicerone.navigatorHolder)
 
         //Auth
         bind(AuthHolder::class.java).to(Prefs::class.java).singletonInScope()
 
         //AppInfo
-        bind(AppInfo::class.java).toInstance(AppInfo(
+        bind(AppInfo::class.java).toInstance(
+            AppInfo(
                 BuildConfig.VERSION_NAME,
                 BuildConfig.VERSION_CODE,
                 BuildConfig.APP_DESCRIPTION,
                 BuildConfig.VERSION_UID.take(8),
                 BuildConfig.APP_HOME_PAGE,
                 BuildConfig.FEEDBACK_URL
-        ))
+            )
+        )
         bind(AppInfoRepository::class.java)
         bind(AppInfoInteractor::class.java)
     }

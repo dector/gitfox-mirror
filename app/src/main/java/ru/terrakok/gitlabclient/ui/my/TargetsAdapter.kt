@@ -30,8 +30,8 @@ class TargetsAdapter(
 
         //yes, on main thread...
         DiffUtil
-                .calculateDiff(DiffCallback(items, oldData), false)
-                .dispatchUpdatesTo(this)
+            .calculateDiff(DiffCallback(items, oldData), false)
+            .dispatchUpdatesTo(this)
     }
 
     fun showProgress(isVisible: Boolean) {

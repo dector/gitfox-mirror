@@ -12,20 +12,20 @@ import javax.inject.Inject
  */
 @InjectViewState
 class LibrariesPresenter @Inject constructor(
-        private val router: Router,
-        private val appInfoInteractor: AppInfoInteractor
+    private val router: Router,
+    private val appInfoInteractor: AppInfoInteractor
 ) : BasePresenter<LibrariesView>() {
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
         appInfoInteractor
-                .getAppLibraries()
-                .subscribe(
-                        { viewState.showLibraries(it) },
-                        { Timber.e("getAppLibraries error: $it") }
-                )
-                .connect()
+            .getAppLibraries()
+            .subscribe(
+                { viewState.showLibraries(it) },
+                { Timber.e("getAppLibraries error: $it") }
+            )
+            .connect()
     }
 
     fun onBackPressed() = router.exit()

@@ -5,17 +5,17 @@ import ru.terrakok.cicerone.Router
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 19.12.17.
  */
-class FlowRouter : Router() {
+class FlowRouter(private val appRouter: Router) : Router() {
 
-    fun startFlow(flowKey: String, data: Any? = null) {
-        executeCommands(StartFlow(flowKey, data))
+    fun startFlow(screenKey: String, data: Any? = null) {
+        appRouter.navigateTo(screenKey, data)
     }
 
-    fun finishFlow(data: Any? = null) {
-        executeCommands(FinishFlow(data))
+    fun newRootFlow(screenKey: String, data: Any? = null) {
+        appRouter.newRootScreen(screenKey, data)
     }
 
-    fun cancelFlow() {
-        finishChain()
+    fun finishFlow() {
+        appRouter.exit()
     }
 }
