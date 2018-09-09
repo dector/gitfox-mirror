@@ -6,7 +6,11 @@ import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.extension.openInfo
 import ru.terrakok.gitlabclient.model.interactor.event.EventInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
-import ru.terrakok.gitlabclient.presentation.global.*
+import ru.terrakok.gitlabclient.presentation.global.BasePresenter
+import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
+import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
+import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
+import ru.terrakok.gitlabclient.presentation.global.Paginator
 import javax.inject.Inject
 
 /**
@@ -30,9 +34,8 @@ class MyEventsPresenter @Inject constructor(
     private val paginator = Paginator(
         {
             eventInteractor.getEvents(it)
-                .toObservable()
-                .flatMapIterable { it }
-                .flatMap { item ->
+                .flattenAsObservable { it }
+                .concatMap { item ->
                     mdConverter.markdownToSpannable(item.body.toString())
                         .map { md -> item.copy(body = md) }
                         .toObservable()

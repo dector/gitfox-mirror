@@ -7,7 +7,14 @@ import ru.terrakok.gitlabclient.entity.Note
 import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.Sort
-import ru.terrakok.gitlabclient.entity.app.target.*
+import ru.terrakok.gitlabclient.entity.app.target.AppTarget
+import ru.terrakok.gitlabclient.entity.app.target.TargetBadge
+import ru.terrakok.gitlabclient.entity.app.target.TargetBadgeIcon
+import ru.terrakok.gitlabclient.entity.app.target.TargetBadgeStatus
+import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
+import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderIcon
+import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderTitle
+import ru.terrakok.gitlabclient.entity.app.target.TargetInternal
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.issue.Issue
 import ru.terrakok.gitlabclient.entity.issue.IssueScope
@@ -43,6 +50,32 @@ class IssueRepository @Inject constructor(
         pageSize: Int = defaultPageSize
     ) = api
         .getMyIssues(scope, state, labels, milestone, iids, orderBy, sort, search, page, pageSize)
+        .flatMap { issues ->
+            Single.zip(
+                Single.just(issues),
+                getDistinctProjects(issues),
+                BiFunction<List<Issue>, Map<Long, Project>, List<TargetHeader>> { sourceIssues, projects ->
+                    sourceIssues.map { getTargetHeader(it, projects[it.projectId]!!) }
+                }
+            )
+        }
+        .subscribeOn(schedulers.io())
+        .observeOn(schedulers.ui())
+
+    fun getIssues(
+        projectId: Long,
+        scope: IssueScope? = null,
+        state: IssueState? = null,
+        labels: String? = null,
+        milestone: String? = null,
+        iids: Array<Long>? = null,
+        orderBy: OrderBy? = null,
+        sort: Sort? = null,
+        search: String? = null,
+        page: Int,
+        pageSize: Int = defaultPageSize
+    ) = api
+        .getIssues(projectId, scope, state, labels, milestone, iids, orderBy, sort, search, page, pageSize)
         .flatMap { issues ->
             Single.zip(
                 Single.just(issues),

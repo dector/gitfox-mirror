@@ -24,6 +24,19 @@ class IssueInteractor @Inject constructor(
             page = page
         )
 
+    fun getIssues(
+        projectId: Long,
+        issueState: IssueState?,
+        page: Int
+    ) = issueRepository
+        .getIssues(
+            projectId = projectId,
+            state = issueState,
+            scope = IssueScope.ALL,
+            orderBy = OrderBy.UPDATED_AT,
+            page = page
+        )
+
     fun getIssue(
         projectId: Long,
         issueId: Long

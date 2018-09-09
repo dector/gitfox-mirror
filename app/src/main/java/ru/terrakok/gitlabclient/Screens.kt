@@ -2,13 +2,13 @@ package ru.terrakok.gitlabclient
 
 import android.content.Intent
 import android.net.Uri
-import ru.terrakok.gitlabclient.toothpick.DI
+import ru.terrakok.gitlabclient.entity.issue.IssueState
+import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
 import ru.terrakok.gitlabclient.ui.about.AboutFragment
 import ru.terrakok.gitlabclient.ui.auth.AuthFlowFragment
 import ru.terrakok.gitlabclient.ui.auth.AuthFragment
 import ru.terrakok.gitlabclient.ui.drawer.DrawerFlowFragment
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import ru.terrakok.gitlabclient.ui.global.StubFragment
 import ru.terrakok.gitlabclient.ui.issue.IssueFlowFragment
 import ru.terrakok.gitlabclient.ui.issue.IssueFragment
 import ru.terrakok.gitlabclient.ui.issue.IssueInfoFragment
@@ -27,8 +27,12 @@ import ru.terrakok.gitlabclient.ui.my.mergerequests.MyMergeRequestsFragment
 import ru.terrakok.gitlabclient.ui.my.todos.MyTodosContainerFragment
 import ru.terrakok.gitlabclient.ui.my.todos.MyTodosFragment
 import ru.terrakok.gitlabclient.ui.project.ProjectFlowFragment
-import ru.terrakok.gitlabclient.ui.project.ProjectMainFlowFragment
-import ru.terrakok.gitlabclient.ui.project.info.ProjectInfoFragment
+import ru.terrakok.gitlabclient.ui.project.ProjectFragment
+import ru.terrakok.gitlabclient.ui.project.ProjectInfoFragment
+import ru.terrakok.gitlabclient.ui.project.issues.ProjectIssuesContainerFragment
+import ru.terrakok.gitlabclient.ui.project.issues.ProjectIssuesFragment
+import ru.terrakok.gitlabclient.ui.project.mergerequest.ProjectMergeRequestsContainerFragment
+import ru.terrakok.gitlabclient.ui.project.mergerequest.ProjectMergeRequestsFragment
 import ru.terrakok.gitlabclient.ui.projects.ProjectsContainerFragment
 import ru.terrakok.gitlabclient.ui.projects.ProjectsListFragment
 import ru.terrakok.gitlabclient.ui.user.UserFlowFragment
@@ -65,7 +69,9 @@ object Screens {
     const val PROJECT_FLOW = "project flow"
     const val PROJECT_MAIN_FLOW = "project main flow"
     const val PROJECT_INFO_SCREEN = "project info screen"
+    const val PROJECT_ISSUES_CONTAINER_SCREEN = "project issues container screen"
     const val PROJECT_ISSUES_SCREEN = "project issues screen"
+    const val PROJECT_MR_CONTAINER_SCREEN = "project mr container screen"
     const val PROJECT_MR_SCREEN = "project mr screen"
 
     const val USER_FLOW = "user flow"
@@ -134,10 +140,12 @@ object Screens {
             Screens.USER_INFO_SCREEN -> UserInfoFragment()
 
             Screens.PROJECT_FLOW -> ProjectFlowFragment.create(data as Long)
-            Screens.PROJECT_MAIN_FLOW -> ProjectMainFlowFragment()
+            Screens.PROJECT_MAIN_FLOW -> ProjectFragment()
             Screens.PROJECT_INFO_SCREEN -> ProjectInfoFragment()
-            Screens.PROJECT_ISSUES_SCREEN -> StubFragment.create(DI.PROJECT_FLOW_SCOPE)
-            Screens.PROJECT_MR_SCREEN -> StubFragment.create(DI.PROJECT_FLOW_SCOPE)
+            Screens.PROJECT_ISSUES_CONTAINER_SCREEN -> ProjectIssuesContainerFragment()
+            Screens.PROJECT_ISSUES_SCREEN -> ProjectIssuesFragment.create(data as IssueState)
+            Screens.PROJECT_MR_CONTAINER_SCREEN -> ProjectMergeRequestsContainerFragment()
+            Screens.PROJECT_MR_SCREEN -> ProjectMergeRequestsFragment.create(data as MergeRequestState)
 
             Screens.MR_FLOW -> {
                 val (projectId, mrId) = data as Pair<Long, Long>

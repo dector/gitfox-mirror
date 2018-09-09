@@ -8,7 +8,14 @@ import ru.terrakok.gitlabclient.entity.Note
 import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.Sort
-import ru.terrakok.gitlabclient.entity.app.target.*
+import ru.terrakok.gitlabclient.entity.app.target.AppTarget
+import ru.terrakok.gitlabclient.entity.app.target.TargetBadge
+import ru.terrakok.gitlabclient.entity.app.target.TargetBadgeIcon
+import ru.terrakok.gitlabclient.entity.app.target.TargetBadgeStatus
+import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
+import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderIcon
+import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderTitle
+import ru.terrakok.gitlabclient.entity.app.target.TargetInternal
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestScope
@@ -29,7 +36,40 @@ class MergeRequestRepository @Inject constructor(
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
 
+    fun getMyMergeRequests(
+        state: MergeRequestState? = null,
+        milestone: String? = null,
+        viewType: MergeRequestViewType? = null,
+        labels: String? = null,
+        createdBefore: LocalDateTime? = null,
+        createdAfter: LocalDateTime? = null,
+        scope: MergeRequestScope? = null,
+        authorId: Int? = null,
+        assigneeId: Int? = null,
+        meReactionEmoji: String? = null,
+        orderBy: OrderBy? = null,
+        sort: Sort? = null,
+        page: Int,
+        pageSize: Int = defaultPageSize
+    ) = api
+        .getMyMergeRequests(
+            state, milestone, viewType, labels, createdBefore, createdAfter, scope,
+            authorId, assigneeId, meReactionEmoji, orderBy, sort, page, pageSize
+        )
+        .flatMap { mrs ->
+            Single.zip(
+                Single.just(mrs),
+                getDistinctProjects(mrs),
+                BiFunction<List<MergeRequest>, Map<Long, Project>, List<TargetHeader>> { sourceMrs, projects ->
+                    sourceMrs.map { getTargetHeader(it, projects[it.projectId]!!) }
+                }
+            )
+        }
+        .subscribeOn(schedulers.io())
+        .observeOn(schedulers.ui())
+
     fun getMergeRequests(
+        projectId: Long,
         state: MergeRequestState? = null,
         milestone: String? = null,
         viewType: MergeRequestViewType? = null,
@@ -46,8 +86,8 @@ class MergeRequestRepository @Inject constructor(
         pageSize: Int = defaultPageSize
     ) = api
         .getMergeRequests(
-            state, milestone, viewType, labels, createdBefore, createdAfter, scope,
-            authorId, assigneeId, meReactionEmoji, orderBy, sort, page, pageSize
+            projectId, state, milestone, viewType, labels, createdBefore, createdAfter,
+            scope, authorId, assigneeId, meReactionEmoji, orderBy, sort, page, pageSize
         )
         .flatMap { mrs ->
             Single.zip(

@@ -14,9 +14,21 @@ class MergeRequestInteractor @Inject constructor(
         onlyOpened: Boolean,
         page: Int
     ) = mergeRequestRepository
-        .getMergeRequests(
+        .getMyMergeRequests(
             scope = if (createdByMe) MergeRequestScope.CREATED_BY_ME else MergeRequestScope.ASSIGNED_TO_ME,
             state = if (onlyOpened) MergeRequestState.OPENED else null,
+            orderBy = OrderBy.UPDATED_AT,
+            page = page
+        )
+
+    fun getMergeRequests(
+        projectId: Long,
+        mergeRequestState: MergeRequestState,
+        page: Int
+    ) = mergeRequestRepository
+        .getMergeRequests(
+            projectId = projectId,
+            state = mergeRequestState,
             orderBy = OrderBy.UPDATED_AT,
             page = page
         )

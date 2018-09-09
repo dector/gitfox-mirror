@@ -1,48 +1,51 @@
-package ru.terrakok.gitlabclient.presentation.my.issues
+package ru.terrakok.gitlabclient.presentation.project.mergerequest
 
 import com.arellomobile.mvp.InjectViewState
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
+import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
 import ru.terrakok.gitlabclient.extension.openInfo
-import ru.terrakok.gitlabclient.model.interactor.issue.IssueInteractor
+import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.presentation.global.Paginator
+import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
+import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
 import javax.inject.Inject
 
 /**
- * @author Konstantin Tskhovrebov (aka terrakok) on 15.06.17.
+ * @author Eugene Shapovalov (CraggyHaggy). Date: 28.08.18
  */
 @InjectViewState
-class MyIssuesPresenter @Inject constructor(
-    initFilter: Filter,
-    private val issueInteractor: IssueInteractor,
+class ProjectMergeRequestsPresenter @Inject constructor(
+    @ProjectId private val projectIdWrapper: PrimitiveWrapper<Long>,
+    private val mergeRequestState: MergeRequestState,
+    private val mergeRequestInteractor: MergeRequestInteractor,
     private val mdConverter: MarkDownConverter,
     private val errorHandler: ErrorHandler,
     private val router: FlowRouter
-) : BasePresenter<MyIssuesView>() {
-    data class Filter(val createdByMe: Boolean, val onlyOpened: Boolean)
+) : BasePresenter<ProjectMergeRequestsView>() {
 
-    private var filter = initFilter
+    private val projectId = projectIdWrapper.value
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
-        refreshIssues()
+        refreshMergeRequests()
     }
 
     private val paginator = Paginator(
         {
-            issueInteractor.getMyIssues(filter.createdByMe, filter.onlyOpened, it)
-                .flattenAsObservable { it }
-                .concatMap { item ->
-                    mdConverter.markdownToSpannable(item.body.toString())
-                        .map { md -> item.copy(body = md) }
-                        .toObservable()
-                }
-                .toList()
+            mergeRequestInteractor.getMergeRequests(projectId, mergeRequestState, it)
+                    .flattenAsObservable { it }
+                    .concatMap { item ->
+                        mdConverter.markdownToSpannable(item.body.toString())
+                                .map { md -> item.copy(body = md) }
+                                .toObservable()
+                    }
+                    .toList()
         },
         object : Paginator.ViewController<TargetHeader> {
             override fun showEmptyProgress(show: Boolean) {
@@ -66,7 +69,7 @@ class MyIssuesPresenter @Inject constructor(
             }
 
             override fun showData(show: Boolean, data: List<TargetHeader>) {
-                viewState.showIssues(show, data)
+                viewState.showMergeRequests(show, data)
             }
 
             override fun showRefreshProgress(show: Boolean) {
@@ -79,20 +82,14 @@ class MyIssuesPresenter @Inject constructor(
         }
     )
 
-    fun applyNewFilter(filter: Filter) {
-        if (this.filter != filter) {
-            this.filter = filter
-            paginator.restart()
-        }
-    }
-
-    fun onIssueClick(item: TargetHeader) = item.openInfo(router)
+    fun onMergeRequestClick(item: TargetHeader) = item.openInfo(router)
     fun onUserClick(userId: Long) = router.startFlow(Screens.USER_FLOW, userId)
-    fun refreshIssues() = paginator.refresh()
-    fun loadNextIssuesPage() = paginator.loadNewPage()
+    fun refreshMergeRequests() = paginator.refresh()
+    fun loadNextMergeRequestsPage() = paginator.loadNewPage()
 
     override fun onDestroy() {
         super.onDestroy()
+
         paginator.release()
     }
 }

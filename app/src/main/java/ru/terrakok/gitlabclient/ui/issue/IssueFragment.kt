@@ -14,7 +14,7 @@ import javax.inject.Inject
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 14.02.18.
  */
-class IssueFragment : BaseFragment(), IssueInfoFragment.ToolbarConfigurator {
+class IssueFragment : BaseFragment(), IssueInfoFragment.IssueInfoToolbar {
 
     override val layoutRes = R.layout.fragment_issue
 
