@@ -139,6 +139,7 @@
     <string name="todo_action_marked">added a todo</string>
     <string name="todo_action_approval_required">approval required</string>
     <string name="todo_action_directly_addressed">directly addressed</string>
+    <string name="todo_action_unmergeable">Could not merge</string>
 
     <!--Merge Request Info screen-->
     <string name="merge_request_info_tab">Details</string>
