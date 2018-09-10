@@ -64,13 +64,13 @@ class TargetHeaderAdapterDelegate(
             this.item = item
             with(itemView) {
                 titleTextView.text = item.title.getHumanName(resources)
-                Markwon.setText(descriptionTextView, item.body ?: "")
+                Markwon.setText(descriptionTextView, item.body)
                 descriptionTextView.movementMethod = null //disable internal link click
                 avatarImageView.loadRoundedImage(item.author.avatarUrl)
                 iconImageView.setImageResource(item.icon.getIcon())
                 dateTextView.text = item.date.humanTime(resources)
 
-                descriptionTextView.visible(item.body != null)
+                descriptionTextView.visible(item.body.isNotEmpty())
                 iconImageView.visible(item.icon != TargetHeaderIcon.NONE)
 
                 bindBadges(item.badges)
