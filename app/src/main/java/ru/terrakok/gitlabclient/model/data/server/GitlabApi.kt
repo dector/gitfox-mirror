@@ -3,21 +3,8 @@ package ru.terrakok.gitlabclient.model.data.server
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.threeten.bp.LocalDateTime
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
-import retrofit2.http.Query
-import ru.terrakok.gitlabclient.entity.File
-import ru.terrakok.gitlabclient.entity.Note
-import ru.terrakok.gitlabclient.entity.OrderBy
-import ru.terrakok.gitlabclient.entity.Project
-import ru.terrakok.gitlabclient.entity.RepositoryTreeNode
-import ru.terrakok.gitlabclient.entity.Sort
-import ru.terrakok.gitlabclient.entity.TokenData
-import ru.terrakok.gitlabclient.entity.User
-import ru.terrakok.gitlabclient.entity.Visibility
+import retrofit2.http.*
+import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.entity.event.Event
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.event.EventTarget
@@ -204,19 +191,15 @@ interface GitlabApi {
     @POST("$API_PATH/todos/mark_as_done")
     fun markAllPendingTodosAsDone(): Completable
 
-    @GET("$API_PATH/projects/{project_id}/issues/{issue_id}/notes")
-    fun getIssueNotes(
+    @GET("$API_PATH/projects/{project_id}/issues/{issue_id}/discussions")
+    fun getIssueDiscussions(
         @Path("project_id") projectId: Long,
-        @Path("issue_id") issueId: Long,
-        @Query("order_by") orderBy: OrderBy?,
-        @Query("sort") sort: Sort?
-    ): Single<List<Note>>
+        @Path("issue_id") issueId: Long
+    ): Single<List<Discussion>>
 
-    @GET("$API_PATH/projects/{project_id}/merge_requests/{merge_request_id}/notes")
-    fun getMergeRequestNotes(
+    @GET("$API_PATH/projects/{project_id}/merge_requests/{merge_request_id}/discussions")
+    fun getMergeRequestDiscussions(
         @Path("project_id") projectId: Long,
-        @Path("merge_request_id") mergeRequestId: Long,
-        @Query("order_by") orderBy: OrderBy?,
-        @Query("sort") sort: Sort?
-    ): Single<List<Note>>
+        @Path("merge_request_id") mergeRequestId: Long
+    ): Single<List<Discussion>>
 }

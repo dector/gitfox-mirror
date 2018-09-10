@@ -8,22 +8,15 @@ import ru.terrakok.gitlabclient.entity.Note
 import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.Sort
-import ru.terrakok.gitlabclient.entity.app.target.AppTarget
-import ru.terrakok.gitlabclient.entity.app.target.TargetBadge
-import ru.terrakok.gitlabclient.entity.app.target.TargetBadgeIcon
-import ru.terrakok.gitlabclient.entity.app.target.TargetBadgeStatus
-import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
-import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderIcon
-import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderTitle
-import ru.terrakok.gitlabclient.entity.app.target.TargetInternal
+import ru.terrakok.gitlabclient.entity.app.target.*
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestScope
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestViewType
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
-import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
+import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultPageSize
 import javax.inject.Inject
@@ -154,28 +147,32 @@ class MergeRequestRepository @Inject constructor(
 
     fun getMergeRequestNotes(
         projectId: Long,
-        mergeRequestId: Long,
-        orderBy: OrderBy? = null,
-        sort: Sort? = Sort.ASC
-    ) =
-        Single
-            .zip(
-                api.getProject(projectId),
-                api.getMergeRequestNotes(projectId, mergeRequestId, orderBy, sort),
-                BiFunction<Project, List<Note>, List<Note>> { project, notes ->
-                    ArrayList(notes).apply {
-                        val iterator = listIterator()
-                        while (iterator.hasNext()) {
-                            val note = iterator.next()
-                            val resolved = markDownUrlResolver.resolve(note.body, project)
+        mergeRequestId: Long
+    ) = Single
+        .zip(
+            api.getProject(projectId),
+            getDiscussionNotes(projectId, mergeRequestId),
+            BiFunction<Project, List<Note>, List<Note>> { project, notes ->
+                ArrayList(notes).apply {
+                    val iterator = listIterator()
+                    while (iterator.hasNext()) {
+                        val note = iterator.next()
+                        val resolved = markDownUrlResolver.resolve(note.body, project)
 
-                            if (resolved != note.body) {
-                                iterator.set(note.copy(body = resolved))
-                            }
+                        if (resolved != note.body) {
+                            iterator.set(note.copy(body = resolved))
                         }
                     }
                 }
-            )
-            .subscribeOn(schedulers.io())
-            .observeOn(schedulers.ui())
+            }
+        )
+        .subscribeOn(schedulers.io())
+        .observeOn(schedulers.ui())
+
+    private fun getDiscussionNotes(projectId: Long, mergeRequestId: Long) =
+        api
+            .getMergeRequestDiscussions(projectId, mergeRequestId)
+            .flattenAsObservable { it }
+            .concatMap { discussion -> Observable.fromIterable(discussion.notes) }
+            .toList()
 }
