@@ -36,18 +36,6 @@ class TargetHeaderAdapterDelegate(
         payloads: MutableList<Any>
     ) = (viewHolder as ViewHolder).bind(items[position] as TargetHeader)
 
-    override fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {
-        super.onViewDetachedFromWindow(holder)
-
-        (holder as ViewHolder).release()
-    }
-
-    override fun onViewRecycled(viewHolder: RecyclerView.ViewHolder) {
-        super.onViewRecycled(viewHolder)
-
-        (viewHolder as ViewHolder).release()
-    }
-
     private inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private lateinit var item: TargetHeader
 
@@ -141,10 +129,6 @@ class TargetHeaderAdapterDelegate(
                     }
                 }
             }
-        }
-
-        fun release() {
-            Markwon.unscheduleDrawables(itemView.descriptionTextView)
         }
     }
 }
