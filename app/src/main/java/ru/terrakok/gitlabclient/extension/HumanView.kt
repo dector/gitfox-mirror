@@ -5,6 +5,7 @@ import android.content.res.Resources
 import android.support.annotation.DrawableRes
 import org.threeten.bp.Duration
 import org.threeten.bp.LocalDateTime
+import org.threeten.bp.format.DateTimeFormatter
 import retrofit2.HttpException
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.develop.LicenseType
@@ -38,6 +39,7 @@ fun Throwable.userMessage(resourceManager: ResourceManager) = when (this) {
     else -> resourceManager.getString(R.string.unknown_error)
 }
 
+private val DATE_FORMAT = DateTimeFormatter.ofPattern("dd MMM yyyy")
 fun LocalDateTime.humanTime(resources: Resources): String {
     val delta = Duration.between(this, LocalDateTime.now()).seconds
     val timeStr =
@@ -46,7 +48,7 @@ fun LocalDateTime.humanTime(resources: Resources): String {
             delta < 60 * 60 -> resources.getString(R.string.time_min, delta / 60)
             delta < 60 * 60 * 24 -> resources.getString(R.string.time_hour, delta / (60 * 60))
             delta < 60 * 60 * 24 * 7 -> resources.getString(R.string.time_day, delta / (60 * 60 * 24))
-            else -> return this.toLocalDate().toString()
+            else -> return this.toLocalDate().format(DATE_FORMAT)
         }
 
     return resources.getString(R.string.time_ago, timeStr)
