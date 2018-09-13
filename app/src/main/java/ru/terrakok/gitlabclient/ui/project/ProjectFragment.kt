@@ -1,6 +1,7 @@
 package ru.terrakok.gitlabclient.ui.project
 
 import android.os.Bundle
+import android.support.v4.view.ViewCompat
 import android.util.TypedValue
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter
 import kotlinx.android.synthetic.main.fragment_project.*
@@ -91,13 +92,12 @@ class ProjectFragment : BaseFragment(), ProjectInfoFragment.ProjectInfoToolbar {
 
     private fun setToolbarElevation(tab: String) {
         if (tab == Screens.PROJECT_INFO_SCREEN) {
-            toolbar.elevation = TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                8f,
-                resources.displayMetrics
+            ViewCompat.setElevation(
+                toolbar,
+                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8f, resources.displayMetrics)
             )
         } else {
-            toolbar.elevation = 0f
+            ViewCompat.setElevation(toolbar, 0f)
         }
     }
 
