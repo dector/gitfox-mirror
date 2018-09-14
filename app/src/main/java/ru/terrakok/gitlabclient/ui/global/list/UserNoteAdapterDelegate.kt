@@ -33,18 +33,6 @@ class UserNoteAdapterDelegate(
         payloads: MutableList<Any>
     ) = (viewHolder as ViewHolder).bind(items[position])
 
-    override fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {
-        super.onViewDetachedFromWindow(holder)
-
-        (holder as ViewHolder).release()
-    }
-
-    override fun onViewRecycled(viewHolder: RecyclerView.ViewHolder) {
-        super.onViewRecycled(viewHolder)
-
-        (viewHolder as ViewHolder).release()
-    }
-
     private inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private lateinit var note: Note
 
@@ -60,10 +48,6 @@ class UserNoteAdapterDelegate(
                 subtitleTextView.text = note.createdAt.humanTime(context.resources)
                 Markwon.setText(descriptionTextView, data.body)
             }
-        }
-
-        fun release() {
-            Markwon.unscheduleDrawables(itemView.descriptionTextView)
         }
     }
 }

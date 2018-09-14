@@ -97,6 +97,7 @@ fun TodoAction.getHumanName(resources: Resources): String = when (this) {
     TodoAction.DIRECTLY_ADDRESSED -> resources.getString(R.string.todo_action_directly_addressed)
     TodoAction.MARKED -> resources.getString(R.string.todo_action_marked)
     TodoAction.MENTIONED -> resources.getString(R.string.todo_action_mentioned)
+    TodoAction.UNMERGEABLE -> resources.getString(R.string.todo_action_unmergeable)
 }
 
 fun TargetHeaderTitle.getHumanName(resources: Resources) = when (this) {
@@ -133,9 +134,12 @@ fun TargetHeaderTitle.getHumanName(resources: Resources) = when (this) {
             TodoAction.MARKED -> {
                 "$author $actionName ${resources.getString(R.string.for_str)} $targetName ${resources.getString(R.string.at)} $projectName"
             }
+            TodoAction.UNMERGEABLE -> {
+                "$actionName $targetName $projectName"
+            }
             else -> {
                 Timber.e("Unsupported template for todo action=$actionName.")
-                "$author $actionName $targetName $assignee ${resources.getString(R.string.at)}"
+                "$author $actionName $targetName $assignee ${resources.getString(R.string.at)} $projectName"
             }
         }
     }

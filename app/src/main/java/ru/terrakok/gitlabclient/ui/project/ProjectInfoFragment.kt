@@ -1,5 +1,7 @@
 package ru.terrakok.gitlabclient.ui.project
 
+import android.os.Bundle
+import android.view.View
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_project_info.*
@@ -7,9 +9,7 @@ import ru.noties.markwon.Markwon
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.Visibility
-import ru.terrakok.gitlabclient.extension.loadRoundedImage
-import ru.terrakok.gitlabclient.extension.showSnackMessage
-import ru.terrakok.gitlabclient.extension.visible
+import ru.terrakok.gitlabclient.extension.*
 import ru.terrakok.gitlabclient.presentation.project.info.ProjectInfoPresenter
 import ru.terrakok.gitlabclient.presentation.project.info.ProjectInfoView
 import ru.terrakok.gitlabclient.toothpick.DI
@@ -31,6 +31,15 @@ class ProjectInfoFragment : BaseFragment(), ProjectInfoView {
         Toothpick
             .openScopes(DI.PROJECT_FLOW_SCOPE)
             .getInstance(ProjectInfoPresenter::class.java)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        with(view) {
+            starsTextView.setStartDrawable(context.getTintDrawable(R.drawable.ic_star_black_24dp, R.color.colorPrimary))
+            forksTextView.setStartDrawable(context.getTintDrawable(R.drawable.ic_fork, R.color.colorPrimary))
+        }
+    }
 
     override fun showProject(project: Project, mdReadme: CharSequence) {
         (parentFragment as? ProjectInfoToolbar)?.apply {

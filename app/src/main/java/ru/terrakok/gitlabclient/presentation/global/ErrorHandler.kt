@@ -5,6 +5,7 @@ import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.extension.userMessage
 import ru.terrakok.gitlabclient.model.data.server.ServerError
+import ru.terrakok.gitlabclient.model.data.server.TokenInvalidError
 import ru.terrakok.gitlabclient.model.interactor.auth.AuthInteractor
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
@@ -30,13 +31,13 @@ class ErrorHandler @Inject constructor(
 
     fun proceed(error: Throwable, messageListener: (String) -> Unit = {}) {
         Timber.e(error)
-        if (error is ServerError) {
-            when (error.errorCode) {
+        when (error) {
+            is ServerError -> when (error.errorCode) {
                 401 -> authErrorRelay.accept(true)
                 else -> messageListener(error.userMessage(resourceManager))
             }
-        } else {
-            messageListener(error.userMessage(resourceManager))
+            is TokenInvalidError -> authErrorRelay.accept(true)
+            else -> messageListener(error.userMessage(resourceManager))
         }
     }
 

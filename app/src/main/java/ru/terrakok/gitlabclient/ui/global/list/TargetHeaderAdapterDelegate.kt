@@ -26,8 +26,21 @@ class TargetHeaderAdapterDelegate(
     override fun isForViewType(items: MutableList<Any>, position: Int) =
         items[position] is TargetHeader
 
-    override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder =
-        ViewHolder(parent.inflate(R.layout.item_target_header))
+    override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
+        val root = parent.inflate(R.layout.item_target_header)
+        with(root) {
+            commentsTextView.setStartDrawable(
+                context.getTintDrawable(
+                    R.drawable.ic_event_commented_24dp,
+                    R.color.colorPrimary
+                )
+            )
+            commitsTextView.setStartDrawable(context.getTintDrawable(R.drawable.ic_commit, R.color.colorPrimary))
+            upVotesTextView.setStartDrawable(context.getTintDrawable(R.drawable.ic_thumb_up, R.color.colorPrimary))
+            downVotesTextView.setStartDrawable(context.getTintDrawable(R.drawable.ic_thumb_down, R.color.colorPrimary))
+        }
+        return ViewHolder(root)
+    }
 
     override fun onBindViewHolder(
         items: MutableList<Any>,
@@ -35,18 +48,6 @@ class TargetHeaderAdapterDelegate(
         viewHolder: RecyclerView.ViewHolder,
         payloads: MutableList<Any>
     ) = (viewHolder as ViewHolder).bind(items[position] as TargetHeader)
-
-    override fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {
-        super.onViewDetachedFromWindow(holder)
-
-        (holder as ViewHolder).release()
-    }
-
-    override fun onViewRecycled(viewHolder: RecyclerView.ViewHolder) {
-        super.onViewRecycled(viewHolder)
-
-        (viewHolder as ViewHolder).release()
-    }
 
     private inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private lateinit var item: TargetHeader
@@ -64,13 +65,13 @@ class TargetHeaderAdapterDelegate(
             this.item = item
             with(itemView) {
                 titleTextView.text = item.title.getHumanName(resources)
-                Markwon.setText(descriptionTextView, item.body ?: "")
+                Markwon.setText(descriptionTextView, item.body)
                 descriptionTextView.movementMethod = null //disable internal link click
                 avatarImageView.loadRoundedImage(item.author.avatarUrl)
                 iconImageView.setImageResource(item.icon.getIcon())
                 dateTextView.text = item.date.humanTime(resources)
 
-                descriptionTextView.visible(item.body != null)
+                descriptionTextView.visible(item.body.isNotEmpty())
                 iconImageView.visible(item.icon != TargetHeaderIcon.NONE)
 
                 bindBadges(item.badges)
@@ -141,10 +142,6 @@ class TargetHeaderAdapterDelegate(
                     }
                 }
             }
-        }
-
-        fun release() {
-            Markwon.unscheduleDrawables(itemView.descriptionTextView)
         }
     }
 }

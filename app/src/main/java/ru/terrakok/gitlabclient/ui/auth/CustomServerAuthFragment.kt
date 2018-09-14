@@ -6,6 +6,7 @@ import android.support.design.widget.BottomSheetDialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.webkit.URLUtil
 import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_custom_server_auth.*
@@ -36,6 +37,14 @@ class CustomServerAuthFragment : BottomSheetDialogFragment() {
             serverPathValue.setText(BuildConfig.ORIGIN_GITLAB_ENDPOINT)
         }
 
+        privateTokenValue.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                login()
+                true
+            } else {
+                false
+            }
+        }
         loginButton.setOnClickListener { login() }
         cancelButton.setOnClickListener { dismiss() }
     }
