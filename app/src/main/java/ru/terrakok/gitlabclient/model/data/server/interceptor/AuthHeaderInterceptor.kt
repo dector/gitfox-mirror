@@ -3,7 +3,7 @@ package ru.terrakok.gitlabclient.model.data.server.interceptor
 import okhttp3.Interceptor
 import okhttp3.Response
 import ru.terrakok.gitlabclient.model.data.auth.AuthHolder
-import ru.terrakok.gitlabclient.model.data.server.ServerError
+import ru.terrakok.gitlabclient.model.data.server.TokenInvalidError
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 23.04.17.
@@ -21,7 +21,7 @@ class AuthHeaderInterceptor(private val authData: AuthHolder) : Interceptor {
                 }
             } catch (e: IllegalArgumentException) {
                 // If token can't be parsed, just logout user to change it with correct value.
-                throw ServerError(401)
+                throw TokenInvalidError()
             }
         }
         return chain.proceed(request)
