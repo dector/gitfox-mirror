@@ -81,6 +81,10 @@ class AppActivity : MvpAppCompatActivity(), MvpView {
         Toothpick.inject(this, Toothpick.openScope(DI.SERVER_SCOPE))
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_container)
+
+        if (savedInstanceState == null) {
+            presenter.coldStart()
+        }
     }
 
     override fun onResumeFragments() {

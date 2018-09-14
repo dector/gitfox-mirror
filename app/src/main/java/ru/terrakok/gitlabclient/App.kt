@@ -2,7 +2,9 @@ package ru.terrakok.gitlabclient
 
 import android.app.Application
 import android.graphics.Color
+import com.crashlytics.android.Crashlytics
 import com.jakewharton.threetenabp.AndroidThreeTen
+import io.fabric.sdk.android.Fabric
 import ru.noties.markwon.SpannableConfiguration
 import ru.noties.markwon.spans.SpannableTheme
 import ru.terrakok.gitlabclient.model.data.auth.AuthHolder
@@ -24,6 +26,7 @@ class App : Application() {
         super.onCreate()
 
         initLogger()
+        initFabric()
         initToothpick()
         initAppScope()
         initMarkwon()
@@ -34,6 +37,15 @@ class App : Application() {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
+    }
+
+    private fun initFabric() {
+        Fabric.with(
+            Fabric.Builder(this)
+                .kits(Crashlytics())
+                .debuggable(BuildConfig.DEBUG)
+                .build()
+        )
     }
 
     private fun initToothpick() {

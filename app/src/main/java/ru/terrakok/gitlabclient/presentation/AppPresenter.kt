@@ -15,8 +15,7 @@ class AppPresenter @Inject constructor(
     private val authInteractor: AuthInteractor
 ) : MvpPresenter<MvpView>() {
 
-    override fun onFirstViewAttach() {
-        super.onFirstViewAttach()
+    fun coldStart() {
         if (authInteractor.isSignedIn()) router.newRootScreen(Screens.DRAWER_FLOW)
         else router.newRootScreen(Screens.AUTH_FLOW)
     }

@@ -3,13 +3,18 @@
     "name": "Konstantin Tskhovrebov",
     "avatarUrl": "https://assets.gitlab-static.net/uploads/-/system/user/avatar/62974/avatar.png",
     "gitlabId": 62974,
-    "role": "owner"
+    "role": "main developer"
   },
   {
     "name": "Eugene Shapovalov",
     "avatarUrl": "https://assets.gitlab-static.net/uploads/-/system/user/avatar/1583723/avatar.png",
     "gitlabId": 1583723,
-    "role": "developer"
+    "role": "main developer"
+  },
+  {
+    "name": "Ilyas Gaifullin",
+    "avatarUrl": "https://mir-s3-cdn-cf.behance.net/user/230/e0e22a1584077.581bca76bcad5.jpeg",
+    "role": "designer"
   },
   {
     "name": "Vladimir Parfenov",
@@ -40,10 +45,5 @@
     "avatarUrl": "https://assets.gitlab-static.net/uploads/-/system/user/avatar/1601949/avatar.png",
     "gitlabId": 1601949,
     "role": "developer"
-  },
-  {
-    "name": "Ilyas Gaifullin",
-    "avatarUrl": "https://mir-s3-cdn-cf.behance.net/user/230/e0e22a1584077.581bca76bcad5.jpeg",
-    "role": "designer"
   }
 ]

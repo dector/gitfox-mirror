@@ -1,6 +1,7 @@
 # Build files and folders
 .gradle/
 build/
+keys/
 
 # Properties
 local.properties

@@ -83,5 +83,10 @@
     "name": "Google / Flexbox-layout",
     "url": "https://github.com/google/flexbox-layout",
     "license": "APACHE_2"
+  },
+  {
+    "name": "Noties / Markwon",
+    "url": "https://github.com/noties/Markwon",
+    "license": "APACHE_2"
   }
 ]

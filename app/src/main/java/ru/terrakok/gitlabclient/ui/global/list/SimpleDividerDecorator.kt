@@ -23,7 +23,7 @@ class SimpleDividerDecorator(
         ContextCompat.getColor(context, R.color.divider)
     )
 
-    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State?) {
+    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         super.getItemOffsets(outRect, view, parent, state)
 
         if (parent.getChildAdapterPosition(view) == 0) return
@@ -31,12 +31,12 @@ class SimpleDividerDecorator(
         outRect.top = dividerSizePx
     }
 
-    override fun onDraw(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State?) {
+    override fun onDraw(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
         val dividerLeft = parent.paddingLeft
         val dividerRight = parent.width - parent.paddingRight
 
         val childCount = parent.childCount
-        for (i in 0..childCount - 1) {
+        for (i in 0 until childCount) {
             val child = parent.getChildAt(i)
 
             val params = child.layoutParams as RecyclerView.LayoutParams
