@@ -38,7 +38,7 @@ class CustomServerAuthFragment : BottomSheetDialogFragment() {
         }
 
         privateTokenValue.setOnEditorActionListener { _, actionId, _ ->
-            return@setOnEditorActionListener if (actionId == EditorInfo.IME_ACTION_DONE) {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
                 login()
                 true
             } else {
@@ -59,7 +59,7 @@ class CustomServerAuthFragment : BottomSheetDialogFragment() {
         }
 
         if (URLUtil.isValidUrl(url)) {
-            listener.customLogin.invoke(if (url.endsWith("/")) url else "$url/", token)
+            listener.customLogin.invoke(url, token)
             dismiss()
         } else {
             Toast.makeText(this.context, getString(R.string.invalid_server_url), Toast.LENGTH_SHORT).show()
