@@ -3,11 +3,13 @@ package ru.terrakok.gitlabclient.extension
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.support.annotation.LayoutRes
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import android.support.v4.graphics.drawable.DrawableCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,6 +41,21 @@ fun Navigator.setLaunchScreen(screenKey: String, data: Any? = null) {
 }
 
 fun Context.color(colorRes: Int) = ContextCompat.getColor(this, colorRes)
+
+fun Context.getTintDrawable(drawableRes: Int, colorRes: Int): Drawable {
+    val wrapDrawable = DrawableCompat.wrap(ContextCompat.getDrawable(this, drawableRes)!!).mutate()
+    DrawableCompat.setTint(wrapDrawable, color(colorRes))
+    return wrapDrawable
+}
+
+fun TextView.setStartDrawable(drawable: Drawable) {
+    setCompoundDrawablesRelativeWithIntrinsicBounds(
+        drawable,
+        null,
+        null,
+        null
+    )
+}
 
 fun ImageView.tint(colorRes: Int) = this.setColorFilter(this.context.color(colorRes))
 

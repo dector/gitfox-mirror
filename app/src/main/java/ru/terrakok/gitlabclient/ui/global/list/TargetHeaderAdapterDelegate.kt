@@ -26,8 +26,21 @@ class TargetHeaderAdapterDelegate(
     override fun isForViewType(items: MutableList<Any>, position: Int) =
         items[position] is TargetHeader
 
-    override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder =
-        ViewHolder(parent.inflate(R.layout.item_target_header))
+    override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
+        val root = parent.inflate(R.layout.item_target_header)
+        with(root) {
+            commentsTextView.setStartDrawable(
+                context.getTintDrawable(
+                    R.drawable.ic_event_commented_24dp,
+                    R.color.colorPrimary
+                )
+            )
+            commitsTextView.setStartDrawable(context.getTintDrawable(R.drawable.ic_commit, R.color.colorPrimary))
+            upVotesTextView.setStartDrawable(context.getTintDrawable(R.drawable.ic_thumb_up, R.color.colorPrimary))
+            downVotesTextView.setStartDrawable(context.getTintDrawable(R.drawable.ic_thumb_down, R.color.colorPrimary))
+        }
+        return ViewHolder(root)
+    }
 
     override fun onBindViewHolder(
         items: MutableList<Any>,

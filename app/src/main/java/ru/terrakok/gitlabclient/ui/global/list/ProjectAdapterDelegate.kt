@@ -8,8 +8,10 @@ import kotlinx.android.synthetic.main.item_project.view.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.Visibility
+import ru.terrakok.gitlabclient.extension.getTintDrawable
 import ru.terrakok.gitlabclient.extension.inflate
 import ru.terrakok.gitlabclient.extension.loadRoundedImage
+import ru.terrakok.gitlabclient.extension.setStartDrawable
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 18.06.17.
@@ -19,8 +21,14 @@ class ProjectAdapterDelegate(private val clickListener: (Project) -> Unit) : Ada
     override fun isForViewType(items: MutableList<Any>, position: Int) =
         items[position] is Project
 
-    override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder =
-        ViewHolder(parent.inflate(R.layout.item_project))
+    override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
+        val root = parent.inflate(R.layout.item_project)
+        with(root) {
+            starsTextView.setStartDrawable(context.getTintDrawable(R.drawable.ic_star_black_24dp, R.color.colorPrimary))
+            forksTextView.setStartDrawable(context.getTintDrawable(R.drawable.ic_fork, R.color.colorPrimary))
+        }
+        return ViewHolder(root)
+    }
 
     override fun onBindViewHolder(
         items: MutableList<Any>,
