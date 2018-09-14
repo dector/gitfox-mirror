@@ -32,6 +32,7 @@ android {
         buildConfigField "String", "OAUTH_CALLBACK", '"app://gitlab.client/"'
 
         vectorDrawables.useSupportLibrary true
+        multiDexEnabled true
 
         javaCompileOptions {
             annotationProcessorOptions {
