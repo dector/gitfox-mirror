@@ -1,0 +1,92 @@
+[
+  {
+    "name": "Google / Support Library",
+    "url": "https://developer.android.com/topic/libraries/support-library/index.html",
+    "license": "APACHE_2"
+  },
+  {
+    "name": "JetBrains / Kotlin",
+    "url": "https://github.com/JetBrains/kotlin",
+    "license": "APACHE_2"
+  },
+  {
+    "name": "Jake Wharton / Timber",
+    "url": "https://github.com/JakeWharton/timber",
+    "license": "APACHE_2"
+  },
+  {
+    "name": "Arello-Mobile / Moxy",
+    "url": "https://github.com/Arello-Mobile/Moxy",
+    "license": "MIT"
+  },
+  {
+    "name": "Terrakok / Cicerone",
+    "url": "https://github.com/terrakok/Cicerone",
+    "license": "MIT"
+  },
+  {
+    "name": "Stephane Nicolas / Toothpick",
+    "url": "https://github.com/stephanenicolas/toothpick",
+    "license": "APACHE_2"
+  },
+  {
+    "name": "Google / Gson",
+    "url": "https://github.com/google/gson",
+    "license": "APACHE_2"
+  },
+  {
+    "name": "Square / Retrofit",
+    "url": "https://github.com/square/retrofit",
+    "license": "APACHE_2"
+  },
+  {
+    "name": "ReactiveX / RxJava",
+    "url": "https://github.com/ReactiveX/RxJava",
+    "license": "APACHE_2"
+  },
+  {
+    "name": "Sockeqwe / AdapterDelegates",
+    "url": "https://github.com/sockeqwe/AdapterDelegates",
+    "license": "APACHE_2"
+  },
+  {
+    "name": "Bumptech / Glide",
+    "url": "https://github.com/bumptech/glide",
+    "license": "CUSTOM"
+  },
+  {
+    "name": "Commonsguy / CWAC AndDown",
+    "url": "https://github.com/commonsguy/cwac-anddown",
+    "license": "APACHE_2"
+  },
+  {
+    "name": "Roughike / BottomBar",
+    "url": "https://github.com/roughike/BottomBar",
+    "license": "APACHE_2"
+  },
+  {
+    "name": "Chrisjenx / Calligraphy",
+    "url": "https://github.com/chrisjenx/Calligraphy",
+    "license": "APACHE_2"
+  },
+  {
+    "name": "Airbnb / Lottie",
+    "url": "https://github.com/airbnb/lottie",
+    "license": "MIT"
+  },
+  {
+    "name": "JodaOrg / Joda-time",
+    "url": "https://github.com/JodaOrg/joda-time",
+    "license": "APACHE_2"
+  },
+  {
+    "name": "Google / Flexbox-layout",
+    "url": "https://github.com/google/flexbox-layout",
+    "license": "APACHE_2"
+  },
+  {
+    "name": "Noties / Markwon",
+    "url": "https://github.com/noties/Markwon",
+    "license": "APACHE_2"
+  }
+]

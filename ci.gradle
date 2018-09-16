@@ -1,0 +1,13 @@
+ext.getBuildNumber = {
+    (System.env.BUILD_NUMBER ?: 1) as int
+}
+
+ext.getBuildUid = {
+    System.env.BUILD_COMMIT_SHA ?: "local"
+}
+
+gradle.buildFinished {
+    println("VersionName: ${android.defaultConfig.versionName}")
+    println("VersionCode: ${getBuildNumber()}")
+    println("BuildUid: ${getBuildUid()}")
+}

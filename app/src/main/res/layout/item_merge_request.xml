@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground">
+
+    <TextView
+        android:id="@+id/mergeRequestTitleTextView"
+        style="@style/TextTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:ellipsize="end"
+        android:maxLines="3"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/mergeRequestUpdatedAtTextView"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Implemented merge requests screen. Btw, this is a Very Long Description. Is is about four lines long"/>
+
+    <TextView
+        android:id="@+id/mergeRequestUpdatedAtTextView"
+        style="@style/TextBody"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBaseline_toBaselineOf="@id/mergeRequestTitleTextView"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:text="29 min ago"/>
+
+    <TextView
+        android:id="@+id/mergeRequestDescriptionTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="6dp"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mergeRequestTitleTextView"
+        tools:text="Now user can see merge requests which are associated with him."/>
+
+    <TextView
+        android:id="@+id/mergeRequestIdTextView"
+        app:fontFamily="@font/roboto_medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/colorPrimary"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mergeRequestDescriptionTextView"
+        tools:text="#12"/>
+
+    <TextView
+        android:id="@+id/mergeRequestOpenedAtByAuthorTextView"
+        app:fontFamily="@font/roboto_medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/colorPrimary"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@id/mergeRequestIdTextView"
+        app:layout_constraintLeft_toRightOf="@id/mergeRequestIdTextView"
+        tools:text="opened 3 hours ago by Anthony Gvozdev"/>
+
+    <TextView
+        android:id="@+id/mergeRequestMessagesCountTextView"
+        app:fontFamily="@font/roboto_medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/colorPrimary"
+        android:textSize="14sp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mergeRequestDescriptionTextView"
+        tools:text="5"/>
+
+    <ImageView
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="@id/mergeRequestMessagesCountTextView"
+        app:layout_constraintRight_toLeftOf="@id/mergeRequestMessagesCountTextView"
+        app:layout_constraintTop_toTopOf="@id/mergeRequestMessagesCountTextView"
+        app:srcCompat="@drawable/ic_messages"/>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="@dimen/divider_size"
+        android:layout_marginTop="12dp"
+        android:background="@color/divider"
+        app:layout_constraintLeft_toLeftOf="@id/mergeRequestIdTextView"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mergeRequestMessagesCountTextView"/>
+
+</android.support.constraint.ConstraintLayout>

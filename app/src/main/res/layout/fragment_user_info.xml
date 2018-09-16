@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        style="@style/ToolbarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:navigationIcon="@drawable/ic_arrow_back_24dp"
+        tools:title="Username"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical">
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/avatarImageView"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_margin="16dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:src="@drawable/default_img"/>
+
+                <TextView
+                    android:id="@+id/usernameTextView"
+                    app:fontFamily="@font/roboto_medium"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/primary_text"
+                    android:textSize="16sp"
+                    app:layout_constraintLeft_toRightOf="@+id/avatarImageView"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/avatarImageView"
+                    tools:text="Stan Hu"/>
+
+                <TextView
+                    android:id="@+id/userIdTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="4dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/secondary_text"
+                    android:textSize="14sp"
+                    app:layout_constraintLeft_toRightOf="@+id/avatarImageView"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/usernameTextView"
+                    tools:text="\@stanhu"/>
+
+                <TextView
+                    android:id="@+id/userBioTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:textColor="@color/secondary_text"
+                    android:textSize="14sp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/avatarImageView"
+                    tools:text="Senior Android Developer"/>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/divider_size"
+                    android:layout_marginTop="16dp"
+                    android:background="@color/divider"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/userBioTextView"/>
+
+            </android.support.constraint.ConstraintLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="8dp"/>
+
+            <TextView
+                android:id="@+id/userCompanyTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:drawablePadding="16dp"
+                android:drawableStart="@drawable/ic_group"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:paddingBottom="8dp"
+                android:paddingEnd="16dp"
+                android:paddingStart="16dp"
+                android:paddingTop="8dp"
+                android:textColor="@color/primary_text"
+                android:textSize="16sp"
+                android:visibility="gone"
+                tools:text="company"
+                tools:visibility="visible"/>
+
+            <TextView
+                android:id="@+id/userLocationTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:drawablePadding="16dp"
+                android:drawableStart="@drawable/ic_location"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:paddingBottom="8dp"
+                android:paddingEnd="16dp"
+                android:paddingStart="16dp"
+                android:paddingTop="8dp"
+                android:textColor="@color/primary_text"
+                android:textSize="16sp"
+                android:visibility="gone"
+                tools:text="company"
+                tools:visibility="visible"/>
+
+            <TextView
+                android:id="@+id/userSiteTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:drawablePadding="16dp"
+                android:drawableStart="@drawable/ic_link"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:paddingBottom="8dp"
+                android:paddingEnd="16dp"
+                android:paddingStart="16dp"
+                android:paddingTop="8dp"
+                android:textColor="@color/primary_text"
+                android:textSize="16sp"
+                android:visibility="gone"
+                tools:text="company"
+                tools:visibility="visible"/>
+
+            <TextView
+                android:id="@+id/userSkypeTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:drawablePadding="16dp"
+                android:drawableStart="@drawable/ic_skype"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:paddingBottom="8dp"
+                android:paddingEnd="16dp"
+                android:paddingStart="16dp"
+                android:paddingTop="8dp"
+                android:textColor="@color/primary_text"
+                android:textSize="16sp"
+                android:visibility="gone"
+                tools:text="company"
+                tools:visibility="visible"/>
+
+            <TextView
+                android:id="@+id/userLinkedinTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:drawablePadding="16dp"
+                android:drawableStart="@drawable/ic_linkedin"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:paddingBottom="8dp"
+                android:paddingEnd="16dp"
+                android:paddingStart="16dp"
+                android:paddingTop="8dp"
+                android:textColor="@color/primary_text"
+                android:textSize="16sp"
+                android:visibility="gone"
+                tools:text="company"
+                tools:visibility="visible"/>
+
+            <TextView
+                android:id="@+id/userTwitterTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:drawablePadding="16dp"
+                android:drawableStart="@drawable/ic_twitter"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:paddingBottom="8dp"
+                android:paddingEnd="16dp"
+                android:paddingStart="16dp"
+                android:paddingTop="8dp"
+                android:textColor="@color/primary_text"
+                android:textSize="16sp"
+                android:visibility="gone"
+                tools:text="company"
+                tools:visibility="visible"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>
