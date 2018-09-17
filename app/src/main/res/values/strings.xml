@@ -135,9 +135,9 @@
     <string name="my_todos_done">Done</string>
     <string name="todo_action_assigned">assigned</string>
     <string name="todo_action_mentioned">mentioned</string>
-    <string name="todo_action_build_failed">build failed</string>
+    <string name="todo_action_build_failed">The build failed</string>
     <string name="todo_action_marked">added a todo</string>
-    <string name="todo_action_approval_required">approval required</string>
+    <string name="todo_action_approval_required">set you as an approver</string>
     <string name="todo_action_directly_addressed">directly addressed</string>
     <string name="todo_action_unmergeable">Could not merge</string>
 
