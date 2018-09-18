@@ -2,6 +2,7 @@ package ru.terrakok.gitlabclient.model.interactor.project
 
 import io.reactivex.Single
 import ru.terrakok.gitlabclient.entity.OrderBy
+import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.model.repository.project.ProjectRepository
 import ru.terrakok.gitlabclient.model.repository.tools.Base64Tools
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
@@ -42,28 +43,22 @@ class ProjectInteractor @Inject constructor(
 
     fun getProject(id: Long) = projectRepository.getProject(id)
 
-    /**
-     * Returns [Single] with the project readme file decoded as [String]
-     * at the specified project and branch. The project readme is searched ignoring case.
-     *
-     * @param id project id.
-     * @param branchName project branch name to search readme.
-     * @return [Single] with readme decoded as [String].
-     * @throws NoSuchElementException if project readme with name [README_FILE_NAME] not found.
-     */
-    fun getProjectReadme(id: Long, branchName: String) =
-        projectRepository.getRepositoryTree(projectId = id, branchName = branchName)
-            .map { treeNodes ->
-                treeNodes.first { it.name.contains(README_FILE_NAME, true) }
+    fun getProjectReadme(project: Project) =
+        Single
+            .defer {
+                if (project.readmeUrl != null) {
+                    val readmePath = project.readmeUrl.substringAfter(
+                        "${project.webUrl}/blob/${project.defaultBranch}/"
+                    )
+                    projectRepository.getFile(project.id, readmePath, project.defaultBranch)
+                } else {
+                    Single.error(ReadmeNotFound())
+                }
             }
-            .flatMap { treeNode ->
-                projectRepository.getFile(id, treeNode.name, branchName)
-                    .observeOn(schedulers.computation())
-                    .map { file -> base64Tools.decode(file.content) }
-                    .observeOn(schedulers.ui())
-            }
+            .observeOn(schedulers.computation())
+            .map { file -> base64Tools.decode(file.content) }
+            .observeOn(schedulers.ui())
 
-    companion object {
-        private const val README_FILE_NAME = "readme.md"
-    }
+
+    class ReadmeNotFound : Exception()
 }

@@ -30,10 +30,10 @@ class ProjectInfoPresenter @Inject constructor(
             .getProject(projectId)
             .flatMap { project ->
                 projectInteractor
-                    .getProjectReadme(project.id, project.defaultBranch)
+                    .getProjectReadme(project)
                     .onErrorResumeNext { throwable ->
                         when (throwable) {
-                            is NoSuchElementException -> Single.just("")
+                            is ProjectInteractor.ReadmeNotFound -> Single.just("")
                             else -> Single.error(throwable)
                         }
                     }

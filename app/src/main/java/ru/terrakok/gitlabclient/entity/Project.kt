@@ -39,5 +39,6 @@ data class Project(
     @SerializedName("shared_with_groups") val sharedWithGroups: List<SharedWithGroup>?,
     @SerializedName("only_allow_merge_if_pipeline_succeeds") val onlyAllowMergeIfPipelineSucceeds: Boolean,
     @SerializedName("only_allow_merge_if_all_discussions_are_resolved") val onlyAllowMergeIfAllDiscussionsAreResolved: Boolean,
-    @SerializedName("request_access_enabled") val requestAccessEnabled: Boolean
+    @SerializedName("request_access_enabled") val requestAccessEnabled: Boolean,
+    @SerializedName("readme_url") val readmeUrl: String?
 )
