@@ -15,7 +15,6 @@ import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderTitle
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.todo.TodoAction
 import ru.terrakok.gitlabclient.model.system.ResourceManager
-import timber.log.Timber
 import java.io.IOException
 
 /**
@@ -123,9 +122,7 @@ fun TargetHeaderTitle.getHumanName(resources: Resources) = when (this) {
 
         when (action) {
             TodoAction.ASSIGNED -> {
-                "$author $actionName $targetName ${resources.getString(R.string.at)} $projectName ${resources.getString(
-                    R.string.to
-                )} $assignee"
+                "$author $actionName $targetName ${resources.getString(R.string.at)} $projectName ${resources.getString(R.string.to)} $assignee"
             }
             TodoAction.DIRECTLY_ADDRESSED,
             TodoAction.MENTIONED -> {
@@ -135,11 +132,13 @@ fun TargetHeaderTitle.getHumanName(resources: Resources) = when (this) {
                 "$author $actionName ${resources.getString(R.string.for_str)} $targetName ${resources.getString(R.string.at)} $projectName"
             }
             TodoAction.UNMERGEABLE -> {
-                "$actionName $targetName $projectName"
+                "$actionName $targetName ${resources.getString(R.string.at)} $projectName"
             }
-            else -> {
-                Timber.e("Unsupported template for todo action=$actionName.")
-                "$author $actionName $targetName $assignee ${resources.getString(R.string.at)} $projectName"
+            TodoAction.BUILD_FAILED -> {
+                "$actionName ${resources.getString(R.string.for_str)} $targetName ${resources.getString(R.string.at)} $projectName"
+            }
+            TodoAction.APPROVAL_REQUIRED -> {
+                "$author $actionName ${resources.getString(R.string.for_str)} $targetName ${resources.getString(R.string.at)} $projectName"
             }
         }
     }
