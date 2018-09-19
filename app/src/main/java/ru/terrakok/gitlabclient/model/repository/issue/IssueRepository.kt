@@ -133,11 +133,15 @@ class IssueRepository @Inject constructor(
 
     fun getIssueNotes(
         projectId: Long,
-        issueId: Long
+        issueId: Long,
+        sort: Sort?,
+        orderBy: OrderBy?,
+        page: Int,
+        pageSize: Int = defaultPageSize
     ) = Single
         .zip(
             api.getProject(projectId),
-            getDiscussionNotes(projectId, issueId),
+            api.getIssueNotes(projectId, issueId, sort, orderBy, page, pageSize),
             BiFunction<Project, List<Note>, List<Note>> { project, notes ->
                 ArrayList(notes).apply {
                     val iterator = listIterator()
@@ -154,11 +158,4 @@ class IssueRepository @Inject constructor(
         )
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
-
-    private fun getDiscussionNotes(projectId: Long, issueId: Long) =
-        api
-            .getIssueDiscussions(projectId, issueId)
-            .flattenAsObservable { it }
-            .concatMap { discussion -> Observable.fromIterable(discussion.notes) }
-            .toList()
 }

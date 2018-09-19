@@ -147,11 +147,15 @@ class MergeRequestRepository @Inject constructor(
 
     fun getMergeRequestNotes(
         projectId: Long,
-        mergeRequestId: Long
+        mergeRequestId: Long,
+        sort: Sort?,
+        orderBy: OrderBy?,
+        page: Int,
+        pageSize: Int = defaultPageSize
     ) = Single
         .zip(
             api.getProject(projectId),
-            getDiscussionNotes(projectId, mergeRequestId),
+            api.getMergeRequestNotes(projectId, mergeRequestId, sort, orderBy, page, pageSize),
             BiFunction<Project, List<Note>, List<Note>> { project, notes ->
                 ArrayList(notes).apply {
                     val iterator = listIterator()
@@ -168,11 +172,4 @@ class MergeRequestRepository @Inject constructor(
         )
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
-
-    private fun getDiscussionNotes(projectId: Long, mergeRequestId: Long) =
-        api
-            .getMergeRequestDiscussions(projectId, mergeRequestId)
-            .flattenAsObservable { it }
-            .concatMap { discussion -> Observable.fromIterable(discussion.notes) }
-            .toList()
 }

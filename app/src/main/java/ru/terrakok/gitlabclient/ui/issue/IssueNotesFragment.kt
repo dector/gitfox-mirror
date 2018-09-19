@@ -7,6 +7,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.layout_base_list.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.extension.showSnackMessage
+import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.global.NoteWithFormattedBody
 import ru.terrakok.gitlabclient.presentation.issue.notes.IssueNotesPresenter
 import ru.terrakok.gitlabclient.presentation.issue.notes.IssueNotesView
@@ -23,7 +24,7 @@ class IssueNotesFragment : BaseFragment(), IssueNotesView {
 
     override val layoutRes = R.layout.fragment_issue_notes
 
-    private val adapter by lazy { TargetNotesAdapter() }
+    private val adapter by lazy { TargetNotesAdapter({ presenter.loadNextIssuesPage() }) }
 
     @InjectPresenter
     lateinit var presenter: IssueNotesPresenter
@@ -43,15 +44,30 @@ class IssueNotesFragment : BaseFragment(), IssueNotesView {
             adapter = this@IssueNotesFragment.adapter
         }
 
-        swipeToRefresh.setOnRefreshListener { presenter.refresh() }
+        swipeToRefresh.setOnRefreshListener { presenter.refreshNotes() }
     }
 
-    override fun showNotes(notes: List<NoteWithFormattedBody>) {
-        adapter.setData(notes)
+    override fun showRefreshProgress(show: Boolean) {
+        swipeToRefresh.post { swipeToRefresh.isRefreshing = show }
     }
 
-    override fun showProgress(show: Boolean) {
-        swipeToRefresh.isRefreshing = show
+    override fun showEmptyProgress(show: Boolean) {
+        swipeToRefresh.post { swipeToRefresh.isRefreshing = false }
+    }
+
+    override fun showPageProgress(show: Boolean) {
+        recyclerView.post { adapter.showProgress(show) }
+    }
+
+    override fun showEmptyView(show: Boolean) {
+    }
+
+    override fun showEmptyError(show: Boolean, message: String?) {
+    }
+
+    override fun showNotes(show: Boolean, notes: List<NoteWithFormattedBody>) {
+        recyclerView.visible(show)
+        recyclerView.post { adapter.setData(notes) }
     }
 
     override fun showMessage(message: String) {

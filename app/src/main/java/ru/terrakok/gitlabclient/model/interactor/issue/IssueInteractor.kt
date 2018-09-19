@@ -1,6 +1,7 @@
 package ru.terrakok.gitlabclient.model.interactor.issue
 
 import ru.terrakok.gitlabclient.entity.OrderBy
+import ru.terrakok.gitlabclient.entity.Sort
 import ru.terrakok.gitlabclient.entity.issue.IssueScope
 import ru.terrakok.gitlabclient.entity.issue.IssueState
 import ru.terrakok.gitlabclient.model.repository.issue.IssueRepository
@@ -44,6 +45,7 @@ class IssueInteractor @Inject constructor(
 
     fun getIssueNotes(
         projectId: Long,
-        issueId: Long
-    ) = issueRepository.getIssueNotes(projectId, issueId)
+        issueId: Long,
+        page: Int
+    ) = issueRepository.getIssueNotes(projectId, issueId, Sort.ASC, OrderBy.UPDATED_AT, page)
 }
