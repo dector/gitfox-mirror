@@ -1,6 +1,7 @@
 package ru.terrakok.gitlabclient.ui.global
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.arellomobile.mvp.MvpAppCompatFragment
@@ -15,12 +16,25 @@ abstract class BaseFragment : MvpAppCompatFragment() {
 
     private var instanceStateSaved: Boolean = false
 
+    private val viewHandler = Handler()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
         inflater.inflate(layoutRes, container, false)
 
     override fun onResume() {
         super.onResume()
         instanceStateSaved = false
+    }
+
+    //fix for async views (like swipeToRefresh and RecyclerView)
+    //if synchronously call actions on swipeToRefresh in sequence show and hide then swipeToRefresh will not hidden
+    protected fun postViewAction(action: () -> Unit) {
+        viewHandler.post(action)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewHandler.removeCallbacksAndMessages(null)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

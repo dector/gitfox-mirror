@@ -76,7 +76,7 @@ class ProjectMergeRequestsFragment : BaseFragment(), ProjectMergeRequestsView {
     }
 
     override fun showRefreshProgress(show: Boolean) {
-        swipeToRefresh.post { swipeToRefresh.isRefreshing = show }
+        postViewAction { swipeToRefresh.isRefreshing = show }
     }
 
     override fun showEmptyProgress(show: Boolean) {
@@ -84,11 +84,11 @@ class ProjectMergeRequestsFragment : BaseFragment(), ProjectMergeRequestsView {
 
         //trick for disable and hide swipeToRefresh on fullscreen progress
         swipeToRefresh.visible(!show)
-        swipeToRefresh.post { swipeToRefresh.isRefreshing = false }
+        postViewAction { swipeToRefresh.isRefreshing = false }
     }
 
     override fun showPageProgress(show: Boolean) {
-        recyclerView.post { adapter.showProgress(show) }
+        postViewAction { adapter.showProgress(show) }
     }
 
     override fun showEmptyView(show: Boolean) {
@@ -103,7 +103,7 @@ class ProjectMergeRequestsFragment : BaseFragment(), ProjectMergeRequestsView {
 
     override fun showMergeRequests(show: Boolean, mergeRequests: List<TargetHeader>) {
         recyclerView.visible(show)
-        recyclerView.post { adapter.setData(mergeRequests) }
+        postViewAction { adapter.setData(mergeRequests) }
     }
 
     override fun showMessage(message: String) {

@@ -66,7 +66,7 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
     }
 
     override fun showRefreshProgress(show: Boolean) {
-        swipeToRefresh.post { swipeToRefresh?.isRefreshing = show }
+        postViewAction { swipeToRefresh.isRefreshing = show }
     }
 
     override fun showEmptyProgress(show: Boolean) {
@@ -74,7 +74,7 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
 
         //trick for disable and hide swipeToRefresh on fullscreen progress
         swipeToRefresh.visible(!show)
-        swipeToRefresh.post { swipeToRefresh.isRefreshing = false }
+        postViewAction { swipeToRefresh.isRefreshing = false }
     }
 
     override fun showEmptyView(show: Boolean) {
@@ -89,7 +89,7 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
 
     override fun showProjects(show: Boolean, projects: List<Project>) {
         recyclerView.visible(show)
-        recyclerView.post { adapter.setData(projects) }
+        postViewAction { adapter.setData(projects) }
     }
 
     override fun showMessage(message: String) {
@@ -97,7 +97,7 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
     }
 
     override fun showPageProgress(isVisible: Boolean) {
-        recyclerView.post { adapter.showProgress(isVisible) }
+        postViewAction { adapter.showProgress(isVisible) }
     }
 
     override fun onBackPressed() = presenter.onBackPressed()
