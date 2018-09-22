@@ -2,10 +2,7 @@ package ru.terrakok.gitlabclient.presentation.issue.notes
 
 import com.arellomobile.mvp.InjectViewState
 import ru.terrakok.gitlabclient.model.interactor.issue.IssueInteractor
-import ru.terrakok.gitlabclient.presentation.global.BasePresenter
-import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
-import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
-import ru.terrakok.gitlabclient.presentation.global.NoteWithFormattedBody
+import ru.terrakok.gitlabclient.presentation.global.*
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.IssueId
 import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
@@ -29,26 +26,60 @@ class IssueNotesPresenter @Inject constructor(
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
-        requestNotes()
+        refreshNotes()
     }
 
-    private fun requestNotes() {
-        issueInteractor.getIssueNotes(projectId, issueId)
-            .flattenAsObservable { it }
-            .concatMap { note ->
-                mdConverter.markdownToSpannable(note.body)
-                    .map { NoteWithFormattedBody(note, it) }
-                    .toObservable()
+    private val paginator = Paginator(
+        { page ->
+            issueInteractor.getIssueNotes(projectId, issueId, page)
+                .flattenAsObservable { it }
+                .concatMap { note ->
+                    mdConverter.markdownToSpannable(note.body)
+                        .map { NoteWithFormattedBody(note, it) }
+                        .toObservable()
+                }
+                .toList()
+        },
+        object : Paginator.ViewController<NoteWithFormattedBody> {
+            override fun showEmptyProgress(show: Boolean) {
+                viewState.showEmptyProgress(show)
             }
-            .toList()
-            .doOnSubscribe { viewState.showProgress(true) }
-            .doAfterTerminate { viewState.showProgress(false) }
-            .subscribe(
-                { viewState.showNotes(it) },
-                { errorHandler.proceed(it, { viewState.showMessage(it) }) }
-            )
-            .connect()
-    }
 
-    fun refresh() = requestNotes()
+            override fun showEmptyError(show: Boolean, error: Throwable?) {
+                if (error != null) {
+                    errorHandler.proceed(error, { viewState.showEmptyError(show, it) })
+                } else {
+                    viewState.showEmptyError(show, null)
+                }
+            }
+
+            override fun showErrorMessage(error: Throwable) {
+                errorHandler.proceed(error, { viewState.showMessage(it) })
+            }
+
+            override fun showEmptyView(show: Boolean) {
+                viewState.showEmptyView(show)
+            }
+
+            override fun showData(show: Boolean, data: List<NoteWithFormattedBody>) {
+                viewState.showNotes(show, data)
+            }
+
+            override fun showRefreshProgress(show: Boolean) {
+                viewState.showRefreshProgress(show)
+            }
+
+            override fun showPageProgress(show: Boolean) {
+                viewState.showPageProgress(show)
+            }
+        }
+    )
+
+    fun refreshNotes() = paginator.refresh()
+    fun loadNextIssuesPage() = paginator.loadNewPage()
+
+    override fun onDestroy() {
+        super.onDestroy()
+        paginator.release()
+    }
 }

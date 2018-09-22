@@ -16,20 +16,20 @@ import ru.terrakok.gitlabclient.presentation.global.NoteWithFormattedBody
  */
 class SystemNoteAdapterDelegate(
     private val clickListener: (Note) -> Unit
-) : AdapterDelegate<MutableList<NoteWithFormattedBody>>() {
+) : AdapterDelegate<MutableList<Any>>() {
 
-    override fun isForViewType(items: MutableList<NoteWithFormattedBody>, position: Int) =
-        items[position].note.isSystem
+    override fun isForViewType(items: MutableList<Any>, position: Int) =
+        with(items[position]) { this is NoteWithFormattedBody && this.note.isSystem }
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder =
         ViewHolder(parent.inflate(R.layout.item_system_note))
 
     override fun onBindViewHolder(
-        items: MutableList<NoteWithFormattedBody>,
+        items: MutableList<Any>,
         position: Int,
         viewHolder: RecyclerView.ViewHolder,
         payloads: MutableList<Any>
-    ) = (viewHolder as ViewHolder).bind(items[position])
+    ) = (viewHolder as ViewHolder).bind(items[position] as NoteWithFormattedBody)
 
     private inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private lateinit var note: Note
