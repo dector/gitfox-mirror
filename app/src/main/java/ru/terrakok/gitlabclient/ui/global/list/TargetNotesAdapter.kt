@@ -6,7 +6,7 @@ import com.hannesdorfmann.adapterdelegates3.ListDelegationAdapter
 import ru.terrakok.gitlabclient.presentation.global.NoteWithFormattedBody
 
 class TargetNotesAdapter(
-    private val nextListener: () -> Unit
+    private val nextPageListener: () -> Unit
 ) : ListDelegationAdapter<MutableList<Any>>() {
 
     init {
@@ -49,7 +49,7 @@ class TargetNotesAdapter(
     ) {
         super.onBindViewHolder(holder, position, payloads)
 
-        if (position == items.size - 10) nextListener()
+        if (position == items.size - 10) nextPageListener()
     }
 
     private inner class DiffCallback(
