@@ -11,7 +11,7 @@ import ru.terrakok.gitlabclient.ui.global.list.TargetHeaderAdapterDelegate
 class TargetsAdapter(
     userClickListener: (Long) -> Unit,
     clickListener: (TargetHeader) -> Unit,
-    private val nextListener: () -> Unit
+    private val nextPageListener: () -> Unit
 ) : ListDelegationAdapter<MutableList<Any>>() {
 
     init {
@@ -56,7 +56,7 @@ class TargetsAdapter(
     ) {
         super.onBindViewHolder(holder, position, payloads)
 
-        if (position == items.size - 10) nextListener()
+        if (position == items.size - 10) nextPageListener()
     }
 
     private inner class DiffCallback(

@@ -1,6 +1,7 @@
 package ru.terrakok.gitlabclient.model.interactor.mergerequest
 
 import ru.terrakok.gitlabclient.entity.OrderBy
+import ru.terrakok.gitlabclient.entity.Sort
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestScope
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
 import ru.terrakok.gitlabclient.model.repository.mergerequest.MergeRequestRepository
@@ -40,6 +41,7 @@ class MergeRequestInteractor @Inject constructor(
 
     fun getMergeRequestNotes(
         projectId: Long,
-        mergeRequestId: Long
-    ) = mergeRequestRepository.getMergeRequestNotes(projectId, mergeRequestId)
+        mergeRequestId: Long,
+        page: Int
+    ) = mergeRequestRepository.getMergeRequestNotes(projectId, mergeRequestId, Sort.ASC, OrderBy.UPDATED_AT, page)
 }
