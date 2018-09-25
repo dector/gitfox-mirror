@@ -42,7 +42,7 @@ class MergeRequestInfoPresenter @Inject constructor(
                     .getMergeRequest(projectId, mrId)
                     .flatMap { mr ->
                         mdConverter
-                            .markdownToSpannable(mr.description ?: "")
+                            .markdownToSpannable(mr.description)
                             .map { Pair(mr, it) }
                     },
                 projectInteractor.getProject(projectId),

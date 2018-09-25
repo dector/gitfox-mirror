@@ -126,8 +126,19 @@ class IssueRepository @Inject constructor(
     fun getIssue(
         projectId: Long,
         issueId: Long
-    ) = api
-        .getIssue(projectId, issueId)
+    ) = Single
+        .zip(
+            api.getProject(projectId),
+            api.getIssue(projectId, issueId),
+            BiFunction<Project, Issue, Issue> { project, issue ->
+                val resolved = markDownUrlResolver.resolve(issue.description, project)
+                if (resolved != issue.description) {
+                    issue.copy(description = resolved)
+                } else {
+                    issue
+                }
+            }
+        )
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
 
