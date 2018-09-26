@@ -10,7 +10,7 @@ data class Issue(
     @SerializedName("id") val id: Long,
     @SerializedName("iid") val iid: Long,
     @SerializedName("state") val state: IssueState,
-    @SerializedName("description") val description: String?,
+    @SerializedName("description") val description: String,
     @SerializedName("author") val author: Author,
     @SerializedName("milestone") val milestone: Milestone?,
     @SerializedName("project_id") val projectId: Long,
