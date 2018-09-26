@@ -10,7 +10,8 @@ data class Milestone(
     @SerializedName("description") val description: String?,
     @SerializedName("state") val state: String?,
     @SerializedName("due_date") val dueDate: String?,
+    @SerializedName("start_date") val startDate: String?,
     @SerializedName("created_at") val createdAt: LocalDateTime?,
     @SerializedName("title") val title: String?,
-    @SerializedName("updated_at") val updatedAt: String?
+    @SerializedName("updated_at") val updatedAt: LocalDateTime?
 )

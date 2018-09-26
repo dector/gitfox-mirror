@@ -40,12 +40,13 @@ class App : Application() {
     }
 
     private fun initFabric() {
-        Fabric.with(
-            Fabric.Builder(this)
-                .kits(Crashlytics())
-                .debuggable(BuildConfig.DEBUG)
-                .build()
-        )
+        if (!BuildConfig.DEBUG) {
+            Fabric.with(
+                Fabric.Builder(this)
+                    .kits(Crashlytics())
+                    .build()
+            )
+        }
     }
 
     private fun initToothpick() {

@@ -42,7 +42,7 @@ class IssueInfoPresenter @Inject constructor(
                     .getIssue(projectId, issueId)
                     .flatMap { issue ->
                         mdConverter
-                            .markdownToSpannable(issue.description ?: "")
+                            .markdownToSpannable(issue.description)
                             .map { Pair(issue, it) }
                     },
                 projectInteractor.getProject(projectId),

@@ -140,8 +140,19 @@ class MergeRequestRepository @Inject constructor(
     fun getMergeRequest(
         projectId: Long,
         mergeRequestId: Long
-    ) = api
-        .getMergeRequest(projectId, mergeRequestId)
+    ) = Single
+        .zip(
+            api.getProject(projectId),
+            api.getMergeRequest(projectId, mergeRequestId),
+            BiFunction<Project, MergeRequest, MergeRequest> { project, mr ->
+                val resolved = markDownUrlResolver.resolve(mr.description, project)
+                if (resolved != mr.description) {
+                    mr.copy(description = resolved)
+                } else {
+                    mr
+                }
+            }
+        )
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
 
