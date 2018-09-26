@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.ui.project
+package ru.terrakok.gitlabclient.ui.project.info
 
 import android.os.Bundle
 import android.view.View

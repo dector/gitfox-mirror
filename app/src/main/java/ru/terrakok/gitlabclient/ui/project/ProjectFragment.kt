@@ -12,6 +12,7 @@ import ru.terrakok.gitlabclient.extension.shareText
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.ui.project.info.ProjectInfoFragment
 import toothpick.Toothpick
 import javax.inject.Inject
 
@@ -57,7 +58,7 @@ class ProjectFragment : BaseFragment(), ProjectInfoFragment.ProjectInfoToolbar {
             setOnTabSelectedListener { position, wasSelected ->
                 if (!wasSelected) selectTab(
                     when (position) {
-                        0 -> Screens.PROJECT_INFO_SCREEN
+                        0 -> Screens.PROJECT_INFO_CONTAINER_SCREEN
                         1 -> Screens.PROJECT_ISSUES_CONTAINER_SCREEN
                         else -> Screens.PROJECT_MR_CONTAINER_SCREEN
                     }
@@ -66,7 +67,7 @@ class ProjectFragment : BaseFragment(), ProjectInfoFragment.ProjectInfoToolbar {
             }
         }
 
-        selectTab(currentTabFragment?.tag ?: Screens.PROJECT_INFO_SCREEN)
+        selectTab(currentTabFragment?.tag ?: Screens.PROJECT_INFO_CONTAINER_SCREEN)
     }
 
     private fun selectTab(tab: String) {

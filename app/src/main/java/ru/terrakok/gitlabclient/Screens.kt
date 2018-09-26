@@ -29,7 +29,9 @@ import ru.terrakok.gitlabclient.ui.my.todos.MyTodosFragment
 import ru.terrakok.gitlabclient.ui.privacypolicy.PrivacyPolicyFragment
 import ru.terrakok.gitlabclient.ui.project.ProjectFlowFragment
 import ru.terrakok.gitlabclient.ui.project.ProjectFragment
-import ru.terrakok.gitlabclient.ui.project.ProjectInfoFragment
+import ru.terrakok.gitlabclient.ui.project.info.ProjectEventsFragment
+import ru.terrakok.gitlabclient.ui.project.info.ProjectInfoContainerFragment
+import ru.terrakok.gitlabclient.ui.project.info.ProjectInfoFragment
 import ru.terrakok.gitlabclient.ui.project.issues.ProjectIssuesContainerFragment
 import ru.terrakok.gitlabclient.ui.project.issues.ProjectIssuesFragment
 import ru.terrakok.gitlabclient.ui.project.mergerequest.ProjectMergeRequestsContainerFragment
@@ -69,7 +71,9 @@ object Screens {
 
     const val PROJECT_FLOW = "project flow"
     const val PROJECT_MAIN_FLOW = "project main flow"
+    const val PROJECT_INFO_CONTAINER_SCREEN = "project info container screen"
     const val PROJECT_INFO_SCREEN = "project info screen"
+    const val PROJECT_EVENTS_SCREEN = "project events screen"
     const val PROJECT_ISSUES_CONTAINER_SCREEN = "project issues container screen"
     const val PROJECT_ISSUES_SCREEN = "project issues screen"
     const val PROJECT_MR_CONTAINER_SCREEN = "project mr container screen"
@@ -143,9 +147,14 @@ object Screens {
 
             Screens.PROJECT_FLOW -> ProjectFlowFragment.create(data as Long)
             Screens.PROJECT_MAIN_FLOW -> ProjectFragment()
+
+            Screens.PROJECT_INFO_CONTAINER_SCREEN -> ProjectInfoContainerFragment()
             Screens.PROJECT_INFO_SCREEN -> ProjectInfoFragment()
+            Screens.PROJECT_EVENTS_SCREEN -> ProjectEventsFragment()
+
             Screens.PROJECT_ISSUES_CONTAINER_SCREEN -> ProjectIssuesContainerFragment()
             Screens.PROJECT_ISSUES_SCREEN -> ProjectIssuesFragment.create(data as IssueState)
+
             Screens.PROJECT_MR_CONTAINER_SCREEN -> ProjectMergeRequestsContainerFragment()
             Screens.PROJECT_MR_SCREEN -> ProjectMergeRequestsFragment.create(data as MergeRequestState)
 

@@ -153,6 +153,8 @@
     <string name="menu_project_info">Info</string>
     <string name="menu_project_issue">Issues</string>
     <string name="menu_project_merge_request">Merge Requests</string>
+    <string name="project_info">Info</string>
+    <string name="project_events">Activity</string>
 
     <!--Privacy policy screen-->
     <string name="privacy_policy">Privacy policy</string>
