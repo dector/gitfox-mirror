@@ -20,7 +20,7 @@ data class Issue(
     @SerializedName("created_at") val createdAt: LocalDateTime,
     @SerializedName("labels") val labels: List<String>,
     @SerializedName("user_notes_count") val userNotesCount: Int,
-    @SerializedName("due_date") val dueDate: LocalDateTime?,
+    @SerializedName("due_date") val dueDate: String?,
     @SerializedName("web_url") val webUrl: String?,
     @SerializedName("confidential") val confidential: Boolean,
     @SerializedName("upvotes") val upvotes: Int,
