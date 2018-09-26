@@ -14,8 +14,8 @@ import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.event.EventTarget
 import ru.terrakok.gitlabclient.entity.event.EventTargetType
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
-import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
+import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultPageSize
 import javax.inject.Inject
@@ -42,6 +42,40 @@ class EventRepository @Inject constructor(
         pageSize: Int = defaultPageSize
     ): Single<List<TargetHeader>> = api
         .getEvents(
+            action,
+            targetType,
+            beforeDay?.run { this.toLocalDate().toString() },
+            afterDay?.run { this.toLocalDate().toString() },
+            sort,
+            orderBy,
+            page,
+            pageSize
+        )
+        .flatMap { events ->
+            Single.zip(
+                Single.just(events),
+                getDistinctProjects(events),
+                BiFunction<List<Event>, Map<Long, Project>, List<TargetHeader>> { sourceEvents, projects ->
+                    sourceEvents.map { getTargetHeader(it, projects[it.projectId]) }
+                }
+            )
+        }
+        .subscribeOn(schedulers.io())
+        .observeOn(schedulers.ui())
+
+    fun getProjectEvents(
+        projectId: Long,
+        action: EventAction? = null,
+        targetType: EventTarget? = null,
+        beforeDay: LocalDateTime? = null,
+        afterDay: LocalDateTime? = null,
+        sort: Sort? = Sort.DESC,
+        orderBy: OrderBy = OrderBy.UPDATED_AT,
+        page: Int,
+        pageSize: Int = defaultPageSize
+    ): Single<List<TargetHeader>> = api
+        .getProjectEvents(
+            projectId,
             action,
             targetType,
             beforeDay?.run { this.toLocalDate().toString() },

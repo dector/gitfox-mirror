@@ -124,6 +124,19 @@ interface GitlabApi {
         @Query("per_page") pageSize: Int
     ): Single<List<Event>>
 
+    @GET("$API_PATH/projects/{project_id}/events")
+    fun getProjectEvents(
+        @Path("project_id") projectId: Long,
+        @Query("action") action: EventAction?,
+        @Query("target_type") targetType: EventTarget?,
+        @Query("before") beforeDay: String?,
+        @Query("after") afterDay: String?,
+        @Query("sort") sort: Sort?,
+        @Query("order_by") orderBy: OrderBy?,
+        @Query("page") page: Int,
+        @Query("per_page") pageSize: Int
+    ): Single<List<Event>>
+
     @GET("$API_PATH/merge_requests")
     fun getMyMergeRequests(
         @Query("state") state: MergeRequestState?,
