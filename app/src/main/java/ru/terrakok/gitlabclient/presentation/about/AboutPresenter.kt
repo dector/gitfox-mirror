@@ -40,6 +40,8 @@ class AboutPresenter @Inject constructor(
 
     fun onShowLibrariesClicked() = router.startFlow(Screens.APP_LIBRARIES_FLOW)
 
+    fun onPrivacyPolicyClicked() = router.startFlow(Screens.PRIVACY_POLICY_FLOW)
+
     fun onDeveloperClicked(id: Long) = router.startFlow(Screens.USER_FLOW, id)
 
     fun onMenuPressed() = menuController.open()

@@ -26,6 +26,7 @@ import ru.terrakok.gitlabclient.ui.my.mergerequests.MyMergeRequestsContainerFrag
 import ru.terrakok.gitlabclient.ui.my.mergerequests.MyMergeRequestsFragment
 import ru.terrakok.gitlabclient.ui.my.todos.MyTodosContainerFragment
 import ru.terrakok.gitlabclient.ui.my.todos.MyTodosFragment
+import ru.terrakok.gitlabclient.ui.privacypolicy.PrivacyPolicyFragment
 import ru.terrakok.gitlabclient.ui.project.ProjectFlowFragment
 import ru.terrakok.gitlabclient.ui.project.ProjectFragment
 import ru.terrakok.gitlabclient.ui.project.ProjectInfoFragment
@@ -90,6 +91,7 @@ object Screens {
     const val EXTERNAL_BROWSER_FLOW = "external browser flow"
     const val SHARE_FLOW = "share flow"
     const val CALL_FLOW = "call flow"
+    const val PRIVACY_POLICY_FLOW = "privacy policy flow"
 
     fun createIntent(flowKey: String, data: Any?) = when (flowKey) {
         Screens.EXTERNAL_BROWSER_FLOW -> Intent(Intent.ACTION_VIEW, Uri.parse(data as String))
@@ -162,6 +164,8 @@ object Screens {
             Screens.ISSUE_SCREEN -> IssueFragment()
             Screens.ISSUE_INFO_SCREEN -> IssueInfoFragment()
             Screens.ISSUE_NOTES_SCREEN -> IssueNotesFragment()
+
+            Screens.PRIVACY_POLICY_FLOW -> PrivacyPolicyFragment()
             else -> null
         }
 }
