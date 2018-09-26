@@ -67,4 +67,57 @@ class MarkDownUrlResolverTest {
 
         Assert.assertEquals(expected, resolved)
     }
+
+    @Test
+    fun check_markdown_with_images_in_table() {
+        val body = "## What does this MR do?\n" +
+            "\n" +
+            "Make vertical margin of page titles symmetric and aligned to grid.\n" +
+            "\n" +
+            "## Screenshots\n" +
+            "\n" +
+            "| Before | After |\n" +
+            "| --- | --- |\n" +
+            "| ![Screen_Shot_2018-09-24_at_18.08.23](/uploads/01237180208137f436d5f2a561ab1d74/Screen_Shot_2018-09-24_at_18.08.23.png) | ![Screen_Shot_2018-09-24_at_18.54.10](/uploads/1a29578cdac9a266888709f4f9b607fa/Screen_Shot_2018-09-24_at_18.54.10.png) |\n" +
+            "\n" +
+            "## What are the relevant issue numbers?\n" +
+            "\n" +
+            "https://gitlab.com/gitlab-org/gitlab-ee/merge_requests/7433#note_103849055\n" +
+            "\n" +
+            "## Does this MR meet the acceptance criteria?\n" +
+            "\n" +
+            "- [ ] [Changelog entry](https://docs.gitlab.com/ee/development/changelog.html) added, if necessary\n" +
+            "- [ ] [Documentation created/updated](https://docs.gitlab.com/ee/development/documentation/index.html#contributing-to-docs)\n" +
+            "- [ ] [Tests added for this feature/bug](https://docs.gitlab.com/ee/development/testing_guide/index.html)\n" +
+            "- [ ] Conforms to the [code review guidelines](https://docs.gitlab.com/ee/development/code_review.html)\n" +
+            "- [ ] Conforms to the [merge request performance guidelines](https://docs.gitlab.com/ee/development/merge_request_performance_guidelines.html)\n" +
+            "- [ ] Conforms to the [style guides](https://gitlab.com/gitlab-org/gitlab-ee/blob/master/CONTRIBUTING.md#style-guides)\n" +
+            "- [ ] Conforms to the [database guides](https://docs.gitlab.com/ee/development/README.html#databases-guides)"
+        val expected = "## What does this MR do?\n" +
+            "\n" +
+            "Make vertical margin of page titles symmetric and aligned to grid.\n" +
+            "\n" +
+            "## Screenshots\n" +
+            "\n" +
+            "| Before | After |\n" +
+            "| --- | --- |\n" +
+            "| ![Screen_Shot_2018-09-24_at_18.08.23](terrakok/gitlab-client/uploads/01237180208137f436d5f2a561ab1d74/Screen_Shot_2018-09-24_at_18.08.23.png) | ![Screen_Shot_2018-09-24_at_18.54.10](terrakok/gitlab-client/uploads/1a29578cdac9a266888709f4f9b607fa/Screen_Shot_2018-09-24_at_18.54.10.png) |\n" +
+            "\n" +
+            "## What are the relevant issue numbers?\n" +
+            "\n" +
+            "https://gitlab.com/gitlab-org/gitlab-ee/merge_requests/7433#note_103849055\n" +
+            "\n" +
+            "## Does this MR meet the acceptance criteria?\n" +
+            "\n" +
+            "- [ ] [Changelog entry](https://docs.gitlab.com/ee/development/changelog.html) added, if necessary\n" +
+            "- [ ] [Documentation created/updated](https://docs.gitlab.com/ee/development/documentation/index.html#contributing-to-docs)\n" +
+            "- [ ] [Tests added for this feature/bug](https://docs.gitlab.com/ee/development/testing_guide/index.html)\n" +
+            "- [ ] Conforms to the [code review guidelines](https://docs.gitlab.com/ee/development/code_review.html)\n" +
+            "- [ ] Conforms to the [merge request performance guidelines](https://docs.gitlab.com/ee/development/merge_request_performance_guidelines.html)\n" +
+            "- [ ] Conforms to the [style guides](https://gitlab.com/gitlab-org/gitlab-ee/blob/master/CONTRIBUTING.md#style-guides)\n" +
+            "- [ ] Conforms to the [database guides](https://docs.gitlab.com/ee/development/README.html#databases-guides)"
+        val resolved = markDownUrlResolver.resolve(body, project)
+
+        Assert.assertEquals(expected, resolved)
+    }
 }

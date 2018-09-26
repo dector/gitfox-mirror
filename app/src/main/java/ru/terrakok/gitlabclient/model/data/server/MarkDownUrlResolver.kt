@@ -8,16 +8,12 @@ import javax.inject.Inject
  */
 class MarkDownUrlResolver @Inject constructor() {
 
-    private val regex = Regex("(!\\[.+]\\(/uploads/.+/.+\\.\\w{3,4}\\))")
+    private val regex = Regex("!\\[[^]]+]\\(/uploads/[^)]+\\)")
 
     fun resolve(body: String, project: Project): String {
-        val iterator = regex.findAll(body).iterator()
         val builderBody = StringBuilder(body)
-        if (iterator.hasNext()) {
-            do {
-                val result = iterator.next()
-                builderBody.insert(builderBody.indexOf("/uploads/", result.range.start), project.pathWithNamespace)
-            } while (iterator.hasNext())
+        regex.findAll(body).forEach {
+            builderBody.insert(builderBody.indexOf("/uploads/", it.range.start), project.pathWithNamespace)
         }
         return builderBody.toString()
     }
