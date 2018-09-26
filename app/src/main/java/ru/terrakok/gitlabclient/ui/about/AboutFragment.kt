@@ -42,6 +42,7 @@ class AboutFragment : BaseFragment(), AboutView {
         toolbar.setNavigationOnClickListener { presenter.onMenuPressed() }
         feedbackView.setOnClickListener { tryOpenLink(supportUrl) }
         librariesView.setOnClickListener { presenter.onShowLibrariesClicked() }
+        privacyPolicyView.setOnClickListener { presenter.onPrivacyPolicyClicked() }
     }
 
     override fun showAppInfo(appInfo: AppInfo) {

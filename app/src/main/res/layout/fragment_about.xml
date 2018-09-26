@@ -93,6 +93,18 @@
                 android:textSize="16sp"/>
 
             <TextView
+                android:id="@+id/privacyPolicyView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:drawablePadding="16dp"
+                android:drawableStart="@drawable/ic_format_align_left_black_24dp"
+                android:padding="16sp"
+                android:text="@string/privacy_policy"
+                android:textColor="@color/primary_text"
+                android:textSize="16sp" />
+
+            <TextView
                 app:fontFamily="@font/roboto_medium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
