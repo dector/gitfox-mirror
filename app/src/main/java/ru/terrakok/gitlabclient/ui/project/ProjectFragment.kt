@@ -1,8 +1,6 @@
 package ru.terrakok.gitlabclient.ui.project
 
 import android.os.Bundle
-import android.support.v4.view.ViewCompat
-import android.util.TypedValue
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter
 import kotlinx.android.synthetic.main.fragment_project.*
 import ru.terrakok.gitlabclient.R
@@ -88,18 +86,6 @@ class ProjectFragment : BaseFragment(), ProjectInfoFragment.ProjectInfoToolbar {
                 it.userVisibleHint = true
             }
         }.commitNow()
-        setToolbarElevation(tab)
-    }
-
-    private fun setToolbarElevation(tab: String) {
-        if (tab == Screens.PROJECT_INFO_SCREEN) {
-            ViewCompat.setElevation(
-                toolbar,
-                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8f, resources.displayMetrics)
-            )
-        } else {
-            ViewCompat.setElevation(toolbar, 0f)
-        }
     }
 
     private fun createTabFragment(tab: String) =
