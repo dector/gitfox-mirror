@@ -9,11 +9,11 @@ import kotlinx.android.synthetic.main.layout_zero.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
+import ru.terrakok.gitlabclient.extension.argument
 import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.project.mergerequest.ProjectMergeRequestsPresenter
 import ru.terrakok.gitlabclient.presentation.project.mergerequest.ProjectMergeRequestsView
-import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.ZeroViewHolder
 import ru.terrakok.gitlabclient.ui.my.TargetsAdapter
@@ -25,14 +25,15 @@ import toothpick.config.Module
  */
 class ProjectMergeRequestsFragment : BaseFragment(), ProjectMergeRequestsView {
     override val layoutRes = R.layout.fragment_my_merge_requests
+    private val scopeName: String? by argument(ARG_SCOPE_NAME)
 
     @InjectPresenter
     lateinit var presenter: ProjectMergeRequestsPresenter
 
     @ProvidePresenter
     fun providePresenter(): ProjectMergeRequestsPresenter {
-        val scopeName = "ProjectMergeRequestsScope_${hashCode()}"
-        val scope = Toothpick.openScopes(DI.PROJECT_FLOW_SCOPE, scopeName)
+        val subScopeName = "ProjectMergeRequestsScope_${hashCode()}"
+        val scope = Toothpick.openScopes(scopeName, subScopeName)
         scope.installModules(object : Module() {
             init {
                 bind(MergeRequestState::class.java)
@@ -41,7 +42,7 @@ class ProjectMergeRequestsFragment : BaseFragment(), ProjectMergeRequestsView {
         })
 
         return scope.getInstance(ProjectMergeRequestsPresenter::class.java).also {
-            Toothpick.closeScope(scopeName)
+            Toothpick.closeScope(subScopeName)
         }
     }
 
@@ -112,11 +113,13 @@ class ProjectMergeRequestsFragment : BaseFragment(), ProjectMergeRequestsView {
 
     companion object {
         private const val ARG_MERGE_REQUEST_STATE = "arg merge request state"
+        private const val ARG_SCOPE_NAME = "arg_scope_name"
 
-        fun create(mergeRequestState: MergeRequestState) =
+        fun create(mergeRequestState: MergeRequestState, scope: String) =
             ProjectMergeRequestsFragment().apply {
                 arguments = Bundle().apply {
                     putSerializable(ARG_MERGE_REQUEST_STATE, mergeRequestState)
+                    putString(ARG_SCOPE_NAME, scope)
                 }
             }
     }
