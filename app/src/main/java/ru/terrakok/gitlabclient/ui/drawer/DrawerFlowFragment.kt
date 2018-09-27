@@ -11,12 +11,12 @@ import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.drawer_flow_fragment.*
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.NavigatorHolder
-import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.android.SupportFragmentNavigator
 import ru.terrakok.cicerone.commands.Command
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.extension.setLaunchScreen
+import ru.terrakok.gitlabclient.model.system.flow.AppRouter
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
 import ru.terrakok.gitlabclient.presentation.launch.DrawerFlowPresenter
@@ -103,7 +103,7 @@ class DrawerFlowFragment : BaseFragment(), MvpView {
     private fun initScope() {
         val scope = Toothpick.openScopes(DI.SERVER_SCOPE, DI.DRAWER_FLOW_SCOPE)
         scope.installModules(
-            FlowNavigationModule(scope.getInstance(Router::class.java)),
+            FlowNavigationModule(scope.getInstance(AppRouter::class.java)),
             GlobalMenuModule()
         )
         Toothpick.inject(this@DrawerFlowFragment, scope)

@@ -4,10 +4,10 @@ import android.os.Bundle
 import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.extension.argument
 import ru.terrakok.gitlabclient.extension.setLaunchScreen
+import ru.terrakok.gitlabclient.model.system.flow.AppRouter
 import ru.terrakok.gitlabclient.presentation.project.ProjectFlowPresenter
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
@@ -43,7 +43,7 @@ class ProjectFlowFragment : FlowFragment(), MvpView {
     private fun initScope() {
         val scope = Toothpick.openScopes(DI.SERVER_SCOPE, DI.PROJECT_FLOW_SCOPE)
         scope.installModules(
-            FlowNavigationModule(scope.getInstance(Router::class.java)),
+            FlowNavigationModule(scope.getInstance(AppRouter::class.java)),
             object : Module() {
                 init {
                     bind(PrimitiveWrapper::class.java)
