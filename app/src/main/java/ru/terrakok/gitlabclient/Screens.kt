@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import ru.terrakok.gitlabclient.entity.issue.IssueState
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
+import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.about.AboutFragment
 import ru.terrakok.gitlabclient.ui.auth.AuthFlowFragment
 import ru.terrakok.gitlabclient.ui.auth.AuthFragment
@@ -112,52 +113,51 @@ object Screens {
 
     fun createFragment(screenKey: String, data: Any? = null): BaseFragment? =
         when (screenKey) {
+            //DRAWER SCOPE SCREENS
             Screens.DRAWER_FLOW -> DrawerFlowFragment()
-
             Screens.MAIN_FLOW -> MainFlowFragment()
             Screens.MY_EVENTS_SCREEN -> MyEventsFragment()
-
             Screens.MY_ISSUES_CONTAINER_SCREEN -> MyIssuesContainerFragment()
             Screens.MY_ISSUES_SCREEN -> {
                 val (createdByMe, onlyOpened) = data as Pair<Boolean, Boolean>
                 MyIssuesFragment.create(createdByMe, onlyOpened)
             }
-
             Screens.MY_MR_CONTAINER_SCREEN -> MyMergeRequestsContainerFragment()
             Screens.MY_MR_SCREEN -> {
                 val (createdByMe, onlyOpened) = data as Pair<Boolean, Boolean>
                 MyMergeRequestsFragment.create(createdByMe, onlyOpened)
             }
-
             Screens.MY_TODOS_CONTAINER_SCREEN -> MyTodosContainerFragment()
             Screens.MY_TODOS_SCREEN -> MyTodosFragment.create(data as Boolean)
-
             Screens.PROJECTS_CONTAINER_SCREEN -> ProjectsContainerFragment()
             Screens.PROJECTS_SCREEN -> ProjectsListFragment.create(data as Int)
 
-            Screens.ABOUT_SCREEN -> AboutFragment()
-
-            Screens.APP_LIBRARIES_FLOW -> LibrariesFragment()
-
+            //AUTH SCREENS
             Screens.AUTH_FLOW -> AuthFlowFragment()
             Screens.AUTH_SCREEN -> AuthFragment()
 
+            //USER SCOPE SCREENS
             Screens.USER_FLOW -> UserFlowFragment.create(data as Long)
             Screens.USER_INFO_SCREEN -> UserInfoFragment()
 
-            Screens.PROJECT_FLOW -> ProjectFlowFragment.create(data as Long)
-            Screens.PROJECT_MAIN_FLOW -> ProjectFragment()
+            //PROJECT SCOPE SCREENS
+            Screens.PROJECT_FLOW -> {
+                ProjectFlowFragment.create(data as Long, DI.PROJECT_FLOW_SCOPE + " " + System.currentTimeMillis())
+            }
+            Screens.PROJECT_MAIN_FLOW -> ProjectFragment.create(data as String)
+            Screens.PROJECT_INFO_CONTAINER_SCREEN -> ProjectInfoContainerFragment.create(data as String)
+            Screens.PROJECT_INFO_SCREEN -> ProjectInfoFragment.create(data as String)
+            Screens.PROJECT_EVENTS_SCREEN -> ProjectEventsFragment.create(data as String)
+            Screens.PROJECT_ISSUES_CONTAINER_SCREEN -> ProjectIssuesContainerFragment.create(data as String)
+            Screens.PROJECT_ISSUES_SCREEN -> (data as Pair<IssueState, String>).let { (issueState, scope) ->
+                ProjectIssuesFragment.create(issueState, scope)
+            }
+            Screens.PROJECT_MR_CONTAINER_SCREEN -> ProjectMergeRequestsContainerFragment.create(data as String)
+            Screens.PROJECT_MR_SCREEN -> (data as Pair<MergeRequestState, String>).let { (mrState, scope) ->
+                ProjectMergeRequestsFragment.create(mrState, scope)
+            }
 
-            Screens.PROJECT_INFO_CONTAINER_SCREEN -> ProjectInfoContainerFragment()
-            Screens.PROJECT_INFO_SCREEN -> ProjectInfoFragment()
-            Screens.PROJECT_EVENTS_SCREEN -> ProjectEventsFragment()
-
-            Screens.PROJECT_ISSUES_CONTAINER_SCREEN -> ProjectIssuesContainerFragment()
-            Screens.PROJECT_ISSUES_SCREEN -> ProjectIssuesFragment.create(data as IssueState)
-
-            Screens.PROJECT_MR_CONTAINER_SCREEN -> ProjectMergeRequestsContainerFragment()
-            Screens.PROJECT_MR_SCREEN -> ProjectMergeRequestsFragment.create(data as MergeRequestState)
-
+            //MR SCOPE SCREENS
             Screens.MR_FLOW -> {
                 val (projectId, mrId) = data as Pair<Long, Long>
                 MergeRequestFlowFragment.create(projectId, mrId)
@@ -166,6 +166,7 @@ object Screens {
             Screens.MR_INFO_SCREEN -> MergeRequestInfoFragment()
             Screens.MR_NOTES_SCREEN -> MergeRequestNotesFragment()
 
+            //ISSUE SCOPE SCREENS
             Screens.ISSUE_FLOW -> {
                 val (projectId, issueId) = data as Pair<Long, Long>
                 IssueFlowFragment.create(projectId, issueId)
@@ -175,6 +176,8 @@ object Screens {
             Screens.ISSUE_NOTES_SCREEN -> IssueNotesFragment()
 
             Screens.PRIVACY_POLICY_FLOW -> PrivacyPolicyFragment()
+            Screens.ABOUT_SCREEN -> AboutFragment()
+            Screens.APP_LIBRARIES_FLOW -> LibrariesFragment()
             else -> null
         }
 }

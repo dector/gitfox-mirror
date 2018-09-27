@@ -5,8 +5,8 @@ import android.support.v4.app.FragmentPagerAdapter
 import kotlinx.android.synthetic.main.fragment_project_info_container.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
+import ru.terrakok.gitlabclient.extension.argument
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
-import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import toothpick.Toothpick
 import javax.inject.Inject
@@ -17,11 +17,12 @@ class ProjectInfoContainerFragment : BaseFragment(), ProjectInfoFragment.Project
     lateinit var router: FlowRouter
 
     override val layoutRes = R.layout.fragment_project_info_container
+    private val scopeName: String? by argument(ARG_SCOPE_NAME)
 
     private val adapter: ProjectInfoPagesAdapter by lazy { ProjectInfoPagesAdapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Toothpick.inject(this, Toothpick.openScope(DI.PROJECT_FLOW_SCOPE))
+        Toothpick.inject(this, Toothpick.openScope(scopeName))
         super.onCreate(savedInstanceState)
     }
 
@@ -44,8 +45,8 @@ class ProjectInfoContainerFragment : BaseFragment(), ProjectInfoFragment.Project
 
     private inner class ProjectInfoPagesAdapter : FragmentPagerAdapter(childFragmentManager) {
         override fun getItem(position: Int) = when (position) {
-            0 -> Screens.createFragment(Screens.PROJECT_INFO_SCREEN)
-            1 -> Screens.createFragment(Screens.PROJECT_EVENTS_SCREEN)
+            0 -> Screens.createFragment(Screens.PROJECT_INFO_SCREEN, scopeName)
+            1 -> Screens.createFragment(Screens.PROJECT_EVENTS_SCREEN, scopeName)
             else -> null
         }
 
@@ -56,5 +57,15 @@ class ProjectInfoContainerFragment : BaseFragment(), ProjectInfoFragment.Project
             1 -> getString(R.string.project_events)
             else -> null
         }
+    }
+
+    companion object {
+        private const val ARG_SCOPE_NAME = "arg_scope_name"
+        fun create(scope: String) =
+            ProjectInfoContainerFragment().apply {
+                arguments = Bundle().apply {
+                    putString(ARG_SCOPE_NAME, scope)
+                }
+            }
     }
 }

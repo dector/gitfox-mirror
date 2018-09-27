@@ -23,25 +23,26 @@ import toothpick.config.Module
 class ProjectFlowFragment : FlowFragment(), MvpView {
 
     private val projectId by argument(ARG_PROJECT_ID, 0L)
+    private val scopeName: String? by argument(ARG_SCOPE_NAME)
 
     @InjectPresenter
     lateinit var presenter: ProjectFlowPresenter
 
     @ProvidePresenter
     fun providePresenter() =
-        Toothpick.openScope(DI.PROJECT_FLOW_SCOPE)
+        Toothpick.openScope(scopeName)
             .getInstance(ProjectFlowPresenter::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         initScope()
         super.onCreate(savedInstanceState)
         if (childFragmentManager.fragments.isEmpty()) {
-            navigator.setLaunchScreen(Screens.PROJECT_MAIN_FLOW, null)
+            navigator.setLaunchScreen(Screens.PROJECT_MAIN_FLOW, scopeName)
         }
     }
 
     private fun initScope() {
-        val scope = Toothpick.openScopes(DI.SERVER_SCOPE, DI.PROJECT_FLOW_SCOPE)
+        val scope = Toothpick.openScopes(DI.SERVER_SCOPE, scopeName)
         scope.installModules(
             FlowNavigationModule(scope.getInstance(AppRouter::class.java)),
             object : Module() {
@@ -61,10 +62,12 @@ class ProjectFlowFragment : FlowFragment(), MvpView {
 
     companion object {
         private const val ARG_PROJECT_ID = "arg_project_id"
-        fun create(projectId: Long) =
+        private const val ARG_SCOPE_NAME = "arg_scope_name"
+        fun create(projectId: Long, scope: String) =
             ProjectFlowFragment().apply {
                 arguments = Bundle().apply {
                     putLong(ARG_PROJECT_ID, projectId)
+                    putString(ARG_SCOPE_NAME, scope)
                 }
             }
     }

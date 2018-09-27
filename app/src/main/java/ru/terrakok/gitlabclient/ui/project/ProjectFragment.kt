@@ -5,10 +5,10 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter
 import kotlinx.android.synthetic.main.fragment_project.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
+import ru.terrakok.gitlabclient.extension.argument
 import ru.terrakok.gitlabclient.extension.color
 import ru.terrakok.gitlabclient.extension.shareText
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
-import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.project.info.ProjectInfoFragment
 import toothpick.Toothpick
@@ -19,6 +19,7 @@ import javax.inject.Inject
  */
 class ProjectFragment : BaseFragment(), ProjectInfoFragment.ProjectInfoToolbar {
     override val layoutRes: Int = R.layout.fragment_project
+    private val scopeName: String? by argument(ARG_SCOPE_NAME)
 
     private val currentTabFragment: BaseFragment?
         get() = childFragmentManager.fragments.firstOrNull { !it.isHidden } as? BaseFragment
@@ -29,7 +30,7 @@ class ProjectFragment : BaseFragment(), ProjectInfoFragment.ProjectInfoToolbar {
     private var shareUrl: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Toothpick.inject(this, Toothpick.openScope(DI.PROJECT_FLOW_SCOPE))
+        Toothpick.inject(this, Toothpick.openScope(scopeName))
         super.onCreate(savedInstanceState)
     }
 
@@ -89,7 +90,7 @@ class ProjectFragment : BaseFragment(), ProjectInfoFragment.ProjectInfoToolbar {
     }
 
     private fun createTabFragment(tab: String) =
-        Screens.createFragment(tab) ?: throw RuntimeException("Unknown tab $tab")
+        Screens.createFragment(tab, scopeName) ?: throw RuntimeException("Unknown tab $tab")
 
     override fun onBackPressed() {
         super.onBackPressed()
@@ -103,5 +104,15 @@ class ProjectFragment : BaseFragment(), ProjectInfoFragment.ProjectInfoToolbar {
 
     override fun setShareUrl(url: String?) {
         shareUrl = url
+    }
+
+    companion object {
+        private const val ARG_SCOPE_NAME = "arg_scope_name"
+        fun create(scope: String) =
+            ProjectFragment().apply {
+                arguments = Bundle().apply {
+                    putString(ARG_SCOPE_NAME, scope)
+                }
+            }
     }
 }
