@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegate
 import kotlinx.android.synthetic.main.item_target_badge.view.*
-import kotlinx.android.synthetic.main.item_target_header.view.*
+import kotlinx.android.synthetic.main.item_target_header_public.view.*
 import ru.noties.markwon.Markwon
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.target.TargetBadge
@@ -18,16 +18,16 @@ import ru.terrakok.gitlabclient.extension.*
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 18.06.17.
  */
-class TargetHeaderAdapterDelegate(
+class TargetHeaderPublicAdapterDelegate(
     private val avatarClickListener: (Long) -> Unit,
-    private val clickListener: (TargetHeader) -> Unit
+    private val clickListener: (TargetHeader.Public) -> Unit
 ) : AdapterDelegate<MutableList<Any>>() {
 
     override fun isForViewType(items: MutableList<Any>, position: Int) =
-        items[position] is TargetHeader
+        items[position] is TargetHeader.Public
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
-        val root = parent.inflate(R.layout.item_target_header)
+        val root = parent.inflate(R.layout.item_target_header_public)
         with(root) {
             commentsTextView.setStartDrawable(
                 context.getTintDrawable(
@@ -47,10 +47,10 @@ class TargetHeaderAdapterDelegate(
         position: Int,
         viewHolder: RecyclerView.ViewHolder,
         payloads: MutableList<Any>
-    ) = (viewHolder as ViewHolder).bind(items[position] as TargetHeader)
+    ) = (viewHolder as ViewHolder).bind(items[position] as TargetHeader.Public)
 
     private inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private lateinit var item: TargetHeader
+        private lateinit var item: TargetHeader.Public
 
         init {
             view.setOnClickListener { clickListener(item) }
@@ -61,7 +61,7 @@ class TargetHeaderAdapterDelegate(
             }
         }
 
-        fun bind(item: TargetHeader) {
+        fun bind(item: TargetHeader.Public) {
             this.item = item
             with(itemView) {
                 titleTextView.text = item.title.getHumanName(resources)

@@ -99,36 +99,41 @@ class EventRepository @Inject constructor(
 
     private fun getDistinctProjects(events: List<Event>): Single<Map<Long, Project>> {
         return Observable.fromIterable(events)
+            .filter { it.projectId != 0L }
             .distinct { it.projectId }
             .flatMapSingle { event -> api.getProject(event.projectId) }
             .toMap { it.id }
     }
 
     private fun getTargetHeader(event: Event, project: Project?): TargetHeader {
-        val targetData = getTarget(event)
-        val badges = mutableListOf<TargetBadge>()
-        project?.let { badges.add(TargetBadge.Text(it.name, AppTarget.PROJECT, it.id)) }
-        badges.add(TargetBadge.Text(event.author.username, AppTarget.USER, event.author.id))
-        event.pushData?.let { pushData ->
-            badges.add(TargetBadge.Icon(TargetBadgeIcon.COMMITS, pushData.commitCount))
-        }
+        return if (event.projectId != 0L) {
+            val targetData = getTarget(event)
+            val badges = mutableListOf<TargetBadge>()
+            project?.let { badges.add(TargetBadge.Text(it.name, AppTarget.PROJECT, it.id)) }
+            badges.add(TargetBadge.Text(event.author.username, AppTarget.USER, event.author.id))
+            event.pushData?.let { pushData ->
+                badges.add(TargetBadge.Icon(TargetBadgeIcon.COMMITS, pushData.commitCount))
+            }
 
-        return TargetHeader(
-            event.author,
-            getIcon(event.actionName),
-            TargetHeaderTitle.Event(
-                event.author.name,
-                event.actionName,
-                targetData.name,
-                project?.name ?: ""
-            ),
-            getBody(event, project) ?: "",
-            event.createdAt,
-            targetData.target,
-            targetData.id,
-            getTargetInternal(event),
-            badges
-        )
+            TargetHeader.Public(
+                event.author,
+                getIcon(event.actionName),
+                TargetHeaderTitle.Event(
+                    event.author.name,
+                    event.actionName,
+                    targetData.name,
+                    project?.name ?: ""
+                ),
+                getBody(event, project) ?: "",
+                event.createdAt,
+                targetData.target,
+                targetData.id,
+                getTargetInternal(event),
+                badges
+            )
+        } else {
+            TargetHeader.Confidential
+        }
     }
 
     private fun getIcon(action: EventAction) = when (action) {
