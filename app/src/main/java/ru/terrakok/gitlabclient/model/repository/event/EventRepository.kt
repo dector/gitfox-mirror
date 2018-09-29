@@ -106,6 +106,10 @@ class EventRepository @Inject constructor(
     }
 
     private fun getTargetHeader(event: Event, project: Project?): TargetHeader {
+        // There are two event types: public and confidential.
+        // Public events are opened to read with any rights in project.
+        // Confidential event is closed to read without specific rights in project.
+        // So GitLab returns it will undefined values.
         return if (event.projectId != 0L) {
             val targetData = getTarget(event)
             val badges = mutableListOf<TargetBadge>()

@@ -6,8 +6,8 @@ import com.hannesdorfmann.adapterdelegates3.ListDelegationAdapter
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.ui.global.list.ProgressAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.ProgressItem
+import ru.terrakok.gitlabclient.ui.global.list.TargetHeaderConfidentialAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.TargetHeaderPublicAdapterDelegate
-import ru.terrakok.gitlabclient.ui.global.list.TargetHeaderPublicConfidentialDelegate
 
 class TargetsAdapter(
     userClickListener: (Long) -> Unit,
@@ -18,7 +18,7 @@ class TargetsAdapter(
     init {
         items = mutableListOf()
         delegatesManager.addDelegate(TargetHeaderPublicAdapterDelegate(userClickListener, clickListener))
-        delegatesManager.addDelegate(TargetHeaderPublicConfidentialDelegate())
+        delegatesManager.addDelegate(TargetHeaderConfidentialAdapterDelegate())
         delegatesManager.addDelegate(ProgressAdapterDelegate())
     }
 

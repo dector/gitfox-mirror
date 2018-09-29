@@ -11,7 +11,7 @@ import ru.terrakok.gitlabclient.extension.inflate
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 28.10.18.
  */
-class TargetHeaderPublicConfidentialDelegate : AdapterDelegate<MutableList<Any>>() {
+class TargetHeaderConfidentialAdapterDelegate : AdapterDelegate<MutableList<Any>>() {
 
     override fun isForViewType(items: MutableList<Any>, position: Int) =
         items[position] is TargetHeader.Confidential
