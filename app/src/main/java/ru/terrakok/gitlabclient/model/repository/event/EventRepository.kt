@@ -51,6 +51,7 @@ class EventRepository @Inject constructor(
             page,
             pageSize
         )
+        .map { filterBrokenEvents(it) }
         .flatMap { events ->
             Single.zip(
                 Single.just(events),
@@ -85,6 +86,7 @@ class EventRepository @Inject constructor(
             page,
             pageSize
         )
+        .map { filterBrokenEvents(it) }
         .flatMap { events ->
             Single.zip(
                 Single.just(events),
@@ -96,6 +98,17 @@ class EventRepository @Inject constructor(
         }
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
+
+    private fun filterBrokenEvents(events: List<Event>): List<Event> = events.filter { !isNoteBroken(it) }
+
+    /**
+     * Sometimes GitLab returns event with targetType = DIFF_NOTE || targetType = _NOTE, but _note = null.
+     * On web these events are filtered.
+     */
+    private fun isNoteBroken(event: Event) =
+        event.targetType != null
+            && (event.targetType == EventTargetType.DIFF_NOTE || event.targetType == EventTargetType.NOTE)
+            && event.note == null
 
     private fun getDistinctProjects(events: List<Event>): Single<Map<Long, Project>> {
         return Observable.fromIterable(events)
