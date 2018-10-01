@@ -118,6 +118,8 @@
     <string name="target_status_opened">Opened</string>
     <string name="target_status_closed">Closed</string>
     <string name="target_status_merged">Merged</string>
+    <string name="target_confidential_title">Confidential Event</string>
+    <string name="target_confidential_description">This event is not available.</string>
 
     <!--My Merge Requests Screen-->
     <string name="merge_request_created_by_me">Created</string>
