@@ -23,7 +23,7 @@ class AppPresenter @Inject constructor(
             else Screens.AUTH_FLOW
 
         if (launchInteractor.isFirstLaunch) {
-            router.navigateTo(
+            router.newRootScreens(
                 Pair(rootScreen, null),
                 Pair(Screens.PRIVACY_POLICY_FLOW, null)
             )
