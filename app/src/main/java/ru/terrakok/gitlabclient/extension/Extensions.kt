@@ -19,6 +19,7 @@ import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import ru.terrakok.cicerone.Navigator
+import ru.terrakok.cicerone.android.support.SupportAppScreen
 import ru.terrakok.cicerone.commands.BackTo
 import ru.terrakok.cicerone.commands.Replace
 import ru.terrakok.gitlabclient.R
@@ -31,11 +32,11 @@ import timber.log.Timber
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 03.03.17
  */
-fun Navigator.setLaunchScreen(screenKey: String, data: Any? = null) {
+fun Navigator.setLaunchScreen(screen: SupportAppScreen) {
     applyCommands(
         arrayOf(
             BackTo(null),
-            Replace(screenKey, data)
+            Replace(screen)
         )
     )
 }
@@ -138,32 +139,26 @@ fun ImageView.loadRoundedImage(
 fun TargetHeader.Public.openInfo(router: FlowRouter) {
     when (target) {
         AppTarget.PROJECT -> {
-            router.startFlow(Screens.PROJECT_FLOW, targetId)
+            router.startFlow(Screens.ProjectFlow(targetId))
         }
         AppTarget.USER -> {
-            router.startFlow(Screens.USER_FLOW, targetId)
+            router.startFlow(Screens.UserFlow(targetId))
         }
         AppTarget.MERGE_REQUEST -> {
             internal?.let { targetInternal ->
-                router.startFlow(
-                    Screens.MR_FLOW,
-                    Pair(targetInternal.projectId, targetInternal.targetIid)
-                )
+                router.startFlow(Screens.MergeRequestFlow(targetInternal.projectId, targetInternal.targetIid))
             }
         }
         AppTarget.ISSUE -> {
             internal?.let { targetInternal ->
-                router.startFlow(
-                    Screens.ISSUE_FLOW,
-                    Pair(targetInternal.projectId, targetInternal.targetIid)
-                )
+                router.startFlow(Screens.IssueFlow(targetInternal.projectId, targetInternal.targetIid))
             }
         }
         else -> {
             internal?.let { targetInternal ->
                 Timber.i("Temporary open project flow")
                 //todo
-                router.startFlow(Screens.PROJECT_FLOW, targetInternal.projectId)
+                router.startFlow(Screens.ProjectFlow(targetInternal.projectId))
             }
         }
     }
@@ -177,3 +172,5 @@ fun Fragment.showSnackMessage(message: String) {
         snackbar.show()
     }
 }
+
+fun Any.objectScopeName() = "${javaClass.simpleName}_${hashCode()}"

@@ -16,7 +16,6 @@ import ru.terrakok.gitlabclient.model.repository.tools.Base64Tools
 import ru.terrakok.gitlabclient.model.system.AppSchedulers
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
-import ru.terrakok.gitlabclient.model.system.flow.AppRouter
 import ru.terrakok.gitlabclient.model.system.message.SystemMessageNotifier
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultPageSize
@@ -40,9 +39,8 @@ class AppModule(context: Context) : Module() {
         bind(SystemMessageNotifier::class.java).toInstance(SystemMessageNotifier())
 
         //Navigation
-        val cicerone = Cicerone.create(AppRouter())
+        val cicerone = Cicerone.create()
         bind(Router::class.java).toInstance(cicerone.router)
-        bind(AppRouter::class.java).toInstance(cicerone.router)
         bind(NavigatorHolder::class.java).toInstance(cicerone.navigatorHolder)
 
         //Auth

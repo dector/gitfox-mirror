@@ -71,8 +71,8 @@ class MyIssuesContainerFragment : BaseFragment() {
 
     private inner class MyIssuesPagesAdapter : FragmentPagerAdapter(childFragmentManager) {
         override fun getItem(position: Int) = when (position) {
-            0 -> Screens.createFragment(Screens.MY_ISSUES_SCREEN, Pair(true, showOnlyOpened))
-            1 -> Screens.createFragment(Screens.MY_ISSUES_SCREEN, Pair(false, showOnlyOpened))
+            0 -> Screens.MyIssues(true, showOnlyOpened).fragment
+            1 -> Screens.MyIssues(false, showOnlyOpened).fragment
             else -> null
         }
 

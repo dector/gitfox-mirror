@@ -46,8 +46,8 @@ class IssueFragment : BaseFragment(), IssueInfoFragment.IssueInfoToolbar {
 
     private inner class IssuePagesAdapter : FragmentPagerAdapter(childFragmentManager) {
         override fun getItem(position: Int): BaseFragment? = when (position) {
-            0 -> Screens.createFragment(Screens.ISSUE_INFO_SCREEN)
-            1 -> Screens.createFragment(Screens.ISSUE_NOTES_SCREEN)
+            0 -> Screens.IssueInfo.fragment
+            1 -> Screens.IssueNotes.fragment
             else -> null
         }
 

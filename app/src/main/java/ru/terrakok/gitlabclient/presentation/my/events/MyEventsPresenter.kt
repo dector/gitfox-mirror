@@ -81,7 +81,7 @@ class MyEventsPresenter @Inject constructor(
 
     fun onMenuClick() = menuController.open()
     fun onItemClick(item: TargetHeader.Public) = item.openInfo(router)
-    fun onUserClick(userId: Long) = router.startFlow(Screens.USER_FLOW, userId)
+    fun onUserClick(userId: Long) = router.startFlow(Screens.UserFlow(userId))
     fun refreshEvents() = paginator.refresh()
     fun loadNextEventsPage() = paginator.loadNewPage()
     fun onBackPressed() = router.exit()

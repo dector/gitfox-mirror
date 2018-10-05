@@ -50,6 +50,6 @@ class ErrorHandler @Inject constructor(
 
     private fun logout() {
         authInteractor.logout()
-        router.newRootScreen(Screens.AUTH_FLOW)
+        router.newRootScreen(Screens.AuthFlow)
     }
 }

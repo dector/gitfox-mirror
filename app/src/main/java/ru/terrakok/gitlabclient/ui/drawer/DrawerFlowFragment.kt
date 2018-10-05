@@ -11,12 +11,12 @@ import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.drawer_flow_fragment.*
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.NavigatorHolder
-import ru.terrakok.cicerone.android.SupportFragmentNavigator
+import ru.terrakok.cicerone.Router
+import ru.terrakok.cicerone.android.support.SupportAppNavigator
 import ru.terrakok.cicerone.commands.Command
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.extension.setLaunchScreen
-import ru.terrakok.gitlabclient.model.system.flow.AppRouter
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
 import ru.terrakok.gitlabclient.presentation.launch.DrawerFlowPresenter
@@ -58,23 +58,18 @@ class DrawerFlowFragment : BaseFragment(), MvpView {
     }
 
     private val navigator: Navigator by lazy {
-        object : SupportFragmentNavigator(childFragmentManager, R.id.mainContainer) {
+        object : SupportAppNavigator(this.activity, childFragmentManager, R.id.mainContainer) {
 
             override fun applyCommands(commands: Array<out Command>?) {
                 super.applyCommands(commands)
                 updateNavDrawer()
             }
 
-            override fun exit() {
+            override fun activityBack() {
                 presenter.onExit()
             }
 
-            override fun createFragment(screenKey: String, data: Any?): Fragment? =
-                Screens.createFragment(screenKey, data)
-
-            override fun showSystemMessage(message: String?) {}
-
-            override fun setupFragmentTransactionAnimation(
+            override fun setupFragmentTransaction(
                 command: Command?,
                 currentFragment: Fragment?,
                 nextFragment: Fragment?,
@@ -96,14 +91,14 @@ class DrawerFlowFragment : BaseFragment(), MvpView {
                 .replace(R.id.navDrawerContainer, NavigationDrawerFragment())
                 .commitNow()
 
-            navigator.setLaunchScreen(Screens.MAIN_FLOW)
+            navigator.setLaunchScreen(Screens.MainFlow)
         }
     }
 
     private fun initScope() {
         val scope = Toothpick.openScopes(DI.SERVER_SCOPE, DI.DRAWER_FLOW_SCOPE)
         scope.installModules(
-            FlowNavigationModule(scope.getInstance(AppRouter::class.java)),
+            FlowNavigationModule(scope.getInstance(Router::class.java)),
             GlobalMenuModule()
         )
         Toothpick.inject(this@DrawerFlowFragment, scope)

@@ -28,9 +28,9 @@ class ProjectMergeRequestsContainerFragment : BaseFragment() {
         FragmentPagerAdapter(childFragmentManager) {
 
         override fun getItem(position: Int) = when (position) {
-            0 -> Screens.createFragment(Screens.PROJECT_MR_SCREEN, Pair(MergeRequestState.OPENED, scopeName))
-            1 -> Screens.createFragment(Screens.PROJECT_MR_SCREEN, Pair(MergeRequestState.MERGED, scopeName))
-            2 -> Screens.createFragment(Screens.PROJECT_MR_SCREEN, Pair(MergeRequestState.CLOSED, scopeName))
+            0 -> Screens.ProjectMergeRequests(MergeRequestState.OPENED, scopeName!!).fragment
+            1 -> Screens.ProjectMergeRequests(MergeRequestState.MERGED, scopeName!!).fragment
+            2 -> Screens.ProjectMergeRequests(MergeRequestState.CLOSED, scopeName!!).fragment
             else -> null
         }
 
