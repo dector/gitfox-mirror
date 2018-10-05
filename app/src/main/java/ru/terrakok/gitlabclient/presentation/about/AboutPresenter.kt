@@ -38,11 +38,11 @@ class AboutPresenter @Inject constructor(
             .connect()
     }
 
-    fun onShowLibrariesClicked() = router.startFlow(Screens.APP_LIBRARIES_FLOW)
+    fun onShowLibrariesClicked() = router.startFlow(Screens.Libraries)
 
-    fun onPrivacyPolicyClicked() = router.startFlow(Screens.PRIVACY_POLICY_FLOW)
+    fun onPrivacyPolicyClicked() = router.startFlow(Screens.PrivacyPolicy)
 
-    fun onDeveloperClicked(id: Long) = router.startFlow(Screens.USER_FLOW, id)
+    fun onDeveloperClicked(id: Long) = router.startFlow(Screens.UserFlow(id))
 
     fun onMenuPressed() = menuController.open()
     fun onBackPressed() = router.exit()

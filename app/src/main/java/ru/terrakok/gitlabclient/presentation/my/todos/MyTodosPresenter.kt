@@ -87,7 +87,7 @@ class MyTodosPresenter @Inject constructor(
     )
 
     fun onTodoClick(item: TargetHeader.Public) = item.openInfo(router)
-    fun onUserClick(userId: Long) = router.startFlow(Screens.USER_FLOW, userId)
+    fun onUserClick(userId: Long) = router.startFlow(Screens.UserFlow(userId))
     fun refreshTodos() = paginator.refresh()
     fun loadNextTodosPage() = paginator.loadNewPage()
 

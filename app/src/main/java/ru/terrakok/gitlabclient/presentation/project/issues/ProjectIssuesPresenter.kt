@@ -89,7 +89,7 @@ class ProjectIssuesPresenter @Inject constructor(
     )
 
     fun onIssueClick(item: TargetHeader.Public) = item.openInfo(router)
-    fun onUserClick(userId: Long) = router.startFlow(Screens.USER_FLOW, userId)
+    fun onUserClick(userId: Long) = router.startFlow(Screens.UserFlow(userId))
     fun refreshIssues() = paginator.refresh()
     fun loadNextIssuesPage() = paginator.loadNewPage()
 

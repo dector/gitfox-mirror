@@ -90,7 +90,7 @@ class MyMergeRequestsPresenter @Inject constructor(
     }
 
     fun onMergeRequestClick(item: TargetHeader.Public) = item.openInfo(router)
-    fun onUserClick(userId: Long) = router.startFlow(Screens.USER_FLOW, userId)
+    fun onUserClick(userId: Long) = router.startFlow(Screens.UserFlow(userId))
     fun refreshMergeRequests() = paginator.refresh()
     fun loadNextMergeRequestsPage() = paginator.loadNewPage()
 

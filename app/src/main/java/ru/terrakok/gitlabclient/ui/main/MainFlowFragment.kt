@@ -3,6 +3,7 @@ package ru.terrakok.gitlabclient.ui.main
 import android.os.Bundle
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter
 import kotlinx.android.synthetic.main.fragment_main.*
+import ru.terrakok.cicerone.android.support.SupportAppScreen
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.extension.color
@@ -30,27 +31,35 @@ class MainFlowFragment : BaseFragment() {
             setOnTabSelectedListener { position, wasSelected ->
                 if (!wasSelected) selectTab(
                     when (position) {
-                        0 -> Screens.MY_EVENTS_SCREEN
-                        1 -> Screens.MY_ISSUES_CONTAINER_SCREEN
-                        2 -> Screens.MY_MR_CONTAINER_SCREEN
-                        else -> Screens.MY_TODOS_CONTAINER_SCREEN
+                        0 -> eventsTab
+                        1 -> issuesTab
+                        2 -> mrsTab
+                        else -> todosTab
                     }
                 )
                 true
             }
         }
 
-        selectTab(currentTabFragment?.tag ?: Screens.MY_EVENTS_SCREEN)
+        selectTab(
+            when (currentTabFragment?.tag) {
+                eventsTab.screenKey -> eventsTab
+                issuesTab.screenKey -> eventsTab
+                mrsTab.screenKey -> eventsTab
+                todosTab.screenKey -> eventsTab
+                else -> eventsTab
+            }
+        )
     }
 
-    private fun selectTab(tab: String) {
+    private fun selectTab(tab: SupportAppScreen) {
         val currentFragment = currentTabFragment
-        val newFragment = childFragmentManager.findFragmentByTag(tab)
+        val newFragment = childFragmentManager.findFragmentByTag(tab.screenKey)
 
         if (currentFragment != null && newFragment != null && currentFragment == newFragment) return
 
         childFragmentManager.beginTransaction().apply {
-            if (newFragment == null) add(R.id.mainScreenContainer, createTabFragment(tab), tab)
+            if (newFragment == null) add(R.id.mainScreenContainer, createTabFragment(tab), tab.screenKey)
 
             currentFragment?.let {
                 hide(it)
@@ -63,10 +72,16 @@ class MainFlowFragment : BaseFragment() {
         }.commitNow()
     }
 
-    private fun createTabFragment(tab: String) =
-        Screens.createFragment(tab) ?: throw RuntimeException("Unknown tab $tab")
+    private fun createTabFragment(tab: SupportAppScreen) = tab.fragment
 
     override fun onBackPressed() {
         currentTabFragment?.onBackPressed()
+    }
+
+    companion object {
+        private val eventsTab = Screens.MyEvents
+        private val issuesTab = Screens.MyIssuesContainer
+        private val mrsTab = Screens.MyMrContainer
+        private val todosTab = Screens.MyTodosContainer
     }
 }

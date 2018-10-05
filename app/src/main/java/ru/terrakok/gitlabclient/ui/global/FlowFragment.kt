@@ -4,10 +4,9 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.NavigatorHolder
-import ru.terrakok.cicerone.android.SupportFragmentNavigator
+import ru.terrakok.cicerone.android.support.SupportAppNavigator
 import ru.terrakok.cicerone.commands.Command
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.Screens
 import javax.inject.Inject
 
 /**
@@ -23,17 +22,12 @@ abstract class FlowFragment : BaseFragment() {
     lateinit var navigatorHolder: NavigatorHolder
 
     protected val navigator: Navigator by lazy {
-        object : SupportFragmentNavigator(childFragmentManager, R.id.container) {
-            override fun exit() {
+        object : SupportAppNavigator(this.activity, childFragmentManager, R.id.container) {
+            override fun activityBack() {
                 onExit()
             }
 
-            override fun createFragment(screenKey: String, data: Any?): Fragment? =
-                Screens.createFragment(screenKey, data)
-
-            override fun showSystemMessage(message: String?) {}
-
-            override fun setupFragmentTransactionAnimation(
+            override fun setupFragmentTransaction(
                 command: Command?,
                 currentFragment: Fragment?,
                 nextFragment: Fragment?,

@@ -45,8 +45,8 @@ class MyTodosContainerFragment : BaseFragment() {
 
     private inner class MyTodosPagerAdapter : FragmentPagerAdapter(childFragmentManager) {
         override fun getItem(position: Int) = when (position) {
-            0 -> Screens.createFragment(Screens.MY_TODOS_SCREEN, true)
-            1 -> Screens.createFragment(Screens.MY_TODOS_SCREEN, false)
+            0 -> Screens.MyTodos(true).fragment
+            1 -> Screens.MyTodos(false).fragment
             else -> null
         }
 
