@@ -45,7 +45,6 @@ class IssueInteractor @Inject constructor(
 
     fun getIssueNotes(
         projectId: Long,
-        issueId: Long,
-        page: Int
-    ) = issueRepository.getIssueNotes(projectId, issueId, Sort.ASC, OrderBy.UPDATED_AT, page)
+        issueId: Long
+    ) = issueRepository.getIssueNotes(projectId, issueId, Sort.ASC, OrderBy.UPDATED_AT)
 }

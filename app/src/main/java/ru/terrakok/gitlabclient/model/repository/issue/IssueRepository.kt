@@ -17,6 +17,7 @@ import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultPageSize
+import ru.terrakok.gitlabclient.toothpick.qualifier.MaxPageSise
 import javax.inject.Inject
 
 /**
@@ -26,9 +27,11 @@ class IssueRepository @Inject constructor(
     private val api: GitlabApi,
     private val schedulers: SchedulersProvider,
     @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>,
-    private val markDownUrlResolver: MarkDownUrlResolver
+    private val markDownUrlResolver: MarkDownUrlResolver,
+    @MaxPageSise private val maxPageSizeWrapper: PrimitiveWrapper<Int>
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
+    private val maxPageSize = maxPageSizeWrapper.value
 
     fun getMyIssues(
         scope: IssueScope? = null,
@@ -146,13 +149,11 @@ class IssueRepository @Inject constructor(
         projectId: Long,
         issueId: Long,
         sort: Sort?,
-        orderBy: OrderBy?,
-        page: Int,
-        pageSize: Int = defaultPageSize
+        orderBy: OrderBy?
     ) = Single
         .zip(
             api.getProject(projectId),
-            api.getIssueNotes(projectId, issueId, sort, orderBy, page, pageSize),
+            getAllIssueNotes(projectId, issueId, sort, orderBy),
             BiFunction<Project, List<Note>, List<Note>> { project, notes ->
                 ArrayList(notes).apply {
                     val iterator = listIterator()
@@ -169,4 +170,14 @@ class IssueRepository @Inject constructor(
         )
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
+
+    private fun getAllIssueNotes(projectId: Long, issueId: Long, sort: Sort?, orderBy: OrderBy?) =
+        Observable.range(1, Int.MAX_VALUE)
+            .concatMap { page ->
+                api.getIssueNotes(projectId, issueId, sort, orderBy, page, maxPageSize)
+                    .toObservable()
+            }
+            .takeWhile { notes -> notes.isNotEmpty() }
+            .flatMapIterable { it }
+            .toList()
 }

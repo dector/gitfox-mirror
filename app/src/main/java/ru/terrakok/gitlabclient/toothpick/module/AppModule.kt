@@ -21,6 +21,7 @@ import ru.terrakok.gitlabclient.model.system.message.SystemMessageNotifier
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultPageSize
 import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultServerPath
+import ru.terrakok.gitlabclient.toothpick.qualifier.MaxPageSise
 import toothpick.config.Module
 
 /**
@@ -32,6 +33,7 @@ class AppModule(context: Context) : Module() {
         bind(Context::class.java).toInstance(context)
         bind(String::class.java).withName(DefaultServerPath::class.java).toInstance(BuildConfig.ORIGIN_GITLAB_ENDPOINT)
         bind(PrimitiveWrapper::class.java).withName(DefaultPageSize::class.java).toInstance(PrimitiveWrapper(20))
+        bind(PrimitiveWrapper::class.java).withName(MaxPageSise::class.java).toInstance(PrimitiveWrapper(100))
         bind(SchedulersProvider::class.java).toInstance(AppSchedulers())
         bind(ResourceManager::class.java).singletonInScope()
         bind(Base64Tools::class.java).toInstance(Base64Tools())

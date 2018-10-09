@@ -26,8 +26,7 @@ class IssueNotesFragment : BaseFragment(), IssueNotesView {
 
     override val layoutRes = R.layout.fragment_issue_notes
 
-    private val adapter by lazy { TargetNotesAdapter({ presenter.loadNextIssuesPage() }) }
-    private var zeroViewHolder: ZeroViewHolder? = null
+    private val adapter by lazy { TargetNotesAdapter() }
 
     @InjectPresenter
     lateinit var presenter: IssueNotesPresenter
@@ -46,40 +45,15 @@ class IssueNotesFragment : BaseFragment(), IssueNotesView {
             addItemDecoration(SimpleDividerDecorator(context))
             adapter = this@IssueNotesFragment.adapter
         }
-
-        swipeToRefresh.setOnRefreshListener { presenter.refreshNotes() }
-        zeroViewHolder = ZeroViewHolder(zeroLayout, { presenter.refreshNotes() })
-    }
-
-    override fun showRefreshProgress(show: Boolean) {
-        postViewAction { swipeToRefresh.isRefreshing = show }
+        swipeToRefresh.isEnabled = false
     }
 
     override fun showEmptyProgress(show: Boolean) {
         fullscreenProgressView.visible(show)
-
-        //trick for disable and hide swipeToRefresh on fullscreen progress
-        swipeToRefresh.visible(!show)
-        postViewAction { swipeToRefresh.isRefreshing = false }
     }
 
-    override fun showPageProgress(show: Boolean) {
-        postViewAction { adapter.showProgress(show) }
-    }
-
-    override fun showEmptyView(show: Boolean) {
-        if (show) zeroViewHolder?.showEmptyData()
-        else zeroViewHolder?.hide()
-    }
-
-    override fun showEmptyError(show: Boolean, message: String?) {
-        if (show) zeroViewHolder?.showEmptyError(message)
-        else zeroViewHolder?.hide()
-    }
-
-    override fun showNotes(show: Boolean, notes: List<NoteWithFormattedBody>) {
-        recyclerView.visible(show)
-        postViewAction { adapter.setData(notes) }
+    override fun showNotes(notes: List<NoteWithFormattedBody>) {
+        adapter.setData(notes)
     }
 
     override fun showMessage(message: String) {

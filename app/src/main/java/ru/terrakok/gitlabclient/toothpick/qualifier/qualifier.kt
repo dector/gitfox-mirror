@@ -10,6 +10,9 @@ import javax.inject.Qualifier
 annotation class DefaultPageSize
 
 @Qualifier
+annotation class MaxPageSise
+
+@Qualifier
 annotation class DefaultServerPath
 
 @Qualifier

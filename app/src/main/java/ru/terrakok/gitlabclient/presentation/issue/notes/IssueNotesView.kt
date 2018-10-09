@@ -12,12 +12,8 @@ import ru.terrakok.gitlabclient.presentation.global.NoteWithFormattedBody
 @StateStrategyType(AddToEndSingleStrategy::class)
 interface IssueNotesView : MvpView {
 
-    fun showRefreshProgress(show: Boolean)
     fun showEmptyProgress(show: Boolean)
-    fun showPageProgress(show: Boolean)
-    fun showEmptyView(show: Boolean)
-    fun showEmptyError(show: Boolean, message: String?)
-    fun showNotes(show: Boolean, notes: List<NoteWithFormattedBody>)
+    fun showNotes(notes: List<NoteWithFormattedBody>)
 
     @StateStrategyType(OneExecutionStateStrategy::class)
     fun showMessage(message: String)
