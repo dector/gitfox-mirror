@@ -30,7 +30,7 @@ class IssueNotesPresenter @Inject constructor(
         super.onFirstViewAttach()
 
         issueInteractor
-            .getIssueNotes(projectId, issueId)
+            .getAllIssueNotes(projectId, issueId)
             .doOnSubscribe { viewState.showEmptyProgress(true) }
             .doAfterTerminate { viewState.showEmptyProgress(false) }
             .flattenAsObservable { it }

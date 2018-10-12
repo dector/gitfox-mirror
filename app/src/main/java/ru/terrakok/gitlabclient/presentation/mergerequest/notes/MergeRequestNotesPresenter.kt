@@ -30,7 +30,7 @@ class MergeRequestNotesPresenter @Inject constructor(
         super.onFirstViewAttach()
 
         mrInteractor
-            .getMergeRequestNotes(projectId, mrId)
+            .getAllMergeRequestNotes(projectId, mrId)
             .doOnSubscribe { viewState.showEmptyProgress(true) }
             .doAfterTerminate { viewState.showEmptyProgress(false) }
             .flattenAsObservable { it }

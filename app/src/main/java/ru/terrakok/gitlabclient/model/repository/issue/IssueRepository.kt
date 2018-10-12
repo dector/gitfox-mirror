@@ -17,7 +17,6 @@ import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultPageSize
-import ru.terrakok.gitlabclient.toothpick.qualifier.MaxPageSise
 import javax.inject.Inject
 
 /**
@@ -27,11 +26,9 @@ class IssueRepository @Inject constructor(
     private val api: GitlabApi,
     private val schedulers: SchedulersProvider,
     @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>,
-    private val markDownUrlResolver: MarkDownUrlResolver,
-    @MaxPageSise private val maxPageSizeWrapper: PrimitiveWrapper<Int>
+    private val markDownUrlResolver: MarkDownUrlResolver
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
-    private val maxPageSize = maxPageSizeWrapper.value
 
     fun getMyIssues(
         scope: IssueScope? = null,
@@ -149,35 +146,56 @@ class IssueRepository @Inject constructor(
         projectId: Long,
         issueId: Long,
         sort: Sort?,
-        orderBy: OrderBy?
+        orderBy: OrderBy?,
+        page: Int,
+        pageSize: Int = defaultPageSize
     ) = Single
         .zip(
             api.getProject(projectId),
-            getAllIssueNotes(projectId, issueId, sort, orderBy),
+            api.getIssueNotes(projectId, issueId, sort, orderBy, page, pageSize),
             BiFunction<Project, List<Note>, List<Note>> { project, notes ->
-                ArrayList(notes).apply {
-                    val iterator = listIterator()
-                    while (iterator.hasNext()) {
-                        val note = iterator.next()
-                        val resolved = markDownUrlResolver.resolve(note.body, project)
-
-                        if (resolved != note.body) {
-                            iterator.set(note.copy(body = resolved))
-                        }
-                    }
-                }
+                getMarkdownUrlResolvedNotes(notes, project)
             }
         )
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
 
-    private fun getAllIssueNotes(projectId: Long, issueId: Long, sort: Sort?, orderBy: OrderBy?) =
+    fun getAllIssueNotes(
+        projectId: Long,
+        issueId: Long,
+        sort: Sort?,
+        orderBy: OrderBy?
+    ) = Single
+        .zip(
+            api.getProject(projectId),
+            getAllIssueNotePages(projectId, issueId, sort, orderBy),
+            BiFunction<Project, List<Note>, List<Note>> { project, notes ->
+                getMarkdownUrlResolvedNotes(notes, project)
+            }
+        )
+        .subscribeOn(schedulers.io())
+        .observeOn(schedulers.ui())
+
+    private fun getAllIssueNotePages(projectId: Long, issueId: Long, sort: Sort?, orderBy: OrderBy?) =
         Observable.range(1, Int.MAX_VALUE)
             .concatMap { page ->
-                api.getIssueNotes(projectId, issueId, sort, orderBy, page, maxPageSize)
+                api.getIssueNotes(projectId, issueId, sort, orderBy, page, 100)
                     .toObservable()
             }
             .takeWhile { notes -> notes.isNotEmpty() }
             .flatMapIterable { it }
             .toList()
+
+    private fun getMarkdownUrlResolvedNotes(notes: List<Note>, project: Project) =
+        ArrayList(notes).apply {
+            val iterator = listIterator()
+            while (iterator.hasNext()) {
+                val note = iterator.next()
+                val resolved = markDownUrlResolver.resolve(note.body, project)
+
+                if (resolved != note.body) {
+                    iterator.set(note.copy(body = resolved))
+                }
+            }
+        }
 }
