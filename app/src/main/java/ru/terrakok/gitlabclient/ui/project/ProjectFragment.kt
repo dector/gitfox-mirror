@@ -23,8 +23,8 @@ class ProjectFragment : BaseFragment(), ProjectInfoFragment.ProjectInfoToolbar {
     private val scopeName: String? by argument(ARG_SCOPE_NAME)
 
     private val infoTab by lazy { Screens.ProjectInfoContainer(scopeName!!) }
-    private val issuesTab by lazy { Screens.ProjectInfoContainer(scopeName!!) }
-    private val mrsTab by lazy { Screens.ProjectInfoContainer(scopeName!!) }
+    private val issuesTab by lazy { Screens.ProjectIssuesContainer(scopeName!!) }
+    private val mrsTab by lazy { Screens.ProjectMergeRequestsContainer(scopeName!!) }
 
     private val currentTabFragment: BaseFragment?
         get() = childFragmentManager.fragments.firstOrNull { !it.isHidden } as? BaseFragment
