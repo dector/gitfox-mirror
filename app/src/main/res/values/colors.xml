@@ -14,6 +14,8 @@
 
     <color name="silver">#6A8398</color>
     <color name="lightGrey">#f1f1f1</color>
+    <color name="grey">#757575</color>
+    <color name="grey_30">#4D757575</color>
 
     <color name="green">#5AC54F</color>
     <color name="lightGreen">#EEF9ED</color>

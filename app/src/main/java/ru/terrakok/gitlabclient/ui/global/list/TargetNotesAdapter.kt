@@ -8,8 +8,12 @@ class TargetNotesAdapter : ListDelegationAdapter<MutableList<Any>>() {
 
     init {
         items = mutableListOf()
-        delegatesManager.addDelegate(UserNoteAdapterDelegate({}))
-        delegatesManager.addDelegate(SystemNoteAdapterDelegate({}))
+        delegatesManager.addDelegate(UserNoteAdapterDelegate())
+        delegatesManager.addDelegate(SystemNoteAdapterDelegate())
+    }
+
+    override fun getItemId(position: Int): Long {
+        return (items[position] as NoteWithFormattedBody).note.id
     }
 
     fun setData(data: List<NoteWithFormattedBody>) {

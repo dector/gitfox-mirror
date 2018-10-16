@@ -6,6 +6,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.extension.argument
+import ru.terrakok.gitlabclient.extension.hideKeyboard
 import ru.terrakok.gitlabclient.extension.setLaunchScreen
 import ru.terrakok.gitlabclient.model.system.flow.AppRouter
 import ru.terrakok.gitlabclient.presentation.issue.IssueFlowPresenter
@@ -62,6 +63,7 @@ class IssueFlowFragment : FlowFragment(), MvpView {
 
 
     override fun onExit() {
+        activity?.hideKeyboard()
         presenter.onExit()
     }
 

@@ -223,4 +223,12 @@ interface GitlabApi {
         @Query("page") page: Int,
         @Query("per_page") pageSize: Int
     ): Single<List<Note>>
+
+    @FormUrlEncoded
+    @POST("$API_PATH/projects/{project_id}/issues/{issue_id}/notes")
+    fun createIssueNote(
+        @Path("project_id") projectId: Long,
+        @Path("issue_id") issueId: Long,
+        @Field("body") body: String
+    ): Single<Note>
 }

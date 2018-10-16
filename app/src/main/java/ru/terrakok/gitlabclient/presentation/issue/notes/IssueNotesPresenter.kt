@@ -41,9 +41,29 @@ class IssueNotesPresenter @Inject constructor(
             }
             .toList()
             .subscribe(
-                { viewState.showNotes(it) },
+                { viewState.showNotes(it, false) },
                 { errorHandler.proceed(it, { viewState.showMessage(it) }) }
             )
             .connect()
     }
+
+    fun onSendClicked(body: String) =
+        issueInteractor.createIssueNote(projectId, issueId, body)
+            .flatMap {
+                issueInteractor.getAllIssueNotes(projectId, issueId)
+                    .flattenAsObservable { it }
+                    .concatMap { note ->
+                        mdConverter.markdownToSpannable(note.body)
+                            .map { NoteWithFormattedBody(note, it) }
+                            .toObservable()
+                    }
+                    .toList()
+            }
+            .doOnSubscribe { viewState.showBlockingProgress(true) }
+            .doAfterTerminate { viewState.showBlockingProgress(false) }
+            .subscribe(
+                { viewState.showNotes(it, true) },
+                { errorHandler.proceed(it, { viewState.showMessage(it) }) }
+            )
+            .connect()
 }

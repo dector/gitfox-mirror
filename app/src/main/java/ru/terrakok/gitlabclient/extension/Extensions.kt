@@ -1,7 +1,9 @@
 package ru.terrakok.gitlabclient.extension
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
@@ -13,6 +15,7 @@ import android.support.v4.graphics.drawable.DrawableCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.webkit.URLUtil
 import android.widget.ImageView
 import android.widget.TextView
@@ -43,9 +46,17 @@ fun Navigator.setLaunchScreen(screenKey: String, data: Any? = null) {
 fun Context.color(colorRes: Int) = ContextCompat.getColor(this, colorRes)
 
 fun Context.getTintDrawable(drawableRes: Int, colorRes: Int): Drawable {
-    val wrapDrawable = DrawableCompat.wrap(ContextCompat.getDrawable(this, drawableRes)!!).mutate()
-    DrawableCompat.setTint(wrapDrawable, color(colorRes))
-    return wrapDrawable
+    val source = ContextCompat.getDrawable(this, drawableRes)!!.mutate()
+    val wrapped = DrawableCompat.wrap(source)
+    DrawableCompat.setTint(wrapped, color(colorRes))
+    return wrapped
+}
+
+fun Context.getTintDrawable(drawableRes: Int, colorResources: IntArray, states: Array<IntArray>): Drawable {
+    val source = ContextCompat.getDrawable(this, drawableRes)!!.mutate()
+    val wrapped = DrawableCompat.wrap(source)
+    DrawableCompat.setTintList(wrapped, ColorStateList(states, colorResources.map { color(it) }.toIntArray()))
+    return wrapped
 }
 
 fun TextView.setStartDrawable(drawable: Drawable) {
@@ -175,5 +186,12 @@ fun Fragment.showSnackMessage(message: String) {
         val messageTextView = snackbar.view.findViewById<TextView>(android.support.design.R.id.snackbar_text)
         messageTextView.setTextColor(Color.WHITE)
         snackbar.show()
+    }
+}
+
+fun Activity.hideKeyboard() {
+    currentFocus?.apply {
+        val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputManager.hideSoftInputFromWindow(windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
     }
 }

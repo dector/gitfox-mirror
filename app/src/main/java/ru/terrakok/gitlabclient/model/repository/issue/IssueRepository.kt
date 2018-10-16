@@ -198,4 +198,9 @@ class IssueRepository @Inject constructor(
                 }
             }
         }
+
+    fun createIssueNote(projectId: Long, issueId: Long, body: String) =
+        api.createIssueNote(projectId, issueId, body)
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
 }
