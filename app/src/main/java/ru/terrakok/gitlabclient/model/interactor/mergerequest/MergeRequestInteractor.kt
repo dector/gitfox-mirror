@@ -49,4 +49,10 @@ class MergeRequestInteractor @Inject constructor(
         projectId: Long,
         mergeRequestId: Long
     ) = mergeRequestRepository.getAllMergeRequestNotes(projectId, mergeRequestId, Sort.ASC, OrderBy.UPDATED_AT)
+
+    fun createMergeRequestNote(
+        projectId: Long,
+        issueId: Long,
+        body: String
+    ) = mergeRequestRepository.createMergeRequestNote(projectId, issueId, body)
 }

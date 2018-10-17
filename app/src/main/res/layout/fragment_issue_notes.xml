@@ -25,6 +25,7 @@
         android:layout_margin="16dp"
         android:src="@drawable/ic_arrow_down_24dp"
         android:visibility="gone"
+        app:fabSize="mini"
         app:layout_constraintBottom_toBottomOf="@id/recyclerView"
         app:layout_constraintEnd_toEndOf="@id/recyclerView"
         tools:visibility="visible" />

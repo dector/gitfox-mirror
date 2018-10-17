@@ -231,4 +231,12 @@ interface GitlabApi {
         @Path("issue_id") issueId: Long,
         @Field("body") body: String
     ): Single<Note>
+
+    @FormUrlEncoded
+    @POST("$API_PATH/projects/{project_id}/merge_requests/{merge_request_id}/notes")
+    fun createMergeRequestNote(
+        @Path("project_id") projectId: Long,
+        @Path("merge_request_id") mergeRequestId: Long,
+        @Field("body") body: String
+    ): Single<Note>
 }

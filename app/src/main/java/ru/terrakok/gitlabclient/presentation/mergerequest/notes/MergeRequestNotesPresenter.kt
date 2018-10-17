@@ -41,9 +41,29 @@ class MergeRequestNotesPresenter @Inject constructor(
             }
             .toList()
             .subscribe(
-                { viewState.showNotes(it) },
+                { viewState.showNotes(it, false) },
                 { errorHandler.proceed(it, { viewState.showMessage(it) }) }
             )
             .connect()
     }
+
+    fun onSendClicked(body: String) =
+        mrInteractor.createMergeRequestNote(projectId, mrId, body)
+            .flatMap {
+                mrInteractor.getAllMergeRequestNotes(projectId, mrId)
+                    .flattenAsObservable { it }
+                    .concatMap { note ->
+                        mdConverter.markdownToSpannable(note.body)
+                            .map { NoteWithFormattedBody(note, it) }
+                            .toObservable()
+                    }
+                    .toList()
+            }
+            .doOnSubscribe { viewState.showBlockingProgress(true) }
+            .doAfterTerminate { viewState.showBlockingProgress(false) }
+            .subscribe(
+                { viewState.showNotes(it, true) },
+                { errorHandler.proceed(it, { viewState.showMessage(it) }) }
+            )
+            .connect()
 }

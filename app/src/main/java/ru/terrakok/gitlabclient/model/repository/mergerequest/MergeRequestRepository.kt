@@ -205,6 +205,11 @@ class MergeRequestRepository @Inject constructor(
         return if (resolved != it.body) it.copy(body = resolved) else it
     }
 
+    fun createMergeRequestNote(projectId: Long, issueId: Long, body: String) =
+        api.createMergeRequestNote(projectId, issueId, body)
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
+
     companion object {
         // See GitLab documentation: https://docs.gitlab.com/ee/api/#pagination.
         private const val MAX_PAGE_SIZE = 100
