@@ -168,7 +168,7 @@ class MergeRequestRepository @Inject constructor(
             api.getProject(projectId),
             api.getMergeRequestNotes(projectId, mergeRequestId, sort, orderBy, page, pageSize),
             BiFunction<Project, List<Note>, List<Note>> { project, notes ->
-                getMarkdownUrlResolvedNotes(notes, project)
+                notes.map { resolveMarkDownUrl(it, project) }
             }
         )
         .subscribeOn(schedulers.io())
@@ -184,7 +184,7 @@ class MergeRequestRepository @Inject constructor(
             api.getProject(projectId),
             getAllMergeRequestNotePages(projectId, mergeRequestId, sort, orderBy),
             BiFunction<Project, List<Note>, List<Note>> { project, notes ->
-                getMarkdownUrlResolvedNotes(notes, project)
+                notes.map { resolveMarkDownUrl(it, project) }
             }
         )
         .subscribeOn(schedulers.io())
@@ -193,23 +193,20 @@ class MergeRequestRepository @Inject constructor(
     private fun getAllMergeRequestNotePages(projectId: Long, mergeRequestId: Long, sort: Sort?, orderBy: OrderBy?) =
         Observable.range(1, Int.MAX_VALUE)
             .concatMap { page ->
-                api.getMergeRequestNotes(projectId, mergeRequestId, sort, orderBy, page, 100)
+                api.getMergeRequestNotes(projectId, mergeRequestId, sort, orderBy, page, MAX_PAGE_SIZE)
                     .toObservable()
             }
             .takeWhile { notes -> notes.isNotEmpty() }
             .flatMapIterable { it }
             .toList()
 
-    private fun getMarkdownUrlResolvedNotes(notes: List<Note>, project: Project) =
-        ArrayList(notes).apply {
-            val iterator = listIterator()
-            while (iterator.hasNext()) {
-                val note = iterator.next()
-                val resolved = markDownUrlResolver.resolve(note.body, project)
+    private fun resolveMarkDownUrl(it: Note, project: Project): Note {
+        val resolved = markDownUrlResolver.resolve(it.body, project)
+        return if (resolved != it.body) it.copy(body = resolved) else it
+    }
 
-                if (resolved != note.body) {
-                    iterator.set(note.copy(body = resolved))
-                }
-            }
-        }
+    companion object {
+        // See GitLab documentation: https://docs.gitlab.com/ee/api/#pagination.
+        private const val MAX_PAGE_SIZE = 100
+    }
 }

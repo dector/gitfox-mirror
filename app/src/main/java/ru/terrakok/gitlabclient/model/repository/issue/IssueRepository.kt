@@ -154,7 +154,7 @@ class IssueRepository @Inject constructor(
             api.getProject(projectId),
             api.getIssueNotes(projectId, issueId, sort, orderBy, page, pageSize),
             BiFunction<Project, List<Note>, List<Note>> { project, notes ->
-                getMarkdownUrlResolvedNotes(notes, project)
+                notes.map { resolveMarkDownUrl(it, project) }
             }
         )
         .subscribeOn(schedulers.io())
@@ -170,7 +170,7 @@ class IssueRepository @Inject constructor(
             api.getProject(projectId),
             getAllIssueNotePages(projectId, issueId, sort, orderBy),
             BiFunction<Project, List<Note>, List<Note>> { project, notes ->
-                getMarkdownUrlResolvedNotes(notes, project)
+                notes.map { resolveMarkDownUrl(it, project) }
             }
         )
         .subscribeOn(schedulers.io())
@@ -179,28 +179,25 @@ class IssueRepository @Inject constructor(
     private fun getAllIssueNotePages(projectId: Long, issueId: Long, sort: Sort?, orderBy: OrderBy?) =
         Observable.range(1, Int.MAX_VALUE)
             .concatMap { page ->
-                api.getIssueNotes(projectId, issueId, sort, orderBy, page, 100)
+                api.getIssueNotes(projectId, issueId, sort, orderBy, page, MAX_PAGE_SIZE)
                     .toObservable()
             }
             .takeWhile { notes -> notes.isNotEmpty() }
             .flatMapIterable { it }
             .toList()
 
-    private fun getMarkdownUrlResolvedNotes(notes: List<Note>, project: Project) =
-        ArrayList(notes).apply {
-            val iterator = listIterator()
-            while (iterator.hasNext()) {
-                val note = iterator.next()
-                val resolved = markDownUrlResolver.resolve(note.body, project)
-
-                if (resolved != note.body) {
-                    iterator.set(note.copy(body = resolved))
-                }
-            }
-        }
+    private fun resolveMarkDownUrl(it: Note, project: Project): Note {
+        val resolved = markDownUrlResolver.resolve(it.body, project)
+        return if (resolved != it.body) it.copy(body = resolved) else it
+    }
 
     fun createIssueNote(projectId: Long, issueId: Long, body: String) =
         api.createIssueNote(projectId, issueId, body)
             .subscribeOn(schedulers.io())
             .observeOn(schedulers.ui())
+
+    companion object {
+        // See GitLab documentation: https://docs.gitlab.com/ee/api/#pagination.
+        private const val MAX_PAGE_SIZE = 100
+    }
 }
