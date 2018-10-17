@@ -69,8 +69,8 @@ class MyMergeRequestsContainerFragment : BaseFragment() {
 
     private inner class MyMergeRequestsPagesAdapter : FragmentPagerAdapter(childFragmentManager) {
         override fun getItem(position: Int) = when (position) {
-            0 -> Screens.createFragment(Screens.MY_MR_SCREEN, Pair(true, showOnlyOpened))
-            1 -> Screens.createFragment(Screens.MY_MR_SCREEN, Pair(false, showOnlyOpened))
+            0 -> Screens.MyMergeRequests(true, showOnlyOpened).fragment
+            1 -> Screens.MyMergeRequests(false, showOnlyOpened).fragment
             else -> null
         }
 

@@ -32,3 +32,6 @@ annotation class TodoListPendingState
 
 @Qualifier
 annotation class UserId
+
+@Qualifier
+annotation class CacheLifetime

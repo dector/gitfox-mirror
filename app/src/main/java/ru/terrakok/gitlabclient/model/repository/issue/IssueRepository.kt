@@ -105,7 +105,7 @@ class IssueRepository @Inject constructor(
         badges.add(TargetBadge.Icon(TargetBadgeIcon.DOWN_VOTES, issue.downvotes))
         issue.labels.forEach { label -> badges.add(TargetBadge.Text(label)) }
 
-        return TargetHeader(
+        return TargetHeader.Public(
             issue.author,
             TargetHeaderIcon.NONE,
             TargetHeaderTitle.Event(

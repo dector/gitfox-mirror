@@ -4,10 +4,10 @@ import android.os.Bundle
 import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.extension.argument
 import ru.terrakok.gitlabclient.extension.setLaunchScreen
-import ru.terrakok.gitlabclient.model.system.flow.AppRouter
 import ru.terrakok.gitlabclient.presentation.mergerequest.MergeRequestFlowPresenter
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
@@ -38,14 +38,14 @@ class MergeRequestFlowFragment : FlowFragment(), MvpView {
         initScope()
         super.onCreate(savedInstanceState)
         if (childFragmentManager.fragments.isEmpty()) {
-            navigator.setLaunchScreen(Screens.MR_SCREEN, null)
+            navigator.setLaunchScreen(Screens.MergeRequest)
         }
     }
 
     private fun initScope() {
         val scope = Toothpick.openScopes(DI.SERVER_SCOPE, DI.MERGE_REQUEST_FLOW_SCOPE)
         scope.installModules(
-            FlowNavigationModule(scope.getInstance(AppRouter::class.java)),
+            FlowNavigationModule(scope.getInstance(Router::class.java)),
             object : Module() {
                 init {
                     bind(PrimitiveWrapper::class.java)

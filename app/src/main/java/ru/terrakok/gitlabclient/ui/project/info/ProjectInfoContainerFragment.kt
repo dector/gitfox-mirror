@@ -44,9 +44,9 @@ class ProjectInfoContainerFragment : BaseFragment(), ProjectInfoFragment.Project
     }
 
     private inner class ProjectInfoPagesAdapter : FragmentPagerAdapter(childFragmentManager) {
-        override fun getItem(position: Int) = when (position) {
-            0 -> Screens.createFragment(Screens.PROJECT_INFO_SCREEN, scopeName)
-            1 -> Screens.createFragment(Screens.PROJECT_EVENTS_SCREEN, scopeName)
+        override fun getItem(position: Int): BaseFragment? = when (position) {
+            0 -> Screens.ProjectInfo(scopeName!!).fragment
+            1 -> Screens.ProjectEvents(scopeName!!).fragment
             else -> null
         }
 

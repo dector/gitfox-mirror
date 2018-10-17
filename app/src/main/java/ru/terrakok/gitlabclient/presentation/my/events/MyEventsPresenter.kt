@@ -1,16 +1,13 @@
 package ru.terrakok.gitlabclient.presentation.my.events
 
 import com.arellomobile.mvp.InjectViewState
+import io.reactivex.Observable
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.extension.openInfo
 import ru.terrakok.gitlabclient.model.interactor.event.EventInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
-import ru.terrakok.gitlabclient.presentation.global.BasePresenter
-import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
-import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
-import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
-import ru.terrakok.gitlabclient.presentation.global.Paginator
+import ru.terrakok.gitlabclient.presentation.global.*
 import javax.inject.Inject
 
 /**
@@ -36,9 +33,14 @@ class MyEventsPresenter @Inject constructor(
             eventInteractor.getEvents(it)
                 .flattenAsObservable { it }
                 .concatMap { item ->
-                    mdConverter.markdownToSpannable(item.body.toString())
-                        .map { md -> item.copy(body = md) }
-                        .toObservable()
+                    when (item) {
+                        is TargetHeader.Public -> {
+                            mdConverter.markdownToSpannable(item.body.toString())
+                                .map { md -> item.copy(body = md) }
+                                .toObservable()
+                        }
+                        is TargetHeader.Confidential -> Observable.just(item)
+                    }
                 }
                 .toList()
         },
@@ -78,8 +80,8 @@ class MyEventsPresenter @Inject constructor(
     )
 
     fun onMenuClick() = menuController.open()
-    fun onItemClick(item: TargetHeader) = item.openInfo(router)
-    fun onUserClick(userId: Long) = router.startFlow(Screens.USER_FLOW, userId)
+    fun onItemClick(item: TargetHeader.Public) = item.openInfo(router)
+    fun onUserClick(userId: Long) = router.startFlow(Screens.UserFlow(userId))
     fun refreshEvents() = paginator.refresh()
     fun loadNextEventsPage() = paginator.loadNewPage()
     fun onBackPressed() = router.exit()

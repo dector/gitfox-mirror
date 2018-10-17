@@ -119,7 +119,7 @@ class MergeRequestRepository @Inject constructor(
         badges.add(TargetBadge.Icon(TargetBadgeIcon.DOWN_VOTES, mr.downvotes))
         mr.labels.forEach { label -> badges.add(TargetBadge.Text(label)) }
 
-        return TargetHeader(
+        return TargetHeader.Public(
             mr.author,
             TargetHeaderIcon.NONE,
             TargetHeaderTitle.Event(

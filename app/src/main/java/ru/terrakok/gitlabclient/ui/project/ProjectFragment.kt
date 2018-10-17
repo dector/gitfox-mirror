@@ -3,6 +3,7 @@ package ru.terrakok.gitlabclient.ui.project
 import android.os.Bundle
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter
 import kotlinx.android.synthetic.main.fragment_project.*
+import ru.terrakok.cicerone.android.support.SupportAppScreen
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.extension.argument
@@ -20,6 +21,10 @@ import javax.inject.Inject
 class ProjectFragment : BaseFragment(), ProjectInfoFragment.ProjectInfoToolbar {
     override val layoutRes: Int = R.layout.fragment_project
     private val scopeName: String? by argument(ARG_SCOPE_NAME)
+
+    private val infoTab by lazy { Screens.ProjectInfoContainer(scopeName!!) }
+    private val issuesTab by lazy { Screens.ProjectIssuesContainer(scopeName!!) }
+    private val mrsTab by lazy { Screens.ProjectMergeRequestsContainer(scopeName!!) }
 
     private val currentTabFragment: BaseFragment?
         get() = childFragmentManager.fragments.firstOrNull { !it.isHidden } as? BaseFragment
@@ -57,26 +62,33 @@ class ProjectFragment : BaseFragment(), ProjectInfoFragment.ProjectInfoToolbar {
             setOnTabSelectedListener { position, wasSelected ->
                 if (!wasSelected) selectTab(
                     when (position) {
-                        0 -> Screens.PROJECT_INFO_CONTAINER_SCREEN
-                        1 -> Screens.PROJECT_ISSUES_CONTAINER_SCREEN
-                        else -> Screens.PROJECT_MR_CONTAINER_SCREEN
+                        0 -> infoTab
+                        1 -> issuesTab
+                        else -> mrsTab
                     }
                 )
                 true
             }
         }
 
-        selectTab(currentTabFragment?.tag ?: Screens.PROJECT_INFO_CONTAINER_SCREEN)
+        selectTab(
+            when (currentTabFragment?.tag) {
+                infoTab.screenKey -> infoTab
+                issuesTab.screenKey -> issuesTab
+                mrsTab.screenKey -> mrsTab
+                else -> infoTab
+            }
+        )
     }
 
-    private fun selectTab(tab: String) {
+    private fun selectTab(tab: SupportAppScreen) {
         val currentFragment = currentTabFragment
-        val newFragment = childFragmentManager.findFragmentByTag(tab)
+        val newFragment = childFragmentManager.findFragmentByTag(tab.screenKey)
 
         if (currentFragment != null && newFragment != null && currentFragment == newFragment) return
 
         childFragmentManager.beginTransaction().apply {
-            if (newFragment == null) add(R.id.projectMainContainer, createTabFragment(tab), tab)
+            if (newFragment == null) add(R.id.projectMainContainer, tab.fragment, tab.screenKey)
 
             currentFragment?.let {
                 hide(it)
@@ -88,9 +100,6 @@ class ProjectFragment : BaseFragment(), ProjectInfoFragment.ProjectInfoToolbar {
             }
         }.commitNow()
     }
-
-    private fun createTabFragment(tab: String) =
-        Screens.createFragment(tab, scopeName) ?: throw RuntimeException("Unknown tab $tab")
 
     override fun onBackPressed() {
         super.onBackPressed()
