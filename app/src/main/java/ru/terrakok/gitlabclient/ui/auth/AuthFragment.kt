@@ -7,6 +7,7 @@ import android.support.annotation.RequiresApi
 import android.webkit.*
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.fragment_auth.*
 import kotlinx.android.synthetic.main.layout_zero.*
 import ru.terrakok.gitlabclient.BuildConfig
@@ -64,7 +65,7 @@ class AuthFragment : BaseFragment(), AuthView, CustomServerAuthFragment.OnClickL
             userAgentString = BuildConfig.WEB_AUTH_USER_AGENT
         }
 
-        webView.setWebViewClient(object : WebViewClient() {
+        webView.webViewClient = object : WebViewClient() {
 
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 showProgressDialog(true)
@@ -94,14 +95,37 @@ class AuthFragment : BaseFragment(), AuthView, CustomServerAuthFragment.OnClickL
                 super.onReceivedError(view, request, error)
                 showEmptyView(true)
             }
-        })
+        }
 
         zeroViewHolder = ZeroViewHolder(zeroLayout, { presenter.refresh() })
     }
 
     private fun showEmptyView(show: Boolean) {
         zeroViewHolder?.apply { if (show) showEmptyError() else hide() }
-        webView.visible(!show)
+        if (webView != null) {
+            webView.visible(!show)
+        } else {
+            // There is no clear reason about crash (WebView is null), so log it and analyse.
+            activity?.let {
+                val params = Bundle()
+                params.putBoolean("showEmptyView", show)
+                params.putBoolean("isFragmentAdded", isAdded)
+                params.putBoolean("isFragmentVisible", isVisible)
+                params.putBoolean("isFragmentStateSaved", isStateSaved)
+                params.putBoolean("isFragmentDetached", isDetached)
+                FirebaseAnalytics.getInstance(it).logEvent("auth_fragment_webView_null", params)
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        webView.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        webView.onPause()
     }
 
     override fun loadUrl(url: String) {
