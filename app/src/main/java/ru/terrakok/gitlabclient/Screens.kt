@@ -16,10 +16,7 @@ import ru.terrakok.gitlabclient.ui.issue.IssueInfoFragment
 import ru.terrakok.gitlabclient.ui.issue.IssueNotesFragment
 import ru.terrakok.gitlabclient.ui.libraries.LibrariesFragment
 import ru.terrakok.gitlabclient.ui.main.MainFlowFragment
-import ru.terrakok.gitlabclient.ui.mergerequest.MergeRequestFlowFragment
-import ru.terrakok.gitlabclient.ui.mergerequest.MergeRequestFragment
-import ru.terrakok.gitlabclient.ui.mergerequest.MergeRequestInfoFragment
-import ru.terrakok.gitlabclient.ui.mergerequest.MergeRequestNotesFragment
+import ru.terrakok.gitlabclient.ui.mergerequest.*
 import ru.terrakok.gitlabclient.ui.my.activity.MyEventsFragment
 import ru.terrakok.gitlabclient.ui.my.issues.MyIssuesContainerFragment
 import ru.terrakok.gitlabclient.ui.my.issues.MyIssuesFragment
@@ -183,8 +180,8 @@ object Screens {
     }
 
     data class MergeRequestFlow(
-        val mrId: Long,
-        val projectId: Long
+        val projectId: Long,
+        val mrId: Long
     ) : SupportAppScreen() {
         override fun getFragment() = MergeRequestFlowFragment.create(projectId, mrId)
     }
@@ -197,13 +194,17 @@ object Screens {
         override fun getFragment() = MergeRequestInfoFragment()
     }
 
+    object MergeRequestCommits : SupportAppScreen() {
+        override fun getFragment() = MergeRequestCommitsFragment()
+    }
+
     object MergeRequestNotes : SupportAppScreen() {
         override fun getFragment() = MergeRequestNotesFragment()
     }
 
     data class IssueFlow(
-        val issueId: Long,
-        val projectId: Long
+        val projectId: Long,
+        val issueId: Long
     ) : SupportAppScreen() {
         override fun getFragment() = IssueFlowFragment.create(projectId, issueId)
     }

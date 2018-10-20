@@ -4,10 +4,8 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import org.threeten.bp.LocalDateTime
-import ru.terrakok.gitlabclient.entity.Note
-import ru.terrakok.gitlabclient.entity.OrderBy
-import ru.terrakok.gitlabclient.entity.Project
-import ru.terrakok.gitlabclient.entity.Sort
+import ru.terrakok.gitlabclient.entity.*
+import ru.terrakok.gitlabclient.entity.app.CommitWithAvatarUrl
 import ru.terrakok.gitlabclient.entity.app.target.*
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
@@ -183,4 +181,41 @@ class MergeRequestRepository @Inject constructor(
         )
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
+
+    fun getMergeRequestCommits(
+        projectId: Long,
+        mergeRequestId: Long,
+        page: Int,
+        pageSize: Int = defaultPageSize
+    ) = Single
+        .zip(
+            getAllMergeRequestParticipants(projectId, mergeRequestId),
+            api.getMergeRequestCommits(projectId, mergeRequestId, page, pageSize),
+            BiFunction<List<Author>, List<Commit>, List<CommitWithAvatarUrl>> { participants, commits ->
+                commits.map { commit ->
+                    CommitWithAvatarUrl(
+                        commit,
+                        participants.find { it.name == commit.authorName || it.username == commit.authorName }?.avatarUrl
+                    )
+                }
+            }
+        )
+
+        .subscribeOn(schedulers.io())
+        .observeOn(schedulers.ui())
+
+    private fun getAllMergeRequestParticipants(projectId: Long, mergeRequestId: Long) =
+        Observable.range(1, Int.MAX_VALUE)
+            .concatMap { page ->
+                api.getMergeRequestParticipiants(projectId, mergeRequestId, page, MAX_PAGE_SIZE)
+                    .toObservable()
+            }
+            .takeWhile { participants -> participants.isNotEmpty() }
+            .flatMapIterable { it }
+            .toList()
+
+    companion object {
+        // See GitLab documentation: https://docs.gitlab.com/ee/api/#pagination.
+        private const val MAX_PAGE_SIZE = 100
+    }
 }

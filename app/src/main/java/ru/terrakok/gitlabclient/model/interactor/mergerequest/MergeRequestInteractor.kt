@@ -44,4 +44,10 @@ class MergeRequestInteractor @Inject constructor(
         mergeRequestId: Long,
         page: Int
     ) = mergeRequestRepository.getMergeRequestNotes(projectId, mergeRequestId, Sort.ASC, OrderBy.UPDATED_AT, page)
+
+    fun getMergeRequestCommits(
+        projectId: Long,
+        mergeRequestId: Long,
+        page: Int
+    ) = mergeRequestRepository.getMergeRequestCommits(projectId, mergeRequestId, page)
 }

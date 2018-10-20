@@ -47,15 +47,17 @@ class MergeRequestFragment : BaseFragment(), MergeRequestInfoFragment.MergeReque
     private inner class MergeRequestPagesAdapter : FragmentPagerAdapter(childFragmentManager) {
         override fun getItem(position: Int): BaseFragment? = when (position) {
             0 -> Screens.MergeRequestInfo.fragment
-            1 -> Screens.MergeRequestNotes.fragment
+            1 -> Screens.MergeRequestCommits.fragment
+            2 -> Screens.MergeRequestNotes.fragment
             else -> null
         }
 
-        override fun getCount() = 2
+        override fun getCount() = 3
 
         override fun getPageTitle(position: Int) = when (position) {
             0 -> getString(R.string.merge_request_info_tab)
-            1 -> getString(R.string.merge_request_discussion_tab)
+            1 -> getString(R.string.merge_request_commits_tab)
+            2 -> getString(R.string.merge_request_discussion_tab)
             else -> null
         }
     }
