@@ -3,6 +3,7 @@ package ru.terrakok.gitlabclient.toothpick.module
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import ru.terrakok.gitlabclient.BuildConfig
+import ru.terrakok.gitlabclient.markwonx.label.LabelSpanConfig
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.model.interactor.auth.AuthInteractor
@@ -25,6 +26,7 @@ import ru.terrakok.gitlabclient.model.repository.user.UserRepository
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.toothpick.provider.ApiProvider
 import ru.terrakok.gitlabclient.toothpick.provider.GsonProvider
+import ru.terrakok.gitlabclient.toothpick.provider.LabelSpanConfigProvider
 import ru.terrakok.gitlabclient.toothpick.provider.OkHttpClientProvider
 import ru.terrakok.gitlabclient.toothpick.qualifier.ServerPath
 import toothpick.config.Module
@@ -38,6 +40,7 @@ class ServerModule(serverUrl: String) : Module() {
         bind(String::class.java).withName(ServerPath::class.java).toInstance(serverUrl)
         bind(Gson::class.java).toProvider(GsonProvider::class.java).providesSingletonInScope()
         bind(OkHttpClient::class.java).toProvider(OkHttpClientProvider::class.java).providesSingletonInScope()
+        bind(LabelSpanConfig::class.java).toProvider(LabelSpanConfigProvider::class.java).providesSingletonInScope()
         bind(GitlabApi::class.java).toProvider(ApiProvider::class.java).providesSingletonInScope()
         bind(MarkDownUrlResolver::class.java)
 

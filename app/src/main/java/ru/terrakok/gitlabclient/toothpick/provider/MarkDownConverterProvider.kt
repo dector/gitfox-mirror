@@ -18,10 +18,7 @@ import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Label
 import ru.terrakok.gitlabclient.extension.color
 import ru.terrakok.gitlabclient.markwonx.*
-import ru.terrakok.gitlabclient.markwonx.label.LabelDecorator
-import ru.terrakok.gitlabclient.markwonx.label.LabelDescription
-import ru.terrakok.gitlabclient.markwonx.label.LabelExtensionProcessor
-import ru.terrakok.gitlabclient.markwonx.label.LabelVisitor
+import ru.terrakok.gitlabclient.markwonx.label.*
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultServerPath
@@ -35,6 +32,7 @@ class MarkDownConverterProvider @Inject constructor(
     private val context: Context,
     private val httpClient: OkHttpClient,
     private val schedulers: SchedulersProvider,
+    private val labelSpanConfig: LabelSpanConfig,
     @DefaultServerPath private val defaultServerPath: String
 ) {
 
@@ -131,6 +129,7 @@ class MarkDownConverterProvider @Inject constructor(
         spannableBuilder,
         LabelVisitor(
             spannableConfig,
+            labelSpanConfig,
             spannableBuilder
         )
     )
