@@ -151,6 +151,9 @@
     <!--Issue Info screen-->
     <string name="issue_info_subtitle" formatted="false">%s by %s %s</string>
 
+    <!--Issue Discussion screen-->
+    <string name="issue_discussion_note_hint">Write a comment</string>
+
     <!--Project info screen-->
     <string name="menu_project_info">Info</string>
     <string name="menu_project_issue">Issues</string>

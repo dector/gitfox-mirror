@@ -12,12 +12,9 @@ import ru.terrakok.gitlabclient.presentation.global.NoteWithFormattedBody
 @StateStrategyType(AddToEndSingleStrategy::class)
 interface MergeRequestNotesView : MvpView {
 
-    fun showRefreshProgress(show: Boolean)
     fun showEmptyProgress(show: Boolean)
-    fun showPageProgress(show: Boolean)
-    fun showEmptyView(show: Boolean)
-    fun showEmptyError(show: Boolean, message: String?)
-    fun showNotes(show: Boolean, notes: List<NoteWithFormattedBody>)
+    fun showNotes(notes: List<NoteWithFormattedBody>, scrollToEnd: Boolean)
+    fun showBlockingProgress(show: Boolean)
 
     @StateStrategyType(OneExecutionStateStrategy::class)
     fun showMessage(message: String)

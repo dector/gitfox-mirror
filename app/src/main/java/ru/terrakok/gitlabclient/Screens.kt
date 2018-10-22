@@ -183,8 +183,8 @@ object Screens {
     }
 
     data class MergeRequestFlow(
-        val mrId: Long,
-        val projectId: Long
+        val projectId: Long,
+        val mrId: Long
     ) : SupportAppScreen() {
         override fun getFragment() = MergeRequestFlowFragment.create(projectId, mrId)
     }
@@ -202,8 +202,8 @@ object Screens {
     }
 
     data class IssueFlow(
-        val issueId: Long,
-        val projectId: Long
+        val projectId: Long,
+        val issueId: Long
     ) : SupportAppScreen() {
         override fun getFragment() = IssueFlowFragment.create(projectId, issueId)
     }
