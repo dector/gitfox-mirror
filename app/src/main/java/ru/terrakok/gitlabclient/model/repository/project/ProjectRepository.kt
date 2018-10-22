@@ -1,5 +1,6 @@
 package ru.terrakok.gitlabclient.model.repository.project
 
+import io.reactivex.Observable
 import io.reactivex.Single
 import ru.terrakok.gitlabclient.entity.Label
 import ru.terrakok.gitlabclient.entity.OrderBy
@@ -20,6 +21,7 @@ class ProjectRepository @Inject constructor(
     @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
+    private val projectLabels = mutableMapOf<Long, Observable<List<Label>>>()
 
     fun getProjectsList(
         archived: Boolean? = null,
@@ -78,10 +80,15 @@ class ProjectRepository @Inject constructor(
     // Otherwise there will be too much requests per each project.
     // For example, in the lists.
     fun getProjectLabels(projectId: Long): Single<List<Label>> {
-        return api
-            .getProjectLabels(projectId)
-            .subscribeOn(schedulers.io())
-            .observeOn(schedulers.ui())
+        return projectLabels.getOrPut(projectId) {
+            api
+                .getProjectLabels(projectId)
+                .subscribeOn(schedulers.io())
+                .observeOn(schedulers.ui())
+                .toObservable()
+                .cache()
+                .share()
+        }.singleOrError()
     }
 
 
