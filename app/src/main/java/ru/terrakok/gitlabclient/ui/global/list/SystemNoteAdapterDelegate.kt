@@ -14,9 +14,7 @@ import ru.terrakok.gitlabclient.presentation.global.NoteWithFormattedBody
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 18.06.17.
  */
-class SystemNoteAdapterDelegate(
-    private val clickListener: (Note) -> Unit
-) : AdapterDelegate<MutableList<Any>>() {
+class SystemNoteAdapterDelegate : AdapterDelegate<MutableList<Any>>() {
 
     override fun isForViewType(items: MutableList<Any>, position: Int) =
         with(items[position]) { this is NoteWithFormattedBody && this.note.isSystem }
@@ -33,10 +31,6 @@ class SystemNoteAdapterDelegate(
 
     private inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private lateinit var note: Note
-
-        init {
-            view.setOnClickListener { clickListener(note) }
-        }
 
         fun bind(data: NoteWithFormattedBody) {
             this.note = data.note

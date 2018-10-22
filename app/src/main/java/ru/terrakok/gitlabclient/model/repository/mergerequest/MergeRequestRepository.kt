@@ -166,21 +166,47 @@ class MergeRequestRepository @Inject constructor(
             api.getProject(projectId),
             api.getMergeRequestNotes(projectId, mergeRequestId, sort, orderBy, page, pageSize),
             BiFunction<Project, List<Note>, List<Note>> { project, notes ->
-                ArrayList(notes).apply {
-                    val iterator = listIterator()
-                    while (iterator.hasNext()) {
-                        val note = iterator.next()
-                        val resolved = markDownUrlResolver.resolve(note.body, project)
-
-                        if (resolved != note.body) {
-                            iterator.set(note.copy(body = resolved))
-                        }
-                    }
-                }
+                notes.map { resolveMarkDownUrl(it, project) }
             }
         )
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
+
+    fun getAllMergeRequestNotes(
+        projectId: Long,
+        mergeRequestId: Long,
+        sort: Sort?,
+        orderBy: OrderBy?
+    ) = Single
+        .zip(
+            api.getProject(projectId),
+            getAllMergeRequestNotePages(projectId, mergeRequestId, sort, orderBy),
+            BiFunction<Project, List<Note>, List<Note>> { project, notes ->
+                notes.map { resolveMarkDownUrl(it, project) }
+            }
+        )
+        .subscribeOn(schedulers.io())
+        .observeOn(schedulers.ui())
+
+    private fun getAllMergeRequestNotePages(projectId: Long, mergeRequestId: Long, sort: Sort?, orderBy: OrderBy?) =
+        Observable.range(1, Int.MAX_VALUE)
+            .concatMap { page ->
+                api.getMergeRequestNotes(projectId, mergeRequestId, sort, orderBy, page, MAX_PAGE_SIZE)
+                    .toObservable()
+            }
+            .takeWhile { notes -> notes.isNotEmpty() }
+            .flatMapIterable { it }
+            .toList()
+
+    private fun resolveMarkDownUrl(it: Note, project: Project): Note {
+        val resolved = markDownUrlResolver.resolve(it.body, project)
+        return if (resolved != it.body) it.copy(body = resolved) else it
+    }
+
+    fun createMergeRequestNote(projectId: Long, issueId: Long, body: String) =
+        api.createMergeRequestNote(projectId, issueId, body)
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
 
     fun getMergeRequestCommits(
         projectId: Long,
@@ -207,7 +233,7 @@ class MergeRequestRepository @Inject constructor(
     private fun getAllMergeRequestParticipants(projectId: Long, mergeRequestId: Long) =
         Observable.range(1, Int.MAX_VALUE)
             .concatMap { page ->
-                api.getMergeRequestParticipiants(projectId, mergeRequestId, page, MAX_PAGE_SIZE)
+                api.getMergeRequestParticipants(projectId, mergeRequestId, page, MAX_PAGE_SIZE)
                     .toObservable()
             }
             .takeWhile { participants -> participants.isNotEmpty() }
