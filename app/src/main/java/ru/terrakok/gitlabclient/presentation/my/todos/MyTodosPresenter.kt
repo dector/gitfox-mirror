@@ -8,8 +8,8 @@ import ru.terrakok.gitlabclient.model.interactor.todo.TodoListInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
-import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.presentation.global.Paginator
+import ru.terrakok.gitlabclient.presentation.global.ProjectMarkDownConverterProvider
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.TodoListPendingState
 import javax.inject.Inject
@@ -21,7 +21,7 @@ import javax.inject.Inject
 class MyTodosPresenter @Inject constructor(
     @TodoListPendingState private val pendingStateWrapper: PrimitiveWrapper<Boolean>,
     private val todoListInteractor: TodoListInteractor,
-    private val mdConverter: MarkDownConverter,
+    private val mdConverterProvider: ProjectMarkDownConverterProvider,
     private val errorHandler: ErrorHandler,
     private val router: FlowRouter
 ) : BasePresenter<MyTodoListView>() {
@@ -39,8 +39,13 @@ class MyTodosPresenter @Inject constructor(
             todoListInteractor.getMyTodos(isPending, it)
                 .flattenAsObservable { it }
                 .concatMap { item ->
-                    mdConverter.markdownToSpannable(item.body.toString())
-                        .map { md -> item.copy(body = md) }
+                    mdConverterProvider
+                        .getMarkdownConverter(item.projectId)
+                        .flatMap { converter ->
+                            converter
+                                .markdownToSpannable(item.body.toString())
+                                .map { md -> item.copy(body = md) }
+                        }
                         .toObservable()
                 }
                 .toList()

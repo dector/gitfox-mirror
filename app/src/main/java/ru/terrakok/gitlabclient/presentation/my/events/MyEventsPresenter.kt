@@ -6,11 +6,7 @@ import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.extension.openInfo
 import ru.terrakok.gitlabclient.model.interactor.event.EventInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
-import ru.terrakok.gitlabclient.presentation.global.BasePresenter
-import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
-import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
-import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
-import ru.terrakok.gitlabclient.presentation.global.Paginator
+import ru.terrakok.gitlabclient.presentation.global.*
 import javax.inject.Inject
 
 /**
@@ -19,7 +15,7 @@ import javax.inject.Inject
 @InjectViewState
 class MyEventsPresenter @Inject constructor(
     private val eventInteractor: EventInteractor,
-    private val mdConverter: MarkDownConverter,
+    private val mdConverterProvider: ProjectMarkDownConverterProvider,
     private val menuController: GlobalMenuController,
     private val errorHandler: ErrorHandler,
     private val router: FlowRouter
@@ -36,8 +32,13 @@ class MyEventsPresenter @Inject constructor(
             eventInteractor.getEvents(it)
                 .flattenAsObservable { it }
                 .concatMap { item ->
-                    mdConverter.markdownToSpannable(item.body.toString())
-                        .map { md -> item.copy(body = md) }
+                    mdConverterProvider
+                        .getMarkdownConverter(item.projectId)
+                        .flatMap { converter ->
+                            converter
+                                .markdownToSpannable(item.body.toString())
+                                .map { md -> item.copy(body = md) }
+                        }
                         .toObservable()
                 }
                 .toList()

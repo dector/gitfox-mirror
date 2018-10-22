@@ -15,9 +15,11 @@ import ru.noties.markwon.renderer.ImageSizeResolver
 import ru.noties.markwon.spans.SpannableTheme
 import ru.noties.markwon.tasklist.TaskListExtension
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.entity.Label
 import ru.terrakok.gitlabclient.extension.color
 import ru.terrakok.gitlabclient.markwonx.*
 import ru.terrakok.gitlabclient.markwonx.label.LabelDecorator
+import ru.terrakok.gitlabclient.markwonx.label.LabelDescription
 import ru.terrakok.gitlabclient.markwonx.label.LabelExtensionProcessor
 import ru.terrakok.gitlabclient.markwonx.label.LabelVisitor
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
@@ -25,7 +27,6 @@ import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultServerPath
 import java.util.concurrent.Executors
 import javax.inject.Inject
-import javax.inject.Provider
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 28.02.18.
@@ -35,7 +36,7 @@ class MarkDownConverterProvider @Inject constructor(
     private val httpClient: OkHttpClient,
     private val schedulers: SchedulersProvider,
     @DefaultServerPath private val defaultServerPath: String
-) : Provider<MarkDownConverter> {
+) {
 
     private val spannableTheme
         get() = SpannableTheme
@@ -87,13 +88,24 @@ class MarkDownConverterProvider @Inject constructor(
             .imageSizeResolver(imageSizeResolver)
             .build()
 
-    fun getMarkdownDecorator(): MarkdownDecorator {
+    fun getMarkdownDecorator(labels: List<Label>): MarkdownDecorator {
         return CompositeMarkdownDecorator(
-            LabelDecorator()
+            LabelDecorator(
+                labels.flatMap {
+                    listOf(it.id.toString(), it.name)
+                }
+            )
         )
     }
 
-    fun getParser(): Parser {
+    fun getParser(labels: List<Label>): Parser {
+        val labelDescriptions = labels.map {
+            LabelDescription(
+                id = it.id,
+                name = it.name,
+                color = it.color
+            )
+        }
         return with(Parser.Builder()) {
             extensions(
                 listOf(
@@ -106,7 +118,7 @@ class MarkDownConverterProvider @Inject constructor(
             customDelimiterProcessor(
                 GitlabExtensionsDelimiterProcessor(
                     mapOf(
-                        GitlabMarkdownExtension.LABEL to LabelExtensionProcessor()
+                        GitlabMarkdownExtension.LABEL to LabelExtensionProcessor(labelDescriptions)
                     )
                 )
             )
@@ -123,10 +135,10 @@ class MarkDownConverterProvider @Inject constructor(
         )
     )
 
-    override fun get() = MarkDownConverter(
+    fun get(labels: List<Label>) = MarkDownConverter(
         spannableConfig,
-        getParser(),
-        getMarkdownDecorator(),
+        getParser(labels),
+        getMarkdownDecorator(labels),
         { builder -> getCustomVisitor(builder) },
         schedulers
     )

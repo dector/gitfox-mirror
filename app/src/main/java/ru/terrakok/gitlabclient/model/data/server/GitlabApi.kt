@@ -210,4 +210,11 @@ interface GitlabApi {
         @Query("page") page: Int,
         @Query("per_page") pageSize: Int
     ): Single<List<Note>>
+
+
+    @GET("$API_PATH/projects/{project_id}/labels")
+    fun getProjectLabels(
+        @Path("project_id") projectId: Long
+    ): Single<List<Label>>
+
 }

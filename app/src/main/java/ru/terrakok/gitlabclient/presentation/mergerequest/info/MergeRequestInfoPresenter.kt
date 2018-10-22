@@ -9,7 +9,7 @@ import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestIntera
 import ru.terrakok.gitlabclient.model.interactor.project.ProjectInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
-import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
+import ru.terrakok.gitlabclient.presentation.global.ProjectMarkDownConverterProvider
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.MergeRequestId
 import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
@@ -26,7 +26,7 @@ class MergeRequestInfoPresenter @Inject constructor(
     @MergeRequestId mrIdWrapper: PrimitiveWrapper<Long>,
     private val mrInteractor: MergeRequestInteractor,
     private val projectInteractor: ProjectInteractor,
-    private val mdConverter: MarkDownConverter,
+    private val mdConverterProvider: ProjectMarkDownConverterProvider,
     private val errorHandler: ErrorHandler
 ) : BasePresenter<MergeRequestInfoView>() {
 
@@ -41,9 +41,13 @@ class MergeRequestInfoPresenter @Inject constructor(
                 mrInteractor
                     .getMergeRequest(projectId, mrId)
                     .flatMap { mr ->
-                        mdConverter
-                            .markdownToSpannable(mr.description ?: "")
-                            .map { Pair(mr, it) }
+                        mdConverterProvider
+                            .getMarkdownConverter(projectId)
+                            .flatMap { converter ->
+                                converter
+                                    .markdownToSpannable(mr.description ?: "")
+                                    .map { Pair(mr, it) }
+                            }
                     },
                 projectInteractor.getProject(projectId),
                 MergeRequestLinker { (mr, html), project -> MergeRequestInfoView.MergeRequestInfo(mr, project, html) }

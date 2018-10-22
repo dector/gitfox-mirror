@@ -5,7 +5,7 @@ import org.commonmark.node.Delimited
 import ru.terrakok.gitlabclient.markwonx.GitlabExtensionsDelimiterProcessor
 
 data class LabelNode(
-    val label: String
+    val label: LabelDescription
 ) : CustomNode(), Delimited {
     override fun getOpeningDelimiter(): String = GitlabExtensionsDelimiterProcessor.DELIMITER_STRING
 

@@ -14,8 +14,8 @@ import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.event.EventTarget
 import ru.terrakok.gitlabclient.entity.event.EventTargetType
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
-import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
+import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultPageSize
 import javax.inject.Inject
@@ -93,7 +93,8 @@ class EventRepository @Inject constructor(
             targetData.target,
             targetData.id,
             getTargetInternal(event),
-            badges
+            badges,
+            project?.id
         )
     }
 

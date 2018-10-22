@@ -8,15 +8,15 @@ import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestIntera
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
-import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.presentation.global.Paginator
+import ru.terrakok.gitlabclient.presentation.global.ProjectMarkDownConverterProvider
 import javax.inject.Inject
 
 @InjectViewState
 class MyMergeRequestsPresenter @Inject constructor(
     initFilter: Filter,
     private val interactor: MergeRequestInteractor,
-    private val mdConverter: MarkDownConverter,
+    private val mdConverterProvider: ProjectMarkDownConverterProvider,
     private val errorHandler: ErrorHandler,
     private val router: FlowRouter
 ) : BasePresenter<MyMergeRequestListView>() {
@@ -35,8 +35,13 @@ class MyMergeRequestsPresenter @Inject constructor(
             interactor.getMyMergeRequests(filter.createdByMe, filter.onlyOpened, it)
                 .flattenAsObservable { it }
                 .concatMap { item ->
-                    mdConverter.markdownToSpannable(item.body.toString())
-                        .map { md -> item.copy(body = md) }
+                    mdConverterProvider
+                        .getMarkdownConverter(item.projectId)
+                        .flatMap { converter ->
+                            converter
+                                .markdownToSpannable(item.body.toString())
+                                .map { md -> item.copy(body = md) }
+                        }
                         .toObservable()
                 }
                 .toList()

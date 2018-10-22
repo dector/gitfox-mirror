@@ -16,7 +16,7 @@ class MergeRequestNotesPresenter @Inject constructor(
     @ProjectId projectIdWrapper: PrimitiveWrapper<Long>,
     @MergeRequestId mrIdWrapper: PrimitiveWrapper<Long>,
     private val mrInteractor: MergeRequestInteractor,
-    private val mdConverter: MarkDownConverter,
+    private val mdConverterProvider: ProjectMarkDownConverterProvider,
     private val errorHandler: ErrorHandler
 ) : BasePresenter<MergeRequestNotesView>() {
 
@@ -34,8 +34,13 @@ class MergeRequestNotesPresenter @Inject constructor(
             mrInteractor.getMergeRequestNotes(projectId, mrId, page)
                 .flattenAsObservable { it }
                 .concatMap { note ->
-                    mdConverter.markdownToSpannable(note.body)
-                        .map { NoteWithFormattedBody(note, it) }
+                    mdConverterProvider
+                        .getMarkdownConverter(projectId)
+                        .flatMap { converter ->
+                            converter
+                                .markdownToSpannable(note.body)
+                                .map { NoteWithFormattedBody(note, it) }
+                        }
                         .toObservable()
                 }
                 .toList()

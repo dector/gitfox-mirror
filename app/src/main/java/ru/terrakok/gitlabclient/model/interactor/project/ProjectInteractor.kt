@@ -59,6 +59,7 @@ class ProjectInteractor @Inject constructor(
             .map { file -> base64Tools.decode(file.content) }
             .observeOn(schedulers.ui())
 
+    fun getProjectLabels(projectId: Long) = projectRepository.getProjectLabels(projectId)
 
     class ReadmeNotFound : Exception()
 }

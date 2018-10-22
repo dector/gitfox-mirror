@@ -11,7 +11,7 @@ class LabelDecoratorTest {
 
     @Before
     fun setUp() {
-        decorator = LabelDecorator()
+        decorator = LabelDecorator(listOf(SINGLE_NAME, SINGLE_CYRILLIC_NAME, MULTIPLE_NAME, ID_ONLY))
     }
 
     fun assertDecorated(labelType: LabelType, source: String, name: String) {

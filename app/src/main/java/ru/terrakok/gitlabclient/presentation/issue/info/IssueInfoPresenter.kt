@@ -9,7 +9,7 @@ import ru.terrakok.gitlabclient.model.interactor.issue.IssueInteractor
 import ru.terrakok.gitlabclient.model.interactor.project.ProjectInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
-import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
+import ru.terrakok.gitlabclient.presentation.global.ProjectMarkDownConverterProvider
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.IssueId
 import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
@@ -26,7 +26,7 @@ class IssueInfoPresenter @Inject constructor(
     @IssueId private val issueIdWrapper: PrimitiveWrapper<Long>,
     private val issueInteractor: IssueInteractor,
     private val projectInteractor: ProjectInteractor,
-    private val mdConverter: MarkDownConverter,
+    private val mdConverterProvider: ProjectMarkDownConverterProvider,
     private val errorHandler: ErrorHandler
 ) : BasePresenter<IssueInfoView>() {
 
@@ -41,9 +41,13 @@ class IssueInfoPresenter @Inject constructor(
                 issueInteractor
                     .getIssue(projectId, issueId)
                     .flatMap { issue ->
-                        mdConverter
-                            .markdownToSpannable(issue.description ?: "")
-                            .map { Pair(issue, it) }
+                        mdConverterProvider
+                            .getMarkdownConverter(issue.projectId)
+                            .flatMap { converter ->
+                                converter
+                                    .markdownToSpannable(issue.description ?: "")
+                                    .map { issue to it }
+                            }
                     },
                 projectInteractor.getProject(projectId),
                 IssueLinker { (issue, html), project -> IssueInfoView.IssueInfo(issue, project, html) }

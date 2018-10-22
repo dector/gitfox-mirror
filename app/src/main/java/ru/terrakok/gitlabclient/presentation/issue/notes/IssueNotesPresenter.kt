@@ -16,7 +16,7 @@ class IssueNotesPresenter @Inject constructor(
     @ProjectId projectIdWrapper: PrimitiveWrapper<Long>,
     @IssueId issueIdWrapper: PrimitiveWrapper<Long>,
     private val issueInteractor: IssueInteractor,
-    private val mdConverter: MarkDownConverter,
+    private val mdConverterProvider: ProjectMarkDownConverterProvider,
     private val errorHandler: ErrorHandler
 ) : BasePresenter<IssueNotesView>() {
 
@@ -31,11 +31,17 @@ class IssueNotesPresenter @Inject constructor(
 
     private val paginator = Paginator(
         { page ->
-            issueInteractor.getIssueNotes(projectId, issueId, page)
+            issueInteractor
+                .getIssueNotes(projectId, issueId, page)
                 .flattenAsObservable { it }
                 .concatMap { note ->
-                    mdConverter.markdownToSpannable(note.body)
-                        .map { NoteWithFormattedBody(note, it) }
+                    mdConverterProvider
+                        .getMarkdownConverter(projectId)
+                        .flatMap { converter ->
+                            converter
+                                .markdownToSpannable(note.body)
+                                .map { NoteWithFormattedBody(note, it) }
+                        }
                         .toObservable()
                 }
                 .toList()

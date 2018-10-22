@@ -133,7 +133,8 @@ class MergeRequestRepository @Inject constructor(
             AppTarget.MERGE_REQUEST,
             mr.id,
             TargetInternal(mr.projectId, mr.iid),
-            badges
+            badges,
+            project.id
         )
     }
 

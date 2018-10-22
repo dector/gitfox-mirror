@@ -17,7 +17,7 @@ class LabelVisitor(
         if (customNode is LabelNode) {
             val label = customNode.label
             val length = builder.length
-            builder.append(label)
+            builder.append(label.name)
             builder.setSpan(StyleSpan(Typeface.BOLD), length)
         } else {
             super.visit(customNode)

@@ -1,5 +1,7 @@
 package ru.terrakok.gitlabclient.model.repository.project
 
+import io.reactivex.Single
+import ru.terrakok.gitlabclient.entity.Label
 import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.entity.Sort
 import ru.terrakok.gitlabclient.entity.Visibility
@@ -71,4 +73,16 @@ class ProjectRepository @Inject constructor(
         .getRepositoryTree(projectId, path, branchName, recursive)
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
+
+    // Here i'm caching projectLabels for each project for current session.
+    // Otherwise there will be too much requests per each project.
+    // For example, in the lists.
+    fun getProjectLabels(projectId: Long): Single<List<Label>> {
+        return api
+            .getProjectLabels(projectId)
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
+    }
+
+
 }

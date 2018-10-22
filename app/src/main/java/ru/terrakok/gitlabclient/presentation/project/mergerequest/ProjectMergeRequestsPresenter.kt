@@ -9,8 +9,8 @@ import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestIntera
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
-import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.presentation.global.Paginator
+import ru.terrakok.gitlabclient.presentation.global.ProjectMarkDownConverterProvider
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
 import javax.inject.Inject
@@ -23,7 +23,7 @@ class ProjectMergeRequestsPresenter @Inject constructor(
     @ProjectId private val projectIdWrapper: PrimitiveWrapper<Long>,
     private val mergeRequestState: MergeRequestState,
     private val mergeRequestInteractor: MergeRequestInteractor,
-    private val mdConverter: MarkDownConverter,
+    private val mdConverterProvider: ProjectMarkDownConverterProvider,
     private val errorHandler: ErrorHandler,
     private val router: FlowRouter
 ) : BasePresenter<ProjectMergeRequestsView>() {
@@ -39,13 +39,18 @@ class ProjectMergeRequestsPresenter @Inject constructor(
     private val paginator = Paginator(
         {
             mergeRequestInteractor.getMergeRequests(projectId, mergeRequestState, it)
-                    .flattenAsObservable { it }
-                    .concatMap { item ->
-                        mdConverter.markdownToSpannable(item.body.toString())
+                .flattenAsObservable { it }
+                .concatMap { item ->
+                    mdConverterProvider
+                        .getMarkdownConverter(projectId)
+                        .flatMap { converter ->
+                            converter
+                                .markdownToSpannable(item.body.toString())
                                 .map { md -> item.copy(body = md) }
-                                .toObservable()
-                    }
-                    .toList()
+                        }
+                        .toObservable()
+                }
+                .toList()
         },
         object : Paginator.ViewController<TargetHeader> {
             override fun showEmptyProgress(show: Boolean) {
