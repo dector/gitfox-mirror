@@ -16,10 +16,7 @@ import ru.terrakok.gitlabclient.ui.issue.IssueInfoFragment
 import ru.terrakok.gitlabclient.ui.issue.IssueNotesFragment
 import ru.terrakok.gitlabclient.ui.libraries.LibrariesFragment
 import ru.terrakok.gitlabclient.ui.main.MainFlowFragment
-import ru.terrakok.gitlabclient.ui.mergerequest.MergeRequestFlowFragment
-import ru.terrakok.gitlabclient.ui.mergerequest.MergeRequestFragment
-import ru.terrakok.gitlabclient.ui.mergerequest.MergeRequestInfoFragment
-import ru.terrakok.gitlabclient.ui.mergerequest.MergeRequestNotesFragment
+import ru.terrakok.gitlabclient.ui.mergerequest.*
 import ru.terrakok.gitlabclient.ui.my.activity.MyEventsFragment
 import ru.terrakok.gitlabclient.ui.my.issues.MyIssuesContainerFragment
 import ru.terrakok.gitlabclient.ui.my.issues.MyIssuesFragment
@@ -195,6 +192,10 @@ object Screens {
 
     object MergeRequestInfo : SupportAppScreen() {
         override fun getFragment() = MergeRequestInfoFragment()
+    }
+
+    object MergeRequestCommits : SupportAppScreen() {
+        override fun getFragment() = MergeRequestCommitsFragment()
     }
 
     object MergeRequestNotes : SupportAppScreen() {

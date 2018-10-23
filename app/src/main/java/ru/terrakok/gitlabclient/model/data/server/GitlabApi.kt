@@ -239,4 +239,20 @@ interface GitlabApi {
         @Path("merge_request_id") mergeRequestId: Long,
         @Field("body") body: String
     ): Single<Note>
+
+    @GET("$API_PATH/projects/{project_id}/merge_requests/{merge_request_id}/commits")
+    fun getMergeRequestCommits(
+        @Path("project_id") projectId: Long,
+        @Path("merge_request_id") mergeRequestId: Long,
+        @Query("page") page: Int,
+        @Query("per_page") pageSize: Int
+    ): Single<List<Commit>>
+
+    @GET("$API_PATH/projects/{project_id}/merge_requests/{merge_request_id}/participants")
+    fun getMergeRequestParticipants(
+        @Path("project_id") projectId: Long,
+        @Path("merge_request_id") mergeRequestId: Long,
+        @Query("page") page: Int,
+        @Query("per_page") pageSize: Int
+    ): Single<List<Author>>
 }
