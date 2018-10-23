@@ -36,28 +36,30 @@ class IssueFlowFragment : FlowFragment(), MvpView {
             .getInstance(IssueFlowPresenter::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        initScope()
+        prepareScope(savedInstanceState == null)
         super.onCreate(savedInstanceState)
         if (childFragmentManager.fragments.isEmpty()) {
             navigator.setLaunchScreen(Screens.Issue)
         }
     }
 
-    private fun initScope() {
+    private fun prepareScope(firstTime: Boolean) {
         val scope = Toothpick.openScopes(DI.SERVER_SCOPE, DI.ISSUE_FLOW_SCOPE)
-        scope.installModules(
-            FlowNavigationModule(scope.getInstance(Router::class.java)),
-            object : Module() {
-                init {
-                    bind(PrimitiveWrapper::class.java)
-                        .withName(IssueId::class.java)
-                        .toInstance(PrimitiveWrapper(issueId))
-                    bind(PrimitiveWrapper::class.java)
-                        .withName(ProjectId::class.java)
-                        .toInstance(PrimitiveWrapper(projectId))
+        if (firstTime) {
+            scope.installModules(
+                FlowNavigationModule(scope.getInstance(Router::class.java)),
+                object : Module() {
+                    init {
+                        bind(PrimitiveWrapper::class.java)
+                            .withName(IssueId::class.java)
+                            .toInstance(PrimitiveWrapper(issueId))
+                        bind(PrimitiveWrapper::class.java)
+                            .withName(ProjectId::class.java)
+                            .toInstance(PrimitiveWrapper(projectId))
+                    }
                 }
-            }
-        )
+            )
+        }
         Toothpick.inject(this, scope)
     }
 

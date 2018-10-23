@@ -33,25 +33,27 @@ class UserFlowFragment : FlowFragment(), MvpView {
             .getInstance(UserFlowPresenter::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        initScope()
+        prepareScope(savedInstanceState == null)
         super.onCreate(savedInstanceState)
         if (childFragmentManager.fragments.isEmpty()) {
             navigator.setLaunchScreen(Screens.UserInfo)
         }
     }
 
-    private fun initScope() {
+    private fun prepareScope(firstTime: Boolean) {
         val scope = Toothpick.openScopes(DI.SERVER_SCOPE, DI.USER_FLOW_SCOPE)
-        scope.installModules(
-            FlowNavigationModule(scope.getInstance(Router::class.java)),
-            object : Module() {
-                init {
-                    bind(PrimitiveWrapper::class.java)
-                        .withName(UserId::class.java)
-                        .toInstance(PrimitiveWrapper(userId))
+        if (firstTime) {
+            scope.installModules(
+                FlowNavigationModule(scope.getInstance(Router::class.java)),
+                object : Module() {
+                    init {
+                        bind(PrimitiveWrapper::class.java)
+                            .withName(UserId::class.java)
+                            .toInstance(PrimitiveWrapper(userId))
+                    }
                 }
-            }
-        )
+            )
+        }
         Toothpick.inject(this, scope)
     }
 

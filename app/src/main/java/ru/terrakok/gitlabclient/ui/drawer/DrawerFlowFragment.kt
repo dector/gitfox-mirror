@@ -82,7 +82,7 @@ class DrawerFlowFragment : BaseFragment(), MvpView {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        initScope()
+        prepareScope(savedInstanceState == null)
         super.onCreate(savedInstanceState)
 
         if (childFragmentManager.fragments.isEmpty()) {
@@ -95,12 +95,14 @@ class DrawerFlowFragment : BaseFragment(), MvpView {
         }
     }
 
-    private fun initScope() {
+    private fun prepareScope(firstTime: Boolean) {
         val scope = Toothpick.openScopes(DI.SERVER_SCOPE, DI.DRAWER_FLOW_SCOPE)
-        scope.installModules(
-            FlowNavigationModule(scope.getInstance(Router::class.java)),
-            GlobalMenuModule()
-        )
+        if (firstTime) {
+            scope.installModules(
+                FlowNavigationModule(scope.getInstance(Router::class.java)),
+                GlobalMenuModule()
+            )
+        }
         Toothpick.inject(this@DrawerFlowFragment, scope)
     }
 
