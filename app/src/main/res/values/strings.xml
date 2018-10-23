@@ -118,6 +118,8 @@
     <string name="target_status_opened">Opened</string>
     <string name="target_status_closed">Closed</string>
     <string name="target_status_merged">Merged</string>
+    <string name="target_confidential_title">Confidential Event</string>
+    <string name="target_confidential_description">This event is not available.</string>
 
     <!--My Merge Requests Screen-->
     <string name="merge_request_created_by_me">Created</string>
@@ -143,11 +145,18 @@
 
     <!--Merge Request Info screen-->
     <string name="merge_request_info_tab">Details</string>
+    <string name="merge_request_commits_tab">Commits</string>
     <string name="merge_request_discussion_tab">Discussion</string>
     <string name="merge_request_info_subtitle" formatted="false">%s by %s %s</string>
 
+    <!--Merge Request Commits screen-->
+    <string name="merge_request_commits_description" formatted="false">%s authored %s</string>
+
     <!--Issue Info screen-->
     <string name="issue_info_subtitle" formatted="false">%s by %s %s</string>
+
+    <!--Issue Discussion screen-->
+    <string name="issue_discussion_note_hint">Write a comment</string>
 
     <!--Project info screen-->
     <string name="menu_project_info">Info</string>

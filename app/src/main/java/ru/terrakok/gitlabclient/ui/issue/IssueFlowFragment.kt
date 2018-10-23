@@ -4,10 +4,11 @@ import android.os.Bundle
 import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.extension.argument
+import ru.terrakok.gitlabclient.extension.hideKeyboard
 import ru.terrakok.gitlabclient.extension.setLaunchScreen
-import ru.terrakok.gitlabclient.model.system.flow.AppRouter
 import ru.terrakok.gitlabclient.presentation.issue.IssueFlowPresenter
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
@@ -35,33 +36,36 @@ class IssueFlowFragment : FlowFragment(), MvpView {
             .getInstance(IssueFlowPresenter::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        initScope()
+        prepareScope(savedInstanceState == null)
         super.onCreate(savedInstanceState)
         if (childFragmentManager.fragments.isEmpty()) {
-            navigator.setLaunchScreen(Screens.ISSUE_SCREEN, null)
+            navigator.setLaunchScreen(Screens.Issue)
         }
     }
 
-    private fun initScope() {
+    private fun prepareScope(firstTime: Boolean) {
         val scope = Toothpick.openScopes(DI.SERVER_SCOPE, DI.ISSUE_FLOW_SCOPE)
-        scope.installModules(
-            FlowNavigationModule(scope.getInstance(AppRouter::class.java)),
-            object : Module() {
-                init {
-                    bind(PrimitiveWrapper::class.java)
-                        .withName(IssueId::class.java)
-                        .toInstance(PrimitiveWrapper(issueId))
-                    bind(PrimitiveWrapper::class.java)
-                        .withName(ProjectId::class.java)
-                        .toInstance(PrimitiveWrapper(projectId))
+        if (firstTime) {
+            scope.installModules(
+                FlowNavigationModule(scope.getInstance(Router::class.java)),
+                object : Module() {
+                    init {
+                        bind(PrimitiveWrapper::class.java)
+                            .withName(IssueId::class.java)
+                            .toInstance(PrimitiveWrapper(issueId))
+                        bind(PrimitiveWrapper::class.java)
+                            .withName(ProjectId::class.java)
+                            .toInstance(PrimitiveWrapper(projectId))
+                    }
                 }
-            }
-        )
+            )
+        }
         Toothpick.inject(this, scope)
     }
 
 
     override fun onExit() {
+        activity?.hideKeyboard()
         presenter.onExit()
     }
 

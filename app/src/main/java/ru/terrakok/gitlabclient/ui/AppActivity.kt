@@ -1,7 +1,5 @@
 package ru.terrakok.gitlabclient.ui
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
@@ -13,10 +11,9 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import io.reactivex.disposables.Disposable
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.NavigatorHolder
-import ru.terrakok.cicerone.android.SupportAppNavigator
+import ru.terrakok.cicerone.android.support.SupportAppNavigator
 import ru.terrakok.cicerone.commands.Command
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.model.system.message.SystemMessageNotifier
 import ru.terrakok.gitlabclient.model.system.message.SystemMessageType
 import ru.terrakok.gitlabclient.presentation.AppPresenter
@@ -52,20 +49,7 @@ class AppActivity : MvpAppCompatActivity(), MvpView {
 
     private val navigator: Navigator =
         object : SupportAppNavigator(this, supportFragmentManager, R.id.container) {
-            override fun createActivityIntent(
-                context: Context,
-                screenKey: String,
-                data: Any?
-            ): Intent? = Screens.createIntent(screenKey, data)
-
-            override fun exit() {
-                finish()
-            }
-
-            override fun createFragment(screenKey: String, data: Any?) =
-                Screens.createFragment(screenKey, data)
-
-            override fun setupFragmentTransactionAnimation(
+            override fun setupFragmentTransaction(
                 command: Command?,
                 currentFragment: Fragment?,
                 nextFragment: Fragment?,

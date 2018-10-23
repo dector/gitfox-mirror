@@ -1,25 +1,22 @@
 package ru.terrakok.gitlabclient
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import ru.terrakok.cicerone.android.support.SupportAppScreen
 import ru.terrakok.gitlabclient.entity.issue.IssueState
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
-import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.about.AboutFragment
 import ru.terrakok.gitlabclient.ui.auth.AuthFlowFragment
 import ru.terrakok.gitlabclient.ui.auth.AuthFragment
 import ru.terrakok.gitlabclient.ui.drawer.DrawerFlowFragment
-import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.issue.IssueFlowFragment
 import ru.terrakok.gitlabclient.ui.issue.IssueFragment
 import ru.terrakok.gitlabclient.ui.issue.IssueInfoFragment
 import ru.terrakok.gitlabclient.ui.issue.IssueNotesFragment
 import ru.terrakok.gitlabclient.ui.libraries.LibrariesFragment
 import ru.terrakok.gitlabclient.ui.main.MainFlowFragment
-import ru.terrakok.gitlabclient.ui.mergerequest.MergeRequestFlowFragment
-import ru.terrakok.gitlabclient.ui.mergerequest.MergeRequestFragment
-import ru.terrakok.gitlabclient.ui.mergerequest.MergeRequestInfoFragment
-import ru.terrakok.gitlabclient.ui.mergerequest.MergeRequestNotesFragment
+import ru.terrakok.gitlabclient.ui.mergerequest.*
 import ru.terrakok.gitlabclient.ui.my.activity.MyEventsFragment
 import ru.terrakok.gitlabclient.ui.my.issues.MyIssuesContainerFragment
 import ru.terrakok.gitlabclient.ui.my.issues.MyIssuesFragment
@@ -46,138 +43,205 @@ import ru.terrakok.gitlabclient.ui.user.info.UserInfoFragment
  * @author Konstantin Tskhovrebov (aka terrakok) on 26.03.17.
  */
 object Screens {
-    const val DRAWER_FLOW = "drawer flow"
-
-    const val MAIN_FLOW = "main flow"
-    const val MY_EVENTS_SCREEN = "my events screen"
-
-    const val MY_ISSUES_CONTAINER_SCREEN = "my issues container screen"
-    const val MY_ISSUES_SCREEN = "my issues screen"
-
-    const val MY_MR_CONTAINER_SCREEN = "my mr container screen"
-    const val MY_MR_SCREEN = "my mr screen"
-
-    const val MY_TODOS_CONTAINER_SCREEN = "my todo container screen"
-    const val MY_TODOS_SCREEN = "my todo screen"
-
-    const val PROJECTS_CONTAINER_SCREEN = "projects container screen"
-    const val PROJECTS_SCREEN = "projects screen"
-
-    const val ABOUT_SCREEN = "about screen"
-
-    const val APP_LIBRARIES_FLOW = "app libraries flow"
-
-    const val AUTH_FLOW = "auth flow"
-    const val AUTH_SCREEN = "auth screen"
-
-    const val PROJECT_FLOW = "project flow"
-    const val PROJECT_MAIN_FLOW = "project main flow"
-    const val PROJECT_INFO_CONTAINER_SCREEN = "project info container screen"
-    const val PROJECT_INFO_SCREEN = "project info screen"
-    const val PROJECT_EVENTS_SCREEN = "project events screen"
-    const val PROJECT_ISSUES_CONTAINER_SCREEN = "project issues container screen"
-    const val PROJECT_ISSUES_SCREEN = "project issues screen"
-    const val PROJECT_MR_CONTAINER_SCREEN = "project mr container screen"
-    const val PROJECT_MR_SCREEN = "project mr screen"
-
-    const val USER_FLOW = "user flow"
-    const val USER_INFO_SCREEN = "user info screen"
-
-    const val MR_FLOW = "mr flow"
-    const val MR_SCREEN = "mr screen"
-    const val MR_INFO_SCREEN = "mr info screen"
-    const val MR_NOTES_SCREEN = "mr notes screen"
-
-    const val ISSUE_FLOW = "issue flow"
-    const val ISSUE_SCREEN = "issue screen"
-    const val ISSUE_INFO_SCREEN = "issue info screen"
-    const val ISSUE_NOTES_SCREEN = "issue notes screen"
-
-    const val EXTERNAL_BROWSER_FLOW = "external browser flow"
-    const val SHARE_FLOW = "share flow"
-    const val CALL_FLOW = "call flow"
-    const val PRIVACY_POLICY_FLOW = "privacy policy flow"
-
-    fun createIntent(flowKey: String, data: Any?) = when (flowKey) {
-        Screens.EXTERNAL_BROWSER_FLOW -> Intent(Intent.ACTION_VIEW, Uri.parse(data as String))
-        Screens.SHARE_FLOW -> Intent.createChooser(
-            Intent(Intent.ACTION_SEND).apply {
-                putExtra(Intent.EXTRA_TEXT, data as String)
-                type = "text/plain"
-            },
-            data as String
-        )
-        Screens.CALL_FLOW -> Intent(Intent.ACTION_DIAL, Uri.parse("tel:$data"))
-        else -> null
+    object DrawerFlow : SupportAppScreen() {
+        override fun getFragment() = DrawerFlowFragment()
     }
 
-    fun createFragment(screenKey: String, data: Any? = null): BaseFragment? =
-        when (screenKey) {
-            //DRAWER SCOPE SCREENS
-            Screens.DRAWER_FLOW -> DrawerFlowFragment()
-            Screens.MAIN_FLOW -> MainFlowFragment()
-            Screens.MY_EVENTS_SCREEN -> MyEventsFragment()
-            Screens.MY_ISSUES_CONTAINER_SCREEN -> MyIssuesContainerFragment()
-            Screens.MY_ISSUES_SCREEN -> {
-                val (createdByMe, onlyOpened) = data as Pair<Boolean, Boolean>
-                MyIssuesFragment.create(createdByMe, onlyOpened)
-            }
-            Screens.MY_MR_CONTAINER_SCREEN -> MyMergeRequestsContainerFragment()
-            Screens.MY_MR_SCREEN -> {
-                val (createdByMe, onlyOpened) = data as Pair<Boolean, Boolean>
-                MyMergeRequestsFragment.create(createdByMe, onlyOpened)
-            }
-            Screens.MY_TODOS_CONTAINER_SCREEN -> MyTodosContainerFragment()
-            Screens.MY_TODOS_SCREEN -> MyTodosFragment.create(data as Boolean)
-            Screens.PROJECTS_CONTAINER_SCREEN -> ProjectsContainerFragment()
-            Screens.PROJECTS_SCREEN -> ProjectsListFragment.create(data as Int)
+    object MainFlow : SupportAppScreen() {
+        override fun getFragment() = MainFlowFragment()
+    }
 
-            //AUTH SCREENS
-            Screens.AUTH_FLOW -> AuthFlowFragment()
-            Screens.AUTH_SCREEN -> AuthFragment()
+    object MyEvents : SupportAppScreen() {
+        override fun getFragment() = MyEventsFragment()
+    }
 
-            //USER SCOPE SCREENS
-            Screens.USER_FLOW -> UserFlowFragment.create(data as Long)
-            Screens.USER_INFO_SCREEN -> UserInfoFragment()
+    object MyIssuesContainer : SupportAppScreen() {
+        override fun getFragment() = MyIssuesContainerFragment()
+    }
 
-            //PROJECT SCOPE SCREENS
-            Screens.PROJECT_FLOW -> {
-                ProjectFlowFragment.create(data as Long, DI.PROJECT_FLOW_SCOPE + " " + System.currentTimeMillis())
-            }
-            Screens.PROJECT_MAIN_FLOW -> ProjectFragment.create(data as String)
-            Screens.PROJECT_INFO_CONTAINER_SCREEN -> ProjectInfoContainerFragment.create(data as String)
-            Screens.PROJECT_INFO_SCREEN -> ProjectInfoFragment.create(data as String)
-            Screens.PROJECT_EVENTS_SCREEN -> ProjectEventsFragment.create(data as String)
-            Screens.PROJECT_ISSUES_CONTAINER_SCREEN -> ProjectIssuesContainerFragment.create(data as String)
-            Screens.PROJECT_ISSUES_SCREEN -> (data as Pair<IssueState, String>).let { (issueState, scope) ->
-                ProjectIssuesFragment.create(issueState, scope)
-            }
-            Screens.PROJECT_MR_CONTAINER_SCREEN -> ProjectMergeRequestsContainerFragment.create(data as String)
-            Screens.PROJECT_MR_SCREEN -> (data as Pair<MergeRequestState, String>).let { (mrState, scope) ->
-                ProjectMergeRequestsFragment.create(mrState, scope)
-            }
+    data class MyIssues(
+        val createdByMe: Boolean,
+        val onlyOpened: Boolean
+    ) : SupportAppScreen() {
+        override fun getFragment() = MyIssuesFragment.create(createdByMe, onlyOpened)
+    }
 
-            //MR SCOPE SCREENS
-            Screens.MR_FLOW -> {
-                val (projectId, mrId) = data as Pair<Long, Long>
-                MergeRequestFlowFragment.create(projectId, mrId)
-            }
-            Screens.MR_SCREEN -> MergeRequestFragment()
-            Screens.MR_INFO_SCREEN -> MergeRequestInfoFragment()
-            Screens.MR_NOTES_SCREEN -> MergeRequestNotesFragment()
+    object MyMrContainer : SupportAppScreen() {
+        override fun getFragment() = MyMergeRequestsContainerFragment()
+    }
 
-            //ISSUE SCOPE SCREENS
-            Screens.ISSUE_FLOW -> {
-                val (projectId, issueId) = data as Pair<Long, Long>
-                IssueFlowFragment.create(projectId, issueId)
-            }
-            Screens.ISSUE_SCREEN -> IssueFragment()
-            Screens.ISSUE_INFO_SCREEN -> IssueInfoFragment()
-            Screens.ISSUE_NOTES_SCREEN -> IssueNotesFragment()
+    data class MyMergeRequests(
+        val createdByMe: Boolean,
+        val onlyOpened: Boolean
+    ) : SupportAppScreen() {
+        override fun getFragment() = MyMergeRequestsFragment.create(createdByMe, onlyOpened)
+    }
 
-            Screens.PRIVACY_POLICY_FLOW -> PrivacyPolicyFragment()
-            Screens.ABOUT_SCREEN -> AboutFragment()
-            Screens.APP_LIBRARIES_FLOW -> LibrariesFragment()
-            else -> null
-        }
+    object MyTodosContainer : SupportAppScreen() {
+        override fun getFragment() = MyTodosContainerFragment()
+    }
+
+    data class MyTodos(
+        val isPending: Boolean
+    ) : SupportAppScreen() {
+        override fun getFragment() = MyTodosFragment.create(isPending)
+    }
+
+    object ProjectsContainer : SupportAppScreen() {
+        override fun getFragment() = ProjectsContainerFragment()
+    }
+
+    data class Projects(
+        val mode: Int
+    ) : SupportAppScreen() {
+        override fun getFragment() = ProjectsListFragment.create(mode)
+    }
+
+    object About : SupportAppScreen() {
+        override fun getFragment() = AboutFragment()
+    }
+
+    object Libraries : SupportAppScreen() {
+        override fun getFragment() = LibrariesFragment()
+    }
+
+    object AuthFlow : SupportAppScreen() {
+        override fun getFragment() = AuthFlowFragment()
+    }
+
+    object Auth : SupportAppScreen() {
+        override fun getFragment() = AuthFragment()
+    }
+
+    data class ProjectFlow(
+        val projectId: Long
+    ) : SupportAppScreen() {
+        override fun getFragment() = ProjectFlowFragment.create(projectId)
+    }
+
+    data class ProjectMainFlow(
+        val scope: String
+    ) : SupportAppScreen() {
+        override fun getFragment() = ProjectFragment.create(scope)
+    }
+
+    data class ProjectInfoContainer(
+        val scope: String
+    ) : SupportAppScreen() {
+        override fun getFragment() = ProjectInfoContainerFragment.create(scope)
+    }
+
+    data class ProjectInfo(
+        val scope: String
+    ) : SupportAppScreen() {
+        override fun getFragment() = ProjectInfoFragment.create(scope)
+    }
+
+    data class ProjectEvents(
+        val scope: String
+    ) : SupportAppScreen() {
+        override fun getFragment() = ProjectEventsFragment.create(scope)
+    }
+
+    data class ProjectIssuesContainer(
+        val scope: String
+    ) : SupportAppScreen() {
+        override fun getFragment() = ProjectIssuesContainerFragment.create(scope)
+    }
+
+    data class ProjectIssues(
+        val issueState: IssueState,
+        val scope: String
+    ) : SupportAppScreen() {
+        override fun getFragment() = ProjectIssuesFragment.create(issueState, scope)
+    }
+
+    data class ProjectMergeRequestsContainer(
+        val scope: String
+    ) : SupportAppScreen() {
+        override fun getFragment() = ProjectMergeRequestsContainerFragment.create(scope)
+    }
+
+    data class ProjectMergeRequests(
+        val mrState: MergeRequestState,
+        val scope: String
+    ) : SupportAppScreen() {
+        override fun getFragment() = ProjectMergeRequestsFragment.create(mrState, scope)
+    }
+
+    data class UserFlow(
+        val userId: Long
+    ) : SupportAppScreen() {
+        override fun getFragment() = UserFlowFragment.create(userId)
+    }
+
+    object UserInfo : SupportAppScreen() {
+        override fun getFragment() = UserInfoFragment()
+    }
+
+    data class MergeRequestFlow(
+        val projectId: Long,
+        val mrId: Long
+    ) : SupportAppScreen() {
+        override fun getFragment() = MergeRequestFlowFragment.create(projectId, mrId)
+    }
+
+    object MergeRequest : SupportAppScreen() {
+        override fun getFragment() = MergeRequestFragment()
+    }
+
+    object MergeRequestInfo : SupportAppScreen() {
+        override fun getFragment() = MergeRequestInfoFragment()
+    }
+
+    object MergeRequestCommits : SupportAppScreen() {
+        override fun getFragment() = MergeRequestCommitsFragment()
+    }
+
+    object MergeRequestNotes : SupportAppScreen() {
+        override fun getFragment() = MergeRequestNotesFragment()
+    }
+
+    data class IssueFlow(
+        val projectId: Long,
+        val issueId: Long
+    ) : SupportAppScreen() {
+        override fun getFragment() = IssueFlowFragment.create(projectId, issueId)
+    }
+
+    object Issue : SupportAppScreen() {
+        override fun getFragment() = IssueFragment()
+    }
+
+    object IssueInfo : SupportAppScreen() {
+        override fun getFragment() = IssueInfoFragment()
+    }
+
+    object IssueNotes : SupportAppScreen() {
+        override fun getFragment() = IssueNotesFragment()
+    }
+
+    object PrivacyPolicy : SupportAppScreen() {
+        override fun getFragment() = PrivacyPolicyFragment()
+    }
+
+    data class ExternalBrowserFlow(
+        val url: String
+    ) : SupportAppScreen() {
+        override fun getActivityIntent(context: Context?) =
+            Intent(Intent.ACTION_VIEW, Uri.parse(url))
+    }
+
+    data class ShareFlow(
+        val text: String
+    ) : SupportAppScreen() {
+        override fun getActivityIntent(context: Context?) =
+            Intent.createChooser(
+                Intent(Intent.ACTION_SEND).apply {
+                    putExtra(Intent.EXTRA_TEXT, text)
+                    type = "text/plain"
+                },
+                text
+            )
+    }
 }

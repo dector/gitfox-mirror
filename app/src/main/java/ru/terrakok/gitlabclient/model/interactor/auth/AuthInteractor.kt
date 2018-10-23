@@ -1,6 +1,7 @@
 package ru.terrakok.gitlabclient.model.interactor.auth
 
 import io.reactivex.Completable
+import ru.terrakok.gitlabclient.model.data.cache.ProjectCache
 import ru.terrakok.gitlabclient.model.repository.auth.AuthRepository
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.toothpick.module.ServerModule
@@ -19,20 +20,23 @@ class AuthInteractor(
     private val defaultServerPath: String,
     private val authRepository: AuthRepository,
     private val hash: String,
-    private val oauthParams: OAuthParams
+    private val oauthParams: OAuthParams,
+    private val projectCache: ProjectCache
 ) {
 
     @Inject constructor(
         @ServerPath serverPath: String,
         @DefaultServerPath defaultServerPath: String,
         authRepository: AuthRepository,
-        oauthParams: OAuthParams
+        oauthParams: OAuthParams,
+        projectCache: ProjectCache
     ) : this(
         serverPath,
         defaultServerPath,
         authRepository,
         UUID.randomUUID().toString(),
-        oauthParams
+        oauthParams,
+        projectCache
     )
 
     val oauthUrl = "${serverPath}oauth/authorize?client_id=${oauthParams.appId}" +
@@ -73,6 +77,7 @@ class AuthInteractor(
 
     fun logout() {
         authRepository.clearAuthData()
+        projectCache.clear()
         switchServerIfNeeded(defaultServerPath)
     }
 

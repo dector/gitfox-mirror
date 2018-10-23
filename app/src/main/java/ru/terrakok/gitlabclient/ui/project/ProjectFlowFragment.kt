@@ -4,10 +4,11 @@ import android.os.Bundle
 import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.extension.argument
+import ru.terrakok.gitlabclient.extension.objectScopeName
 import ru.terrakok.gitlabclient.extension.setLaunchScreen
-import ru.terrakok.gitlabclient.model.system.flow.AppRouter
 import ru.terrakok.gitlabclient.presentation.project.ProjectFlowPresenter
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
@@ -23,7 +24,15 @@ import toothpick.config.Module
 class ProjectFlowFragment : FlowFragment(), MvpView {
 
     private val projectId by argument(ARG_PROJECT_ID, 0L)
-    private val scopeName: String? by argument(ARG_SCOPE_NAME)
+    private val scopeName: String
+        get() {
+            var scopeName = arguments?.getString(ARG_SCOPE_NAME)
+            if (scopeName == null) {
+                scopeName = this@ProjectFlowFragment.objectScopeName()
+                arguments?.putString(ARG_SCOPE_NAME, scopeName)
+            }
+            return scopeName
+        }
 
     @InjectPresenter
     lateinit var presenter: ProjectFlowPresenter
@@ -34,25 +43,27 @@ class ProjectFlowFragment : FlowFragment(), MvpView {
             .getInstance(ProjectFlowPresenter::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        initScope()
+        prepareScope(savedInstanceState == null)
         super.onCreate(savedInstanceState)
         if (childFragmentManager.fragments.isEmpty()) {
-            navigator.setLaunchScreen(Screens.PROJECT_MAIN_FLOW, scopeName)
+            navigator.setLaunchScreen(Screens.ProjectMainFlow(scopeName))
         }
     }
 
-    private fun initScope() {
+    private fun prepareScope(firstTime: Boolean) {
         val scope = Toothpick.openScopes(DI.SERVER_SCOPE, scopeName)
-        scope.installModules(
-            FlowNavigationModule(scope.getInstance(AppRouter::class.java)),
-            object : Module() {
-                init {
-                    bind(PrimitiveWrapper::class.java)
-                        .withName(ProjectId::class.java)
-                        .toInstance(PrimitiveWrapper(projectId))
+        if (firstTime) {
+            scope.installModules(
+                FlowNavigationModule(scope.getInstance(Router::class.java)),
+                object : Module() {
+                    init {
+                        bind(PrimitiveWrapper::class.java)
+                            .withName(ProjectId::class.java)
+                            .toInstance(PrimitiveWrapper(projectId))
+                    }
                 }
-            }
-        )
+            )
+        }
         Toothpick.inject(this, scope)
     }
 
@@ -63,11 +74,10 @@ class ProjectFlowFragment : FlowFragment(), MvpView {
     companion object {
         private const val ARG_PROJECT_ID = "arg_project_id"
         private const val ARG_SCOPE_NAME = "arg_scope_name"
-        fun create(projectId: Long, scope: String) =
+        fun create(projectId: Long) =
             ProjectFlowFragment().apply {
                 arguments = Bundle().apply {
                     putLong(ARG_PROJECT_ID, projectId)
-                    putString(ARG_SCOPE_NAME, scope)
                 }
             }
     }
