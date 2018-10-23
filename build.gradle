@@ -1,5 +1,6 @@
 buildscript {
     ext.kotlinVersion = '1.2.70'
+    ext.markwonVersion = "2.0.0"
     repositories {
         jcenter()
         google()
