@@ -29,7 +29,7 @@ class ProjectFlowFragment : FlowFragment(), MvpView {
             var scopeName = arguments?.getString(ARG_SCOPE_NAME)
             if (scopeName == null) {
                 scopeName = this@ProjectFlowFragment.objectScopeName()
-                arguments?.putString(ARG_SCOPE_NAME, scopeName)
+                arguments = (arguments ?: Bundle()).apply { putString(ARG_SCOPE_NAME, scopeName) }
             }
             return scopeName
         }
