@@ -7,7 +7,6 @@ import android.support.annotation.RequiresApi
 import android.webkit.*
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.fragment_auth.*
 import kotlinx.android.synthetic.main.layout_zero.*
 import ru.terrakok.gitlabclient.BuildConfig
@@ -102,20 +101,7 @@ class AuthFragment : BaseFragment(), AuthView, CustomServerAuthFragment.OnClickL
 
     private fun showEmptyView(show: Boolean) {
         zeroViewHolder?.apply { if (show) showEmptyError() else hide() }
-        if (webView != null) {
-            webView.visible(!show)
-        } else {
-            // There is no clear reason about crash (WebView is null), so log it and analyse.
-            activity?.let {
-                val params = Bundle()
-                params.putBoolean("showEmptyView", show)
-                params.putBoolean("isFragmentAdded", isAdded)
-                params.putBoolean("isFragmentVisible", isVisible)
-                params.putBoolean("isFragmentStateSaved", isStateSaved)
-                params.putBoolean("isFragmentDetached", isDetached)
-                FirebaseAnalytics.getInstance(it).logEvent("auth_fragment_webView_null", params)
-            }
-        }
+        webView.visible(!show)
     }
 
     override fun onResume() {
@@ -126,6 +112,11 @@ class AuthFragment : BaseFragment(), AuthView, CustomServerAuthFragment.OnClickL
     override fun onPause() {
         super.onPause()
         webView.onPause()
+    }
+
+    override fun onDestroyView() {
+        webView.destroy()
+        super.onDestroyView()
     }
 
     override fun loadUrl(url: String) {
