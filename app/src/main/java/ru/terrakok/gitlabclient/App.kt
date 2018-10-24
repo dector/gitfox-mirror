@@ -24,6 +24,7 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        appHashCode = hashCode()
 
         initLogger()
         initFabric()
@@ -81,5 +82,10 @@ class App : Application() {
 
     private fun initThreetenABP() {
         AndroidThreeTen.init(this)
+    }
+
+    companion object {
+        var appHashCode = -1
+            private set
     }
 }

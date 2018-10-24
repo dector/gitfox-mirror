@@ -27,7 +27,7 @@ class AuthFlowFragment : FlowFragment(), MvpView {
             .getInstance(AuthFlowPresenter::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        prepareScope(savedInstanceState == null)
+        prepareScope(isFirstLaunch(savedInstanceState))
         super.onCreate(savedInstanceState)
         if (childFragmentManager.fragments.isEmpty()) {
             navigator.setLaunchScreen(Screens.Auth)
