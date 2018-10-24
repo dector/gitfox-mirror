@@ -35,7 +35,7 @@ class MergeRequestFlowFragment : FlowFragment(), MvpView {
             .getInstance(MergeRequestFlowPresenter::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        prepareScope(savedInstanceState == null)
+        prepareScope(isFirstLaunch(savedInstanceState))
         super.onCreate(savedInstanceState)
         if (childFragmentManager.fragments.isEmpty()) {
             navigator.setLaunchScreen(Screens.MergeRequest)

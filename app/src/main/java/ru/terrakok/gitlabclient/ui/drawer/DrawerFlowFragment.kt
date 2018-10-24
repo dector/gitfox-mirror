@@ -82,7 +82,7 @@ class DrawerFlowFragment : BaseFragment(), MvpView {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        prepareScope(savedInstanceState == null)
+        prepareScope(isFirstLaunch(savedInstanceState))
         super.onCreate(savedInstanceState)
 
         if (childFragmentManager.fragments.isEmpty()) {
