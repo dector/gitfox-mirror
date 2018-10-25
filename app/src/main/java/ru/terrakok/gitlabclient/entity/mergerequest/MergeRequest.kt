@@ -41,5 +41,6 @@ data class MergeRequest(
     @SerializedName("closed_by") val closedBy: Author?,
     @SerializedName("closed_at") val closedAt: LocalDateTime?,
     @SerializedName("merged_by") val mergedBy: Author?,
-    @SerializedName("merged_at") val mergedAt: LocalDateTime?
+    @SerializedName("merged_at") val mergedAt: LocalDateTime?,
+    @SerializedName("changes") val changes: List<MergeRequestChange>?
 )

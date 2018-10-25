@@ -226,7 +226,6 @@ class MergeRequestRepository @Inject constructor(
                 }
             }
         )
-
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
 
@@ -239,6 +238,12 @@ class MergeRequestRepository @Inject constructor(
             .takeWhile { participants -> participants.isNotEmpty() }
             .flatMapIterable { it }
             .toList()
+
+    fun getMergeRequestChanges(projectId: Long, mergeRequestId: Long) =
+        api.getMergeRequestChanges(projectId, mergeRequestId)
+            .map { it.changes ?: arrayListOf() }
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
 
     companion object {
         // See GitLab documentation: https://docs.gitlab.com/ee/api/#pagination.
