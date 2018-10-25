@@ -31,6 +31,21 @@ class PrivacyPolicyFragment : BaseFragment() {
         webView.loadUrl("https://gitlab.com/terrakok/gitlab-client/raw/develop/PrivacyPolicy.txt")
     }
 
+    override fun onResume() {
+        super.onResume()
+        webView.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        webView.onPause()
+    }
+
+    override fun onDestroyView() {
+        webView.destroy()
+        super.onDestroyView()
+    }
+
     override fun onBackPressed() {
         super.onBackPressed()
         router.exit()

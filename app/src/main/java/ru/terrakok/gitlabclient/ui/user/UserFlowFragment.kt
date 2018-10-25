@@ -33,7 +33,7 @@ class UserFlowFragment : FlowFragment(), MvpView {
             .getInstance(UserFlowPresenter::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        prepareScope(savedInstanceState == null)
+        prepareScope(isFirstLaunch(savedInstanceState))
         super.onCreate(savedInstanceState)
         if (childFragmentManager.fragments.isEmpty()) {
             navigator.setLaunchScreen(Screens.UserInfo)

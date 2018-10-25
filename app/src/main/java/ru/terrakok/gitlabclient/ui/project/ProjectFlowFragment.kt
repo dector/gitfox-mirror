@@ -29,7 +29,7 @@ class ProjectFlowFragment : FlowFragment(), MvpView {
             var scopeName = arguments?.getString(ARG_SCOPE_NAME)
             if (scopeName == null) {
                 scopeName = this@ProjectFlowFragment.objectScopeName()
-                arguments?.putString(ARG_SCOPE_NAME, scopeName)
+                arguments = (arguments ?: Bundle()).apply { putString(ARG_SCOPE_NAME, scopeName) }
             }
             return scopeName
         }
@@ -43,7 +43,7 @@ class ProjectFlowFragment : FlowFragment(), MvpView {
             .getInstance(ProjectFlowPresenter::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        prepareScope(savedInstanceState == null)
+        prepareScope(isFirstLaunch(savedInstanceState))
         super.onCreate(savedInstanceState)
         if (childFragmentManager.fragments.isEmpty()) {
             navigator.setLaunchScreen(Screens.ProjectMainFlow(scopeName))
