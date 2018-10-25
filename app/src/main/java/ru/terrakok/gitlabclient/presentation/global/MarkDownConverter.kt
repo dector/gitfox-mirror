@@ -11,7 +11,7 @@ import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 28.05.17
  */
-class MarkDownConverter constructor(
+class MarkDownConverter(
     private val config: SpannableConfiguration,
     private val parser: Parser,
     private val decorator: MarkdownDecorator,

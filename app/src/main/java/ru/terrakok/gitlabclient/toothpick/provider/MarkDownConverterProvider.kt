@@ -87,14 +87,13 @@ class MarkDownConverterProvider @Inject constructor(
             .imageSizeResolver(imageSizeResolver)
             .build()
 
-    fun getMarkdownDecorator(): MarkdownDecorator {
-        return CompositeMarkdownDecorator(
+    fun getMarkdownDecorator(): MarkdownDecorator =
+        CompositeMarkdownDecorator(
             LabelDecorator()
         )
-    }
 
-    fun getParser(): Parser {
-        return with(Parser.Builder()) {
+    fun getParser(): Parser =
+        Parser.Builder().apply {
             extensions(
                 listOf(
                     StrikethroughExtension.create(),
@@ -110,18 +109,18 @@ class MarkDownConverterProvider @Inject constructor(
                     )
                 )
             )
-            build()
-        }
-    }
 
-    fun getCustomVisitor(spannableBuilder: SpannableBuilder) = CompositeVisitor(
-        spannableConfig,
-        spannableBuilder,
-        LabelVisitor(
+        }.build()
+
+    fun getCustomVisitor(spannableBuilder: SpannableBuilder) =
+        CompositeVisitor(
             spannableConfig,
-            spannableBuilder
+            spannableBuilder,
+            LabelVisitor(
+                spannableConfig,
+                spannableBuilder
+            )
         )
-    )
 
     override fun get() = MarkDownConverter(
         spannableConfig,
