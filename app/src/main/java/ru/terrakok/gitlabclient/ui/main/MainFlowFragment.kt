@@ -44,9 +44,9 @@ class MainFlowFragment : BaseFragment() {
         selectTab(
             when (currentTabFragment?.tag) {
                 eventsTab.screenKey -> eventsTab
-                issuesTab.screenKey -> eventsTab
-                mrsTab.screenKey -> eventsTab
-                todosTab.screenKey -> eventsTab
+                issuesTab.screenKey -> issuesTab
+                mrsTab.screenKey -> mrsTab
+                todosTab.screenKey -> todosTab
                 else -> eventsTab
             }
         )
