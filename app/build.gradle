@@ -74,6 +74,7 @@ ext {
     toothpickVersion = "1.0.6"
     retrofitVersion = "2.2.0"
     markwonVersion = "1.1.1"
+    glideVersion = "4.8.0"
 }
 
 dependencies {
@@ -108,7 +109,11 @@ dependencies {
     //Adapter simplify
     implementation "com.hannesdorfmann:adapterdelegates3:3.0.1"
     //Image load and cache
-    implementation "com.github.bumptech.glide:glide:4.7.1"
+    implementation "com.github.bumptech.glide:glide:$glideVersion"
+    kapt "com.github.bumptech.glide:compiler:$glideVersion"
+    implementation ('com.github.bumptech.glide:okhttp3-integration:4.6.1') {
+        exclude group: 'glide-parent'
+    }
     //Markdown to HTML converter
     implementation "ru.noties:markwon:$markwonVersion"
     implementation "ru.noties:markwon-image-loader:$markwonVersion"
