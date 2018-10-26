@@ -1,10 +1,10 @@
 package ru.terrakok.gitlabclient.presentation.mergerequest.changes
 
 import com.arellomobile.mvp.InjectViewState
+import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestChange
 import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
-import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.MergeRequestId
 import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
@@ -18,12 +18,14 @@ class MergeRequestChangesPresenter @Inject constructor(
     @ProjectId projectIdWrapper: PrimitiveWrapper<Long>,
     @MergeRequestId mrIdWrapper: PrimitiveWrapper<Long>,
     private val mrInteractor: MergeRequestInteractor,
-    private val mdConverter: MarkDownConverter,
     private val errorHandler: ErrorHandler
 ) : BasePresenter<MergeRequestChangesView>() {
 
     private val projectId = projectIdWrapper.value
     private val mrId = mrIdWrapper.value
+
+    private val changes = arrayListOf<MergeRequestChange>()
+    private var isEmptyError: Boolean = false
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -33,8 +35,71 @@ class MergeRequestChangesPresenter @Inject constructor(
             .doOnSubscribe { viewState.showEmptyProgress(true) }
             .doAfterTerminate { viewState.showEmptyProgress(false) }
             .subscribe(
-                { viewState.showChanges(it) },
-                { errorHandler.proceed(it, { viewState.showMessage(it) }) }
+                {
+                    if (it.isNotEmpty()) {
+                        changes.addAll(it)
+                        viewState.showChanges(true, it)
+                    } else {
+                        viewState.showChanges(false, it)
+                        viewState.showEmptyView(true)
+                    }
+                },
+                {
+                    isEmptyError = true
+                    errorHandler.proceed(it, { viewState.showEmptyError(true, it) })
+                }
+            )
+            .connect()
+    }
+
+    fun refreshChanges() {
+        mrInteractor
+            .getMergeRequestChanges(projectId, mrId)
+            .doOnSubscribe {
+                if (isEmptyError) {
+                    viewState.showEmptyError(false, null)
+                    isEmptyError = false
+                }
+                if (changes.isEmpty()) {
+                    viewState.showEmptyView(false)
+                }
+                if (changes.isNotEmpty()) {
+                    viewState.showRefreshProgress(true)
+                } else {
+                    viewState.showEmptyProgress(true)
+                }
+            }
+            .doAfterTerminate {
+                if (changes.isNotEmpty()) {
+                    viewState.showRefreshProgress(false)
+                } else {
+                    viewState.showEmptyProgress(false)
+                }
+            }
+            .subscribe(
+                {
+                    changes.clear()
+                    if (it.isNotEmpty()) {
+                        changes.addAll(it)
+                        viewState.showChanges(true, it)
+                    } else {
+                        viewState.showChanges(false, it)
+                        viewState.showEmptyView(true)
+                    }
+                },
+                {
+                    errorHandler.proceed(
+                        it,
+                        {
+                            if (changes.isNotEmpty()) {
+                                viewState.showMessage(it)
+                            } else {
+                                isEmptyError = true
+                                viewState.showEmptyError(true, it)
+                            }
+                        }
+                    )
+                }
             )
             .connect()
     }
