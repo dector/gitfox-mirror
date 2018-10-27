@@ -89,24 +89,13 @@ class MarkDownConverterProvider @Inject constructor(
             .imageSizeResolver(imageSizeResolver)
             .build()
 
-    private fun getMarkdownDecorator(labels: List<Label>): MarkdownDecorator {
+    private fun getMarkdownDecorator(labelDescriptions: List<LabelDescription>): MarkdownDecorator {
         return CompositeMarkdownDecorator(
-            LabelDecorator(
-                labels.flatMap {
-                    listOf(it.id.toString(), it.name)
-                }
-            )
+            LabelDecorator(labelDescriptions)
         )
     }
 
-    private fun getParser(labels: List<Label>): Parser {
-        val labelDescriptions = labels.map {
-            LabelDescription(
-                id = it.id,
-                name = it.name,
-                color = it.color
-            )
-        }
+    private fun getParser(labelDescriptions: List<LabelDescription>): Parser {
         return Parser.Builder().apply {
             extensions(
                 listOf(
@@ -136,11 +125,20 @@ class MarkDownConverterProvider @Inject constructor(
             )
         )
 
-    fun get(labels: List<Label>) = MarkDownConverter(
-        spannableConfig,
-        getParser(labels),
-        getMarkdownDecorator(labels),
-        { builder -> getCustomVisitor(builder) },
-        schedulers
-    )
+    fun get(labels: List<Label>): MarkDownConverter {
+        val labelDescriptions = labels.map {
+            LabelDescription(
+                id = it.id,
+                name = it.name,
+                color = it.color
+            )
+        }
+        return MarkDownConverter(
+            spannableConfig,
+            getParser(labelDescriptions),
+            getMarkdownDecorator(labelDescriptions),
+            { builder -> getCustomVisitor(builder) },
+            schedulers
+        )
+    }
 }
