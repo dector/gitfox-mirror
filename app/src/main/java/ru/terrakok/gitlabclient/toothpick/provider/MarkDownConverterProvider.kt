@@ -5,6 +5,7 @@ import android.graphics.Rect
 import okhttp3.OkHttpClient
 import org.commonmark.ext.gfm.strikethrough.StrikethroughExtension
 import org.commonmark.ext.gfm.tables.TablesExtension
+import org.commonmark.node.Visitor
 import org.commonmark.parser.Parser
 import ru.noties.markwon.SpannableBuilder
 import ru.noties.markwon.SpannableConfiguration
@@ -88,7 +89,7 @@ class MarkDownConverterProvider @Inject constructor(
             .imageSizeResolver(imageSizeResolver)
             .build()
 
-    fun getMarkdownDecorator(labels: List<Label>): MarkdownDecorator {
+    private fun getMarkdownDecorator(labels: List<Label>): MarkdownDecorator {
         return CompositeMarkdownDecorator(
             LabelDecorator(
                 labels.flatMap {
@@ -98,7 +99,7 @@ class MarkDownConverterProvider @Inject constructor(
         )
     }
 
-    fun getParser(labels: List<Label>): Parser {
+    private fun getParser(labels: List<Label>): Parser {
         val labelDescriptions = labels.map {
             LabelDescription(
                 id = it.id,
@@ -106,7 +107,7 @@ class MarkDownConverterProvider @Inject constructor(
                 color = it.color
             )
         }
-        return with(Parser.Builder()) {
+        return Parser.Builder().apply {
             extensions(
                 listOf(
                     StrikethroughExtension.create(),
@@ -122,18 +123,18 @@ class MarkDownConverterProvider @Inject constructor(
                     )
                 )
             )
-            build()
-        }
+        }.build()
     }
 
-    fun getCustomVisitor(spannableBuilder: SpannableBuilder) = CompositeVisitor(
-        spannableConfig,
-        spannableBuilder,
-        LabelVisitor(
+    private fun getCustomVisitor(spannableBuilder: SpannableBuilder): Visitor =
+        CompositeVisitor(
             spannableConfig,
-            spannableBuilder
+            spannableBuilder,
+            LabelVisitor(
+                spannableConfig,
+                spannableBuilder
+            )
         )
-    )
 
     fun get(labels: List<Label>) = MarkDownConverter(
         spannableConfig,
