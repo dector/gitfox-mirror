@@ -5,6 +5,7 @@ import android.graphics.Rect
 import okhttp3.OkHttpClient
 import org.commonmark.ext.gfm.strikethrough.StrikethroughExtension
 import org.commonmark.ext.gfm.tables.TablesExtension
+import org.commonmark.node.Visitor
 import org.commonmark.parser.Parser
 import ru.noties.markwon.SpannableBuilder
 import ru.noties.markwon.SpannableConfiguration
@@ -112,7 +113,7 @@ class MarkDownConverterProvider @Inject constructor(
 
         }.build()
 
-    fun getCustomVisitor(spannableBuilder: SpannableBuilder) =
+    fun getCustomVisitor(spannableBuilder: SpannableBuilder): Visitor =
         CompositeVisitor(
             spannableConfig,
             spannableBuilder,
