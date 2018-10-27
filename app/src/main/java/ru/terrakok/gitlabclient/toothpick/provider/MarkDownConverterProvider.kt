@@ -88,12 +88,13 @@ class MarkDownConverterProvider @Inject constructor(
             .imageSizeResolver(imageSizeResolver)
             .build()
 
-    fun getMarkdownDecorator(): MarkdownDecorator =
+    private val markdownDecorator: MarkdownDecorator by lazy {
         CompositeMarkdownDecorator(
             LabelDecorator()
         )
+    }
 
-    fun getParser(): Parser =
+    private  val parser : Parser by lazy {
         Parser.Builder().apply {
             extensions(
                 listOf(
@@ -110,10 +111,10 @@ class MarkDownConverterProvider @Inject constructor(
                     )
                 )
             )
-
         }.build()
+    }
 
-    fun getCustomVisitor(spannableBuilder: SpannableBuilder): Visitor =
+    private fun getCustomVisitor(spannableBuilder: SpannableBuilder): Visitor =
         CompositeVisitor(
             spannableConfig,
             spannableBuilder,
@@ -125,8 +126,8 @@ class MarkDownConverterProvider @Inject constructor(
 
     override fun get() = MarkDownConverter(
         spannableConfig,
-        getParser(),
-        getMarkdownDecorator(),
+        parser,
+        markdownDecorator,
         { builder -> getCustomVisitor(builder) },
         schedulers
     )
