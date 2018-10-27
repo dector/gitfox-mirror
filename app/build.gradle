@@ -124,6 +124,9 @@ dependencies {
     //Crashlytics
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.5'
 
+    //Custom GitLab markdown parsing tools
+    implementation project(":markwonx")
+
     //JUnit
     testImplementation "junit:junit:4.12"
     //Mockito
