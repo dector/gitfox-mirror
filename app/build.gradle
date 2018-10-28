@@ -15,8 +15,8 @@ android {
         minSdkVersion 19
         targetSdkVersion 28
 
-        versionName "1.2.1"
-        versionCode 8
+        versionName "1.3.0"
+        versionCode 9
 
         buildConfigField "String", "VERSION_UID", '"' + getBuildUid() + '"'
         buildConfigField "String", "APP_DESCRIPTION", '"Gitfox is an Android client for Gitlab."'
