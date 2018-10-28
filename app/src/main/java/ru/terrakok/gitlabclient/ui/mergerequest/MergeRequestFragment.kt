@@ -49,15 +49,17 @@ class MergeRequestFragment : BaseFragment(), MergeRequestInfoFragment.MergeReque
             0 -> Screens.MergeRequestInfo.fragment
             1 -> Screens.MergeRequestCommits.fragment
             2 -> Screens.MergeRequestNotes.fragment
+            3 -> Screens.MergeRequestChanges.fragment
             else -> null
         }
 
-        override fun getCount() = 3
+        override fun getCount() = 4
 
         override fun getPageTitle(position: Int) = when (position) {
             0 -> getString(R.string.merge_request_info_tab)
             1 -> getString(R.string.merge_request_commits_tab)
             2 -> getString(R.string.merge_request_discussion_tab)
+            3 -> getString(R.string.merge_request_changes_tab)
             else -> null
         }
     }

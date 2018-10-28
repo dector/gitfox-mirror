@@ -202,6 +202,10 @@ object Screens {
         override fun getFragment() = MergeRequestNotesFragment()
     }
 
+    object MergeRequestChanges : SupportAppScreen() {
+        override fun getFragment() = MergeRequestChangesFragment()
+    }
+
     data class IssueFlow(
         val projectId: Long,
         val issueId: Long
