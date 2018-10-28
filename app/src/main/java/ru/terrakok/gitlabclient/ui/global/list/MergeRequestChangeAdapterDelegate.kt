@@ -8,7 +8,7 @@ import kotlinx.android.synthetic.main.item_merge_request_change.view.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestChange
 import ru.terrakok.gitlabclient.extension.inflate
-import ru.terrakok.gitlabclient.ui.global.MergeRequestChangeViewController
+import ru.terrakok.gitlabclient.ui.global.GitDiffViewController
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 26.10.18.
@@ -35,8 +35,7 @@ class MergeRequestChangeAdapterDelegate : AdapterDelegate<MutableList<MergeReque
     private inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private lateinit var mergeRequestChange: MergeRequestChange
 
-        private var mergeRequestChangeViewController: MergeRequestChangeViewController =
-            MergeRequestChangeViewController(itemView.changeFile)
+        private val gitDiffViewController: GitDiffViewController = GitDiffViewController(itemView.changeFile)
 
         fun bind(mergeRequestChange: MergeRequestChange) {
             this.mergeRequestChange = mergeRequestChange
@@ -53,20 +52,20 @@ class MergeRequestChangeAdapterDelegate : AdapterDelegate<MutableList<MergeReque
                     val index = it.lastIndexOf("/")
                     it.substring(if (index != -1) index + 1 else 0)
                 }
-                mergeRequestChangeViewController.setText(mergeRequestChange.diff)
+                gitDiffViewController.setText(mergeRequestChange.diff)
                 changeAddedCount.text = context.getString(
                     R.string.merge_request_changes_added_count,
-                    mergeRequestChangeViewController.getAddedLineCount()
+                    gitDiffViewController.getAddedLineCount()
                 )
                 changeDeletedCount.text = context.getString(
                     R.string.merge_request_changes_deleted_count,
-                    mergeRequestChangeViewController.getDeletedLineCount()
+                    gitDiffViewController.getDeletedLineCount()
                 )
             }
         }
 
         fun recycle() {
-            mergeRequestChangeViewController.release()
+            gitDiffViewController.release()
         }
     }
 }

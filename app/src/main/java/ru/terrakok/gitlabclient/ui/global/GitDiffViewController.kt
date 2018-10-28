@@ -24,7 +24,7 @@ import android.text.style.ForegroundColorSpan
 import android.text.style.LineBackgroundSpan
 import android.widget.TextView
 
-class MergeRequestChangeViewController(
+class GitDiffViewController(
     private val view: TextView
 ) {
 

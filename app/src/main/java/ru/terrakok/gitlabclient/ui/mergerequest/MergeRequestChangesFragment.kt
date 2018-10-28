@@ -15,9 +15,7 @@ import ru.terrakok.gitlabclient.presentation.mergerequest.changes.MergeRequestCh
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.ZeroViewHolder
-import ru.terrakok.gitlabclient.ui.global.list.MergeRequestChangeAdapter
 import ru.terrakok.gitlabclient.ui.global.list.SimpleDividerDecorator
-import ru.terrakok.gitlabclient.ui.global.list.TargetNotesAdapter
 import toothpick.Toothpick
 
 /**
