@@ -28,4 +28,6 @@ class GlideModule : AppGlideModule() {
 
         glide.registry.replace(GlideUrl::class.java, InputStream::class.java, factory)
     }
+
+    override fun isManifestParsingEnabled() = false
 }
