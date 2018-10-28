@@ -69,15 +69,13 @@ class MergeRequestChangesPresenter @Inject constructor(
                     viewState.showEmptyProgress(true)
                 }
             }
-            .doAfterTerminate {
-                if (changes.isNotEmpty()) {
-                    viewState.showRefreshProgress(false)
-                } else {
-                    viewState.showEmptyProgress(false)
-                }
-            }
             .subscribe(
                 {
+                    if (changes.isNotEmpty()) {
+                        viewState.showRefreshProgress(false)
+                    } else {
+                        viewState.showEmptyProgress(false)
+                    }
                     changes.clear()
                     if (it.isNotEmpty()) {
                         changes.addAll(it)
@@ -88,6 +86,11 @@ class MergeRequestChangesPresenter @Inject constructor(
                     }
                 },
                 {
+                    if (changes.isNotEmpty()) {
+                        viewState.showRefreshProgress(false)
+                    } else {
+                        viewState.showEmptyProgress(false)
+                    }
                     errorHandler.proceed(
                         it,
                         {
