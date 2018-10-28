@@ -147,10 +147,15 @@
     <string name="merge_request_info_tab">Details</string>
     <string name="merge_request_commits_tab">Commits</string>
     <string name="merge_request_discussion_tab">Discussion</string>
+    <string name="merge_request_changes_tab">Changes</string>
     <string name="merge_request_info_subtitle" formatted="false">%s by %s %s</string>
 
     <!--Merge Request Commits screen-->
     <string name="merge_request_commits_description" formatted="false">%s authored %s</string>
+
+    <!--Merge Request Changes screen-->
+    <string name="merge_request_changes_added_count" formatted="false">+%d</string>
+    <string name="merge_request_changes_deleted_count" formatted="false">-%d</string>
 
     <!--Issue Info screen-->
     <string name="issue_info_subtitle" formatted="false">%s by %s %s</string>

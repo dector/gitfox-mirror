@@ -255,4 +255,10 @@ interface GitlabApi {
         @Query("page") page: Int,
         @Query("per_page") pageSize: Int
     ): Single<List<Author>>
+
+    @GET("$API_PATH/projects/{project_id}/merge_requests/{merge_request_id}/changes")
+    fun getMergeRequestChanges(
+        @Path("project_id") projectId: Long,
+        @Path("merge_request_id") mergeRequestId: Long
+    ): Single<MergeRequest>
 }
