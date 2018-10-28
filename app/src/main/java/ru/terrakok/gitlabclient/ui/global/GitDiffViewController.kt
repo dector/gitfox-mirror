@@ -123,7 +123,7 @@ class GitDiffViewController(
             // expand canvas bounds by padding
             val clipBounds = c.clipBounds
             clipBounds.inset(-padding, 0)
-            c.clipRect(clipBounds, Region.Op.REPLACE)
+            c.clipRect(clipBounds, Region.Op.INTERSECT)
 
             val paintColor = p.color
             p.color = color
