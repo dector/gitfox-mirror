@@ -304,4 +304,37 @@ interface GitlabApi {
         @Path("project_id") projectId: Long,
         @Path("milestone_id") mileStoneId: Long
     ): Single<List<MergeRequest>>
+
+    @GET("$API_PATH/projects/{project_id}/labels")
+    fun getProjectLabels(
+        @Path("project_id") projectId: Long
+    ): Single<List<Label>>
+
+    @FormUrlEncoded
+    @POST("$API_PATH/projects/{project_id}/labels")
+    fun createLabel(
+        @Path("project_id") projectId: Long,
+        @Field("name") name: String,
+        @Field("color") color: String,
+        @Field("description") description: String?,
+        @Field("priority") priority: Int?
+    ): Single<Label>
+
+    @DELETE("$API_PATH/projects/{project_id}/labels")
+    fun deleteLabel(
+        @Path("project_id") projectId: Long,
+        @Query("name") name: String
+    ): Completable
+
+    @POST("$API_PATH/projects/{project_id}/labels/{label_id}/subscribe")
+    fun subscribeToLabel(
+        @Path("project_id") projectId: Long,
+        @Path("label_id") labelId: Long
+    ): Single<Label>
+
+    @POST("$API_PATH/projects/{project_id}/labels/{label_id}/unsubscribe")
+    fun unsubscribeFromLabel(
+        @Path("project_id") projectId: Long,
+        @Path("label_id") labelId: Long
+    ): Single<Label>
 }
