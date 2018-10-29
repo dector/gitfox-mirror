@@ -9,6 +9,7 @@ import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.module.AppGlideModule
 import okhttp3.OkHttpClient
 import ru.terrakok.gitlabclient.toothpick.DI
+import ru.terrakok.gitlabclient.toothpick.qualifier.GlideClient
 import toothpick.Toothpick
 import java.io.InputStream
 
@@ -21,7 +22,7 @@ class GlideModule : AppGlideModule() {
     private val okHttpClient: OkHttpClient =
         Toothpick
             .openScope(DI.SERVER_SCOPE)
-            .getInstance(OkHttpClient::class.java)
+            .getInstance(OkHttpClient::class.java, GlideClient::class.java.name)
 
     override fun registerComponents(context: Context, glide: Glide, registry: Registry) {
         val factory = OkHttpUrlLoader.Factory(okHttpClient)
