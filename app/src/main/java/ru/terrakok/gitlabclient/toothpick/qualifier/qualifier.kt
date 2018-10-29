@@ -37,4 +37,4 @@ annotation class UserId
 annotation class CacheLifetime
 
 @Qualifier
-annotation class GlideClient
+annotation class WithErrorHandler

@@ -9,6 +9,7 @@ import ru.terrakok.gitlabclient.model.data.cache.ProjectCache
 import ru.terrakok.gitlabclient.model.data.server.ApiWithCache
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.toothpick.qualifier.ServerPath
+import ru.terrakok.gitlabclient.toothpick.qualifier.WithErrorHandler
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -16,7 +17,7 @@ import javax.inject.Provider
  * @author Konstantin Tskhovrebov (aka terrakok) on 20.06.17.
  */
 class ApiProvider @Inject constructor(
-    private val okHttpClient: OkHttpClient,
+    @WithErrorHandler private val okHttpClient: OkHttpClient,
     private val gson: Gson,
     private val projectCache: ProjectCache,
     @ServerPath private val serverPath: String
