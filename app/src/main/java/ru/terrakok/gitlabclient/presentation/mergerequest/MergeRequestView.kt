@@ -11,8 +11,6 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 @StateStrategyType(AddToEndSingleStrategy::class)
 interface MergeRequestView : MvpView {
     fun setTitle(title: String, subtitle: String)
-
-    @StateStrategyType(OneExecutionStateStrategy::class)
     fun showBlockingProgress(show: Boolean)
 
     @StateStrategyType(OneExecutionStateStrategy::class)
