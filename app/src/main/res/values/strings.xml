@@ -144,6 +144,7 @@
     <string name="todo_action_unmergeable">Could not merge</string>
 
     <!--Merge Request Info screen-->
+    <string name="merge_request_title">!%d</string>
     <string name="merge_request_info_tab">Details</string>
     <string name="merge_request_commits_tab">Commits</string>
     <string name="merge_request_discussion_tab">Discussion</string>
