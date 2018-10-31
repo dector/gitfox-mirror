@@ -6,6 +6,7 @@ import ru.terrakok.gitlabclient.model.interactor.app.AppInfoInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
+import ru.terrakok.gitlabclient.toothpick.qualifier.AppDevelopersPath
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -16,7 +17,8 @@ import javax.inject.Inject
 class AboutPresenter @Inject constructor(
     private val router: FlowRouter,
     private val menuController: GlobalMenuController,
-    private val appInfoInteractor: AppInfoInteractor
+    private val appInfoInteractor: AppInfoInteractor,
+    @AppDevelopersPath private val appDevelopersUrl: String
 ) : BasePresenter<AboutView>() {
 
     override fun onFirstViewAttach() {
@@ -29,20 +31,13 @@ class AboutPresenter @Inject constructor(
                 { Timber.e(it) }
             )
             .connect()
-        appInfoInteractor
-            .getAppDevelopers()
-            .subscribe(
-                { viewState.showAppDevelopers(it) },
-                { Timber.e(it) }
-            )
-            .connect()
     }
 
     fun onShowLibrariesClicked() = router.startFlow(Screens.Libraries)
 
     fun onPrivacyPolicyClicked() = router.startFlow(Screens.PrivacyPolicy)
 
-    fun onDeveloperClicked(id: Long) = router.startFlow(Screens.UserFlow(id))
+    fun onDevelopersClicked() = viewState.showAppDevelopers(appDevelopersUrl)
 
     fun onMenuPressed() = menuController.open()
     fun onBackPressed() = router.exit()
