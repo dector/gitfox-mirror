@@ -68,11 +68,8 @@ class AuthInteractor(
 
     fun login(customServerPath: String, privateToken: String) =
         Completable.fromAction {
-            var serverPath = customServerPath
-            if (!customServerPath.endsWith("/")) serverPath += "/"
-
-            authRepository.saveAuthData(privateToken, serverPath, false)
-            switchServerIfNeeded(serverPath)
+            authRepository.saveAuthData(privateToken, customServerPath, false)
+            switchServerIfNeeded(customServerPath)
         }
 
     fun logout() {
