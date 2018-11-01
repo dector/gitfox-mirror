@@ -59,8 +59,8 @@ abstract class BaseFragment : MvpAppCompatFragment() {
     }
 
     protected fun isFirstLaunch(savedInstanceState: Bundle?): Boolean {
-        val savedAppHashCode = savedInstanceState?.getString(STATE_LAUNCH_FLAG)
-        return savedAppHashCode != App.appCode
+        val savedAppCode = savedInstanceState?.getString(STATE_LAUNCH_FLAG)
+        return savedAppCode != App.appCode
     }
 
     open fun onBackPressed() {}
