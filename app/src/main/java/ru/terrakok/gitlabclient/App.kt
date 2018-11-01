@@ -25,7 +25,7 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        appHashCode = UUID.randomUUID().hashCode()
+        appCode = UUID.randomUUID().toString()
 
         initLogger()
         initFabric()
@@ -86,7 +86,7 @@ class App : Application() {
     }
 
     companion object {
-        var appHashCode = -1
+        lateinit var appCode: String
             private set
     }
 }
