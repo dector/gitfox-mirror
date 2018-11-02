@@ -13,5 +13,4 @@ import ru.terrakok.gitlabclient.entity.app.develop.AppInfo
 @StateStrategyType(AddToEndSingleStrategy::class)
 interface AboutView : MvpView {
     fun showAppInfo(appInfo: AppInfo)
-    fun showAppDevelopers(appDevelopersUrl: String)
 }

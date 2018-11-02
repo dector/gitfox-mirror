@@ -172,6 +172,4 @@
 
     <!--Privacy policy screen-->
     <string name="privacy_policy">Privacy policy</string>
-
-    <string name="app_developers_path">https://gitlab.com/terrakok/gitlab-client/graphs/develop</string>
 </resources>

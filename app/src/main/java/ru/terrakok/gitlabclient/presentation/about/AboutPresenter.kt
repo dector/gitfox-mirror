@@ -37,7 +37,7 @@ class AboutPresenter @Inject constructor(
 
     fun onPrivacyPolicyClicked() = router.startFlow(Screens.PrivacyPolicy)
 
-    fun onDevelopersClicked() = viewState.showAppDevelopers(appDevelopersUrl)
+    fun onDevelopersClicked() = router.startFlow(Screens.ExternalBrowserFlow(appDevelopersUrl))
 
     fun onMenuPressed() = menuController.open()
     fun onBackPressed() = router.exit()

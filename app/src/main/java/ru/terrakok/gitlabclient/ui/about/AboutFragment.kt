@@ -47,10 +47,6 @@ class AboutFragment : BaseFragment(), AboutView {
         versionTextView.text = "${appInfo.versionName} (${appInfo.versionCode} ${appInfo.buildId})"
     }
 
-    override fun showAppDevelopers(appDevelopersUrl: String) {
-        startActivity(Intent.parseUri(appDevelopersUrl,0))
-    }
-
     override fun onBackPressed() {
         presenter.onBackPressed()
     }

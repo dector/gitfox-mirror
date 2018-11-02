@@ -30,7 +30,7 @@ class AppModule(context: Context) : Module() {
         //Global
         bind(Context::class.java).toInstance(context)
         bind(String::class.java).withName(DefaultServerPath::class.java).toInstance(BuildConfig.ORIGIN_GITLAB_ENDPOINT)
-        bind(String::class.java).withName(AppDevelopersPath::class.java).toInstance(context.getString(R.string.app_developers_path))
+        bind(String::class.java).withName(AppDevelopersPath::class.java).toInstance(BuildConfig.APP_DEVELOPERS_PATH)
         bind(PrimitiveWrapper::class.java).withName(DefaultPageSize::class.java).toInstance(PrimitiveWrapper(20))
         bind(PrimitiveWrapper::class.java).withName(CacheLifetime::class.java).toInstance(PrimitiveWrapper(300_000L))
         bind(SchedulersProvider::class.java).toInstance(AppSchedulers())
