@@ -59,6 +59,12 @@ class ProjectInteractor @Inject constructor(
             .map { file -> base64Tools.decode(file.content) }
             .observeOn(schedulers.ui())
 
+    fun getProjectFiles(
+        projectId: Long,
+        path: String,
+        branchName: String,
+        page: Int
+    ) = projectRepository.getFiles(projectId = projectId, path = path, branchName = branchName, page = page)
 
     class ReadmeNotFound : Exception()
 }
