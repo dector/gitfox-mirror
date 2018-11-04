@@ -176,6 +176,9 @@
     <string name="project_labels">Labels</string>
     <string name="project_files">Files</string>
 
+    <!--Repository files screen-->
+    <string name="repository_files">Files</string>
+
     <!--Privacy policy screen-->
     <string name="privacy_policy">Privacy policy</string>
 </resources>

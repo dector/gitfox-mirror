@@ -5,7 +5,7 @@ import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.entity.RepositoryTreeNodeType
 import ru.terrakok.gitlabclient.entity.Sort
 import ru.terrakok.gitlabclient.entity.Visibility
-import ru.terrakok.gitlabclient.entity.app.ProjectFile
+import ru.terrakok.gitlabclient.entity.app.RepositoryFile
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
@@ -65,14 +65,14 @@ class ProjectRepository @Inject constructor(
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
 
-    fun getFiles(
+    fun getRepositoryFiles(
         projectId: Long,
         path: String,
         branchName: String,
         recursive: Boolean? = null,
         page: Int,
         pageSize: Int = defaultPageSize
-    ): Single<List<ProjectFile>> =
+    ): Single<List<RepositoryFile>> =
         api
             .getRepositoryTree(projectId, path, branchName, recursive, page, pageSize)
             .flattenAsObservable { it }
@@ -82,7 +82,7 @@ class ProjectRepository @Inject constructor(
                         .flatMap { file ->
                             api.getRepositoryCommit(projectId, file.lastCommitId)
                                 .map { commit ->
-                                    ProjectFile(
+                                    RepositoryFile(
                                         treeNode.id,
                                         treeNode.name,
                                         RepositoryTreeNodeType.BLOB,
@@ -95,7 +95,7 @@ class ProjectRepository @Inject constructor(
                     api.getRepositoryCommits(projectId, branchName, null, null, treeNode.path, null, null)
                         .map { commits ->
                             val commit = commits.first()
-                            ProjectFile(
+                            RepositoryFile(
                                 treeNode.id,
                                 treeNode.name,
                                 RepositoryTreeNodeType.TREE,

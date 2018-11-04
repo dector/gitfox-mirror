@@ -6,14 +6,13 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter
 import kotlinx.android.synthetic.main.fragment_project.*
 import ru.terrakok.cicerone.android.support.SupportAppScreen
-import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.extension.color
 import ru.terrakok.gitlabclient.extension.shareText
-import ru.terrakok.gitlabclient.extension.showSnackMessage
-import ru.terrakok.gitlabclient.presentation.project.ProjectPresenter
-import ru.terrakok.gitlabclient.presentation.project.ProjectView
+import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
+import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import toothpick.Toothpick
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 10.02.18.
@@ -43,6 +42,16 @@ class ProjectFragment : BaseFragment(), ProjectView {
                 when (item.itemId) {
                     R.id.shareAction -> shareText(shareUrl)
                     R.id.labelAction -> presenter.onLabelPressed()
+                    R.id.filesAction -> {
+                        router.startFlow(
+                            Screens.RepositoryFilesFlow(
+                                Toothpick
+                                    .openScope(scopeName)
+                                    .getInstance(PrimitiveWrapper::class.java, ProjectId::class.java.name)
+                                    .value as Long
+                            )
+                        )
+                    }
                 }
                 true
             }

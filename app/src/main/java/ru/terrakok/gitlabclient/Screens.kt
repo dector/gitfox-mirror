@@ -10,6 +10,8 @@ import ru.terrakok.gitlabclient.ui.about.AboutFragment
 import ru.terrakok.gitlabclient.ui.auth.AuthFlowFragment
 import ru.terrakok.gitlabclient.ui.auth.AuthFragment
 import ru.terrakok.gitlabclient.ui.drawer.DrawerFlowFragment
+import ru.terrakok.gitlabclient.ui.files.RepositoryFilesFlowFragment
+import ru.terrakok.gitlabclient.ui.files.RepositoryFilesFragment
 import ru.terrakok.gitlabclient.ui.files.ProjectFilesFragment
 import ru.terrakok.gitlabclient.ui.issue.IssueFlowFragment
 import ru.terrakok.gitlabclient.ui.issue.IssueFragment
@@ -31,7 +33,6 @@ import ru.terrakok.gitlabclient.ui.project.ProjectFragment
 import ru.terrakok.gitlabclient.ui.project.info.ProjectEventsFragment
 import ru.terrakok.gitlabclient.ui.project.info.ProjectInfoContainerFragment
 import ru.terrakok.gitlabclient.ui.project.info.ProjectInfoFragment
-import ru.terrakok.gitlabclient.ui.project.info.files.ProjectFilesFragment
 import ru.terrakok.gitlabclient.ui.project.issues.ProjectIssuesContainerFragment
 import ru.terrakok.gitlabclient.ui.project.issues.ProjectIssuesFragment
 import ru.terrakok.gitlabclient.ui.project.labels.ProjectLabelsFragment
@@ -226,6 +227,16 @@ object Screens {
 
     object PrivacyPolicy : SupportAppScreen() {
         override fun getFragment() = PrivacyPolicyFragment()
+    }
+
+    data class RepositoryFilesFlow(
+        val projectId: Long
+    ) : SupportAppScreen() {
+        override fun getFragment() = RepositoryFilesFlowFragment.create(projectId)
+    }
+
+    object RepositoryFiles : SupportAppScreen() {
+        override fun getFragment() = RepositoryFilesFragment()
     }
 
     data class ExternalBrowserFlow(
