@@ -2,10 +2,9 @@ package ru.terrakok.gitlabclient.model.repository.project
 
 import io.reactivex.Single
 import ru.terrakok.gitlabclient.entity.OrderBy
-import ru.terrakok.gitlabclient.entity.RepositoryTreeNodeType
 import ru.terrakok.gitlabclient.entity.Sort
 import ru.terrakok.gitlabclient.entity.Visibility
-import ru.terrakok.gitlabclient.entity.app.RepositoryFile
+import ru.terrakok.gitlabclient.entity.app.ProjectFile
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
@@ -56,7 +55,7 @@ class ProjectRepository @Inject constructor(
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
 
-    fun getFile(
+    fun getBlobFile(
         projectId: Long,
         path: String,
         branchName: String
@@ -65,47 +64,17 @@ class ProjectRepository @Inject constructor(
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
 
-    fun getRepositoryFiles(
+    fun getProjectFiles(
         projectId: Long,
         path: String,
         branchName: String,
         recursive: Boolean? = null,
         page: Int,
         pageSize: Int = defaultPageSize
-    ): Single<List<RepositoryFile>> =
+    ): Single<List<ProjectFile>> =
         api
             .getRepositoryTree(projectId, path, branchName, recursive, page, pageSize)
-            .flattenAsObservable { it }
-            .flatMapSingle { treeNode ->
-                if (treeNode.type == RepositoryTreeNodeType.BLOB) {
-                    api.getFile(projectId, treeNode.path, branchName)
-                        .flatMap { file ->
-                            api.getRepositoryCommit(projectId, file.lastCommitId)
-                                .map { commit ->
-                                    RepositoryFile(
-                                        treeNode.id,
-                                        treeNode.name,
-                                        RepositoryTreeNodeType.BLOB,
-                                        commit.message,
-                                        commit.authoredDate
-                                    )
-                                }
-                        }
-                } else {
-                    api.getRepositoryCommits(projectId, branchName, null, null, treeNode.path, null, null)
-                        .map { commits ->
-                            val commit = commits.first()
-                            RepositoryFile(
-                                treeNode.id,
-                                treeNode.name,
-                                RepositoryTreeNodeType.TREE,
-                                commit.message,
-                                commit.authoredDate
-                            )
-                        }
-                }
-            }
-            .toList()
+            .map { trees -> trees.map { tree -> ProjectFile(tree.id, tree.name, tree.type) } }
             .subscribeOn(schedulers.io())
             .observeOn(schedulers.ui())
 }

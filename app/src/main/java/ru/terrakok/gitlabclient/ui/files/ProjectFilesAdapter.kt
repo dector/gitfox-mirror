@@ -3,26 +3,26 @@ package ru.terrakok.gitlabclient.ui.files
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates3.ListDelegationAdapter
-import ru.terrakok.gitlabclient.entity.app.RepositoryFile
+import ru.terrakok.gitlabclient.entity.app.ProjectFile
 import ru.terrakok.gitlabclient.ui.global.list.ProgressAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.ProgressItem
-import ru.terrakok.gitlabclient.ui.global.list.RepositoryFileAdapterDelegate
+import ru.terrakok.gitlabclient.ui.global.list.ProjectFileAdapterDelegate
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 02.11.18.
  */
-class RepositoryFilesAdapter(
-    fileClickListener: (RepositoryFile) -> Unit,
+class ProjectFilesAdapter(
+    fileClickListener: (ProjectFile) -> Unit,
     private val nextPageListener: () -> Unit
 ) : ListDelegationAdapter<MutableList<Any>>() {
 
     init {
         items = mutableListOf()
-        delegatesManager.addDelegate(RepositoryFileAdapterDelegate(fileClickListener))
+        delegatesManager.addDelegate(ProjectFileAdapterDelegate(fileClickListener))
         delegatesManager.addDelegate(ProgressAdapterDelegate())
     }
 
-    fun setData(data: List<RepositoryFile>) {
+    fun setData(data: List<ProjectFile>) {
         val oldItems = items.toList()
 
         items.clear()
@@ -70,7 +70,7 @@ class RepositoryFilesAdapter(
             val oldItem = oldItems[oldItemPosition]
             val newItem = newItems[newItemPosition]
 
-            return if (newItem is RepositoryFile && oldItem is RepositoryFile) {
+            return if (newItem is ProjectFile && oldItem is ProjectFile) {
                 newItem.id == oldItem.id
             } else {
                 newItem is ProgressItem && oldItem is ProgressItem
@@ -81,10 +81,10 @@ class RepositoryFilesAdapter(
             val oldItem = oldItems[oldItemPosition]
             val newItem = newItems[newItemPosition]
 
-            return if (newItem is RepositoryFile && oldItem is RepositoryFile) {
+            return if (newItem is ProjectFile && oldItem is ProjectFile) {
                 newItem == oldItem
             } else {
-                true
+                false
             }
         }
     }

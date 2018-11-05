@@ -1,7 +1,7 @@
 package ru.terrakok.gitlabclient.presentation.files
 
 import com.arellomobile.mvp.InjectViewState
-import ru.terrakok.gitlabclient.entity.app.RepositoryFile
+import ru.terrakok.gitlabclient.entity.app.ProjectFile
 import ru.terrakok.gitlabclient.model.interactor.project.ProjectInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
@@ -15,12 +15,12 @@ import javax.inject.Inject
  * Created by Eugene Shapovalov (@CraggyHaggy) on 02.11.18.
  */
 @InjectViewState
-class RepositoryFilesPresenter @Inject constructor(
+class ProjectFilesPresenter @Inject constructor(
     @ProjectId private val projectIdWrapper: PrimitiveWrapper<Long>,
     private val projectInteractor: ProjectInteractor,
     private val errorHandler: ErrorHandler,
     private val router: FlowRouter
-) : BasePresenter<RepositoryFilesView>() {
+) : BasePresenter<ProjectFilesView>() {
 
     private val projectId = projectIdWrapper.value
 
@@ -31,8 +31,9 @@ class RepositoryFilesPresenter @Inject constructor(
     }
 
     private val paginator = Paginator(
-        { projectInteractor.getRepositoryFiles(projectId, "", "develop", it) },
-        object : Paginator.ViewController<RepositoryFile> {
+        // TODO: project files (Use correct branch).
+        { projectInteractor.getProjectFiles(projectId, "", "develop", it) },
+        object : Paginator.ViewController<ProjectFile> {
             override fun showEmptyProgress(show: Boolean) {
                 viewState.showEmptyProgress(show)
             }
@@ -53,7 +54,7 @@ class RepositoryFilesPresenter @Inject constructor(
                 viewState.showEmptyView(show)
             }
 
-            override fun showData(show: Boolean, data: List<RepositoryFile>) {
+            override fun showData(show: Boolean, data: List<ProjectFile>) {
                 viewState.showFiles(show, data)
             }
 
@@ -67,10 +68,10 @@ class RepositoryFilesPresenter @Inject constructor(
         }
     )
 
-    fun onFileClick(item: RepositoryFile) {}
+    fun onFileClick(item: ProjectFile) {}
     fun refreshFiles() = paginator.refresh()
     fun loadNextIssuesPage() = paginator.loadNewPage()
-    fun onBackPressed() = router.finishFlow()
+    fun onBackPressed() = router.exit()
 
     override fun onDestroy() {
         super.onDestroy()

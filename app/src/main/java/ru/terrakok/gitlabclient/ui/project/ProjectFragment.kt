@@ -44,7 +44,7 @@ class ProjectFragment : BaseFragment(), ProjectView {
                     R.id.labelAction -> presenter.onLabelPressed()
                     R.id.filesAction -> {
                         router.startFlow(
-                            Screens.RepositoryFilesFlow(
+                            Screens.ProjectFilesFlow(
                                 Toothpick
                                     .openScope(scopeName)
                                     .getInstance(PrimitiveWrapper::class.java, ProjectId::class.java.name)
