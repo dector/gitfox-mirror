@@ -12,7 +12,7 @@
         android:id="@+id/filesAction"
         android:icon="@drawable/ic_folder_white"
         android:title="@string/repository_files"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/labelAction"

@@ -2,12 +2,14 @@ package ru.terrakok.gitlabclient.ui.files
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.PopupMenu
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import kotlinx.android.synthetic.main.fragment_repository_files.*
+import kotlinx.android.synthetic.main.fragment_project_files.*
 import kotlinx.android.synthetic.main.layout_base_list.*
 import kotlinx.android.synthetic.main.layout_zero.*
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.entity.Branch
 import ru.terrakok.gitlabclient.entity.app.ProjectFile
 import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.extension.visible
@@ -22,7 +24,7 @@ import toothpick.Toothpick
  * Created by Eugene Shapovalov (@CraggyHaggy) on 02.11.18.
  */
 class ProjectFilesFragment : BaseFragment(), ProjectFilesView {
-    override val layoutRes = R.layout.fragment_repository_files
+    override val layoutRes = R.layout.fragment_project_files
 
     @InjectPresenter
     lateinit var presenter: ProjectFilesPresenter
@@ -50,9 +52,17 @@ class ProjectFilesFragment : BaseFragment(), ProjectFilesView {
             adapter = this@ProjectFilesFragment.adapter
         }
         toolbar.apply {
-            title = "Files"
-            subtitle = "develop"
+            inflateMenu(R.menu.project_files_menu)
             setNavigationOnClickListener { presenter.onBackPressed() }
+            setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.showBranchesAction -> {
+                        presenter.onShowBranchesClick()
+                        true
+                    }
+                    else -> false
+                }
+            }
         }
 
         swipeToRefresh.setOnRefreshListener { presenter.refreshFiles() }
@@ -62,6 +72,14 @@ class ProjectFilesFragment : BaseFragment(), ProjectFilesView {
     override fun onBackPressed() {
         super.onBackPressed()
         presenter.onBackPressed()
+    }
+
+    override fun setPath(path: String) {
+        toolbar.title = path
+    }
+
+    override fun setBranch(branchName: String) {
+        toolbar.subtitle = branchName
     }
 
     override fun showRefreshProgress(show: Boolean) {
@@ -93,6 +111,23 @@ class ProjectFilesFragment : BaseFragment(), ProjectFilesView {
     override fun showFiles(show: Boolean, files: List<ProjectFile>) {
         recyclerView.visible(show)
         postViewAction { adapter.setData(files) }
+    }
+
+    override fun showBlockingProgress(show: Boolean) {
+        showProgressDialog(show)
+    }
+
+    override fun showBranches(branches: List<Branch>) {
+        PopupMenu(toolbar.context, toolbar).apply {
+            for (branch in branches) {
+                menu.add(branch.name)
+            }
+            setOnMenuItemClickListener {
+                presenter.onBranchClick(it.title.toString())
+                true
+            }
+            show()
+        }
     }
 
     override fun showMessage(message: String) {

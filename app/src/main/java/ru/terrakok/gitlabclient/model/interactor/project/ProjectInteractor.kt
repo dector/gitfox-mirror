@@ -66,5 +66,9 @@ class ProjectInteractor @Inject constructor(
         page: Int
     ) = projectRepository.getProjectFiles(projectId = projectId, path = path, branchName = branchName, page = page)
 
+    fun getProjectBranches(
+        projectId: Long
+    ) = projectRepository.getProjectBranches(projectId)
+
     class ReadmeNotFound : Exception()
 }

@@ -88,6 +88,11 @@ interface GitlabApi {
         @Query("with_stats") withStats: Boolean?
     ): Single<List<Commit>>
 
+    @GET("$API_PATH/projects/{project_id}/repository/branches/")
+    fun getRepositoryBranches(
+        @Path("project_id") projectId: Long
+    ): Single<List<Branch>>
+
     @GET("$API_PATH/user")
     fun getMyUser(): Single<User>
 
