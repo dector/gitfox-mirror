@@ -103,9 +103,11 @@ class ProjectFilesPresenter @Inject constructor(
     fun onBackPressed() = router.exit()
     fun onShowBranchesClick() = viewState.showBranches(projectBranches)
     fun onBranchClick(branchName: String) {
-        currentBranchName = branchName
-        viewState.setBranch(branchName)
-        paginator.refresh()
+        if (currentBranchName != branchName) {
+            currentBranchName = branchName
+            viewState.setBranch(branchName)
+            paginator.refresh()
+        }
     }
 
     override fun onDestroy() {
