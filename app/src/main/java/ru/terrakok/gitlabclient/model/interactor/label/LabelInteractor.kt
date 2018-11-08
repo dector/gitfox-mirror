@@ -12,4 +12,14 @@ class LabelInteractor @Inject constructor(
 
     fun getLabelList(projectId: Long) = labelRepository.getLabelList(projectId)
 
+    fun subscribeToLabel(
+        projectId: Long,
+        labelId: Long
+    ) = labelRepository.subscribeToLabel(projectId, labelId)
+
+    fun unsubscribeFromLabel(
+        projectId: Long,
+        labelId: Long
+    ) = labelRepository.unsubscribeFromLabel(projectId, labelId)
+
 }

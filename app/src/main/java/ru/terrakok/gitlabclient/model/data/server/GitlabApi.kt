@@ -320,10 +320,11 @@ interface GitlabApi {
         @Field("priority") priority: Int?
     ): Single<Label>
 
+    @FormUrlEncoded
     @DELETE("$API_PATH/projects/{project_id}/labels")
     fun deleteLabel(
         @Path("project_id") projectId: Long,
-        @Query("name") name: String
+        @Field("name") name: String
     ): Completable
 
     @POST("$API_PATH/projects/{project_id}/labels/{label_id}/subscribe")
