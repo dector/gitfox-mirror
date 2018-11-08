@@ -16,6 +16,9 @@ annotation class DefaultServerPath
 annotation class ServerPath
 
 @Qualifier
+annotation class AppDevelopersPath
+
+@Qualifier
 annotation class IssueId
 
 @Qualifier

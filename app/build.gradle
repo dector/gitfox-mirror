@@ -25,6 +25,7 @@ android {
 
         buildConfigField "String", "WEB_AUTH_USER_AGENT", '"gitfox_user_agent"'
         buildConfigField "String", "ORIGIN_GITLAB_ENDPOINT", '"https://gitlab.com/"'
+        buildConfigField "String", "APP_DEVELOPERS_PATH", '"https://gitlab.com/terrakok/gitlab-client/graphs/develop"'
 
         //todo: put prod value for release
         buildConfigField "String", "OAUTH_APP_ID", '"808b7f51c6634294afd879edd75d5eaf55f1a75e7fe5bd91ca8b7140a5af639d"'

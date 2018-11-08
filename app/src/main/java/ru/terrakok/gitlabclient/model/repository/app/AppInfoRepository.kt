@@ -30,10 +30,4 @@ class AppInfoRepository @Inject constructor(
         .onErrorReturn { emptyList() }
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
-
-    fun getAppDevelopers() = rawAppData
-        .getAppDevelopers()
-        .onErrorReturn { emptyList() }
-        .subscribeOn(schedulers.io())
-        .observeOn(schedulers.ui())
 }
