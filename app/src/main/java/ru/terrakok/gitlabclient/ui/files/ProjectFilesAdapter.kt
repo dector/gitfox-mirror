@@ -3,7 +3,7 @@ package ru.terrakok.gitlabclient.ui.files
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates3.ListDelegationAdapter
-import ru.terrakok.gitlabclient.entity.app.ProjectFile
+import ru.terrakok.gitlabclient.entity.app.file.ProjectFile
 import ru.terrakok.gitlabclient.ui.global.list.ProgressAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.ProgressItem
 import ru.terrakok.gitlabclient.ui.global.list.ProjectFileAdapterDelegate

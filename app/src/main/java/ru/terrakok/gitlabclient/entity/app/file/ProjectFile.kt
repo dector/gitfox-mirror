@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.entity.app
+package ru.terrakok.gitlabclient.entity.app.file
 
 import ru.terrakok.gitlabclient.entity.RepositoryTreeNodeType
 

@@ -10,7 +10,8 @@ import kotlinx.android.synthetic.main.layout_base_list.*
 import kotlinx.android.synthetic.main.layout_zero.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Branch
-import ru.terrakok.gitlabclient.entity.app.ProjectFile
+import ru.terrakok.gitlabclient.entity.app.file.ProjectFile
+import ru.terrakok.gitlabclient.entity.app.file.ProjectFileNavigation
 import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.files.ProjectFilesPresenter
@@ -19,6 +20,7 @@ import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.ZeroViewHolder
 import toothpick.Toothpick
+import toothpick.config.Module
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 02.11.18.
@@ -30,10 +32,20 @@ class ProjectFilesFragment : BaseFragment(), ProjectFilesView {
     lateinit var presenter: ProjectFilesPresenter
 
     @ProvidePresenter
-    fun providePresenter(): ProjectFilesPresenter =
-        Toothpick
-            .openScope(DI.PROJECT_FILES_FLOW_SCOPE)
-            .getInstance(ProjectFilesPresenter::class.java)
+    fun providePresenter(): ProjectFilesPresenter {
+        val scopeName = "ProjectFilesFragment_${hashCode()}"
+        val scope = Toothpick.openScopes(DI.PROJECT_FILES_FLOW_SCOPE, scopeName)
+        scope.installModules(object : Module() {
+            init {
+                bind(ProjectFileNavigation::class.java)
+                    .toInstance(projectFileNavigation)
+            }
+        })
+
+        return scope.getInstance(ProjectFilesPresenter::class.java).also {
+            Toothpick.closeScope(scopeName)
+        }
+    }
 
     private val adapter: ProjectFilesAdapter by lazy {
         ProjectFilesAdapter(
@@ -42,6 +54,21 @@ class ProjectFilesFragment : BaseFragment(), ProjectFilesView {
         )
     }
     private var zeroViewHolder: ZeroViewHolder? = null
+
+    private lateinit var projectFileNavigation: ProjectFileNavigation
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        if (isFirstLaunch(savedInstanceState) && savedInstanceState != null) {
+            projectFileNavigation = ProjectFileNavigation(
+                savedInstanceState.getString(KEY_DEFAULT_PATH)!!,
+                savedInstanceState.getString(KEY_BRANCH_NAME)!!,
+                savedInstanceState.getStringArrayList(KEY_PATHS)!!
+            )
+        } else {
+            projectFileNavigation = ProjectFileNavigation()
+        }
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -67,6 +94,13 @@ class ProjectFilesFragment : BaseFragment(), ProjectFilesView {
 
         swipeToRefresh.setOnRefreshListener { presenter.refreshFiles() }
         zeroViewHolder = ZeroViewHolder(zeroLayout, { presenter.refreshFiles() })
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(KEY_DEFAULT_PATH, projectFileNavigation.defaultPath)
+        outState.putString(KEY_BRANCH_NAME, projectFileNavigation.branchName)
+        outState.putStringArrayList(KEY_PATHS, projectFileNavigation.paths)
     }
 
     override fun onBackPressed() {
@@ -130,7 +164,17 @@ class ProjectFilesFragment : BaseFragment(), ProjectFilesView {
         }
     }
 
+    override fun showBranchSelection(show: Boolean) {
+        toolbar.menu.findItem(R.id.showBranchesAction).isVisible = show
+    }
+
     override fun showMessage(message: String) {
         showSnackMessage(message)
+    }
+
+    companion object {
+        private const val KEY_BRANCH_NAME = "key branch name"
+        private const val KEY_PATHS = "key paths"
+        private const val KEY_DEFAULT_PATH = "key default path"
     }
 }
