@@ -159,6 +159,7 @@
     <string name="merge_request_changes_deleted_count" formatted="false">-%d</string>
 
     <!--Issue Info screen-->
+    <string name="issue_title" formatted="false">#%d</string>
     <string name="issue_info_subtitle" formatted="false">%s by %s %s</string>
 
     <!--Issue Discussion screen-->
