@@ -42,10 +42,6 @@ class ProjectInfoFragment : BaseFragment(), ProjectInfoView {
     }
 
     override fun showProject(project: Project, mdReadme: CharSequence) {
-        (parentFragment as? ProjectInfoToolbar)?.apply {
-            setTitle(project.name)
-            setShareUrl(project.webUrl)
-        }
         titleTextView.text = project.nameWithNamespace
         descriptionTextView.text = project.description
         starsTextView.text = project.starCount.toString()
@@ -65,17 +61,12 @@ class ProjectInfoFragment : BaseFragment(), ProjectInfoView {
     }
 
     override fun showProgress(show: Boolean) {
-        showProgressDialog(show)
         projectInfoLayout.visible(!show)
+        fullscreenProgressView.visible(show)
     }
 
     override fun showMessage(message: String) {
         showSnackMessage(message)
-    }
-
-    interface ProjectInfoToolbar {
-        fun setTitle(title: String)
-        fun setShareUrl(url: String?)
     }
 
     companion object {

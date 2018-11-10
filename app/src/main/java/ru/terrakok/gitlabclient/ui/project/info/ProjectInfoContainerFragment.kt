@@ -11,7 +11,7 @@ import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import toothpick.Toothpick
 import javax.inject.Inject
 
-class ProjectInfoContainerFragment : BaseFragment(), ProjectInfoFragment.ProjectInfoToolbar {
+class ProjectInfoContainerFragment : BaseFragment() {
 
     @Inject
     lateinit var router: FlowRouter
@@ -33,14 +33,6 @@ class ProjectInfoContainerFragment : BaseFragment(), ProjectInfoFragment.Project
 
     override fun onBackPressed() {
         router.exit()
-    }
-
-    override fun setTitle(title: String) {
-        (parentFragment as? ProjectInfoFragment.ProjectInfoToolbar)?.setTitle(title)
-    }
-
-    override fun setShareUrl(url: String?) {
-        (parentFragment as? ProjectInfoFragment.ProjectInfoToolbar)?.setShareUrl(url)
     }
 
     private inner class ProjectInfoPagesAdapter : FragmentPagerAdapter(childFragmentManager) {

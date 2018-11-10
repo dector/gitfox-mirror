@@ -5,11 +5,9 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_issue_info.*
 import ru.noties.markwon.Markwon
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.entity.issue.Issue
 import ru.terrakok.gitlabclient.entity.issue.IssueState
-import ru.terrakok.gitlabclient.extension.color
-import ru.terrakok.gitlabclient.extension.humanTime
-import ru.terrakok.gitlabclient.extension.loadRoundedImage
-import ru.terrakok.gitlabclient.extension.showSnackMessage
+import ru.terrakok.gitlabclient.extension.*
 import ru.terrakok.gitlabclient.presentation.issue.info.IssueInfoPresenter
 import ru.terrakok.gitlabclient.presentation.issue.info.IssueInfoView
 import ru.terrakok.gitlabclient.toothpick.DI
@@ -31,12 +29,7 @@ class IssueInfoFragment : BaseFragment(), IssueInfoView {
         Toothpick.openScope(DI.ISSUE_FLOW_SCOPE)
             .getInstance(IssueInfoPresenter::class.java)
 
-    override fun showIssue(issueInfo: IssueInfoView.IssueInfo) {
-        val issue = issueInfo.issue
-
-        (parentFragment as? IssueInfoToolbar)
-            ?.setTitle("#${issue.iid}", issueInfo.project.name)
-
+    override fun showInfo(issue: Issue, mdDescription: CharSequence) {
         titleTextView.text = issue.title
         stateImageView.setImageResource(R.drawable.circle)
         when (issue.state) {
@@ -64,18 +57,15 @@ class IssueInfoFragment : BaseFragment(), IssueInfoView {
             }
         }
         avatarImageView.loadRoundedImage(issue.author.avatarUrl, context)
-        Markwon.setText(descriptionTextView, issueInfo.mdDescription)
+        Markwon.setText(descriptionTextView, mdDescription)
     }
 
-    override fun showProgress(show: Boolean) {
-        showProgressDialog(show)
+    override fun showEmptyProgress(show: Boolean) {
+        issueInfoContainer.visible(!show)
+        fullscreenProgressView.visible(show)
     }
 
     override fun showMessage(message: String) {
         showSnackMessage(message)
-    }
-
-    interface IssueInfoToolbar {
-        fun setTitle(title: String, subTitle: String)
     }
 }
