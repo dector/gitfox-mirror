@@ -1,5 +1,6 @@
 package ru.terrakok.gitlabclient.model.interactor.auth
 
+import com.nhaarman.mockito_kotlin.mock
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
 import org.junit.Assert
@@ -25,8 +26,15 @@ class AuthInteractorTest {
 
     @Before
     fun setUp() {
-        authRepo = mock(AuthRepository::class.java)
-        interactor = AuthInteractor("some server path", "some default server path", authRepo, HASH, OAUTH_PARAMS)
+        authRepo = mock()
+        interactor = AuthInteractor(
+            "some server path",
+            "some default server path",
+            authRepo,
+            HASH,
+            OAUTH_PARAMS,
+            mock()
+        )
     }
 
     @Test
@@ -73,24 +81,28 @@ class AuthInteractorTest {
         val testUrl = "http://something.com/test?code=" + code + "&state=happiness" + HASH
         val tokenData = TokenData("", "", "", 0L, "")
 
-        `when`(authRepo.requestOAuthToken(
+        `when`(
+            authRepo.requestOAuthToken(
                 ArgumentMatchers.anyString(),
                 ArgumentMatchers.anyString(),
                 ArgumentMatchers.anyString(),
-                ArgumentMatchers.anyString())).thenReturn(Single.just(tokenData))
+                ArgumentMatchers.anyString()
+            )
+        ).thenReturn(Single.just(tokenData))
 
         val testObserver: TestObserver<Void> = interactor.login(testUrl).test()
         testObserver.awaitTerminalEvent()
 
         verify(authRepo).requestOAuthToken(
-                OAUTH_PARAMS.appId,
-                OAUTH_PARAMS.appKey,
-                code,
-                OAUTH_PARAMS.redirectUrl)
+            OAUTH_PARAMS.appId,
+            OAUTH_PARAMS.appKey,
+            code,
+            OAUTH_PARAMS.redirectUrl
+        )
 
         testObserver
-                .assertNoValues()
-                .assertNoErrors()
+            .assertNoValues()
+            .assertNoErrors()
     }
 
     @Test
@@ -103,7 +115,7 @@ class AuthInteractorTest {
         verifyNoMoreInteractions(authRepo)
 
         testObserver
-                .assertNoValues()
-                .assertError(RuntimeException::class.java)
+            .assertNoValues()
+            .assertError(RuntimeException::class.java)
     }
 }
