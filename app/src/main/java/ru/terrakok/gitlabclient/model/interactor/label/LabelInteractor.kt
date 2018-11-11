@@ -10,7 +10,10 @@ class LabelInteractor @Inject constructor(
     private val labelRepository: LabelRepository
 ) {
 
-    fun getLabelList(projectId: Long) = labelRepository.getLabelList(projectId)
+    fun getLabelList(
+        projectId: Long,
+        page: Int
+    ) = labelRepository.getLabelList(projectId, page)
 
     fun subscribeToLabel(
         projectId: Long,

@@ -11,8 +11,11 @@ class LabelRepository @Inject constructor(
     private val api: GitlabApi,
     private val schedulers: SchedulersProvider
 ) {
-    fun getLabelList(projectId: Long) = api
-        .getProjectLabels(projectId)
+    fun getLabelList(
+        projectId: Long,
+        page: Int
+    ) = api
+        .getProjectLabels(projectId, page)
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
 

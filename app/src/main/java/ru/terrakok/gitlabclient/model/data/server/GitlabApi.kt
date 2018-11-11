@@ -307,7 +307,8 @@ interface GitlabApi {
 
     @GET("$API_PATH/projects/{project_id}/labels")
     fun getProjectLabels(
-        @Path("project_id") projectId: Long
+        @Path("project_id") projectId: Long,
+        @Query("page") page: Int
     ): Single<List<Label>>
 
     @FormUrlEncoded

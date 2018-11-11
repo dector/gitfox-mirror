@@ -44,6 +44,13 @@ class Paginator<T>(
         currentState.release()
     }
 
+    fun updateItem(updatedItem: T, predicate: (T) -> Boolean) {
+        currentData.indexOfFirst(predicate)
+            .takeIf { it > -1 }
+            ?.also { updatedIndex -> currentData[updatedIndex] = updatedItem }
+            ?.also { currentState.newData(currentData.toMutableList()) }
+    }
+
     private fun loadPage(page: Int) {
         disposable?.dispose()
         disposable = requestFactory.invoke(page)
