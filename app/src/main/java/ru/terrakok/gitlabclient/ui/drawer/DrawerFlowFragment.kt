@@ -92,6 +92,8 @@ class DrawerFlowFragment : BaseFragment(), MvpView {
                 .commitNow()
 
             navigator.setLaunchScreen(Screens.MainFlow)
+        } else {
+            updateNavDrawer()
         }
     }
 
