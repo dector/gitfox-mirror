@@ -47,8 +47,8 @@ class Paginator<T>(
     fun updateItem(updatedItem: T, predicate: (T) -> Boolean) {
         currentData.indexOfFirst(predicate)
             .takeIf { it > -1 }
-            ?.also { updatedIndex -> currentData[updatedIndex] = updatedItem }
-            ?.also { currentState.newData(currentData.toMutableList()) }
+            ?.let { updatedIndex -> currentData.toMutableList().also { it[updatedIndex] = updatedItem} }
+            ?.also { currentState.newData(it) }
     }
 
     private fun loadPage(page: Int) {
@@ -95,7 +95,7 @@ class Paginator<T>(
                 currentData.clear()
                 currentData.addAll(data)
                 currentPage = FIRST_PAGE
-                viewController.showData(true, currentData)
+                viewController.showData(true, currentData.toList())
                 viewController.showEmptyProgress(false)
             } else {
                 currentState = EMPTY_DATA()
@@ -185,6 +185,18 @@ class Paginator<T>(
             currentState = RELEASED()
             disposable?.dispose()
         }
+
+        override fun newData(data: List<T>) {
+            if (data.isNotEmpty()) {
+                currentState = DATA()
+                currentData.clear()
+                currentData.addAll(data)
+                viewController.showData(true, currentData.toList())
+            } else {
+                currentState = EMPTY_DATA()
+                viewController.showEmptyView(true)
+            }
+        }
     }
 
     private inner class REFRESH : State<T> {
@@ -204,7 +216,7 @@ class Paginator<T>(
                 currentData.addAll(data)
                 currentPage = FIRST_PAGE
                 viewController.showRefreshProgress(false)
-                viewController.showData(true, currentData)
+                viewController.showData(true, currentData.toList())
             } else {
                 currentState = EMPTY_DATA()
                 currentData.clear()
@@ -242,7 +254,7 @@ class Paginator<T>(
                 currentData.addAll(data)
                 currentPage++
                 viewController.showPageProgress(false)
-                viewController.showData(true, currentData)
+                viewController.showData(true, currentData.toList())
             } else {
                 currentState = ALL_DATA()
                 viewController.showPageProgress(false)
