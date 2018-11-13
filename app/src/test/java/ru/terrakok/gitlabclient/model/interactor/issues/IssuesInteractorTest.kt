@@ -4,6 +4,7 @@ import com.nhaarman.mockito_kotlin.*
 import io.reactivex.Single
 import org.junit.Before
 import org.junit.Test
+import org.mockito.Mockito.mock
 import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.entity.issue.IssueScope
 import ru.terrakok.gitlabclient.entity.issue.IssueState

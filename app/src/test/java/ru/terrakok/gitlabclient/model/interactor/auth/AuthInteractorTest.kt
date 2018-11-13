@@ -33,7 +33,7 @@ class AuthInteractorTest {
             authRepo,
             HASH,
             OAUTH_PARAMS,
-            mock()
+            projectCache = mock()
         )
     }
 
