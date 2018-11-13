@@ -5,6 +5,7 @@ import io.reactivex.observers.TestObserver
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.*
+import org.threeten.bp.LocalDateTime
 import ru.terrakok.gitlabclient.entity.User
 import ru.terrakok.gitlabclient.entity.app.user.MyUserInfo
 import ru.terrakok.gitlabclient.model.repository.profile.ProfileRepository
@@ -25,9 +26,38 @@ class MyProfileInteractorTest {
 
     @Before
     fun setUp() {
-        testUser = User(1L, "", null, "", null, null,
-                null, Date(), false, null, null, null, null, null,
-                null, null, Date(), Date(), 0L, 0L, Date(), null, false, false, false, false)
+
+        val testDate = LocalDateTime.of(2018, 1, 1, 0, 0)
+
+        testUser = User(
+            id = 1L,
+            username = "",
+            email = null,
+            name = "",
+            state = null,
+            avatarUrl = null,
+            webUrl = null,
+            createdAt = testDate,
+            isAdmin = false,
+            bio = null,
+            location = null,
+            skype = null,
+            linkedin = null,
+            twitter = null,
+            websiteUrl = null,
+            organization = null,
+            lastSignInAt = testDate,
+            confirmedAt = testDate,
+            colorSchemeId = 0L,
+            projectsLimit = 0L,
+            currentSignInAt = testDate,
+            identities = null,
+            canCreateGroup = false,
+            canCreateProject = false,
+            twoFactorEnabled = false,
+            external = false
+        )
+
         testServer = "Test server"
         profileRepo = mock(ProfileRepository::class.java)
         testError =  RuntimeException("test error")

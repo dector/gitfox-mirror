@@ -53,7 +53,7 @@ class TodoListInteractorTest {
         observer
                 .assertValueCount(1)
                 .assertNoErrors()
-        assert(observer.values().size == 3)
+                .assertValue { it.size == 3 }
     }
 
     @Test
@@ -117,7 +117,7 @@ class TodoListInteractorTest {
         observer
                 .assertValueCount(1)
                 .assertNoErrors()
-        assert(observer.values().size == 3)
+                .assertValue { it.size == 3 }
     }
 
     @Test
