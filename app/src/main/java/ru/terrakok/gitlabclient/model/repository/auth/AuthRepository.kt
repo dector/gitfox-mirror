@@ -16,8 +16,6 @@ class AuthRepository @Inject constructor(
     @DefaultServerPath private val defaultServerPath: String
 ) {
 
-    val isSignedIn get() = !authData.token.isNullOrEmpty()
-
     fun requestOAuthToken(
         appId: String,
         appKey: String,

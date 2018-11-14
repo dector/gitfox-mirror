@@ -45,8 +45,6 @@ class AuthInteractor(
 
     fun checkOAuthRedirect(url: String) = url.indexOf(oauthParams.redirectUrl) == 0
 
-    fun isSignedIn() = authRepository.isSignedIn
-
     fun login(oauthRedirect: String) =
         Completable.defer {
             if (oauthRedirect.contains(hash)) {
