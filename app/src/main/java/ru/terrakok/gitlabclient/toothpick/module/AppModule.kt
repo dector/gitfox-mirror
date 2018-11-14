@@ -11,6 +11,7 @@ import ru.terrakok.gitlabclient.entity.app.develop.AppInfo
 import ru.terrakok.gitlabclient.model.data.storage.RawAppData
 import ru.terrakok.gitlabclient.model.interactor.app.AppInfoInteractor
 import ru.terrakok.gitlabclient.model.repository.app.AppInfoRepository
+import ru.terrakok.gitlabclient.model.repository.session.SessionRepository
 import ru.terrakok.gitlabclient.model.repository.tools.Base64Tools
 import ru.terrakok.gitlabclient.model.system.AppSchedulers
 import ru.terrakok.gitlabclient.model.system.ResourceManager
@@ -47,6 +48,9 @@ class AppModule(context: Context) : Module() {
         val cicerone = Cicerone.create()
         bind(Router::class.java).toInstance(cicerone.router)
         bind(NavigatorHolder::class.java).toInstance(cicerone.navigatorHolder)
+
+        //Session
+        bind(SessionRepository::class.java).singletonInScope()
 
         //AppInfo
         bind(AppInfo::class.java).toInstance(

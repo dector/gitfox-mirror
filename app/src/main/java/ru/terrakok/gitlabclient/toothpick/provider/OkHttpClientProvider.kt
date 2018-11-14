@@ -5,10 +5,9 @@ import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import ru.terrakok.gitlabclient.BuildConfig
-import ru.terrakok.gitlabclient.model.data.auth.AuthHolder
+import ru.terrakok.gitlabclient.entity.app.session.AuthHolder
 import ru.terrakok.gitlabclient.model.data.server.interceptor.AuthHeaderInterceptor
 import ru.terrakok.gitlabclient.model.data.server.interceptor.CurlLoggingInterceptor
-import ru.terrakok.gitlabclient.model.data.server.interceptor.ErrorResponseInterceptor
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Provider
