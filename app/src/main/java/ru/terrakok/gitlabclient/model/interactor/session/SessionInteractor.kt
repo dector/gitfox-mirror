@@ -48,6 +48,15 @@ class SessionInteractor @Inject constructor(
             .doOnSuccess { switchAccount(it) }
             .ignoreElement()
 
+    fun logout(): Boolean {
+        val currentAccount = sessionRepository.getCurrentUserAccount()
+        if (currentAccount != null) {
+            return logout(currentAccount.userId)
+        } else {
+            return false
+        }
+    }
+
     fun logout(userId: Long): Boolean {
         val currentAccount = sessionRepository.getCurrentUserAccount()
         val newAccount = sessionRepository.logout(userId)

@@ -13,6 +13,7 @@
     <string name="you">you</string>
     <string name="yourself">yourself</string>
     <string name="loading">loading…</string>
+    <string name="auto_logout_message">Session error. Auto logout…</string>
 
     <!--Main screen-->
     <string name="gitlab_activity">Activity</string>
