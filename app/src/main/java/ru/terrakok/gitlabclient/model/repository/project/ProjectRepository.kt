@@ -5,7 +5,7 @@ import ru.terrakok.gitlabclient.entity.Branch
 import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.entity.Sort
 import ru.terrakok.gitlabclient.entity.Visibility
-import ru.terrakok.gitlabclient.entity.app.file.ProjectFile
+import ru.terrakok.gitlabclient.entity.app.ProjectFile
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
@@ -75,7 +75,15 @@ class ProjectRepository @Inject constructor(
     ): Single<List<ProjectFile>> =
         api
             .getRepositoryTree(projectId, path, branchName, recursive, page, pageSize)
-            .map { trees -> trees.map { tree -> ProjectFile(tree.id, tree.name, tree.type) } }
+            .map { trees ->
+                trees.map { tree ->
+                    ProjectFile(
+                        tree.id,
+                        tree.name,
+                        tree.type
+                    )
+                }
+            }
             .subscribeOn(schedulers.io())
             .observeOn(schedulers.ui())
 
