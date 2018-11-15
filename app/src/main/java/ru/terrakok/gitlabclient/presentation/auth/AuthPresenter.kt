@@ -2,7 +2,7 @@ package ru.terrakok.gitlabclient.presentation.auth
 
 import com.arellomobile.mvp.InjectViewState
 import ru.terrakok.gitlabclient.Screens
-import ru.terrakok.gitlabclient.model.interactor.auth.AuthInteractor
+import ru.terrakok.gitlabclient.model.interactor.session.SessionInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
@@ -14,7 +14,7 @@ import javax.inject.Inject
 @InjectViewState
 class AuthPresenter @Inject constructor(
     private val router: FlowRouter,
-    private val authInteractor: AuthInteractor,
+    private val sessionInteractor: SessionInteractor,
     private val errorHandler: ErrorHandler
 ) : BasePresenter<AuthView>() {
 
@@ -25,11 +25,11 @@ class AuthPresenter @Inject constructor(
     }
 
     private fun startAuthorization() {
-        viewState.loadUrl(authInteractor.oauthUrl)
+        viewState.loadUrl(sessionInteractor.oauthUrl)
     }
 
     private fun requestToken(url: String) {
-        authInteractor.login(url)
+        sessionInteractor.login(url)
             .doOnSubscribe { viewState.showProgress(true) }
             .doAfterTerminate { viewState.showProgress(false) }
             .subscribe(
@@ -39,7 +39,7 @@ class AuthPresenter @Inject constructor(
     }
 
     fun onRedirect(url: String): Boolean {
-        if (authInteractor.checkOAuthRedirect(url)) {
+        if (sessionInteractor.checkOAuthRedirect(url)) {
             requestToken(url)
             return true
         } else {
@@ -53,7 +53,7 @@ class AuthPresenter @Inject constructor(
     }
 
     fun loginOnCustomServer(url: String, token: String) {
-        authInteractor.login(url, token)
+        sessionInteractor.login(url, token)
             .subscribe(
                 { router.newRootFlow(Screens.DrawerFlow) },
                 { errorHandler.proceed(it, { viewState.showMessage(it) }) }

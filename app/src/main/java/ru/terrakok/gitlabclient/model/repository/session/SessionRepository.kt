@@ -117,6 +117,7 @@ class SessionRepository @Inject constructor(
             }
             .subscribeOn(schedulers.io())
             .observeOn(schedulers.ui())
+            .doOnSuccess { saveNewAccount(it) }
 
     fun login(
         token: String,
@@ -153,4 +154,12 @@ class SessionRepository @Inject constructor(
             }
             .subscribeOn(schedulers.io())
             .observeOn(schedulers.ui())
+            .doOnSuccess { saveNewAccount(it) }
+
+    private fun saveNewAccount(userAccount: UserAccount) {
+        val newAccounts = prefs.accounts.toMutableList()
+        newAccounts.removeAll { it.userId == userAccount.userId }
+        newAccounts.add(0, userAccount)
+        prefs.accounts = newAccounts
+    }
 }
