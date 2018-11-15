@@ -6,7 +6,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_nav_drawer.*
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.app.user.MyUserInfo
+import ru.terrakok.gitlabclient.entity.app.session.UserAccount
 import ru.terrakok.gitlabclient.extension.loadRoundedImage
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerPresenter
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView
@@ -22,7 +22,6 @@ import toothpick.Toothpick
  */
 class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView, MessageDialogFragment.OnClickListener {
     override val layoutRes = R.layout.fragment_nav_drawer
-    private var userId: Long? = null
 
     private val itemClickListener = { view: View ->
         presenter.onMenuItemClick(view.tag as MenuItem)
@@ -41,7 +40,7 @@ class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView, MessageDi
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        avatarImageView.setOnClickListener { userId?.let { presenter.onUserClick(it) } }
+        avatarImageView.setOnClickListener { presenter.onUserClick() }
 
         logoutIV.setOnClickListener {
             MessageDialogFragment.create(
@@ -61,20 +60,10 @@ class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView, MessageDi
         aboutMI.setOnClickListener(itemClickListener)
     }
 
-    override fun showUserInfo(user: MyUserInfo) {
-        if (user.user == null) {
-            userId = null
-            nickTV.text = ""
-            serverNameTV.text = ""
-            avatarImageView.visibility = View.GONE
-        } else {
-            with(user.user) {
-                userId = this.id
-                nickTV.text = this.name
-                serverNameTV.text = user.serverName
-                avatarImageView.loadRoundedImage(this.avatarUrl, context)
-            }
-        }
+    override fun showUserAccount(userAccount: UserAccount) {
+        nickTV.text = userAccount.userName
+        serverNameTV.text = userAccount.serverPath
+        avatarImageView.loadRoundedImage(userAccount.avatarUrl, context)
     }
 
     override fun selectMenuItem(item: MenuItem) {

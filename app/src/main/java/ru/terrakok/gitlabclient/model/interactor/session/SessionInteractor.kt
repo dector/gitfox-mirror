@@ -24,6 +24,15 @@ class SessionInteractor @Inject constructor(
     val oauthUrl = "${serverPath}oauth/authorize?client_id=${oauthParams.appId}" +
         "&redirect_uri=${oauthParams.redirectUrl}&response_type=code&state=$hash"
 
+    fun getUserAccounts() = sessionRepository.getUserAccounts()
+    fun getCurrentUserAccount() = sessionRepository.getCurrentUserAccount()
+
+    fun setCurrentUserAccount(userId: Long): UserAccount? {
+        val newAccount = sessionRepository.setCurrentUserAccount(userId)
+        switchAccount(newAccount)
+        return newAccount
+    }
+
     fun checkOAuthRedirect(url: String) = url.indexOf(oauthParams.redirectUrl) == 0
 
     fun login(oauthRedirect: String): Completable =
@@ -48,6 +57,7 @@ class SessionInteractor @Inject constructor(
             .doOnSuccess { switchAccount(it) }
             .ignoreElement()
 
+    //return hasOtherAccount
     fun logout(): Boolean {
         val currentAccount = sessionRepository.getCurrentUserAccount()
         if (currentAccount != null) {
@@ -57,16 +67,12 @@ class SessionInteractor @Inject constructor(
         }
     }
 
+    //return hasOtherAccount
     fun logout(userId: Long): Boolean {
-        val currentAccount = sessionRepository.getCurrentUserAccount()
+        projectCache.clear()
         val newAccount = sessionRepository.logout(userId)
-        if (currentAccount != newAccount) {
-            projectCache.clear()
-            switchAccount(newAccount)
-            return true
-        } else {
-            return false
-        }
+        switchAccount(newAccount)
+        return newAccount != null
     }
 
     private fun getQueryParameterFromUri(url: String, queryName: String): String {

@@ -70,7 +70,7 @@ class SessionRepository @Inject constructor(
                     .add("grant_type", "authorization_code")
                     .build()
                 val request = Request.Builder()
-                    .url("$defaultServerPath/oauth/token")
+                    .url("${defaultServerPath}oauth/token")
                     .post(body)
                     .build()
                 try {
@@ -81,7 +81,7 @@ class SessionRepository @Inject constructor(
                     } else {
                         val resultCode = response.code()
                         if (resultCode in 400..500) throw ServerError(resultCode)
-                        else throw UnknownError("Get token data error: $resultCode")
+                        else throw RuntimeException("Get token data error: $resultCode")
                     }
                 } catch (e: Exception) {
                     return@defer Single.error(e)
@@ -90,7 +90,7 @@ class SessionRepository @Inject constructor(
             .flatMap<UserAccount> { tokenData ->
                 val request = Request.Builder()
                     .addHeader("Authorization", "Bearer ${tokenData.token}")
-                    .url("$defaultServerPath/user")
+                    .url("${defaultServerPath}api/v4/user")
                     .build()
                 try {
                     val response = okHttpClient.newCall(request).execute()
@@ -109,7 +109,7 @@ class SessionRepository @Inject constructor(
                     } else {
                         val resultCode = response.code()
                         if (resultCode in 400..500) throw ServerError(resultCode)
-                        else throw UnknownError("Get user data error: $resultCode")
+                        else throw RuntimeException("Get user data error: $resultCode")
                     }
                 } catch (e: Exception) {
                     return@flatMap Single.error(e)
@@ -127,7 +127,7 @@ class SessionRepository @Inject constructor(
             .defer<UserAccount> {
                 val request = Request.Builder()
                     .addHeader("PRIVATE-TOKEN", token)
-                    .url("$serverPath/user")
+                    .url("${serverPath}api/v4/user")
                     .build()
                 try {
                     val response = okHttpClient.newCall(request).execute()
@@ -146,7 +146,7 @@ class SessionRepository @Inject constructor(
                     } else {
                         val code = response.code()
                         if (code in 400..500) throw ServerError(code)
-                        else throw UnknownError("Custom server login error: $code")
+                        else throw RuntimeException("Custom server login error: $code")
                     }
                 } catch (e: Exception) {
                     return@defer Single.error(e)
@@ -159,7 +159,8 @@ class SessionRepository @Inject constructor(
     private fun saveNewAccount(userAccount: UserAccount) {
         val newAccounts = prefs.accounts.toMutableList()
         newAccounts.removeAll { it.userId == userAccount.userId }
-        newAccounts.add(0, userAccount)
+        newAccounts.add(userAccount)
+        prefs.selectedAccount = userAccount.userId
         prefs.accounts = newAccounts
     }
 }

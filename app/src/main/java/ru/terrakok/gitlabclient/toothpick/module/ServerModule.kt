@@ -11,7 +11,6 @@ import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.model.interactor.event.EventInteractor
 import ru.terrakok.gitlabclient.model.interactor.issue.IssueInteractor
 import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestInteractor
-import ru.terrakok.gitlabclient.model.interactor.profile.MyProfileInteractor
 import ru.terrakok.gitlabclient.model.interactor.project.ProjectInteractor
 import ru.terrakok.gitlabclient.model.interactor.todo.TodoListInteractor
 import ru.terrakok.gitlabclient.model.interactor.user.UserInteractor
@@ -71,7 +70,6 @@ class ServerModule(userAccount: UserAccount?) : Module() {
 
         //Profile
         bind(ProfileRepository::class.java)
-        bind(MyProfileInteractor::class.java)
 
         //Project
         bind(ProjectRepository::class.java)

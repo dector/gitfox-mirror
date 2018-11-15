@@ -2,13 +2,12 @@ package ru.terrakok.gitlabclient.presentation.drawer
 
 import com.arellomobile.mvp.InjectViewState
 import ru.terrakok.gitlabclient.Screens
-import ru.terrakok.gitlabclient.model.interactor.auth.AuthInteractor
-import ru.terrakok.gitlabclient.model.interactor.profile.MyProfileInteractor
+import ru.terrakok.gitlabclient.entity.app.session.UserAccount
+import ru.terrakok.gitlabclient.model.interactor.session.SessionInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem.*
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
-import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
 import javax.inject.Inject
 
@@ -19,22 +18,18 @@ import javax.inject.Inject
 class NavigationDrawerPresenter @Inject constructor(
     private val router: FlowRouter,
     private val menuController: GlobalMenuController,
-    private val authInteractor: AuthInteractor,
-    private val myProfileInteractor: MyProfileInteractor,
-    private val errorHandler: ErrorHandler
+    private val sessionInteractor: SessionInteractor
 ) : BasePresenter<NavigationDrawerView>() {
 
     private var currentSelectedItem: MenuItem? = null
+    private var userAccount: UserAccount? = null
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
-        myProfileInteractor.getMyProfile()
-            .subscribe(
-                { viewState.showUserInfo(it) },
-                { errorHandler.proceed(it) }
-            )
-            .connect()
+        sessionInteractor.getCurrentUserAccount()?.let { userAccount ->
+            viewState.showUserAccount(userAccount)
+        }
     }
 
     fun onScreenChanged(item: MenuItem) {
@@ -56,12 +51,20 @@ class NavigationDrawerPresenter @Inject constructor(
 
     fun onLogoutClick() {
         menuController.close()
-        authInteractor.logout()
-        router.newRootFlow(Screens.AuthFlow)
+        userAccount?.let {
+            val hasOtherAccount = sessionInteractor.logout(it.userId)
+            if (hasOtherAccount) {
+                router.newRootFlow(Screens.DrawerFlow)
+            } else {
+                router.newRootFlow(Screens.AuthFlow)
+            }
+        }
     }
 
-    fun onUserClick(id: Long) {
+    fun onUserClick() {
         menuController.close()
-        router.startFlow(Screens.UserFlow(id))
+        userAccount?.let {
+            router.startFlow(Screens.UserFlow(it.userId))
+        }
     }
 }
