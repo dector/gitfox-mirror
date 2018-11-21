@@ -5,7 +5,7 @@ import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import org.threeten.bp.LocalDateTime
 import ru.terrakok.gitlabclient.entity.*
-import ru.terrakok.gitlabclient.entity.app.CommitWithAvatarUrl
+import ru.terrakok.gitlabclient.entity.app.CommitWithAuthor
 import ru.terrakok.gitlabclient.entity.app.target.*
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
@@ -217,9 +217,9 @@ class MergeRequestRepository @Inject constructor(
         .zip(
             getAllMergeRequestParticipants(projectId, mergeRequestId),
             api.getMergeRequestCommits(projectId, mergeRequestId, page, pageSize),
-            BiFunction<List<Author>, List<Commit>, List<CommitWithAvatarUrl>> { participants, commits ->
+            BiFunction<List<Author>, List<Commit>, List<CommitWithAuthor>> { participants, commits ->
                 commits.map { commit ->
-                    CommitWithAvatarUrl(
+                    CommitWithAuthor(
                         commit,
                         participants.find { it.name == commit.authorName || it.username == commit.authorName }?.avatarUrl
                     )

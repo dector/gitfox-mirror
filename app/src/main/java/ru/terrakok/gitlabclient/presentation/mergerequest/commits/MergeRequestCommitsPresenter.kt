@@ -1,7 +1,7 @@
 package ru.terrakok.gitlabclient.presentation.mergerequest.commits
 
 import com.arellomobile.mvp.InjectViewState
-import ru.terrakok.gitlabclient.entity.app.CommitWithAvatarUrl
+import ru.terrakok.gitlabclient.entity.app.CommitWithAuthor
 import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
@@ -35,7 +35,7 @@ class MergeRequestCommitsPresenter @Inject constructor(
 
     private val paginator = Paginator(
         { page -> mrInteractor.getMergeRequestCommits(projectId, mrId, page) },
-        object : Paginator.ViewController<CommitWithAvatarUrl> {
+        object : Paginator.ViewController<CommitWithAuthor> {
             override fun showEmptyProgress(show: Boolean) {
                 viewState.showEmptyProgress(show)
             }
@@ -56,7 +56,7 @@ class MergeRequestCommitsPresenter @Inject constructor(
                 viewState.showEmptyView(show)
             }
 
-            override fun showData(show: Boolean, data: List<CommitWithAvatarUrl>) {
+            override fun showData(show: Boolean, data: List<CommitWithAuthor>) {
                 viewState.showCommits(show, data)
             }
 
