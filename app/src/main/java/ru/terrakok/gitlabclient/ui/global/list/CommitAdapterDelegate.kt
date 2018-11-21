@@ -35,7 +35,7 @@ class CommitAdapterDelegate : AdapterDelegate<MutableList<Any>>() {
         fun bind(commitWithAuthor: CommitWithAuthor) {
             this.commitWithAuthor = commitWithAuthor
             with(itemView) {
-                avatarImageView.loadRoundedImage(commitWithAuthor.authorAvatarUrl)
+                avatarImageView.loadRoundedImage(commitWithAuthor.author?.avatarUrl)
                 titleTextView.text = commitWithAuthor.commit.title
                 descriptionTextView.text = String.format(
                     context.getString(R.string.merge_request_commits_description),

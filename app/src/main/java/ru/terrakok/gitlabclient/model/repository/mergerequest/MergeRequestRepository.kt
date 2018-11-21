@@ -221,7 +221,7 @@ class MergeRequestRepository @Inject constructor(
                 commits.map { commit ->
                     CommitWithAuthor(
                         commit,
-                        participants.find { it.name == commit.authorName || it.username == commit.authorName }?.avatarUrl
+                        participants.find { it.name == commit.authorName || it.username == commit.authorName }
                     )
                 }
             }
