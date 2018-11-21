@@ -9,12 +9,13 @@ import ru.terrakok.gitlabclient.entity.app.CommitWithAuthor
  * Created by Eugene Shapovalov (@CraggyHaggy) on 20.10.18.
  */
 class TargetCommitsAdapter(
+    userClickListener: (Long) -> Unit,
     private val nextPageListener: () -> Unit
 ) : ListDelegationAdapter<MutableList<Any>>() {
 
     init {
         items = mutableListOf()
-        delegatesManager.addDelegate(CommitAdapterDelegate())
+        delegatesManager.addDelegate(CommitAdapterDelegate(userClickListener))
         delegatesManager.addDelegate(ProgressAdapterDelegate())
     }
 

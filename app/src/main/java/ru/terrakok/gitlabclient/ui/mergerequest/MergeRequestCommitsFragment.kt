@@ -26,7 +26,12 @@ class MergeRequestCommitsFragment : BaseFragment(), MergeRequestCommitsView {
 
     override val layoutRes = R.layout.fragment_mr_commits
 
-    private val adapter by lazy { TargetCommitsAdapter({ presenter.loadNextCommitsPage() }) }
+    private val adapter by lazy {
+        TargetCommitsAdapter(
+            { presenter.onUserClicked(it) },
+            { presenter.loadNextCommitsPage() }
+        )
+    }
     private var zeroViewHolder: ZeroViewHolder? = null
 
     @InjectPresenter

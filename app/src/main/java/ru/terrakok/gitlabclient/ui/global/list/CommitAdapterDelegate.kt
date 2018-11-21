@@ -14,7 +14,9 @@ import ru.terrakok.gitlabclient.extension.loadRoundedImage
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 20.10.18.
  */
-class CommitAdapterDelegate : AdapterDelegate<MutableList<Any>>() {
+class CommitAdapterDelegate(
+    private val userClickListener: (Long) -> Unit
+) : AdapterDelegate<MutableList<Any>>() {
 
     override fun isForViewType(items: MutableList<Any>, position: Int) =
         items[position] is CommitWithAuthor
@@ -31,6 +33,10 @@ class CommitAdapterDelegate : AdapterDelegate<MutableList<Any>>() {
 
     private inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private lateinit var commitWithAuthor: CommitWithAuthor
+
+        init {
+            view.avatarImageView.setOnClickListener { commitWithAuthor.author?.id?.let(userClickListener) }
+        }
 
         fun bind(commitWithAuthor: CommitWithAuthor) {
             this.commitWithAuthor = commitWithAuthor
