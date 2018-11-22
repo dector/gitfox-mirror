@@ -268,4 +268,10 @@ interface GitlabApi {
         @Path("project_id") projectId: Long,
         @Path("sha") commitId: String
     ): Single<CommitDiff>
+
+    @GET("$API_PATH//projects/:id/repository/commits/:sha")
+    fun getCommit(
+        @Path("project_id") projectId: Long,
+        @Path("sha") commitId: String
+    ): Single<Commit>
 }
