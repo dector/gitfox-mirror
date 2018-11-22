@@ -62,7 +62,6 @@ class ProjectInteractorTest {
 
     @Test
     fun get_single_project() {
-
         val repo = mock(ProjectRepository::class.java)
         `when`(repo.getProject(anyLong())).thenReturn(Single.just(testProject))
 
@@ -73,9 +72,9 @@ class ProjectInteractorTest {
 
         verify(repo, times(1)).getProject(testProject.id)
         testObserver
-                .assertValueCount(1)
-                .assertNoErrors()
-                .assertValue(testProject)
+            .assertValueCount(1)
+            .assertNoErrors()
+            .assertValue(testProject)
     }
 
     @Test
@@ -88,13 +87,13 @@ class ProjectInteractorTest {
 
         val interactor = ProjectInteractor(repo, schedulers, base64Tools)
 
-        val testObserver: TestObserver<Project> = interactor.getProject(projectId).test()
+        val testObserver: TestObserver<Project> = interactor.getProject(testProject.id).test()
         testObserver.awaitTerminalEvent()
 
-        verify(repo, times(1)).getProject(projectId)
+        verify(repo, times(1)).getProject(testProject.id)
         testObserver
-                .assertValueCount(0)
-                .assertError(error)
+            .assertValueCount(0)
+            .assertError(error)
     }
 
     @Test
@@ -116,11 +115,10 @@ class ProjectInteractorTest {
 
         verify(repo, times(1)).getFile(testProject.id, "README.md", testProject.defaultBranch)
         verify(base64, times(1)).decode(testFileContent)
-
         testObserver
-                .assertValueCount(1)
-                .assertNoErrors()
-                .assertValue(raw)
+            .assertValueCount(1)
+            .assertNoErrors()
+            .assertValue(raw)
     }
 
     @Test
@@ -142,8 +140,8 @@ class ProjectInteractorTest {
         verifyZeroInteractions(base64)
         verifyZeroInteractions(mdConverter)
         testObserver
-                .assertNoValues()
-                .assertError(error)
+            .assertNoValues()
+            .assertError(error)
     }
 
 }

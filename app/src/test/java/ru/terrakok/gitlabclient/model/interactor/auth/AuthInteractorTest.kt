@@ -1,6 +1,5 @@
 package ru.terrakok.gitlabclient.model.interactor.auth
 
-import com.nhaarman.mockito_kotlin.mock
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
 import org.junit.Assert
