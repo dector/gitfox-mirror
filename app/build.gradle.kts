@@ -140,6 +140,8 @@ dependencies {
     //Markdown to HTML converter
     implementation("ru.noties:markwon:$markwonVersion")
     implementation("ru.noties:markwon-image-loader:$markwonVersion")
+    implementation("ru.noties:markwon-syntax:$markwonVersion")
+    kapt("ru.noties:prism4j-bundler:1.1.0")
     //Bottom navigation bar
     implementation("com.aurelhubert:ahbottomnavigation:2.1.0")
     //Lottie
