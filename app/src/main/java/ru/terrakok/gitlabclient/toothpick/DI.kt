@@ -15,4 +15,5 @@ object DI {
     const val PROJECT_FLOW_SCOPE = "project flow scope: "
     const val MERGE_REQUEST_FLOW_SCOPE = "merge request flow scope: "
     const val ISSUE_FLOW_SCOPE = "issue flow scope: "
+    const val PROJECT_FILE_FLOW_SCOPE = "project file flow scope: "
 }

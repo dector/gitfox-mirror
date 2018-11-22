@@ -41,3 +41,12 @@ annotation class CacheLifetime
 
 @Qualifier
 annotation class WithErrorHandler
+
+@Qualifier
+annotation class FileName
+
+@Qualifier
+annotation class FilePath
+
+@Qualifier
+annotation class BranchName
