@@ -5,6 +5,7 @@ import io.reactivex.Single
 import org.threeten.bp.LocalDateTime
 import retrofit2.http.*
 import ru.terrakok.gitlabclient.entity.*
+import ru.terrakok.gitlabclient.entity.commit.Commit
 import ru.terrakok.gitlabclient.entity.event.Event
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.event.EventTarget

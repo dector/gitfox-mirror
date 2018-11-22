@@ -7,6 +7,7 @@ import org.threeten.bp.LocalDateTime
 import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.entity.app.CommitWithAuthor
 import ru.terrakok.gitlabclient.entity.app.target.*
+import ru.terrakok.gitlabclient.entity.commit.Commit
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestScope

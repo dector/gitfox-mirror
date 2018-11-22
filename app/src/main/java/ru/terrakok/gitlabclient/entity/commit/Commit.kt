@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.entity
+package ru.terrakok.gitlabclient.entity.commit
 
 import com.google.gson.annotations.SerializedName
 import org.threeten.bp.LocalDateTime
