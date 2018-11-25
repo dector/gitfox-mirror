@@ -3,7 +3,6 @@ package ru.terrakok.gitlabclient.presentation.project.labels
 import com.nhaarman.mockito_kotlin.*
 import io.reactivex.Single
 import org.junit.Assert.assertEquals
-import org.junit.Before
 import org.junit.Test
 import ru.terrakok.gitlabclient.entity.Label
 import ru.terrakok.gitlabclient.model.interactor.label.LabelInteractor
@@ -49,11 +48,9 @@ class ProjectLabelsPresenterTest {
 
         presenter.attachView(view)
 
-        val uiItems = dataList.map { LabelUi(it, isLoading = false) }
-
         inOrder(view) {
             verify(view).showEmptyProgress(true)
-            verify(view).showItems(true, uiItems)
+            verify(view).showLabels(true, dataList)
             verify(view).showEmptyProgress(false)
         }
         verifyNoMoreInteractions(view)
@@ -69,18 +66,19 @@ class ProjectLabelsPresenterTest {
             .thenReturn(Single.just(secondPageLabels))
 
         presenter.attachView(view)
-        presenter.loadNextLabelsPage()
-
-        val firstPageItems = firstPageLabels.map { LabelUi(it, isLoading = false) }
-        val secondPageItems = secondPageLabels.map { LabelUi(it, isLoading = false) }
 
         inOrder(view) {
             verify(view).showEmptyProgress(true)
-            verify(view).showItems(true, firstPageItems)
+            verify(view).showLabels(true, firstPageLabels)
             verify(view).showEmptyProgress(false)
+        }
+
+        presenter.loadNextLabelsPage()
+
+        inOrder(view) {
             verify(view).showPageProgress(true)
             verify(view).showPageProgress(false)
-            verify(view).showItems(true, firstPageItems + secondPageItems)
+            verify(view).showLabels(true, firstPageLabels + secondPageLabels)
         }
 
         verifyNoMoreInteractions(view)
@@ -121,103 +119,6 @@ class ProjectLabelsPresenterTest {
             verify(view).showPageProgress(false)
             verify(errorHandler).proceed(eq(error), any())
         }
-    }
-
-    @Test
-    fun `successfully unsubscribe from label`() {
-        val firstPageLabels = listOf(label(1, subscribed = true), label(2), label(3))
-        val labelToToggle = firstPageLabels[0]
-
-        whenever(interactor.getLabelList(eq(projectId), any()))
-            .thenReturn(Single.just(firstPageLabels))
-        whenever(interactor.unsubscribeFromLabel(eq(projectId), eq(labelToToggle.id)))
-            .thenReturn(Single.just(label(1, subscribed = false)))
-
-        presenter.attachView(view)
-        presenter.toggleSubscription(LabelUi(labelToToggle, isLoading = false))
-
-        val labelsBeforeToggling = firstPageLabels.map { LabelUi(it, isLoading = false) }
-        val labelsWithLoading = listOf(
-            LabelUi(label(1, subscribed = true), isLoading = true),
-            LabelUi(label(2), isLoading = false),
-            LabelUi(label(3), isLoading = false)
-        )
-        val labelsAfterToggling = listOf(
-            LabelUi(label(1, subscribed = false), isLoading = false),
-            LabelUi(label(2), isLoading = false),
-            LabelUi(label(3), isLoading = false)
-        )
-
-        argumentCaptor<List<LabelUi>>().apply {
-            verify(view, times(3)).showItems(eq(true), capture())
-            assertEquals(labelsBeforeToggling, firstValue)
-            assertEquals(labelsWithLoading, secondValue)
-            assertEquals(labelsAfterToggling, thirdValue)
-        }
-    }
-
-    @Test
-    fun `successfully subscribe to label`() {
-        val firstPageLabels = listOf(label(1, subscribed = false), label(2), label(3))
-        val labelToToggle = firstPageLabels[0]
-
-        whenever(interactor.getLabelList(eq(projectId), any()))
-            .thenReturn(Single.just(firstPageLabels))
-        whenever(interactor.subscribeToLabel(eq(projectId), eq(labelToToggle.id)))
-            .thenReturn(Single.just(label(1, subscribed = true)))
-
-        presenter.attachView(view)
-        presenter.toggleSubscription(LabelUi(labelToToggle, isLoading = false))
-
-        val labelsBeforeToggling = firstPageLabels.map { LabelUi(it, isLoading = false) }
-        val labelsWithLoading = listOf(
-            LabelUi(label(1, subscribed = false), isLoading = true),
-            LabelUi(label(2), isLoading = false),
-            LabelUi(label(3), isLoading = false)
-        )
-        val labelsAfterToggling = listOf(
-            LabelUi(label(1, subscribed = true), isLoading = false),
-            LabelUi(label(2), isLoading = false),
-            LabelUi(label(3), isLoading = false)
-        )
-
-        argumentCaptor<List<LabelUi>>().apply {
-            verify(view, times(3)).showItems(eq(true), capture())
-            assertEquals(labelsBeforeToggling, firstValue)
-            assertEquals(labelsWithLoading, secondValue)
-            assertEquals(labelsAfterToggling, thirdValue)
-        }
-    }
-
-
-    @Test
-    fun `unsubscribe from label with fail`() {
-        val firstPageLabels = listOf(label(1, subscribed = true), label(2), label(3))
-        val labelToToggle = firstPageLabels[0]
-        val error = RuntimeException("error")
-
-        whenever(interactor.getLabelList(eq(projectId), any()))
-            .thenReturn(Single.just(firstPageLabels))
-        whenever(interactor.unsubscribeFromLabel(eq(projectId), eq(labelToToggle.id)))
-            .thenReturn(Single.error(error))
-
-        presenter.attachView(view)
-        presenter.toggleSubscription(LabelUi(labelToToggle, isLoading = false))
-
-        val labelsBeforeToggling = firstPageLabels.map { LabelUi(it, isLoading = false) }
-        val labelsWithLoading = listOf(
-            LabelUi(label(1, subscribed = true), isLoading = true),
-            LabelUi(label(2), isLoading = false),
-            LabelUi(label(3), isLoading = false)
-        )
-
-        argumentCaptor<List<LabelUi>>().apply {
-            verify(view, times(3)).showItems(eq(true), capture())
-            assertEquals(labelsBeforeToggling, firstValue)
-            assertEquals(labelsWithLoading, secondValue)
-            assertEquals(labelsBeforeToggling, thirdValue)
-        }
-        verify(errorHandler).proceed(eq(error), any())
     }
 
     private fun label(id: Long, subscribed: Boolean = false): Label {

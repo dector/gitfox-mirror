@@ -179,7 +179,7 @@ class IssueRepository @Inject constructor(
     private fun getAllIssueNotePages(projectId: Long, issueId: Long, sort: Sort?, orderBy: OrderBy?) =
         Observable.range(1, Int.MAX_VALUE)
             .concatMap { page ->
-                api.getIssueNotes(projectId, issueId, sort, orderBy, page, MAX_PAGE_SIZE)
+                api.getIssueNotes(projectId, issueId, sort, orderBy, page, GitlabApi.MAX_PAGE_SIZE)
                     .toObservable()
             }
             .takeWhile { notes -> notes.isNotEmpty() }
@@ -203,9 +203,4 @@ class IssueRepository @Inject constructor(
         .getMilestoneIssues(projectId, milestoneId)
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
-
-    companion object {
-        // See GitLab documentation: https://docs.gitlab.com/ee/api/#pagination.
-        private const val MAX_PAGE_SIZE = 100
-    }
 }

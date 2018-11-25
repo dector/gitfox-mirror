@@ -28,6 +28,8 @@ import ru.terrakok.gitlabclient.entity.todo.TodoState
 interface GitlabApi {
     companion object {
         const val API_PATH = "api/v4"
+        // See GitLab documentation: https://docs.gitlab.com/ee/api/#pagination.
+        const val MAX_PAGE_SIZE = 100
     }
 
     @GET("$API_PATH/projects")
@@ -308,7 +310,8 @@ interface GitlabApi {
     @GET("$API_PATH/projects/{project_id}/labels")
     fun getProjectLabels(
         @Path("project_id") projectId: Long,
-        @Query("page") page: Int
+        @Query("page") page: Int,
+        @Query("per_page") pageSize: Int
     ): Single<List<Label>>
 
     @FormUrlEncoded

@@ -1,7 +1,7 @@
 package ru.terrakok.gitlabclient.presentation.project.labels
 
 import com.arellomobile.mvp.InjectViewState
-import io.reactivex.disposables.CompositeDisposable
+import ru.terrakok.gitlabclient.entity.Label
 import ru.terrakok.gitlabclient.model.interactor.label.LabelInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
@@ -21,7 +21,6 @@ class ProjectLabelsPresenter @Inject constructor(
 ) : BasePresenter<ProjectLabelsView>() {
 
     private val projectId = projectIdWrapper.value
-    private val toggleSubscriptionsDisposable = CompositeDisposable()
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -31,11 +30,8 @@ class ProjectLabelsPresenter @Inject constructor(
     private val paginator = Paginator(
         { page ->
             labelInteractor.getLabelList(projectId, page)
-                .map {
-                    it.map { label -> LabelUi(origin = label, isLoading = false) }
-                }
         },
-        object : Paginator.ViewController<LabelUi> {
+        object : Paginator.ViewController<Label> {
             override fun showEmptyProgress(show: Boolean) {
                 viewState.showEmptyProgress(show)
             }
@@ -56,8 +52,8 @@ class ProjectLabelsPresenter @Inject constructor(
                 viewState.showEmptyView(show)
             }
 
-            override fun showData(show: Boolean, data: List<LabelUi>) {
-                viewState.showItems(show, data)
+            override fun showData(show: Boolean, data: List<Label>) {
+                viewState.showLabels(show, data)
             }
 
             override fun showRefreshProgress(show: Boolean) {
@@ -71,45 +67,13 @@ class ProjectLabelsPresenter @Inject constructor(
     )
 
     fun refreshProjectLabels() {
-        toggleSubscriptionsDisposable.clear()
         paginator.refresh()
     }
 
     fun loadNextLabelsPage() = paginator.loadNewPage()
 
-    fun toggleSubscription(label: LabelUi) {
-        val labelId = label.origin.id
-        val toggleAction = if (label.origin.subscribed) {
-            labelInteractor.unsubscribeFromLabel(projectId, labelId)
-        } else {
-            labelInteractor.subscribeToLabel(projectId, labelId)
-        }
-
-        toggleAction
-            .doOnSubscribe {
-                label.copy(isLoading = true)
-                    .let { updateLabel(it) }
-            }
-            .subscribe(
-                { updatedLabel ->
-                    val uiLabel = LabelUi(origin = updatedLabel, isLoading = false)
-                    updateLabel(uiLabel)
-                },
-                { throwable ->
-                    updateLabel(label)
-                    errorHandler.proceed(throwable) { viewState.showMessage(it) }
-                }
-            )
-            .also { toggleSubscriptionsDisposable.add(it) }
-    }
-
-    private fun updateLabel(label: LabelUi) {
-        paginator.updateItem(label) { it.origin.id == label.origin.id }
-    }
-
     override fun onDestroy() {
         super.onDestroy()
-        toggleSubscriptionsDisposable.dispose()
         paginator.release()
     }
 

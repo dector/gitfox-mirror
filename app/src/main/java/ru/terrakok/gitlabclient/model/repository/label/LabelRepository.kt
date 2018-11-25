@@ -15,7 +15,7 @@ class LabelRepository @Inject constructor(
         projectId: Long,
         page: Int
     ) = api
-        .getProjectLabels(projectId, page)
+        .getProjectLabels(projectId, page, GitlabApi.MAX_PAGE_SIZE)
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
 
