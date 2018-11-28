@@ -118,6 +118,8 @@
     <string name="target_status_opened">Opened</string>
     <string name="target_status_closed">Closed</string>
     <string name="target_status_merged">Merged</string>
+    <string name="target_confidential_title">Confidential Event</string>
+    <string name="target_confidential_description">This event is not available.</string>
 
     <!--My Merge Requests Screen-->
     <string name="merge_request_created_by_me">Created</string>
@@ -142,15 +144,34 @@
     <string name="todo_action_unmergeable">Could not merge</string>
 
     <!--Merge Request Info screen-->
+    <string name="merge_request_title">!%d</string>
     <string name="merge_request_info_tab">Details</string>
+    <string name="merge_request_commits_tab">Commits</string>
     <string name="merge_request_discussion_tab">Discussion</string>
+    <string name="merge_request_changes_tab">Changes</string>
     <string name="merge_request_info_subtitle" formatted="false">%s by %s %s</string>
 
+    <!--Merge Request Commits screen-->
+    <string name="merge_request_commits_description" formatted="false">%s authored %s</string>
+
+    <!--Merge Request Changes screen-->
+    <string name="merge_request_changes_added_count" formatted="false">+%d</string>
+    <string name="merge_request_changes_deleted_count" formatted="false">-%d</string>
+
     <!--Issue Info screen-->
+    <string name="issue_title" formatted="false">#%d</string>
     <string name="issue_info_subtitle" formatted="false">%s by %s %s</string>
+
+    <!--Issue Discussion screen-->
+    <string name="issue_discussion_note_hint">Write a comment</string>
 
     <!--Project info screen-->
     <string name="menu_project_info">Info</string>
     <string name="menu_project_issue">Issues</string>
     <string name="menu_project_merge_request">Merge Requests</string>
+    <string name="project_info">Info</string>
+    <string name="project_events">Activity</string>
+
+    <!--Privacy policy screen-->
+    <string name="privacy_policy">Privacy policy</string>
 </resources>

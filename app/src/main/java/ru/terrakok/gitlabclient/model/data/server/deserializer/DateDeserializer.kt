@@ -8,7 +8,6 @@ import org.threeten.bp.ZonedDateTime
 import java.lang.reflect.Type
 import java.util.*
 
-
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 27.02.18.
  */

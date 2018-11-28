@@ -27,18 +27,20 @@ class AuthFlowFragment : FlowFragment(), MvpView {
             .getInstance(AuthFlowPresenter::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        initScope()
+        prepareScope(isFirstLaunch(savedInstanceState))
         super.onCreate(savedInstanceState)
         if (childFragmentManager.fragments.isEmpty()) {
-            navigator.setLaunchScreen(Screens.AUTH_SCREEN, null)
+            navigator.setLaunchScreen(Screens.Auth)
         }
     }
 
-    private fun initScope() {
+    private fun prepareScope(firstTime: Boolean) {
         val scope = Toothpick.openScopes(DI.SERVER_SCOPE, DI.AUTH_FLOW_SCOPE)
-        scope.installModules(
-            FlowNavigationModule(scope.getInstance(Router::class.java))
-        )
+        if (firstTime) {
+            scope.installModules(
+                FlowNavigationModule(scope.getInstance(Router::class.java))
+            )
+        }
         Toothpick.inject(this, scope)
     }
 

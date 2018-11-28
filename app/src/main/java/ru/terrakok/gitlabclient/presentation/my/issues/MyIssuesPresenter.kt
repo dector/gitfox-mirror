@@ -1,6 +1,7 @@
 package ru.terrakok.gitlabclient.presentation.my.issues
 
 import com.arellomobile.mvp.InjectViewState
+import io.reactivex.Observable
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.extension.openInfo
@@ -38,9 +39,14 @@ class MyIssuesPresenter @Inject constructor(
             issueInteractor.getMyIssues(filter.createdByMe, filter.onlyOpened, it)
                 .flattenAsObservable { it }
                 .concatMap { item ->
-                    mdConverter.markdownToSpannable(item.body.toString())
-                        .map { md -> item.copy(body = md) }
-                        .toObservable()
+                    when (item) {
+                        is TargetHeader.Public -> {
+                            mdConverter.markdownToSpannable(item.body.toString())
+                                .map { md -> item.copy(body = md) }
+                                .toObservable()
+                        }
+                        is TargetHeader.Confidential -> Observable.just(item)
+                    }
                 }
                 .toList()
         },
@@ -86,8 +92,8 @@ class MyIssuesPresenter @Inject constructor(
         }
     }
 
-    fun onIssueClick(item: TargetHeader) = item.openInfo(router)
-    fun onUserClick(userId: Long) = router.startFlow(Screens.USER_FLOW, userId)
+    fun onIssueClick(item: TargetHeader.Public) = item.openInfo(router)
+    fun onUserClick(userId: Long) = router.startFlow(Screens.UserFlow(userId))
     fun refreshIssues() = paginator.refresh()
     fun loadNextIssuesPage() = paginator.loadNewPage()
 

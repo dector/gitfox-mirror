@@ -1,6 +1,7 @@
 package ru.terrakok.gitlabclient.presentation.my.mergerequests
 
 import com.arellomobile.mvp.InjectViewState
+import io.reactivex.Observable
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.extension.openInfo
@@ -35,9 +36,14 @@ class MyMergeRequestsPresenter @Inject constructor(
             interactor.getMyMergeRequests(filter.createdByMe, filter.onlyOpened, it)
                 .flattenAsObservable { it }
                 .concatMap { item ->
-                    mdConverter.markdownToSpannable(item.body.toString())
-                        .map { md -> item.copy(body = md) }
-                        .toObservable()
+                    when (item) {
+                        is TargetHeader.Public -> {
+                            mdConverter.markdownToSpannable(item.body.toString())
+                                .map { md -> item.copy(body = md) }
+                                .toObservable()
+                        }
+                        is TargetHeader.Confidential -> Observable.just(item)
+                    }
                 }
                 .toList()
         },
@@ -83,8 +89,8 @@ class MyMergeRequestsPresenter @Inject constructor(
         }
     }
 
-    fun onMergeRequestClick(item: TargetHeader) = item.openInfo(router)
-    fun onUserClick(userId: Long) = router.startFlow(Screens.USER_FLOW, userId)
+    fun onMergeRequestClick(item: TargetHeader.Public) = item.openInfo(router)
+    fun onUserClick(userId: Long) = router.startFlow(Screens.UserFlow(userId))
     fun refreshMergeRequests() = paginator.refresh()
     fun loadNextMergeRequestsPage() = paginator.loadNewPage()
 

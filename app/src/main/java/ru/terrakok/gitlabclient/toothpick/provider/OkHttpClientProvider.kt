@@ -22,12 +22,11 @@ class OkHttpClientProvider @Inject constructor(
 ) : Provider<OkHttpClient> {
 
     override fun get() = with(OkHttpClient.Builder()) {
-        cache(Cache(context.cacheDir, 20 * 1024))
-        connectTimeout(30, TimeUnit.SECONDS)
-        readTimeout(30, TimeUnit.SECONDS)
+        cache(Cache(context.cacheDir, CACHE_SIZE_BYTES))
+        connectTimeout(TIMEOUT, TimeUnit.SECONDS)
+        readTimeout(TIMEOUT, TimeUnit.SECONDS)
 
         addNetworkInterceptor(AuthHeaderInterceptor(authData))
-        addNetworkInterceptor(ErrorResponseInterceptor())
         if (BuildConfig.DEBUG) {
             addNetworkInterceptor(
                 HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
@@ -35,5 +34,10 @@ class OkHttpClientProvider @Inject constructor(
             addNetworkInterceptor(CurlLoggingInterceptor())
         }
         build()
+    }
+
+    companion object {
+        private const val CACHE_SIZE_BYTES = 20 * 1024L
+        private const val TIMEOUT = 30L
     }
 }

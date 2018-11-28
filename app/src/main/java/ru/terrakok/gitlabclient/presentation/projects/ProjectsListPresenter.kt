@@ -89,6 +89,6 @@ class ProjectsListPresenter @Inject constructor(
     fun refreshProjects() = paginator.refresh()
     fun loadNextProjectsPage() = paginator.loadNewPage()
 
-    fun onProjectClicked(id: Long) = router.startFlow(Screens.PROJECT_FLOW, id)
+    fun onProjectClicked(id: Long) = router.startFlow(Screens.ProjectFlow(id))
     fun onBackPressed() = router.exit()
 }

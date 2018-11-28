@@ -124,6 +124,19 @@ interface GitlabApi {
         @Query("per_page") pageSize: Int
     ): Single<List<Event>>
 
+    @GET("$API_PATH/projects/{project_id}/events")
+    fun getProjectEvents(
+        @Path("project_id") projectId: Long,
+        @Query("action") action: EventAction?,
+        @Query("target_type") targetType: EventTarget?,
+        @Query("before") beforeDay: String?,
+        @Query("after") afterDay: String?,
+        @Query("sort") sort: Sort?,
+        @Query("order_by") orderBy: OrderBy?,
+        @Query("page") page: Int,
+        @Query("per_page") pageSize: Int
+    ): Single<List<Event>>
+
     @GET("$API_PATH/merge_requests")
     fun getMyMergeRequests(
         @Query("state") state: MergeRequestState?,
@@ -210,4 +223,42 @@ interface GitlabApi {
         @Query("page") page: Int,
         @Query("per_page") pageSize: Int
     ): Single<List<Note>>
+
+    @FormUrlEncoded
+    @POST("$API_PATH/projects/{project_id}/issues/{issue_id}/notes")
+    fun createIssueNote(
+        @Path("project_id") projectId: Long,
+        @Path("issue_id") issueId: Long,
+        @Field("body") body: String
+    ): Single<Note>
+
+    @FormUrlEncoded
+    @POST("$API_PATH/projects/{project_id}/merge_requests/{merge_request_id}/notes")
+    fun createMergeRequestNote(
+        @Path("project_id") projectId: Long,
+        @Path("merge_request_id") mergeRequestId: Long,
+        @Field("body") body: String
+    ): Single<Note>
+
+    @GET("$API_PATH/projects/{project_id}/merge_requests/{merge_request_id}/commits")
+    fun getMergeRequestCommits(
+        @Path("project_id") projectId: Long,
+        @Path("merge_request_id") mergeRequestId: Long,
+        @Query("page") page: Int,
+        @Query("per_page") pageSize: Int
+    ): Single<List<Commit>>
+
+    @GET("$API_PATH/projects/{project_id}/merge_requests/{merge_request_id}/participants")
+    fun getMergeRequestParticipants(
+        @Path("project_id") projectId: Long,
+        @Path("merge_request_id") mergeRequestId: Long,
+        @Query("page") page: Int,
+        @Query("per_page") pageSize: Int
+    ): Single<List<Author>>
+
+    @GET("$API_PATH/projects/{project_id}/merge_requests/{merge_request_id}/changes")
+    fun getMergeRequestChanges(
+        @Path("project_id") projectId: Long,
+        @Path("merge_request_id") mergeRequestId: Long
+    ): Single<MergeRequest>
 }

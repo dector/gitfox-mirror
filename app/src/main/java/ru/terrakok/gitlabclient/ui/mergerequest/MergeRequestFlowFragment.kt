@@ -35,28 +35,30 @@ class MergeRequestFlowFragment : FlowFragment(), MvpView {
             .getInstance(MergeRequestFlowPresenter::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        initScope()
+        prepareScope(isFirstLaunch(savedInstanceState))
         super.onCreate(savedInstanceState)
         if (childFragmentManager.fragments.isEmpty()) {
-            navigator.setLaunchScreen(Screens.MR_SCREEN, null)
+            navigator.setLaunchScreen(Screens.MergeRequest)
         }
     }
 
-    private fun initScope() {
+    private fun prepareScope(firstTime: Boolean) {
         val scope = Toothpick.openScopes(DI.SERVER_SCOPE, DI.MERGE_REQUEST_FLOW_SCOPE)
-        scope.installModules(
-            FlowNavigationModule(scope.getInstance(Router::class.java)),
-            object : Module() {
-                init {
-                    bind(PrimitiveWrapper::class.java)
-                        .withName(MergeRequestId::class.java)
-                        .toInstance(PrimitiveWrapper(mrId))
-                    bind(PrimitiveWrapper::class.java)
-                        .withName(ProjectId::class.java)
-                        .toInstance(PrimitiveWrapper(projectId))
+        if (firstTime) {
+            scope.installModules(
+                FlowNavigationModule(scope.getInstance(Router::class.java)),
+                object : Module() {
+                    init {
+                        bind(PrimitiveWrapper::class.java)
+                            .withName(MergeRequestId::class.java)
+                            .toInstance(PrimitiveWrapper(mrId))
+                        bind(PrimitiveWrapper::class.java)
+                            .withName(ProjectId::class.java)
+                            .toInstance(PrimitiveWrapper(projectId))
+                    }
                 }
-            }
-        )
+            )
+        }
         Toothpick.inject(this, scope)
     }
 

@@ -105,7 +105,7 @@ class IssueRepository @Inject constructor(
         badges.add(TargetBadge.Icon(TargetBadgeIcon.DOWN_VOTES, issue.downvotes))
         issue.labels.forEach { label -> badges.add(TargetBadge.Text(label)) }
 
-        return TargetHeader(
+        return TargetHeader.Public(
             issue.author,
             TargetHeaderIcon.NONE,
             TargetHeaderTitle.Event(
@@ -126,8 +126,19 @@ class IssueRepository @Inject constructor(
     fun getIssue(
         projectId: Long,
         issueId: Long
-    ) = api
-        .getIssue(projectId, issueId)
+    ) = Single
+        .zip(
+            api.getProject(projectId),
+            api.getIssue(projectId, issueId),
+            BiFunction<Project, Issue, Issue> { project, issue ->
+                val resolved = markDownUrlResolver.resolve(issue.description, project)
+                if (resolved != issue.description) {
+                    issue.copy(description = resolved)
+                } else {
+                    issue
+                }
+            }
+        )
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
 
@@ -143,19 +154,50 @@ class IssueRepository @Inject constructor(
             api.getProject(projectId),
             api.getIssueNotes(projectId, issueId, sort, orderBy, page, pageSize),
             BiFunction<Project, List<Note>, List<Note>> { project, notes ->
-                ArrayList(notes).apply {
-                    val iterator = listIterator()
-                    while (iterator.hasNext()) {
-                        val note = iterator.next()
-                        val resolved = markDownUrlResolver.resolve(note.body, project)
-
-                        if (resolved != note.body) {
-                            iterator.set(note.copy(body = resolved))
-                        }
-                    }
-                }
+                notes.map { resolveMarkDownUrl(it, project) }
             }
         )
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
+
+    fun getAllIssueNotes(
+        projectId: Long,
+        issueId: Long,
+        sort: Sort?,
+        orderBy: OrderBy?
+    ) = Single
+        .zip(
+            api.getProject(projectId),
+            getAllIssueNotePages(projectId, issueId, sort, orderBy),
+            BiFunction<Project, List<Note>, List<Note>> { project, notes ->
+                notes.map { resolveMarkDownUrl(it, project) }
+            }
+        )
+        .subscribeOn(schedulers.io())
+        .observeOn(schedulers.ui())
+
+    private fun getAllIssueNotePages(projectId: Long, issueId: Long, sort: Sort?, orderBy: OrderBy?) =
+        Observable.range(1, Int.MAX_VALUE)
+            .concatMap { page ->
+                api.getIssueNotes(projectId, issueId, sort, orderBy, page, MAX_PAGE_SIZE)
+                    .toObservable()
+            }
+            .takeWhile { notes -> notes.isNotEmpty() }
+            .flatMapIterable { it }
+            .toList()
+
+    private fun resolveMarkDownUrl(it: Note, project: Project): Note {
+        val resolved = markDownUrlResolver.resolve(it.body, project)
+        return if (resolved != it.body) it.copy(body = resolved) else it
+    }
+
+    fun createIssueNote(projectId: Long, issueId: Long, body: String) =
+        api.createIssueNote(projectId, issueId, body)
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
+
+    companion object {
+        // See GitLab documentation: https://docs.gitlab.com/ee/api/#pagination.
+        private const val MAX_PAGE_SIZE = 100
+    }
 }

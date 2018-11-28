@@ -5,8 +5,10 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.arellomobile.mvp.MvpAppCompatFragment
+import ru.terrakok.gitlabclient.App
 
 private const val PROGRESS_TAG = "bf_progress"
+private const val STATE_LAUNCH_FLAG = "state_launch_flag"
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 26.03.17.
@@ -39,6 +41,7 @@ abstract class BaseFragment : MvpAppCompatFragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
+        outState.putString(STATE_LAUNCH_FLAG, App.appCode)
         instanceStateSaved = true
     }
 
@@ -53,6 +56,11 @@ abstract class BaseFragment : MvpAppCompatFragment() {
             ProgressDialog().show(childFragmentManager, PROGRESS_TAG)
             childFragmentManager.executePendingTransactions()
         }
+    }
+
+    protected fun isFirstLaunch(savedInstanceState: Bundle?): Boolean {
+        val savedAppCode = savedInstanceState?.getString(STATE_LAUNCH_FLAG)
+        return savedAppCode != App.appCode
     }
 
     open fun onBackPressed() {}
