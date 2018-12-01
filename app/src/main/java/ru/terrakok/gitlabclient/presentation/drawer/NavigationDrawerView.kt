@@ -16,6 +16,6 @@ interface NavigationDrawerView : MvpView {
         ABOUT
     }
 
-    fun showUserAccount(userAccount: UserAccount)
     fun selectMenuItem(item: MenuItem)
+    fun setAccounts(accounts: List<UserAccount>, currentAccount: UserAccount)
 }

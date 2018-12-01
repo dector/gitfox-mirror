@@ -27,8 +27,9 @@ class NavigationDrawerPresenter @Inject constructor(
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
-        sessionInteractor.getCurrentUserAccount()?.let { userAccount ->
-            viewState.showUserAccount(userAccount)
+        sessionInteractor.getCurrentUserAccount()?.let { acc ->
+            this.userAccount = acc
+            viewState.setAccounts(sessionInteractor.getUserAccounts(), acc)
         }
     }
 
@@ -66,5 +67,17 @@ class NavigationDrawerPresenter @Inject constructor(
         userAccount?.let {
             router.startFlow(Screens.UserFlow(it.userId))
         }
+    }
+
+    fun onAccountClick(account: UserAccount) {
+        if (account != userAccount) {
+            sessionInteractor.setCurrentUserAccount(account.userId)?.let { acc ->
+                router.newRootFlow(Screens.DrawerFlow)
+            }
+        }
+    }
+
+    fun onAddAccountClick() {
+        router.startFlow(Screens.AuthFlow)
     }
 }

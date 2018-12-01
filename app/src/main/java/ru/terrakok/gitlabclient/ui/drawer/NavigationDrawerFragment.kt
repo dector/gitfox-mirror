@@ -5,9 +5,12 @@ import android.view.View
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_nav_drawer.*
+import kotlinx.android.synthetic.main.item_user_acount.view.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.session.UserAccount
+import ru.terrakok.gitlabclient.extension.inflate
 import ru.terrakok.gitlabclient.extension.loadRoundedImage
+import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerPresenter
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem
@@ -40,7 +43,11 @@ class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView, MessageDi
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        showAccountsList(false)
         avatarImageView.setOnClickListener { presenter.onUserClick() }
+        dropDownImageView.setOnClickListener {
+            showAccountsList(accountsContainer.visibility == View.GONE)
+        }
 
         logoutIV.setOnClickListener {
             MessageDialogFragment.create(
@@ -60,16 +67,43 @@ class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView, MessageDi
         aboutMI.setOnClickListener(itemClickListener)
     }
 
-    override fun showUserAccount(userAccount: UserAccount) {
-        nickTV.text = userAccount.userName
-        serverNameTV.text = userAccount.serverPath
-        avatarImageView.loadRoundedImage(userAccount.avatarUrl, context)
-    }
-
     override fun selectMenuItem(item: MenuItem) {
         (0 until navDrawerMenuContainer.childCount)
             .map { navDrawerMenuContainer.getChildAt(it) }
             .forEach { menuItem -> menuItem.tag?.let { menuItem.isSelected = it == item } }
+    }
+
+    override fun setAccounts(accounts: List<UserAccount>, currentAccount: UserAccount) {
+        nickTV.text = currentAccount.userName
+        serverNameTV.text = currentAccount.serverPath
+        avatarImageView.loadRoundedImage(currentAccount.avatarUrl, context)
+
+        accountsContainer.removeAllViews()
+        accounts.forEach { acc ->
+            accountsContainer.inflate(R.layout.item_user_acount)
+                .apply {
+                    avatarImageView.loadRoundedImage(acc.avatarUrl, context)
+                    nameTextView.text = acc.userName
+                    serverTextView.text = acc.serverPath
+                    selectorView.visible(acc == currentAccount)
+                    setOnClickListener { presenter.onAccountClick(acc) }
+                }
+                .also {
+                    accountsContainer.addView(it)
+                }
+        }
+        accountsContainer.inflate(R.layout.item_add_acount)
+            .apply {
+                setOnClickListener { presenter.onAddAccountClick() }
+            }
+            .also {
+                accountsContainer.addView(it)
+            }
+    }
+
+    private fun showAccountsList(show: Boolean) {
+        accountsContainer.visible(show)
+        dropDownImageView.rotation = if (show) 180f else 0f
     }
 
     fun onScreenChanged(item: MenuItem) {
