@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 import org.threeten.bp.LocalDateTime
 import ru.terrakok.gitlabclient.entity.Assignee
 import ru.terrakok.gitlabclient.entity.Author
-import ru.terrakok.gitlabclient.entity.Milestone
+import ru.terrakok.gitlabclient.entity.milestone.Milestone
 
 data class Issue(
     @SerializedName("id") val id: Long,

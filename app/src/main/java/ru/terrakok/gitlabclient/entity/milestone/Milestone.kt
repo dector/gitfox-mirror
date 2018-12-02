@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.entity
+package ru.terrakok.gitlabclient.entity.milestone
 
 import com.google.gson.annotations.SerializedName
 import org.threeten.bp.LocalDateTime
@@ -8,7 +8,7 @@ data class Milestone(
     @SerializedName("iid") val iid: Long,
     @SerializedName("project_id") val projectId: Long,
     @SerializedName("description") val description: String?,
-    @SerializedName("state") val state: String?,
+    @SerializedName("state") val state: MilestoneState,
     @SerializedName("due_date") val dueDate: String?,
     @SerializedName("start_date") val startDate: String?,
     @SerializedName("created_at") val createdAt: LocalDateTime?,
