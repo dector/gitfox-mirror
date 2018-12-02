@@ -27,6 +27,7 @@ import ru.terrakok.gitlabclient.ui.about.AboutFragment
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.main.MainFlowFragment
 import ru.terrakok.gitlabclient.ui.projects.ProjectsContainerFragment
+import toothpick.Scope
 import toothpick.Toothpick
 import javax.inject.Inject
 
@@ -51,10 +52,16 @@ class DrawerFlowFragment : BaseFragment(), MvpView {
     lateinit var presenter: DrawerFlowPresenter
 
     @ProvidePresenter
-    fun providePresenter(): DrawerFlowPresenter {
-        return Toothpick
-            .openScope(DI.DRAWER_FLOW_SCOPE)
-            .getInstance(DrawerFlowPresenter::class.java)
+    fun providePresenter(): DrawerFlowPresenter =
+        scope.getInstance(DrawerFlowPresenter::class.java)
+
+
+    override val parentScopeName = DI.SERVER_SCOPE
+    override val scopeModuleInstaller = { scope: Scope ->
+        scope.installModules(
+            FlowNavigationModule(scope.getInstance(Router::class.java)),
+            GlobalMenuModule()
+        )
     }
 
     private val navigator: Navigator by lazy {
@@ -82,8 +89,8 @@ class DrawerFlowFragment : BaseFragment(), MvpView {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        prepareScope(isFirstLaunch(savedInstanceState))
         super.onCreate(savedInstanceState)
+        Toothpick.inject(this, scope)
 
         if (childFragmentManager.fragments.isEmpty()) {
             childFragmentManager
@@ -95,17 +102,6 @@ class DrawerFlowFragment : BaseFragment(), MvpView {
         } else {
             updateNavDrawer()
         }
-    }
-
-    private fun prepareScope(firstTime: Boolean) {
-        val scope = Toothpick.openScopes(DI.SERVER_SCOPE, DI.DRAWER_FLOW_SCOPE)
-        if (firstTime) {
-            scope.installModules(
-                FlowNavigationModule(scope.getInstance(Router::class.java)),
-                GlobalMenuModule()
-            )
-        }
-        Toothpick.inject(this@DrawerFlowFragment, scope)
     }
 
     override fun onResume() {

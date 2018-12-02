@@ -15,12 +15,10 @@ import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.global.NoteWithFormattedBody
 import ru.terrakok.gitlabclient.presentation.issue.notes.IssueNotesPresenter
 import ru.terrakok.gitlabclient.presentation.issue.notes.IssueNotesView
-import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.NewNoteViewController
 import ru.terrakok.gitlabclient.ui.global.list.SimpleDividerDecorator
 import ru.terrakok.gitlabclient.ui.global.list.TargetNotesAdapter
-import toothpick.Toothpick
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 15.02.18.
@@ -41,9 +39,8 @@ class IssueNotesFragment : BaseFragment(), IssueNotesView {
     lateinit var presenter: IssueNotesPresenter
 
     @ProvidePresenter
-    fun providePresenter() =
-        Toothpick.openScope(DI.ISSUE_FLOW_SCOPE)
-            .getInstance(IssueNotesPresenter::class.java)
+    fun providePresenter(): IssueNotesPresenter =
+        scope.getInstance(IssueNotesPresenter::class.java)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

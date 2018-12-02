@@ -12,11 +12,10 @@ import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.my.issues.MyIssuesPresenter
 import ru.terrakok.gitlabclient.presentation.my.issues.MyIssuesView
-import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.ZeroViewHolder
 import ru.terrakok.gitlabclient.ui.my.TargetsAdapter
-import toothpick.Toothpick
+import toothpick.Scope
 import toothpick.config.Module
 
 /**
@@ -38,10 +37,7 @@ class MyIssuesFragment : BaseFragment(), MyIssuesView {
     }
     private var zeroViewHolder: ZeroViewHolder? = null
 
-    @ProvidePresenter
-    fun providePresenter(): MyIssuesPresenter {
-        val scopeName = "MyIssuesScope_${hashCode()}"
-        val scope = Toothpick.openScopes(DI.DRAWER_FLOW_SCOPE, scopeName)
+    override val scopeModuleInstaller = { scope: Scope ->
         scope.installModules(object : Module() {
             init {
                 bind(MyIssuesPresenter.Filter::class.java)
@@ -53,11 +49,11 @@ class MyIssuesFragment : BaseFragment(), MyIssuesView {
                     )
             }
         })
-
-        return scope.getInstance(MyIssuesPresenter::class.java).also {
-            Toothpick.closeScope(scopeName)
-        }
     }
+
+    @ProvidePresenter
+    fun providePresenter(): MyIssuesPresenter =
+        scope.getInstance(MyIssuesPresenter::class.java)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

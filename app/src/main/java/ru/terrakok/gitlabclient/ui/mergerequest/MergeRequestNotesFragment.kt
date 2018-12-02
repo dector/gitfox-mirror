@@ -15,12 +15,10 @@ import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.global.NoteWithFormattedBody
 import ru.terrakok.gitlabclient.presentation.mergerequest.notes.MergeRequestNotesPresenter
 import ru.terrakok.gitlabclient.presentation.mergerequest.notes.MergeRequestNotesView
-import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.NewNoteViewController
 import ru.terrakok.gitlabclient.ui.global.list.SimpleDividerDecorator
 import ru.terrakok.gitlabclient.ui.global.list.TargetNotesAdapter
-import toothpick.Toothpick
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 15.02.18.
@@ -42,8 +40,7 @@ class MergeRequestNotesFragment : BaseFragment(), MergeRequestNotesView {
 
     @ProvidePresenter
     fun providePresenter() =
-        Toothpick.openScope(DI.MERGE_REQUEST_FLOW_SCOPE)
-            .getInstance(MergeRequestNotesPresenter::class.java)
+        scope.getInstance(MergeRequestNotesPresenter::class.java)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

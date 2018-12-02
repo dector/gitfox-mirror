@@ -13,11 +13,9 @@ import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.my.events.MyEventsPresenter
 import ru.terrakok.gitlabclient.presentation.my.events.MyEventsView
-import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.ZeroViewHolder
 import ru.terrakok.gitlabclient.ui.my.TargetsAdapter
-import toothpick.Toothpick
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 13.06.17
@@ -39,9 +37,7 @@ class MyEventsFragment : BaseFragment(), MyEventsView {
 
     @ProvidePresenter
     fun providePresenter(): MyEventsPresenter =
-        Toothpick
-            .openScope(DI.DRAWER_FLOW_SCOPE)
-            .getInstance(MyEventsPresenter::class.java)
+        scope.getInstance(MyEventsPresenter::class.java)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

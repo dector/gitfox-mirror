@@ -15,10 +15,8 @@ import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerPresenter
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem.*
-import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.MessageDialogFragment
-import toothpick.Toothpick
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 04.04.17
@@ -34,11 +32,8 @@ class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView, MessageDi
     lateinit var presenter: NavigationDrawerPresenter
 
     @ProvidePresenter
-    fun providePresenter(): NavigationDrawerPresenter {
-        return Toothpick
-            .openScope(DI.DRAWER_FLOW_SCOPE)
-            .getInstance(NavigationDrawerPresenter::class.java)
-    }
+    fun providePresenter(): NavigationDrawerPresenter =
+        scope.getInstance(NavigationDrawerPresenter::class.java)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

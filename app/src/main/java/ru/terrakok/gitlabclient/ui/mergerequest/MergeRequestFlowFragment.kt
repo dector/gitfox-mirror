@@ -15,6 +15,7 @@ import ru.terrakok.gitlabclient.toothpick.module.FlowNavigationModule
 import ru.terrakok.gitlabclient.toothpick.qualifier.MergeRequestId
 import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
 import ru.terrakok.gitlabclient.ui.global.FlowFragment
+import toothpick.Scope
 import toothpick.Toothpick
 import toothpick.config.Module
 
@@ -26,40 +27,37 @@ class MergeRequestFlowFragment : FlowFragment(), MvpView {
     private val mrId by argument(ARG_MR_ID, 0L)
     private val projectId by argument(ARG_PROJECT_ID, 0L)
 
+    override val parentScopeName = DI.SERVER_SCOPE
+
+    override val scopeModuleInstaller = { scope: Scope ->
+        scope.installModules(
+            FlowNavigationModule(scope.getInstance(Router::class.java)),
+            object : Module() {
+                init {
+                    bind(PrimitiveWrapper::class.java)
+                        .withName(MergeRequestId::class.java)
+                        .toInstance(PrimitiveWrapper(mrId))
+                    bind(PrimitiveWrapper::class.java)
+                        .withName(ProjectId::class.java)
+                        .toInstance(PrimitiveWrapper(projectId))
+                }
+            }
+        )
+    }
+
     @InjectPresenter
     lateinit var presenter: MergeRequestFlowPresenter
 
     @ProvidePresenter
     fun providePresenter() =
-        Toothpick.openScope(DI.MERGE_REQUEST_FLOW_SCOPE)
-            .getInstance(MergeRequestFlowPresenter::class.java)
+        scope.getInstance(MergeRequestFlowPresenter::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        prepareScope(isFirstLaunch(savedInstanceState))
         super.onCreate(savedInstanceState)
+        Toothpick.inject(this, scope)
         if (childFragmentManager.fragments.isEmpty()) {
             navigator.setLaunchScreen(Screens.MergeRequest)
         }
-    }
-
-    private fun prepareScope(firstTime: Boolean) {
-        val scope = Toothpick.openScopes(DI.SERVER_SCOPE, DI.MERGE_REQUEST_FLOW_SCOPE)
-        if (firstTime) {
-            scope.installModules(
-                FlowNavigationModule(scope.getInstance(Router::class.java)),
-                object : Module() {
-                    init {
-                        bind(PrimitiveWrapper::class.java)
-                            .withName(MergeRequestId::class.java)
-                            .toInstance(PrimitiveWrapper(mrId))
-                        bind(PrimitiveWrapper::class.java)
-                            .withName(ProjectId::class.java)
-                            .toInstance(PrimitiveWrapper(projectId))
-                    }
-                }
-            )
-        }
-        Toothpick.inject(this, scope)
     }
 
     override fun onExit() {

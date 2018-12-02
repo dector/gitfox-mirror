@@ -7,7 +7,6 @@ import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
-import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import toothpick.Toothpick
 import javax.inject.Inject
@@ -28,8 +27,8 @@ class MyTodosContainerFragment : BaseFragment() {
     override val layoutRes = R.layout.fragment_my_todos_container
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Toothpick.inject(this, Toothpick.openScope(DI.DRAWER_FLOW_SCOPE))
         super.onCreate(savedInstanceState)
+        Toothpick.inject(this, scope)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

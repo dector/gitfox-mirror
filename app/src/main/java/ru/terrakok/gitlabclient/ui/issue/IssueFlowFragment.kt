@@ -16,6 +16,7 @@ import ru.terrakok.gitlabclient.toothpick.module.FlowNavigationModule
 import ru.terrakok.gitlabclient.toothpick.qualifier.IssueId
 import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
 import ru.terrakok.gitlabclient.ui.global.FlowFragment
+import toothpick.Scope
 import toothpick.Toothpick
 import toothpick.config.Module
 
@@ -27,42 +28,38 @@ class IssueFlowFragment : FlowFragment(), MvpView {
     private val issueId by argument(ARG_ISSUE_ID, 0L)
     private val projectId by argument(ARG_PROJECT_ID, 0L)
 
+    override val parentScopeName = DI.SERVER_SCOPE
+
+    override val scopeModuleInstaller = { scope: Scope ->
+        scope.installModules(
+            FlowNavigationModule(scope.getInstance(Router::class.java)),
+            object : Module() {
+                init {
+                    bind(PrimitiveWrapper::class.java)
+                        .withName(IssueId::class.java)
+                        .toInstance(PrimitiveWrapper(issueId))
+                    bind(PrimitiveWrapper::class.java)
+                        .withName(ProjectId::class.java)
+                        .toInstance(PrimitiveWrapper(projectId))
+                }
+            }
+        )
+    }
+
     @InjectPresenter
     lateinit var presenter: IssueFlowPresenter
 
     @ProvidePresenter
     fun providePresenter() =
-        Toothpick.openScope(DI.ISSUE_FLOW_SCOPE)
-            .getInstance(IssueFlowPresenter::class.java)
+        scope.getInstance(IssueFlowPresenter::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        prepareScope(isFirstLaunch(savedInstanceState))
         super.onCreate(savedInstanceState)
+        Toothpick.inject(this, scope)
         if (childFragmentManager.fragments.isEmpty()) {
             navigator.setLaunchScreen(Screens.Issue)
         }
     }
-
-    private fun prepareScope(firstTime: Boolean) {
-        val scope = Toothpick.openScopes(DI.SERVER_SCOPE, DI.ISSUE_FLOW_SCOPE)
-        if (firstTime) {
-            scope.installModules(
-                FlowNavigationModule(scope.getInstance(Router::class.java)),
-                object : Module() {
-                    init {
-                        bind(PrimitiveWrapper::class.java)
-                            .withName(IssueId::class.java)
-                            .toInstance(PrimitiveWrapper(issueId))
-                        bind(PrimitiveWrapper::class.java)
-                            .withName(ProjectId::class.java)
-                            .toInstance(PrimitiveWrapper(projectId))
-                    }
-                }
-            )
-        }
-        Toothpick.inject(this, scope)
-    }
-
 
     override fun onExit() {
         activity?.hideKeyboard()
