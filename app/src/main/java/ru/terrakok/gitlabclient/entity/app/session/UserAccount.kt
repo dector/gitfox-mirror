@@ -7,4 +7,6 @@ data class UserAccount(
     val avatarUrl: String,
     val userName: String,
     val isOAuth: Boolean
-)
+) {
+    val id: String = "$userId : $serverPath"
+}

@@ -53,7 +53,7 @@ class NavigationDrawerPresenter @Inject constructor(
     fun onLogoutClick() {
         menuController.close()
         userAccount?.let {
-            val hasOtherAccount = sessionInteractor.logout(it.userId)
+            val hasOtherAccount = sessionInteractor.logout(it.id)
             if (hasOtherAccount) {
                 router.newRootFlow(Screens.DrawerFlow)
             } else {
@@ -71,7 +71,7 @@ class NavigationDrawerPresenter @Inject constructor(
 
     fun onAccountClick(account: UserAccount) {
         if (account != userAccount) {
-            sessionInteractor.setCurrentUserAccount(account.userId)?.let { acc ->
+            sessionInteractor.setCurrentUserAccount(account.id)?.let { acc ->
                 router.newRootFlow(Screens.DrawerFlow)
             }
         }

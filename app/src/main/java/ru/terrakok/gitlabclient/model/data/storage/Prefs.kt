@@ -22,10 +22,10 @@ class Prefs @Inject constructor(
     private val KEY_USER_ACCOUNTS = "ad_accounts"
     private val authPrefs by lazy { getSharedPreferences(AUTH_DATA) }
 
-    var selectedAccount: Long?
-        get() = authPrefs.getLong(KEY_CURRENT_ACCOUNT, 0).takeIf { it > 0 }
+    var selectedAccount: String?
+        get() = authPrefs.getString(KEY_CURRENT_ACCOUNT, null)
         set(value) {
-            authPrefs.edit().putLong(KEY_CURRENT_ACCOUNT, value ?: 0).apply()
+            authPrefs.edit().putString(KEY_CURRENT_ACCOUNT, value).apply()
         }
 
     private val accountsTypeToken = object : TypeToken<List<UserAccount>>() {}.type

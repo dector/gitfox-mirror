@@ -25,32 +25,32 @@ class SessionRepository @Inject constructor(
 
     fun getCurrentUserAccount(): UserAccount? {
         prefs.selectedAccount?.let { id ->
-            return prefs.accounts.find { it.userId == id }
+            return prefs.accounts.find { it.id == id }
         }
         return null
     }
 
-    fun setCurrentUserAccount(userId: Long): UserAccount? {
-        val account = prefs.accounts.find { it.userId == userId }
-        prefs.selectedAccount = account?.userId
+    fun setCurrentUserAccount(accountId: String): UserAccount? {
+        val account = prefs.accounts.find { it.id == accountId }
+        prefs.selectedAccount = account?.id
         return account
     }
 
     fun getUserAccounts(): List<UserAccount> =
         prefs.accounts
 
-    fun logout(userId: Long): UserAccount? {
+    fun logout(accountId: String): UserAccount? {
         val newAccounts = prefs.accounts.toMutableList()
-        newAccounts.removeAll { it.userId == userId }
+        newAccounts.removeAll { it.id == accountId }
         prefs.accounts = newAccounts
 
         val currentAccount = prefs.selectedAccount
-        if (currentAccount == userId) {
+        if (currentAccount == accountId) {
             val newAccount = newAccounts.firstOrNull()
-            prefs.selectedAccount = newAccount?.userId
+            prefs.selectedAccount = newAccount?.id
             return newAccount
         } else {
-            return newAccounts.find { it.userId == currentAccount }
+            return newAccounts.find { it.id == currentAccount }
         }
     }
 
@@ -158,9 +158,9 @@ class SessionRepository @Inject constructor(
 
     private fun saveNewAccount(userAccount: UserAccount) {
         val newAccounts = prefs.accounts.toMutableList()
-        newAccounts.removeAll { it.userId == userAccount.userId }
+        newAccounts.removeAll { it.id == userAccount.id }
         newAccounts.add(userAccount)
-        prefs.selectedAccount = userAccount.userId
+        prefs.selectedAccount = userAccount.id
         prefs.accounts = newAccounts
     }
 }

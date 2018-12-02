@@ -27,8 +27,8 @@ class SessionInteractor @Inject constructor(
     fun getUserAccounts() = sessionRepository.getUserAccounts()
     fun getCurrentUserAccount() = sessionRepository.getCurrentUserAccount()
 
-    fun setCurrentUserAccount(userId: Long): UserAccount? {
-        val newAccount = sessionRepository.setCurrentUserAccount(userId)
+    fun setCurrentUserAccount(accountId: String): UserAccount? {
+        val newAccount = sessionRepository.setCurrentUserAccount(accountId)
         switchAccount(newAccount)
         return newAccount
     }
@@ -61,16 +61,16 @@ class SessionInteractor @Inject constructor(
     fun logout(): Boolean {
         val currentAccount = sessionRepository.getCurrentUserAccount()
         if (currentAccount != null) {
-            return logout(currentAccount.userId)
+            return logout(currentAccount.id)
         } else {
             return false
         }
     }
 
     //return hasOtherAccount
-    fun logout(userId: Long): Boolean {
+    fun logout(accountId: String): Boolean {
         projectCache.clear()
-        val newAccount = sessionRepository.logout(userId)
+        val newAccount = sessionRepository.logout(accountId)
         switchAccount(newAccount)
         return newAccount != null
     }
