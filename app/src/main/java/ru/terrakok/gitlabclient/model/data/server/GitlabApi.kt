@@ -28,16 +28,6 @@ interface GitlabApi {
         const val API_PATH = "api/v4"
     }
 
-    @FormUrlEncoded
-    @POST("oauth/token")
-    fun auth(
-        @Field("client_id") appId: String,
-        @Field("client_secret") appKey: String,
-        @Field("code") code: String,
-        @Field("redirect_uri") redirectUri: String,
-        @Field("grant_type") type: String = "authorization_code"
-    ): Single<TokenData>
-
     @GET("$API_PATH/projects")
     fun getProjects(
         @Query("archived") archived: Boolean?,

@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.model.interactor.auth
+package ru.terrakok.gitlabclient.entity.app.session
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 25.09.17.

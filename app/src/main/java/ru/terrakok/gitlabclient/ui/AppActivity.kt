@@ -13,6 +13,7 @@ import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.android.support.SupportAppNavigator
 import ru.terrakok.cicerone.commands.Command
+import ru.terrakok.gitlabclient.App
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.model.system.message.SystemMessageNotifier
 import ru.terrakok.gitlabclient.model.system.message.SystemMessageType
@@ -26,6 +27,9 @@ import javax.inject.Inject
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 03.09.18.
  */
+
+private const val STATE_LAUNCH_FLAG = "state_launch_flag"
+
 class AppActivity : MvpAppCompatActivity(), MvpView {
 
     @InjectPresenter
@@ -33,7 +37,7 @@ class AppActivity : MvpAppCompatActivity(), MvpView {
 
     @ProvidePresenter
     fun providePresenter() =
-        Toothpick.openScope(DI.SERVER_SCOPE)
+        Toothpick.openScope(DI.APP_SCOPE)
             .getInstance(AppPresenter::class.java)
 
     @Inject
@@ -62,11 +66,11 @@ class AppActivity : MvpAppCompatActivity(), MvpView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
-        Toothpick.inject(this, Toothpick.openScope(DI.SERVER_SCOPE))
+        Toothpick.inject(this, Toothpick.openScope(DI.APP_SCOPE))
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_container)
 
-        if (savedInstanceState == null) {
+        if (isFirstLaunch(savedInstanceState)) {
             presenter.coldStart()
         }
     }
@@ -81,6 +85,16 @@ class AppActivity : MvpAppCompatActivity(), MvpView {
         navigatorHolder.removeNavigator()
         unsubscribeOnSystemMessages()
         super.onPause()
+    }
+
+    private fun isFirstLaunch(savedInstanceState: Bundle?): Boolean {
+        val savedAppCode = savedInstanceState?.getString(STATE_LAUNCH_FLAG)
+        return savedAppCode != App.appCode
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState?.putString(STATE_LAUNCH_FLAG, App.appCode)
     }
 
     override fun onBackPressed() {

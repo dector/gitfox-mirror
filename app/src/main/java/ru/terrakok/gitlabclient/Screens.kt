@@ -119,54 +119,40 @@ object Screens {
         override fun getFragment() = ProjectFlowFragment.create(projectId)
     }
 
-    data class ProjectMainFlow(
-        val scope: String
-    ) : SupportAppScreen() {
-        override fun getFragment() = ProjectFragment.create(scope)
+    object ProjectMainFlow : SupportAppScreen() {
+        override fun getFragment() = ProjectFragment()
     }
 
-    data class ProjectInfoContainer(
-        val scope: String
-    ) : SupportAppScreen() {
-        override fun getFragment() = ProjectInfoContainerFragment.create(scope)
+    object ProjectInfoContainer : SupportAppScreen() {
+        override fun getFragment() = ProjectInfoContainerFragment()
     }
 
-    data class ProjectInfo(
-        val scope: String
-    ) : SupportAppScreen() {
-        override fun getFragment() = ProjectInfoFragment.create(scope)
+    object ProjectInfo : SupportAppScreen() {
+        override fun getFragment() = ProjectInfoFragment()
     }
 
-    data class ProjectEvents(
-        val scope: String
-    ) : SupportAppScreen() {
-        override fun getFragment() = ProjectEventsFragment.create(scope)
+    object ProjectEvents : SupportAppScreen() {
+        override fun getFragment() = ProjectEventsFragment()
     }
 
-    data class ProjectIssuesContainer(
-        val scope: String
-    ) : SupportAppScreen() {
-        override fun getFragment() = ProjectIssuesContainerFragment.create(scope)
+    object ProjectIssuesContainer : SupportAppScreen() {
+        override fun getFragment() = ProjectIssuesContainerFragment()
     }
 
     data class ProjectIssues(
-        val issueState: IssueState,
-        val scope: String
+        val issueState: IssueState
     ) : SupportAppScreen() {
-        override fun getFragment() = ProjectIssuesFragment.create(issueState, scope)
+        override fun getFragment() = ProjectIssuesFragment.create(issueState)
     }
 
-    data class ProjectMergeRequestsContainer(
-        val scope: String
-    ) : SupportAppScreen() {
-        override fun getFragment() = ProjectMergeRequestsContainerFragment.create(scope)
+    object ProjectMergeRequestsContainer : SupportAppScreen() {
+        override fun getFragment() = ProjectMergeRequestsContainerFragment()
     }
 
     data class ProjectMergeRequests(
-        val mrState: MergeRequestState,
-        val scope: String
+        val mrState: MergeRequestState
     ) : SupportAppScreen() {
-        override fun getFragment() = ProjectMergeRequestsFragment.create(mrState, scope)
+        override fun getFragment() = ProjectMergeRequestsFragment.create(mrState)
     }
 
     data class UserFlow(

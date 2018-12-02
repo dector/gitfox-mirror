@@ -10,9 +10,7 @@ import ru.terrakok.gitlabclient.entity.issue.IssueState
 import ru.terrakok.gitlabclient.extension.*
 import ru.terrakok.gitlabclient.presentation.issue.info.IssueInfoPresenter
 import ru.terrakok.gitlabclient.presentation.issue.info.IssueInfoView
-import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import toothpick.Toothpick
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 03.02.18.
@@ -25,9 +23,8 @@ class IssueInfoFragment : BaseFragment(), IssueInfoView {
     lateinit var presenter: IssueInfoPresenter
 
     @ProvidePresenter
-    fun providePresenter() =
-        Toothpick.openScope(DI.ISSUE_FLOW_SCOPE)
-            .getInstance(IssueInfoPresenter::class.java)
+    fun providePresenter(): IssueInfoPresenter =
+        scope.getInstance(IssueInfoPresenter::class.java)
 
     override fun showInfo(issue: Issue, mdDescription: CharSequence) {
         titleTextView.text = issue.title

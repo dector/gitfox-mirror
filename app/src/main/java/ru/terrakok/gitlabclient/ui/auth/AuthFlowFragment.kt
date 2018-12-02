@@ -11,6 +11,7 @@ import ru.terrakok.gitlabclient.presentation.auth.AuthFlowPresenter
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.toothpick.module.FlowNavigationModule
 import ru.terrakok.gitlabclient.ui.global.FlowFragment
+import toothpick.Scope
 import toothpick.Toothpick
 
 /**
@@ -18,30 +19,27 @@ import toothpick.Toothpick
  */
 class AuthFlowFragment : FlowFragment(), MvpView {
 
+    override val parentScopeName = DI.SERVER_SCOPE
+
+    override val scopeModuleInstaller = { scope: Scope ->
+        scope.installModules(
+            FlowNavigationModule(scope.getInstance(Router::class.java))
+        )
+    }
+
     @InjectPresenter
     lateinit var presenter: AuthFlowPresenter
 
     @ProvidePresenter
-    fun providePresenter() =
-        Toothpick.openScope(DI.AUTH_FLOW_SCOPE)
-            .getInstance(AuthFlowPresenter::class.java)
+    fun providePresenter(): AuthFlowPresenter =
+        scope.getInstance(AuthFlowPresenter::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        prepareScope(isFirstLaunch(savedInstanceState))
         super.onCreate(savedInstanceState)
+        Toothpick.inject(this, scope)
         if (childFragmentManager.fragments.isEmpty()) {
             navigator.setLaunchScreen(Screens.Auth)
         }
-    }
-
-    private fun prepareScope(firstTime: Boolean) {
-        val scope = Toothpick.openScopes(DI.SERVER_SCOPE, DI.AUTH_FLOW_SCOPE)
-        if (firstTime) {
-            scope.installModules(
-                FlowNavigationModule(scope.getInstance(Router::class.java))
-            )
-        }
-        Toothpick.inject(this, scope)
     }
 
     override fun onExit() {
