@@ -14,7 +14,8 @@ class Prefs @Inject constructor(
     private val gson: Gson
 ) {
 
-    private fun getSharedPreferences(prefsName: String) = context.getSharedPreferences(prefsName, Context.MODE_PRIVATE)
+    private fun getSharedPreferences(prefsName: String) =
+        context.getSharedPreferences(prefsName, Context.MODE_PRIVATE)
 
     //region auth
     private val AUTH_DATA = "auth_data"
@@ -31,7 +32,6 @@ class Prefs @Inject constructor(
     private val accountsTypeToken = object : TypeToken<List<UserAccount>>() {}.type
     var accounts: List<UserAccount>
         get() {
-            //todo restore current account
             return gson.fromJson(authPrefs.getString(KEY_USER_ACCOUNTS, "[]"), accountsTypeToken)
         }
         set(value) {
