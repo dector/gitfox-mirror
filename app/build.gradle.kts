@@ -98,7 +98,7 @@ dependencies {
     val moxyVersion = "1.4.6"
     val toothpickVersion = "1.0.6"
     val retrofitVersion = "2.2.0"
-    val markwonVersion = "1.1.1"
+    val markwonVersion = "2.0.0"
     val glideVersion = "4.8.0"
 
     //Support
