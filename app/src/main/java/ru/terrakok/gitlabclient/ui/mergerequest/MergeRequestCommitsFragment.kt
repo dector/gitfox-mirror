@@ -7,7 +7,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.layout_base_list.*
 import kotlinx.android.synthetic.main.layout_zero.*
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.app.CommitWithAvatarUrl
+import ru.terrakok.gitlabclient.entity.app.CommitWithAuthor
 import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.mergerequest.commits.MergeRequestCommitsPresenter
@@ -26,7 +26,12 @@ class MergeRequestCommitsFragment : BaseFragment(), MergeRequestCommitsView {
 
     override val layoutRes = R.layout.fragment_mr_commits
 
-    private val adapter by lazy { TargetCommitsAdapter({ presenter.loadNextCommitsPage() }) }
+    private val adapter by lazy {
+        TargetCommitsAdapter(
+            { presenter.onUserClicked(it) },
+            { presenter.loadNextCommitsPage() }
+        )
+    }
     private var zeroViewHolder: ZeroViewHolder? = null
 
     @InjectPresenter
@@ -77,7 +82,7 @@ class MergeRequestCommitsFragment : BaseFragment(), MergeRequestCommitsView {
         else zeroViewHolder?.hide()
     }
 
-    override fun showCommits(show: Boolean, commits: List<CommitWithAvatarUrl>) {
+    override fun showCommits(show: Boolean, commits: List<CommitWithAuthor>) {
         recyclerView.visible(show)
         postViewAction { adapter.setData(commits) }
     }

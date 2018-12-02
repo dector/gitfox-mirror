@@ -3,22 +3,23 @@ package ru.terrakok.gitlabclient.ui.global.list
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates3.ListDelegationAdapter
-import ru.terrakok.gitlabclient.entity.app.CommitWithAvatarUrl
+import ru.terrakok.gitlabclient.entity.app.CommitWithAuthor
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 20.10.18.
  */
 class TargetCommitsAdapter(
+    userClickListener: (Long) -> Unit,
     private val nextPageListener: () -> Unit
 ) : ListDelegationAdapter<MutableList<Any>>() {
 
     init {
         items = mutableListOf()
-        delegatesManager.addDelegate(CommitAdapterDelegate())
+        delegatesManager.addDelegate(CommitAdapterDelegate(userClickListener))
         delegatesManager.addDelegate(ProgressAdapterDelegate())
     }
 
-    fun setData(data: List<CommitWithAvatarUrl>) {
+    fun setData(data: List<CommitWithAuthor>) {
         val oldItems = items.toList()
 
         items.clear()
@@ -66,7 +67,7 @@ class TargetCommitsAdapter(
             val oldItem = oldItems[oldItemPosition]
             val newItem = newItems[newItemPosition]
 
-            return if (newItem is CommitWithAvatarUrl && oldItem is CommitWithAvatarUrl) {
+            return if (newItem is CommitWithAuthor && oldItem is CommitWithAuthor) {
                 newItem.commit.id == oldItem.commit.id
             } else {
                 newItem is ProgressItem && oldItem is ProgressItem
@@ -77,7 +78,7 @@ class TargetCommitsAdapter(
             val oldItem = oldItems[oldItemPosition]
             val newItem = newItems[newItemPosition]
 
-            return if (newItem is CommitWithAvatarUrl && oldItem is CommitWithAvatarUrl) {
+            return if (newItem is CommitWithAuthor && oldItem is CommitWithAuthor) {
                 newItem == oldItem
             } else {
                 true
