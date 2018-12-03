@@ -2,6 +2,8 @@ package ru.terrakok.gitlabclient.model.repository.label
 
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
+import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
+import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultPageSize
 import javax.inject.Inject
 
 /**
@@ -9,13 +11,17 @@ import javax.inject.Inject
  */
 class LabelRepository @Inject constructor(
     private val api: GitlabApi,
+    @DefaultPageSize defaultPageSizeWrapper: PrimitiveWrapper<Int>,
     private val schedulers: SchedulersProvider
 ) {
+
+    private val defaultPageSize: Int = defaultPageSizeWrapper.value
+
     fun getLabelList(
         projectId: Long,
         page: Int
     ) = api
-        .getProjectLabels(projectId, page, GitlabApi.MAX_PAGE_SIZE)
+        .getProjectLabels(projectId, page, defaultPageSize)
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
 
