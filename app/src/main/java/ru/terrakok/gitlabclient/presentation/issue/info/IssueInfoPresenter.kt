@@ -4,7 +4,6 @@ import com.arellomobile.mvp.InjectViewState
 import ru.terrakok.gitlabclient.model.interactor.issue.IssueInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
-import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.IssueId
 import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
@@ -18,7 +17,6 @@ class IssueInfoPresenter @Inject constructor(
     @ProjectId private val projectIdWrapper: PrimitiveWrapper<Long>,
     @IssueId private val issueIdWrapper: PrimitiveWrapper<Long>,
     private val issueInteractor: IssueInteractor,
-    private val mdConverter: MarkDownConverter,
     private val errorHandler: ErrorHandler
 ) : BasePresenter<IssueInfoView>() {
 
@@ -30,15 +28,10 @@ class IssueInfoPresenter @Inject constructor(
 
         issueInteractor
             .getIssue(projectId, issueId)
-            .flatMap { issue ->
-                mdConverter
-                    .markdownToSpannable(issue.description)
-                    .map { Pair(issue, it) }
-            }
             .doOnSubscribe { viewState.showEmptyProgress(true) }
             .doAfterTerminate { viewState.showEmptyProgress(false) }
             .subscribe(
-                { (issue, mdDescription) -> viewState.showInfo(issue, mdDescription) },
+                { issue -> viewState.showInfo(issue) },
                 { errorHandler.proceed(it, { viewState.showMessage(it) }) }
             )
             .connect()

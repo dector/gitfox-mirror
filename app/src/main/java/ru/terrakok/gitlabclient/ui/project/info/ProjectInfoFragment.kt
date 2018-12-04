@@ -35,9 +35,11 @@ class ProjectInfoFragment : BaseFragment(), ProjectInfoView {
             starsTextView.setStartDrawable(context.getTintDrawable(R.drawable.ic_star_black_24dp, R.color.colorPrimary))
             forksTextView.setStartDrawable(context.getTintDrawable(R.drawable.ic_fork, R.color.colorPrimary))
         }
+
+        readmeTextView.initWithParentDelegate(mvpDelegate)
     }
 
-    override fun showProject(project: Project, mdReadme: CharSequence) {
+    override fun showProject(project: Project, mdReadme: String) {
         titleTextView.text = project.nameWithNamespace
         descriptionTextView.text = project.description
         starsTextView.text = project.starCount.toString()
@@ -53,7 +55,7 @@ class ProjectInfoFragment : BaseFragment(), ProjectInfoView {
             }
         )
 
-        Markwon.setText(readmeTextView, mdReadme)
+        readmeTextView.setMarkdown(mdReadme, project.id)
     }
 
     override fun showProgress(show: Boolean) {
