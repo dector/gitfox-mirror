@@ -2,6 +2,7 @@ package ru.terrakok.gitlabclient.ui.my
 
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
+import com.arellomobile.mvp.MvpDelegate
 import com.hannesdorfmann.adapterdelegates3.ListDelegationAdapter
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.ui.global.list.ProgressAdapterDelegate
@@ -10,6 +11,7 @@ import ru.terrakok.gitlabclient.ui.global.list.TargetHeaderConfidentialAdapterDe
 import ru.terrakok.gitlabclient.ui.global.list.TargetHeaderPublicAdapterDelegate
 
 class TargetsAdapter(
+    mvpDelegate: MvpDelegate<*>,
     userClickListener: (Long) -> Unit,
     clickListener: (TargetHeader.Public) -> Unit,
     private val nextPageListener: () -> Unit
@@ -17,7 +19,7 @@ class TargetsAdapter(
 
     init {
         items = mutableListOf()
-        delegatesManager.addDelegate(TargetHeaderPublicAdapterDelegate(userClickListener, clickListener))
+        delegatesManager.addDelegate(TargetHeaderPublicAdapterDelegate(mvpDelegate, userClickListener, clickListener))
         delegatesManager.addDelegate(TargetHeaderConfidentialAdapterDelegate())
         delegatesManager.addDelegate(ProgressAdapterDelegate())
     }

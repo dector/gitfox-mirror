@@ -30,6 +30,7 @@ class MyIssuesFragment : BaseFragment(), MyIssuesView {
 
     private val adapter: TargetsAdapter by lazy {
         TargetsAdapter(
+            mvpDelegate,
             { presenter.onUserClick(it) },
             { presenter.onIssueClick(it) },
             { presenter.loadNextIssuesPage() }

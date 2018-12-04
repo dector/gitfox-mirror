@@ -30,6 +30,7 @@ class MyMergeRequestsFragment : BaseFragment(), MyMergeRequestListView {
 
     private val adapter: TargetsAdapter by lazy {
         TargetsAdapter(
+            mvpDelegate,
             { presenter.onUserClick(it) },
             { presenter.onMergeRequestClick(it) },
             { presenter.loadNextMergeRequestsPage() }
