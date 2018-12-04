@@ -5,7 +5,6 @@ import ru.terrakok.gitlabclient.entity.app.CommitWithAvatarUrl
 import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
-import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.MergeRequestId
@@ -20,7 +19,6 @@ class MergeRequestCommitsPresenter @Inject constructor(
     @ProjectId projectIdWrapper: PrimitiveWrapper<Long>,
     @MergeRequestId mrIdWrapper: PrimitiveWrapper<Long>,
     private val mrInteractor: MergeRequestInteractor,
-    private val mdConverter: MarkDownConverter,
     private val errorHandler: ErrorHandler
 ) : BasePresenter<MergeRequestCommitsView>() {
 

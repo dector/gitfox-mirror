@@ -2,24 +2,27 @@ package ru.terrakok.gitlabclient.toothpick.module
 
 import android.content.Context
 import android.content.res.AssetManager
+import com.google.gson.Gson
 import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.BuildConfig
-import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.develop.AppInfo
-import ru.terrakok.gitlabclient.model.data.auth.AuthHolder
-import ru.terrakok.gitlabclient.model.data.storage.Prefs
 import ru.terrakok.gitlabclient.model.data.storage.RawAppData
 import ru.terrakok.gitlabclient.model.interactor.app.AppInfoInteractor
 import ru.terrakok.gitlabclient.model.repository.app.AppInfoRepository
+import ru.terrakok.gitlabclient.model.repository.session.SessionRepository
 import ru.terrakok.gitlabclient.model.repository.tools.Base64Tools
 import ru.terrakok.gitlabclient.model.system.AppSchedulers
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.model.system.message.SystemMessageNotifier
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
-import ru.terrakok.gitlabclient.toothpick.qualifier.*
+import ru.terrakok.gitlabclient.toothpick.provider.GsonProvider
+import ru.terrakok.gitlabclient.toothpick.qualifier.AppDevelopersPath
+import ru.terrakok.gitlabclient.toothpick.qualifier.CacheLifetime
+import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultPageSize
+import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultServerPath
 import toothpick.config.Module
 
 /**
@@ -39,14 +42,15 @@ class AppModule(context: Context) : Module() {
         bind(AssetManager::class.java).toInstance(context.assets)
         bind(RawAppData::class.java)
         bind(SystemMessageNotifier::class.java).toInstance(SystemMessageNotifier())
+        bind(Gson::class.java).toProvider(GsonProvider::class.java).providesSingletonInScope()
 
         //Navigation
         val cicerone = Cicerone.create()
         bind(Router::class.java).toInstance(cicerone.router)
         bind(NavigatorHolder::class.java).toInstance(cicerone.navigatorHolder)
 
-        //Auth
-        bind(AuthHolder::class.java).to(Prefs::class.java).singletonInScope()
+        //Session
+        bind(SessionRepository::class.java).singletonInScope()
 
         //AppInfo
         bind(AppInfo::class.java).toInstance(

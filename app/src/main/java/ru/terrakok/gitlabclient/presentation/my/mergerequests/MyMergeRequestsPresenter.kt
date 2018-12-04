@@ -1,7 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.my.mergerequests
 
 import com.arellomobile.mvp.InjectViewState
-import io.reactivex.Observable
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.extension.openInfo
@@ -9,7 +8,6 @@ import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestIntera
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
-import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 import javax.inject.Inject
 
@@ -17,7 +15,6 @@ import javax.inject.Inject
 class MyMergeRequestsPresenter @Inject constructor(
     initFilter: Filter,
     private val interactor: MergeRequestInteractor,
-    private val mdConverter: MarkDownConverter,
     private val errorHandler: ErrorHandler,
     private val router: FlowRouter
 ) : BasePresenter<MyMergeRequestListView>() {
@@ -32,21 +29,7 @@ class MyMergeRequestsPresenter @Inject constructor(
     }
 
     private val paginator = Paginator(
-        {
-            interactor.getMyMergeRequests(filter.createdByMe, filter.onlyOpened, it)
-                .flattenAsObservable { it }
-                .concatMap { item ->
-                    when (item) {
-                        is TargetHeader.Public -> {
-                            mdConverter.markdownToSpannable(item.body.toString())
-                                .map { md -> item.copy(body = md) }
-                                .toObservable()
-                        }
-                        is TargetHeader.Confidential -> Observable.just(item)
-                    }
-                }
-                .toList()
-        },
+        { interactor.getMyMergeRequests(filter.createdByMe, filter.onlyOpened, it) },
         object : Paginator.ViewController<TargetHeader> {
             override fun showEmptyProgress(show: Boolean) {
                 viewState.showEmptyProgress(show)

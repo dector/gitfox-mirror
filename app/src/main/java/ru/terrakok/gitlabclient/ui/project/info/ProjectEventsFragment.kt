@@ -8,7 +8,6 @@ import kotlinx.android.synthetic.main.layout_base_list.*
 import kotlinx.android.synthetic.main.layout_zero.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
-import ru.terrakok.gitlabclient.extension.argument
 import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.project.events.ProjectEventsPresenter
@@ -16,20 +15,19 @@ import ru.terrakok.gitlabclient.presentation.project.events.ProjectEventsView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.ZeroViewHolder
 import ru.terrakok.gitlabclient.ui.my.TargetsAdapter
-import toothpick.Toothpick
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 13.06.17
  */
 class ProjectEventsFragment : BaseFragment(), ProjectEventsView {
     override val layoutRes = R.layout.fragment_project_events
-    private val scopeName: String? by argument(ARG_SCOPE_NAME)
 
     @InjectPresenter
     lateinit var presenter: ProjectEventsPresenter
 
     private val adapter: TargetsAdapter by lazy {
         TargetsAdapter(
+            mvpDelegate,
             { presenter.onUserClick(it) },
             { presenter.onItemClick(it) },
             { presenter.loadNextEventsPage() }
@@ -39,9 +37,7 @@ class ProjectEventsFragment : BaseFragment(), ProjectEventsView {
 
     @ProvidePresenter
     fun providePresenter(): ProjectEventsPresenter =
-        Toothpick
-            .openScope(scopeName)
-            .getInstance(ProjectEventsPresenter::class.java)
+        scope.getInstance(ProjectEventsPresenter::class.java)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -93,15 +89,5 @@ class ProjectEventsFragment : BaseFragment(), ProjectEventsView {
 
     override fun onBackPressed() {
         presenter.onBackPressed()
-    }
-
-    companion object {
-        private const val ARG_SCOPE_NAME = "arg_scope_name"
-        fun create(scope: String) =
-            ProjectEventsFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_SCOPE_NAME, scope)
-                }
-            }
     }
 }

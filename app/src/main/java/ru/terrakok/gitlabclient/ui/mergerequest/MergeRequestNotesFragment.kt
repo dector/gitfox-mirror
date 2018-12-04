@@ -12,15 +12,13 @@ import kotlinx.android.synthetic.main.fragment_issue_notes.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.extension.visible
-import ru.terrakok.gitlabclient.presentation.global.NoteWithFormattedBody
+import ru.terrakok.gitlabclient.presentation.global.NoteWithProjectId
 import ru.terrakok.gitlabclient.presentation.mergerequest.notes.MergeRequestNotesPresenter
 import ru.terrakok.gitlabclient.presentation.mergerequest.notes.MergeRequestNotesView
-import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.NewNoteViewController
 import ru.terrakok.gitlabclient.ui.global.list.SimpleDividerDecorator
 import ru.terrakok.gitlabclient.ui.global.list.TargetNotesAdapter
-import toothpick.Toothpick
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 15.02.18.
@@ -29,7 +27,7 @@ class MergeRequestNotesFragment : BaseFragment(), MergeRequestNotesView {
 
     override val layoutRes = R.layout.fragment_mr_notes
 
-    private val adapter by lazy { TargetNotesAdapter() }
+    private val adapter by lazy { TargetNotesAdapter(mvpDelegate) }
     private val fadeFabScrollToBottom by lazy {
         Fade().apply {
             addTarget(fabScrollToBottom)
@@ -42,8 +40,7 @@ class MergeRequestNotesFragment : BaseFragment(), MergeRequestNotesView {
 
     @ProvidePresenter
     fun providePresenter() =
-        Toothpick.openScope(DI.MERGE_REQUEST_FLOW_SCOPE)
-            .getInstance(MergeRequestNotesPresenter::class.java)
+        scope.getInstance(MergeRequestNotesPresenter::class.java)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -83,7 +80,7 @@ class MergeRequestNotesFragment : BaseFragment(), MergeRequestNotesView {
         showProgressDialog(show)
     }
 
-    override fun showNotes(notes: List<NoteWithFormattedBody>, scrollToEnd: Boolean) {
+    override fun showNotes(notes: List<NoteWithProjectId>, scrollToEnd: Boolean) {
         adapter.setData(notes)
         if (scrollToEnd) {
             recyclerView.scrollToPosition(adapter.itemCount - 1)

@@ -11,10 +11,8 @@ import ru.terrakok.gitlabclient.entity.app.develop.AppLibrary
 import ru.terrakok.gitlabclient.extension.tryOpenLink
 import ru.terrakok.gitlabclient.presentation.libraries.LibrariesPresenter
 import ru.terrakok.gitlabclient.presentation.libraries.LibrariesView
-import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.list.AppLibraryAdapterDelegate
-import toothpick.Toothpick
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 24.12.17.
@@ -29,9 +27,7 @@ class LibrariesFragment : BaseFragment(), LibrariesView {
 
     @ProvidePresenter
     fun providePresenter(): LibrariesPresenter =
-        Toothpick
-            .openScope(DI.SERVER_SCOPE)
-            .getInstance(LibrariesPresenter::class.java)
+        scope.getInstance(LibrariesPresenter::class.java)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

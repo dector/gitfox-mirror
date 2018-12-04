@@ -4,10 +4,10 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.arellomobile.mvp.MvpDelegate
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegate
 import kotlinx.android.synthetic.main.item_target_badge.view.*
 import kotlinx.android.synthetic.main.item_target_header_public.view.*
-import ru.noties.markwon.Markwon
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.target.TargetBadge
 import ru.terrakok.gitlabclient.entity.app.target.TargetBadgeIcon
@@ -19,6 +19,7 @@ import ru.terrakok.gitlabclient.extension.*
  * @author Konstantin Tskhovrebov (aka terrakok) on 18.06.17.
  */
 class TargetHeaderPublicAdapterDelegate(
+    private val mvpDelegate: MvpDelegate<*>,
     private val avatarClickListener: (Long) -> Unit,
     private val clickListener: (TargetHeader.Public) -> Unit
 ) : AdapterDelegate<MutableList<Any>>() {
@@ -65,7 +66,8 @@ class TargetHeaderPublicAdapterDelegate(
             this.item = item
             with(itemView) {
                 titleTextView.text = item.title.getHumanName(resources)
-                Markwon.setText(descriptionTextView, item.body)
+                descriptionTextView.initWithParentDelegate(mvpDelegate)
+                descriptionTextView.setMarkdown(item.body, item.internal?.projectId)
                 descriptionTextView.movementMethod = null //disable internal link click
                 avatarImageView.loadRoundedImage(item.author.avatarUrl)
                 iconImageView.setImageResource(item.icon.getIcon())

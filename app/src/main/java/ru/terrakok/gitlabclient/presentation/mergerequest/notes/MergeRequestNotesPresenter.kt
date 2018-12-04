@@ -4,8 +4,7 @@ import com.arellomobile.mvp.InjectViewState
 import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
-import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
-import ru.terrakok.gitlabclient.presentation.global.NoteWithFormattedBody
+import ru.terrakok.gitlabclient.presentation.global.NoteWithProjectId
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.MergeRequestId
 import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
@@ -19,7 +18,6 @@ class MergeRequestNotesPresenter @Inject constructor(
     @ProjectId projectIdWrapper: PrimitiveWrapper<Long>,
     @MergeRequestId mrIdWrapper: PrimitiveWrapper<Long>,
     private val mrInteractor: MergeRequestInteractor,
-    private val mdConverter: MarkDownConverter,
     private val errorHandler: ErrorHandler
 ) : BasePresenter<MergeRequestNotesView>() {
 
@@ -33,15 +31,8 @@ class MergeRequestNotesPresenter @Inject constructor(
             .getAllMergeRequestNotes(projectId, mrId)
             .doOnSubscribe { viewState.showEmptyProgress(true) }
             .doAfterTerminate { viewState.showEmptyProgress(false) }
-            .flattenAsObservable { it }
-            .concatMap { note ->
-                mdConverter.markdownToSpannable(note.body)
-                    .map { NoteWithFormattedBody(note, it) }
-                    .toObservable()
-            }
-            .toList()
             .subscribe(
-                { viewState.showNotes(it, false) },
+                { viewState.showNotes(it.map { NoteWithProjectId(it, projectId) }, false) },
                 { errorHandler.proceed(it, { viewState.showMessage(it) }) }
             )
             .connect()
@@ -49,20 +40,11 @@ class MergeRequestNotesPresenter @Inject constructor(
 
     fun onSendClicked(body: String) =
         mrInteractor.createMergeRequestNote(projectId, mrId, body)
-            .flatMap {
-                mrInteractor.getAllMergeRequestNotes(projectId, mrId)
-                    .flattenAsObservable { it }
-                    .concatMap { note ->
-                        mdConverter.markdownToSpannable(note.body)
-                            .map { NoteWithFormattedBody(note, it) }
-                            .toObservable()
-                    }
-                    .toList()
-            }
+            .flatMap { mrInteractor.getAllMergeRequestNotes(projectId, mrId) }
             .doOnSubscribe { viewState.showBlockingProgress(true) }
             .doAfterTerminate { viewState.showBlockingProgress(false) }
             .subscribe(
-                { viewState.showNotes(it, true) },
+                { viewState.showNotes(it.map { NoteWithProjectId(it, projectId) }, true) },
                 { errorHandler.proceed(it, { viewState.showMessage(it) }) }
             )
             .connect()

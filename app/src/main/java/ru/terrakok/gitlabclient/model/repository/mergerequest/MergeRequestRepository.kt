@@ -245,6 +245,14 @@ class MergeRequestRepository @Inject constructor(
             .subscribeOn(schedulers.io())
             .observeOn(schedulers.ui())
 
+    fun getMilestoneMergeRequests(
+        projectId: Long,
+        milestoneId: Long
+    ) = api
+        .getMilestoneMergeRequests(projectId, milestoneId)
+        .subscribeOn(schedulers.io())
+        .observeOn(schedulers.ui())
+
     companion object {
         // See GitLab documentation: https://docs.gitlab.com/ee/api/#pagination.
         private const val MAX_PAGE_SIZE = 100

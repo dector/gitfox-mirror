@@ -7,10 +7,8 @@ import com.jakewharton.threetenabp.AndroidThreeTen
 import io.fabric.sdk.android.Fabric
 import ru.noties.markwon.SpannableConfiguration
 import ru.noties.markwon.spans.SpannableTheme
-import ru.terrakok.gitlabclient.model.data.auth.AuthHolder
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.toothpick.module.AppModule
-import ru.terrakok.gitlabclient.toothpick.module.ServerModule
 import timber.log.Timber
 import toothpick.Toothpick
 import toothpick.configuration.Configuration
@@ -62,13 +60,8 @@ class App : Application() {
     }
 
     private fun initAppScope() {
-        val appScope = Toothpick.openScope(DI.APP_SCOPE)
-        appScope.installModules(AppModule(this))
-
-        //By default we need init ServerScope for launch app
-        val authHolder = appScope.getInstance(AuthHolder::class.java)
-        val serverScope = Toothpick.openScopes(DI.APP_SCOPE, DI.SERVER_SCOPE)
-        serverScope.installModules(ServerModule(authHolder.serverPath))
+        Toothpick.openScope(DI.APP_SCOPE)
+            .installModules(AppModule(this))
     }
 
     private fun initMarkwon() {

@@ -10,9 +10,7 @@ import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.presentation.mergerequest.MergeRequestPresenter
 import ru.terrakok.gitlabclient.presentation.mergerequest.MergeRequestView
-import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import toothpick.Toothpick
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 14.02.18.
@@ -25,9 +23,8 @@ class MergeRequestFragment : BaseFragment(), MergeRequestView {
     lateinit var presenter: MergeRequestPresenter
 
     @ProvidePresenter
-    fun providePresenter() =
-        Toothpick.openScope(DI.MERGE_REQUEST_FLOW_SCOPE)
-            .getInstance(MergeRequestPresenter::class.java)
+    fun providePresenter(): MergeRequestPresenter =
+        scope.getInstance(MergeRequestPresenter::class.java)
 
     private val adapter by lazy { MergeRequestPagesAdapter() }
 

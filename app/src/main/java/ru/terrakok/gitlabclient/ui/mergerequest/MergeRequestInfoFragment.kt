@@ -1,5 +1,7 @@
 package ru.terrakok.gitlabclient.ui.mergerequest
 
+import android.os.Bundle
+import android.view.View
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_mr_info.*
@@ -10,9 +12,7 @@ import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
 import ru.terrakok.gitlabclient.extension.*
 import ru.terrakok.gitlabclient.presentation.mergerequest.info.MergeRequestInfoPresenter
 import ru.terrakok.gitlabclient.presentation.mergerequest.info.MergeRequestInfoView
-import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import toothpick.Toothpick
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 03.02.18.
@@ -26,10 +26,14 @@ class MergeRequestInfoFragment : BaseFragment(), MergeRequestInfoView {
 
     @ProvidePresenter
     fun providePresenter() =
-        Toothpick.openScope(DI.MERGE_REQUEST_FLOW_SCOPE)
-            .getInstance(MergeRequestInfoPresenter::class.java)
+        scope.getInstance(MergeRequestInfoPresenter::class.java)
 
-    override fun showInfo(mr: MergeRequest, mdDescription: CharSequence) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        descriptionTextView.initWithParentDelegate(mvpDelegate)
+    }
+
+    override fun showInfo(mr: MergeRequest) {
         titleTextView.text = mr.title
         when (mr.state) {
             MergeRequestState.OPENED -> {
@@ -71,7 +75,7 @@ class MergeRequestInfoFragment : BaseFragment(), MergeRequestInfoView {
             }
         }
         avatarImageView.loadRoundedImage(mr.author.avatarUrl, context)
-        Markwon.setText(descriptionTextView, mdDescription)
+        descriptionTextView.setMarkdown(mr.description, mr.projectId)
     }
 
     override fun showEmptyProgress(show: Boolean) {

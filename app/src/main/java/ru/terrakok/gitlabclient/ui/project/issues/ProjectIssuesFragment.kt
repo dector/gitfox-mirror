@@ -9,7 +9,6 @@ import kotlinx.android.synthetic.main.layout_zero.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.entity.issue.IssueState
-import ru.terrakok.gitlabclient.extension.argument
 import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.project.issues.ProjectIssuesPresenter
@@ -17,7 +16,7 @@ import ru.terrakok.gitlabclient.presentation.project.issues.ProjectIssuesView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.ZeroViewHolder
 import ru.terrakok.gitlabclient.ui.my.TargetsAdapter
-import toothpick.Toothpick
+import toothpick.Scope
 import toothpick.config.Module
 
 /**
@@ -25,29 +24,26 @@ import toothpick.config.Module
  */
 class ProjectIssuesFragment : BaseFragment(), ProjectIssuesView {
     override val layoutRes = R.layout.fragment_project_issues
-    private val scopeName: String? by argument(ARG_SCOPE_NAME)
 
-    @InjectPresenter
-    lateinit var presenter: ProjectIssuesPresenter
-
-    @ProvidePresenter
-    fun providePresenter(): ProjectIssuesPresenter {
-        val subScopeName = "ProjectIssuesScope_${hashCode()}"
-        val scope = Toothpick.openScopes(scopeName, subScopeName)
+    override val scopeModuleInstaller = { scope: Scope ->
         scope.installModules(object : Module() {
             init {
                 bind(IssueState::class.java)
                     .toInstance(arguments!!.getSerializable(ARG_ISSUE_STATE) as IssueState)
             }
         })
-
-        return scope.getInstance(ProjectIssuesPresenter::class.java).also {
-            Toothpick.closeScope(subScopeName)
-        }
     }
+
+    @InjectPresenter
+    lateinit var presenter: ProjectIssuesPresenter
+
+    @ProvidePresenter
+    fun providePresenter(): ProjectIssuesPresenter =
+        scope.getInstance(ProjectIssuesPresenter::class.java)
 
     private val adapter: TargetsAdapter by lazy {
         TargetsAdapter(
+            mvpDelegate,
             { presenter.onUserClick(it) },
             { presenter.onIssueClick(it) },
             { presenter.loadNextIssuesPage() }
@@ -113,13 +109,11 @@ class ProjectIssuesFragment : BaseFragment(), ProjectIssuesView {
 
     companion object {
         private const val ARG_ISSUE_STATE = "arg issue state"
-        private const val ARG_SCOPE_NAME = "arg_scope_name"
 
-        fun create(issueState: IssueState, scope: String) =
+        fun create(issueState: IssueState) =
             ProjectIssuesFragment().apply {
                 arguments = Bundle().apply {
                     putSerializable(ARG_ISSUE_STATE, issueState)
-                    putString(ARG_SCOPE_NAME, scope)
                 }
             }
     }

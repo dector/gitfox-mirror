@@ -1,7 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.project.issues
 
 import com.arellomobile.mvp.InjectViewState
-import io.reactivex.Observable
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.entity.issue.IssueState
@@ -10,7 +9,6 @@ import ru.terrakok.gitlabclient.model.interactor.issue.IssueInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
-import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
@@ -24,7 +22,6 @@ class ProjectIssuesPresenter @Inject constructor(
     @ProjectId private val projectIdWrapper: PrimitiveWrapper<Long>,
     private val issueState: IssueState,
     private val issueInteractor: IssueInteractor,
-    private val mdConverter: MarkDownConverter,
     private val errorHandler: ErrorHandler,
     private val router: FlowRouter
 ) : BasePresenter<ProjectIssuesView>() {
@@ -38,21 +35,7 @@ class ProjectIssuesPresenter @Inject constructor(
     }
 
     private val paginator = Paginator(
-        {
-            issueInteractor.getIssues(projectId, issueState, it)
-                    .flattenAsObservable { it }
-                    .concatMap { item ->
-                        when (item) {
-                            is TargetHeader.Public -> {
-                                mdConverter.markdownToSpannable(item.body.toString())
-                                    .map { md -> item.copy(body = md) }
-                                    .toObservable()
-                            }
-                            is TargetHeader.Confidential -> Observable.just(item)
-                        }
-                    }
-                    .toList()
-        },
+        { issueInteractor.getIssues(projectId, issueState, it) },
         object : Paginator.ViewController<TargetHeader> {
             override fun showEmptyProgress(show: Boolean) {
                 viewState.showEmptyProgress(show)

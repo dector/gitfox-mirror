@@ -13,7 +13,6 @@ import ru.terrakok.gitlabclient.extension.*
 import ru.terrakok.gitlabclient.presentation.project.info.ProjectInfoPresenter
 import ru.terrakok.gitlabclient.presentation.project.info.ProjectInfoView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import toothpick.Toothpick
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 27.04.17.
@@ -21,16 +20,13 @@ import toothpick.Toothpick
 class ProjectInfoFragment : BaseFragment(), ProjectInfoView {
 
     override val layoutRes = R.layout.fragment_project_info
-    private val scopeName: String? by argument(ARG_SCOPE_NAME)
 
     @InjectPresenter
     lateinit var presenter: ProjectInfoPresenter
 
     @ProvidePresenter
     fun providePresenter(): ProjectInfoPresenter =
-        Toothpick
-            .openScopes(scopeName)
-            .getInstance(ProjectInfoPresenter::class.java)
+        scope.getInstance(ProjectInfoPresenter::class.java)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -39,9 +35,11 @@ class ProjectInfoFragment : BaseFragment(), ProjectInfoView {
             starsTextView.setStartDrawable(context.getTintDrawable(R.drawable.ic_star_black_24dp, R.color.colorPrimary))
             forksTextView.setStartDrawable(context.getTintDrawable(R.drawable.ic_fork, R.color.colorPrimary))
         }
+
+        readmeTextView.initWithParentDelegate(mvpDelegate)
     }
 
-    override fun showProject(project: Project, mdReadme: CharSequence) {
+    override fun showProject(project: Project, mdReadme: String) {
         titleTextView.text = project.nameWithNamespace
         descriptionTextView.text = project.description
         starsTextView.text = project.starCount.toString()
@@ -57,7 +55,7 @@ class ProjectInfoFragment : BaseFragment(), ProjectInfoView {
             }
         )
 
-        Markwon.setText(readmeTextView, mdReadme)
+        readmeTextView.setMarkdown(mdReadme, project.id)
     }
 
     override fun showProgress(show: Boolean) {
@@ -67,15 +65,5 @@ class ProjectInfoFragment : BaseFragment(), ProjectInfoView {
 
     override fun showMessage(message: String) {
         showSnackMessage(message)
-    }
-
-    companion object {
-        private const val ARG_SCOPE_NAME = "arg_scope_name"
-        fun create(scope: String) =
-            ProjectInfoFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_SCOPE_NAME, scope)
-                }
-            }
     }
 }

@@ -3,7 +3,7 @@ package ru.terrakok.gitlabclient.entity.mergerequest
 import com.google.gson.annotations.SerializedName
 import org.threeten.bp.LocalDateTime
 import ru.terrakok.gitlabclient.entity.Author
-import ru.terrakok.gitlabclient.entity.Milestone
+import ru.terrakok.gitlabclient.entity.milestone.Milestone
 import ru.terrakok.gitlabclient.entity.User
 
 data class MergeRequest(
