@@ -32,8 +32,7 @@ class ProjectFilesPresenter @Inject constructor(
     private val projectBranches = arrayListOf<Branch>()
 
     init {
-        projectFileDestination.setOnProjectFileDestinationListener(object :
-            ProjectFileDestination.OnProjectFileDestinationListener {
+        projectFileDestination.setCallback(object : ProjectFileDestination.Callback {
             override fun onMoveForward(fromRoot: Boolean) {
                 val inRoot = projectFileDestination.isInRoot()
                 if (fromRoot) {

@@ -10,16 +10,16 @@ class ProjectFileDestination {
         private set
     val paths = arrayListOf<String>()
 
-    interface OnProjectFileDestinationListener {
+    interface Callback {
         fun onMoveForward(fromRoot: Boolean)
         fun onMoveBack(fromRoot: Boolean)
         fun onBranchChange(branchName: String)
     }
 
-    private lateinit var onProjectFileDestinationListener: OnProjectFileDestinationListener
+    private var callback: Callback? = null
 
-    fun setOnProjectFileDestinationListener(onProjectFileDestinationListener: OnProjectFileDestinationListener) {
-        this.onProjectFileDestinationListener = onProjectFileDestinationListener
+    fun setCallback(callback: Callback) {
+        this.callback = callback
     }
 
     fun init(defaultPath: String, branchName: String) {
@@ -46,13 +46,13 @@ class ProjectFileDestination {
         if (!isInitiated()) {
             paths.add(ROOT_PATH)
         }
-        onProjectFileDestinationListener.onMoveForward(fromRoot)
+        callback?.onMoveForward(fromRoot)
     }
 
     fun moveForward(path: String) {
         val fromRoot = isInRoot()
         paths.add(path)
-        onProjectFileDestinationListener.onMoveForward(fromRoot)
+        callback?.onMoveForward(fromRoot)
     }
 
     fun moveBack() {
@@ -60,7 +60,7 @@ class ProjectFileDestination {
         if (!fromRoot) {
             paths.removeAt(paths.lastIndex)
         }
-        onProjectFileDestinationListener.onMoveBack(fromRoot)
+        callback?.onMoveBack(fromRoot)
     }
 
     fun isInRoot() = paths.size == 1
@@ -70,7 +70,7 @@ class ProjectFileDestination {
             this.branchName = branchName
             this.paths.clear()
             this.paths.add(ROOT_PATH)
-            onProjectFileDestinationListener.onBranchChange(branchName)
+            callback?.onBranchChange(branchName)
         }
     }
 
