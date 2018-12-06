@@ -7,7 +7,6 @@ import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
-import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import toothpick.Toothpick
 import javax.inject.Inject
@@ -26,8 +25,8 @@ class MyMergeRequestsContainerFragment : BaseFragment() {
     private var showOnlyOpened = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Toothpick.inject(this, Toothpick.openScope(DI.DRAWER_FLOW_SCOPE))
         super.onCreate(savedInstanceState)
+        Toothpick.inject(this, scope)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -69,8 +68,8 @@ class MyMergeRequestsContainerFragment : BaseFragment() {
 
     private inner class MyMergeRequestsPagesAdapter : FragmentPagerAdapter(childFragmentManager) {
         override fun getItem(position: Int) = when (position) {
-            0 -> Screens.createFragment(Screens.MY_MR_SCREEN, Pair(true, showOnlyOpened))
-            1 -> Screens.createFragment(Screens.MY_MR_SCREEN, Pair(false, showOnlyOpened))
+            0 -> Screens.MyMergeRequests(true, showOnlyOpened).fragment
+            1 -> Screens.MyMergeRequests(false, showOnlyOpened).fragment
             else -> null
         }
 

@@ -1,17 +1,18 @@
 package ru.terrakok.gitlabclient.ui.mergerequest
 
+import android.os.Bundle
+import android.view.View
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_mr_info.*
 import ru.noties.markwon.Markwon
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
 import ru.terrakok.gitlabclient.extension.*
 import ru.terrakok.gitlabclient.presentation.mergerequest.info.MergeRequestInfoPresenter
 import ru.terrakok.gitlabclient.presentation.mergerequest.info.MergeRequestInfoView
-import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import toothpick.Toothpick
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 03.02.18.
@@ -25,35 +26,34 @@ class MergeRequestInfoFragment : BaseFragment(), MergeRequestInfoView {
 
     @ProvidePresenter
     fun providePresenter() =
-        Toothpick.openScope(DI.MERGE_REQUEST_FLOW_SCOPE)
-            .getInstance(MergeRequestInfoPresenter::class.java)
+        scope.getInstance(MergeRequestInfoPresenter::class.java)
 
-    override fun showInfo(mrInfo: MergeRequestInfoView.MergeRequestInfo) {
-        val mergeRequest = mrInfo.mr
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        descriptionTextView.initWithParentDelegate(mvpDelegate)
+    }
 
-        (parentFragment as? MergeRequestInfoToolbar)
-            ?.setTitle("!${mergeRequest.iid}", mrInfo.project.name)
-
-        titleTextView.text = mergeRequest.title
-        when (mergeRequest.state) {
+    override fun showInfo(mr: MergeRequest) {
+        titleTextView.text = mr.title
+        when (mr.state) {
             MergeRequestState.OPENED -> {
                 stateImageView.tint(R.color.green)
                 subtitleTextView.text = String.format(
                     getString(R.string.merge_request_info_subtitle),
                     getString(R.string.target_status_opened),
-                    mergeRequest.author.name,
-                    mergeRequest.createdAt.humanTime(resources)
+                    mr.author.name,
+                    mr.createdAt.humanTime(resources)
                 )
             }
             MergeRequestState.MERGED -> {
                 stateImageView.tint(R.color.blue)
                 subtitleTextView.text =
-                    if (mergeRequest.mergedBy != null && mergeRequest.mergedAt != null) {
+                    if (mr.mergedBy != null && mr.mergedAt != null) {
                         String.format(
                             getString(R.string.issue_info_subtitle),
                             getString(R.string.target_status_merged),
-                            mergeRequest.mergedBy.name,
-                            mergeRequest.mergedAt.humanTime(resources)
+                            mr.mergedBy.name,
+                            mr.mergedAt.humanTime(resources)
                         )
                     } else {
                         getString(R.string.target_status_merged)
@@ -62,32 +62,28 @@ class MergeRequestInfoFragment : BaseFragment(), MergeRequestInfoView {
             MergeRequestState.CLOSED -> {
                 stateImageView.tint(R.color.red)
                 subtitleTextView.text =
-                    if (mergeRequest.closedBy != null && mergeRequest.closedAt != null) {
+                    if (mr.closedBy != null && mr.closedAt != null) {
                         String.format(
                             getString(R.string.issue_info_subtitle),
                             getString(R.string.target_status_closed),
-                            mergeRequest.closedBy.name,
-                            mergeRequest.closedAt.humanTime(resources)
+                            mr.closedBy.name,
+                            mr.closedAt.humanTime(resources)
                         )
                     } else {
                         getString(R.string.target_status_closed)
                     }
             }
         }
-        avatarImageView.loadRoundedImage(mergeRequest.author.avatarUrl, context)
-        Markwon.setText(descriptionTextView, mrInfo.mdDescription)
+        avatarImageView.loadRoundedImage(mr.author.avatarUrl, context)
+        descriptionTextView.setMarkdown(mr.description, mr.projectId)
     }
 
-    override fun showProgress(show: Boolean) {
-        view?.visible(!show)
-        showProgressDialog(show)
+    override fun showEmptyProgress(show: Boolean) {
+        mrInfoContainer.visible(!show)
+        fullscreenProgressView.visible(show)
     }
 
     override fun showMessage(message: String) {
         showSnackMessage(message)
-    }
-
-    interface MergeRequestInfoToolbar {
-        fun setTitle(title: String, subTitle: String)
     }
 }

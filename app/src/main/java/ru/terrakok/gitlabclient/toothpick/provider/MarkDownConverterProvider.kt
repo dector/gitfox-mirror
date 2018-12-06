@@ -1,17 +1,15 @@
 package ru.terrakok.gitlabclient.toothpick.provider
 
 import android.content.Context
-import android.graphics.Rect
 import okhttp3.OkHttpClient
 import org.commonmark.ext.gfm.strikethrough.StrikethroughExtension
 import org.commonmark.ext.gfm.tables.TablesExtension
+import org.commonmark.node.Visitor
 import org.commonmark.parser.Parser
 import ru.noties.markwon.SpannableBuilder
 import ru.noties.markwon.SpannableConfiguration
 import ru.noties.markwon.UrlProcessorRelativeToAbsolute
 import ru.noties.markwon.il.AsyncDrawableLoader
-import ru.noties.markwon.renderer.ImageSize
-import ru.noties.markwon.renderer.ImageSizeResolver
 import ru.noties.markwon.spans.SpannableTheme
 import ru.noties.markwon.tasklist.TaskListExtension
 import ru.terrakok.gitlabclient.R
@@ -53,60 +51,21 @@ class MarkDownConverterProvider @Inject constructor(
 
     private val urlProcessor = UrlProcessorRelativeToAbsolute(defaultServerPath)
 
-    private val imageSizeResolver = object : ImageSizeResolver() {
-        override fun resolveImageSize(
-            imageSize: ImageSize?,
-            imageBounds: Rect,
-            canvasWidth: Int,
-            textSize: Float
-        ): Rect {
-            // This implementation was taken from SNAPSHOT @2.0,0.
-            // Post process bounds to fit canvasWidth (previously was inside AsyncDrawable)
-            // must be applied only if imageSize is null.
-            val rect: Rect
-            val w = imageBounds.width()
-            rect = if (w > canvasWidth) {
-                val reduceRatio = w.toFloat() / canvasWidth
-                Rect(
-                    0,
-                    0,
-                    canvasWidth,
-                    (imageBounds.height() / reduceRatio + .5f).toInt()
-                )
-            } else {
-                imageBounds
-            }
-            return rect
-        }
-    }
-
     private val spannableConfig
         get() = SpannableConfiguration.builder(context)
             .asyncDrawableLoader(asyncDrawableLoader)
             .urlProcessor(urlProcessor)
             .theme(spannableTheme)
-            .imageSizeResolver(imageSizeResolver)
             .build()
 
-    fun getMarkdownDecorator(labels: List<Label>): MarkdownDecorator {
+    private fun getMarkdownDecorator(labelDescriptions: List<LabelDescription>): MarkdownDecorator {
         return CompositeMarkdownDecorator(
-            LabelDecorator(
-                labels.flatMap {
-                    listOf(it.id.toString(), it.name)
-                }
-            )
+            LabelDecorator(labelDescriptions)
         )
     }
 
-    fun getParser(labels: List<Label>): Parser {
-        val labelDescriptions = labels.map {
-            LabelDescription(
-                id = it.id,
-                name = it.name,
-                color = it.color
-            )
-        }
-        return with(Parser.Builder()) {
+    private fun getParser(labelDescriptions: List<LabelDescription>): Parser {
+        return Parser.Builder().apply {
             extensions(
                 listOf(
                     StrikethroughExtension.create(),
@@ -122,24 +81,33 @@ class MarkDownConverterProvider @Inject constructor(
                     )
                 )
             )
-            build()
-        }
+        }.build()
     }
 
-    fun getCustomVisitor(spannableBuilder: SpannableBuilder) = CompositeVisitor(
-        spannableConfig,
-        spannableBuilder,
-        LabelVisitor(
+    private fun getCustomVisitor(spannableBuilder: SpannableBuilder): Visitor =
+        CompositeVisitor(
             spannableConfig,
-            spannableBuilder
+            spannableBuilder,
+            LabelVisitor(
+                spannableConfig,
+                spannableBuilder
+            )
         )
-    )
 
-    fun get(labels: List<Label>) = MarkDownConverter(
-        spannableConfig,
-        getParser(labels),
-        getMarkdownDecorator(labels),
-        { builder -> getCustomVisitor(builder) },
-        schedulers
-    )
+    fun get(labels: List<Label>): MarkDownConverter {
+        val labelDescriptions = labels.map {
+            LabelDescription(
+                id = it.id,
+                name = it.name,
+                color = it.color
+            )
+        }
+        return MarkDownConverter(
+            spannableConfig,
+            getParser(labelDescriptions),
+            getMarkdownDecorator(labelDescriptions),
+            { builder -> getCustomVisitor(builder) },
+            schedulers
+        )
+    }
 }

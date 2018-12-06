@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,7 +9,8 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp">
+        android:layout_height="0dp"
+        android:animateLayoutChanges="true">
 
         <View
             android:id="@+id/view"
@@ -20,26 +20,26 @@
             app:layout_constraintBottom_toBottomOf="@+id/serverNameTV"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/avatarImageView"
-            android:src="@drawable/default_img"
             android:layout_width="72dp"
             android:layout_height="72dp"
             android:layout_margin="16dp"
+            android:src="@drawable/default_img"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/nickTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
             android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:textColor="@color/white"
@@ -49,26 +49,26 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/avatarImageView"
-            tools:text="Terrakok"/>
+            tools:text="Terrakok" />
 
         <TextView
             android:id="@+id/serverNameTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
             android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:ellipsize="end"
             android:maxLines="1"
             android:paddingBottom="16dp"
             android:textColor="@color/white"
             android:textSize="14sp"
-            android:ellipsize="end"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/nickTV"
-            tools:text="gitlab.com"/>
+            tools:text="gitlab.com" />
 
         <ImageView
             android:id="@+id/logoutIV"
@@ -76,12 +76,22 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:padding="8dp"
+            android:src="@drawable/ic_exit_to_app_white_24dp"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_exit_to_app_white_24dp"/>
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/dropDownImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:src="@drawable/ic_arrow_drop_down_black_24dp"
+            android:tint="@color/white"
+            app:layout_constraintBottom_toBottomOf="@id/view"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <LinearLayout
-            android:id="@+id/navDrawerMenuContainer"
+            android:id="@+id/accountsContainer"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -90,15 +100,31 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view">
 
+            <include layout="@layout/item_add_acount" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/navDrawerMenuContainer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/accountsContainer"
+            app:layout_goneMarginTop="8dp">
+
             <TextView
                 android:id="@+id/activityMI"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/selector_light_grey_to_white"
-                android:drawableLeft="@drawable/ic_assessment_grey_800_24dp"
-                android:drawablePadding="16dp"
+                android:drawableStart="@drawable/ic_assessment_grey_800_24dp"
+                android:drawablePadding="24dp"
                 android:gravity="center_vertical"
-                android:padding="16dp"
+                android:paddingStart="24dp"
+                android:paddingTop="16dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="16dp"
                 android:text="@string/activity_item"
                 android:textColor="@color/primary_text"
                 android:textSize="14sp"
@@ -109,10 +135,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/selector_light_grey_to_white"
-                android:drawableLeft="@drawable/ic_view_list_grey_800_24dp"
-                android:drawablePadding="16dp"
+                android:drawableStart="@drawable/ic_view_list_grey_800_24dp"
+                android:drawablePadding="24dp"
                 android:gravity="center_vertical"
-                android:padding="16dp"
+                android:paddingStart="24dp"
+                android:paddingTop="16dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="16dp"
                 android:text="@string/projects_item"
                 android:textColor="@color/primary_text"
                 android:textSize="14sp"
@@ -121,19 +150,22 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/divider_size"
-                android:background="@color/divider"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp" />
+                android:layout_marginBottom="8dp"
+                android:background="@color/divider" />
 
             <TextView
                 android:id="@+id/aboutMI"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/selector_light_grey_to_white"
-                android:drawableLeft="@drawable/ic_info_grey_800_24dp"
-                android:drawablePadding="16dp"
+                android:drawableStart="@drawable/ic_info_grey_800_24dp"
+                android:drawablePadding="24dp"
                 android:gravity="center_vertical"
-                android:padding="16dp"
+                android:paddingStart="24dp"
+                android:paddingTop="16dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="16dp"
                 android:text="@string/about_item"
                 android:textColor="@color/primary_text"
                 android:textSize="14sp"

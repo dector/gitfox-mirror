@@ -3,7 +3,7 @@ package ru.terrakok.gitlabclient.entity.mergerequest
 import com.google.gson.annotations.SerializedName
 import org.threeten.bp.LocalDateTime
 import ru.terrakok.gitlabclient.entity.Author
-import ru.terrakok.gitlabclient.entity.Milestone
+import ru.terrakok.gitlabclient.entity.milestone.Milestone
 import ru.terrakok.gitlabclient.entity.User
 
 data class MergeRequest(
@@ -22,7 +22,7 @@ data class MergeRequest(
     @SerializedName("assignee") val assignee: User?,
     @SerializedName("source_project_id") val sourceProjectId: Int,
     @SerializedName("target_project_id") val targetProjectId: Int,
-    @SerializedName("description") val description: String?,
+    @SerializedName("description") val description: String,
     @SerializedName("work_in_progress") val workInProgress: Boolean,
     @SerializedName("milestone") val milestone: Milestone?,
     @SerializedName("merge_when_pipeline_succeeds") val mergeWhenPipelineSucceeds: Boolean,
@@ -41,5 +41,6 @@ data class MergeRequest(
     @SerializedName("closed_by") val closedBy: Author?,
     @SerializedName("closed_at") val closedAt: LocalDateTime?,
     @SerializedName("merged_by") val mergedBy: Author?,
-    @SerializedName("merged_at") val mergedAt: LocalDateTime?
+    @SerializedName("merged_at") val mergedAt: LocalDateTime?,
+    @SerializedName("changes") val changes: List<MergeRequestChange>?
 )

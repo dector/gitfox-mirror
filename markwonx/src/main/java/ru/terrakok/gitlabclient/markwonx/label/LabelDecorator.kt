@@ -4,8 +4,15 @@ import ru.terrakok.gitlabclient.markwonx.GitlabMarkdownExtension
 import ru.terrakok.gitlabclient.markwonx.MarkdownDecorator
 
 class LabelDecorator(
-    val supportedLabels: List<String>
+    val labelDescriptions: List<LabelDescription>
 ) : MarkdownDecorator {
+
+    val supportedLabels by lazy {
+        labelDescriptions.flatMap {
+            listOf(it.id.toString(), it.name)
+        }
+    }
+
     override fun decorate(markdown: String): String = LabelType
         .values()
         .fold(markdown) { acc, type ->

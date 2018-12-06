@@ -13,11 +13,10 @@ import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.project.issues.ProjectIssuesPresenter
 import ru.terrakok.gitlabclient.presentation.project.issues.ProjectIssuesView
-import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.ZeroViewHolder
 import ru.terrakok.gitlabclient.ui.my.TargetsAdapter
-import toothpick.Toothpick
+import toothpick.Scope
 import toothpick.config.Module
 
 /**
@@ -26,27 +25,25 @@ import toothpick.config.Module
 class ProjectIssuesFragment : BaseFragment(), ProjectIssuesView {
     override val layoutRes = R.layout.fragment_project_issues
 
-    @InjectPresenter
-    lateinit var presenter: ProjectIssuesPresenter
-
-    @ProvidePresenter
-    fun providePresenter(): ProjectIssuesPresenter {
-        val scopeName = "ProjectIssuesScope_${hashCode()}"
-        val scope = Toothpick.openScopes(DI.PROJECT_FLOW_SCOPE, scopeName)
+    override val scopeModuleInstaller = { scope: Scope ->
         scope.installModules(object : Module() {
             init {
                 bind(IssueState::class.java)
                     .toInstance(arguments!!.getSerializable(ARG_ISSUE_STATE) as IssueState)
             }
         })
-
-        return scope.getInstance(ProjectIssuesPresenter::class.java).also {
-            Toothpick.closeScope(scopeName)
-        }
     }
+
+    @InjectPresenter
+    lateinit var presenter: ProjectIssuesPresenter
+
+    @ProvidePresenter
+    fun providePresenter(): ProjectIssuesPresenter =
+        scope.getInstance(ProjectIssuesPresenter::class.java)
 
     private val adapter: TargetsAdapter by lazy {
         TargetsAdapter(
+            mvpDelegate,
             { presenter.onUserClick(it) },
             { presenter.onIssueClick(it) },
             { presenter.loadNextIssuesPage() }

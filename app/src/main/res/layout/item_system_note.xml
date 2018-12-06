@@ -29,7 +29,7 @@
         app:layout_constraintTop_toTopOf="@id/iconImageView"
         tools:text="Marc MacLeod"/>
 
-    <TextView
+    <ru.terrakok.gitlabclient.ui.global.markdown.MarkdownTextView
         android:id="@+id/subtitleTextView"
         style="@style/TextBody"
         android:layout_width="0dp"

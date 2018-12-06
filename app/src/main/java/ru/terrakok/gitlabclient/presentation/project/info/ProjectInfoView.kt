@@ -12,7 +12,7 @@ import ru.terrakok.gitlabclient.entity.Project
 @StateStrategyType(AddToEndSingleStrategy::class)
 interface ProjectInfoView : MvpView {
 
-    fun showProject(project: Project, mdReadme: CharSequence)
+    fun showProject(project: Project, mdReadme: String)
     fun showProgress(show: Boolean)
 
     @StateStrategyType(OneExecutionStateStrategy::class)

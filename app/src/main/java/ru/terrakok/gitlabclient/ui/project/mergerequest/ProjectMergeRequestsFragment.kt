@@ -13,11 +13,10 @@ import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.project.mergerequest.ProjectMergeRequestsPresenter
 import ru.terrakok.gitlabclient.presentation.project.mergerequest.ProjectMergeRequestsView
-import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.ZeroViewHolder
 import ru.terrakok.gitlabclient.ui.my.TargetsAdapter
-import toothpick.Toothpick
+import toothpick.Scope
 import toothpick.config.Module
 
 /**
@@ -26,27 +25,25 @@ import toothpick.config.Module
 class ProjectMergeRequestsFragment : BaseFragment(), ProjectMergeRequestsView {
     override val layoutRes = R.layout.fragment_my_merge_requests
 
-    @InjectPresenter
-    lateinit var presenter: ProjectMergeRequestsPresenter
-
-    @ProvidePresenter
-    fun providePresenter(): ProjectMergeRequestsPresenter {
-        val scopeName = "ProjectMergeRequestsScope_${hashCode()}"
-        val scope = Toothpick.openScopes(DI.PROJECT_FLOW_SCOPE, scopeName)
+    override val scopeModuleInstaller = { scope: Scope ->
         scope.installModules(object : Module() {
             init {
                 bind(MergeRequestState::class.java)
                     .toInstance(arguments!!.getSerializable(ARG_MERGE_REQUEST_STATE) as MergeRequestState)
             }
         })
-
-        return scope.getInstance(ProjectMergeRequestsPresenter::class.java).also {
-            Toothpick.closeScope(scopeName)
-        }
     }
+
+    @InjectPresenter
+    lateinit var presenter: ProjectMergeRequestsPresenter
+
+    @ProvidePresenter
+    fun providePresenter(): ProjectMergeRequestsPresenter =
+        scope.getInstance(ProjectMergeRequestsPresenter::class.java)
 
     private val adapter: TargetsAdapter by lazy {
         TargetsAdapter(
+            mvpDelegate,
             { presenter.onUserClick(it) },
             { presenter.onMergeRequestClick(it) },
             { presenter.loadNextMergeRequestsPage() }

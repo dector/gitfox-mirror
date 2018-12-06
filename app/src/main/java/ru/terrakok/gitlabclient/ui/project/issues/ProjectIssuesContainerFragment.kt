@@ -25,8 +25,8 @@ class ProjectIssuesContainerFragment : BaseFragment() {
     private inner class ProjectIssuesPagesAdapter : FragmentPagerAdapter(childFragmentManager) {
 
         override fun getItem(position: Int) = when (position) {
-            0 -> Screens.createFragment(Screens.PROJECT_ISSUES_SCREEN, IssueState.OPENED)
-            1 -> Screens.createFragment(Screens.PROJECT_ISSUES_SCREEN, IssueState.CLOSED)
+            0 -> Screens.ProjectIssues(IssueState.OPENED).fragment
+            1 -> Screens.ProjectIssues(IssueState.CLOSED).fragment
             else -> null
         }
 

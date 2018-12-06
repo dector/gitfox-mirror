@@ -15,10 +15,8 @@ import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.auth.AuthPresenter
 import ru.terrakok.gitlabclient.presentation.auth.AuthView
-import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.ZeroViewHolder
-import toothpick.Toothpick
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 27.03.17
@@ -33,11 +31,8 @@ class AuthFragment : BaseFragment(), AuthView, CustomServerAuthFragment.OnClickL
     lateinit var presenter: AuthPresenter
 
     @ProvidePresenter
-    fun providePresenter(): AuthPresenter {
-        return Toothpick
-            .openScope(DI.AUTH_FLOW_SCOPE)
-            .getInstance(AuthPresenter::class.java)
-    }
+    fun providePresenter(): AuthPresenter =
+        scope.getInstance(AuthPresenter::class.java)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -64,7 +59,7 @@ class AuthFragment : BaseFragment(), AuthView, CustomServerAuthFragment.OnClickL
             userAgentString = BuildConfig.WEB_AUTH_USER_AGENT
         }
 
-        webView.setWebViewClient(object : WebViewClient() {
+        webView.webViewClient = object : WebViewClient() {
 
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 showProgressDialog(true)
@@ -94,7 +89,7 @@ class AuthFragment : BaseFragment(), AuthView, CustomServerAuthFragment.OnClickL
                 super.onReceivedError(view, request, error)
                 showEmptyView(true)
             }
-        })
+        }
 
         zeroViewHolder = ZeroViewHolder(zeroLayout, { presenter.refresh() })
     }
@@ -102,6 +97,21 @@ class AuthFragment : BaseFragment(), AuthView, CustomServerAuthFragment.OnClickL
     private fun showEmptyView(show: Boolean) {
         zeroViewHolder?.apply { if (show) showEmptyError() else hide() }
         webView.visible(!show)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        webView.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        webView.onPause()
+    }
+
+    override fun onDestroyView() {
+        webView.destroy()
+        super.onDestroyView()
     }
 
     override fun loadUrl(url: String) {
