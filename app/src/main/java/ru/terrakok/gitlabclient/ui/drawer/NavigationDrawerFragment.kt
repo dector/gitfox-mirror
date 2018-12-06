@@ -5,24 +5,24 @@ import android.view.View
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_nav_drawer.*
+import kotlinx.android.synthetic.main.item_user_acount.view.*
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.app.user.MyUserInfo
+import ru.terrakok.gitlabclient.entity.app.session.UserAccount
+import ru.terrakok.gitlabclient.extension.inflate
 import ru.terrakok.gitlabclient.extension.loadRoundedImage
+import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerPresenter
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem.*
-import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.MessageDialogFragment
-import toothpick.Toothpick
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 04.04.17
  */
 class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView, MessageDialogFragment.OnClickListener {
     override val layoutRes = R.layout.fragment_nav_drawer
-    private var userId: Long? = null
 
     private val itemClickListener = { view: View ->
         presenter.onMenuItemClick(view.tag as MenuItem)
@@ -32,16 +32,17 @@ class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView, MessageDi
     lateinit var presenter: NavigationDrawerPresenter
 
     @ProvidePresenter
-    fun providePresenter(): NavigationDrawerPresenter {
-        return Toothpick
-            .openScope(DI.DRAWER_FLOW_SCOPE)
-            .getInstance(NavigationDrawerPresenter::class.java)
-    }
+    fun providePresenter(): NavigationDrawerPresenter =
+        scope.getInstance(NavigationDrawerPresenter::class.java)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        avatarImageView.setOnClickListener { userId?.let { presenter.onUserClick(it) } }
+        showAccountsList(false)
+        avatarImageView.setOnClickListener { presenter.onUserClick() }
+        dropDownImageView.setOnClickListener {
+            showAccountsList(accountsContainer.visibility == View.GONE)
+        }
 
         logoutIV.setOnClickListener {
             MessageDialogFragment.create(
@@ -61,26 +62,43 @@ class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView, MessageDi
         aboutMI.setOnClickListener(itemClickListener)
     }
 
-    override fun showUserInfo(user: MyUserInfo) {
-        if (user.user == null) {
-            userId = null
-            nickTV.text = ""
-            serverNameTV.text = ""
-            avatarImageView.visibility = View.GONE
-        } else {
-            with(user.user) {
-                userId = this.id
-                nickTV.text = this.name
-                serverNameTV.text = user.serverName
-                avatarImageView.loadRoundedImage(this.avatarUrl, context)
-            }
-        }
-    }
-
     override fun selectMenuItem(item: MenuItem) {
         (0 until navDrawerMenuContainer.childCount)
             .map { navDrawerMenuContainer.getChildAt(it) }
             .forEach { menuItem -> menuItem.tag?.let { menuItem.isSelected = it == item } }
+    }
+
+    override fun setAccounts(accounts: List<UserAccount>, currentAccount: UserAccount) {
+        nickTV.text = currentAccount.userName
+        serverNameTV.text = currentAccount.serverPath
+        avatarImageView.loadRoundedImage(currentAccount.avatarUrl, context)
+
+        accountsContainer.removeAllViews()
+        accounts.forEach { acc ->
+            accountsContainer.inflate(R.layout.item_user_acount)
+                .apply {
+                    avatarImageView.loadRoundedImage(acc.avatarUrl, context)
+                    nameTextView.text = acc.userName
+                    serverTextView.text = acc.serverPath
+                    selectorView.visible(acc == currentAccount)
+                    setOnClickListener { presenter.onAccountClick(acc) }
+                }
+                .also {
+                    accountsContainer.addView(it)
+                }
+        }
+        accountsContainer.inflate(R.layout.item_add_acount)
+            .apply {
+                setOnClickListener { presenter.onAddAccountClick() }
+            }
+            .also {
+                accountsContainer.addView(it)
+            }
+    }
+
+    private fun showAccountsList(show: Boolean) {
+        accountsContainer.visible(show)
+        dropDownImageView.rotation = if (show) 180f else 0f
     }
 
     fun onScreenChanged(item: MenuItem) {

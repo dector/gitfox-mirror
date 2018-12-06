@@ -69,7 +69,7 @@ class TodoRepository @Inject constructor(
         badges.add(TargetBadge.Text(todo.author.username, AppTarget.USER, todo.author.id))
         badges.add(TargetBadge.Text(todo.project.name, AppTarget.PROJECT, todo.project.id))
 
-        return TargetHeader(
+        return TargetHeader.Public(
             todo.author,
             TargetHeaderIcon.NONE,
             TargetHeaderTitle.Todo(
@@ -86,8 +86,7 @@ class TodoRepository @Inject constructor(
             appTarget,
             target.id,
             TargetInternal(target.projectId, target.iid),
-            badges,
-            todo.project.id
+            badges
         )
     }
 

@@ -2,7 +2,7 @@ package ru.terrakok.gitlabclient.model.data.server.interceptor
 
 import okhttp3.Interceptor
 import okhttp3.Response
-import ru.terrakok.gitlabclient.model.data.auth.AuthHolder
+import ru.terrakok.gitlabclient.entity.app.session.AuthHolder
 import ru.terrakok.gitlabclient.model.data.server.TokenInvalidError
 
 /**
@@ -14,7 +14,7 @@ class AuthHeaderInterceptor(private val authData: AuthHolder) : Interceptor {
         val token = authData.token
         if (token != null) {
             try {
-                request = if (authData.isOAuthToken) {
+                request = if (authData.isOAuth) {
                     request.newBuilder().addHeader("Authorization", "Bearer $token").build()
                 } else {
                     request.newBuilder().addHeader("PRIVATE-TOKEN", token).build()

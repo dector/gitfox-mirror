@@ -4,7 +4,7 @@ import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
-import ru.terrakok.gitlabclient.presentation.global.NoteWithFormattedBody
+import ru.terrakok.gitlabclient.presentation.global.NoteWithProjectId
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 12.02.18.
@@ -12,12 +12,9 @@ import ru.terrakok.gitlabclient.presentation.global.NoteWithFormattedBody
 @StateStrategyType(AddToEndSingleStrategy::class)
 interface MergeRequestNotesView : MvpView {
 
-    fun showRefreshProgress(show: Boolean)
     fun showEmptyProgress(show: Boolean)
-    fun showPageProgress(show: Boolean)
-    fun showEmptyView(show: Boolean)
-    fun showEmptyError(show: Boolean, message: String?)
-    fun showNotes(show: Boolean, notes: List<NoteWithFormattedBody>)
+    fun showNotes(notes: List<NoteWithProjectId>, scrollToEnd: Boolean)
+    fun showBlockingProgress(show: Boolean)
 
     @StateStrategyType(OneExecutionStateStrategy::class)
     fun showMessage(message: String)

@@ -16,6 +16,9 @@ annotation class DefaultServerPath
 annotation class ServerPath
 
 @Qualifier
+annotation class AppDevelopersPath
+
+@Qualifier
 annotation class IssueId
 
 @Qualifier
@@ -32,3 +35,9 @@ annotation class TodoListPendingState
 
 @Qualifier
 annotation class UserId
+
+@Qualifier
+annotation class CacheLifetime
+
+@Qualifier
+annotation class WithErrorHandler

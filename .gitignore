@@ -8,7 +8,6 @@ local.properties
 
 # Idea
 .idea/
-!.idea/codeStyles
 **/*.iml
 
 # Mac OS

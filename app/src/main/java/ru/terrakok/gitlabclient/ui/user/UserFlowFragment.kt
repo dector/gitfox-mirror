@@ -14,6 +14,7 @@ import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.module.FlowNavigationModule
 import ru.terrakok.gitlabclient.toothpick.qualifier.UserId
 import ru.terrakok.gitlabclient.ui.global.FlowFragment
+import toothpick.Scope
 import toothpick.Toothpick
 import toothpick.config.Module
 
@@ -24,24 +25,9 @@ class UserFlowFragment : FlowFragment(), MvpView {
 
     private val userId by argument(ARG_USER_ID, 0L)
 
-    @InjectPresenter
-    lateinit var presenter: UserFlowPresenter
+    override val parentScopeName = DI.SERVER_SCOPE
 
-    @ProvidePresenter
-    fun providePresenter() =
-        Toothpick.openScope(DI.USER_FLOW_SCOPE)
-            .getInstance(UserFlowPresenter::class.java)
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        initScope()
-        super.onCreate(savedInstanceState)
-        if (childFragmentManager.fragments.isEmpty()) {
-            navigator.setLaunchScreen(Screens.USER_INFO_SCREEN, null)
-        }
-    }
-
-    private fun initScope() {
-        val scope = Toothpick.openScopes(DI.SERVER_SCOPE, DI.USER_FLOW_SCOPE)
+    override val scopeModuleInstaller = { scope: Scope ->
         scope.installModules(
             FlowNavigationModule(scope.getInstance(Router::class.java)),
             object : Module() {
@@ -52,7 +38,21 @@ class UserFlowFragment : FlowFragment(), MvpView {
                 }
             }
         )
+    }
+
+    @InjectPresenter
+    lateinit var presenter: UserFlowPresenter
+
+    @ProvidePresenter
+    fun providePresenter(): UserFlowPresenter =
+        scope.getInstance(UserFlowPresenter::class.java)
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         Toothpick.inject(this, scope)
+        if (childFragmentManager.fragments.isEmpty()) {
+            navigator.setLaunchScreen(Screens.UserInfo)
+        }
     }
 
     override fun onExit() {

@@ -9,7 +9,6 @@ import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.Paginator
-import ru.terrakok.gitlabclient.presentation.global.ProjectMarkDownConverterProvider
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.TodoListPendingState
 import javax.inject.Inject
@@ -21,7 +20,6 @@ import javax.inject.Inject
 class MyTodosPresenter @Inject constructor(
     @TodoListPendingState private val pendingStateWrapper: PrimitiveWrapper<Boolean>,
     private val todoListInteractor: TodoListInteractor,
-    private val mdConverterProvider: ProjectMarkDownConverterProvider,
     private val errorHandler: ErrorHandler,
     private val router: FlowRouter
 ) : BasePresenter<MyTodoListView>() {
@@ -35,21 +33,7 @@ class MyTodosPresenter @Inject constructor(
     }
 
     private val paginator = Paginator(
-        {
-            todoListInteractor.getMyTodos(isPending, it)
-                .flattenAsObservable { it }
-                .concatMap { item ->
-                    mdConverterProvider
-                        .getMarkdownConverter(item.projectId)
-                        .flatMap { converter ->
-                            converter
-                                .markdownToSpannable(item.body.toString())
-                                .map { md -> item.copy(body = md) }
-                        }
-                        .toObservable()
-                }
-                .toList()
-        },
+        { todoListInteractor.getMyTodos(isPending, it) },
         object : Paginator.ViewController<TargetHeader> {
             override fun showEmptyProgress(show: Boolean) {
                 viewState.showEmptyProgress(show)
@@ -85,8 +69,8 @@ class MyTodosPresenter @Inject constructor(
         }
     )
 
-    fun onTodoClick(item: TargetHeader) = item.openInfo(router)
-    fun onUserClick(userId: Long) = router.startFlow(Screens.USER_FLOW, userId)
+    fun onTodoClick(item: TargetHeader.Public) = item.openInfo(router)
+    fun onUserClick(userId: Long) = router.startFlow(Screens.UserFlow(userId))
     fun refreshTodos() = paginator.refresh()
     fun loadNextTodosPage() = paginator.loadNewPage()
 

@@ -8,7 +8,6 @@ import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
 import ru.terrakok.gitlabclient.presentation.projects.ProjectsListPresenter
-import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import toothpick.Toothpick
 import javax.inject.Inject
@@ -25,8 +24,8 @@ class ProjectsContainerFragment : BaseFragment() {
     private val adapter: ProjectsPagesAdapter by lazy { ProjectsPagesAdapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Toothpick.inject(this, Toothpick.openScope(DI.DRAWER_FLOW_SCOPE))
         super.onCreate(savedInstanceState)
+        Toothpick.inject(this, scope)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -42,9 +41,9 @@ class ProjectsContainerFragment : BaseFragment() {
 
     private inner class ProjectsPagesAdapter : FragmentPagerAdapter(childFragmentManager) {
         override fun getItem(position: Int) = when (position) {
-            0 -> Screens.createFragment(Screens.PROJECTS_SCREEN, ProjectsListPresenter.MAIN_PROJECTS)
-            1 -> Screens.createFragment(Screens.PROJECTS_SCREEN, ProjectsListPresenter.MY_PROJECTS)
-            2 -> Screens.createFragment(Screens.PROJECTS_SCREEN, ProjectsListPresenter.STARRED_PROJECTS)
+            0 -> Screens.Projects(ProjectsListPresenter.MAIN_PROJECTS).fragment
+            1 -> Screens.Projects(ProjectsListPresenter.MY_PROJECTS).fragment
+            2 -> Screens.Projects(ProjectsListPresenter.STARRED_PROJECTS).fragment
             else -> null
         }
 

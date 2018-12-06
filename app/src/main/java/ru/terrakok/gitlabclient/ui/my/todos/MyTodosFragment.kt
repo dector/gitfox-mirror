@@ -12,13 +12,12 @@ import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.my.todos.MyTodoListView
 import ru.terrakok.gitlabclient.presentation.my.todos.MyTodosPresenter
-import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.TodoListPendingState
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.ZeroViewHolder
 import ru.terrakok.gitlabclient.ui.my.TargetsAdapter
-import toothpick.Toothpick
+import toothpick.Scope
 import toothpick.config.Module
 
 /**
@@ -30,6 +29,7 @@ class MyTodosFragment : BaseFragment(), MyTodoListView {
 
     private val adapter: TargetsAdapter by lazy {
         TargetsAdapter(
+            mvpDelegate,
             { presenter.onUserClick(it) },
             { presenter.onTodoClick(it) },
             { presenter.loadNextTodosPage() }
@@ -37,13 +37,7 @@ class MyTodosFragment : BaseFragment(), MyTodoListView {
     }
     private var zeroViewHolder: ZeroViewHolder? = null
 
-    @InjectPresenter
-    lateinit var presenter: MyTodosPresenter
-
-    @ProvidePresenter
-    fun providePresenter(): MyTodosPresenter {
-        val scopeName = "MyTodoListScope_${hashCode()}"
-        val scope = Toothpick.openScopes(DI.DRAWER_FLOW_SCOPE, scopeName)
+    override val scopeModuleInstaller = { scope: Scope ->
         scope.installModules(object : Module() {
             init {
                 bind(PrimitiveWrapper::class.java)
@@ -51,11 +45,14 @@ class MyTodosFragment : BaseFragment(), MyTodoListView {
                     .toInstance(PrimitiveWrapper(arguments?.get(ARG_MODE_IS_PENDING)))
             }
         })
-
-        return scope.getInstance(MyTodosPresenter::class.java).also {
-            Toothpick.closeScope(scopeName)
-        }
     }
+
+    @InjectPresenter
+    lateinit var presenter: MyTodosPresenter
+
+    @ProvidePresenter
+    fun providePresenter(): MyTodosPresenter =
+        scope.getInstance(MyTodosPresenter::class.java)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

@@ -2,21 +2,25 @@ package ru.terrakok.gitlabclient.ui.my
 
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
+import com.arellomobile.mvp.MvpDelegate
 import com.hannesdorfmann.adapterdelegates3.ListDelegationAdapter
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.ui.global.list.ProgressAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.ProgressItem
-import ru.terrakok.gitlabclient.ui.global.list.TargetHeaderAdapterDelegate
+import ru.terrakok.gitlabclient.ui.global.list.TargetHeaderConfidentialAdapterDelegate
+import ru.terrakok.gitlabclient.ui.global.list.TargetHeaderPublicAdapterDelegate
 
 class TargetsAdapter(
+    mvpDelegate: MvpDelegate<*>,
     userClickListener: (Long) -> Unit,
-    clickListener: (TargetHeader) -> Unit,
+    clickListener: (TargetHeader.Public) -> Unit,
     private val nextPageListener: () -> Unit
 ) : ListDelegationAdapter<MutableList<Any>>() {
 
     init {
         items = mutableListOf()
-        delegatesManager.addDelegate(TargetHeaderAdapterDelegate(userClickListener, clickListener))
+        delegatesManager.addDelegate(TargetHeaderPublicAdapterDelegate(mvpDelegate, userClickListener, clickListener))
+        delegatesManager.addDelegate(TargetHeaderConfidentialAdapterDelegate())
         delegatesManager.addDelegate(ProgressAdapterDelegate())
     }
 
@@ -71,9 +75,11 @@ class TargetsAdapter(
             val oldItem = oldItems[oldItemPosition]
             val newItem = newItems[newItemPosition]
 
-            return if (newItem is TargetHeader && oldItem is TargetHeader) {
+            return if (newItem is TargetHeader.Public && oldItem is TargetHeader.Public) {
                 newItem.target == oldItem.target && newItem.targetId == oldItem.targetId
                         && newItem.date == oldItem.date
+            } else if (newItem is TargetHeader.Confidential && oldItem is TargetHeader.Confidential) {
+                true
             } else {
                 newItem is ProgressItem && oldItem is ProgressItem
             }
