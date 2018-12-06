@@ -60,5 +60,10 @@ class ProjectInteractor @Inject constructor(
             .observeOn(schedulers.ui())
 
 
+    fun getCommitDiff(
+        projectId: Long,
+        commitId: String
+    ) = projectRepository.getCommitDiff(projectId, commitId)
+
     class ReadmeNotFound : Exception()
 }
