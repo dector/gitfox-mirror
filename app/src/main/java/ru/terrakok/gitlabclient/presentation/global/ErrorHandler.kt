@@ -2,13 +2,15 @@ package ru.terrakok.gitlabclient.presentation.global
 
 import com.jakewharton.rxrelay2.PublishRelay
 import ru.terrakok.cicerone.Router
+import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.extension.userMessage
 import ru.terrakok.gitlabclient.model.data.server.ServerError
 import ru.terrakok.gitlabclient.model.data.server.TokenInvalidError
-import ru.terrakok.gitlabclient.model.interactor.auth.AuthInteractor
+import ru.terrakok.gitlabclient.model.interactor.session.SessionInteractor
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
+import ru.terrakok.gitlabclient.model.system.message.SystemMessageNotifier
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -18,7 +20,8 @@ import javax.inject.Inject
  */
 class ErrorHandler @Inject constructor(
     private val router: Router,
-    private val authInteractor: AuthInteractor,
+    private val sessionInteractor: SessionInteractor,
+    private val systemMessageNotifier: SystemMessageNotifier,
     private val resourceManager: ResourceManager,
     private val schedulers: SchedulersProvider
 ) {
@@ -49,7 +52,12 @@ class ErrorHandler @Inject constructor(
     }
 
     private fun logout() {
-        authInteractor.logout()
-        router.newRootScreen(Screens.AUTH_FLOW)
+        systemMessageNotifier.send(resourceManager.getString(R.string.auto_logout_message))
+        val hasOtherAccount = sessionInteractor.logout()
+        if (hasOtherAccount) {
+            router.newRootScreen(Screens.DrawerFlow)
+        } else {
+            router.newRootScreen(Screens.AuthFlow)
+        }
     }
 }

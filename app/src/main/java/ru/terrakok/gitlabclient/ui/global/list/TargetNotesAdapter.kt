@@ -1,22 +1,25 @@
 package ru.terrakok.gitlabclient.ui.global.list
 
 import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
+import com.arellomobile.mvp.MvpDelegate
 import com.hannesdorfmann.adapterdelegates3.ListDelegationAdapter
-import ru.terrakok.gitlabclient.presentation.global.NoteWithFormattedBody
+import ru.terrakok.gitlabclient.presentation.global.NoteWithProjectId
 
 class TargetNotesAdapter(
-    private val nextPageListener: () -> Unit
+    mvpDelegate: MvpDelegate<*>
 ) : ListDelegationAdapter<MutableList<Any>>() {
 
     init {
         items = mutableListOf()
-        delegatesManager.addDelegate(UserNoteAdapterDelegate({}))
-        delegatesManager.addDelegate(SystemNoteAdapterDelegate({}))
-        delegatesManager.addDelegate(ProgressAdapterDelegate())
+        delegatesManager.addDelegate(UserNoteAdapterDelegate(mvpDelegate))
+        delegatesManager.addDelegate(SystemNoteAdapterDelegate(mvpDelegate))
     }
 
-    fun setData(data: List<NoteWithFormattedBody>) {
+    override fun getItemId(position: Int): Long {
+        return (items[position] as NoteWithProjectId).note.id
+    }
+
+    fun setData(data: List<NoteWithProjectId>) {
         val oldItems = items.toList()
 
         items.clear()
@@ -25,31 +28,6 @@ class TargetNotesAdapter(
         DiffUtil
             .calculateDiff(DiffCallback(items, oldItems), false)
             .dispatchUpdatesTo(this)
-    }
-
-    fun showProgress(isVisible: Boolean) {
-        val oldData = items.toList()
-        val currentProgress = isProgress()
-
-        if (isVisible && !currentProgress) {
-            items.add(ProgressItem())
-            notifyItemInserted(items.lastIndex)
-        } else if (!isVisible && currentProgress) {
-            items.remove(items.last())
-            notifyItemRemoved(oldData.lastIndex)
-        }
-    }
-
-    private fun isProgress() = items.isNotEmpty() && items.last() is ProgressItem
-
-    override fun onBindViewHolder(
-        holder: RecyclerView.ViewHolder,
-        position: Int,
-        payloads: MutableList<Any?>
-    ) {
-        super.onBindViewHolder(holder, position, payloads)
-
-        if (position == items.size - 10) nextPageListener()
     }
 
     private inner class DiffCallback(
@@ -61,25 +39,17 @@ class TargetNotesAdapter(
         override fun getNewListSize() = newItems.size
 
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            val oldItem = oldItems[oldItemPosition]
-            val newItem = newItems[newItemPosition]
+            val oldItem = oldItems[oldItemPosition] as NoteWithProjectId
+            val newItem = newItems[newItemPosition] as NoteWithProjectId
 
-            return if (newItem is NoteWithFormattedBody && oldItem is NoteWithFormattedBody) {
-                newItem.note.id == oldItem.note.id
-            } else {
-                newItem is ProgressItem && oldItem is ProgressItem
-            }
+            return newItem.note.id == oldItem.note.id
         }
 
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            val oldItem = oldItems[oldItemPosition]
-            val newItem = newItems[newItemPosition]
+            val oldItem = oldItems[oldItemPosition] as NoteWithProjectId
+            val newItem = newItems[newItemPosition] as NoteWithProjectId
 
-            return if (newItem is NoteWithFormattedBody && oldItem is NoteWithFormattedBody) {
-                newItem == oldItem
-            } else {
-                true
-            }
+            return newItem == oldItem
         }
     }
 }

@@ -26,6 +26,7 @@
 
 # We use ProGuard only for minify
 -keep class ru.terrakok.** { *; }
+-keep class com.bumptech.glide.GeneratedAppGlideModuleImpl
 
 -dontwarn com.roughike.bottombar.VerticalScrollingBehavior$ScrollDirection
 -dontwarn org.codehaus.mojo.animal_sniffer.*

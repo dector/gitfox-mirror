@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <ScrollView
+        android:id="@+id/projectInfoLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
 
         <android.support.constraint.ConstraintLayout
-            android:id="@+id/projectInfoLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/avatarImageView"
@@ -108,7 +107,7 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/descriptionTextView" />
 
-            <TextView
+            <ru.terrakok.gitlabclient.ui.global.markdown.MarkdownTextView
                 android:id="@+id/readmeTextView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -122,4 +121,12 @@
 
     </ScrollView>
 
-</LinearLayout>
+    <include
+        android:id="@+id/fullscreenProgressView"
+        layout="@layout/layout_gitlab_progress"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+</FrameLayout>

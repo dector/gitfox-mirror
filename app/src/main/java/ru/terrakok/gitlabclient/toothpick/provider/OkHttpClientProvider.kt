@@ -5,10 +5,9 @@ import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import ru.terrakok.gitlabclient.BuildConfig
-import ru.terrakok.gitlabclient.model.data.auth.AuthHolder
+import ru.terrakok.gitlabclient.entity.app.session.AuthHolder
 import ru.terrakok.gitlabclient.model.data.server.interceptor.AuthHeaderInterceptor
 import ru.terrakok.gitlabclient.model.data.server.interceptor.CurlLoggingInterceptor
-import ru.terrakok.gitlabclient.model.data.server.interceptor.ErrorResponseInterceptor
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Provider
@@ -22,12 +21,11 @@ class OkHttpClientProvider @Inject constructor(
 ) : Provider<OkHttpClient> {
 
     override fun get() = with(OkHttpClient.Builder()) {
-        cache(Cache(context.cacheDir, 20 * 1024))
-        connectTimeout(30, TimeUnit.SECONDS)
-        readTimeout(30, TimeUnit.SECONDS)
+        cache(Cache(context.cacheDir, CACHE_SIZE_BYTES))
+        connectTimeout(TIMEOUT, TimeUnit.SECONDS)
+        readTimeout(TIMEOUT, TimeUnit.SECONDS)
 
         addNetworkInterceptor(AuthHeaderInterceptor(authData))
-        addNetworkInterceptor(ErrorResponseInterceptor())
         if (BuildConfig.DEBUG) {
             addNetworkInterceptor(
                 HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
@@ -35,5 +33,10 @@ class OkHttpClientProvider @Inject constructor(
             addNetworkInterceptor(CurlLoggingInterceptor())
         }
         build()
+    }
+
+    companion object {
+        private const val CACHE_SIZE_BYTES = 20 * 1024L
+        private const val TIMEOUT = 30L
     }
 }

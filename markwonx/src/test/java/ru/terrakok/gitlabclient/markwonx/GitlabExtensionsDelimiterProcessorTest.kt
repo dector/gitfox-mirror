@@ -17,7 +17,7 @@ class GitlabExtensionsDelimiterProcessorTest {
     @Before
     fun setUp() {
         labels = listOf(LABEL)
-        decorator = LabelDecorator(listOf(LABEL_STR))
+        decorator = LabelDecorator(listOf(LABEL))
         parser = with(Parser.Builder()) {
             customDelimiterProcessor(
                 GitlabExtensionsDelimiterProcessor(

@@ -76,9 +76,6 @@ class ProjectRepository @Inject constructor(
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
 
-    // Here i'm caching projectLabels for each project for current session.
-    // Otherwise there will be too much requests per each project.
-    // For example, in the lists.
     fun getProjectLabels(projectId: Long): Single<List<Label>> {
         return projectLabels.getOrPut(projectId) {
             api
@@ -90,6 +87,5 @@ class ProjectRepository @Inject constructor(
                 .share()
         }.singleOrError()
     }
-
 
 }

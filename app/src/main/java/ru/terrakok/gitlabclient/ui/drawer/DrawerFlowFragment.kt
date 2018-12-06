@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.drawer_flow_fragment.*
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
-import ru.terrakok.cicerone.android.SupportFragmentNavigator
+import ru.terrakok.cicerone.android.support.SupportAppNavigator
 import ru.terrakok.cicerone.commands.Command
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
@@ -27,6 +27,7 @@ import ru.terrakok.gitlabclient.ui.about.AboutFragment
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.main.MainFlowFragment
 import ru.terrakok.gitlabclient.ui.projects.ProjectsContainerFragment
+import toothpick.Scope
 import toothpick.Toothpick
 import javax.inject.Inject
 
@@ -51,30 +52,31 @@ class DrawerFlowFragment : BaseFragment(), MvpView {
     lateinit var presenter: DrawerFlowPresenter
 
     @ProvidePresenter
-    fun providePresenter(): DrawerFlowPresenter {
-        return Toothpick
-            .openScope(DI.DRAWER_FLOW_SCOPE)
-            .getInstance(DrawerFlowPresenter::class.java)
+    fun providePresenter(): DrawerFlowPresenter =
+        scope.getInstance(DrawerFlowPresenter::class.java)
+
+
+    override val parentScopeName = DI.SERVER_SCOPE
+    override val scopeModuleInstaller = { scope: Scope ->
+        scope.installModules(
+            FlowNavigationModule(scope.getInstance(Router::class.java)),
+            GlobalMenuModule()
+        )
     }
 
     private val navigator: Navigator by lazy {
-        object : SupportFragmentNavigator(childFragmentManager, R.id.mainContainer) {
+        object : SupportAppNavigator(this.activity, childFragmentManager, R.id.mainContainer) {
 
             override fun applyCommands(commands: Array<out Command>?) {
                 super.applyCommands(commands)
                 updateNavDrawer()
             }
 
-            override fun exit() {
+            override fun activityBack() {
                 presenter.onExit()
             }
 
-            override fun createFragment(screenKey: String, data: Any?): Fragment? =
-                Screens.createFragment(screenKey, data)
-
-            override fun showSystemMessage(message: String?) {}
-
-            override fun setupFragmentTransactionAnimation(
+            override fun setupFragmentTransaction(
                 command: Command?,
                 currentFragment: Fragment?,
                 nextFragment: Fragment?,
@@ -87,8 +89,8 @@ class DrawerFlowFragment : BaseFragment(), MvpView {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        initScope()
         super.onCreate(savedInstanceState)
+        Toothpick.inject(this, scope)
 
         if (childFragmentManager.fragments.isEmpty()) {
             childFragmentManager
@@ -96,17 +98,10 @@ class DrawerFlowFragment : BaseFragment(), MvpView {
                 .replace(R.id.navDrawerContainer, NavigationDrawerFragment())
                 .commitNow()
 
-            navigator.setLaunchScreen(Screens.MAIN_FLOW)
+            navigator.setLaunchScreen(Screens.MainFlow)
+        } else {
+            updateNavDrawer()
         }
-    }
-
-    private fun initScope() {
-        val scope = Toothpick.openScopes(DI.SERVER_SCOPE, DI.DRAWER_FLOW_SCOPE)
-        scope.installModules(
-            FlowNavigationModule(scope.getInstance(Router::class.java)),
-            GlobalMenuModule()
-        )
-        Toothpick.inject(this@DrawerFlowFragment, scope)
     }
 
     override fun onResume() {

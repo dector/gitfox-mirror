@@ -7,9 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.webkit.URLUtil
 import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_custom_server_auth.*
+import okhttp3.HttpUrl
 import ru.terrakok.gitlabclient.BuildConfig
 import ru.terrakok.gitlabclient.R
 
@@ -50,7 +50,9 @@ class CustomServerAuthFragment : BottomSheetDialogFragment() {
     }
 
     private fun login() {
-        val url = serverPathValue.text.toString()
+        val url = serverPathValue.text.toString().let {
+            if (it.endsWith("/")) it else it.plus("/")
+        }
         val token = privateTokenValue.text.toString()
 
         if (token.isEmpty()) {
@@ -58,7 +60,7 @@ class CustomServerAuthFragment : BottomSheetDialogFragment() {
             return
         }
 
-        if (URLUtil.isValidUrl(url)) {
+        if (HttpUrl.parse(url) != null) {
             listener.customLogin.invoke(url, token)
             dismiss()
         } else {

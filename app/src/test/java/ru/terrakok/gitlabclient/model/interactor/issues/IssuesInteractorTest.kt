@@ -5,8 +5,6 @@ import io.reactivex.Single
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.mock
-import ru.terrakok.gitlabclient.entity.IssueState
-import ru.terrakok.gitlabclient.model.interactor.issue.IssuesInteractor
 import ru.terrakok.gitlabclient.model.repository.issue.IssueRepository
 
 /**

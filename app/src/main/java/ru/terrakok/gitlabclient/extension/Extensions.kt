@@ -1,7 +1,9 @@
 package ru.terrakok.gitlabclient.extension
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
@@ -13,12 +15,14 @@ import android.support.v4.graphics.drawable.DrawableCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.webkit.URLUtil
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import ru.terrakok.cicerone.Navigator
+import ru.terrakok.cicerone.android.support.SupportAppScreen
 import ru.terrakok.cicerone.commands.BackTo
 import ru.terrakok.cicerone.commands.Replace
 import ru.terrakok.gitlabclient.R
@@ -31,11 +35,11 @@ import timber.log.Timber
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 03.03.17
  */
-fun Navigator.setLaunchScreen(screenKey: String, data: Any? = null) {
+fun Navigator.setLaunchScreen(screen: SupportAppScreen) {
     applyCommands(
         arrayOf(
             BackTo(null),
-            Replace(screenKey, data)
+            Replace(screen)
         )
     )
 }
@@ -43,9 +47,17 @@ fun Navigator.setLaunchScreen(screenKey: String, data: Any? = null) {
 fun Context.color(colorRes: Int) = ContextCompat.getColor(this, colorRes)
 
 fun Context.getTintDrawable(drawableRes: Int, colorRes: Int): Drawable {
-    val wrapDrawable = DrawableCompat.wrap(ContextCompat.getDrawable(this, drawableRes)!!).mutate()
-    DrawableCompat.setTint(wrapDrawable, color(colorRes))
-    return wrapDrawable
+    val source = ContextCompat.getDrawable(this, drawableRes)!!.mutate()
+    val wrapped = DrawableCompat.wrap(source)
+    DrawableCompat.setTint(wrapped, color(colorRes))
+    return wrapped
+}
+
+fun Context.getTintDrawable(drawableRes: Int, colorResources: IntArray, states: Array<IntArray>): Drawable {
+    val source = ContextCompat.getDrawable(this, drawableRes)!!.mutate()
+    val wrapped = DrawableCompat.wrap(source)
+    DrawableCompat.setTintList(wrapped, ColorStateList(states, colorResources.map { color(it) }.toIntArray()))
+    return wrapped
 }
 
 fun TextView.setStartDrawable(drawable: Drawable) {
@@ -135,35 +147,29 @@ fun ImageView.loadRoundedImage(
         .into(this)
 }
 
-fun TargetHeader.openInfo(router: FlowRouter) {
+fun TargetHeader.Public.openInfo(router: FlowRouter) {
     when (target) {
         AppTarget.PROJECT -> {
-            router.startFlow(Screens.PROJECT_FLOW, targetId)
+            router.startFlow(Screens.ProjectFlow(targetId))
         }
         AppTarget.USER -> {
-            router.startFlow(Screens.USER_FLOW, targetId)
+            router.startFlow(Screens.UserFlow(targetId))
         }
         AppTarget.MERGE_REQUEST -> {
             internal?.let { targetInternal ->
-                router.startFlow(
-                    Screens.MR_FLOW,
-                    Pair(targetInternal.projectId, targetInternal.targetIid)
-                )
+                router.startFlow(Screens.MergeRequestFlow(targetInternal.projectId, targetInternal.targetIid))
             }
         }
         AppTarget.ISSUE -> {
             internal?.let { targetInternal ->
-                router.startFlow(
-                    Screens.ISSUE_FLOW,
-                    Pair(targetInternal.projectId, targetInternal.targetIid)
-                )
+                router.startFlow(Screens.IssueFlow(targetInternal.projectId, targetInternal.targetIid))
             }
         }
         else -> {
             internal?.let { targetInternal ->
                 Timber.i("Temporary open project flow")
                 //todo
-                router.startFlow(Screens.PROJECT_FLOW, targetInternal.projectId)
+                router.startFlow(Screens.ProjectFlow(targetInternal.projectId))
             }
         }
     }
@@ -177,3 +183,12 @@ fun Fragment.showSnackMessage(message: String) {
         snackbar.show()
     }
 }
+
+fun Activity.hideKeyboard() {
+    currentFocus?.apply {
+        val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputManager.hideSoftInputFromWindow(windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+    }
+}
+
+fun Any.objectScopeName() = "${javaClass.simpleName}_${hashCode()}"
