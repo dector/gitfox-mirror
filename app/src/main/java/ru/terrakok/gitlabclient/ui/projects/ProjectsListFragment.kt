@@ -14,7 +14,6 @@ import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.projects.ProjectsListPresenter
 import ru.terrakok.gitlabclient.presentation.projects.ProjectsListView
-import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectListMode
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
@@ -22,7 +21,7 @@ import ru.terrakok.gitlabclient.ui.global.ZeroViewHolder
 import ru.terrakok.gitlabclient.ui.global.list.ProgressAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.ProgressItem
 import ru.terrakok.gitlabclient.ui.global.list.ProjectAdapterDelegate
-import toothpick.Toothpick
+import toothpick.Scope
 import toothpick.config.Module
 
 /**
@@ -35,13 +34,7 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
 
     override val layoutRes = R.layout.fragment_projects
 
-    @InjectPresenter
-    lateinit var presenter: ProjectsListPresenter
-
-    @ProvidePresenter
-    fun createPresenter(): ProjectsListPresenter {
-        val scopeName = "projects list scope"
-        val scope = Toothpick.openScopes(DI.DRAWER_FLOW_SCOPE, scopeName)
+    override val scopeModuleInstaller = { scope: Scope ->
         scope.installModules(object : Module() {
             init {
                 bind(PrimitiveWrapper::class.java)
@@ -49,10 +42,14 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
                     .toInstance(PrimitiveWrapper(arguments?.getInt(ARG_MODE)))
             }
         })
-        return scope.getInstance(ProjectsListPresenter::class.java).also {
-            Toothpick.closeScope(scopeName)
-        }
     }
+
+    @InjectPresenter
+    lateinit var presenter: ProjectsListPresenter
+
+    @ProvidePresenter
+    fun createPresenter(): ProjectsListPresenter =
+        scope.getInstance(ProjectsListPresenter::class.java)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

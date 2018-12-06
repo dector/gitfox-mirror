@@ -14,6 +14,7 @@ import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.module.FlowNavigationModule
 import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
 import ru.terrakok.gitlabclient.ui.global.FlowFragment
+import toothpick.Scope
 import toothpick.Toothpick
 import toothpick.config.Module
 
@@ -24,24 +25,9 @@ class ProjectFlowFragment : FlowFragment(), MvpView {
 
     private val projectId by argument(ARG_PROJECT_ID, 0L)
 
-    @InjectPresenter
-    lateinit var presenter: ProjectFlowPresenter
+    override val parentScopeName = DI.SERVER_SCOPE
 
-    @ProvidePresenter
-    fun providePresenter() =
-        Toothpick.openScope(DI.PROJECT_FLOW_SCOPE)
-            .getInstance(ProjectFlowPresenter::class.java)
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        initScope()
-        super.onCreate(savedInstanceState)
-        if (childFragmentManager.fragments.isEmpty()) {
-            navigator.setLaunchScreen(Screens.PROJECT_MAIN_FLOW, null)
-        }
-    }
-
-    private fun initScope() {
-        val scope = Toothpick.openScopes(DI.SERVER_SCOPE, DI.PROJECT_FLOW_SCOPE)
+    override val scopeModuleInstaller = { scope: Scope ->
         scope.installModules(
             FlowNavigationModule(scope.getInstance(Router::class.java)),
             object : Module() {
@@ -52,7 +38,21 @@ class ProjectFlowFragment : FlowFragment(), MvpView {
                 }
             }
         )
+    }
+
+    @InjectPresenter
+    lateinit var presenter: ProjectFlowPresenter
+
+    @ProvidePresenter
+    fun providePresenter(): ProjectFlowPresenter =
+        scope.getInstance(ProjectFlowPresenter::class.java)
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         Toothpick.inject(this, scope)
+        if (childFragmentManager.fragments.isEmpty()) {
+            navigator.setLaunchScreen(Screens.ProjectMainFlow)
+        }
     }
 
     override fun onExit() {

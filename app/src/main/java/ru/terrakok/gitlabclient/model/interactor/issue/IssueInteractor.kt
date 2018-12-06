@@ -48,4 +48,15 @@ class IssueInteractor @Inject constructor(
         issueId: Long,
         page: Int
     ) = issueRepository.getIssueNotes(projectId, issueId, Sort.ASC, OrderBy.UPDATED_AT, page)
+
+    fun getAllIssueNotes(
+        projectId: Long,
+        issueId: Long
+    ) = issueRepository.getAllIssueNotes(projectId, issueId, Sort.ASC, OrderBy.UPDATED_AT)
+
+    fun createIssueNote(
+        projectId: Long,
+        issueId: Long,
+        body: String
+    ) = issueRepository.createIssueNote(projectId, issueId, body)
 }

@@ -5,7 +5,6 @@ import io.reactivex.Single
 import ru.terrakok.gitlabclient.model.interactor.project.ProjectInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
-import ru.terrakok.gitlabclient.presentation.global.ProjectMarkDownConverterProvider
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
 import javax.inject.Inject
@@ -17,7 +16,6 @@ import javax.inject.Inject
 class ProjectInfoPresenter @Inject constructor(
     @ProjectId private val projectIdWrapper: PrimitiveWrapper<Long>,
     private val projectInteractor: ProjectInteractor,
-    private val mdConverterProvider: ProjectMarkDownConverterProvider,
     private val errorHandler: ErrorHandler
 ) : BasePresenter<ProjectInfoView>() {
 
@@ -36,11 +34,6 @@ class ProjectInfoPresenter @Inject constructor(
                             is ProjectInteractor.ReadmeNotFound -> Single.just("")
                             else -> Single.error(throwable)
                         }
-                    }
-                    .flatMap {
-                        mdConverterProvider
-                            .getMarkdownConverter(projectId)
-                            .flatMap { converter -> converter.markdownToSpannable(it) }
                     }
                     .map { mdReadme -> Pair(project, mdReadme) }
             }

@@ -9,9 +9,7 @@ import ru.terrakok.gitlabclient.entity.User
 import ru.terrakok.gitlabclient.extension.*
 import ru.terrakok.gitlabclient.presentation.user.info.UserInfoPresenter
 import ru.terrakok.gitlabclient.presentation.user.info.UserInfoView
-import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import toothpick.Toothpick
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 25.11.17.
@@ -26,9 +24,7 @@ class UserInfoFragment : BaseFragment(), UserInfoView {
 
     @ProvidePresenter
     fun providePresenter(): UserInfoPresenter =
-        Toothpick
-            .openScope(DI.USER_FLOW_SCOPE)
-            .getInstance(UserInfoPresenter::class.java)
+        scope.getInstance(UserInfoPresenter::class.java)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

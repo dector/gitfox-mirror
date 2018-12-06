@@ -6,7 +6,10 @@ import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.extension.openInfo
 import ru.terrakok.gitlabclient.model.interactor.event.EventInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
-import ru.terrakok.gitlabclient.presentation.global.*
+import ru.terrakok.gitlabclient.presentation.global.BasePresenter
+import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
+import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
+import ru.terrakok.gitlabclient.presentation.global.Paginator
 import javax.inject.Inject
 
 /**
@@ -15,7 +18,6 @@ import javax.inject.Inject
 @InjectViewState
 class MyEventsPresenter @Inject constructor(
     private val eventInteractor: EventInteractor,
-    private val mdConverterProvider: ProjectMarkDownConverterProvider,
     private val menuController: GlobalMenuController,
     private val errorHandler: ErrorHandler,
     private val router: FlowRouter
@@ -28,21 +30,7 @@ class MyEventsPresenter @Inject constructor(
     }
 
     private val paginator = Paginator(
-        {
-            eventInteractor.getEvents(it)
-                .flattenAsObservable { it }
-                .concatMap { item ->
-                    mdConverterProvider
-                        .getMarkdownConverter(item.projectId)
-                        .flatMap { converter ->
-                            converter
-                                .markdownToSpannable(item.body.toString())
-                                .map { md -> item.copy(body = md) }
-                        }
-                        .toObservable()
-                }
-                .toList()
-        },
+        { eventInteractor.getEvents(it) },
         object : Paginator.ViewController<TargetHeader> {
             override fun showEmptyProgress(show: Boolean) {
                 viewState.showEmptyProgress(show)
@@ -79,8 +67,8 @@ class MyEventsPresenter @Inject constructor(
     )
 
     fun onMenuClick() = menuController.open()
-    fun onItemClick(item: TargetHeader) = item.openInfo(router)
-    fun onUserClick(userId: Long) = router.startFlow(Screens.USER_FLOW, userId)
+    fun onItemClick(item: TargetHeader.Public) = item.openInfo(router)
+    fun onUserClick(userId: Long) = router.startFlow(Screens.UserFlow(userId))
     fun refreshEvents() = paginator.refresh()
     fun loadNextEventsPage() = paginator.loadNewPage()
     fun onBackPressed() = router.exit()

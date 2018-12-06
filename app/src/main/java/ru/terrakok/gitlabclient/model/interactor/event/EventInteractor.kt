@@ -9,5 +9,9 @@ import javax.inject.Inject
 class EventInteractor @Inject constructor(
     private val eventRepository: EventRepository
 ) {
-    fun getEvents(page: Int) = eventRepository.getEvents(page = page)
+    fun getEvents(page: Int) =
+        eventRepository.getEvents(page = page)
+
+    fun getProjectEvents(projectId: Long, page: Int) =
+        eventRepository.getProjectEvents(projectId = projectId, page = page)
 }

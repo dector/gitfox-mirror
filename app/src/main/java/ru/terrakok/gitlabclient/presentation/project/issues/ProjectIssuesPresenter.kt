@@ -10,7 +10,6 @@ import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.Paginator
-import ru.terrakok.gitlabclient.presentation.global.ProjectMarkDownConverterProvider
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
 import javax.inject.Inject
@@ -23,7 +22,6 @@ class ProjectIssuesPresenter @Inject constructor(
     @ProjectId private val projectIdWrapper: PrimitiveWrapper<Long>,
     private val issueState: IssueState,
     private val issueInteractor: IssueInteractor,
-    private val mdConverterProvider: ProjectMarkDownConverterProvider,
     private val errorHandler: ErrorHandler,
     private val router: FlowRouter
 ) : BasePresenter<ProjectIssuesView>() {
@@ -37,21 +35,7 @@ class ProjectIssuesPresenter @Inject constructor(
     }
 
     private val paginator = Paginator(
-        {
-            issueInteractor.getIssues(projectId, issueState, it)
-                .flattenAsObservable { it }
-                .concatMap { item ->
-                    mdConverterProvider
-                        .getMarkdownConverter(projectId)
-                        .flatMap { converter ->
-                            converter
-                                .markdownToSpannable(item.body.toString())
-                                .map { md -> item.copy(body = md) }
-                        }
-                        .toObservable()
-                }
-                .toList()
-        },
+        { issueInteractor.getIssues(projectId, issueState, it) },
         object : Paginator.ViewController<TargetHeader> {
             override fun showEmptyProgress(show: Boolean) {
                 viewState.showEmptyProgress(show)
@@ -87,8 +71,8 @@ class ProjectIssuesPresenter @Inject constructor(
         }
     )
 
-    fun onIssueClick(item: TargetHeader) = item.openInfo(router)
-    fun onUserClick(userId: Long) = router.startFlow(Screens.USER_FLOW, userId)
+    fun onIssueClick(item: TargetHeader.Public) = item.openInfo(router)
+    fun onUserClick(userId: Long) = router.startFlow(Screens.UserFlow(userId))
     fun refreshIssues() = paginator.refresh()
     fun loadNextIssuesPage() = paginator.loadNewPage()
 

@@ -15,6 +15,8 @@ import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestScope
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestViewType
+import ru.terrakok.gitlabclient.entity.milestone.Milestone
+import ru.terrakok.gitlabclient.entity.milestone.MilestoneState
 import ru.terrakok.gitlabclient.entity.target.TargetType
 import ru.terrakok.gitlabclient.entity.todo.Todo
 import ru.terrakok.gitlabclient.entity.todo.TodoAction
@@ -27,16 +29,6 @@ interface GitlabApi {
     companion object {
         const val API_PATH = "api/v4"
     }
-
-    @FormUrlEncoded
-    @POST("oauth/token")
-    fun auth(
-        @Field("client_id") appId: String,
-        @Field("client_secret") appKey: String,
-        @Field("code") code: String,
-        @Field("redirect_uri") redirectUri: String,
-        @Field("grant_type") type: String = "authorization_code"
-    ): Single<TokenData>
 
     @GET("$API_PATH/projects")
     fun getProjects(
@@ -114,6 +106,19 @@ interface GitlabApi {
 
     @GET("$API_PATH/events")
     fun getEvents(
+        @Query("action") action: EventAction?,
+        @Query("target_type") targetType: EventTarget?,
+        @Query("before") beforeDay: String?,
+        @Query("after") afterDay: String?,
+        @Query("sort") sort: Sort?,
+        @Query("order_by") orderBy: OrderBy?,
+        @Query("page") page: Int,
+        @Query("per_page") pageSize: Int
+    ): Single<List<Event>>
+
+    @GET("$API_PATH/projects/{project_id}/events")
+    fun getProjectEvents(
+        @Path("project_id") projectId: Long,
         @Query("action") action: EventAction?,
         @Query("target_type") targetType: EventTarget?,
         @Query("before") beforeDay: String?,
@@ -210,6 +215,95 @@ interface GitlabApi {
         @Query("page") page: Int,
         @Query("per_page") pageSize: Int
     ): Single<List<Note>>
+
+    @FormUrlEncoded
+    @POST("$API_PATH/projects/{project_id}/issues/{issue_id}/notes")
+    fun createIssueNote(
+        @Path("project_id") projectId: Long,
+        @Path("issue_id") issueId: Long,
+        @Field("body") body: String
+    ): Single<Note>
+
+    @FormUrlEncoded
+    @POST("$API_PATH/projects/{project_id}/merge_requests/{merge_request_id}/notes")
+    fun createMergeRequestNote(
+        @Path("project_id") projectId: Long,
+        @Path("merge_request_id") mergeRequestId: Long,
+        @Field("body") body: String
+    ): Single<Note>
+
+    @GET("$API_PATH/projects/{project_id}/merge_requests/{merge_request_id}/commits")
+    fun getMergeRequestCommits(
+        @Path("project_id") projectId: Long,
+        @Path("merge_request_id") mergeRequestId: Long,
+        @Query("page") page: Int,
+        @Query("per_page") pageSize: Int
+    ): Single<List<Commit>>
+
+    @GET("$API_PATH/projects/{project_id}/merge_requests/{merge_request_id}/participants")
+    fun getMergeRequestParticipants(
+        @Path("project_id") projectId: Long,
+        @Path("merge_request_id") mergeRequestId: Long,
+        @Query("page") page: Int,
+        @Query("per_page") pageSize: Int
+    ): Single<List<Author>>
+
+    @GET("$API_PATH/projects/{project_id}/merge_requests/{merge_request_id}/changes")
+    fun getMergeRequestChanges(
+        @Path("project_id") projectId: Long,
+        @Path("merge_request_id") mergeRequestId: Long
+    ): Single<MergeRequest>
+
+    @GET("$API_PATH/projects/{project_id}/milestones")
+    fun getMilestones(
+        @Path("project_id") projectId: Long,
+        @Query("state") state: MilestoneState?
+    ): Single<List<Milestone>>
+
+    @GET("$API_PATH/projects/{project_id}/milestones/{milestone_id}")
+    fun getMilestone(
+        @Path("project_id") projectId: Long,
+        @Path("milestone_id") mileStoneId: Long
+    ): Single<Milestone>
+
+    @FormUrlEncoded
+    @POST("$API_PATH/projects/{project_id}/milestones")
+    fun createMileStone(
+        @Path("project_id") projectId: Long,
+        @Field("title") title: String,
+        @Field("description") description: String?,
+        @Field("due_date") dueDate: String?,
+        @Field("start_date") startDate: String?
+    ): Single<Milestone>
+
+    @FormUrlEncoded
+    @PUT("$API_PATH/projects/{project_id}/milestones/{milestone_id}")
+    fun updateMileStone(
+        @Path("project_id") projectId: Long,
+        @Path("milestone_id") mileStoneId: Long,
+        @Field("title") title: String?,
+        @Field("description") description: String?,
+        @Field("due_date") dueDate: String?,
+        @Field("start_date") startDate: String?
+    ): Single<Milestone>
+
+    @DELETE("$API_PATH/projects/{project_id}/milestones/{milestone_id}")
+    fun deleteMilestone(
+        @Path("project_id") projectId: Long,
+        @Path("milestone_id") mileStoneId: Long
+    ): Completable
+
+    @GET("$API_PATH/projects/{project_id}/milestones/{milestone_id}/issues")
+    fun getMilestoneIssues(
+        @Path("project_id") projectId: Long,
+        @Path("milestone_id") mileStoneId: Long
+    ): Single<List<Issue>>
+
+    @GET("$API_PATH/projects/{project_id}/milestones/{milestone_id}/merge_requests")
+    fun getMilestoneMergeRequests(
+        @Path("project_id") projectId: Long,
+        @Path("milestone_id") mileStoneId: Long
+    ): Single<List<MergeRequest>>
 
     @GET("$API_PATH/projects/{project_id}/labels")
     fun getProjectLabels(

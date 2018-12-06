@@ -15,6 +15,7 @@ import ru.terrakok.gitlabclient.toothpick.module.FlowNavigationModule
 import ru.terrakok.gitlabclient.toothpick.qualifier.MergeRequestId
 import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
 import ru.terrakok.gitlabclient.ui.global.FlowFragment
+import toothpick.Scope
 import toothpick.Toothpick
 import toothpick.config.Module
 
@@ -26,24 +27,9 @@ class MergeRequestFlowFragment : FlowFragment(), MvpView {
     private val mrId by argument(ARG_MR_ID, 0L)
     private val projectId by argument(ARG_PROJECT_ID, 0L)
 
-    @InjectPresenter
-    lateinit var presenter: MergeRequestFlowPresenter
+    override val parentScopeName = DI.SERVER_SCOPE
 
-    @ProvidePresenter
-    fun providePresenter() =
-        Toothpick.openScope(DI.MERGE_REQUEST_FLOW_SCOPE)
-            .getInstance(MergeRequestFlowPresenter::class.java)
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        initScope()
-        super.onCreate(savedInstanceState)
-        if (childFragmentManager.fragments.isEmpty()) {
-            navigator.setLaunchScreen(Screens.MR_SCREEN, null)
-        }
-    }
-
-    private fun initScope() {
-        val scope = Toothpick.openScopes(DI.SERVER_SCOPE, DI.MERGE_REQUEST_FLOW_SCOPE)
+    override val scopeModuleInstaller = { scope: Scope ->
         scope.installModules(
             FlowNavigationModule(scope.getInstance(Router::class.java)),
             object : Module() {
@@ -57,7 +43,21 @@ class MergeRequestFlowFragment : FlowFragment(), MvpView {
                 }
             }
         )
+    }
+
+    @InjectPresenter
+    lateinit var presenter: MergeRequestFlowPresenter
+
+    @ProvidePresenter
+    fun providePresenter() =
+        scope.getInstance(MergeRequestFlowPresenter::class.java)
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         Toothpick.inject(this, scope)
+        if (childFragmentManager.fragments.isEmpty()) {
+            navigator.setLaunchScreen(Screens.MergeRequest)
+        }
     }
 
     override fun onExit() {
