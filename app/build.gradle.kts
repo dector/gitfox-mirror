@@ -140,8 +140,6 @@ dependencies {
     //Markdown to HTML converter
     implementation("ru.noties:markwon:$markwonVersion")
     implementation("ru.noties:markwon-image-loader:$markwonVersion")
-    implementation("ru.noties:markwon-syntax:$markwonVersion")
-    kapt("ru.noties:prism4j-bundler:1.1.0")
     //Bottom navigation bar
     implementation("com.aurelhubert:ahbottomnavigation:2.1.0")
     //Lottie
@@ -154,7 +152,8 @@ dependencies {
     implementation("com.google.firebase:firebase-core:16.0.5")
     //Crashlytics
     implementation("com.crashlytics.sdk.android:crashlytics:2.9.6")
-
+    //Code highlight (https://github.com/CraggyHaggy/highlightjs-android)
+    implementation(project(":code_highlight"))
     //JUnit
     testImplementation("junit:junit:4.12")
     //Mockito
