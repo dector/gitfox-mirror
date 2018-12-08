@@ -247,9 +247,11 @@ class MergeRequestRepository @Inject constructor(
 
     fun getMilestoneMergeRequests(
         projectId: Long,
-        milestoneId: Long
-    ) = api
-        .getMilestoneMergeRequests(projectId, milestoneId)
+        milestoneId: Long,
+        page: Int,
+        pageSize: Int = defaultPageSize
+    ): Single<List<MergeRequest>> = api
+        .getMilestoneMergeRequests(projectId, milestoneId, page, pageSize)
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
 }
