@@ -17,6 +17,9 @@ import ru.terrakok.gitlabclient.entity.Label
 import ru.terrakok.gitlabclient.extension.color
 import ru.terrakok.gitlabclient.markwonx.*
 import ru.terrakok.gitlabclient.markwonx.label.*
+import ru.terrakok.gitlabclient.markwonx.milestone.MilestoneDecorator
+import ru.terrakok.gitlabclient.markwonx.milestone.MilestoneExtensionProcessor
+import ru.terrakok.gitlabclient.markwonx.milestone.MilestoneVisitor
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultServerPath
@@ -58,7 +61,8 @@ class MarkDownConverterProvider @Inject constructor(
 
     private fun getMarkdownDecorator(labelDescriptions: List<LabelDescription>): MarkdownDecorator {
         return CompositeMarkdownDecorator(
-            LabelDecorator(labelDescriptions)
+            LabelDecorator(labelDescriptions),
+            MilestoneDecorator()
         )
     }
 
@@ -75,7 +79,8 @@ class MarkDownConverterProvider @Inject constructor(
             customDelimiterProcessor(
                 GitlabExtensionsDelimiterProcessor(
                     mapOf(
-                        GitlabMarkdownExtension.LABEL to LabelExtensionProcessor(labelDescriptions)
+                        GitlabMarkdownExtension.LABEL to LabelExtensionProcessor(labelDescriptions),
+                        GitlabMarkdownExtension.MILESTONE to MilestoneExtensionProcessor()
                     )
                 )
             )
@@ -89,9 +94,13 @@ class MarkDownConverterProvider @Inject constructor(
             LabelVisitor(
                 spannableConfig,
                 labelSpanConfig,
-            spannableBuilder
+                spannableBuilder
+            ),
+            MilestoneVisitor(
+                spannableConfig,
+                spannableBuilder
+            )
         )
-    )
 
     fun get(labels: List<Label>): MarkDownConverter {
         val labelDescriptions = labels.map {
