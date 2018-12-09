@@ -1,5 +1,6 @@
 package ru.terrakok.gitlabclient.markwonx.label
 
+import ru.terrakok.gitlabclient.markwonx.GitlabExtensionsDelimiterProcessor
 import ru.terrakok.gitlabclient.markwonx.GitlabMarkdownExtension
 import ru.terrakok.gitlabclient.markwonx.MarkdownDecorator
 
@@ -19,10 +20,16 @@ class LabelDecorator(
             type.regex.replace(acc) { matchResult ->
                 val value = matchResult.groupValues[1]
                 if (supportedLabels.contains(value)) {
-                    "%%%%%${GitlabMarkdownExtension.LABEL}_${type.name}_$value%%%%%"
+                    getDecoratedString(type, value)
                 } else {
                     matchResult.groupValues[0]
                 }
             }
         }
+
+    companion object {
+        fun getDecoratedString(type: LabelType, value: String) = GitlabExtensionsDelimiterProcessor.decorate(
+            "${GitlabMarkdownExtension.LABEL}_${type.name}_$value"
+        )
+    }
 }

@@ -40,7 +40,15 @@ class GitlabExtensionsDelimiterProcessor(
         // It is so long to avoid overlapping with anything else than our custom extensions.
         const val DELIMITER_LENGTH = 5
         const val DELIMITER = '%'
-        val DELIMITER_STRING = (0..DELIMITER_LENGTH).joinToString { DELIMITER.toString() }
+        const val DELIMITER_NEGATIVE_MATCH = "(?<!(%%%%))"
+        val DELIMITER_STRING = (0 until DELIMITER_LENGTH).joinToString("") { DELIMITER.toString() }
+
+        fun decorate(extensionData: String) = StringBuilder().apply {
+            append(GitlabExtensionsDelimiterProcessor.DELIMITER_STRING)
+            append(extensionData)
+            append(GitlabExtensionsDelimiterProcessor.DELIMITER_STRING)
+        }.toString()
+
     }
 
 }

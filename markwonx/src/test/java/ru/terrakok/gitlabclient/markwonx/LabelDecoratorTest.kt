@@ -16,11 +16,7 @@ class LabelDecoratorTest {
     }
 
     fun assertDecorated(labelType: LabelType, source: String, name: String) {
-        assert(decorator.decorate(source) == decorateForTest(labelType, name))
-    }
-
-    private fun decorateForTest(labelType: LabelType, name: String): Any? {
-        return "%%%%%LABEL_${labelType}_$name%%%%%"
+        assert(decorator.decorate(source) == LabelDecorator.getDecoratedString(labelType, name))
     }
 
     @Test
@@ -57,7 +53,7 @@ class LabelDecoratorTest {
             TestLabel(LabelType.ID, ID, ID_ONLY.toString())
         )
         val allStr = all.map { (_, source, _) -> source }
-        val allResults = all.map { (type, _, name) -> decorateForTest(type, name) }
+        val allResults = all.map { (type, _, name) -> LabelDecorator.getDecoratedString(type, name) }
         val fullStr = "some another text in the beginning " +
             "${allStr.joinToString(" ")} " +
             "some another text in the end"
