@@ -6,7 +6,7 @@ import ru.noties.markwon.SpannableBuilder
 import ru.noties.markwon.SpannableConfiguration
 import ru.noties.markwon.renderer.SpannableMarkdownVisitor
 
-class LabelVisitor constructor(
+class LabelVisitor(
     configuration: SpannableConfiguration,
     val config: LabelSpanConfig,
     val builder: SpannableBuilder
