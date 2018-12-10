@@ -34,6 +34,7 @@ class MarkDownConverterProvider @Inject constructor(
     private val httpClient: OkHttpClient,
     private val schedulers: SchedulersProvider,
     private val labelSpanConfig: LabelSpanConfig,
+    private val markdownClickMediator: MarkdownClickMediator,
     @DefaultServerPath private val defaultServerPath: String
 ) {
 
@@ -94,11 +95,13 @@ class MarkDownConverterProvider @Inject constructor(
             LabelVisitor(
                 spannableConfig,
                 labelSpanConfig,
-                spannableBuilder
+                spannableBuilder,
+                markdownClickMediator
             ),
             MilestoneVisitor(
                 spannableConfig,
-                spannableBuilder
+                spannableBuilder,
+                markdownClickMediator
             )
         )
 

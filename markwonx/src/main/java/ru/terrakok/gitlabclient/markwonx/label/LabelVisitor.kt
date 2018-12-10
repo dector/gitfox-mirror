@@ -5,11 +5,14 @@ import org.commonmark.node.CustomNode
 import ru.noties.markwon.SpannableBuilder
 import ru.noties.markwon.SpannableConfiguration
 import ru.noties.markwon.renderer.SpannableMarkdownVisitor
+import ru.terrakok.gitlabclient.markwonx.GitlabMarkdownExtension
+import ru.terrakok.gitlabclient.markwonx.MarkdownClickMediator
 
 class LabelVisitor(
     configuration: SpannableConfiguration,
     val config: LabelSpanConfig,
-    val builder: SpannableBuilder
+    val builder: SpannableBuilder,
+    val clickListener: MarkdownClickMediator
 ) : SpannableMarkdownVisitor(configuration, builder) {
 
     override fun visit(customNode: CustomNode) {
@@ -23,7 +26,9 @@ class LabelVisitor(
             }
             if (color != null) {
                 builder.append(label.name)
-                builder.setSpan(LabelSpan(label, color, config), length)
+                builder.setSpan(LabelSpan(label, color, config) {
+                    clickListener.markdownClicked(GitlabMarkdownExtension.LABEL, it)
+                }, length)
             }
         } else {
             super.visit(customNode)
