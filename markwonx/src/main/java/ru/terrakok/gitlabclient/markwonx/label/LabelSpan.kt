@@ -5,12 +5,12 @@ import android.text.TextPaint
 import android.text.style.ClickableSpan
 import android.view.View
 
-class LabelSpan constructor(
+class LabelSpan(
     val label: LabelDescription,
     val color: Int,
     // Currently unused. Provides padding for label to use in future.
     val config: LabelSpanConfig,
-    val onLabelClicked: (LabelDescription) -> Unit = { }
+    val onLabelClicked: (LabelDescription) -> Unit
 ) : ClickableSpan() {
 
     override fun onClick(widget: View) {
