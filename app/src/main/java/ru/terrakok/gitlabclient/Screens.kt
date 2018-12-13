@@ -10,6 +10,7 @@ import ru.terrakok.gitlabclient.ui.about.AboutFragment
 import ru.terrakok.gitlabclient.ui.auth.AuthFlowFragment
 import ru.terrakok.gitlabclient.ui.auth.AuthFragment
 import ru.terrakok.gitlabclient.ui.drawer.DrawerFlowFragment
+import ru.terrakok.gitlabclient.ui.global.StubFragment
 import ru.terrakok.gitlabclient.ui.issue.IssueFlowFragment
 import ru.terrakok.gitlabclient.ui.issue.IssueFragment
 import ru.terrakok.gitlabclient.ui.issue.IssueInfoFragment
@@ -238,5 +239,12 @@ object Screens {
                 },
                 text
             )
+    }
+
+    data class MilestoneFlow(
+        val milestoneId: Long
+    ) : SupportAppScreen() {
+        //todo: implement milestone flow.
+        override fun getFragment() = StubFragment()
     }
 }
