@@ -1,6 +1,7 @@
 package ru.terrakok.gitlabclient.ui.project
 
 import android.os.Bundle
+import android.support.v4.view.ViewCompat
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter
@@ -58,7 +59,8 @@ class ProjectFragment : BaseFragment(), ProjectView {
                     when (position) {
                         0 -> Screens.ProjectInfoContainer
                         1 -> Screens.ProjectIssuesContainer
-                        else -> Screens.ProjectMergeRequestsContainer
+                        2 -> Screens.ProjectMergeRequestsContainer
+                        else -> Screens.ProjectLabels
                     }
                 )
                 true
@@ -70,6 +72,7 @@ class ProjectFragment : BaseFragment(), ProjectView {
                 Screens.ProjectInfoContainer.screenKey -> Screens.ProjectInfoContainer
                 Screens.ProjectIssuesContainer.screenKey -> Screens.ProjectIssuesContainer
                 Screens.ProjectMergeRequestsContainer.screenKey -> Screens.ProjectMergeRequestsContainer
+                Screens.ProjectLabels.screenKey -> Screens.ProjectLabels
                 else -> Screens.ProjectInfoContainer
             }
         )
@@ -93,6 +96,19 @@ class ProjectFragment : BaseFragment(), ProjectView {
                 it.userVisibleHint = true
             }
         }.commitNow()
+        setToolbarElevation(tab)
+    }
+
+
+    private fun setToolbarElevation(tab: SupportAppScreen) {
+        if (tab is Screens.ProjectLabels) {
+            ViewCompat.setElevation(
+                toolbar,
+                resources.getDimensionPixelSize(R.dimen.toolbar_elevation).toFloat()
+            )
+        } else {
+            ViewCompat.setElevation(toolbar, 0f)
+        }
     }
 
     override fun onBackPressed() {
