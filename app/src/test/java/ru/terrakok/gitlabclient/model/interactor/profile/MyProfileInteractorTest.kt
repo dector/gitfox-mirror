@@ -7,7 +7,6 @@ import org.junit.Test
 import org.mockito.Mockito.*
 import org.threeten.bp.LocalDateTime
 import ru.terrakok.gitlabclient.entity.User
-import ru.terrakok.gitlabclient.entity.app.user.MyUserInfo
 import ru.terrakok.gitlabclient.model.repository.profile.ProfileRepository
 import java.util.*
 
