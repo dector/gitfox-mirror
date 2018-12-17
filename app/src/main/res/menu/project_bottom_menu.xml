@@ -15,4 +15,10 @@
         android:id="@+id/tab_merge_request"
         android:icon="@drawable/ic_merge"
         android:title="@string/menu_project_merge_request" />
+
+    <item
+        android:id="@+id/tab_milestones"
+        android:icon="@drawable/ic_milestone"
+        android:title="@string/menu_project_merge_request" />
+
 </menu>

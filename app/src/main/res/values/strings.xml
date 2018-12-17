@@ -171,6 +171,7 @@
     <string name="menu_project_info">Info</string>
     <string name="menu_project_issue">Issues</string>
     <string name="menu_project_merge_request">Merge Requests</string>
+    <string name="menu_project_milestones">Milestones</string>
     <string name="project_info">Info</string>
     <string name="project_events">Activity</string>
     <string name="project_labels">Labels</string>

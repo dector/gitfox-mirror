@@ -59,7 +59,8 @@ class ProjectFragment : BaseFragment(), ProjectView {
                     when (position) {
                         0 -> Screens.ProjectInfoContainer
                         1 -> Screens.ProjectIssuesContainer
-                        else -> Screens.ProjectMergeRequestsContainer
+                        2 -> Screens.ProjectMergeRequestsContainer
+                        else -> Screens.ProjectMilestonesContainer
                     }
                 )
                 true
@@ -71,6 +72,7 @@ class ProjectFragment : BaseFragment(), ProjectView {
                 Screens.ProjectInfoContainer.screenKey -> Screens.ProjectInfoContainer
                 Screens.ProjectIssuesContainer.screenKey -> Screens.ProjectIssuesContainer
                 Screens.ProjectMergeRequestsContainer.screenKey -> Screens.ProjectMergeRequestsContainer
+                Screens.ProjectMilestonesContainer.screenKey -> Screens.ProjectMilestonesContainer
                 else -> Screens.ProjectInfoContainer
             }
         )

@@ -71,7 +71,6 @@ class ProjectMilestonesPresenter @Inject constructor(
     )
 
     fun onMilestoneClick(milestoneId: Long) = router.startFlow(Screens.MilestoneFlow(milestoneId))
-    fun onUserClick(userId: Long) = router.startFlow(Screens.UserFlow(userId))
     fun refreshMilestones() = paginator.refresh()
     fun loadNextMilestonesPage() = paginator.loadNewPage()
 
