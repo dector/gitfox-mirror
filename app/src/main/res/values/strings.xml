@@ -25,7 +25,7 @@
     <string name="auth_title">Authorization</string>
     <string name="invalid_hash">Invalid auth response!</string>
     <string name="auth_error">Unknown error! Try again later</string>
-    <string name="custom_auth_menu">Access token authorization</string>
+    <string name="custom_auth_menu">Custom server</string>
     <string name="custom_authorization">Enter your access token</string>
     <string name="server_path">Url:</string>
     <string name="server_path_hint">https://gitlab.com/</string>
