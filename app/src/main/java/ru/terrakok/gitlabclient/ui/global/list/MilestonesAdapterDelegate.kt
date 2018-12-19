@@ -18,7 +18,7 @@ class MilestonesAdapterDelegate(
 ) : AdapterDelegate<MutableList<Any>>() {
 
     override fun isForViewType(items: MutableList<Any>, position: Int) =
-        with(items[position]) { this is Milestone }
+        items[position] is Milestone
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder =
         ViewHolder(parent.inflate(R.layout.item_milestone))
