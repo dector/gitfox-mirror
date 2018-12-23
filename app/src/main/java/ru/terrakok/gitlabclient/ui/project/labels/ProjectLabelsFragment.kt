@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import kotlinx.android.synthetic.main.fragment_project_labels.*
 import kotlinx.android.synthetic.main.layout_base_list.*
 import kotlinx.android.synthetic.main.layout_zero.*
 import ru.terrakok.gitlabclient.R
@@ -41,8 +42,13 @@ class ProjectLabelsFragment : BaseFragment(), ProjectLabelsView {
             adapter = this@ProjectLabelsFragment.adapter
         }
 
+        toolbar.setNavigationOnClickListener { onBackPressed() }
         swipeToRefresh.setOnRefreshListener { presenter.refreshProjectLabels() }
         zeroViewHolder = ZeroViewHolder(zeroLayout) { presenter.refreshProjectLabels() }
+    }
+
+    override fun onBackPressed() {
+        presenter.onBackPressed()
     }
 
     override fun showRefreshProgress(show: Boolean) {
