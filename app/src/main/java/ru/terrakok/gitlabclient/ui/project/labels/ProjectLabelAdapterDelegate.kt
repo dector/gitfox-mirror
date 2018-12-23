@@ -20,8 +20,7 @@ import ru.terrakok.gitlabclient.extension.setBackgroundTintByColor
 class ProjectLabelAdapterDelegate : AdapterDelegate<MutableList<Any>>() {
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
-        return parent.inflate(R.layout.item_label)
-            .let(::Holder)
+        return ViewHolder(parent.inflate(R.layout.item_label))
     }
 
     override fun isForViewType(items: MutableList<Any>, position: Int): Boolean {
@@ -34,12 +33,10 @@ class ProjectLabelAdapterDelegate : AdapterDelegate<MutableList<Any>>() {
         holder: RecyclerView.ViewHolder,
         payloads: MutableList<Any>
     ) {
-        holder as Holder
-        val item = items[position] as Label
-        holder.bind(item)
+        (holder as ViewHolder).bind(items[position] as Label)
     }
 
-    private class Holder(view: View) : RecyclerView.ViewHolder(view) {
+    private class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         @SuppressLint("SetTextI18n")
         fun bind(item: Label) = with(itemView) {
