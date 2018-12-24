@@ -15,4 +15,11 @@
         app:iconTint="@android:color/white"
         app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/milestonesAction"
+        android:icon="@drawable/ic_milestone"
+        android:title="@string/menu_project_milestones"
+        app:iconTint="@android:color/white"
+        app:showAsAction="ifRoom" />
+
 </menu>

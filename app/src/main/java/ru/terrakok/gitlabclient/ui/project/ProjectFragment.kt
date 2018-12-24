@@ -19,6 +19,7 @@ import ru.terrakok.gitlabclient.ui.global.BaseFragment
  * Created by Eugene Shapovalov (@CraggyHaggy) on 10.02.18.
  */
 class ProjectFragment : BaseFragment(), ProjectView {
+
     override val layoutRes: Int = R.layout.fragment_project
 
     private val currentTabFragment: BaseFragment?
@@ -43,6 +44,7 @@ class ProjectFragment : BaseFragment(), ProjectView {
                 when (item.itemId) {
                     R.id.shareAction -> shareText(shareUrl)
                     R.id.labelAction -> presenter.onLabelPressed()
+                    R.id.milestonesAction -> presenter.onMilestonesClicked()
                 }
                 true
             }
@@ -59,8 +61,7 @@ class ProjectFragment : BaseFragment(), ProjectView {
                     when (position) {
                         0 -> Screens.ProjectInfoContainer
                         1 -> Screens.ProjectIssuesContainer
-                        2 -> Screens.ProjectMergeRequestsContainer
-                        else -> Screens.ProjectMilestonesContainer
+                        else -> Screens.ProjectMergeRequestsContainer
                     }
                 )
                 true
@@ -72,7 +73,6 @@ class ProjectFragment : BaseFragment(), ProjectView {
                 Screens.ProjectInfoContainer.screenKey -> Screens.ProjectInfoContainer
                 Screens.ProjectIssuesContainer.screenKey -> Screens.ProjectIssuesContainer
                 Screens.ProjectMergeRequestsContainer.screenKey -> Screens.ProjectMergeRequestsContainer
-                Screens.ProjectMilestonesContainer.screenKey -> Screens.ProjectMilestonesContainer
                 else -> Screens.ProjectInfoContainer
             }
         )
