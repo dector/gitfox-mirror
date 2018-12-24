@@ -1,7 +1,7 @@
 package ru.terrakok.gitlabclient.entity.app
 
 import ru.terrakok.gitlabclient.entity.Author
-import ru.terrakok.gitlabclient.entity.Commit
+import ru.terrakok.gitlabclient.entity.commit.Commit
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 20.10.18.

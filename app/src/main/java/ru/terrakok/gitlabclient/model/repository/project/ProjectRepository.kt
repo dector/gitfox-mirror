@@ -71,4 +71,14 @@ class ProjectRepository @Inject constructor(
         .getRepositoryTree(projectId, path, branchName, recursive)
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
+
+    fun getCommit(projectId: Long, commitId: String) = api
+        .getCommit(projectId, commitId)
+        .subscribeOn(schedulers.io())
+        .observeOn(schedulers.ui())
+
+    fun getCommitDiff(projectId: Long, commitId: String) = api
+        .getCommitDiff(projectId, commitId)
+        .subscribeOn(schedulers.io())
+        .observeOn(schedulers.ui())
 }

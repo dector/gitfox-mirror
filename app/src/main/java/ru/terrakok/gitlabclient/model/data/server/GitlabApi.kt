@@ -5,6 +5,8 @@ import io.reactivex.Single
 import org.threeten.bp.LocalDateTime
 import retrofit2.http.*
 import ru.terrakok.gitlabclient.entity.*
+import ru.terrakok.gitlabclient.entity.commit.Commit
+import ru.terrakok.gitlabclient.entity.commit.CommitDiff
 import ru.terrakok.gitlabclient.entity.event.Event
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.event.EventTarget
@@ -19,7 +21,6 @@ import ru.terrakok.gitlabclient.entity.target.TargetType
 import ru.terrakok.gitlabclient.entity.todo.Todo
 import ru.terrakok.gitlabclient.entity.todo.TodoAction
 import ru.terrakok.gitlabclient.entity.todo.TodoState
-
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 28.03.17
  */
@@ -261,4 +262,16 @@ interface GitlabApi {
         @Path("project_id") projectId: Long,
         @Path("merge_request_id") mergeRequestId: Long
     ): Single<MergeRequest>
+
+    @GET("$API_PATH/projects/{project_id}/repository/commits/{sha}/diff")
+    fun getCommitDiff(
+        @Path("project_id") projectId: Long,
+        @Path("sha") commitId: String
+    ): Single<CommitDiff>
+
+    @GET("$API_PATH//projects/:id/repository/commits/:sha")
+    fun getCommit(
+        @Path("project_id") projectId: Long,
+        @Path("sha") commitId: String
+    ): Single<Commit>
 }
