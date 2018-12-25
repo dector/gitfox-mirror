@@ -198,9 +198,11 @@ class IssueRepository @Inject constructor(
 
     fun getMilestoneIssues(
         projectId: Long,
-        milestoneId: Long
-    ) = api
-        .getMilestoneIssues(projectId, milestoneId)
+        milestoneId: Long,
+        page: Int,
+        pageSize: Int = defaultPageSize
+    ): Single<List<Issue>> = api
+        .getMilestoneIssues(projectId, milestoneId, page, pageSize)
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
 }
