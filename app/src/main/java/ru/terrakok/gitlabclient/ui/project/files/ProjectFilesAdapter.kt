@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.ui.files
+package ru.terrakok.gitlabclient.ui.project.files
 
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView

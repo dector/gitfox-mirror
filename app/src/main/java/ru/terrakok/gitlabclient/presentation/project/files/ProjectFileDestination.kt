@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.presentation.files
+package ru.terrakok.gitlabclient.presentation.project.files
 
 import android.os.Bundle
 
@@ -63,7 +63,7 @@ class ProjectFileDestination {
         callback?.onMoveBack(fromRoot)
     }
 
-    fun isInRoot() = paths.size == 1
+    fun isInRoot() = paths.size <= 1
 
     fun changeBranch(branchName: String) {
         if (this.branchName != branchName) {

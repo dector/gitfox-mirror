@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.presentation.files
+package ru.terrakok.gitlabclient.presentation.project.files
 
 import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy

@@ -10,9 +10,6 @@ import ru.terrakok.gitlabclient.ui.about.AboutFragment
 import ru.terrakok.gitlabclient.ui.auth.AuthFlowFragment
 import ru.terrakok.gitlabclient.ui.auth.AuthFragment
 import ru.terrakok.gitlabclient.ui.drawer.DrawerFlowFragment
-import ru.terrakok.gitlabclient.ui.files.ProjectFilesFragment
-import ru.terrakok.gitlabclient.ui.files.ProjectFilesFlowFragment
-import ru.terrakok.gitlabclient.ui.files.ProjectFilesFragment
 import ru.terrakok.gitlabclient.ui.issue.IssueFlowFragment
 import ru.terrakok.gitlabclient.ui.issue.IssueFragment
 import ru.terrakok.gitlabclient.ui.issue.IssueInfoFragment
@@ -30,6 +27,7 @@ import ru.terrakok.gitlabclient.ui.my.todos.MyTodosFragment
 import ru.terrakok.gitlabclient.ui.privacypolicy.PrivacyPolicyFragment
 import ru.terrakok.gitlabclient.ui.project.ProjectFlowFragment
 import ru.terrakok.gitlabclient.ui.project.ProjectFragment
+import ru.terrakok.gitlabclient.ui.project.files.ProjectFilesFragment
 import ru.terrakok.gitlabclient.ui.project.info.ProjectEventsFragment
 import ru.terrakok.gitlabclient.ui.project.info.ProjectInfoContainerFragment
 import ru.terrakok.gitlabclient.ui.project.info.ProjectInfoFragment
@@ -159,14 +157,12 @@ object Screens {
         override fun getFragment() = ProjectMergeRequestsFragment.create(mrState)
     }
 
-    object ProjectLabels: SupportAppScreen() {
+    object ProjectLabels : SupportAppScreen() {
         override fun getFragment() = ProjectLabelsFragment()
     }
 
-    data class ProjectFiles(
-        val scope: String
-    ) : SupportAppScreen() {
-        override fun getFragment() = ProjectFilesFragment.create(scope)
+    object ProjectFiles : SupportAppScreen() {
+        override fun getFragment() = ProjectFilesFragment()
     }
 
     data class UserFlow(
@@ -227,12 +223,6 @@ object Screens {
 
     object PrivacyPolicy : SupportAppScreen() {
         override fun getFragment() = PrivacyPolicyFragment()
-    }
-
-    data class ProjectFilesFlow(
-        val projectId: Long
-    ) : SupportAppScreen() {
-        override fun getFragment() = ProjectFilesFlowFragment.create(projectId)
     }
 
     data class ExternalBrowserFlow(
