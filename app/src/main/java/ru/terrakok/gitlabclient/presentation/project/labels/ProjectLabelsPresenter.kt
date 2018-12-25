@@ -3,6 +3,7 @@ package ru.terrakok.gitlabclient.presentation.project.labels
 import com.arellomobile.mvp.InjectViewState
 import ru.terrakok.gitlabclient.entity.Label
 import ru.terrakok.gitlabclient.model.interactor.label.LabelInteractor
+import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.Paginator
@@ -17,7 +18,8 @@ import javax.inject.Inject
 class ProjectLabelsPresenter @Inject constructor(
     @ProjectId projectIdWrapper: PrimitiveWrapper<Long>,
     private val labelInteractor: LabelInteractor,
-    private val errorHandler: ErrorHandler
+    private val errorHandler: ErrorHandler,
+    private val flowRouter: FlowRouter
 ) : BasePresenter<ProjectLabelsView>() {
 
     private val projectId = projectIdWrapper.value
@@ -71,6 +73,8 @@ class ProjectLabelsPresenter @Inject constructor(
     }
 
     fun loadNextLabelsPage() = paginator.loadNewPage()
+
+    fun onBackPressed() = flowRouter.exit()
 
     override fun onDestroy() {
         super.onDestroy()
