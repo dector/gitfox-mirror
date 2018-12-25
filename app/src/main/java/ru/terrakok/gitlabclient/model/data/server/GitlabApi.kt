@@ -28,6 +28,8 @@ import ru.terrakok.gitlabclient.entity.todo.TodoState
 interface GitlabApi {
     companion object {
         const val API_PATH = "api/v4"
+        // See GitLab documentation: https://docs.gitlab.com/ee/api/#pagination.
+        const val MAX_PAGE_SIZE = 100
     }
 
     @GET("$API_PATH/projects")
@@ -304,4 +306,40 @@ interface GitlabApi {
         @Path("project_id") projectId: Long,
         @Path("milestone_id") mileStoneId: Long
     ): Single<List<MergeRequest>>
+
+    @GET("$API_PATH/projects/{project_id}/labels")
+    fun getProjectLabels(
+        @Path("project_id") projectId: Long,
+        @Query("page") page: Int,
+        @Query("per_page") pageSize: Int
+    ): Single<List<Label>>
+
+    @FormUrlEncoded
+    @POST("$API_PATH/projects/{project_id}/labels")
+    fun createLabel(
+        @Path("project_id") projectId: Long,
+        @Field("name") name: String,
+        @Field("color") color: String,
+        @Field("description") description: String?,
+        @Field("priority") priority: Int?
+    ): Single<Label>
+
+    @FormUrlEncoded
+    @DELETE("$API_PATH/projects/{project_id}/labels")
+    fun deleteLabel(
+        @Path("project_id") projectId: Long,
+        @Field("name") name: String
+    ): Completable
+
+    @POST("$API_PATH/projects/{project_id}/labels/{label_id}/subscribe")
+    fun subscribeToLabel(
+        @Path("project_id") projectId: Long,
+        @Path("label_id") labelId: Long
+    ): Single<Label>
+
+    @POST("$API_PATH/projects/{project_id}/labels/{label_id}/unsubscribe")
+    fun unsubscribeFromLabel(
+        @Path("project_id") projectId: Long,
+        @Path("label_id") labelId: Long
+    ): Single<Label>
 }

@@ -15,5 +15,4 @@
         android:id="@+id/tab_merge_request"
         android:icon="@drawable/ic_merge"
         android:title="@string/menu_project_merge_request" />
-
 </menu>

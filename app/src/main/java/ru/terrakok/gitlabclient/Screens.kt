@@ -32,6 +32,7 @@ import ru.terrakok.gitlabclient.ui.project.info.ProjectInfoContainerFragment
 import ru.terrakok.gitlabclient.ui.project.info.ProjectInfoFragment
 import ru.terrakok.gitlabclient.ui.project.issues.ProjectIssuesContainerFragment
 import ru.terrakok.gitlabclient.ui.project.issues.ProjectIssuesFragment
+import ru.terrakok.gitlabclient.ui.project.labels.ProjectLabelsFragment
 import ru.terrakok.gitlabclient.ui.project.mergerequest.ProjectMergeRequestsContainerFragment
 import ru.terrakok.gitlabclient.ui.project.mergerequest.ProjectMergeRequestsFragment
 import ru.terrakok.gitlabclient.ui.projects.ProjectsContainerFragment
@@ -153,6 +154,10 @@ object Screens {
         val mrState: MergeRequestState
     ) : SupportAppScreen() {
         override fun getFragment() = ProjectMergeRequestsFragment.create(mrState)
+    }
+
+    object ProjectLabels: SupportAppScreen() {
+        override fun getFragment() = ProjectLabelsFragment()
     }
 
     data class UserFlow(

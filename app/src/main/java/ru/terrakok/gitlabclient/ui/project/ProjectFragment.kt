@@ -38,10 +38,11 @@ class ProjectFragment : BaseFragment(), ProjectView {
 
         toolbar.apply {
             setNavigationOnClickListener { onBackPressed() }
-            inflateMenu(R.menu.share_menu)
+            inflateMenu(R.menu.project_menu)
             setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.shareAction -> shareText(shareUrl)
+                    R.id.labelAction -> presenter.onLabelPressed()
                 }
                 true
             }
