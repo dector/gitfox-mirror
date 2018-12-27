@@ -34,7 +34,8 @@ class MilestonesAdapterDelegate(
         private lateinit var milestone: Milestone
 
         init {
-            view.setOnClickListener { clickListener(milestone.id) }
+            //TODO Milestone Flow(uncomment next line when Milestone Flow is ready).
+            // view.setOnClickListener { clickListener(milestone.id) }
         }
 
         fun bind(data: Milestone) {
