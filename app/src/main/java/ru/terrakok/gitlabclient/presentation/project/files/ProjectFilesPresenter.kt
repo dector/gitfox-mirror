@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.presentation.files
+package ru.terrakok.gitlabclient.presentation.project.files
 
 import com.arellomobile.mvp.InjectViewState
 import io.reactivex.Single

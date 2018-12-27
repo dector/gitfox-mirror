@@ -8,17 +8,17 @@
         android:title="@string/share_to"
         app:showAsAction="always" />
 
-    <item
-        android:id="@+id/filesAction"
-        android:icon="@drawable/ic_folder_white"
-        android:title="@string/repository_files"
-        app:showAsAction="always" />
-
-    <item
+     <item
         android:id="@+id/labelAction"
         android:icon="@drawable/ic_labels"
         android:title="@string/project_labels"
         app:iconTint="@android:color/white"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/filesAction"
+        android:icon="@drawable/ic_folder_white"
+        android:title="@string/project_files"
         app:showAsAction="ifRoom" />
 
 </menu>

@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.ui.files
+package ru.terrakok.gitlabclient.ui.project.files
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -13,13 +13,12 @@ import ru.terrakok.gitlabclient.entity.Branch
 import ru.terrakok.gitlabclient.entity.app.ProjectFile
 import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.extension.visible
-import ru.terrakok.gitlabclient.presentation.files.ProjectFileDestination
-import ru.terrakok.gitlabclient.presentation.files.ProjectFilesPresenter
-import ru.terrakok.gitlabclient.presentation.files.ProjectFilesView
-import ru.terrakok.gitlabclient.toothpick.DI
+import ru.terrakok.gitlabclient.presentation.project.files.ProjectFileDestination
+import ru.terrakok.gitlabclient.presentation.project.files.ProjectFilesPresenter
+import ru.terrakok.gitlabclient.presentation.project.files.ProjectFilesView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.ZeroViewHolder
-import toothpick.Toothpick
+import toothpick.Scope
 import toothpick.config.Module
 
 /**
@@ -31,21 +30,18 @@ class ProjectFilesFragment : BaseFragment(), ProjectFilesView {
     @InjectPresenter
     lateinit var presenter: ProjectFilesPresenter
 
-    @ProvidePresenter
-    fun providePresenter(): ProjectFilesPresenter {
-        val scopeName = "ProjectFilesFragment_${hashCode()}"
-        val scope = Toothpick.openScopes(DI.PROJECT_FILES_FLOW_SCOPE, scopeName)
+    override val scopeModuleInstaller = { scope: Scope ->
         scope.installModules(object : Module() {
             init {
                 bind(ProjectFileDestination::class.java)
                     .toInstance(projectFileDestination)
             }
         })
-
-        return scope.getInstance(ProjectFilesPresenter::class.java).also {
-            Toothpick.closeScope(scopeName)
-        }
     }
+
+    @ProvidePresenter
+    fun providePresenter(): ProjectFilesPresenter =
+        scope.getInstance(ProjectFilesPresenter::class.java)
 
     private val adapter: ProjectFilesAdapter by lazy {
         ProjectFilesAdapter(
@@ -59,7 +55,7 @@ class ProjectFilesFragment : BaseFragment(), ProjectFilesView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         projectFileDestination = ProjectFileDestination()
-        if (isFirstLaunch(savedInstanceState) && savedInstanceState != null) {
+        if (savedInstanceState != null) {
             projectFileDestination.restoreState(savedInstanceState)
         }
         super.onCreate(savedInstanceState)
