@@ -154,7 +154,10 @@ class ProjectFilesPresenter @Inject constructor(
             }
 
             override fun showErrorMessage(error: Throwable) {
-                errorHandler.proceed(error, { viewState.showMessage(it) })
+                // Hide old files to prevent navigation into the same directories.
+                viewState.showEmptyView(true)
+                viewState.showFiles(false, emptyList())
+                errorHandler.proceed(error, { viewState.showEmptyError(true, it) })
             }
 
             override fun showEmptyView(show: Boolean) {
@@ -162,6 +165,8 @@ class ProjectFilesPresenter @Inject constructor(
             }
 
             override fun showData(show: Boolean, data: List<ProjectFile>) {
+                // Hide empty view, if it was hidden in case of error.
+                viewState.showEmptyView(false)
                 viewState.showFiles(show, data)
             }
 
