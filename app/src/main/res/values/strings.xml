@@ -178,6 +178,7 @@
 
     <!--Project files screen-->
     <string name="project_files_show_branches">Branches</string>
+    <string name="project_files_default_path">Project Files</string>
 
     <!--Privacy policy screen-->
     <string name="privacy_policy">Privacy policy</string>

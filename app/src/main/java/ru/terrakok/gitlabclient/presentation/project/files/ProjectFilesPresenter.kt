@@ -3,11 +3,13 @@ package ru.terrakok.gitlabclient.presentation.project.files
 import com.arellomobile.mvp.InjectViewState
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
+import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Branch
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.RepositoryTreeNodeType
 import ru.terrakok.gitlabclient.entity.app.ProjectFile
 import ru.terrakok.gitlabclient.model.interactor.project.ProjectInteractor
+import ru.terrakok.gitlabclient.model.system.ResourceManager
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
@@ -25,7 +27,8 @@ class ProjectFilesPresenter @Inject constructor(
     private val projectInteractor: ProjectInteractor,
     private val errorHandler: ErrorHandler,
     private val router: FlowRouter,
-    private val projectFileDestination: ProjectFileDestination
+    private val projectFileDestination: ProjectFileDestination,
+    private val resourceManager: ResourceManager
 ) : BasePresenter<ProjectFilesView>() {
 
     private val projectId = projectIdWrapper.value
@@ -76,38 +79,56 @@ class ProjectFilesPresenter @Inject constructor(
         super.onFirstViewAttach()
 
         if (projectFileDestination.isInitiated()) {
-            projectInteractor.getProjectBranches(projectId)
-                .doOnSubscribe { viewState.showBlockingProgress(true) }
-                .doAfterTerminate { viewState.showBlockingProgress(false) }
-                .subscribe(
-                    {
-                        projectBranches.addAll(it)
-                        projectFileDestination.moveToRoot()
-                    },
-                    { errorHandler.proceed(it, { viewState.showMessage(it) }) }
-                )
-                .connect()
+            loadBranches()
         } else {
-            Single
-                .zip(
-                    projectInteractor.getProject(projectId),
-                    projectInteractor.getProjectBranches(projectId),
-                    BiFunction<Project, List<Branch>, Pair<Project, List<Branch>>> { project, branches ->
-                        Pair(project, branches)
-                    }
-                )
-                .doOnSubscribe { viewState.showBlockingProgress(true) }
-                .doAfterTerminate { viewState.showBlockingProgress(false) }
-                .subscribe(
-                    { (project, branches) ->
-                        projectBranches.addAll(branches)
-                        projectFileDestination.init(project.path, project.defaultBranch)
-                        projectFileDestination.moveToRoot()
-                    },
-                    { errorHandler.proceed(it, { viewState.showMessage(it) }) }
-                )
-                .connect()
+            loadProjectWithBranches()
         }
+    }
+
+    private fun loadBranches() {
+        projectInteractor.getProjectBranches(projectId)
+            .doOnSubscribe { viewState.showBlockingProgress(true) }
+            .doAfterTerminate { viewState.showBlockingProgress(false) }
+            .subscribe(
+                {
+                    viewState.showBranchSelection(true)
+
+                    projectBranches.addAll(it)
+                    projectFileDestination.moveToRoot()
+                },
+                { handleLoadingProjectDetailsError(it) }
+            )
+            .connect()
+    }
+
+    private fun loadProjectWithBranches() {
+        Single
+            .zip(
+                projectInteractor.getProject(projectId),
+                projectInteractor.getProjectBranches(projectId),
+                BiFunction<Project, List<Branch>, Pair<Project, List<Branch>>> { project, branches ->
+                    Pair(project, branches)
+                }
+            )
+            .doOnSubscribe { viewState.showBlockingProgress(true) }
+            .doAfterTerminate { viewState.showBlockingProgress(false) }
+            .subscribe(
+                { (project, branches) ->
+                    viewState.showBranchSelection(true)
+
+                    projectBranches.addAll(branches)
+                    projectFileDestination.init(project.path, project.defaultBranch)
+                    projectFileDestination.moveToRoot()
+                },
+                { handleLoadingProjectDetailsError(it) }
+            )
+            .connect()
+    }
+
+    private fun handleLoadingProjectDetailsError(error: Throwable) {
+        viewState.setPath(resourceManager.getString(R.string.project_files_default_path))
+        viewState.showBranchSelection(false)
+        errorHandler.proceed(error, { viewState.showEmptyError(true, it) })
     }
 
     private val paginator = Paginator(
@@ -154,7 +175,17 @@ class ProjectFilesPresenter @Inject constructor(
         }
     )
 
-    fun refreshFiles() = paginator.refresh()
+    fun refreshFiles() {
+        if (projectFileDestination.isInitiated()) {
+            paginator.refresh()
+        } else {
+            viewState.showEmptyError(false, null)
+            viewState.showRefreshProgress(false)
+
+            loadProjectWithBranches()
+        }
+    }
+
     fun loadNextFilesPage() = paginator.loadNewPage()
     fun onShowBranchesClick() = viewState.showBranches(projectBranches)
     fun onBackPressed() = projectFileDestination.moveBack()
