@@ -8,7 +8,13 @@
         android:title="@string/share_to"
         app:showAsAction="always" />
 
-     <item
+    <item
+        android:id="@+id/filesAction"
+        android:icon="@drawable/ic_folder_white"
+        android:title="@string/project_files"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/labelAction"
         android:icon="@drawable/ic_labels"
         android:title="@string/project_labels"
@@ -16,9 +22,10 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/filesAction"
-        android:icon="@drawable/ic_folder_white"
-        android:title="@string/project_files"
+        android:id="@+id/milestonesAction"
+        android:icon="@drawable/ic_milestone"
+        android:title="@string/menu_project_milestones"
+        app:iconTint="@android:color/white"
         app:showAsAction="ifRoom" />
 
 </menu>

@@ -284,7 +284,9 @@ interface GitlabApi {
     @GET("$API_PATH/projects/{project_id}/milestones")
     fun getMilestones(
         @Path("project_id") projectId: Long,
-        @Query("state") state: MilestoneState?
+        @Query("state") state: MilestoneState?,
+        @Query("page") page: Int,
+        @Query("per_page") pageSize: Int
     ): Single<List<Milestone>>
 
     @GET("$API_PATH/projects/{project_id}/milestones/{milestone_id}")
@@ -323,13 +325,17 @@ interface GitlabApi {
     @GET("$API_PATH/projects/{project_id}/milestones/{milestone_id}/issues")
     fun getMilestoneIssues(
         @Path("project_id") projectId: Long,
-        @Path("milestone_id") mileStoneId: Long
+        @Path("milestone_id") mileStoneId: Long,
+        @Query("page") page: Int,
+        @Query("per_page") pageSize: Int
     ): Single<List<Issue>>
 
     @GET("$API_PATH/projects/{project_id}/milestones/{milestone_id}/merge_requests")
     fun getMilestoneMergeRequests(
         @Path("project_id") projectId: Long,
-        @Path("milestone_id") mileStoneId: Long
+        @Path("milestone_id") mileStoneId: Long,
+        @Query("page") page: Int,
+        @Query("per_page") pageSize: Int
     ): Single<List<MergeRequest>>
 
     @GET("$API_PATH/projects/{project_id}/labels")

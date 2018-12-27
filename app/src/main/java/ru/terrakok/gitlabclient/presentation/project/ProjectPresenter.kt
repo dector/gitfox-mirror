@@ -41,5 +41,7 @@ class ProjectPresenter @Inject constructor(
 
     fun onLabelPressed() = flowRouter.navigateTo(Screens.ProjectLabels)
 
+    fun onMilestonesClicked() = flowRouter.navigateTo(Screens.ProjectMilestonesContainer)
+
     fun onFilesPressed() = flowRouter.navigateTo(Screens.ProjectFiles)
 }
