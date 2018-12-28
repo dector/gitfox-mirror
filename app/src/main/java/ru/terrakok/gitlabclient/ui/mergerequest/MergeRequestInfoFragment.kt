@@ -30,7 +30,7 @@ class MergeRequestInfoFragment : BaseFragment(), MergeRequestInfoView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        descriptionTextView.initWithParentDelegate(mvpDelegate)
+        descriptionMarkdownTextView.initWithParentDelegate(mvpDelegate)
     }
 
     override fun showInfo(mr: MergeRequest) {
@@ -75,7 +75,7 @@ class MergeRequestInfoFragment : BaseFragment(), MergeRequestInfoView {
             }
         }
         avatarImageView.loadRoundedImage(mr.author.avatarUrl, context)
-        descriptionTextView.setMarkdown(mr.description, mr.projectId)
+        descriptionMarkdownTextView.setMarkdown(mr.description, mr.projectId)
     }
 
     override fun showEmptyProgress(show: Boolean) {
