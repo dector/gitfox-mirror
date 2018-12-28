@@ -176,6 +176,11 @@
     <string name="project_events">Activity</string>
     <string name="project_labels">Labels</string>
     <string name="project_milestones">Milestones</string>
+    <string name="project_files">Files</string>
+
+    <!--Project files screen-->
+    <string name="project_files_show_branches">Branches</string>
+    <string name="project_files_default_path">Project Files</string>
 
     <!--Privacy policy screen-->
     <string name="privacy_policy">Privacy policy</string>

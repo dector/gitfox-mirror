@@ -1,38 +1,35 @@
-package ru.terrakok.gitlabclient.ui.my
+package ru.terrakok.gitlabclient.ui.project.files
 
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates3.ListDelegationAdapter
-import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
+import ru.terrakok.gitlabclient.entity.app.ProjectFile
 import ru.terrakok.gitlabclient.ui.global.list.ProgressAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.ProgressItem
-import ru.terrakok.gitlabclient.ui.global.list.TargetHeaderConfidentialAdapterDelegate
-import ru.terrakok.gitlabclient.ui.global.list.TargetHeaderPublicAdapterDelegate
+import ru.terrakok.gitlabclient.ui.global.list.ProjectFileAdapterDelegate
 
-class TargetsAdapter(
-    userClickListener: (Long) -> Unit,
-    clickListener: (TargetHeader.Public) -> Unit,
+/**
+ * Created by Eugene Shapovalov (@CraggyHaggy) on 02.11.18.
+ */
+class ProjectFilesAdapter(
+    fileClickListener: (ProjectFile) -> Unit,
     private val nextPageListener: () -> Unit
 ) : ListDelegationAdapter<MutableList<Any>>() {
 
     init {
         items = mutableListOf()
-        delegatesManager.addDelegate(TargetHeaderPublicAdapterDelegate(userClickListener, clickListener))
-        delegatesManager.addDelegate(TargetHeaderConfidentialAdapterDelegate())
+        delegatesManager.addDelegate(ProjectFileAdapterDelegate(fileClickListener))
         delegatesManager.addDelegate(ProgressAdapterDelegate())
     }
 
-    fun setData(events: List<TargetHeader>) {
-        val oldData = items.toList()
-        val progress = isProgress()
+    fun setData(data: List<ProjectFile>) {
+        val oldItems = items.toList()
 
         items.clear()
-        items.addAll(events)
-        if (progress) items.add(ProgressItem())
+        items.addAll(data)
 
-        //yes, on main thread...
         DiffUtil
-            .calculateDiff(DiffCallback(items, oldData), false)
+            .calculateDiff(DiffCallback(items, oldItems), false)
             .dispatchUpdatesTo(this)
     }
 
@@ -73,11 +70,8 @@ class TargetsAdapter(
             val oldItem = oldItems[oldItemPosition]
             val newItem = newItems[newItemPosition]
 
-            return if (newItem is TargetHeader.Public && oldItem is TargetHeader.Public) {
-                newItem.target == oldItem.target && newItem.targetId == oldItem.targetId
-                        && newItem.date == oldItem.date
-            } else if (newItem is TargetHeader.Confidential && oldItem is TargetHeader.Confidential) {
-                true
+            return if (newItem is ProjectFile && oldItem is ProjectFile) {
+                newItem.id == oldItem.id
             } else {
                 newItem is ProgressItem && oldItem is ProgressItem
             }
@@ -87,7 +81,7 @@ class TargetsAdapter(
             val oldItem = oldItems[oldItemPosition]
             val newItem = newItems[newItemPosition]
 
-            return if (newItem is TargetHeader && oldItem is TargetHeader) {
+            return if (newItem is ProjectFile && oldItem is ProjectFile) {
                 newItem == oldItem
             } else {
                 false

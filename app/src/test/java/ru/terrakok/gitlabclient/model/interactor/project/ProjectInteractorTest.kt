@@ -103,7 +103,7 @@ class ProjectInteractorTest {
         val testFile = File("", "", 0L, "", testFileContent, testProject.defaultBranch, "", "", "")
 
         val repo = mock(ProjectRepository::class.java)
-        `when`(repo.getFile(anyLong(), anyString(), anyString())).thenReturn(Single.just(testFile))
+        `when`(repo.getBlobFile(anyLong(), anyString(), anyString())).thenReturn(Single.just(testFile))
 
         val base64 = mock(Base64Tools::class.java)
         `when`(base64.decode(anyString())).thenReturn(raw)
@@ -113,7 +113,7 @@ class ProjectInteractorTest {
         val testObserver: TestObserver<String> = interactor.getProjectReadme(testProject).test()
         testObserver.awaitTerminalEvent()
 
-        verify(repo, times(1)).getFile(testProject.id, "README.md", testProject.defaultBranch)
+        verify(repo, times(1)).getBlobFile(projectId, "README.md", branchName)
         verify(base64, times(1)).decode(testFileContent)
         testObserver
             .assertValueCount(1)
@@ -126,7 +126,7 @@ class ProjectInteractorTest {
         val error = RuntimeException("test error")
 
         val repo = mock(ProjectRepository::class.java)
-        `when`(repo.getFile(anyLong(), anyString(), anyString())).thenReturn(Single.error(error))
+        `when`(repo.getBlobFile(anyLong(), anyString(), anyString())).thenReturn(Single.error(error))
 
         val mdConverter = mock(MarkDownConverter::class.java)
         val base64 = mock(Base64Tools::class.java)
@@ -136,7 +136,7 @@ class ProjectInteractorTest {
         val testObserver: TestObserver<String> = interactor.getProjectReadme(testProject).test()
         testObserver.awaitTerminalEvent()
 
-        verify(repo, times(1)).getFile(testProject.id, "README.md", testProject.defaultBranch)
+        verify(repo, times(1)).getBlobFile(projectId, "README.md", branchName)
         verifyZeroInteractions(base64)
         verifyZeroInteractions(mdConverter)
         testObserver

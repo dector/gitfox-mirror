@@ -65,8 +65,33 @@ interface GitlabApi {
         @Path("id") id: Long,
         @Query("path") path: String?,
         @Query("ref") branchName: String?,
-        @Query("recursive") recursive: Boolean?
+        @Query("recursive") recursive: Boolean? = false,
+        @Query("page") page: Int,
+        @Query("per_page") pageSize: Int
     ): Single<List<RepositoryTreeNode>>
+
+    @GET("$API_PATH/projects/{project_id}/repository/commits/{sha}")
+    fun getRepositoryCommit(
+        @Path("project_id") projectId: Long,
+        @Path("sha") sha: String,
+        @Query("stats") stats: Boolean = true
+    ): Single<Commit>
+
+    @GET("$API_PATH/projects/{project_id}/repository/commits/")
+    fun getRepositoryCommits(
+        @Path("project_id") projectId: Long,
+        @Query("ref_name") branchName: String?,
+        @Query("since") since: String?,
+        @Query("until") until: String?,
+        @Query("path") path: String?,
+        @Query("all") all: Boolean?,
+        @Query("with_stats") withStats: Boolean?
+    ): Single<List<Commit>>
+
+    @GET("$API_PATH/projects/{project_id}/repository/branches/")
+    fun getRepositoryBranches(
+        @Path("project_id") projectId: Long
+    ): Single<List<Branch>>
 
     @GET("$API_PATH/user")
     fun getMyUser(): Single<User>

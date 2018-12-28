@@ -45,6 +45,7 @@ class ProjectFragment : BaseFragment(), ProjectView {
                     R.id.shareAction -> shareText(shareUrl)
                     R.id.labelAction -> presenter.onLabelPressed()
                     R.id.milestonesAction -> presenter.onMilestonesClicked()
+                    R.id.filesAction -> presenter.onFilesPressed()
                 }
                 true
             }

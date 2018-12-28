@@ -29,6 +29,7 @@ import ru.terrakok.gitlabclient.ui.my.todos.MyTodosFragment
 import ru.terrakok.gitlabclient.ui.privacypolicy.PrivacyPolicyFragment
 import ru.terrakok.gitlabclient.ui.project.ProjectFlowFragment
 import ru.terrakok.gitlabclient.ui.project.ProjectFragment
+import ru.terrakok.gitlabclient.ui.project.files.ProjectFilesFragment
 import ru.terrakok.gitlabclient.ui.project.info.ProjectEventsFragment
 import ru.terrakok.gitlabclient.ui.project.info.ProjectInfoContainerFragment
 import ru.terrakok.gitlabclient.ui.project.info.ProjectInfoFragment
@@ -160,7 +161,7 @@ object Screens {
         override fun getFragment() = ProjectMergeRequestsFragment.create(mrState)
     }
 
-    object ProjectLabels: SupportAppScreen() {
+    object ProjectLabels : SupportAppScreen() {
         override fun getFragment() = ProjectLabelsFragment()
     }
 
@@ -172,6 +173,10 @@ object Screens {
         val milestoneState: MilestoneState
     ) : SupportAppScreen() {
         override fun getFragment() = ProjectMilestonesFragment.create(milestoneState)
+    }
+
+    object ProjectFiles : SupportAppScreen() {
+        override fun getFragment() = ProjectFilesFragment()
     }
 
     data class UserFlow(

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/showBranchesAction"
+        android:icon="@drawable/ic_arrow_drop_down"
+        android:title="@string/project_files_show_branches"
+        app:showAsAction="always" />
+
+</menu>
