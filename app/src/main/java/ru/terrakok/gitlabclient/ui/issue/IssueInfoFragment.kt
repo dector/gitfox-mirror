@@ -29,7 +29,7 @@ class IssueInfoFragment : BaseFragment(), IssueInfoView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        descriptionTextView.initWithParentDelegate(mvpDelegate)
+        descriptionMarkdownTextView.initWithParentDelegate(mvpDelegate)
     }
 
     override fun showInfo(issue: Issue) {
@@ -60,7 +60,7 @@ class IssueInfoFragment : BaseFragment(), IssueInfoView {
             }
         }
         avatarImageView.loadRoundedImage(issue.author.avatarUrl, context)
-        descriptionTextView.setMarkdown(issue.description, issue.projectId)
+        descriptionMarkdownTextView.setMarkdown(issue.description, issue.projectId)
     }
 
     override fun showEmptyProgress(show: Boolean) {
