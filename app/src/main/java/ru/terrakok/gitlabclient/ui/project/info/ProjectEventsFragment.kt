@@ -27,6 +27,7 @@ class ProjectEventsFragment : BaseFragment(), ProjectEventsView {
 
     private val adapter: TargetsAdapter by lazy {
         TargetsAdapter(
+            mvpDelegate,
             { presenter.onUserClick(it) },
             { presenter.onItemClick(it) },
             { presenter.loadNextEventsPage() }

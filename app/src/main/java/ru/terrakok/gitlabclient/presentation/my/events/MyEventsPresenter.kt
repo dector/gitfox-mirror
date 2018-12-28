@@ -1,13 +1,15 @@
 package ru.terrakok.gitlabclient.presentation.my.events
 
 import com.arellomobile.mvp.InjectViewState
-import io.reactivex.Observable
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.extension.openInfo
 import ru.terrakok.gitlabclient.model.interactor.event.EventInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
-import ru.terrakok.gitlabclient.presentation.global.*
+import ru.terrakok.gitlabclient.presentation.global.BasePresenter
+import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
+import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
+import ru.terrakok.gitlabclient.presentation.global.Paginator
 import javax.inject.Inject
 
 /**
@@ -16,7 +18,6 @@ import javax.inject.Inject
 @InjectViewState
 class MyEventsPresenter @Inject constructor(
     private val eventInteractor: EventInteractor,
-    private val mdConverter: MarkDownConverter,
     private val menuController: GlobalMenuController,
     private val errorHandler: ErrorHandler,
     private val router: FlowRouter
@@ -29,21 +30,7 @@ class MyEventsPresenter @Inject constructor(
     }
 
     private val paginator = Paginator(
-        {
-            eventInteractor.getEvents(it)
-                .flattenAsObservable { it }
-                .concatMap { item ->
-                    when (item) {
-                        is TargetHeader.Public -> {
-                            mdConverter.markdownToSpannable(item.body.toString())
-                                .map { md -> item.copy(body = md) }
-                                .toObservable()
-                        }
-                        is TargetHeader.Confidential -> Observable.just(item)
-                    }
-                }
-                .toList()
-        },
+        { eventInteractor.getEvents(it) },
         object : Paginator.ViewController<TargetHeader> {
             override fun showEmptyProgress(show: Boolean) {
                 viewState.showEmptyProgress(show)

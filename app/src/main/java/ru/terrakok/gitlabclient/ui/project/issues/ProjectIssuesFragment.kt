@@ -43,6 +43,7 @@ class ProjectIssuesFragment : BaseFragment(), ProjectIssuesView {
 
     private val adapter: TargetsAdapter by lazy {
         TargetsAdapter(
+            mvpDelegate,
             { presenter.onUserClick(it) },
             { presenter.onIssueClick(it) },
             { presenter.loadNextIssuesPage() }
