@@ -1,6 +1,7 @@
 package ru.terrakok.gitlabclient.model.data.server
 
 import android.os.Build
+import okhttp3.ConnectionSpec
 import okhttp3.OkHttpClient
 import okhttp3.TlsVersion
 import timber.log.Timber
@@ -53,8 +54,20 @@ class Tls12SocketFactory(private val delegate: SSLSocketFactory) : SSLSocketFact
                 try {
                     val sslContext = SSLContext.getInstance(TlsVersion.TLS_1_2.javaName())
                     sslContext.init(null, arrayOf(trustManager), null)
-
                     sslSocketFactory(Tls12SocketFactory(sslContext.socketFactory), trustManager)
+
+                    val tls12ConnectionSpec = ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
+                        .tlsVersions(TlsVersion.TLS_1_2)
+                        .build()
+
+                    connectionSpecs(
+                        listOf(
+                            tls12ConnectionSpec,
+                            ConnectionSpec.COMPATIBLE_TLS,
+                            ConnectionSpec.CLEARTEXT
+                        )
+                    )
+
                 } catch (e: Exception) {
                     Timber.e(e, "Error while setting TLS 1.2 compatibility")
                 }
@@ -69,7 +82,7 @@ class Tls12SocketFactory(private val delegate: SSLSocketFactory) : SSLSocketFact
      */
     private fun Socket.patchForTls12(): Socket {
         return (this as? SSLSocket)?.apply {
-            enabledProtocols += TlsVersion.TLS_1_2.javaName()
+            enabledProtocols = arrayOf(TlsVersion.TLS_1_2.javaName())
         } ?: this
     }
 
