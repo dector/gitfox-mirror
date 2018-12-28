@@ -66,14 +66,14 @@ class TargetHeaderPublicAdapterDelegate(
             this.item = item
             with(itemView) {
                 titleTextView.text = item.title.getHumanName(resources)
-                descriptionTextView.initWithParentDelegate(mvpDelegate)
-                descriptionTextView.setMarkdown(item.body, item.internal?.projectId)
-                descriptionTextView.movementMethod = null //disable internal link click
+                descriptionMarkdownTextView.initWithParentDelegate(mvpDelegate)
+                descriptionMarkdownTextView.setMarkdown(item.body, item.internal?.projectId)
+                descriptionMarkdownTextView.movementMethod = null //disable internal link click
                 avatarImageView.loadRoundedImage(item.author.avatarUrl)
                 iconImageView.setImageResource(item.icon.getIcon())
                 dateTextView.text = item.date.humanTime(resources)
 
-                descriptionTextView.visible(item.body.isNotEmpty())
+                descriptionMarkdownTextView.visible(item.body.isNotEmpty())
                 iconImageView.visible(item.icon != TargetHeaderIcon.NONE)
 
                 bindBadges(item.badges)
