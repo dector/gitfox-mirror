@@ -2,10 +2,9 @@ package ru.terrakok.gitlabclient.presentation.issue.notes
 
 import com.arellomobile.mvp.InjectViewState
 import ru.terrakok.gitlabclient.model.interactor.issue.IssueInteractor
+import ru.terrakok.gitlabclient.presentation.global.NoteWithProjectId
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
-import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
-import ru.terrakok.gitlabclient.presentation.global.NoteWithFormattedBody
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.IssueId
 import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
@@ -19,7 +18,6 @@ class IssueNotesPresenter @Inject constructor(
     @ProjectId projectIdWrapper: PrimitiveWrapper<Long>,
     @IssueId issueIdWrapper: PrimitiveWrapper<Long>,
     private val issueInteractor: IssueInteractor,
-    private val mdConverter: MarkDownConverter,
     private val errorHandler: ErrorHandler
 ) : BasePresenter<IssueNotesView>() {
 
@@ -33,15 +31,13 @@ class IssueNotesPresenter @Inject constructor(
             .getAllIssueNotes(projectId, issueId)
             .doOnSubscribe { viewState.showEmptyProgress(true) }
             .doAfterTerminate { viewState.showEmptyProgress(false) }
-            .flattenAsObservable { it }
-            .concatMap { note ->
-                mdConverter.markdownToSpannable(note.body)
-                    .map { NoteWithFormattedBody(note, it) }
-                    .toObservable()
-            }
-            .toList()
             .subscribe(
-                { viewState.showNotes(it, false) },
+                { viewState.showNotes(it.map {
+                    NoteWithProjectId(
+                        it,
+                        projectId
+                    )
+                }, false) },
                 { errorHandler.proceed(it, { viewState.showMessage(it) }) }
             )
             .connect()
@@ -51,18 +47,16 @@ class IssueNotesPresenter @Inject constructor(
         issueInteractor.createIssueNote(projectId, issueId, body)
             .flatMap {
                 issueInteractor.getAllIssueNotes(projectId, issueId)
-                    .flattenAsObservable { it }
-                    .concatMap { note ->
-                        mdConverter.markdownToSpannable(note.body)
-                            .map { NoteWithFormattedBody(note, it) }
-                            .toObservable()
-                    }
-                    .toList()
             }
             .doOnSubscribe { viewState.showBlockingProgress(true) }
             .doAfterTerminate { viewState.showBlockingProgress(false) }
             .subscribe(
-                { viewState.showNotes(it, true) },
+                { viewState.showNotes(it.map {
+                    NoteWithProjectId(
+                        it,
+                        projectId
+                    )
+                }, true) },
                 { errorHandler.proceed(it, { viewState.showMessage(it) }) }
             )
             .connect()
