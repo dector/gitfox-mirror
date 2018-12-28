@@ -4,7 +4,6 @@ import com.arellomobile.mvp.InjectViewState
 import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
-import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.MergeRequestId
 import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
@@ -18,7 +17,6 @@ class MergeRequestInfoPresenter @Inject constructor(
     @ProjectId projectIdWrapper: PrimitiveWrapper<Long>,
     @MergeRequestId mrIdWrapper: PrimitiveWrapper<Long>,
     private val mrInteractor: MergeRequestInteractor,
-    private val mdConverter: MarkDownConverter,
     private val errorHandler: ErrorHandler
 ) : BasePresenter<MergeRequestInfoView>() {
 
@@ -30,15 +28,10 @@ class MergeRequestInfoPresenter @Inject constructor(
 
         mrInteractor
             .getMergeRequest(projectId, mrId)
-            .flatMap { mr ->
-                mdConverter
-                    .markdownToSpannable(mr.description)
-                    .map { Pair(mr, it) }
-            }
             .doOnSubscribe { viewState.showEmptyProgress(true) }
             .doAfterTerminate { viewState.showEmptyProgress(false) }
             .subscribe(
-                { (mr, mdDescription) -> viewState.showInfo(mr, mdDescription) },
+                { mr -> viewState.showInfo(mr) },
                 { errorHandler.proceed(it, { viewState.showMessage(it) }) }
             )
             .connect()

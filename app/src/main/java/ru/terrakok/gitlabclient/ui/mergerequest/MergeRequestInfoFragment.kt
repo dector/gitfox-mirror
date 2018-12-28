@@ -1,5 +1,7 @@
 package ru.terrakok.gitlabclient.ui.mergerequest
 
+import android.os.Bundle
+import android.view.View
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_mr_info.*
@@ -26,7 +28,12 @@ class MergeRequestInfoFragment : BaseFragment(), MergeRequestInfoView {
     fun providePresenter() =
         scope.getInstance(MergeRequestInfoPresenter::class.java)
 
-    override fun showInfo(mr: MergeRequest, mdDescription: CharSequence) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        descriptionMarkdownTextView.initWithParentDelegate(mvpDelegate)
+    }
+
+    override fun showInfo(mr: MergeRequest) {
         titleTextView.text = mr.title
         when (mr.state) {
             MergeRequestState.OPENED -> {
@@ -68,7 +75,7 @@ class MergeRequestInfoFragment : BaseFragment(), MergeRequestInfoView {
             }
         }
         avatarImageView.loadRoundedImage(mr.author.avatarUrl, context)
-        Markwon.setText(descriptionTextView, mdDescription)
+        descriptionMarkdownTextView.setMarkdown(mr.description, mr.projectId)
     }
 
     override fun showEmptyProgress(show: Boolean) {

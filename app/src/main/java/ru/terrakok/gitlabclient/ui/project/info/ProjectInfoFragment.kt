@@ -5,7 +5,6 @@ import android.view.View
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_project_info.*
-import ru.noties.markwon.Markwon
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.Visibility
@@ -35,9 +34,11 @@ class ProjectInfoFragment : BaseFragment(), ProjectInfoView {
             starsTextView.setStartDrawable(context.getTintDrawable(R.drawable.ic_star_black_24dp, R.color.colorPrimary))
             forksTextView.setStartDrawable(context.getTintDrawable(R.drawable.ic_fork, R.color.colorPrimary))
         }
+
+        readmeMarkdownTextView.initWithParentDelegate(mvpDelegate)
     }
 
-    override fun showProject(project: Project, mdReadme: CharSequence) {
+    override fun showProject(project: Project, mdReadme: String) {
         titleTextView.text = project.nameWithNamespace
         descriptionTextView.text = project.description
         starsTextView.text = project.starCount.toString()
@@ -53,7 +54,7 @@ class ProjectInfoFragment : BaseFragment(), ProjectInfoView {
             }
         )
 
-        Markwon.setText(readmeTextView, mdReadme)
+        readmeMarkdownTextView.setMarkdown(mdReadme, project.id)
     }
 
     override fun showProgress(show: Boolean) {

@@ -72,8 +72,8 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/subtitleTextView" />
 
-            <TextView
-                android:id="@+id/descriptionTextView"
+            <ru.terrakok.gitlabclient.ui.global.markdown.MarkdownTextView
+                android:id="@+id/descriptionMarkdownTextView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:linksClickable="true"
