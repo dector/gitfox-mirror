@@ -15,9 +15,9 @@
         android:background="@drawable/bg_label"
         android:ellipsize="end"
         android:maxLines="1"
-        android:paddingBottom="2dp"
         android:paddingStart="8dp"
         android:paddingEnd="8dp"
+        android:paddingBottom="2dp"
         android:singleLine="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -33,20 +33,18 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="16dp"
-        android:textColor="@color/primary_text"
+        android:textColor="@color/selector_enabled_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/labelMrCountImageView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/labelTitleTextView"
         tools:text="123123123 123 123 12 3" />
 
-
     <TextView
         android:id="@+id/labelIssueCountTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-
         android:textColor="@color/primary_text"
         app:layout_constraintBottom_toBottomOf="@+id/labelIssueCountImageView"
         app:layout_constraintEnd_toEndOf="parent"
