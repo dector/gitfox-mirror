@@ -42,8 +42,8 @@ class UserNoteAdapterDelegate(
                 avatarImageView.loadRoundedImage(note.author.avatarUrl)
                 titleTextView.text = note.author.name
                 subtitleTextView.text = note.createdAt.humanTime(context.resources)
-                descriptionTextView.initWithParentDelegate(mvpDelegate)
-                descriptionTextView.setMarkdown(note.body, data.projectId)
+                descriptionMarkdownTextView.initWithParentDelegate(mvpDelegate)
+                descriptionMarkdownTextView.setMarkdown(note.body, data.projectId)
             }
         }
     }

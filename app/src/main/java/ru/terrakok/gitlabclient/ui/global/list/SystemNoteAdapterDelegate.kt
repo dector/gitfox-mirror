@@ -38,8 +38,8 @@ class SystemNoteAdapterDelegate(
             this.note = data.note
             with(itemView) {
                 titleTextView.text = note.author.name
-                subtitleTextView.initWithParentDelegate(mvpDelegate)
-                subtitleTextView.setMarkdown(note.body, data.projectId)
+                subtitleMarkdownTextView.initWithParentDelegate(mvpDelegate)
+                subtitleMarkdownTextView.setMarkdown(note.body, data.projectId)
             }
         }
     }

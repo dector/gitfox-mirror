@@ -42,7 +42,7 @@
         tools:text="commented a month ago"/>
 
     <ru.terrakok.gitlabclient.ui.global.markdown.MarkdownTextView
-        android:id="@+id/descriptionTextView"
+        android:id="@+id/descriptionMarkdownTextView"
         style="@style/TextBody"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

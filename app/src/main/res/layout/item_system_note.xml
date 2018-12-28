@@ -30,7 +30,7 @@
         tools:text="Marc MacLeod"/>
 
     <ru.terrakok.gitlabclient.ui.global.markdown.MarkdownTextView
-        android:id="@+id/subtitleTextView"
+        android:id="@+id/subtitleMarkdownTextView"
         style="@style/TextBody"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
