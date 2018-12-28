@@ -41,11 +41,18 @@ class ProjectLabelAdapterDelegate : AdapterDelegate<MutableList<Any>>() {
         @SuppressLint("SetTextI18n")
         fun bind(item: Label) = with(itemView) {
             labelTitleTextView.text = item.name
-            labelDescriptionTextView.text = item.description
+
+            val descriptionIsEmpty = item.description.isNullOrBlank()
+            labelDescriptionTextView.text = if (descriptionIsEmpty) {
+                context.getString(R.string.label_description_empty)
+            } else {
+                item.description
+            }
+            labelDescriptionTextView.isEnabled = descriptionIsEmpty.not()
+
             labelIssueCountTextView.text = "${item.closedIssuesCount + item.openIssuesCount}"
             labelMrCountTextView.text = "${item.openMergeRequestsCount}"
             setLabelColor(item.color)
-
         }
 
         private fun setLabelColor(color: String) = with(itemView.labelTitleTextView) {
