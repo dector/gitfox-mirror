@@ -77,7 +77,7 @@ android {
 
                 proguardFiles(
                     getDefaultProguardFile("proguard-android-optimize.txt"),
-                    file("config/proguard/proguard-rules.txt")
+                    file("proguard-rules.pro")
                 )
             }
             getByName("release") {
@@ -86,7 +86,7 @@ android {
 
                 proguardFiles(
                     getDefaultProguardFile("proguard-android-optimize.txt"),
-                    file("config/proguard/proguard-rules.txt")
+                    file("proguard-rules.pro")
                 )
             }
         }
