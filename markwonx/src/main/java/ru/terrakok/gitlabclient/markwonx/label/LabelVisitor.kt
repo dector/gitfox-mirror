@@ -23,7 +23,7 @@ class LabelVisitor(
             }
             if (color != null) {
                 builder.append(label.name)
-                builder.setSpan(LabelSpan(label, color, config), length)
+                builder.setSpan(LabelSpan(label, color, config, {}), length)
             }
         } else {
             super.visit(customNode)

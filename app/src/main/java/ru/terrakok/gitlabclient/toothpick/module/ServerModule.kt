@@ -6,18 +6,21 @@ import ru.terrakok.gitlabclient.entity.app.session.AuthHolder
 import ru.terrakok.gitlabclient.entity.app.session.OAuthParams
 import ru.terrakok.gitlabclient.entity.app.session.UserAccount
 import ru.terrakok.gitlabclient.model.data.cache.ProjectCache
+import ru.terrakok.gitlabclient.model.data.cache.ProjectLabelCache
 import ru.terrakok.gitlabclient.markwonx.label.LabelSpanConfig
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.model.interactor.event.EventInteractor
 import ru.terrakok.gitlabclient.model.interactor.issue.IssueInteractor
 import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestInteractor
+import ru.terrakok.gitlabclient.model.interactor.milestone.MilestoneInteractor
 import ru.terrakok.gitlabclient.model.interactor.project.ProjectInteractor
 import ru.terrakok.gitlabclient.model.interactor.todo.TodoListInteractor
 import ru.terrakok.gitlabclient.model.interactor.user.UserInteractor
 import ru.terrakok.gitlabclient.model.repository.event.EventRepository
 import ru.terrakok.gitlabclient.model.repository.issue.IssueRepository
 import ru.terrakok.gitlabclient.model.repository.mergerequest.MergeRequestRepository
+import ru.terrakok.gitlabclient.model.repository.milestone.MilestoneRepository
 import ru.terrakok.gitlabclient.model.repository.profile.ProfileRepository
 import ru.terrakok.gitlabclient.model.repository.project.ProjectRepository
 import ru.terrakok.gitlabclient.model.repository.todo.TodoRepository
@@ -52,6 +55,7 @@ class ServerModule(userAccount: UserAccount?) : Module() {
             .toProvider(OkHttpClientWithErrorHandlerProvider::class.java)
             .providesSingletonInScope()
         bind(ProjectCache::class.java).singletonInScope()
+        bind(ProjectLabelCache::class.java).singletonInScope()
         bind(LabelSpanConfig::class.java).toProvider(LabelSpanConfigProvider::class.java).providesSingletonInScope()
         bind(GitlabApi::class.java).toProvider(ApiProvider::class.java).providesSingletonInScope()
         bind(MarkDownUrlResolver::class.java)
@@ -86,6 +90,10 @@ class ServerModule(userAccount: UserAccount?) : Module() {
         //Merge request
         bind(MergeRequestRepository::class.java)
         bind(MergeRequestInteractor::class.java)
+
+        //Milestone
+        bind(MilestoneRepository::class.java)
+        bind(MilestoneInteractor::class.java)
 
         //User info
         bind(UserRepository::class.java)

@@ -7,6 +7,7 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.support.annotation.ColorInt
 import android.support.annotation.LayoutRes
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
@@ -192,3 +193,8 @@ fun Activity.hideKeyboard() {
 }
 
 fun Any.objectScopeName() = "${javaClass.simpleName}_${hashCode()}"
+
+fun View.setBackgroundTintByColor(@ColorInt color: Int) {
+    val wrappedDrawable = DrawableCompat.wrap(background)
+    DrawableCompat.setTint(wrappedDrawable.mutate(), color)
+}

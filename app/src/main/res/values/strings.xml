@@ -25,7 +25,7 @@
     <string name="auth_title">Authorization</string>
     <string name="invalid_hash">Invalid auth response!</string>
     <string name="auth_error">Unknown error! Try again later</string>
-    <string name="custom_auth_menu">Access token authorization</string>
+    <string name="custom_auth_menu">Custom server</string>
     <string name="custom_authorization">Enter your access token</string>
     <string name="server_path">Url:</string>
     <string name="server_path_hint">https://gitlab.com/</string>
@@ -168,12 +168,24 @@
     <string name="issue_discussion_note_hint">Write a comment</string>
 
     <!--Project info screen-->
+    <string name="menu_project_milestones">Milestones</string>
     <string name="menu_project_info">Info</string>
     <string name="menu_project_issue">Issues</string>
     <string name="menu_project_merge_request">Merge Requests</string>
     <string name="project_info">Info</string>
     <string name="project_events">Activity</string>
+    <string name="project_labels">Labels</string>
+    <string name="project_milestones">Milestones</string>
+    <string name="project_files">Files</string>
+
+    <!--Project files screen-->
+    <string name="project_files_show_branches">Branches</string>
+    <string name="project_files_default_path">Project Files</string>
 
     <!--Privacy policy screen-->
     <string name="privacy_policy">Privacy policy</string>
+
+    <!--Label screen-->
+    <string name="label_description_empty">No description</string>
+
 </resources>

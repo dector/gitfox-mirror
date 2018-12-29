@@ -19,6 +19,7 @@ import ru.terrakok.gitlabclient.ui.global.BaseFragment
  * Created by Eugene Shapovalov (@CraggyHaggy) on 10.02.18.
  */
 class ProjectFragment : BaseFragment(), ProjectView {
+
     override val layoutRes: Int = R.layout.fragment_project
 
     private val currentTabFragment: BaseFragment?
@@ -38,10 +39,13 @@ class ProjectFragment : BaseFragment(), ProjectView {
 
         toolbar.apply {
             setNavigationOnClickListener { onBackPressed() }
-            inflateMenu(R.menu.share_menu)
+            inflateMenu(R.menu.project_menu)
             setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.shareAction -> shareText(shareUrl)
+                    R.id.labelAction -> presenter.onLabelPressed()
+                    R.id.milestonesAction -> presenter.onMilestonesClicked()
+                    R.id.filesAction -> presenter.onFilesPressed()
                 }
                 true
             }

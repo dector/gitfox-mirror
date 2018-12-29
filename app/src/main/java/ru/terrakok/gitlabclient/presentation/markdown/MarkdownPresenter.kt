@@ -14,19 +14,17 @@ class MarkdownPresenter @Inject constructor(
     private val errorHandler: ErrorHandler
 ) : BasePresenter<MarkdownView>() {
 
-    var conversionDisposable: Disposable? = null
+    private var conversionDisposable: Disposable? = null
 
     fun setMarkdown(markdown: String, projectId: Long?) {
         conversionDisposable?.dispose()
         conversionDisposable = mdConverterProvider
             .getMarkdownConverter(projectId)
             .flatMap { it.markdownToSpannable(markdown) }
-            .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { viewState.setMarkdownText(it) },
                 { errorHandler.proceed(it) }
             )
-        conversionDisposable?.connect()
     }
 
     override fun detachView(view: MarkdownView?) {
@@ -34,4 +32,8 @@ class MarkdownPresenter @Inject constructor(
         conversionDisposable?.dispose()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        conversionDisposable?.dispose()
+    }
 }
