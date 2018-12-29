@@ -16,7 +16,7 @@ class LabelExtensionProcessor(
         val arg = args.substringAfter('_')
         val label = when (labelType) {
             LabelType.ID -> {
-                val id = arg.toInt()
+                val id = arg.toLong()
                 labels.first { it.id == id }
             }
             LabelType.SINGLE -> {

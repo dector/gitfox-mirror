@@ -1,7 +1,6 @@
 package ru.terrakok.gitlabclient.model.repository.project
 
 import io.reactivex.Single
-import ru.terrakok.gitlabclient.entity.Label
 import ru.terrakok.gitlabclient.entity.Branch
 import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.entity.Sort
@@ -95,11 +94,4 @@ class ProjectRepository @Inject constructor(
             .getRepositoryBranches(projectId)
             .subscribeOn(schedulers.io())
             .observeOn(schedulers.ui())
-
-    fun getProjectLabels(projectId: Long): Single<List<Label>> {
-        return api
-            .getProjectLabels(projectId)
-            .subscribeOn(schedulers.io())
-            .observeOn(schedulers.ui())
-    }
 }

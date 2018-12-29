@@ -1,7 +1,7 @@
 package ru.terrakok.gitlabclient.markwonx.label
 
 data class LabelDescription(
-    val id: Int,
+    val id: Long,
     val name: String,
     val color: String
 )

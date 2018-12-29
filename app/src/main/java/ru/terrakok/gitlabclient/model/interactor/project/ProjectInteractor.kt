@@ -70,7 +70,5 @@ class ProjectInteractor @Inject constructor(
         projectId: Long
     ) = projectRepository.getProjectBranches(projectId)
 
-    fun getProjectLabels(projectId: Long) = projectRepository.getProjectLabels(projectId)
-
     class ReadmeNotFound : Exception()
 }

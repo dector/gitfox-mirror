@@ -147,7 +147,8 @@ class EventRepository @Inject constructor(
                 targetData.id,
                 getTargetInternal(event),
                 badges
-        )} else {
+            )
+        } else {
             TargetHeader.Confidential
         }
     }
