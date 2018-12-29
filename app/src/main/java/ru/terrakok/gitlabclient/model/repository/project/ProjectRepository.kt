@@ -2,10 +2,11 @@ package ru.terrakok.gitlabclient.model.repository.project
 
 import io.reactivex.Observable
 import io.reactivex.Single
-import ru.terrakok.gitlabclient.entity.Label
+import ru.terrakok.gitlabclient.entity.Branch
 import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.entity.Sort
 import ru.terrakok.gitlabclient.entity.Visibility
+import ru.terrakok.gitlabclient.entity.app.ProjectFile
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
@@ -57,7 +58,7 @@ class ProjectRepository @Inject constructor(
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
 
-    fun getFile(
+    fun getBlobFile(
         projectId: Long,
         path: String,
         branchName: String
@@ -66,15 +67,35 @@ class ProjectRepository @Inject constructor(
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
 
-    fun getRepositoryTree(
+    fun getProjectFiles(
         projectId: Long,
-        path: String? = null,
-        branchName: String? = null,
-        recursive: Boolean? = null
-    ) = api
-        .getRepositoryTree(projectId, path, branchName, recursive)
-        .subscribeOn(schedulers.io())
-        .observeOn(schedulers.ui())
+        path: String,
+        branchName: String,
+        recursive: Boolean? = null,
+        page: Int,
+        pageSize: Int = defaultPageSize
+    ): Single<List<ProjectFile>> =
+        api
+            .getRepositoryTree(projectId, path, branchName, recursive, page, pageSize)
+            .map { trees ->
+                trees.map { tree ->
+                    ProjectFile(
+                        tree.id,
+                        tree.name,
+                        tree.type
+                    )
+                }
+            }
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
+
+    fun getProjectBranches(
+        projectId: Long
+    ): Single<List<Branch>> =
+        api
+            .getRepositoryBranches(projectId)
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
 
     fun getProjectLabels(projectId: Long): Single<List<Label>> {
         return projectLabels.getOrPut(projectId) {
@@ -87,5 +108,4 @@ class ProjectRepository @Inject constructor(
                 .share()
         }.singleOrError()
     }
-
 }

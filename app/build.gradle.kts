@@ -57,6 +57,8 @@ android {
                     )
                 }
             }
+
+            vectorDrawables.useSupportLibrary = true
         }
 
         signingConfigs {
@@ -149,9 +151,9 @@ dependencies {
     //FlexBox Layout
     implementation("com.google.android:flexbox:1.0.0")
     //Firebase
-    implementation("com.google.firebase:firebase-core:16.0.5")
+    implementation("com.google.firebase:firebase-core:16.0.6")
     //Crashlytics
-    implementation("com.crashlytics.sdk.android:crashlytics:2.9.6")
+    implementation("com.crashlytics.sdk.android:crashlytics:2.9.8")
 
     //Custom GitLab markdown parsing tools
     implementation(project(":markwonx"))
