@@ -75,6 +75,14 @@ abstract class BaseFragment : MvpAppCompatFragment() {
         instanceStateSaved = true
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        if (activity?.isChangingConfigurations == false) {
+            //destroy this fragment with scope
+            Toothpick.closeScope(scope.name)
+        }
+    }
+
     protected fun showProgressDialog(progress: Boolean) {
         if (!isAdded || instanceStateSaved) return
 

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/shareAction"
+        android:icon="@drawable/ic_share"
+        android:title="@string/share_to"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/filesAction"
+        android:icon="@drawable/ic_folder_white"
+        android:title="@string/project_files"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/labelAction"
+        android:icon="@drawable/ic_labels"
+        android:title="@string/project_labels"
+        app:iconTint="@android:color/white"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/milestonesAction"
+        android:icon="@drawable/ic_milestone"
+        android:title="@string/menu_project_milestones"
+        app:iconTint="@android:color/white"
+        app:showAsAction="ifRoom" />
+
+</menu>

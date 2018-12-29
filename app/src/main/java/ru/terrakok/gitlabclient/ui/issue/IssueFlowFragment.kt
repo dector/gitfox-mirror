@@ -2,14 +2,11 @@ package ru.terrakok.gitlabclient.ui.issue
 
 import android.os.Bundle
 import com.arellomobile.mvp.MvpView
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.extension.argument
 import ru.terrakok.gitlabclient.extension.hideKeyboard
 import ru.terrakok.gitlabclient.extension.setLaunchScreen
-import ru.terrakok.gitlabclient.presentation.issue.IssueFlowPresenter
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.module.FlowNavigationModule
@@ -19,6 +16,7 @@ import ru.terrakok.gitlabclient.ui.global.FlowFragment
 import toothpick.Scope
 import toothpick.Toothpick
 import toothpick.config.Module
+import javax.inject.Inject
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 25.11.17.
@@ -46,12 +44,8 @@ class IssueFlowFragment : FlowFragment(), MvpView {
         )
     }
 
-    @InjectPresenter
-    lateinit var presenter: IssueFlowPresenter
-
-    @ProvidePresenter
-    fun providePresenter() =
-        scope.getInstance(IssueFlowPresenter::class.java)
+    @Inject
+    lateinit var router: Router
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +57,7 @@ class IssueFlowFragment : FlowFragment(), MvpView {
 
     override fun onExit() {
         activity?.hideKeyboard()
-        presenter.onExit()
+        router.exit()
     }
 
     companion object {

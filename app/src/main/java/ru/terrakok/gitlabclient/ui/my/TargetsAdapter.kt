@@ -92,7 +92,7 @@ class TargetsAdapter(
             return if (newItem is TargetHeader && oldItem is TargetHeader) {
                 newItem == oldItem
             } else {
-                true
+                false
             }
         }
     }
