@@ -6,6 +6,7 @@ import ru.terrakok.gitlabclient.entity.app.session.AuthHolder
 import ru.terrakok.gitlabclient.entity.app.session.OAuthParams
 import ru.terrakok.gitlabclient.entity.app.session.UserAccount
 import ru.terrakok.gitlabclient.model.data.cache.ProjectCache
+import ru.terrakok.gitlabclient.model.data.cache.ProjectLabelCache
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.model.interactor.event.EventInteractor
@@ -52,6 +53,7 @@ class ServerModule(userAccount: UserAccount?) : Module() {
             .toProvider(OkHttpClientWithErrorHandlerProvider::class.java)
             .providesSingletonInScope()
         bind(ProjectCache::class.java).singletonInScope()
+        bind(ProjectLabelCache::class.java).singletonInScope()
         bind(GitlabApi::class.java).toProvider(ApiProvider::class.java).providesSingletonInScope()
         bind(MarkDownUrlResolver::class.java)
 
