@@ -10,6 +10,7 @@ import org.mockito.Mockito.*
 import ru.terrakok.gitlabclient.entity.TokenData
 import ru.terrakok.gitlabclient.entity.app.session.OAuthParams
 
+
 /**
  * @author Artur Badretdinov (Gaket)
  *        20.12.2016.
@@ -25,8 +26,15 @@ class AuthInteractorTest {
 
     @Before
     fun setUp() {
-        authRepo = mock(AuthRepository::class.java)
-        interactor = AuthInteractor("some server path", "some default server path", authRepo, HASH, OAUTH_PARAMS)
+        authRepo = mock()
+        interactor = AuthInteractor(
+            "some server path",
+            "some default server path",
+            authRepo,
+            HASH,
+            OAUTH_PARAMS,
+            projectCache = mock()
+        )
     }
 
     @Test

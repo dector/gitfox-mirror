@@ -2,13 +2,10 @@ package ru.terrakok.gitlabclient.ui.mergerequest
 
 import android.os.Bundle
 import com.arellomobile.mvp.MvpView
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.extension.argument
 import ru.terrakok.gitlabclient.extension.setLaunchScreen
-import ru.terrakok.gitlabclient.presentation.mergerequest.MergeRequestFlowPresenter
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.module.FlowNavigationModule
@@ -18,6 +15,7 @@ import ru.terrakok.gitlabclient.ui.global.FlowFragment
 import toothpick.Scope
 import toothpick.Toothpick
 import toothpick.config.Module
+import javax.inject.Inject
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 25.11.17.
@@ -45,12 +43,8 @@ class MergeRequestFlowFragment : FlowFragment(), MvpView {
         )
     }
 
-    @InjectPresenter
-    lateinit var presenter: MergeRequestFlowPresenter
-
-    @ProvidePresenter
-    fun providePresenter() =
-        scope.getInstance(MergeRequestFlowPresenter::class.java)
+    @Inject
+    lateinit var router: Router
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,7 +55,7 @@ class MergeRequestFlowFragment : FlowFragment(), MvpView {
     }
 
     override fun onExit() {
-        presenter.onExit()
+        router.exit()
     }
 
     companion object {

@@ -28,6 +28,8 @@ import ru.terrakok.gitlabclient.entity.todo.TodoState
 interface GitlabApi {
     companion object {
         const val API_PATH = "api/v4"
+        // See GitLab documentation: https://docs.gitlab.com/ee/api/#pagination.
+        const val MAX_PAGE_SIZE = 100
     }
 
     @GET("$API_PATH/projects")
@@ -63,8 +65,33 @@ interface GitlabApi {
         @Path("id") id: Long,
         @Query("path") path: String?,
         @Query("ref") branchName: String?,
-        @Query("recursive") recursive: Boolean?
+        @Query("recursive") recursive: Boolean? = false,
+        @Query("page") page: Int,
+        @Query("per_page") pageSize: Int
     ): Single<List<RepositoryTreeNode>>
+
+    @GET("$API_PATH/projects/{project_id}/repository/commits/{sha}")
+    fun getRepositoryCommit(
+        @Path("project_id") projectId: Long,
+        @Path("sha") sha: String,
+        @Query("stats") stats: Boolean = true
+    ): Single<Commit>
+
+    @GET("$API_PATH/projects/{project_id}/repository/commits/")
+    fun getRepositoryCommits(
+        @Path("project_id") projectId: Long,
+        @Query("ref_name") branchName: String?,
+        @Query("since") since: String?,
+        @Query("until") until: String?,
+        @Query("path") path: String?,
+        @Query("all") all: Boolean?,
+        @Query("with_stats") withStats: Boolean?
+    ): Single<List<Commit>>
+
+    @GET("$API_PATH/projects/{project_id}/repository/branches/")
+    fun getRepositoryBranches(
+        @Path("project_id") projectId: Long
+    ): Single<List<Branch>>
 
     @GET("$API_PATH/user")
     fun getMyUser(): Single<User>
@@ -257,7 +284,9 @@ interface GitlabApi {
     @GET("$API_PATH/projects/{project_id}/milestones")
     fun getMilestones(
         @Path("project_id") projectId: Long,
-        @Query("state") state: MilestoneState?
+        @Query("state") state: MilestoneState?,
+        @Query("page") page: Int,
+        @Query("per_page") pageSize: Int
     ): Single<List<Milestone>>
 
     @GET("$API_PATH/projects/{project_id}/milestones/{milestone_id}")
@@ -296,12 +325,52 @@ interface GitlabApi {
     @GET("$API_PATH/projects/{project_id}/milestones/{milestone_id}/issues")
     fun getMilestoneIssues(
         @Path("project_id") projectId: Long,
-        @Path("milestone_id") mileStoneId: Long
+        @Path("milestone_id") mileStoneId: Long,
+        @Query("page") page: Int,
+        @Query("per_page") pageSize: Int
     ): Single<List<Issue>>
 
     @GET("$API_PATH/projects/{project_id}/milestones/{milestone_id}/merge_requests")
     fun getMilestoneMergeRequests(
         @Path("project_id") projectId: Long,
-        @Path("milestone_id") mileStoneId: Long
+        @Path("milestone_id") mileStoneId: Long,
+        @Query("page") page: Int,
+        @Query("per_page") pageSize: Int
     ): Single<List<MergeRequest>>
+
+    @GET("$API_PATH/projects/{project_id}/labels")
+    fun getProjectLabels(
+        @Path("project_id") projectId: Long,
+        @Query("page") page: Int,
+        @Query("per_page") pageSize: Int
+    ): Single<List<Label>>
+
+    @FormUrlEncoded
+    @POST("$API_PATH/projects/{project_id}/labels")
+    fun createLabel(
+        @Path("project_id") projectId: Long,
+        @Field("name") name: String,
+        @Field("color") color: String,
+        @Field("description") description: String?,
+        @Field("priority") priority: Int?
+    ): Single<Label>
+
+    @FormUrlEncoded
+    @DELETE("$API_PATH/projects/{project_id}/labels")
+    fun deleteLabel(
+        @Path("project_id") projectId: Long,
+        @Field("name") name: String
+    ): Completable
+
+    @POST("$API_PATH/projects/{project_id}/labels/{label_id}/subscribe")
+    fun subscribeToLabel(
+        @Path("project_id") projectId: Long,
+        @Path("label_id") labelId: Long
+    ): Single<Label>
+
+    @POST("$API_PATH/projects/{project_id}/labels/{label_id}/unsubscribe")
+    fun unsubscribeFromLabel(
+        @Path("project_id") projectId: Long,
+        @Path("label_id") labelId: Long
+    ): Single<Label>
 }

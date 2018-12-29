@@ -5,9 +5,6 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
 import android.widget.Toast
 import com.arellomobile.mvp.MvpAppCompatActivity
-import com.arellomobile.mvp.MvpView
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import io.reactivex.disposables.Disposable
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.NavigatorHolder
@@ -17,7 +14,7 @@ import ru.terrakok.gitlabclient.App
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.model.system.message.SystemMessageNotifier
 import ru.terrakok.gitlabclient.model.system.message.SystemMessageType
-import ru.terrakok.gitlabclient.presentation.AppPresenter
+import ru.terrakok.gitlabclient.presentation.AppLauncher
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.MessageDialogFragment
@@ -30,15 +27,10 @@ import javax.inject.Inject
 
 private const val STATE_LAUNCH_FLAG = "state_launch_flag"
 
-class AppActivity : MvpAppCompatActivity(), MvpView {
+class AppActivity : MvpAppCompatActivity() {
 
-    @InjectPresenter
-    lateinit var presenter: AppPresenter
-
-    @ProvidePresenter
-    fun providePresenter() =
-        Toothpick.openScope(DI.APP_SCOPE)
-            .getInstance(AppPresenter::class.java)
+    @Inject
+    lateinit var appLauncher: AppLauncher
 
     @Inject
     lateinit var navigatorHolder: NavigatorHolder
@@ -70,8 +62,8 @@ class AppActivity : MvpAppCompatActivity(), MvpView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_container)
 
-        if (isFirstLaunch(savedInstanceState)) {
-            presenter.coldStart()
+        if (savedInstanceState == null) {
+            appLauncher.coldStart()
         }
     }
 
@@ -85,11 +77,6 @@ class AppActivity : MvpAppCompatActivity(), MvpView {
         navigatorHolder.removeNavigator()
         unsubscribeOnSystemMessages()
         super.onPause()
-    }
-
-    private fun isFirstLaunch(savedInstanceState: Bundle?): Boolean {
-        val savedAppCode = savedInstanceState?.getString(STATE_LAUNCH_FLAG)
-        return savedAppCode != App.appCode
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
