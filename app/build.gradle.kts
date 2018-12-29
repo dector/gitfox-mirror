@@ -71,7 +71,7 @@ android {
 
         buildTypes {
             create("debugPG") {
-                isDebuggable = true
+                initWith(getByName("debug"))
                 isMinifyEnabled = true
                 versionNameSuffix = " debugPG"
 
