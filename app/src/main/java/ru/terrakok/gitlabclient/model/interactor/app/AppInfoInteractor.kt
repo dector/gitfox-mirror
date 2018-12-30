@@ -12,5 +12,4 @@ class AppInfoInteractor @Inject constructor(
 
     fun getAppInfo() = appInfoRepository.getAppInfo()
     fun getAppLibraries() = appInfoRepository.getAppLibraries()
-    fun getAppDevelopers() = appInfoRepository.getAppDevelopers()
 }

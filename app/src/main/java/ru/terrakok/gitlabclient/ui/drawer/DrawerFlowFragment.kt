@@ -4,9 +4,6 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
 import android.support.v4.view.GravityCompat
-import com.arellomobile.mvp.MvpView
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.drawer_flow_fragment.*
 import ru.terrakok.cicerone.Navigator
@@ -19,7 +16,6 @@ import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.extension.setLaunchScreen
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
-import ru.terrakok.gitlabclient.presentation.launch.DrawerFlowPresenter
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.toothpick.module.FlowNavigationModule
 import ru.terrakok.gitlabclient.toothpick.module.GlobalMenuModule
@@ -27,15 +23,19 @@ import ru.terrakok.gitlabclient.ui.about.AboutFragment
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.main.MainFlowFragment
 import ru.terrakok.gitlabclient.ui.projects.ProjectsContainerFragment
+import toothpick.Scope
 import toothpick.Toothpick
 import javax.inject.Inject
 
-class DrawerFlowFragment : BaseFragment(), MvpView {
+class DrawerFlowFragment : BaseFragment() {
     @Inject
     lateinit var menuController: GlobalMenuController
 
     @Inject
     lateinit var navigatorHolder: NavigatorHolder
+
+    @Inject
+    lateinit var router: Router
 
     private var menuStateDisposable: Disposable? = null
 
@@ -47,14 +47,12 @@ class DrawerFlowFragment : BaseFragment(), MvpView {
     private val drawerFragment
         get() = childFragmentManager.findFragmentById(R.id.navDrawerContainer) as? NavigationDrawerFragment
 
-    @InjectPresenter
-    lateinit var presenter: DrawerFlowPresenter
-
-    @ProvidePresenter
-    fun providePresenter(): DrawerFlowPresenter {
-        return Toothpick
-            .openScope(DI.DRAWER_FLOW_SCOPE)
-            .getInstance(DrawerFlowPresenter::class.java)
+    override val parentScopeName = DI.SERVER_SCOPE
+    override val scopeModuleInstaller = { scope: Scope ->
+        scope.installModules(
+            FlowNavigationModule(scope.getInstance(Router::class.java)),
+            GlobalMenuModule()
+        )
     }
 
     private val navigator: Navigator by lazy {
@@ -66,7 +64,7 @@ class DrawerFlowFragment : BaseFragment(), MvpView {
             }
 
             override fun activityBack() {
-                presenter.onExit()
+                router.exit()
             }
 
             override fun setupFragmentTransaction(
@@ -82,8 +80,8 @@ class DrawerFlowFragment : BaseFragment(), MvpView {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        prepareScope(isFirstLaunch(savedInstanceState))
         super.onCreate(savedInstanceState)
+        Toothpick.inject(this, scope)
 
         if (childFragmentManager.fragments.isEmpty()) {
             childFragmentManager
@@ -92,18 +90,9 @@ class DrawerFlowFragment : BaseFragment(), MvpView {
                 .commitNow()
 
             navigator.setLaunchScreen(Screens.MainFlow)
+        } else {
+            updateNavDrawer()
         }
-    }
-
-    private fun prepareScope(firstTime: Boolean) {
-        val scope = Toothpick.openScopes(DI.SERVER_SCOPE, DI.DRAWER_FLOW_SCOPE)
-        if (firstTime) {
-            scope.installModules(
-                FlowNavigationModule(scope.getInstance(Router::class.java)),
-                GlobalMenuModule()
-            )
-        }
-        Toothpick.inject(this@DrawerFlowFragment, scope)
     }
 
     override fun onResume() {
@@ -143,7 +132,7 @@ class DrawerFlowFragment : BaseFragment(), MvpView {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             openNavDrawer(false)
         } else {
-            currentFragment?.onBackPressed() ?: presenter.onExit()
+            currentFragment?.onBackPressed() ?: router.exit()
         }
     }
 }

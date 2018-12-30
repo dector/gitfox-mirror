@@ -80,7 +80,7 @@ class TargetCommitsAdapter(
             return if (newItem is CommitWithAvatarUrl && oldItem is CommitWithAvatarUrl) {
                 newItem == oldItem
             } else {
-                true
+                false
             }
         }
     }
