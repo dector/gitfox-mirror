@@ -198,3 +198,11 @@ fun View.setBackgroundTintByColor(@ColorInt color: Int) {
     val wrappedDrawable = DrawableCompat.wrap(background)
     DrawableCompat.setTint(wrappedDrawable.mutate(), color)
 }
+
+fun parseColorWithDefault(colorString: String, defaultColor: Int): Int {
+    return try {
+        Color.parseColor(colorString)
+    } catch (e: IllegalArgumentException) {
+        defaultColor
+    }
+}

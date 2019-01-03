@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.item_label.view.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Label
 import ru.terrakok.gitlabclient.extension.inflate
+import ru.terrakok.gitlabclient.extension.parseColorWithDefault
 import ru.terrakok.gitlabclient.extension.setBackgroundTintByColor
 
 /**
@@ -56,7 +57,7 @@ class ProjectLabelAdapterDelegate : AdapterDelegate<MutableList<Any>>() {
         }
 
         private fun setLabelColor(color: String) = with(itemView.labelTitleTextView) {
-            val labelColor = Color.parseColor(color)
+            val labelColor = parseColorWithDefault(color, Color.GREEN)
             val textColor = when {
                 isColorDark(labelColor) -> ContextCompat.getColor(context, R.color.white)
                 else -> ContextCompat.getColor(context, R.color.primary_text)
