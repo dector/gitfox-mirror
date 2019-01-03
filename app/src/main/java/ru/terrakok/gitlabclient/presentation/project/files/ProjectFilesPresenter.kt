@@ -114,21 +114,29 @@ class ProjectFilesPresenter @Inject constructor(
             .doAfterTerminate { viewState.showBlockingProgress(false) }
             .subscribe(
                 { (project, branches) ->
-                    viewState.showBranchSelection(true)
+                    if (project.defaultBranch != null) {
+                        viewState.showBranchSelection(true)
 
-                    projectBranches.addAll(branches)
-                    projectFileDestination.init(project.path, project.defaultBranch)
-                    projectFileDestination.moveToRoot()
+                        projectBranches.addAll(branches)
+                        projectFileDestination.init(project.path, project.defaultBranch)
+                        projectFileDestination.moveToRoot()
+                    } else {
+                        handleLoadingProjectDetailsError(null)
+                    }
                 },
                 { handleLoadingProjectDetailsError(it) }
             )
             .connect()
     }
 
-    private fun handleLoadingProjectDetailsError(error: Throwable) {
+    private fun handleLoadingProjectDetailsError(error: Throwable?) {
         viewState.setPath(resourceManager.getString(R.string.project_files_default_path))
         viewState.showBranchSelection(false)
-        errorHandler.proceed(error, { viewState.showEmptyError(true, it) })
+        if (error != null) {
+            errorHandler.proceed(error, { viewState.showEmptyError(true, it) })
+        } else {
+            viewState.showEmptyError(true, resourceManager.getString(R.string.project_files_no_branches))
+        }
     }
 
     private val paginator = Paginator(
