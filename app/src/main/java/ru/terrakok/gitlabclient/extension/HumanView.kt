@@ -15,7 +15,6 @@ import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderTitle
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.todo.TodoAction
 import ru.terrakok.gitlabclient.model.system.ResourceManager
-import ru.terrakok.gitlabclient.presentation.project.files.NoBranchesError
 import java.io.IOException
 
 /**
@@ -36,7 +35,6 @@ fun Throwable.userMessage(resourceManager: ResourceManager) = when (this) {
         else -> resourceManager.getString(R.string.unknown_error)
     }
     is IOException -> resourceManager.getString(R.string.network_error)
-    is NoBranchesError -> resourceManager.getString(R.string.project_files_no_branches)
     else -> resourceManager.getString(R.string.unknown_error)
 }
 

@@ -132,7 +132,11 @@ class ProjectFilesPresenter @Inject constructor(
     private fun handleLoadingProjectDetailsError(error: Throwable) {
         viewState.setPath(resourceManager.getString(R.string.project_files_default_path))
         viewState.showBranchSelection(false)
-        errorHandler.proceed(error, { viewState.showEmptyError(true, it) })
+        if (error is NoBranchesError) {
+            viewState.showEmptyError(true, resourceManager.getString(R.string.project_files_no_branches))
+        } else {
+            errorHandler.proceed(error, { viewState.showEmptyError(true, it) })
+        }
     }
 
     private val paginator = Paginator(
