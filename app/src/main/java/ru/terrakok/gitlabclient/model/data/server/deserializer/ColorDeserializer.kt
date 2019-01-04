@@ -16,6 +16,8 @@ class ColorDeserializer : JsonDeserializer<Color> {
         typeOfT: Type,
         context: JsonDeserializationContext
     ): Color {
+        // The color of the label given in 6-digit hex notation with leading ‘#’ sign (e.g. #FFAABB)
+        // or one of the CSS color names. So according to CSS color names it can be named differently on Android.
         val colorString = json.asJsonPrimitive.asString
         val colorInt = try {
             android.graphics.Color.parseColor(colorString)

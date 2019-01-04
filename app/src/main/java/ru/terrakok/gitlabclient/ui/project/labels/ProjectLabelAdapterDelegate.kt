@@ -57,11 +57,11 @@ class ProjectLabelAdapterDelegate : AdapterDelegate<MutableList<Any>>() {
 
         private fun setLabelColor(color: Color) = with(itemView.labelTitleTextView) {
             val textColor = when {
-                isColorDark(color.colorInt) -> ContextCompat.getColor(context, R.color.white)
+                isColorDark(color.value) -> ContextCompat.getColor(context, R.color.white)
                 else -> ContextCompat.getColor(context, R.color.primary_text)
             }
 
-            setBackgroundTintByColor(color.colorInt)
+            setBackgroundTintByColor(color.value)
             setTextColor(textColor)
         }
 

@@ -8,8 +8,6 @@ import com.google.gson.annotations.SerializedName
 data class Label(
     @SerializedName("id") val id: Long,
     @SerializedName("name") val name: String,
-    // The color of the label given in 6-digit hex notation with leading ‘#’ sign (e.g. #FFAABB)
-    // or one of the CSS color names. So according to CSS color names it can be named differently on Android.
     @SerializedName("color") val color: Color,
     @SerializedName("description") val description: String?,
     @SerializedName("open_issues_count") val openIssuesCount: Int,
