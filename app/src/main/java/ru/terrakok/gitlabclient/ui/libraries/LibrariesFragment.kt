@@ -11,6 +11,7 @@ import ru.terrakok.gitlabclient.entity.app.develop.AppLibrary
 import ru.terrakok.gitlabclient.extension.tryOpenLink
 import ru.terrakok.gitlabclient.presentation.libraries.LibrariesPresenter
 import ru.terrakok.gitlabclient.presentation.libraries.LibrariesView
+import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.list.AppLibraryAdapterDelegate
 
@@ -19,6 +20,8 @@ import ru.terrakok.gitlabclient.ui.global.list.AppLibraryAdapterDelegate
  */
 class LibrariesFragment : BaseFragment(), LibrariesView {
     override val layoutRes = R.layout.fragment_libraries
+
+    override val parentScopeName = DI.APP_SCOPE
 
     private val adapter: LibraryAdapter by lazy { LibraryAdapter() }
 
