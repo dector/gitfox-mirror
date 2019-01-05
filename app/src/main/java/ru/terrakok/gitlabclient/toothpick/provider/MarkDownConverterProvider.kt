@@ -1,6 +1,7 @@
 package ru.terrakok.gitlabclient.toothpick.provider
 
 import android.content.Context
+import io.reactivex.Single
 import okhttp3.OkHttpClient
 import org.commonmark.ext.gfm.strikethrough.StrikethroughExtension
 import org.commonmark.ext.gfm.tables.TablesExtension
@@ -20,6 +21,7 @@ import ru.terrakok.gitlabclient.markwonx.label.LabelDecorator
 import ru.terrakok.gitlabclient.markwonx.label.LabelDescription
 import ru.terrakok.gitlabclient.markwonx.label.LabelExtensionProcessor
 import ru.terrakok.gitlabclient.markwonx.label.LabelVisitor
+import ru.terrakok.gitlabclient.model.interactor.label.LabelInteractor
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultServerPath
@@ -33,6 +35,7 @@ class MarkDownConverterProvider @Inject constructor(
     private val context: Context,
     private val httpClient: OkHttpClient,
     private val schedulers: SchedulersProvider,
+    private val labelInteractor: LabelInteractor,
     @DefaultServerPath private val defaultServerPath: String
 ) {
 
@@ -94,7 +97,19 @@ class MarkDownConverterProvider @Inject constructor(
             )
         )
 
-    fun get(labels: List<Label>): MarkDownConverter {
+    fun getMarkdownConverter(projectId: Long?): Single<MarkDownConverter> {
+        if (projectId != null) {
+            return labelInteractor
+                .getAllProjectLabels(projectId)
+                .map { get(it) }
+        } else {
+            return Single.fromCallable {
+                get(emptyList())
+            }
+        }
+    }
+
+    private fun get(labels: List<Label>): MarkDownConverter {
         val labelDescriptions = labels.map {
             LabelDescription(
                 id = it.id,
