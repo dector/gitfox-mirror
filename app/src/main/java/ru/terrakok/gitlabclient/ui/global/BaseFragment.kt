@@ -5,14 +5,14 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.arellomobile.mvp.MvpAppCompatFragment
-import ru.terrakok.gitlabclient.App
 import ru.terrakok.gitlabclient.extension.objectScopeName
+import timber.log.Timber
 import toothpick.Scope
 import toothpick.Toothpick
 
 private const val PROGRESS_TAG = "bf_progress"
-private const val STATE_LAUNCH_FLAG = "state_launch_flag"
 private const val STATE_SCOPE_NAME = "state_scope_name"
+private const val STATE_SCOPE_WAS_CLOSED = "state_scope_was_closed"
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 26.03.17.
@@ -32,18 +32,22 @@ abstract class BaseFragment : MvpAppCompatFragment() {
     protected open val scopeModuleInstaller: (Scope) -> Unit = {}
 
     private lateinit var fragmentScopeName: String
+    private var scopeIsNotInit: Boolean = true
     protected lateinit var scope: Scope
         private set
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val savedAppCode = savedInstanceState?.getString(STATE_LAUNCH_FLAG)
 
-        //False - if fragment was restored without new app process (for example: activity rotation)
-        val isNewInAppProcess = savedAppCode != App.appCode
+        scopeIsNotInit = savedInstanceState?.getBoolean(STATE_SCOPE_WAS_CLOSED) ?: true
         fragmentScopeName = savedInstanceState?.getString(STATE_SCOPE_NAME) ?: objectScopeName()
         scope = Toothpick.openScopes(parentScopeName, fragmentScopeName)
             .apply {
-                if (isNewInAppProcess) scopeModuleInstaller(this)
+                if (scopeIsNotInit) {
+                    Timber.d("Init new UI scope: $fragmentScopeName")
+                    scopeModuleInstaller(this)
+                } else {
+                    Timber.d("Get exist UI scope: $fragmentScopeName")
+                }
             }
 
         super.onCreate(savedInstanceState)
@@ -70,8 +74,8 @@ abstract class BaseFragment : MvpAppCompatFragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString(STATE_LAUNCH_FLAG, App.appCode)
         outState.putString(STATE_SCOPE_NAME, fragmentScopeName)
+        outState.putBoolean(STATE_SCOPE_WAS_CLOSED, activity?.isChangingConfigurations == false)
         instanceStateSaved = true
     }
 
@@ -79,6 +83,7 @@ abstract class BaseFragment : MvpAppCompatFragment() {
         super.onDestroy()
         if (activity?.isChangingConfigurations == false) {
             //destroy this fragment with scope
+            Timber.d("Destroy UI scope: $fragmentScopeName")
             Toothpick.closeScope(scope.name)
         }
     }

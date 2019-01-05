@@ -10,7 +10,6 @@ import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.android.support.SupportAppNavigator
 import ru.terrakok.cicerone.commands.Command
-import ru.terrakok.gitlabclient.App
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.model.system.message.SystemMessageNotifier
 import ru.terrakok.gitlabclient.model.system.message.SystemMessageType
@@ -24,8 +23,6 @@ import javax.inject.Inject
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 03.09.18.
  */
-
-private const val STATE_LAUNCH_FLAG = "state_launch_flag"
 
 class AppActivity : MvpAppCompatActivity() {
 
@@ -77,11 +74,6 @@ class AppActivity : MvpAppCompatActivity() {
         navigatorHolder.removeNavigator()
         unsubscribeOnSystemMessages()
         super.onPause()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle?) {
-        super.onSaveInstanceState(outState)
-        outState?.putString(STATE_LAUNCH_FLAG, App.appCode)
     }
 
     override fun onBackPressed() {
