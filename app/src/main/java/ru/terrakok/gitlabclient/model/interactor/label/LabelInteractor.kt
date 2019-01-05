@@ -19,20 +19,7 @@ class LabelInteractor @Inject constructor(
 
     fun getAllProjectLabels(
         projectId: Long
-    ): Single<List<Label>> = getAllProjectLabels(projectId, 0)
-
-    private fun getAllProjectLabels(projectId: Long, currentPage: Int): Single<List<Label>> {
-        return labelRepository
-            .getLabelList(projectId, currentPage)
-            .flatMap {labels ->
-                if (labels.isEmpty()) {
-                    Single.just(labels)
-                } else {
-                    getAllProjectLabels(projectId, currentPage + 1)
-                        .map { nextLabels -> labels + nextLabels }
-                }
-            }
-    }
+    ): Single<List<Label>> = labelRepository.getAllProjectLabels(projectId)
 
     fun subscribeToLabel(
         projectId: Long,

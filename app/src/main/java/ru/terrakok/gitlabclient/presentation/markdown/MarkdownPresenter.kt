@@ -1,16 +1,15 @@
 package ru.terrakok.gitlabclient.presentation.markdown
 
 import com.arellomobile.mvp.InjectViewState
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
-import ru.terrakok.gitlabclient.presentation.global.ProjectMarkDownConverterProvider
+import ru.terrakok.gitlabclient.toothpick.provider.MarkDownConverterProvider
 import javax.inject.Inject
 
 @InjectViewState
 class MarkdownPresenter @Inject constructor(
-    private val mdConverterProvider: ProjectMarkDownConverterProvider,
+    private val mdConverterProvider: MarkDownConverterProvider,
     private val errorHandler: ErrorHandler
 ) : BasePresenter<MarkdownView>() {
 

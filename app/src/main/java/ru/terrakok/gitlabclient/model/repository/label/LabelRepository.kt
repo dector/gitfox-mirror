@@ -1,5 +1,8 @@
 package ru.terrakok.gitlabclient.model.repository.label
 
+import io.reactivex.Observable
+import io.reactivex.Single
+import ru.terrakok.gitlabclient.entity.Label
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
@@ -24,6 +27,17 @@ class LabelRepository @Inject constructor(
         .getProjectLabels(projectId, page, defaultPageSize)
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
+
+    fun getAllProjectLabels(
+        projectId: Long
+    ): Single<List<Label>> = Observable.range(1, Integer.MAX_VALUE)
+        .concatMapSingle { page -> api.getProjectLabels(projectId, page, defaultPageSize) }
+        .takeWhile { labels -> labels.isNotEmpty() }
+        .reduce { allLabels, currentLabels -> allLabels + currentLabels }
+        .toSingle()
+        .subscribeOn(schedulers.io())
+        .observeOn(schedulers.ui())
+
 
     fun createLabel(
         projectId: Long,
