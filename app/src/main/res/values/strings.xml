@@ -102,6 +102,7 @@
     <string name="event_action_closed">closed</string>
     <string name="event_action_commented_on">commented on</string>
     <string name="event_action_created">created</string>
+    <string name="event_action_imported">imported</string>
     <string name="event_action_pushed_to">pushed to</string>
     <string name="event_action_pushed_new">pushed new</string>
     <string name="event_action_deleted">deleted</string>
