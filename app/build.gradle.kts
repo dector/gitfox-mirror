@@ -134,9 +134,7 @@ dependencies {
     //Image load and cache
     implementation("com.github.bumptech.glide:glide:$glideVersion")
     kapt("com.github.bumptech.glide:compiler:$glideVersion")
-    implementation("com.github.bumptech.glide:okhttp3-integration:4.6.1") {
-        exclude(group = "glide-parent")
-    }
+    implementation("com.github.bumptech.glide:okhttp3-integration:$glideVersion")
     //Markdown to HTML converter
     implementation("ru.noties:markwon:$markwonVersion")
     implementation("ru.noties:markwon-image-loader:$markwonVersion")
