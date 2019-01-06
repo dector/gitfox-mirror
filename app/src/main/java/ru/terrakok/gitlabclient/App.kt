@@ -14,6 +14,7 @@ import toothpick.Toothpick
 import toothpick.configuration.Configuration
 import toothpick.registries.FactoryRegistryLocator
 import toothpick.registries.MemberInjectorRegistryLocator
+import java.util.*
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 26.03.17.
@@ -22,6 +23,7 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        appCode = UUID.randomUUID().toString()
 
         initLogger()
         initFabric()
@@ -74,5 +76,10 @@ class App : Application() {
 
     private fun initThreetenABP() {
         AndroidThreeTen.init(this)
+    }
+
+    companion object {
+        lateinit var appCode: String
+            private set
     }
 }
