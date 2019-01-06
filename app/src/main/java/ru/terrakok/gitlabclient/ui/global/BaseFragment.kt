@@ -74,19 +74,32 @@ abstract class BaseFragment : MvpAppCompatFragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString(STATE_SCOPE_NAME, fragmentScopeName)
-        outState.putBoolean(STATE_SCOPE_WAS_CLOSED, activity?.isChangingConfigurations == false)
         instanceStateSaved = true
+        outState.putString(STATE_SCOPE_NAME, fragmentScopeName)
+        outState.putBoolean(STATE_SCOPE_WAS_CLOSED, needCloseScope()) //save it but will be used only if destroyed
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        if (activity?.isChangingConfigurations == false) {
+        if (needCloseScope()) {
             //destroy this fragment with scope
             Timber.d("Destroy UI scope: $fragmentScopeName")
             Toothpick.closeScope(scope.name)
         }
     }
+
+    //This is android, baby!
+    private fun isRealRemoving(): Boolean =
+        (isRemoving && !instanceStateSaved) //because isRemoving == true for fragment in backstack on screen rotation
+            || ((parentFragment as? BaseFragment)?.isRealRemoving() ?: false)
+
+    //It will be valid only for 'onDestroy()' method
+    private fun needCloseScope(): Boolean =
+        when {
+            activity?.isChangingConfigurations == true -> false
+            activity?.isFinishing == true -> true
+            else -> isRealRemoving()
+        }
 
     protected fun showProgressDialog(progress: Boolean) {
         if (!isAdded || instanceStateSaved) return
