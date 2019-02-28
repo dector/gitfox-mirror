@@ -3,6 +3,9 @@ package ru.terrakok.gitlabclient.model.interactor.members
 import ru.terrakok.gitlabclient.model.repository.members.MembersRepository
 import javax.inject.Inject
 
+/**
+ * @author Valentin Logvinovitch (glvvl) on 27.02.19.
+ */
 class MembersInteractor @Inject constructor(
     private val membersRepository: MembersRepository
 ) {
