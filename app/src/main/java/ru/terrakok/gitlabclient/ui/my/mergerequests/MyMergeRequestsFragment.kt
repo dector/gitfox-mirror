@@ -12,11 +12,10 @@ import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.my.mergerequests.MyMergeRequestListView
 import ru.terrakok.gitlabclient.presentation.my.mergerequests.MyMergeRequestsPresenter
-import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.ZeroViewHolder
 import ru.terrakok.gitlabclient.ui.my.TargetsAdapter
-import toothpick.Toothpick
+import toothpick.Scope
 import toothpick.config.Module
 
 /**
@@ -38,10 +37,7 @@ class MyMergeRequestsFragment : BaseFragment(), MyMergeRequestListView {
     }
     private var zeroViewHolder: ZeroViewHolder? = null
 
-    @ProvidePresenter
-    fun providePresenter(): MyMergeRequestsPresenter {
-        val scopeName = "MyMergeRequestsScope_${hashCode()}"
-        val scope = Toothpick.openScopes(DI.DRAWER_FLOW_SCOPE, scopeName)
+    override val scopeModuleInstaller = { scope: Scope ->
         scope.installModules(object : Module() {
             init {
                 bind(MyMergeRequestsPresenter.Filter::class.java)
@@ -53,11 +49,11 @@ class MyMergeRequestsFragment : BaseFragment(), MyMergeRequestListView {
                     )
             }
         })
-
-        return scope.getInstance(MyMergeRequestsPresenter::class.java).also {
-            Toothpick.closeScope(scopeName)
-        }
     }
+
+    @ProvidePresenter
+    fun providePresenter(): MyMergeRequestsPresenter =
+        scope.getInstance(MyMergeRequestsPresenter::class.java)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

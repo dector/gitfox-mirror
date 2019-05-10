@@ -16,8 +16,8 @@ android {
         minSdkVersion(19)
         targetSdkVersion(28)
 
-        versionName = "1.3.2"
-        versionCode = 11
+        versionName = "1.4.2"
+        versionCode = 14
 
         buildToolsVersion = "28.0.3"
 
@@ -71,13 +71,13 @@ android {
 
         buildTypes {
             create("debugPG") {
-                isDebuggable = true
+                initWith(getByName("debug"))
                 isMinifyEnabled = true
                 versionNameSuffix = " debugPG"
 
                 proguardFiles(
                     getDefaultProguardFile("proguard-android-optimize.txt"),
-                    file("config/proguard/proguard-rules.txt")
+                    file("proguard-rules.pro")
                 )
             }
             getByName("release") {
@@ -86,7 +86,7 @@ android {
 
                 proguardFiles(
                     getDefaultProguardFile("proguard-android-optimize.txt"),
-                    file("config/proguard/proguard-rules.txt")
+                    file("proguard-rules.pro")
                 )
             }
         }
@@ -98,7 +98,7 @@ dependencies {
     val moxyVersion = "1.4.6"
     val toothpickVersion = "1.0.6"
     val retrofitVersion = "2.2.0"
-    val markwonVersion = "1.1.1"
+    val markwonVersion = "2.0.0"
     val glideVersion = "4.8.0"
 
     //Support
@@ -134,9 +134,7 @@ dependencies {
     //Image load and cache
     implementation("com.github.bumptech.glide:glide:$glideVersion")
     kapt("com.github.bumptech.glide:compiler:$glideVersion")
-    implementation("com.github.bumptech.glide:okhttp3-integration:4.6.1") {
-        exclude(group = "glide-parent")
-    }
+    implementation("com.github.bumptech.glide:okhttp3-integration:$glideVersion")
     //Markdown to HTML converter
     implementation("ru.noties:markwon:$markwonVersion")
     implementation("ru.noties:markwon-image-loader:$markwonVersion")
@@ -149,9 +147,10 @@ dependencies {
     //FlexBox Layout
     implementation("com.google.android:flexbox:1.0.0")
     //Firebase
-    implementation("com.google.firebase:firebase-core:16.0.5")
+    implementation("com.google.firebase:firebase-core:16.0.6")
     //Crashlytics
-    implementation("com.crashlytics.sdk.android:crashlytics:2.9.6")
+    implementation("com.crashlytics.sdk.android:crashlytics:2.9.8")
+
     //JUnit
     testImplementation("junit:junit:4.12")
     //Mockito

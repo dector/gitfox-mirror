@@ -10,9 +10,7 @@ import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.presentation.issue.IssuePresenter
 import ru.terrakok.gitlabclient.presentation.issue.IssueView
-import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import toothpick.Toothpick
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 14.02.18.
@@ -25,10 +23,8 @@ class IssueFragment : BaseFragment(), IssueView {
     lateinit var presenter: IssuePresenter
 
     @ProvidePresenter
-    fun providePresenter() =
-        Toothpick
-            .openScope(DI.ISSUE_FLOW_SCOPE)
-            .getInstance(IssuePresenter::class.java)
+    fun providePresenter(): IssuePresenter =
+        scope.getInstance(IssuePresenter::class.java)
 
     private val adapter by lazy { IssuePagesAdapter() }
 

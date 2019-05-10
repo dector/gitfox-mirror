@@ -10,9 +10,7 @@ import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
 import ru.terrakok.gitlabclient.extension.*
 import ru.terrakok.gitlabclient.presentation.mergerequest.info.MergeRequestInfoPresenter
 import ru.terrakok.gitlabclient.presentation.mergerequest.info.MergeRequestInfoView
-import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import toothpick.Toothpick
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 03.02.18.
@@ -26,8 +24,7 @@ class MergeRequestInfoFragment : BaseFragment(), MergeRequestInfoView {
 
     @ProvidePresenter
     fun providePresenter() =
-        Toothpick.openScope(DI.MERGE_REQUEST_FLOW_SCOPE)
-            .getInstance(MergeRequestInfoPresenter::class.java)
+        scope.getInstance(MergeRequestInfoPresenter::class.java)
 
     override fun showInfo(mr: MergeRequest, mdDescription: CharSequence) {
         titleTextView.text = mr.title

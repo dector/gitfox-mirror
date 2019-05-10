@@ -191,7 +191,7 @@ class MergeRequestRepository @Inject constructor(
     private fun getAllMergeRequestNotePages(projectId: Long, mergeRequestId: Long, sort: Sort?, orderBy: OrderBy?) =
         Observable.range(1, Int.MAX_VALUE)
             .concatMap { page ->
-                api.getMergeRequestNotes(projectId, mergeRequestId, sort, orderBy, page, MAX_PAGE_SIZE)
+                api.getMergeRequestNotes(projectId, mergeRequestId, sort, orderBy, page, GitlabApi.MAX_PAGE_SIZE)
                     .toObservable()
             }
             .takeWhile { notes -> notes.isNotEmpty() }
@@ -232,7 +232,7 @@ class MergeRequestRepository @Inject constructor(
     private fun getAllMergeRequestParticipants(projectId: Long, mergeRequestId: Long) =
         Observable.range(1, Int.MAX_VALUE)
             .concatMap { page ->
-                api.getMergeRequestParticipants(projectId, mergeRequestId, page, MAX_PAGE_SIZE)
+                api.getMergeRequestParticipants(projectId, mergeRequestId, page, GitlabApi.MAX_PAGE_SIZE)
                     .toObservable()
             }
             .takeWhile { participants -> participants.isNotEmpty() }
@@ -245,8 +245,13 @@ class MergeRequestRepository @Inject constructor(
             .subscribeOn(schedulers.io())
             .observeOn(schedulers.ui())
 
-    companion object {
-        // See GitLab documentation: https://docs.gitlab.com/ee/api/#pagination.
-        private const val MAX_PAGE_SIZE = 100
-    }
+    fun getMilestoneMergeRequests(
+        projectId: Long,
+        milestoneId: Long,
+        page: Int,
+        pageSize: Int = defaultPageSize
+    ): Single<List<MergeRequest>> = api
+        .getMilestoneMergeRequests(projectId, milestoneId, page, pageSize)
+        .subscribeOn(schedulers.io())
+        .observeOn(schedulers.ui())
 }

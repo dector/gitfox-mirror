@@ -16,12 +16,14 @@ import javax.inject.Inject
 class PrivacyPolicyFragment : BaseFragment() {
     override val layoutRes = R.layout.fragment_privacy_policy
 
+    override val parentScopeName = DI.APP_SCOPE
+
     @Inject
     lateinit var router: Router
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Toothpick.inject(this, Toothpick.openScope(DI.APP_SCOPE))
         super.onCreate(savedInstanceState)
+        Toothpick.inject(this, scope)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

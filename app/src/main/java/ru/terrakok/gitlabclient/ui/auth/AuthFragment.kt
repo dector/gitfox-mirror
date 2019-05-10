@@ -15,10 +15,8 @@ import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.auth.AuthPresenter
 import ru.terrakok.gitlabclient.presentation.auth.AuthView
-import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.ZeroViewHolder
-import toothpick.Toothpick
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 27.03.17
@@ -33,11 +31,8 @@ class AuthFragment : BaseFragment(), AuthView, CustomServerAuthFragment.OnClickL
     lateinit var presenter: AuthPresenter
 
     @ProvidePresenter
-    fun providePresenter(): AuthPresenter {
-        return Toothpick
-            .openScope(DI.AUTH_FLOW_SCOPE)
-            .getInstance(AuthPresenter::class.java)
-    }
+    fun providePresenter(): AuthPresenter =
+        scope.getInstance(AuthPresenter::class.java)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

@@ -8,7 +8,8 @@ import org.junit.Test
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.*
 import ru.terrakok.gitlabclient.entity.TokenData
-import ru.terrakok.gitlabclient.model.repository.auth.AuthRepository
+import ru.terrakok.gitlabclient.entity.app.session.OAuthParams
+
 
 /**
  * @author Artur Badretdinov (Gaket)
@@ -20,12 +21,20 @@ class AuthInteractorTest {
     private lateinit var authRepo: AuthRepository
 
     private val HASH = "some_hash_here"
-    private val OAUTH_PARAMS = OAuthParams("appId", "appKey", "redirect_url")
+    private val OAUTH_PARAMS =
+        OAuthParams("appId", "appKey", "redirect_url")
 
     @Before
     fun setUp() {
-        authRepo = mock(AuthRepository::class.java)
-        interactor = AuthInteractor("some server path", "some default server path", authRepo, HASH, OAUTH_PARAMS)
+        authRepo = mock()
+        interactor = AuthInteractor(
+            "some server path",
+            "some default server path",
+            authRepo,
+            HASH,
+            OAUTH_PARAMS,
+            projectCache = mock()
+        )
     }
 
     @Test

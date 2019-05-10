@@ -7,9 +7,7 @@ import kotlinx.android.synthetic.main.fragment_mr.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.presentation.file.ProjectFilePresenter
 import ru.terrakok.gitlabclient.presentation.file.ProjectFileView
-import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import toothpick.Toothpick
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 22.11.18.
@@ -23,9 +21,7 @@ class ProjectFileFragment : BaseFragment(), ProjectFileView {
 
     @ProvidePresenter
     fun providePresenter() =
-        Toothpick
-            .openScope(DI.PROJECT_FILE_FLOW_SCOPE)
-            .getInstance(ProjectFilePresenter::class.java)
+        scope.getInstance(ProjectFilePresenter::class.java)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

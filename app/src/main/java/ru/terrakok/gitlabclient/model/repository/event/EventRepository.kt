@@ -155,6 +155,7 @@ class EventRepository @Inject constructor(
 
     private fun getIcon(action: EventAction) = when (action) {
         EventAction.CREATED -> TargetHeaderIcon.CREATED
+        EventAction.IMPORTED -> TargetHeaderIcon.IMPORTED
         EventAction.JOINED -> TargetHeaderIcon.JOINED
         EventAction.COMMENTED_ON,
         EventAction.COMMENTED -> TargetHeaderIcon.COMMENTED
@@ -240,6 +241,8 @@ class EventRepository @Inject constructor(
                             event.projectId
                         )
                     }
+                } else if (event.actionName == EventAction.IMPORTED) {
+                    TargetData(AppTarget.PROJECT, AppTarget.PROJECT.toString(), event.projectId)
                 } else {
                     TargetData(AppTarget.PROJECT, "${AppTarget.PROJECT} ${event.projectId}", event.projectId)
                 }

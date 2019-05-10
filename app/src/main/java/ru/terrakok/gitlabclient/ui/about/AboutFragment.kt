@@ -1,6 +1,5 @@
 package ru.terrakok.gitlabclient.ui.about
 
-import android.content.Intent
 import android.os.Bundle
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -10,9 +9,7 @@ import ru.terrakok.gitlabclient.entity.app.develop.AppInfo
 import ru.terrakok.gitlabclient.extension.tryOpenLink
 import ru.terrakok.gitlabclient.presentation.about.AboutPresenter
 import ru.terrakok.gitlabclient.presentation.about.AboutView
-import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import toothpick.Toothpick
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 20.05.17.
@@ -26,11 +23,8 @@ class AboutFragment : BaseFragment(), AboutView {
     private var supportUrl: String? = null
 
     @ProvidePresenter
-    fun providePresenter(): AboutPresenter {
-        return Toothpick
-            .openScope(DI.DRAWER_FLOW_SCOPE)
-            .getInstance(AboutPresenter::class.java)
-    }
+    fun providePresenter(): AboutPresenter =
+        scope.getInstance(AboutPresenter::class.java)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

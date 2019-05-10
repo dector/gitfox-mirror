@@ -12,12 +12,10 @@ import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.mergerequest.commits.MergeRequestCommitsPresenter
 import ru.terrakok.gitlabclient.presentation.mergerequest.commits.MergeRequestCommitsView
-import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.ZeroViewHolder
 import ru.terrakok.gitlabclient.ui.global.list.SimpleDividerDecorator
 import ru.terrakok.gitlabclient.ui.global.list.TargetCommitsAdapter
-import toothpick.Toothpick
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 20.10.18.
@@ -34,8 +32,7 @@ class MergeRequestCommitsFragment : BaseFragment(), MergeRequestCommitsView {
 
     @ProvidePresenter
     fun providePresenter() =
-        Toothpick.openScope(DI.MERGE_REQUEST_FLOW_SCOPE)
-            .getInstance(MergeRequestCommitsPresenter::class.java)
+        scope.getInstance(MergeRequestCommitsPresenter::class.java)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

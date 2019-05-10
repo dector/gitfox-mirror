@@ -1,5 +1,4 @@
 buildscript {
-    val kotlinVersion = "1.3.0"
     repositories {
         google()
         jcenter()
@@ -7,14 +6,14 @@ buildscript {
     }
     dependencies {
         classpath("com.android.tools.build:gradle:3.4.0-alpha04")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
-        classpath("com.google.gms:google-services:3.2.0")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.11")
+        classpath("com.google.gms:google-services:4.2.0")
         classpath("io.fabric.tools:gradle:1.26.1")
     }
 }
 
 allprojects {
-    extra["kotlinVersion"] = "1.3.0"
+    extra["kotlinVersion"] = "1.3.11"
     repositories {
         google()
         jcenter()
