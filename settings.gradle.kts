@@ -1,1 +1,1 @@
-include(":app", ":code_highlight")
+include(":app")
