@@ -88,10 +88,5 @@
     "name": "Noties / Markwon",
     "url": "https://github.com/noties/Markwon",
     "license": "APACHE_2"
-  },
-  {
-    "name": "Noties / Prism4j",
-    "url": "https://github.com/noties/Prism4j",
-    "license": "APACHE_2"
   }
 ]

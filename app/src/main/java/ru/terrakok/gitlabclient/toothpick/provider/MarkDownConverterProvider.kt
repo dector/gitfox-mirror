@@ -9,10 +9,6 @@ import ru.noties.markwon.il.AsyncDrawableLoader
 import ru.noties.markwon.renderer.ImageSize
 import ru.noties.markwon.renderer.ImageSizeResolver
 import ru.noties.markwon.spans.SpannableTheme
-import ru.noties.markwon.syntax.Prism4jSyntaxHighlight
-import ru.noties.markwon.syntax.Prism4jThemeDefault
-import ru.noties.prism4j.Prism4j
-import ru.noties.prism4j.annotations.PrismBundle
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.extension.color
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
@@ -25,10 +21,6 @@ import javax.inject.Provider
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 28.02.18.
  */
-@PrismBundle(
-    includeAll = true,
-    grammarLocatorClassName = ".MarkDownGrammarLocator"
-)
 class MarkDownConverterProvider @Inject constructor(
     private val context: Context,
     private val httpClient: OkHttpClient,
@@ -78,16 +70,12 @@ class MarkDownConverterProvider @Inject constructor(
         }
     }
 
-    private val syntaxHighlight =
-        Prism4jSyntaxHighlight.create(Prism4j(MarkDownGrammarLocator()), Prism4jThemeDefault.create(), null)
-
     private val spannableConfig
         get() = SpannableConfiguration.builder(context)
             .asyncDrawableLoader(asyncDrawableLoader)
             .urlProcessor(urlProcessor)
             .theme(spannableTheme)
             .imageSizeResolver(imageSizeResolver)
-            .syntaxHighlight(syntaxHighlight)
             .build()
 
     override fun get() = MarkDownConverter(
