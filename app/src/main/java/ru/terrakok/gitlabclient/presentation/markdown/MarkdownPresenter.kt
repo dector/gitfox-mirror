@@ -4,12 +4,12 @@ import com.arellomobile.mvp.InjectViewState
 import io.reactivex.disposables.Disposable
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
-import ru.terrakok.gitlabclient.toothpick.provider.MarkDownConverterProvider
+import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import javax.inject.Inject
 
 @InjectViewState
 class MarkdownPresenter @Inject constructor(
-    private val mdConverterProvider: MarkDownConverterProvider,
+    private val mdConverter: MarkDownConverter,
     private val errorHandler: ErrorHandler
 ) : BasePresenter<MarkdownView>() {
 
@@ -17,9 +17,8 @@ class MarkdownPresenter @Inject constructor(
 
     fun setMarkdown(markdown: String, projectId: Long?) {
         conversionDisposable?.dispose()
-        conversionDisposable = mdConverterProvider
-            .getMarkdownConverter(projectId)
-            .flatMap { it.markdownToSpannable(markdown) }
+        conversionDisposable = mdConverter
+            .markdownToSpannable(markdown, projectId)
             .subscribe(
                 { viewState.setMarkdownText(it) },
                 { errorHandler.proceed(it) }

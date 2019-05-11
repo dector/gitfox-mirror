@@ -22,14 +22,19 @@ class LabelInteractor @Inject constructor(
     fun getAllProjectLabels(
         projectId: Long
     ): Single<List<Label>> = Single.defer {
-        val labels = projectLabelCache.get(projectId)
-        if (labels != null) {
-            Single.just(labels)
-        } else {
-            labelRepository.getAllProjectLabels(projectId)
-                .doOnSuccess { labels -> projectLabelCache.put(projectId, labels) }
+        Single.defer {
+            if (projectId != null) {
+                val labels = projectLabelCache.get(projectId)
+                if (labels != null) {
+                    Single.just(labels)
+                } else {
+                    labelRepository.getAllProjectLabels(projectId)
+                        .doOnSuccess { labels -> projectLabelCache.put(projectId, labels) }
+                }
+            } else {
+                Single.just(emptyList())
+            }
         }
-
     }
 
     fun subscribeToLabel(

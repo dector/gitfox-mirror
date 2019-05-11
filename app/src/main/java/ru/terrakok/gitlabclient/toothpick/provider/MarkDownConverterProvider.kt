@@ -1,7 +1,6 @@
 package ru.terrakok.gitlabclient.toothpick.provider
 
 import android.content.Context
-import io.reactivex.Single
 import okhttp3.OkHttpClient
 import org.commonmark.ext.gfm.strikethrough.StrikethroughExtension
 import org.commonmark.ext.gfm.tables.TablesExtension
@@ -17,16 +16,14 @@ import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Label
 import ru.terrakok.gitlabclient.extension.color
 import ru.terrakok.gitlabclient.markwonx.*
-import ru.terrakok.gitlabclient.markwonx.label.LabelDecorator
-import ru.terrakok.gitlabclient.markwonx.label.LabelDescription
-import ru.terrakok.gitlabclient.markwonx.label.LabelExtensionProcessor
-import ru.terrakok.gitlabclient.markwonx.label.LabelVisitor
+import ru.terrakok.gitlabclient.markwonx.label.*
 import ru.terrakok.gitlabclient.model.interactor.label.LabelInteractor
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultServerPath
 import java.util.concurrent.Executors
 import javax.inject.Inject
+import javax.inject.Provider
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 28.02.18.
@@ -37,38 +34,41 @@ class MarkDownConverterProvider @Inject constructor(
     private val schedulers: SchedulersProvider,
     private val labelInteractor: LabelInteractor,
     @DefaultServerPath private val defaultServerPath: String
-) {
+) : Provider<MarkDownConverter> {
 
-    private val spannableTheme
-        get() = SpannableTheme
+    private val spannableTheme by lazy {
+        SpannableTheme
             .builderWithDefaults(context)
             .codeBackgroundColor(context.color(R.color.beige))
             .build()
+    }
 
-    private val asyncDrawableLoader
-        get() = AsyncDrawableLoader.builder()
+    private val asyncDrawableLoader by lazy {
+        AsyncDrawableLoader.builder()
             .client(httpClient)
             .executorService(Executors.newCachedThreadPool())
             .resources(context.resources)
             .build()
+    }
 
-    private val urlProcessor = UrlProcessorRelativeToAbsolute(defaultServerPath)
+    private val urlProcessor by lazy { UrlProcessorRelativeToAbsolute(defaultServerPath) }
 
-    private val spannableConfig
-        get() = SpannableConfiguration.builder(context)
+    private val spannableConfig by lazy {
+        SpannableConfiguration.builder(context)
             .asyncDrawableLoader(asyncDrawableLoader)
             .urlProcessor(urlProcessor)
             .theme(spannableTheme)
             .build()
+    }
 
-    private fun getMarkdownDecorator(labelDescriptions: List<LabelDescription>): MarkdownDecorator {
-        return CompositeMarkdownDecorator(
-            LabelDecorator(labelDescriptions)
+    private val markdownDecorator: MarkdownDecorator by lazy {
+        CompositeMarkdownDecorator(
+            SimpleMarkdownDecorator()
         )
     }
 
-    private fun getParser(labelDescriptions: List<LabelDescription>): Parser {
-        return Parser.Builder().apply {
+    private val parser: Parser by lazy {
+        Parser.Builder().apply {
             extensions(
                 listOf(
                     StrikethroughExtension.create(),
@@ -80,49 +80,41 @@ class MarkDownConverterProvider @Inject constructor(
             customDelimiterProcessor(
                 GitlabExtensionsDelimiterProcessor(
                     mapOf(
-                        GitlabMarkdownExtension.LABEL to LabelExtensionProcessor(labelDescriptions)
+                        GitlabMarkdownExtension.LABEL to SimpleExtensionProcessor()
                     )
                 )
             )
         }.build()
     }
 
-    private fun getCustomVisitor(spannableBuilder: SpannableBuilder): Visitor =
-        CompositeVisitor(
-            spannableConfig,
-            spannableBuilder,
-            LabelVisitor(
-                spannableConfig,
-                spannableBuilder
-            )
-        )
-
-    fun getMarkdownConverter(projectId: Long?): Single<MarkDownConverter> {
-        if (projectId != null) {
-            return labelInteractor
-                .getAllProjectLabels(projectId)
-                .map { get(it) }
-        } else {
-            return Single.fromCallable {
-                get(emptyList())
-            }
-        }
-    }
-
-    private fun get(labels: List<Label>): MarkDownConverter {
+    private fun getCustomVisitor(labels: List<Label>, spannableBuilder: SpannableBuilder): Visitor {
         val labelDescriptions = labels.map {
             LabelDescription(
                 id = it.id,
                 name = it.name,
-                color = it.color
+                color = it.color.name
             )
         }
-        return MarkDownConverter(
+        return CompositeVisitor(
             spannableConfig,
-            getParser(labelDescriptions),
-            getMarkdownDecorator(labelDescriptions),
-            { builder -> getCustomVisitor(builder) },
+            spannableBuilder,
+            SimpleVisitor(
+                spannableConfig,
+                spannableBuilder,
+                mapOf(
+                    GitlabMarkdownExtension.LABEL to SimpleLabelVisitor(labelDescriptions)
+                )
+            )
+        )
+    }
+
+    override fun get(): MarkDownConverter {
+        return MarkDownConverter(
+            parser,
+            markdownDecorator,
+            { projectId, builder -> labelInteractor.getAllProjectLabels(projectId).map { labels -> getCustomVisitor(labels, builder) } },
             schedulers
         )
     }
 }
+

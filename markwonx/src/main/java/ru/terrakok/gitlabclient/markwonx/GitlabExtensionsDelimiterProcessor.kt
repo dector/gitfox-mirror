@@ -5,28 +5,22 @@ import org.commonmark.parser.delimiter.DelimiterProcessor
 import org.commonmark.parser.delimiter.DelimiterRun
 
 class GitlabExtensionsDelimiterProcessor(
-    val processors: Map<GitlabMarkdownExtension, ExtensionProcessor>
+    private val processors: Map<GitlabMarkdownExtension, ExtensionProcessor>
 ) : DelimiterProcessor {
-    override fun getOpeningCharacter(): Char =
-        DELIMITER
 
-    override fun getClosingCharacter(): Char =
-        DELIMITER
-
-    override fun getMinLength(): Int =
-        DELIMITER_LENGTH
-
-    override fun getDelimiterUse(opener: DelimiterRun, closer: DelimiterRun): Int =
-        DELIMITER_LENGTH
+    override fun getOpeningCharacter(): Char = DELIMITER_START
+    override fun getClosingCharacter(): Char = DELIMITER_END
+    override fun getMinLength(): Int = DELIMITER_LENGTH
+    override fun getDelimiterUse(opener: DelimiterRun, closer: DelimiterRun): Int = DELIMITER_LENGTH
 
     override fun process(opener: Text, closer: Text, delimiterUse: Int) {
-        var text = (opener.next as Text).literal
-        val extTypeStr = text.substringBefore('_')
+        val text = (opener.next as Text).literal
+        val extTypeStr = text.substringBefore(GitlabMarkdownExtension.OPTS_DELIMITER)
         val extType = GitlabMarkdownExtension.valueOf(extTypeStr)
-        val args = text.substringAfter('_')
+        val args = text.substringAfter(GitlabMarkdownExtension.OPTS_DELIMITER)
         val processor = processors[extType]
         if (processor != null) {
-            val replacementNode = processor.process(args)
+            val replacementNode = processor.process(extType, args)
             if (replacementNode != null) {
                 opener.next.unlink()
                 opener.insertAfter(replacementNode)
@@ -36,11 +30,12 @@ class GitlabExtensionsDelimiterProcessor(
 
     companion object {
 
-        // Our delimiters looks like this : %%%%%foo%%%%% where %%%%% is delimiter.
-        // It is so long to avoid overlapping with anything else than our custom extensions.
-        const val DELIMITER_LENGTH = 5
-        const val DELIMITER = '%'
-        val DELIMITER_STRING = (0..DELIMITER_LENGTH).joinToString { DELIMITER.toString() }
+        // Our delimiters looks like this : ▘foo▗ where ▘ is starting delimiter and ▗ is ending delimiter.
+        const val DELIMITER_LENGTH = 1
+        const val DELIMITER_START = '\u2598'
+        const val DELIMITER_START_STR = DELIMITER_START.toString()
+        const val DELIMITER_END = '\u2597'
+        const val DELIMITER_END_STR = DELIMITER_END.toString()
     }
 
 }
