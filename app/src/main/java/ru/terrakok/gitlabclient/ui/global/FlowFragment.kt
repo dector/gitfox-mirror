@@ -7,6 +7,7 @@ import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.android.support.SupportAppNavigator
+import ru.terrakok.cicerone.android.support.SupportAppScreen
 import ru.terrakok.cicerone.commands.Command
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.di.module.FlowNavigationModule
@@ -18,7 +19,7 @@ import javax.inject.Inject
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 03.09.18.
  */
-class FlowFragment : BaseFragment() {
+abstract class FlowFragment : BaseFragment() {
     override val layoutRes: Int = R.layout.layout_container
 
     private val currentFragment
@@ -32,8 +33,7 @@ class FlowFragment : BaseFragment() {
 
     override fun installModules(scope: Scope) {
         scope.installModules(
-            FlowNavigationModule(scope.getInstance(Router::class.java)),
-            FlowFactory.createFlowModule(arguments!!)
+            FlowNavigationModule(scope.getInstance(Router::class.java))
         )
     }
 
@@ -59,9 +59,11 @@ class FlowFragment : BaseFragment() {
         super.onCreate(savedInstanceState)
         Toothpick.inject(this, scope)
         if (childFragmentManager.fragments.isEmpty()) {
-            navigator.setLaunchScreen(FlowFactory.getFlowRootScreen(arguments!!))
+            navigator.setLaunchScreen(getLaunchScreen())
         }
     }
+
+    abstract fun getLaunchScreen(): SupportAppScreen
 
     override fun onBackPressed() {
         currentFragment?.onBackPressed() ?: super.onBackPressed()
