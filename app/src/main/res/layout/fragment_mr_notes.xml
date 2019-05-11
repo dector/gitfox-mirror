@@ -10,7 +10,7 @@
         android:id="@+id/recyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/noteInputLayout"
+        app:layout_constraintBottom_toTopOf="@id/newNoteView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -30,9 +30,8 @@
         app:layout_constraintEnd_toEndOf="@id/recyclerView"
         tools:visibility="visible" />
 
-    <include
-        android:id="@+id/noteInputLayout"
-        layout="@layout/layout_new_note"
+    <ru.terrakok.gitlabclient.ui.global.view.custom.NewNoteView
+        android:id="@+id/newNoteView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -49,14 +49,6 @@ android {
             buildConfigField("String", "OAUTH_CALLBACK", "\"app://gitlab.client/\"")
 
             multiDexEnabled = true
-
-            javaCompileOptions {
-                annotationProcessorOptions {
-                    arguments = mapOf(
-                        "toothpick_registry_package_name" to "ru.terrakok.gitlabclient"
-                    )
-                }
-            }
         }
 
         signingConfigs {
@@ -95,8 +87,8 @@ android {
 
 dependencies {
     val supportLibraryVersion = "28.0.0"
-    val moxyVersion = "1.4.6"
-    val toothpickVersion = "1.0.6"
+    val moxyVersion = "1.5.6"
+    val toothpickVersion = "2.1.0"
     val retrofitVersion = "2.2.0"
     val markwonVersion = "2.0.0"
     val glideVersion = "4.8.0"

@@ -73,8 +73,8 @@
         app:layout_constraintTop_toTopOf="@id/changeFileName"
         tools:text="-2" />
 
-    <TextView
-        android:id="@+id/changeFile"
+    <ru.terrakok.gitlabclient.ui.global.view.custom.GitDiffView
+        android:id="@+id/gitDiffView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"

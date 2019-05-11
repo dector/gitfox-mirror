@@ -5,7 +5,6 @@ import android.support.v7.widget.LinearLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.layout_base_list.*
-import kotlinx.android.synthetic.main.layout_zero.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
@@ -14,7 +13,6 @@ import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.project.mergerequest.ProjectMergeRequestsPresenter
 import ru.terrakok.gitlabclient.presentation.project.mergerequest.ProjectMergeRequestsView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import ru.terrakok.gitlabclient.ui.global.ZeroViewHolder
 import ru.terrakok.gitlabclient.ui.my.TargetsAdapter
 import toothpick.Scope
 import toothpick.config.Module
@@ -25,7 +23,7 @@ import toothpick.config.Module
 class ProjectMergeRequestsFragment : BaseFragment(), ProjectMergeRequestsView {
     override val layoutRes = R.layout.fragment_my_merge_requests
 
-    override val scopeModuleInstaller = { scope: Scope ->
+    override fun installModules(scope: Scope) {
         scope.installModules(object : Module() {
             init {
                 bind(MergeRequestState::class.java)
@@ -48,7 +46,6 @@ class ProjectMergeRequestsFragment : BaseFragment(), ProjectMergeRequestsView {
             { presenter.loadNextMergeRequestsPage() }
         )
     }
-    private var zeroViewHolder: ZeroViewHolder? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,7 +65,7 @@ class ProjectMergeRequestsFragment : BaseFragment(), ProjectMergeRequestsView {
         }
 
         swipeToRefresh.setOnRefreshListener { presenter.refreshMergeRequests() }
-        zeroViewHolder = ZeroViewHolder(zeroLayout, { presenter.refreshMergeRequests() })
+        emptyView.setRefreshListener { presenter.refreshMergeRequests() }
     }
 
     override fun showRefreshProgress(show: Boolean) {
@@ -88,13 +85,11 @@ class ProjectMergeRequestsFragment : BaseFragment(), ProjectMergeRequestsView {
     }
 
     override fun showEmptyView(show: Boolean) {
-        if (show) zeroViewHolder?.showEmptyData()
-        else zeroViewHolder?.hide()
+        emptyView.apply { if (show) showEmptyData() else hide() }
     }
 
     override fun showEmptyError(show: Boolean, message: String?) {
-        if (show) zeroViewHolder?.showEmptyError(message)
-        else zeroViewHolder?.hide()
+        emptyView.apply { if (show) showEmptyError(message) else hide() }
     }
 
     override fun showMergeRequests(show: Boolean, mergeRequests: List<TargetHeader>) {

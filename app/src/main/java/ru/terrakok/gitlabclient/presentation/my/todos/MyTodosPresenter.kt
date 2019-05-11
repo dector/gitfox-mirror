@@ -3,6 +3,8 @@ package ru.terrakok.gitlabclient.presentation.my.todos
 import com.arellomobile.mvp.InjectViewState
 import io.reactivex.Observable
 import ru.terrakok.gitlabclient.Screens
+import ru.terrakok.gitlabclient.di.PrimitiveWrapper
+import ru.terrakok.gitlabclient.di.TodoListPendingState
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.extension.openInfo
 import ru.terrakok.gitlabclient.model.interactor.todo.TodoListInteractor
@@ -11,8 +13,6 @@ import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.presentation.global.Paginator
-import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
-import ru.terrakok.gitlabclient.toothpick.qualifier.TodoListPendingState
 import javax.inject.Inject
 
 /**

@@ -12,7 +12,7 @@ import ru.terrakok.gitlabclient.ui.global.BaseFragment
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 02.04.17
  */
-class MainFlowFragment : BaseFragment() {
+class MainFragment : BaseFragment() {
     override val layoutRes = R.layout.fragment_main
 
     private val currentTabFragment: BaseFragment?

@@ -13,15 +13,14 @@ import ru.terrakok.cicerone.android.support.SupportAppNavigator
 import ru.terrakok.cicerone.commands.Command
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
+import ru.terrakok.gitlabclient.di.module.FlowNavigationModule
+import ru.terrakok.gitlabclient.di.module.GlobalMenuModule
 import ru.terrakok.gitlabclient.extension.setLaunchScreen
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
-import ru.terrakok.gitlabclient.toothpick.DI
-import ru.terrakok.gitlabclient.toothpick.module.FlowNavigationModule
-import ru.terrakok.gitlabclient.toothpick.module.GlobalMenuModule
 import ru.terrakok.gitlabclient.ui.about.AboutFragment
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import ru.terrakok.gitlabclient.ui.main.MainFlowFragment
+import ru.terrakok.gitlabclient.ui.main.MainFragment
 import ru.terrakok.gitlabclient.ui.projects.ProjectsContainerFragment
 import toothpick.Scope
 import toothpick.Toothpick
@@ -47,8 +46,7 @@ class DrawerFlowFragment : BaseFragment() {
     private val drawerFragment
         get() = childFragmentManager.findFragmentById(R.id.navDrawerContainer) as? NavigationDrawerFragment
 
-    override val parentScopeName = DI.SERVER_SCOPE
-    override val scopeModuleInstaller = { scope: Scope ->
+    override fun installModules(scope: Scope) {
         scope.installModules(
             FlowNavigationModule(scope.getInstance(Router::class.java)),
             GlobalMenuModule()
@@ -73,7 +71,7 @@ class DrawerFlowFragment : BaseFragment() {
                 nextFragment: Fragment?,
                 fragmentTransaction: FragmentTransaction
             ) {
-                //fix incorrect order lifecycle callback of MainFlowFragment
+                //fix incorrect order lifecycle callback of MainFragment
                 fragmentTransaction.setReorderingAllowed(true)
             }
         }
@@ -89,7 +87,7 @@ class DrawerFlowFragment : BaseFragment() {
                 .replace(R.id.navDrawerContainer, NavigationDrawerFragment())
                 .commitNow()
 
-            navigator.setLaunchScreen(Screens.MainFlow)
+            navigator.setLaunchScreen(Screens.Main)
         } else {
             updateNavDrawer()
         }
@@ -119,7 +117,7 @@ class DrawerFlowFragment : BaseFragment() {
         drawerFragment?.let { drawerFragment ->
             currentFragment?.let {
                 when (it) {
-                    is MainFlowFragment -> drawerFragment.onScreenChanged(NavigationDrawerView.MenuItem.ACTIVITY)
+                    is MainFragment -> drawerFragment.onScreenChanged(NavigationDrawerView.MenuItem.ACTIVITY)
                     is ProjectsContainerFragment -> drawerFragment.onScreenChanged(NavigationDrawerView.MenuItem.PROJECTS)
                     is AboutFragment -> drawerFragment.onScreenChanged(NavigationDrawerView.MenuItem.ABOUT)
                 }

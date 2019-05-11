@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.toothpick.provider
+package ru.terrakok.gitlabclient.di.provider
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder

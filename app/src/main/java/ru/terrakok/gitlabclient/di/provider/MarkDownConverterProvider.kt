@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.toothpick.provider
+package ru.terrakok.gitlabclient.di.provider
 
 import android.content.Context
 import okhttp3.OkHttpClient
@@ -7,10 +7,10 @@ import ru.noties.markwon.UrlProcessorRelativeToAbsolute
 import ru.noties.markwon.il.AsyncDrawableLoader
 import ru.noties.markwon.spans.SpannableTheme
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.di.DefaultServerPath
 import ru.terrakok.gitlabclient.extension.color
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
-import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultServerPath
 import java.util.concurrent.Executors
 import javax.inject.Inject
 import javax.inject.Provider

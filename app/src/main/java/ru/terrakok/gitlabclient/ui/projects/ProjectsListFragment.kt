@@ -5,17 +5,15 @@ import android.support.v7.widget.LinearLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.layout_base_list.*
-import kotlinx.android.synthetic.main.layout_zero.*
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.di.PrimitiveWrapper
+import ru.terrakok.gitlabclient.di.ProjectListMode
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.projects.ProjectsListPresenter
 import ru.terrakok.gitlabclient.presentation.projects.ProjectsListView
-import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
-import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectListMode
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import ru.terrakok.gitlabclient.ui.global.ZeroViewHolder
 import toothpick.Scope
 import toothpick.config.Module
 
@@ -25,11 +23,10 @@ import toothpick.config.Module
 class ProjectsListFragment : BaseFragment(), ProjectsListView {
 
     private val adapter = ProjectsAdapter({ presenter.loadNextProjectsPage() }, { presenter.onProjectClicked(it) })
-    private var zeroViewHolder: ZeroViewHolder? = null
 
     override val layoutRes = R.layout.fragment_projects
 
-    override val scopeModuleInstaller = { scope: Scope ->
+    override fun installModules(scope: Scope) {
         scope.installModules(object : Module() {
             init {
                 bind(PrimitiveWrapper::class.java)
@@ -54,7 +51,7 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
         recyclerView.adapter = adapter
 
         swipeToRefresh.setOnRefreshListener { presenter.refreshProjects() }
-        zeroViewHolder = ZeroViewHolder(zeroLayout, { presenter.refreshProjects() })
+        emptyView.setRefreshListener { presenter.refreshProjects() }
     }
 
     override fun showRefreshProgress(show: Boolean) {
@@ -70,13 +67,11 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
     }
 
     override fun showEmptyView(show: Boolean) {
-        if (show) zeroViewHolder?.showEmptyData()
-        else zeroViewHolder?.hide()
+        emptyView.apply { if (show) showEmptyData() else hide() }
     }
 
     override fun showEmptyError(show: Boolean, message: String?) {
-        if (show) zeroViewHolder?.showEmptyError(message)
-        else zeroViewHolder?.hide()
+        emptyView.apply { if (show) showEmptyError(message) else hide() }
     }
 
     override fun showProjects(show: Boolean, projects: List<Project>) {

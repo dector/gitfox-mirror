@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.toothpick
+package ru.terrakok.gitlabclient.di
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 09.07.17.
