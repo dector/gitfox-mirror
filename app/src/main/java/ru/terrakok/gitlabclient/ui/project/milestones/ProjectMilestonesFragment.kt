@@ -5,7 +5,6 @@ import android.support.v7.widget.LinearLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.layout_base_list.*
-import kotlinx.android.synthetic.main.layout_zero.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.milestone.Milestone
 import ru.terrakok.gitlabclient.entity.milestone.MilestoneState
@@ -14,7 +13,6 @@ import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.project.milestones.ProjectMilestonesPresenter
 import ru.terrakok.gitlabclient.presentation.project.milestones.ProjectMilestonesView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import ru.terrakok.gitlabclient.ui.global.ZeroViewHolder
 import toothpick.Scope
 import toothpick.config.Module
 
@@ -47,7 +45,6 @@ class ProjectMilestonesFragment : BaseFragment(), ProjectMilestonesView {
             { presenter.loadNextMilestonesPage() }
         )
     }
-    private var zeroViewHolder: ZeroViewHolder? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,7 +64,7 @@ class ProjectMilestonesFragment : BaseFragment(), ProjectMilestonesView {
         }
 
         swipeToRefresh.setOnRefreshListener { presenter.refreshMilestones() }
-        zeroViewHolder = ZeroViewHolder(zeroLayout, { presenter.refreshMilestones() })
+        emptyView.setRefreshListener { presenter.refreshMilestones() }
     }
 
     override fun showRefreshProgress(show: Boolean) {
@@ -87,13 +84,11 @@ class ProjectMilestonesFragment : BaseFragment(), ProjectMilestonesView {
     }
 
     override fun showEmptyView(show: Boolean) {
-        if (show) zeroViewHolder?.showEmptyData()
-        else zeroViewHolder?.hide()
+        emptyView.apply { if (show) showEmptyData() else hide() }
     }
 
     override fun showEmptyError(show: Boolean, message: String?) {
-        if (show) zeroViewHolder?.showEmptyError(message)
-        else zeroViewHolder?.hide()
+        emptyView.apply { if (show) showEmptyError(message) else hide() }
     }
 
     override fun showMilestones(show: Boolean, milestones: List<Milestone>) {

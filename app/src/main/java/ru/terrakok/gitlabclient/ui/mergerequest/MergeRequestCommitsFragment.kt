@@ -5,7 +5,6 @@ import android.support.v7.widget.LinearLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.layout_base_list.*
-import kotlinx.android.synthetic.main.layout_zero.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.CommitWithAvatarUrl
 import ru.terrakok.gitlabclient.extension.showSnackMessage
@@ -13,7 +12,6 @@ import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.mergerequest.commits.MergeRequestCommitsPresenter
 import ru.terrakok.gitlabclient.presentation.mergerequest.commits.MergeRequestCommitsView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import ru.terrakok.gitlabclient.ui.global.ZeroViewHolder
 import ru.terrakok.gitlabclient.ui.global.list.SimpleDividerDecorator
 import ru.terrakok.gitlabclient.ui.global.list.TargetCommitsAdapter
 
@@ -25,7 +23,6 @@ class MergeRequestCommitsFragment : BaseFragment(), MergeRequestCommitsView {
     override val layoutRes = R.layout.fragment_mr_commits
 
     private val adapter by lazy { TargetCommitsAdapter({ presenter.loadNextCommitsPage() }) }
-    private var zeroViewHolder: ZeroViewHolder? = null
 
     @InjectPresenter
     lateinit var presenter: MergeRequestCommitsPresenter
@@ -45,7 +42,7 @@ class MergeRequestCommitsFragment : BaseFragment(), MergeRequestCommitsView {
         }
 
         swipeToRefresh.setOnRefreshListener { presenter.refreshCommits() }
-        zeroViewHolder = ZeroViewHolder(zeroLayout, { presenter.refreshCommits() })
+        emptyView.setRefreshListener { presenter.refreshCommits() }
     }
 
     override fun showRefreshProgress(show: Boolean) {
@@ -65,13 +62,11 @@ class MergeRequestCommitsFragment : BaseFragment(), MergeRequestCommitsView {
     }
 
     override fun showEmptyView(show: Boolean) {
-        if (show) zeroViewHolder?.showEmptyData()
-        else zeroViewHolder?.hide()
+        emptyView.apply { if (show) showEmptyData() else hide() }
     }
 
     override fun showEmptyError(show: Boolean, message: String?) {
-        if (show) zeroViewHolder?.showEmptyError(message)
-        else zeroViewHolder?.hide()
+        emptyView.apply { if (show) showEmptyError(message) else hide() }
     }
 
     override fun showCommits(show: Boolean, commits: List<CommitWithAvatarUrl>) {
