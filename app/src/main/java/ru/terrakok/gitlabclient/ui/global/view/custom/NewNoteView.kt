@@ -1,22 +1,21 @@
-package ru.terrakok.gitlabclient.ui.global
+package ru.terrakok.gitlabclient.ui.global.view.custom
 
+import android.content.Context
+import android.support.constraint.ConstraintLayout
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.ImageView
+import android.util.AttributeSet
+import kotlinx.android.synthetic.main.view_new_note.view.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.extension.getTintDrawable
 
-class NewNoteViewController(
-    root: ViewGroup,
-    onSendClickListener: (String) -> Unit
-) {
-
-    private val newNoteEditText = root.findViewById<EditText>(R.id.newNoteEditText)
-    private val newNoteSend = root.findViewById<ImageView>(R.id.newNoteSend)
+class NewNoteView(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs) {
 
     init {
+        inflate(context, R.layout.view_new_note, this)
+    }
+
+    fun init(onSendClickListener: (String) -> Unit) {
         newNoteEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
 
@@ -30,7 +29,7 @@ class NewNoteViewController(
             }
         })
         newNoteSend.setImageDrawable(
-            root.context.getTintDrawable(
+            context.getTintDrawable(
                 R.drawable.ic_send_24dp,
                 intArrayOf(R.color.grey_30, R.color.grey),
                 arrayOf(intArrayOf(-android.R.attr.state_enabled), intArrayOf(android.R.attr.state_enabled))
