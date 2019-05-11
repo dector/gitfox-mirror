@@ -12,11 +12,11 @@ import ru.terrakok.gitlabclient.ui.auth.AuthFragment
 import ru.terrakok.gitlabclient.ui.drawer.DrawerFlowFragment
 import ru.terrakok.gitlabclient.ui.global.FlowFactory
 import ru.terrakok.gitlabclient.ui.global.StubFragment
-import ru.terrakok.gitlabclient.ui.issue.IssueFragment
+import ru.terrakok.gitlabclient.ui.issue.MainIssueFragment
 import ru.terrakok.gitlabclient.ui.issue.IssueInfoFragment
 import ru.terrakok.gitlabclient.ui.issue.IssueNotesFragment
 import ru.terrakok.gitlabclient.ui.libraries.LibrariesFragment
-import ru.terrakok.gitlabclient.ui.main.MainFlowFragment
+import ru.terrakok.gitlabclient.ui.main.MainFragment
 import ru.terrakok.gitlabclient.ui.mergerequest.*
 import ru.terrakok.gitlabclient.ui.my.activity.MyEventsFragment
 import ru.terrakok.gitlabclient.ui.my.issues.MyIssuesContainerFragment
@@ -26,7 +26,7 @@ import ru.terrakok.gitlabclient.ui.my.mergerequests.MyMergeRequestsFragment
 import ru.terrakok.gitlabclient.ui.my.todos.MyTodosContainerFragment
 import ru.terrakok.gitlabclient.ui.my.todos.MyTodosFragment
 import ru.terrakok.gitlabclient.ui.privacypolicy.PrivacyPolicyFragment
-import ru.terrakok.gitlabclient.ui.project.ProjectFragment
+import ru.terrakok.gitlabclient.ui.project.MainProjectFragment
 import ru.terrakok.gitlabclient.ui.project.files.ProjectFilesFragment
 import ru.terrakok.gitlabclient.ui.project.info.ProjectEventsFragment
 import ru.terrakok.gitlabclient.ui.project.info.ProjectInfoContainerFragment
@@ -50,8 +50,8 @@ object Screens {
         override fun getFragment() = DrawerFlowFragment()
     }
 
-    object MainFlow : SupportAppScreen() {
-        override fun getFragment() = MainFlowFragment()
+    object Main : SupportAppScreen() {
+        override fun getFragment() = MainFragment()
     }
 
     object MyEvents : SupportAppScreen() {
@@ -122,8 +122,8 @@ object Screens {
         override fun getFragment() = FlowFactory.createProjectFlowFragment(projectId)
     }
 
-    object ProjectMainFlow : SupportAppScreen() {
-        override fun getFragment() = ProjectFragment()
+    object MainProject : SupportAppScreen() {
+        override fun getFragment() = MainProjectFragment()
     }
 
     object ProjectInfoContainer : SupportAppScreen() {
@@ -193,8 +193,8 @@ object Screens {
         override fun getFragment() = FlowFactory.createMergeRequestFlowFragment(projectId, mrId)
     }
 
-    object MergeRequest : SupportAppScreen() {
-        override fun getFragment() = MergeRequestFragment()
+    object MainMergeRequest : SupportAppScreen() {
+        override fun getFragment() = MainMergeRequestFragment()
     }
 
     object MergeRequestInfo : SupportAppScreen() {
@@ -220,8 +220,8 @@ object Screens {
         override fun getFragment() = FlowFactory.createIssueFlowFragment(projectId, issueId)
     }
 
-    object Issue : SupportAppScreen() {
-        override fun getFragment() = IssueFragment()
+    object MainIssue : SupportAppScreen() {
+        override fun getFragment() = MainIssueFragment()
     }
 
     object IssueInfo : SupportAppScreen() {

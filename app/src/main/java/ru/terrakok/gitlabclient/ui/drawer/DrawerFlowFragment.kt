@@ -20,7 +20,7 @@ import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
 import ru.terrakok.gitlabclient.ui.about.AboutFragment
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import ru.terrakok.gitlabclient.ui.main.MainFlowFragment
+import ru.terrakok.gitlabclient.ui.main.MainFragment
 import ru.terrakok.gitlabclient.ui.projects.ProjectsContainerFragment
 import toothpick.Scope
 import toothpick.Toothpick
@@ -71,7 +71,7 @@ class DrawerFlowFragment : BaseFragment() {
                 nextFragment: Fragment?,
                 fragmentTransaction: FragmentTransaction
             ) {
-                //fix incorrect order lifecycle callback of MainFlowFragment
+                //fix incorrect order lifecycle callback of MainFragment
                 fragmentTransaction.setReorderingAllowed(true)
             }
         }
@@ -87,7 +87,7 @@ class DrawerFlowFragment : BaseFragment() {
                 .replace(R.id.navDrawerContainer, NavigationDrawerFragment())
                 .commitNow()
 
-            navigator.setLaunchScreen(Screens.MainFlow)
+            navigator.setLaunchScreen(Screens.Main)
         } else {
             updateNavDrawer()
         }
@@ -117,7 +117,7 @@ class DrawerFlowFragment : BaseFragment() {
         drawerFragment?.let { drawerFragment ->
             currentFragment?.let {
                 when (it) {
-                    is MainFlowFragment -> drawerFragment.onScreenChanged(NavigationDrawerView.MenuItem.ACTIVITY)
+                    is MainFragment -> drawerFragment.onScreenChanged(NavigationDrawerView.MenuItem.ACTIVITY)
                     is ProjectsContainerFragment -> drawerFragment.onScreenChanged(NavigationDrawerView.MenuItem.PROJECTS)
                     is AboutFragment -> drawerFragment.onScreenChanged(NavigationDrawerView.MenuItem.ABOUT)
                 }

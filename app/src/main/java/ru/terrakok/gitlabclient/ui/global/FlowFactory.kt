@@ -99,8 +99,8 @@ object FlowFactory {
         when (arguments.getSerializable(ARG_TYPE) as Type) {
             Type.AUTH -> Screens.Auth
             Type.USER -> Screens.UserInfo
-            Type.ISSUE -> Screens.Issue
-            Type.MERGE_REQUEST -> Screens.MergeRequest
-            Type.PROJECT -> Screens.ProjectMainFlow
+            Type.ISSUE -> Screens.MainIssue
+            Type.MERGE_REQUEST -> Screens.MainMergeRequest
+            Type.PROJECT -> Screens.MainProject
         }
 }
