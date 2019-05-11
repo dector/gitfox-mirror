@@ -103,7 +103,7 @@ class MarkDownConverterProvider @Inject constructor(
                 spannableConfig,
                 spannableBuilder,
                 mapOf(
-                    GitlabMarkdownExtension.LABEL to SimpleLabelVisitor(labelDescriptions)
+                    GitlabMarkdownExtension.LABEL to SimpleLabelVisitor(labelDescriptions, labelSpanConfig)
                 )
             )
         )

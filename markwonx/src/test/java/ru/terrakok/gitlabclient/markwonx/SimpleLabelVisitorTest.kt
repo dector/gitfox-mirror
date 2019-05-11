@@ -3,7 +3,6 @@ package ru.terrakok.gitlabclient.markwonx
 import android.app.Activity
 import android.content.Context
 import android.text.Spanned
-import android.text.style.StyleSpan
 import org.commonmark.node.Visitor
 import org.commonmark.parser.Parser
 import org.junit.Before
@@ -53,7 +52,7 @@ class SimpleLabelVisitorTest {
             SpannableConfiguration.create(context),
             spannableBuilder,
             mapOf(
-                GitlabMarkdownExtension.LABEL to SimpleLabelVisitor(LabelsTestUtils.EXISTENT_LABELS.map { it.label })
+                GitlabMarkdownExtension.LABEL to SimpleLabelVisitor(LabelsTestUtils.EXISTENT_LABELS.map { it.label }, LabelSpanConfig(0))
             )
         )
     }
@@ -74,16 +73,16 @@ class SimpleLabelVisitorTest {
     }
 
     fun assertSpanned(start: Int, end: Int, spanned: Spanned, label: LabelDescription) {
-        val spans = spanned.getSpans(start, end, StyleSpan::class.java)
-        assert(spans.any())
+        val spans = spanned.getSpans(start, end, LabelSpan::class.java)
+        assert(spans.any { span -> span.label == label })
     }
 
     @Test
     fun `should not create span for inexistent label`() {
         val content = makeLabel(INEXISTENT)
         val spanned = convertToSpannable(content)
-        val spans = spanned.getSpans(0, content.lastIndex, StyleSpan::class.java)
-        assert(spans.none())
+        val spans = spanned.getSpans(0, content.lastIndex, LabelSpan::class.java)
+        assert(spans.none { span -> span.label == INEXISTENT.label })
     }
 
     @Test

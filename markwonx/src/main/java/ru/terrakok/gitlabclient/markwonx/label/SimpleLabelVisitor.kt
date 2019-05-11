@@ -1,12 +1,14 @@
 package ru.terrakok.gitlabclient.markwonx.label
 
+import android.graphics.Color
 import android.graphics.Typeface
 import android.text.style.StyleSpan
 import ru.noties.markwon.SpannableBuilder
 import ru.terrakok.gitlabclient.markwonx.GitlabMarkdownExtension
 
 class SimpleLabelVisitor(
-    private val labels: List<LabelDescription>
+    private val labels: List<LabelDescription>,
+    private val config: LabelSpanConfig
 ): SimpleNodeVisitor {
 
     override fun visit(args: String, builder: SpannableBuilder) {
@@ -35,6 +37,16 @@ class SimpleLabelVisitor(
             val length = builder.length
             builder.append(label.name)
             builder.setSpan(StyleSpan(Typeface.BOLD), length)
+
+            val color = try {
+                Color.parseColor(label.color)
+            } catch (e: IllegalArgumentException) {
+                null
+            }
+            if (color != null) {
+                builder.setSpan(LabelSpan(label, color, config, {}), length)
+            }
+
         } else {
             builder.append(arg)
         }
