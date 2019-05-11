@@ -43,9 +43,6 @@ annotation class CacheLifetime
 annotation class WithErrorHandler
 
 @Qualifier
-annotation class FileName
-
-@Qualifier
 annotation class FilePath
 
 @Qualifier

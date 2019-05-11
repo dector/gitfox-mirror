@@ -8,11 +8,13 @@ import ru.terrakok.gitlabclient.ui.global.list.MergeRequestChangeAdapterDelegate
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 26.10.18.
  */
-class MergeRequestChangeAdapter : ListDelegationAdapter<MutableList<MergeRequestChange>>() {
+class MergeRequestChangeAdapter(
+    clickListener: (MergeRequestChange) -> Unit
+) : ListDelegationAdapter<MutableList<MergeRequestChange>>() {
 
     init {
         items = mutableListOf()
-        delegatesManager.addDelegate(MergeRequestChangeAdapterDelegate())
+        delegatesManager.addDelegate(MergeRequestChangeAdapterDelegate(clickListener))
     }
 
     fun setData(data: List<MergeRequestChange>) {

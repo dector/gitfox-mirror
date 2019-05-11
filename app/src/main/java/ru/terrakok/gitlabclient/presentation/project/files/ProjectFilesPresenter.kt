@@ -4,6 +4,7 @@ import com.arellomobile.mvp.InjectViewState
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.Branch
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.RepositoryTreeNodeType
@@ -208,7 +209,13 @@ class ProjectFilesPresenter @Inject constructor(
         if (item.nodeType == RepositoryTreeNodeType.TREE) {
             projectFileDestination.moveForward(item.name)
         } else {
-            // TODO: file details (Navigate to file details flow).
+            router.startFlow(
+                Screens.ProjectFile(
+                    projectId,
+                    getFilePath(projectFileDestination.isInRoot(), projectFileDestination.paths, item.name),
+                    projectFileDestination.branchName
+                )
+            )
         }
     }
 
@@ -234,6 +241,13 @@ class ProjectFilesPresenter @Inject constructor(
                 ""
             } else {
                 paths.subList(1, paths.size).joinToString(separator = REMOTE_SEPARATOR)
+            }
+
+        private fun getFilePath(inRoot: Boolean, paths: List<String>, fileName: String) =
+            if (inRoot) {
+                fileName
+            } else {
+                "${paths.subList(1, paths.size).joinToString(separator = REMOTE_SEPARATOR)}$REMOTE_SEPARATOR$fileName"
             }
     }
 }
