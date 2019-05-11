@@ -25,7 +25,7 @@ import toothpick.config.Module
 class ProjectIssuesFragment : BaseFragment(), ProjectIssuesView {
     override val layoutRes = R.layout.fragment_project_issues
 
-    override val scopeModuleInstaller = { scope: Scope ->
+    override fun installModules(scope: Scope) {
         scope.installModules(object : Module() {
             init {
                 bind(IssueState::class.java)

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import com.arellomobile.mvp.MvpAppCompatFragment
 import ru.terrakok.gitlabclient.App
 import ru.terrakok.gitlabclient.extension.objectScopeName
+import ru.terrakok.gitlabclient.toothpick.DI
 import timber.log.Timber
 import toothpick.Scope
 import toothpick.Toothpick
@@ -28,14 +29,14 @@ abstract class BaseFragment : MvpAppCompatFragment() {
 
     protected open val parentScopeName: String by lazy {
         (parentFragment as? BaseFragment)?.fragmentScopeName
-            ?: throw RuntimeException("Must be parent fragment!")
+            ?: DI.SERVER_SCOPE
     }
-
-    protected open val scopeModuleInstaller: (Scope) -> Unit = {}
 
     private lateinit var fragmentScopeName: String
     protected lateinit var scope: Scope
         private set
+
+    protected open fun installModules(scope: Scope) {}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val savedAppCode = savedInstanceState?.getString(STATE_LAUNCH_FLAG)
@@ -49,7 +50,7 @@ abstract class BaseFragment : MvpAppCompatFragment() {
             .apply {
                 if (scopeIsNotInit) {
                     Timber.d("Init new UI scope: $fragmentScopeName")
-                    scopeModuleInstaller(this)
+                    installModules(this)
                 } else {
                     Timber.d("Get exist UI scope: $fragmentScopeName")
                 }

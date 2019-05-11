@@ -8,11 +8,10 @@ import ru.terrakok.gitlabclient.entity.issue.IssueState
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
 import ru.terrakok.gitlabclient.entity.milestone.MilestoneState
 import ru.terrakok.gitlabclient.ui.about.AboutFragment
-import ru.terrakok.gitlabclient.ui.auth.AuthFlowFragment
 import ru.terrakok.gitlabclient.ui.auth.AuthFragment
 import ru.terrakok.gitlabclient.ui.drawer.DrawerFlowFragment
+import ru.terrakok.gitlabclient.ui.global.FlowFactory
 import ru.terrakok.gitlabclient.ui.global.StubFragment
-import ru.terrakok.gitlabclient.ui.issue.IssueFlowFragment
 import ru.terrakok.gitlabclient.ui.issue.IssueFragment
 import ru.terrakok.gitlabclient.ui.issue.IssueInfoFragment
 import ru.terrakok.gitlabclient.ui.issue.IssueNotesFragment
@@ -27,7 +26,6 @@ import ru.terrakok.gitlabclient.ui.my.mergerequests.MyMergeRequestsFragment
 import ru.terrakok.gitlabclient.ui.my.todos.MyTodosContainerFragment
 import ru.terrakok.gitlabclient.ui.my.todos.MyTodosFragment
 import ru.terrakok.gitlabclient.ui.privacypolicy.PrivacyPolicyFragment
-import ru.terrakok.gitlabclient.ui.project.ProjectFlowFragment
 import ru.terrakok.gitlabclient.ui.project.ProjectFragment
 import ru.terrakok.gitlabclient.ui.project.files.ProjectFilesFragment
 import ru.terrakok.gitlabclient.ui.project.info.ProjectEventsFragment
@@ -42,7 +40,6 @@ import ru.terrakok.gitlabclient.ui.project.milestones.ProjectMilestonesContainer
 import ru.terrakok.gitlabclient.ui.project.milestones.ProjectMilestonesFragment
 import ru.terrakok.gitlabclient.ui.projects.ProjectsContainerFragment
 import ru.terrakok.gitlabclient.ui.projects.ProjectsListFragment
-import ru.terrakok.gitlabclient.ui.user.UserFlowFragment
 import ru.terrakok.gitlabclient.ui.user.info.UserInfoFragment
 
 /**
@@ -112,7 +109,7 @@ object Screens {
     }
 
     object AuthFlow : SupportAppScreen() {
-        override fun getFragment() = AuthFlowFragment()
+        override fun getFragment() = FlowFactory.createAuthFlowFragment()
     }
 
     object Auth : SupportAppScreen() {
@@ -122,7 +119,7 @@ object Screens {
     data class ProjectFlow(
         val projectId: Long
     ) : SupportAppScreen() {
-        override fun getFragment() = ProjectFlowFragment.create(projectId)
+        override fun getFragment() = FlowFactory.createProjectFlowFragment(projectId)
     }
 
     object ProjectMainFlow : SupportAppScreen() {
@@ -182,7 +179,7 @@ object Screens {
     data class UserFlow(
         val userId: Long
     ) : SupportAppScreen() {
-        override fun getFragment() = UserFlowFragment.create(userId)
+        override fun getFragment() = FlowFactory.createUserFlowFragment(userId)
     }
 
     object UserInfo : SupportAppScreen() {
@@ -193,7 +190,7 @@ object Screens {
         val projectId: Long,
         val mrId: Long
     ) : SupportAppScreen() {
-        override fun getFragment() = MergeRequestFlowFragment.create(projectId, mrId)
+        override fun getFragment() = FlowFactory.createMergeRequestFlowFragment(projectId, mrId)
     }
 
     object MergeRequest : SupportAppScreen() {
@@ -220,7 +217,7 @@ object Screens {
         val projectId: Long,
         val issueId: Long
     ) : SupportAppScreen() {
-        override fun getFragment() = IssueFlowFragment.create(projectId, issueId)
+        override fun getFragment() = FlowFactory.createIssueFlowFragment(projectId, issueId)
     }
 
     object Issue : SupportAppScreen() {

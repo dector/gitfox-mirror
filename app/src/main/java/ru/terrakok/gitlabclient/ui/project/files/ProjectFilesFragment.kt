@@ -30,7 +30,7 @@ class ProjectFilesFragment : BaseFragment(), ProjectFilesView {
     @InjectPresenter
     lateinit var presenter: ProjectFilesPresenter
 
-    override val scopeModuleInstaller = { scope: Scope ->
+    override fun installModules(scope: Scope) {
         scope.installModules(object : Module() {
             init {
                 bind(ProjectFileDestination::class.java)

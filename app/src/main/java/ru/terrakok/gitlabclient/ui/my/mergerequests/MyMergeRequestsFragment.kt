@@ -37,7 +37,7 @@ class MyMergeRequestsFragment : BaseFragment(), MyMergeRequestListView {
     }
     private var zeroViewHolder: ZeroViewHolder? = null
 
-    override val scopeModuleInstaller = { scope: Scope ->
+    override fun installModules(scope: Scope) {
         scope.installModules(object : Module() {
             init {
                 bind(MyMergeRequestsPresenter.Filter::class.java)

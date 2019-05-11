@@ -7,8 +7,6 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.layout_base_list.*
 import kotlinx.android.synthetic.main.layout_zero.*
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
-import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
 import ru.terrakok.gitlabclient.entity.milestone.Milestone
 import ru.terrakok.gitlabclient.entity.milestone.MilestoneState
 import ru.terrakok.gitlabclient.extension.showSnackMessage
@@ -17,7 +15,6 @@ import ru.terrakok.gitlabclient.presentation.project.milestones.ProjectMilestone
 import ru.terrakok.gitlabclient.presentation.project.milestones.ProjectMilestonesView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.ZeroViewHolder
-import ru.terrakok.gitlabclient.ui.my.TargetsAdapter
 import toothpick.Scope
 import toothpick.config.Module
 
@@ -28,7 +25,7 @@ class ProjectMilestonesFragment : BaseFragment(), ProjectMilestonesView {
 
     override val layoutRes = R.layout.fragment_project_milestones
 
-    override val scopeModuleInstaller = { scope: Scope ->
+    override fun installModules(scope: Scope) {
         scope.installModules(object : Module() {
             init {
                 bind(MilestoneState::class.java)

@@ -29,7 +29,7 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
 
     override val layoutRes = R.layout.fragment_projects
 
-    override val scopeModuleInstaller = { scope: Scope ->
+    override fun installModules(scope: Scope) {
         scope.installModules(object : Module() {
             init {
                 bind(PrimitiveWrapper::class.java)

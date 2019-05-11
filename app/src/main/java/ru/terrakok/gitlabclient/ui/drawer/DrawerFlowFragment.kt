@@ -16,7 +16,6 @@ import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.extension.setLaunchScreen
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
-import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.toothpick.module.FlowNavigationModule
 import ru.terrakok.gitlabclient.toothpick.module.GlobalMenuModule
 import ru.terrakok.gitlabclient.ui.about.AboutFragment
@@ -47,8 +46,7 @@ class DrawerFlowFragment : BaseFragment() {
     private val drawerFragment
         get() = childFragmentManager.findFragmentById(R.id.navDrawerContainer) as? NavigationDrawerFragment
 
-    override val parentScopeName = DI.SERVER_SCOPE
-    override val scopeModuleInstaller = { scope: Scope ->
+    override fun installModules(scope: Scope) {
         scope.installModules(
             FlowNavigationModule(scope.getInstance(Router::class.java)),
             GlobalMenuModule()

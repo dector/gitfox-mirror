@@ -37,7 +37,7 @@ class MyIssuesFragment : BaseFragment(), MyIssuesView {
     }
     private var zeroViewHolder: ZeroViewHolder? = null
 
-    override val scopeModuleInstaller = { scope: Scope ->
+    override fun installModules(scope: Scope) {
         scope.installModules(object : Module() {
             init {
                 bind(MyIssuesPresenter.Filter::class.java)

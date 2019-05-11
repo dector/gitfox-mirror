@@ -25,7 +25,7 @@ import toothpick.config.Module
 class ProjectMergeRequestsFragment : BaseFragment(), ProjectMergeRequestsView {
     override val layoutRes = R.layout.fragment_my_merge_requests
 
-    override val scopeModuleInstaller = { scope: Scope ->
+    override fun installModules(scope: Scope) {
         scope.installModules(object : Module() {
             init {
                 bind(MergeRequestState::class.java)
