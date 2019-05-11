@@ -126,8 +126,8 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:3.11.0")
     implementation("com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion")
     //RxJava
-    implementation("io.reactivex.rxjava2:rxandroid:2.1.0")
-    implementation("io.reactivex.rxjava2:rxjava:2.2.3")
+    implementation("io.reactivex.rxjava2:rxandroid:2.1.1")
+    implementation("io.reactivex.rxjava2:rxjava:2.2.6")
     implementation("com.jakewharton.rxrelay2:rxrelay:2.1.0")
     //Adapter simplify
     implementation("com.hannesdorfmann:adapterdelegates3:3.1.0")
@@ -147,9 +147,9 @@ dependencies {
     //FlexBox Layout
     implementation("com.google.android:flexbox:1.0.0")
     //Firebase
-    implementation("com.google.firebase:firebase-core:16.0.6")
+    implementation("com.google.firebase:firebase-core:16.0.9")
     //Crashlytics
-    implementation("com.crashlytics.sdk.android:crashlytics:2.9.8")
+    implementation("com.crashlytics.sdk.android:crashlytics:2.10.0")
 
     //JUnit
     testImplementation("junit:junit:4.12")
