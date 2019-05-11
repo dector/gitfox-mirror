@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.toothpick.provider
+package ru.terrakok.gitlabclient.di.provider
 
 import okhttp3.OkHttpClient
 import ru.terrakok.gitlabclient.model.data.server.interceptor.ErrorResponseInterceptor

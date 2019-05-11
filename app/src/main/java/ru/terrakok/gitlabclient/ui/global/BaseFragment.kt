@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.arellomobile.mvp.MvpAppCompatFragment
 import ru.terrakok.gitlabclient.App
+import ru.terrakok.gitlabclient.di.DI
 import ru.terrakok.gitlabclient.extension.objectScopeName
-import ru.terrakok.gitlabclient.toothpick.DI
 import timber.log.Timber
 import toothpick.Scope
 import toothpick.Toothpick

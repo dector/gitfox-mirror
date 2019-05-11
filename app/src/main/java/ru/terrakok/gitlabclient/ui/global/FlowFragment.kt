@@ -9,8 +9,8 @@ import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.android.support.SupportAppNavigator
 import ru.terrakok.cicerone.commands.Command
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.di.module.FlowNavigationModule
 import ru.terrakok.gitlabclient.extension.setLaunchScreen
-import ru.terrakok.gitlabclient.toothpick.module.FlowNavigationModule
 import toothpick.Scope
 import toothpick.Toothpick
 import javax.inject.Inject

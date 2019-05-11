@@ -1,7 +1,13 @@
-package ru.terrakok.gitlabclient.toothpick.module
+package ru.terrakok.gitlabclient.di.module
 
 import okhttp3.OkHttpClient
 import ru.terrakok.gitlabclient.BuildConfig
+import ru.terrakok.gitlabclient.di.ServerPath
+import ru.terrakok.gitlabclient.di.WithErrorHandler
+import ru.terrakok.gitlabclient.di.provider.ApiProvider
+import ru.terrakok.gitlabclient.di.provider.MarkDownConverterProvider
+import ru.terrakok.gitlabclient.di.provider.OkHttpClientProvider
+import ru.terrakok.gitlabclient.di.provider.OkHttpClientWithErrorHandlerProvider
 import ru.terrakok.gitlabclient.entity.app.session.AuthHolder
 import ru.terrakok.gitlabclient.entity.app.session.OAuthParams
 import ru.terrakok.gitlabclient.entity.app.session.UserAccount
@@ -25,12 +31,6 @@ import ru.terrakok.gitlabclient.model.repository.todo.TodoRepository
 import ru.terrakok.gitlabclient.model.repository.user.UserRepository
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
-import ru.terrakok.gitlabclient.toothpick.provider.ApiProvider
-import ru.terrakok.gitlabclient.toothpick.provider.MarkDownConverterProvider
-import ru.terrakok.gitlabclient.toothpick.provider.OkHttpClientProvider
-import ru.terrakok.gitlabclient.toothpick.provider.OkHttpClientWithErrorHandlerProvider
-import ru.terrakok.gitlabclient.toothpick.qualifier.ServerPath
-import ru.terrakok.gitlabclient.toothpick.qualifier.WithErrorHandler
 import toothpick.config.Module
 
 /**

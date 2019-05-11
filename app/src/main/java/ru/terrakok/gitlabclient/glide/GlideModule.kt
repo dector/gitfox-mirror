@@ -8,7 +8,7 @@ import com.bumptech.glide.integration.okhttp3.OkHttpUrlLoader
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.module.AppGlideModule
 import okhttp3.OkHttpClient
-import ru.terrakok.gitlabclient.toothpick.DI
+import ru.terrakok.gitlabclient.di.DI
 import toothpick.Toothpick
 import java.io.InputStream
 

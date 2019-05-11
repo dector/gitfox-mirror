@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.toothpick.module
+package ru.terrakok.gitlabclient.di.module
 
 import android.content.Context
 import android.content.res.AssetManager
@@ -7,6 +7,8 @@ import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.BuildConfig
+import ru.terrakok.gitlabclient.di.*
+import ru.terrakok.gitlabclient.di.provider.GsonProvider
 import ru.terrakok.gitlabclient.entity.app.develop.AppInfo
 import ru.terrakok.gitlabclient.model.data.storage.RawAppData
 import ru.terrakok.gitlabclient.model.interactor.app.AppInfoInteractor
@@ -18,12 +20,6 @@ import ru.terrakok.gitlabclient.model.system.ResourceManager
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.model.system.message.SystemMessageNotifier
 import ru.terrakok.gitlabclient.presentation.AppLauncher
-import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
-import ru.terrakok.gitlabclient.toothpick.provider.GsonProvider
-import ru.terrakok.gitlabclient.toothpick.qualifier.AppDevelopersPath
-import ru.terrakok.gitlabclient.toothpick.qualifier.CacheLifetime
-import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultPageSize
-import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultServerPath
 import toothpick.config.Module
 
 /**

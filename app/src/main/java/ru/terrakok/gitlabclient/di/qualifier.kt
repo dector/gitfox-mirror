@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.toothpick.qualifier
+package ru.terrakok.gitlabclient.di
 
 import javax.inject.Qualifier
 

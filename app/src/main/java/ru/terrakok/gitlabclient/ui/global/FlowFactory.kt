@@ -2,11 +2,7 @@ package ru.terrakok.gitlabclient.ui.global
 
 import android.os.Bundle
 import ru.terrakok.gitlabclient.Screens
-import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
-import ru.terrakok.gitlabclient.toothpick.qualifier.IssueId
-import ru.terrakok.gitlabclient.toothpick.qualifier.MergeRequestId
-import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
-import ru.terrakok.gitlabclient.toothpick.qualifier.UserId
+import ru.terrakok.gitlabclient.di.*
 import toothpick.config.Module
 
 object FlowFactory {
