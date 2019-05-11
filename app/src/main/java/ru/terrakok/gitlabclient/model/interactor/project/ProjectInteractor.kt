@@ -46,7 +46,7 @@ class ProjectInteractor @Inject constructor(
     fun getProjectReadme(project: Project) =
         Single
             .defer {
-                if (project.readmeUrl != null) {
+                if (project.defaultBranch != null && project.readmeUrl != null) {
                     val readmePath = project.readmeUrl.substringAfter(
                         "${project.webUrl}/blob/${project.defaultBranch}/"
                     )
