@@ -9,7 +9,7 @@ enum class GitlabMarkdownExtension(regexListFactory: () -> List<ExtensionDataHol
 
     companion object {
 
-        const val EXTENSION_OPTIONS_DELIMITER = '\u2600'
+        const val OPTS_DELIMITER = '\u2600'
 
         fun byString(value: String): GitlabMarkdownExtension? = values().firstOrNull { it.toString() == value }
     }

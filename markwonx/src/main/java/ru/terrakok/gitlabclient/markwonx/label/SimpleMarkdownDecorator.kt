@@ -12,8 +12,8 @@ class SimpleMarkdownDecorator : MarkdownDecorator {
             ext.regexList.fold(acc) { acc, type ->
                 type.regex.replace(acc) { matchResult ->
                     val result = matchResult.groupValues[1]
-                    val exactPrefix = if (type.prefix != null) "${type.prefix}${GitlabMarkdownExtension.EXTENSION_OPTIONS_DELIMITER}" else ""
-                    "${GitlabExtensionsDelimiterProcessor.DELIMITER_START}$ext${GitlabMarkdownExtension.EXTENSION_OPTIONS_DELIMITER}$exactPrefix$result${GitlabExtensionsDelimiterProcessor.DELIMITER_END}"
+                    val exactPrefix = if (type.prefix != null) "${type.prefix}${GitlabMarkdownExtension.OPTS_DELIMITER}" else ""
+                    "${GitlabExtensionsDelimiterProcessor.DELIMITER_START}$ext${GitlabMarkdownExtension.OPTS_DELIMITER}$exactPrefix$result${GitlabExtensionsDelimiterProcessor.DELIMITER_END}"
                 }
             }
         }

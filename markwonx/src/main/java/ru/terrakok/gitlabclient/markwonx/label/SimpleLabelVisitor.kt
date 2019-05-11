@@ -10,12 +10,12 @@ class SimpleLabelVisitor(
 ): SimpleNodeVisitor {
 
     override fun visit(args: String, builder: SpannableBuilder) {
-        val labelType = args.substringBefore(GitlabMarkdownExtension.EXTENSION_OPTIONS_DELIMITER).let {
+        val labelType = args.substringBefore(GitlabMarkdownExtension.OPTS_DELIMITER).let {
             LabelType.byString(
                 it
             )
         }
-        val arg = args.substringAfter(GitlabMarkdownExtension.EXTENSION_OPTIONS_DELIMITER)
+        val arg = args.substringAfter(GitlabMarkdownExtension.OPTS_DELIMITER)
 
         val label = when (labelType) {
             LabelType.ID -> {

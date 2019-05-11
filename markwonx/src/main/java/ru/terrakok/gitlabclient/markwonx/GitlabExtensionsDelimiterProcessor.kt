@@ -15,9 +15,9 @@ class GitlabExtensionsDelimiterProcessor(
 
     override fun process(opener: Text, closer: Text, delimiterUse: Int) {
         val text = (opener.next as Text).literal
-        val extTypeStr = text.substringBefore(GitlabMarkdownExtension.EXTENSION_OPTIONS_DELIMITER)
+        val extTypeStr = text.substringBefore(GitlabMarkdownExtension.OPTS_DELIMITER)
         val extType = GitlabMarkdownExtension.valueOf(extTypeStr)
-        val args = text.substringAfter(GitlabMarkdownExtension.EXTENSION_OPTIONS_DELIMITER)
+        val args = text.substringAfter(GitlabMarkdownExtension.OPTS_DELIMITER)
         val processor = processors[extType]
         if (processor != null) {
             val replacementNode = processor.process(extType, args)

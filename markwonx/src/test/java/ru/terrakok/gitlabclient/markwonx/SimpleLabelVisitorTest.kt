@@ -26,7 +26,6 @@ class SimpleLabelVisitorTest {
 
     private lateinit var decorator: SimpleMarkdownDecorator
     private lateinit var parser: Parser
-    private lateinit var labels: List<LabelDescription>
     private lateinit var context: Context
 
     @Before
@@ -35,7 +34,6 @@ class SimpleLabelVisitorTest {
             this.create()
             get()
         }
-        labels = listOf(GitlabExtensionsDelimiterProcessorTest.LABEL)
         decorator = SimpleMarkdownDecorator()
         val processor = SimpleExtensionProcessor()
         parser = with(Parser.Builder()) {

@@ -27,8 +27,13 @@ object LabelsTestUtils {
         }
     }
 
-    fun decorateForTest(label: TestLabel): Any? {
-        return "${GitlabExtensionsDelimiterProcessor.DELIMITER_START}LABEL${GitlabMarkdownExtension.EXTENSION_OPTIONS_DELIMITER}${label.type}${GitlabMarkdownExtension.EXTENSION_OPTIONS_DELIMITER}${getLabelContent(label)}${GitlabExtensionsDelimiterProcessor.DELIMITER_END}"
+    fun createArgsForTest(label: TestLabel): String {
+        return "${label.type}${GitlabMarkdownExtension.OPTS_DELIMITER}${getLabelContent(label)}"
+    }
+
+    fun decorateForTest(label: TestLabel): String {
+        val args = createArgsForTest(label)
+        return "${GitlabExtensionsDelimiterProcessor.DELIMITER_START}LABEL${GitlabMarkdownExtension.OPTS_DELIMITER}$args${GitlabExtensionsDelimiterProcessor.DELIMITER_END}"
     }
 
 }
