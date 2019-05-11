@@ -26,8 +26,10 @@ import ru.terrakok.gitlabclient.model.repository.project.ProjectRepository
 import ru.terrakok.gitlabclient.model.repository.todo.TodoRepository
 import ru.terrakok.gitlabclient.model.repository.user.UserRepository
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
+import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.toothpick.provider.ApiProvider
 import ru.terrakok.gitlabclient.toothpick.provider.LabelSpanConfigProvider
+import ru.terrakok.gitlabclient.toothpick.provider.MarkDownConverterProvider
 import ru.terrakok.gitlabclient.toothpick.provider.OkHttpClientProvider
 import ru.terrakok.gitlabclient.toothpick.provider.OkHttpClientWithErrorHandlerProvider
 import ru.terrakok.gitlabclient.toothpick.qualifier.ServerPath
@@ -58,6 +60,7 @@ class ServerModule(userAccount: UserAccount?) : Module() {
         bind(ProjectLabelCache::class.java).singletonInScope()
         bind(LabelSpanConfig::class.java).toProvider(LabelSpanConfigProvider::class.java).providesSingletonInScope()
         bind(GitlabApi::class.java).toProvider(ApiProvider::class.java).providesSingletonInScope()
+        bind(MarkDownConverter::class.java).toProvider(MarkDownConverterProvider::class.java).providesSingletonInScope()
         bind(MarkDownUrlResolver::class.java)
 
         //Auth

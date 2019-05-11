@@ -6,7 +6,7 @@ import org.threeten.bp.LocalDateTime
 data class Project(
     @SerializedName("id") val id: Long,
     @SerializedName("description") val description: String?,
-    @SerializedName("default_branch") val defaultBranch: String,
+    @SerializedName("default_branch") val defaultBranch: String?,
     @SerializedName("visibility") val visibility: Visibility,
     @SerializedName("ssh_url_to_repo") val sshUrlToRepo: String?,
     @SerializedName("http_url_to_repo") val httpUrlToRepo: String?,

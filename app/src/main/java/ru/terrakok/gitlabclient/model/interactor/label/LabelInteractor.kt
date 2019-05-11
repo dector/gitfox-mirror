@@ -20,16 +20,20 @@ class LabelInteractor @Inject constructor(
     ) = labelRepository.getLabelList(projectId, page)
 
     fun getAllProjectLabels(
-        projectId: Long
+        projectId: Long?
     ): Single<List<Label>> = Single.defer {
-        val labels = projectLabelCache.get(projectId)
-        if (labels != null) {
-            Single.just(labels)
-        } else {
-            labelRepository.getAllProjectLabels(projectId)
-                .doOnSuccess { labels -> projectLabelCache.put(projectId, labels) }
-        }
-
+            if (projectId != null) {
+                val labels = projectLabelCache.get(projectId)
+                if (labels != null) {
+                    Single.just(labels)
+                } else {
+                    labelRepository
+                        .getAllProjectLabels(projectId)
+                        .doOnSuccess { labels -> projectLabelCache.put(projectId, labels) }
+                }
+            } else {
+                Single.just(emptyList())
+            }
     }
 
     fun subscribeToLabel(
