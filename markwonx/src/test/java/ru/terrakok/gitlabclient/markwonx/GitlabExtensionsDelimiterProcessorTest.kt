@@ -3,26 +3,24 @@ package ru.terrakok.gitlabclient.markwonx
 import org.commonmark.parser.Parser
 import org.junit.Before
 import org.junit.Test
-import ru.terrakok.gitlabclient.markwonx.label.LabelDecorator
-import ru.terrakok.gitlabclient.markwonx.label.LabelDescription
-import ru.terrakok.gitlabclient.markwonx.label.LabelExtensionProcessor
-import ru.terrakok.gitlabclient.markwonx.label.LabelNode
+import ru.terrakok.gitlabclient.markwonx.label.*
 
 class GitlabExtensionsDelimiterProcessorTest {
 
-    private lateinit var decorator: LabelDecorator
+    private lateinit var decorator: SimpleMarkdownDecorator
     private lateinit var parser: Parser
     private lateinit var labels: List<LabelDescription>
 
     @Before
     fun setUp() {
         labels = listOf(LABEL)
-        decorator = LabelDecorator(listOf(LABEL))
+        decorator = SimpleMarkdownDecorator()
+        val processor = SimpleExtensionProcessor()
         parser = with(Parser.Builder()) {
             customDelimiterProcessor(
                 GitlabExtensionsDelimiterProcessor(
                     mapOf(
-                        GitlabMarkdownExtension.LABEL to LabelExtensionProcessor(labels)
+                        GitlabMarkdownExtension.LABEL to processor
                     )
                 )
             )
@@ -33,7 +31,7 @@ class GitlabExtensionsDelimiterProcessorTest {
     @Test
     fun `should replace decorated label extension with label node`() {
         val parsed = parser.parse(decorator.decorate("~$LABEL_STR"))
-        assert(parsed.firstChild.firstChild == LabelNode(LABEL))
+        assert(parsed.firstChild.firstChild == SimpleNode(GitlabMarkdownExtension.LABEL, "${LabelType.SINGLE}${GitlabMarkdownExtension.EXTENSION_OPTIONS_DELIMITER}$LABEL_STR"))
     }
 
     companion object {
