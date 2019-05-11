@@ -6,6 +6,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import ru.terrakok.gitlabclient.BuildConfig
 import ru.terrakok.gitlabclient.entity.app.session.AuthHolder
+import ru.terrakok.gitlabclient.model.data.server.Tls12SocketFactory.Companion.enableTls12
 import ru.terrakok.gitlabclient.model.data.server.interceptor.AuthHeaderInterceptor
 import ru.terrakok.gitlabclient.model.data.server.interceptor.CurlLoggingInterceptor
 import java.util.concurrent.TimeUnit
@@ -21,6 +22,7 @@ class OkHttpClientProvider @Inject constructor(
 ) : Provider<OkHttpClient> {
 
     override fun get() = with(OkHttpClient.Builder()) {
+        enableTls12()
         cache(Cache(context.cacheDir, CACHE_SIZE_BYTES))
         connectTimeout(TIMEOUT, TimeUnit.SECONDS)
         readTimeout(TIMEOUT, TimeUnit.SECONDS)

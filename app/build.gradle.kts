@@ -16,8 +16,8 @@ android {
         minSdkVersion(19)
         targetSdkVersion(28)
 
-        versionName = "1.3.2"
-        versionCode = 11
+        versionName = "1.4.2"
+        versionCode = 14
 
         buildToolsVersion = "28.0.3"
 
@@ -57,8 +57,6 @@ android {
                     )
                 }
             }
-
-            vectorDrawables.useSupportLibrary = true
         }
 
         signingConfigs {
@@ -73,13 +71,13 @@ android {
 
         buildTypes {
             create("debugPG") {
-                isDebuggable = true
+                initWith(getByName("debug"))
                 isMinifyEnabled = true
                 versionNameSuffix = " debugPG"
 
                 proguardFiles(
                     getDefaultProguardFile("proguard-android-optimize.txt"),
-                    file("config/proguard/proguard-rules.txt")
+                    file("proguard-rules.pro")
                 )
             }
             getByName("release") {
@@ -88,7 +86,7 @@ android {
 
                 proguardFiles(
                     getDefaultProguardFile("proguard-android-optimize.txt"),
-                    file("config/proguard/proguard-rules.txt")
+                    file("proguard-rules.pro")
                 )
             }
         }
@@ -136,9 +134,7 @@ dependencies {
     //Image load and cache
     implementation("com.github.bumptech.glide:glide:$glideVersion")
     kapt("com.github.bumptech.glide:compiler:$glideVersion")
-    implementation("com.github.bumptech.glide:okhttp3-integration:4.6.1") {
-        exclude(group = "glide-parent")
-    }
+    implementation("com.github.bumptech.glide:okhttp3-integration:$glideVersion")
     //Markdown to HTML converter
     implementation("ru.noties:markwon:$markwonVersion")
     implementation("ru.noties:markwon-image-loader:$markwonVersion")

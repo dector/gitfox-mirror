@@ -1,7 +1,6 @@
 package ru.terrakok.gitlabclient.ui.project.labels
 
 import android.annotation.SuppressLint
-import android.graphics.Color
 import android.support.v4.content.ContextCompat
 import android.support.v4.graphics.ColorUtils
 import android.support.v7.widget.RecyclerView
@@ -10,6 +9,7 @@ import android.view.ViewGroup
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegate
 import kotlinx.android.synthetic.main.item_label.view.*
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.entity.Color
 import ru.terrakok.gitlabclient.entity.Label
 import ru.terrakok.gitlabclient.extension.inflate
 import ru.terrakok.gitlabclient.extension.setBackgroundTintByColor
@@ -55,14 +55,13 @@ class ProjectLabelAdapterDelegate : AdapterDelegate<MutableList<Any>>() {
             setLabelColor(item.color)
         }
 
-        private fun setLabelColor(color: String) = with(itemView.labelTitleTextView) {
-            val labelColor = Color.parseColor(color)
+        private fun setLabelColor(color: Color) = with(itemView.labelTitleTextView) {
             val textColor = when {
-                isColorDark(labelColor) -> ContextCompat.getColor(context, R.color.white)
+                isColorDark(color.value) -> ContextCompat.getColor(context, R.color.white)
                 else -> ContextCompat.getColor(context, R.color.primary_text)
             }
 
-            setBackgroundTintByColor(labelColor)
+            setBackgroundTintByColor(color.value)
             setTextColor(textColor)
         }
 

@@ -9,6 +9,7 @@ import ru.terrakok.gitlabclient.entity.TokenData
 import ru.terrakok.gitlabclient.entity.User
 import ru.terrakok.gitlabclient.entity.app.session.UserAccount
 import ru.terrakok.gitlabclient.model.data.server.ServerError
+import ru.terrakok.gitlabclient.model.data.server.Tls12SocketFactory.Companion.enableTls12
 import ru.terrakok.gitlabclient.model.data.storage.Prefs
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultServerPath
@@ -21,7 +22,9 @@ class SessionRepository @Inject constructor(
     private val schedulers: SchedulersProvider
 ) {
 
-    private val okHttpClient = OkHttpClient()
+    private val okHttpClient = OkHttpClient.Builder()
+        .enableTls12()
+        .build()
 
     fun getCurrentUserAccount(): UserAccount? {
         prefs.selectedAccount?.let { id ->
