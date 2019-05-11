@@ -9,7 +9,11 @@ import kotlinx.android.synthetic.main.view_new_note.view.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.extension.getTintDrawable
 
-class NewNoteView(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs) {
+class NewNoteView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : ConstraintLayout(context, attrs, defStyleAttr) {
 
     init {
         inflate(context, R.layout.view_new_note, this)

@@ -7,7 +7,11 @@ import kotlinx.android.synthetic.main.view_empty.view.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.extension.visible
 
-class EmptyView(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs) {
+class EmptyView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : ConstraintLayout(context, attrs, defStyleAttr) {
 
     private val res = context.resources
 
