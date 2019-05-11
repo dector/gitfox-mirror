@@ -28,7 +28,7 @@ object LabelsTestUtils {
     }
 
     fun decorateForTest(label: TestLabel): Any? {
-        return "${GitlabExtensionsDelimiterProcessor.DELIMITER_START}LABEL_${label.type}_${getLabelContent(label)}${GitlabExtensionsDelimiterProcessor.DELIMITER_START}"
+        return "${GitlabExtensionsDelimiterProcessor.DELIMITER_START}LABEL${GitlabMarkdownExtension.EXTENSION_OPTIONS_DELIMITER}${label.type}${GitlabMarkdownExtension.EXTENSION_OPTIONS_DELIMITER}${getLabelContent(label)}${GitlabExtensionsDelimiterProcessor.DELIMITER_END}"
     }
 
 }

@@ -9,7 +9,7 @@ class GitlabExtensionsDelimiterProcessor(
 ) : DelimiterProcessor {
 
     override fun getOpeningCharacter(): Char = DELIMITER_START
-    override fun getClosingCharacter(): Char = DELIMITER_START
+    override fun getClosingCharacter(): Char = DELIMITER_END
     override fun getMinLength(): Int = DELIMITER_LENGTH
     override fun getDelimiterUse(opener: DelimiterRun, closer: DelimiterRun): Int = DELIMITER_LENGTH
 

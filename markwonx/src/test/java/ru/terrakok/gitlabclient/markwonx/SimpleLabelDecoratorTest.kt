@@ -22,6 +22,7 @@ class SimpleLabelDecoratorTest {
     fun assertDecorated(label: TestLabel) {
         val decorated = decorator.decorate(makeLabel(label))
         val testDecorated = decorateForTest(label)
+        println("asserting decoration: $decorated to $testDecorated")
         assert(decorated == testDecorated)
     }
 
