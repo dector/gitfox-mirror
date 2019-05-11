@@ -46,10 +46,43 @@ import ru.terrakok.gitlabclient.ui.user.info.UserInfoFragment
  * @author Konstantin Tskhovrebov (aka terrakok) on 26.03.17.
  */
 object Screens {
+
+    //flows
+    object AuthFlow : SupportAppScreen() {
+        override fun getFragment() = FlowFactory.createAuthFlowFragment()
+    }
+
     object DrawerFlow : SupportAppScreen() {
         override fun getFragment() = DrawerFlowFragment()
     }
 
+    data class ProjectFlow(
+        val projectId: Long
+    ) : SupportAppScreen() {
+        override fun getFragment() = FlowFactory.createProjectFlowFragment(projectId)
+    }
+
+    data class UserFlow(
+        val userId: Long
+    ) : SupportAppScreen() {
+        override fun getFragment() = FlowFactory.createUserFlowFragment(userId)
+    }
+
+    data class IssueFlow(
+        val projectId: Long,
+        val issueId: Long
+    ) : SupportAppScreen() {
+        override fun getFragment() = FlowFactory.createIssueFlowFragment(projectId, issueId)
+    }
+
+    data class MergeRequestFlow(
+        val projectId: Long,
+        val mrId: Long
+    ) : SupportAppScreen() {
+        override fun getFragment() = FlowFactory.createMergeRequestFlowFragment(projectId, mrId)
+    }
+
+    //screens
     object Main : SupportAppScreen() {
         override fun getFragment() = MainFragment()
     }
@@ -108,18 +141,8 @@ object Screens {
         override fun getFragment() = LibrariesFragment()
     }
 
-    object AuthFlow : SupportAppScreen() {
-        override fun getFragment() = FlowFactory.createAuthFlowFragment()
-    }
-
     object Auth : SupportAppScreen() {
         override fun getFragment() = AuthFragment()
-    }
-
-    data class ProjectFlow(
-        val projectId: Long
-    ) : SupportAppScreen() {
-        override fun getFragment() = FlowFactory.createProjectFlowFragment(projectId)
     }
 
     object MainProject : SupportAppScreen() {
@@ -176,21 +199,8 @@ object Screens {
         override fun getFragment() = ProjectFilesFragment()
     }
 
-    data class UserFlow(
-        val userId: Long
-    ) : SupportAppScreen() {
-        override fun getFragment() = FlowFactory.createUserFlowFragment(userId)
-    }
-
     object UserInfo : SupportAppScreen() {
         override fun getFragment() = UserInfoFragment()
-    }
-
-    data class MergeRequestFlow(
-        val projectId: Long,
-        val mrId: Long
-    ) : SupportAppScreen() {
-        override fun getFragment() = FlowFactory.createMergeRequestFlowFragment(projectId, mrId)
     }
 
     object MainMergeRequest : SupportAppScreen() {
@@ -213,13 +223,6 @@ object Screens {
         override fun getFragment() = MergeRequestChangesFragment()
     }
 
-    data class IssueFlow(
-        val projectId: Long,
-        val issueId: Long
-    ) : SupportAppScreen() {
-        override fun getFragment() = FlowFactory.createIssueFlowFragment(projectId, issueId)
-    }
-
     object MainIssue : SupportAppScreen() {
         override fun getFragment() = MainIssueFragment()
     }
@@ -236,30 +239,11 @@ object Screens {
         override fun getFragment() = PrivacyPolicyFragment()
     }
 
+    //external flows
     data class ExternalBrowserFlow(
         val url: String
     ) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) =
             Intent(Intent.ACTION_VIEW, Uri.parse(url))
-    }
-
-    data class ShareFlow(
-        val text: String
-    ) : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) =
-            Intent.createChooser(
-                Intent(Intent.ACTION_SEND).apply {
-                    putExtra(Intent.EXTRA_TEXT, text)
-                    type = "text/plain"
-                },
-                text
-            )
-    }
-
-    data class MilestoneFlow(
-        val milestoneId: Long
-    ) : SupportAppScreen() {
-        //todo: implement milestone flow.
-        override fun getFragment() = StubFragment()
     }
 }
