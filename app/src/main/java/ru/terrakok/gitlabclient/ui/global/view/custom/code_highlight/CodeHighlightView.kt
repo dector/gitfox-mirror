@@ -1,20 +1,4 @@
-/*
-* Modifications copyright (C) 2018 https://github.com/PDDStudio/highlightjs-android
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
-
-package ru.terrakok.gitlabclient.ui.global.code_highlight
+package ru.terrakok.gitlabclient.ui.global.view.custom.code_highlight
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -37,28 +21,26 @@ class CodeHighlightView @JvmOverloads constructor(
 
     init {
         loadUrl(EMPTY_PAGE)
-        //set the settings for the view
-        val settings = getSettings()
-        settings.javaScriptEnabled = true
-        settings.builtInZoomControls = true
-        settings.setSupportZoom(true)
-        //disable zoom controls on +Honeycomb devices
-        settings.displayZoomControls = false
-        //to remove padding and margin
-        scrollBarStyle = View.SCROLLBARS_INSIDE_OVERLAY
+        getSettings().apply {
+            settings.javaScriptEnabled = true
+            settings.builtInZoomControls = true
+            settings.setSupportZoom(true)
+            settings.displayZoomControls = false
+            scrollBarStyle = View.SCROLLBARS_INSIDE_OVERLAY
+        }
 
         webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
                 if (url != EMPTY_PAGE) {
-                    // hide progress
+                    // TODO: code highlight (Hide progress).
                 }
             }
 
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 super.onPageStarted(view, url, favicon)
                 if (url != EMPTY_PAGE) {
-                    // start progres
+                    // TODO: code highlight (Show progress).
                 }
             }
         }

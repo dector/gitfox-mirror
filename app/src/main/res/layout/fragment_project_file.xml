@@ -18,7 +18,7 @@
         tools:subtitle="app/src/main/java/ru/terrakok/gitlabclient/entity/app/ProjectFile.kt"
         tools:title="ProjectFile.kt" />
 
-    <ru.terrakok.gitlabclient.ui.global.code_highlight.CodeHighlightView
+    <ru.terrakok.gitlabclient.ui.global.view.custom.code_highlight.CodeHighlightView
         android:id="@+id/projectFileCodeHighlightView"
         android:layout_width="0dp"
         android:layout_height="0dp"

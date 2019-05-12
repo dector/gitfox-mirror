@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.ui.global.code_highlight
+package ru.terrakok.gitlabclient.ui.global.view.custom.code_highlight
 
 object CodeHighlightJsPage {
 
