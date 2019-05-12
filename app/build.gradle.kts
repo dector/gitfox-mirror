@@ -9,7 +9,7 @@ apply(from = "${project.rootDir}/codequality/ktlint.gradle.kts")
 
 val buildUid = System.getenv("BUILD_COMMIT_SHA") ?: "local"
 android {
-    compileSdkVersion(28)
+    compileSdkVersion("android-Q")
 
     defaultConfig {
         applicationId = "com.gitlab.terrakok.gitfox"

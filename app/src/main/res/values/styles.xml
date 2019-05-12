@@ -1,7 +1,7 @@
 <resources>
 
     <!--THEMES-->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -14,6 +14,8 @@
 
         <item name="android:windowBackground">@color/white</item>
         <item name="fontFamily">@font/roboto_regular</item>
+
+        <item name="android:forceDarkAllowed">true</item>
     </style>
 
     <style name="AppTheme.Splash">
