@@ -128,7 +128,9 @@ fun TargetHeaderTitle.getHumanName(resources: Resources) = when (this) {
 
         when (action) {
             TodoAction.ASSIGNED -> {
-                "$author $actionName $targetName ${resources.getString(R.string.at)} $projectName ${resources.getString(R.string.to)} $assignee"
+                "$author $actionName $targetName ${resources.getString(R.string.at)} $projectName ${resources.getString(
+                    R.string.to
+                )} $assignee"
             }
             TodoAction.DIRECTLY_ADDRESSED,
             TodoAction.MENTIONED -> {
@@ -167,4 +169,9 @@ fun TargetBadgeStatus.getBadgeColors(context: Context) = when (this) {
     TargetBadgeStatus.OPENED -> Pair(context.color(R.color.green), context.color(R.color.lightGreen))
     TargetBadgeStatus.CLOSED -> Pair(context.color(R.color.red), context.color(R.color.lightRed))
     TargetBadgeStatus.MERGED -> Pair(context.color(R.color.blue), context.color(R.color.lightBlue))
+}
+
+fun String.extractFileNameFromPath(): String {
+    val index = lastIndexOf("/")
+    return substring(if (index != -1) index + 1 else 0)
 }

@@ -43,6 +43,12 @@ class ProjectInteractor @Inject constructor(
 
     fun getProject(id: Long) = projectRepository.getProject(id)
 
+    fun getProjectFileRawCode(projectId: Long, path: String, branchName: String): Single<String> =
+        projectRepository.getBlobFile(projectId, path, branchName)
+            .observeOn(schedulers.computation())
+            .map { file -> base64Tools.decode(file.content) }
+            .observeOn(schedulers.ui())
+
     fun getProjectReadme(project: Project) =
         Single
             .defer {

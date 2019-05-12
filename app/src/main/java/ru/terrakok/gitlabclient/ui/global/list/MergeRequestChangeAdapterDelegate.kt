@@ -7,6 +7,7 @@ import com.hannesdorfmann.adapterdelegates3.AdapterDelegate
 import kotlinx.android.synthetic.main.item_merge_request_change.view.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestChange
+import ru.terrakok.gitlabclient.extension.extractFileNameFromPath
 import ru.terrakok.gitlabclient.extension.inflate
 import ru.terrakok.gitlabclient.ui.global.GitDiffViewController
 
@@ -54,10 +55,7 @@ class MergeRequestChangeAdapterDelegate(
                         else -> R.drawable.ic_file_changed
                     }
                 )
-                changeFileName.text = item.newPath.let {
-                    val index = it.lastIndexOf("/")
-                    it.substring(if (index != -1) index + 1 else 0)
-                }
+                changeFileName.text = item.newPath.extractFileNameFromPath()
                 gitDiffViewController.setText(item.diff)
                 changeAddedCount.text = context.getString(
                     R.string.merge_request_changes_added_count,

@@ -115,6 +115,7 @@ class MergeRequestChangesPresenter @Inject constructor(
             .doOnSubscribe { viewState.showFullscreenProgress(true) }
             .doAfterTerminate { viewState.showFullscreenProgress(false) }
             .subscribe(
+                // TODO: code highlight (At this time request for file is not working with response 404).
                 { flowRouter.startFlow(Screens.ProjectFile(projectId, item.newPath, it.sourceBranch)) },
                 { errorHandler.proceed(it, { viewState.showMessage(it) }) }
             )

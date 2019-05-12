@@ -2,6 +2,7 @@ package ru.terrakok.gitlabclient.presentation.file
 
 import com.arellomobile.mvp.InjectViewState
 import ru.terrakok.cicerone.Router
+import ru.terrakok.gitlabclient.extension.extractFileNameFromPath
 import ru.terrakok.gitlabclient.model.interactor.project.ProjectInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
@@ -17,14 +18,27 @@ import javax.inject.Inject
 @InjectViewState
 class ProjectFilePresenter @Inject constructor(
     @ProjectId projectIdWrapper: PrimitiveWrapper<Long>,
-    @FilePath filePath: String,
-    @BranchName branchName: String,
+    @FilePath private val filePath: String,
+    @BranchName private val branchName: String,
     private val projectInteractor: ProjectInteractor,
     private val errorHandler: ErrorHandler,
     private val router: Router
 ) : BasePresenter<ProjectFileView>() {
 
     private val projectId = projectIdWrapper.value
+
+    override fun onFirstViewAttach() {
+        super.onFirstViewAttach()
+        viewState.setTitle(filePath.extractFileNameFromPath())
+        projectInteractor.getProjectFileRawCode(projectId, filePath, branchName)
+            .doOnSubscribe { viewState.showEmptyProgress(true) }
+            .doAfterTerminate { viewState.showEmptyProgress(false) }
+            .subscribe(
+                { viewState.setRawCode(it) },
+                { errorHandler.proceed(it, { viewState.showMessage(it) }) }
+            )
+            .connect()
+    }
 
     fun onBackPressed() = router.exit()
 }
