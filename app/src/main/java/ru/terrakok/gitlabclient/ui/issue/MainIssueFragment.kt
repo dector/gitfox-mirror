@@ -1,7 +1,7 @@
 package ru.terrakok.gitlabclient.ui.issue
 
 import android.os.Bundle
-import android.support.v4.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentPagerAdapter
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_main_mr.*
@@ -53,10 +53,9 @@ class MainIssueFragment : BaseFragment(), IssueView {
     }
 
     private inner class IssuePagesAdapter : FragmentPagerAdapter(childFragmentManager) {
-        override fun getItem(position: Int): BaseFragment? = when (position) {
+        override fun getItem(position: Int): BaseFragment = when (position) {
             0 -> Screens.IssueInfo.fragment
-            1 -> Screens.IssueNotes.fragment
-            else -> null
+            else -> Screens.IssueNotes.fragment
         }
 
         override fun getCount() = 2

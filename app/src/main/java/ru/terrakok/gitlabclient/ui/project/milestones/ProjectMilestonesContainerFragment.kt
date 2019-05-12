@@ -1,7 +1,7 @@
 package ru.terrakok.gitlabclient.ui.project.milestones
 
 import android.os.Bundle
-import android.support.v4.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentPagerAdapter
 import kotlinx.android.synthetic.main.fragment_my_merge_requests_container.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
@@ -40,8 +40,7 @@ class ProjectMilestonesContainerFragment : BaseFragment() {
 
         override fun getItem(position: Int) = when (position) {
             0 -> Screens.ProjectMilestones(MilestoneState.ACTIVE).fragment
-            1 -> Screens.ProjectMilestones(MilestoneState.CLOSED).fragment
-            else -> null
+            else -> Screens.ProjectMilestones(MilestoneState.CLOSED).fragment
         }
 
         override fun getCount() = 2

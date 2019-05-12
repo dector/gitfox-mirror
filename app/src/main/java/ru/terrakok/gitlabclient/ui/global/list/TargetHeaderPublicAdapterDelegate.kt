@@ -1,10 +1,10 @@
 package ru.terrakok.gitlabclient.ui.global.list
 
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.hannesdorfmann.adapterdelegates3.AdapterDelegate
+import androidx.recyclerview.widget.RecyclerView
+import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
 import kotlinx.android.synthetic.main.item_target_badge.view.*
 import kotlinx.android.synthetic.main.item_target_header_public.view.*
 import ru.noties.markwon.Markwon

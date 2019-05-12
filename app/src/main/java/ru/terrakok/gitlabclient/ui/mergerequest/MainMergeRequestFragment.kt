@@ -1,7 +1,7 @@
 package ru.terrakok.gitlabclient.ui.mergerequest
 
 import android.os.Bundle
-import android.support.v4.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentPagerAdapter
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_main_mr.*
@@ -53,12 +53,11 @@ class MainMergeRequestFragment : BaseFragment(), MergeRequestView {
     }
 
     private inner class MergeRequestPagesAdapter : FragmentPagerAdapter(childFragmentManager) {
-        override fun getItem(position: Int): BaseFragment? = when (position) {
+        override fun getItem(position: Int): BaseFragment = when (position) {
             0 -> Screens.MergeRequestInfo.fragment
             1 -> Screens.MergeRequestCommits.fragment
             2 -> Screens.MergeRequestNotes.fragment
-            3 -> Screens.MergeRequestChanges.fragment
-            else -> null
+            else -> Screens.MergeRequestChanges.fragment
         }
 
         override fun getCount() = 4

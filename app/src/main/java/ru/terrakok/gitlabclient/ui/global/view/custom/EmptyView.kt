@@ -1,8 +1,8 @@
 package ru.terrakok.gitlabclient.ui.global.view.custom
 
 import android.content.Context
-import android.support.constraint.ConstraintLayout
 import android.util.AttributeSet
+import androidx.constraintlayout.widget.ConstraintLayout
 import kotlinx.android.synthetic.main.view_empty.view.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.extension.visible

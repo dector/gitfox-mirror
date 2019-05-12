@@ -86,27 +86,27 @@ android {
 }
 
 dependencies {
-    val supportLibraryVersion = "28.0.0"
-    val moxyVersion = "1.5.6"
+    val moxyVersion = "1.7.0"
     val toothpickVersion = "2.1.0"
     val retrofitVersion = "2.2.0"
     val markwonVersion = "2.0.0"
     val glideVersion = "4.8.0"
 
     //Support
-    implementation("com.android.support:appcompat-v7:$supportLibraryVersion")
-    implementation("com.android.support:design:$supportLibraryVersion")
-    implementation("com.android.support:cardview-v7:$supportLibraryVersion")
-    implementation("com.android.support.constraint:constraint-layout:1.1.3")
+    implementation("androidx.appcompat:appcompat:1.0.2")
+    implementation("com.google.android.material:material:1.1.0-alpha06")
+    implementation("androidx.cardview:cardview:1.0.0")
+    implementation("androidx.constraintlayout:constraintlayout:1.1.3")
     //Kotlin
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${extra["kotlinVersion"] as String}")
     //Log
     implementation("com.jakewharton.timber:timber:4.7.0")
     //MVP Moxy
-    kapt("com.arello-mobile:moxy-compiler:$moxyVersion")
-    implementation("com.arello-mobile:moxy-app-compat:$moxyVersion")
+    kapt("tech.schoolhelper:moxy-x-compiler:$moxyVersion")
+    implementation("tech.schoolhelper:moxy-x:$moxyVersion")
+    implementation("tech.schoolhelper:moxy-x-androidx:$moxyVersion")
     //Cicerone Navigation
-    implementation("ru.terrakok.cicerone:cicerone:4.0.2")
+    implementation("ru.terrakok.cicerone:cicerone:5.0.0")
     //DI
     implementation("com.github.stephanenicolas.toothpick:toothpick-runtime:$toothpickVersion")
     kapt("com.github.stephanenicolas.toothpick:toothpick-compiler:$toothpickVersion")
@@ -122,7 +122,7 @@ dependencies {
     implementation("io.reactivex.rxjava2:rxjava:2.2.6")
     implementation("com.jakewharton.rxrelay2:rxrelay:2.1.0")
     //Adapter simplify
-    implementation("com.hannesdorfmann:adapterdelegates3:3.1.0")
+    implementation("com.hannesdorfmann:adapterdelegates4:4.0.0")
     //Image load and cache
     implementation("com.github.bumptech.glide:glide:$glideVersion")
     kapt("com.github.bumptech.glide:compiler:$glideVersion")

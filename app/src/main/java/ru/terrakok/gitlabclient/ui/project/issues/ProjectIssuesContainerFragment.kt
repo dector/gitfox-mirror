@@ -1,7 +1,7 @@
 package ru.terrakok.gitlabclient.ui.project.issues
 
 import android.os.Bundle
-import android.support.v4.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentPagerAdapter
 import kotlinx.android.synthetic.main.fragment_my_issues_container.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
@@ -26,8 +26,7 @@ class ProjectIssuesContainerFragment : BaseFragment() {
 
         override fun getItem(position: Int) = when (position) {
             0 -> Screens.ProjectIssues(IssueState.OPENED).fragment
-            1 -> Screens.ProjectIssues(IssueState.CLOSED).fragment
-            else -> null
+            else -> Screens.ProjectIssues(IssueState.CLOSED).fragment
         }
 
         override fun getCount() = 2

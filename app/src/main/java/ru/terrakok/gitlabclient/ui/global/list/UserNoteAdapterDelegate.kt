@@ -1,9 +1,9 @@
 package ru.terrakok.gitlabclient.ui.global.list
 
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
-import com.hannesdorfmann.adapterdelegates3.AdapterDelegate
+import androidx.recyclerview.widget.RecyclerView
+import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
 import kotlinx.android.synthetic.main.item_user_note.view.*
 import ru.noties.markwon.Markwon
 import ru.terrakok.gitlabclient.R

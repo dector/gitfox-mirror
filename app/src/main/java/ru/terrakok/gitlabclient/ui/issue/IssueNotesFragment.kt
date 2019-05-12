@@ -1,10 +1,10 @@
 package ru.terrakok.gitlabclient.ui.issue
 
 import android.os.Bundle
-import android.support.transition.Fade
-import android.support.transition.TransitionManager
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.Fade
+import androidx.transition.TransitionManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_issue_notes.*

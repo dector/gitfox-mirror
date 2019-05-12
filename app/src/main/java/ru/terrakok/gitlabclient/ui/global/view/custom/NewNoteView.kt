@@ -1,10 +1,10 @@
 package ru.terrakok.gitlabclient.ui.global.view.custom
 
 import android.content.Context
-import android.support.constraint.ConstraintLayout
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
+import androidx.constraintlayout.widget.ConstraintLayout
 import kotlinx.android.synthetic.main.view_new_note.view.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.extension.getTintDrawable

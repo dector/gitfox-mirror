@@ -3,8 +3,8 @@ package ru.terrakok.gitlabclient.ui.auth
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
-import android.support.annotation.RequiresApi
 import android.webkit.*
+import androidx.annotation.RequiresApi
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_auth.*

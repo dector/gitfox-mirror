@@ -1,7 +1,7 @@
 package ru.terrakok.gitlabclient.ui.mergerequest
 
-import android.support.v7.util.DiffUtil
-import com.hannesdorfmann.adapterdelegates3.ListDelegationAdapter
+import androidx.recyclerview.widget.DiffUtil
+import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestChange
 import ru.terrakok.gitlabclient.ui.global.list.MergeRequestChangeAdapterDelegate
 
