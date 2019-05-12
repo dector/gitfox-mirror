@@ -13,7 +13,9 @@ import ru.terrakok.gitlabclient.ui.global.GitDiffViewController
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 26.10.18.
  */
-class MergeRequestChangeAdapterDelegate : AdapterDelegate<MutableList<MergeRequestChange>>() {
+class MergeRequestChangeAdapterDelegate(
+    private val clickListener: (MergeRequestChange) -> Unit
+) : AdapterDelegate<MutableList<MergeRequestChange>>() {
 
     override fun isForViewType(items: MutableList<MergeRequestChange>, position: Int) = true
 
@@ -33,26 +35,30 @@ class MergeRequestChangeAdapterDelegate : AdapterDelegate<MutableList<MergeReque
     }
 
     private inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private lateinit var mergeRequestChange: MergeRequestChange
+        private lateinit var item: MergeRequestChange
+
+        init {
+            view.setOnClickListener { clickListener(item) }
+        }
 
         private val gitDiffViewController: GitDiffViewController = GitDiffViewController(itemView.changeFile)
 
-        fun bind(mergeRequestChange: MergeRequestChange) {
-            this.mergeRequestChange = mergeRequestChange
+        fun bind(item: MergeRequestChange) {
+            this.item = item
             with(itemView) {
-                changePath.text = mergeRequestChange.newPath
+                changePath.text = item.newPath
                 changeIcon.setImageResource(
                     when {
-                        mergeRequestChange.newFile -> R.drawable.ic_file_added
-                        mergeRequestChange.deletedFile -> R.drawable.ic_file_deleted
+                        item.newFile -> R.drawable.ic_file_added
+                        item.deletedFile -> R.drawable.ic_file_deleted
                         else -> R.drawable.ic_file_changed
                     }
                 )
-                changeFileName.text = mergeRequestChange.newPath.let {
+                changeFileName.text = item.newPath.let {
                     val index = it.lastIndexOf("/")
                     it.substring(if (index != -1) index + 1 else 0)
                 }
-                gitDiffViewController.setText(mergeRequestChange.diff)
+                gitDiffViewController.setText(item.diff)
                 changeAddedCount.text = context.getString(
                     R.string.merge_request_changes_added_count,
                     gitDiffViewController.getAddedLineCount()
