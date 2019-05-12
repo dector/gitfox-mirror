@@ -46,4 +46,4 @@ annotation class WithErrorHandler
 annotation class FilePath
 
 @Qualifier
-annotation class BranchName
+annotation class FileReference

@@ -6,8 +6,8 @@ import ru.terrakok.gitlabclient.model.interactor.project.ProjectInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
-import ru.terrakok.gitlabclient.toothpick.qualifier.BranchName
 import ru.terrakok.gitlabclient.toothpick.qualifier.FilePath
+import ru.terrakok.gitlabclient.toothpick.qualifier.FileReference
 import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
 import javax.inject.Inject
 
@@ -17,8 +17,8 @@ import javax.inject.Inject
 @InjectViewState
 class ProjectFilePresenter @Inject constructor(
     @ProjectId projectIdWrapper: PrimitiveWrapper<Long>,
-    @FilePath filePath: String,
-    @BranchName branchName: String,
+    @FilePath private val filePath: String,
+    @FileReference private val fileReference: String,
     private val projectInteractor: ProjectInteractor,
     private val errorHandler: ErrorHandler,
     private val router: Router
