@@ -5,7 +5,6 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.arellomobile.mvp.MvpAppCompatFragment
-import ru.terrakok.gitlabclient.App
 import ru.terrakok.gitlabclient.di.DI
 import ru.terrakok.gitlabclient.extension.objectScopeName
 import timber.log.Timber
@@ -14,8 +13,6 @@ import toothpick.Toothpick
 
 private const val PROGRESS_TAG = "bf_progress"
 private const val STATE_SCOPE_NAME = "state_scope_name"
-private const val STATE_LAUNCH_FLAG = "state_launch_flag"
-private const val STATE_SCOPE_WAS_CLOSED = "state_scope_was_closed"
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 26.03.17.
@@ -39,22 +36,16 @@ abstract class BaseFragment : MvpAppCompatFragment() {
     protected open fun installModules(scope: Scope) {}
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val savedAppCode = savedInstanceState?.getString(STATE_LAUNCH_FLAG)
-        //False - if fragment was restored without new app process (for example: activity rotation)
-        val isNewInAppProcess = savedAppCode != App.appCode
-        val scopeWasClosed = savedInstanceState?.getBoolean(STATE_SCOPE_WAS_CLOSED) ?: true
-
-        val scopeIsNotInit = isNewInAppProcess || scopeWasClosed
         fragmentScopeName = savedInstanceState?.getString(STATE_SCOPE_NAME) ?: objectScopeName()
-        scope = Toothpick.openScopes(parentScopeName, fragmentScopeName)
-            .apply {
-                if (scopeIsNotInit) {
-                    Timber.d("Init new UI scope: $fragmentScopeName")
-                    installModules(this)
-                } else {
-                    Timber.d("Get exist UI scope: $fragmentScopeName")
-                }
-            }
+
+        if (Toothpick.isScopeOpen(fragmentScopeName)) {
+            Timber.d("Get exist UI scope: $fragmentScopeName")
+            scope = Toothpick.openScope(fragmentScopeName)
+        } else {
+            Timber.d("Init new UI scope: $fragmentScopeName")
+            scope = Toothpick.openScopes(parentScopeName, fragmentScopeName)
+            installModules(scope)
+        }
 
         super.onCreate(savedInstanceState)
     }
@@ -82,8 +73,6 @@ abstract class BaseFragment : MvpAppCompatFragment() {
         super.onSaveInstanceState(outState)
         instanceStateSaved = true
         outState.putString(STATE_SCOPE_NAME, fragmentScopeName)
-        outState.putString(STATE_LAUNCH_FLAG, App.appCode)
-        outState.putBoolean(STATE_SCOPE_WAS_CLOSED, needCloseScope()) //save it but will be used only if destroyed
     }
 
     override fun onDestroy() {
