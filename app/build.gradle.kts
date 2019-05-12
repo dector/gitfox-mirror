@@ -1,9 +1,9 @@
 plugins {
     id("com.android.application")
     id("io.fabric")
-    id("org.jetbrains.kotlin.android.extensions")
     kotlin("android")
     kotlin("kapt")
+    id("org.jetbrains.kotlin.android.extensions")
 }
 
 val buildUid = System.getenv("BUILD_COMMIT_SHA") ?: "local"
