@@ -115,7 +115,7 @@ class MergeRequestChangesPresenter @Inject constructor(
             .doOnSubscribe { viewState.showFullscreenProgress(true) }
             .doAfterTerminate { viewState.showFullscreenProgress(false) }
             .subscribe(
-                { flowRouter.startFlow(Screens.ProjectFile(projectId, item.newPath, it.sourceBranch)) },
+                { flowRouter.startFlow(Screens.ProjectFile(projectId, item.newPath, it.sha)) },
                 { errorHandler.proceed(it, { viewState.showMessage(it) }) }
             )
             .connect()

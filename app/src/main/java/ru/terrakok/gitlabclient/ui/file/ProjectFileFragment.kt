@@ -10,8 +10,8 @@ import ru.terrakok.gitlabclient.presentation.file.ProjectFilePresenter
 import ru.terrakok.gitlabclient.presentation.file.ProjectFileView
 import ru.terrakok.gitlabclient.toothpick.DI
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
-import ru.terrakok.gitlabclient.toothpick.qualifier.BranchName
 import ru.terrakok.gitlabclient.toothpick.qualifier.FilePath
+import ru.terrakok.gitlabclient.toothpick.qualifier.FileReference
 import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import toothpick.Scope
@@ -24,7 +24,7 @@ class ProjectFileFragment : BaseFragment(), ProjectFileView {
 
     private val projectId by argument(ARG_PROJECT_ID, 0L)
     private val filePath by argument<String>(ARG_FILE_PATH, null)
-    private val branchName by argument<String>(ARG_BRANCH_NAME, null)
+    private val fileReference by argument<String>(ARG_FILE_REFERENCE, null)
 
     override val layoutRes = R.layout.fragment_project_file
 
@@ -41,8 +41,8 @@ class ProjectFileFragment : BaseFragment(), ProjectFileView {
                         .withName(FilePath::class.java)
                         .toInstance(filePath)
                     bind(String::class.java)
-                        .withName(BranchName::class.java)
-                        .toInstance(branchName)
+                        .withName(FileReference::class.java)
+                        .toInstance(fileReference)
                 }
             }
         )
@@ -67,14 +67,14 @@ class ProjectFileFragment : BaseFragment(), ProjectFileView {
     companion object {
         private const val ARG_PROJECT_ID = "arg_project_id"
         private const val ARG_FILE_PATH = "arg_file_path"
-        private const val ARG_BRANCH_NAME = "arg_branch_name"
+        private const val ARG_FILE_REFERENCE = "arg_file_reference"
 
-        fun create(projectId: Long, filePath: String, branchName: String) =
+        fun create(projectId: Long, filePath: String, fileReference: String) =
             ProjectFileFragment().apply {
                 arguments = Bundle().apply {
                     putLong(ARG_PROJECT_ID, projectId)
                     putString(ARG_FILE_PATH, filePath)
-                    putString(ARG_BRANCH_NAME, branchName)
+                    putString(ARG_FILE_REFERENCE, fileReference)
                 }
             }
     }
