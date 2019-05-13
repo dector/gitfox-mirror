@@ -243,9 +243,9 @@ object Screens {
     data class ProjectFile(
         val projectId: Long,
         val filePath: String,
-        val branchName: String
+        val fileReference: String
     ) : SupportAppScreen() {
-        override fun getFragment() = ProjectFileFragment.create(projectId, filePath, branchName)
+        override fun getFragment() = ProjectFileFragment.create(projectId, filePath, fileReference)
     }
 
     data class ExternalBrowserFlow(

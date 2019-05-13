@@ -43,8 +43,8 @@ class ProjectInteractor @Inject constructor(
 
     fun getProject(id: Long) = projectRepository.getProject(id)
 
-    fun getProjectFileRawCode(projectId: Long, path: String, branchName: String): Single<String> =
-        projectRepository.getBlobFile(projectId, path, branchName)
+    fun getProjectFileRawCode(projectId: Long, path: String, fileReference: String): Single<String> =
+        projectRepository.getProjectFile(projectId, path, fileReference)
             .observeOn(schedulers.computation())
             .map { file -> base64Tools.decode(file.content) }
             .observeOn(schedulers.ui())
@@ -56,7 +56,7 @@ class ProjectInteractor @Inject constructor(
                     val readmePath = project.readmeUrl.substringAfter(
                         "${project.webUrl}/blob/${project.defaultBranch}/"
                     )
-                    projectRepository.getBlobFile(project.id, readmePath, project.defaultBranch)
+                    projectRepository.getProjectFile(project.id, readmePath, project.defaultBranch)
                 } else {
                     Single.error(ReadmeNotFound())
                 }

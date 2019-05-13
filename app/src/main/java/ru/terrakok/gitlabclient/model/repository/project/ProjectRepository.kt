@@ -56,12 +56,12 @@ class ProjectRepository @Inject constructor(
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
 
-    fun getBlobFile(
+    fun getProjectFile(
         projectId: Long,
         path: String,
-        branchName: String
+        fileReference: String
     ) = api
-        .getFile(projectId, path, branchName)
+        .getFile(projectId, path, fileReference)
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
 

@@ -7,8 +7,8 @@ import ru.terrakok.gitlabclient.model.interactor.project.ProjectInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
-import ru.terrakok.gitlabclient.toothpick.qualifier.BranchName
 import ru.terrakok.gitlabclient.toothpick.qualifier.FilePath
+import ru.terrakok.gitlabclient.toothpick.qualifier.FileReference
 import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
 import javax.inject.Inject
 
@@ -19,7 +19,7 @@ import javax.inject.Inject
 class ProjectFilePresenter @Inject constructor(
     @ProjectId projectIdWrapper: PrimitiveWrapper<Long>,
     @FilePath private val filePath: String,
-    @BranchName private val branchName: String,
+    @FileReference private val fileReference: String,
     private val projectInteractor: ProjectInteractor,
     private val errorHandler: ErrorHandler,
     private val router: Router
@@ -30,7 +30,7 @@ class ProjectFilePresenter @Inject constructor(
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         viewState.setTitle(filePath.extractFileNameFromPath())
-        projectInteractor.getProjectFileRawCode(projectId, filePath, branchName)
+        projectInteractor.getProjectFileRawCode(projectId, filePath, fileReference)
             .doOnSubscribe { viewState.showEmptyProgress(true) }
             .doAfterTerminate { viewState.showEmptyProgress(false) }
             .subscribe(
