@@ -29,15 +29,25 @@ class ProjectFilePresenter @Inject constructor(
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
+
         viewState.setTitle(filePath.extractFileNameFromPath())
-        projectInteractor.getProjectFileRawCode(projectId, filePath, fileReference)
-            .doOnSubscribe { viewState.showEmptyProgress(true) }
-            .doAfterTerminate { viewState.showEmptyProgress(false) }
+        // Progress will be hidden, after code will be highlighted.
+        viewState.showEmptyProgress(true)
+
+        projectInteractor.getProjectRawFile(projectId, filePath, fileReference)
             .subscribe(
-                { viewState.setRawCode(it) },
+                { viewState.setRawFile(it) },
                 { errorHandler.proceed(it, { viewState.showMessage(it) }) }
             )
             .connect()
+    }
+
+    fun onCodeHighlightStarted() {
+        viewState.showEmptyProgress(true)
+    }
+
+    fun onCodeHighlightSFinished() {
+        viewState.showEmptyProgress(false)
     }
 
     fun onBackPressed() = router.exit()

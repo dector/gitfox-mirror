@@ -16,6 +16,7 @@ import ru.terrakok.gitlabclient.toothpick.qualifier.FilePath
 import ru.terrakok.gitlabclient.toothpick.qualifier.FileReference
 import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.ui.global.view.custom.code_highlight.CodeHighlightView
 import toothpick.Scope
 import toothpick.config.Module
 
@@ -59,6 +60,32 @@ class ProjectFileFragment : BaseFragment(), ProjectFileView {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         toolbar.setNavigationOnClickListener { onBackPressed() }
+        projectFileCodeHighlightView.setOnCodeHighlightProgressLister(
+            object : CodeHighlightView.OnCodeHighlightListener {
+                override fun onCodeHighlightStarted() {
+                    presenter.onCodeHighlightStarted()
+                }
+
+                override fun onCodeHighlightFinished() {
+                    presenter.onCodeHighlightSFinished()
+                }
+            }
+        )
+    }
+
+    override fun onResume() {
+        super.onResume()
+        projectFileCodeHighlightView.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        projectFileCodeHighlightView.onPause()
+    }
+
+    override fun onDestroyView() {
+        projectFileCodeHighlightView.destroy()
+        super.onDestroyView()
     }
 
     override fun onBackPressed() {
@@ -70,8 +97,8 @@ class ProjectFileFragment : BaseFragment(), ProjectFileView {
         toolbar.title = title
     }
 
-    override fun setRawCode(code: String) {
-        projectFileCodeHighlightView.highlightRawCode(code)
+    override fun setRawFile(rawFile: String) {
+        projectFileCodeHighlightView.highlightCode(rawFile)
     }
 
     override fun showEmptyProgress(show: Boolean) {

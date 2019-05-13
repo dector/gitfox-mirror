@@ -43,7 +43,7 @@ class ProjectInteractor @Inject constructor(
 
     fun getProject(id: Long) = projectRepository.getProject(id)
 
-    fun getProjectFileRawCode(projectId: Long, path: String, fileReference: String): Single<String> =
+    fun getProjectRawFile(projectId: Long, path: String, fileReference: String): Single<String> =
         projectRepository.getProjectFile(projectId, path, fileReference)
             .observeOn(schedulers.computation())
             .map { file -> base64Tools.decode(file.content) }

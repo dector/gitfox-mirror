@@ -12,7 +12,7 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 interface ProjectFileView : MvpView {
 
     fun setTitle(title: String)
-    fun setRawCode(code: String)
+    fun setRawFile(rawFile: String)
     fun showEmptyProgress(show: Boolean)
 
     @StateStrategyType(OneExecutionStateStrategy::class)
