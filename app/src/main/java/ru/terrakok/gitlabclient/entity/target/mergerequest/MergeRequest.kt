@@ -26,7 +26,7 @@ class MergeRequest : Target() {
     @SerializedName("merge_commit_sha")
     val mergeCommitSha: String? = null
     @SerializedName("approvals_before_merge")
-    val approvalsBeforeMerge: Boolean? = null
+    val approvalsBeforeMerge: Int? = null
     @SerializedName("force_remove_source_branch")
     val forceRemoveSourceBranch: Boolean? = null
     @SerializedName("squash")
