@@ -38,6 +38,9 @@ class TargetHeaderPublicAdapterDelegate(
             commitsTextView.setStartDrawable(context.getTintDrawable(R.drawable.ic_commit, R.color.colorPrimary))
             upVotesTextView.setStartDrawable(context.getTintDrawable(R.drawable.ic_thumb_up, R.color.colorPrimary))
             downVotesTextView.setStartDrawable(context.getTintDrawable(R.drawable.ic_thumb_down, R.color.colorPrimary))
+            relatedMergeRequestCountTextView.setStartDrawable(
+                context.getTintDrawable(R.drawable.ic_merge_18dp, R.color.colorPrimary)
+            )
         }
         return ViewHolder(root)
     }
@@ -84,6 +87,7 @@ class TargetHeaderPublicAdapterDelegate(
                 commitsTextView.visible(false)
                 upVotesTextView.visible(false)
                 downVotesTextView.visible(false)
+                relatedMergeRequestCountTextView.visible(false)
 
                 val badgeViewsCount = badgesContainer.childCount
                 val textBadgesCount = badges.count { it !is TargetBadge.Icon }
@@ -135,6 +139,10 @@ class TargetHeaderPublicAdapterDelegate(
                                     TargetBadgeIcon.DOWN_VOTES -> {
                                         downVotesTextView.text = badge.count.toString()
                                         downVotesTextView.visible(true)
+                                    }
+                                    TargetBadgeIcon.RELATED_MERGE_REQUESTS -> {
+                                        relatedMergeRequestCountTextView.text = badge.count.toString()
+                                        relatedMergeRequestCountTextView.visible(true)
                                     }
                                 }
                             }
