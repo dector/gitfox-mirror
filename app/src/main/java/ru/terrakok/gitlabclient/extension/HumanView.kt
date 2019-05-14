@@ -128,9 +128,7 @@ fun TargetHeaderTitle.getHumanName(resources: Resources) = when (this) {
 
         when (action) {
             TodoAction.ASSIGNED -> {
-                "$author $actionName $targetName ${resources.getString(R.string.at)} $projectName ${resources.getString(
-                    R.string.to
-                )} $assignee"
+                "$author $actionName $targetName ${resources.getString(R.string.at)} $projectName ${resources.getString(R.string.to)} $assignee"
             }
             TodoAction.DIRECTLY_ADDRESSED,
             TodoAction.MENTIONED -> {

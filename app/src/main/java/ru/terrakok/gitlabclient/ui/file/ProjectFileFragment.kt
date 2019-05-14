@@ -4,9 +4,9 @@ import android.os.Bundle
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_project_file.*
+import kotlinx.android.synthetic.main.layout_zero.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.extension.argument
-import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.file.ProjectFilePresenter
 import ru.terrakok.gitlabclient.presentation.file.ProjectFileView
@@ -16,7 +16,8 @@ import ru.terrakok.gitlabclient.toothpick.qualifier.FilePath
 import ru.terrakok.gitlabclient.toothpick.qualifier.FileReference
 import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import ru.terrakok.gitlabclient.ui.global.view.custom.code_highlight.CodeHighlightView
+import ru.terrakok.gitlabclient.ui.global.ZeroViewHolder
+import ru.terrakok.gitlabclient.ui.global.view.custom.codehighlight.CodeHighlightView
 import toothpick.Scope
 import toothpick.config.Module
 
@@ -57,20 +58,23 @@ class ProjectFileFragment : BaseFragment(), ProjectFileView {
     @ProvidePresenter
     fun providePresenter(): ProjectFilePresenter = scope.getInstance(ProjectFilePresenter::class.java)
 
+    private var zeroViewHolder: ZeroViewHolder? = null
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         toolbar.setNavigationOnClickListener { onBackPressed() }
         projectFileCodeHighlightView.setOnCodeHighlightProgressLister(
             object : CodeHighlightView.OnCodeHighlightListener {
                 override fun onCodeHighlightStarted() {
-                    presenter.onCodeHighlightStarted()
+                    fullscreenProgressView.visible(true)
                 }
 
                 override fun onCodeHighlightFinished() {
-                    presenter.onCodeHighlightSFinished()
+                    fullscreenProgressView.visible(false)
                 }
             }
         )
+        zeroViewHolder = ZeroViewHolder(zeroLayout) { presenter.onFileReload() }
     }
 
     override fun onResume() {
@@ -101,12 +105,14 @@ class ProjectFileFragment : BaseFragment(), ProjectFileView {
         projectFileCodeHighlightView.highlightCode(rawFile)
     }
 
-    override fun showEmptyProgress(show: Boolean) {
-        fullscreenProgressView.visible(show)
-    }
-
-    override fun showMessage(message: String) {
-        showSnackMessage(message)
+    override fun showEmptyView(show: Boolean) {
+        if (show) {
+            zeroViewHolder?.showEmptyData()
+            fullscreenProgressView.visible(false)
+        } else {
+            zeroViewHolder?.hide()
+            fullscreenProgressView.visible(true)
+        }
     }
 
     companion object {

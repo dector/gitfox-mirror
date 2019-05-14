@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.ui.global.view.custom.code_highlight
+package ru.terrakok.gitlabclient.ui.global.view.custom.codehighlight
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -57,7 +57,7 @@ class CodeHighlightView @JvmOverloads constructor(
 
     fun highlightCode(rawFile: String) {
         val jsPage = CodeHighlightJsPage.generatePage(rawFile, "default.css")
-        loadDataWithBaseURL("file:///android_asset/code_highlight/", jsPage, "text/html", "utf-8", null)
+        loadDataWithBaseURL("file:///android_asset/codehighlight/", jsPage, "text/html", "utf-8", null)
     }
 
     companion object {
