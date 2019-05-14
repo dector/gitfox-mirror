@@ -168,3 +168,8 @@ fun TargetBadgeStatus.getBadgeColors(context: Context) = when (this) {
     TargetBadgeStatus.CLOSED -> Pair(context.color(R.color.red), context.color(R.color.lightRed))
     TargetBadgeStatus.MERGED -> Pair(context.color(R.color.blue), context.color(R.color.lightBlue))
 }
+
+fun String.extractFileNameFromPath(): String {
+    val index = lastIndexOf("/")
+    return substring(if (index != -1) index + 1 else 0)
+}

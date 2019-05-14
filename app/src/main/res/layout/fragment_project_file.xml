@@ -1,24 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         style="@style/ToolbarStyle"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
         android:elevation="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_arrow_back_24dp"
-        tools:title="ProjectFile.kt"
-        tools:subtitle="app/src/main/java/ru/terrakok/gitlabclient/entity/app/ProjectFile.kt" />
+        tools:subtitle="app/src/main/java/ru/terrakok/gitlabclient/entity/app/ProjectFile.kt"
+        tools:title="ProjectFile.kt" />
 
-    <TextView
-        android:id="@+id/projectFileDetails"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <ru.terrakok.gitlabclient.ui.global.view.custom.codehighlight.CodeHighlightView
+        android:id="@+id/projectFileCodeHighlightView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
-</LinearLayout>
+    <include
+        android:id="@+id/fullscreenProgressView"
+        layout="@layout/layout_gitlab_progress"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        app:layout_constraintBottom_toBottomOf="@id/projectFileCodeHighlightView"
+        app:layout_constraintEnd_toEndOf="@id/projectFileCodeHighlightView"
+        app:layout_constraintStart_toStartOf="@id/projectFileCodeHighlightView"
+        app:layout_constraintTop_toTopOf="@id/projectFileCodeHighlightView" />
+
+    <include
+        layout="@layout/layout_zero"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
+</android.support.constraint.ConstraintLayout>
