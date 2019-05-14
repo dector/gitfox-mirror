@@ -1,10 +1,10 @@
 package ru.terrakok.gitlabclient.ui.issue
 
 import android.os.Bundle
-import android.support.v4.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentPagerAdapter
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import kotlinx.android.synthetic.main.fragment_mr.*
+import kotlinx.android.synthetic.main.fragment_main_mr.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.extension.showSnackMessage
@@ -15,9 +15,9 @@ import ru.terrakok.gitlabclient.ui.global.BaseFragment
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 14.02.18.
  */
-class IssueFragment : BaseFragment(), IssueView {
+class MainIssueFragment : BaseFragment(), IssueView {
 
-    override val layoutRes = R.layout.fragment_issue
+    override val layoutRes = R.layout.fragment_main_issue
 
     @InjectPresenter
     lateinit var presenter: IssuePresenter
@@ -53,10 +53,9 @@ class IssueFragment : BaseFragment(), IssueView {
     }
 
     private inner class IssuePagesAdapter : FragmentPagerAdapter(childFragmentManager) {
-        override fun getItem(position: Int): BaseFragment? = when (position) {
+        override fun getItem(position: Int): BaseFragment = when (position) {
             0 -> Screens.IssueInfo.fragment
-            1 -> Screens.IssueNotes.fragment
-            else -> null
+            else -> Screens.IssueNotes.fragment
         }
 
         override fun getCount() = 2

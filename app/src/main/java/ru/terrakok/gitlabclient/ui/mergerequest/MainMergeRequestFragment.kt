@@ -1,10 +1,10 @@
 package ru.terrakok.gitlabclient.ui.mergerequest
 
 import android.os.Bundle
-import android.support.v4.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentPagerAdapter
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import kotlinx.android.synthetic.main.fragment_mr.*
+import kotlinx.android.synthetic.main.fragment_main_mr.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.extension.showSnackMessage
@@ -15,9 +15,9 @@ import ru.terrakok.gitlabclient.ui.global.BaseFragment
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 14.02.18.
  */
-class MergeRequestFragment : BaseFragment(), MergeRequestView {
+class MainMergeRequestFragment : BaseFragment(), MergeRequestView {
 
-    override val layoutRes = R.layout.fragment_mr
+    override val layoutRes = R.layout.fragment_main_mr
 
     @InjectPresenter
     lateinit var presenter: MergeRequestPresenter
@@ -53,12 +53,11 @@ class MergeRequestFragment : BaseFragment(), MergeRequestView {
     }
 
     private inner class MergeRequestPagesAdapter : FragmentPagerAdapter(childFragmentManager) {
-        override fun getItem(position: Int): BaseFragment? = when (position) {
+        override fun getItem(position: Int): BaseFragment = when (position) {
             0 -> Screens.MergeRequestInfo.fragment
             1 -> Screens.MergeRequestCommits.fragment
             2 -> Screens.MergeRequestNotes.fragment
-            3 -> Screens.MergeRequestChanges.fragment
-            else -> null
+            else -> Screens.MergeRequestChanges.fragment
         }
 
         override fun getCount() = 4

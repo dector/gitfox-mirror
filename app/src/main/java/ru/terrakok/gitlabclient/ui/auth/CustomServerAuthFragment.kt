@@ -2,12 +2,12 @@ package ru.terrakok.gitlabclient.ui.auth
 
 import android.content.Context
 import android.os.Bundle
-import android.support.design.widget.BottomSheetDialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.fragment_custom_server_auth.*
 import okhttp3.HttpUrl
 import ru.terrakok.gitlabclient.BuildConfig
@@ -20,7 +20,7 @@ import ru.terrakok.gitlabclient.R
 class CustomServerAuthFragment : BottomSheetDialogFragment() {
     private lateinit var listener: OnClickListener
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         listener = parentFragment as OnClickListener
     }

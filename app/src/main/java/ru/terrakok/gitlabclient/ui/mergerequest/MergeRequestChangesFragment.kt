@@ -1,11 +1,10 @@
 package ru.terrakok.gitlabclient.ui.mergerequest
 
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.layout_base_list.*
-import kotlinx.android.synthetic.main.layout_zero.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestChange
 import ru.terrakok.gitlabclient.extension.showSnackMessage
@@ -13,7 +12,6 @@ import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.mergerequest.changes.MergeRequestChangesPresenter
 import ru.terrakok.gitlabclient.presentation.mergerequest.changes.MergeRequestChangesView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import ru.terrakok.gitlabclient.ui.global.ZeroViewHolder
 import ru.terrakok.gitlabclient.ui.global.list.SimpleDividerDecorator
 
 /**
@@ -24,7 +22,6 @@ class MergeRequestChangesFragment : BaseFragment(), MergeRequestChangesView {
     override val layoutRes = R.layout.fragment_mr_changes
 
     private val adapter by lazy { MergeRequestChangeAdapter({ presenter.onMergeRequestChangeClick(it) }) }
-    private var zeroViewHolder: ZeroViewHolder? = null
 
     @InjectPresenter
     lateinit var presenter: MergeRequestChangesPresenter
@@ -44,7 +41,7 @@ class MergeRequestChangesFragment : BaseFragment(), MergeRequestChangesView {
         }
 
         swipeToRefresh.setOnRefreshListener { presenter.refreshChanges() }
-        zeroViewHolder = ZeroViewHolder(zeroLayout, { presenter.refreshChanges() })
+        emptyView.setRefreshListener { presenter.refreshChanges() }
     }
 
     override fun showRefreshProgress(show: Boolean) {
@@ -60,13 +57,11 @@ class MergeRequestChangesFragment : BaseFragment(), MergeRequestChangesView {
     }
 
     override fun showEmptyView(show: Boolean) {
-        if (show) zeroViewHolder?.showEmptyData()
-        else zeroViewHolder?.hide()
+        emptyView.apply { if (show) showEmptyData() else hide() }
     }
 
     override fun showEmptyError(show: Boolean, message: String?) {
-        if (show) zeroViewHolder?.showEmptyError(message)
-        else zeroViewHolder?.hide()
+        emptyView.apply { if (show) showEmptyError(message) else hide() }
     }
 
     override fun showChanges(show: Boolean, changes: List<MergeRequestChange>) {

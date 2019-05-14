@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.toothpick.module
+package ru.terrakok.gitlabclient.di.module
 
 import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.NavigatorHolder

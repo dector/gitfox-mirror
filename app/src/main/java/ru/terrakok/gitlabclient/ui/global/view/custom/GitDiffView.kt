@@ -14,19 +14,23 @@
 * limitations under the License.
 */
 
-package ru.terrakok.gitlabclient.ui.global
+package ru.terrakok.gitlabclient.ui.global.view.custom
 
+import android.content.Context
 import android.graphics.*
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.TextUtils
 import android.text.style.ForegroundColorSpan
 import android.text.style.LineBackgroundSpan
+import android.util.AttributeSet
 import android.widget.TextView
 
-class GitDiffViewController(
-    private val view: TextView
-) {
+class GitDiffView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : TextView(context, attrs, defStyleAttr) {
 
     private val additionColor: Int = Color.parseColor("#CCFFCC")
     private val deletionColor: Int = Color.parseColor("#FFDDDD")
@@ -36,7 +40,7 @@ class GitDiffViewController(
     private var addedLineCount = 0
     private var deletedLineCount = 0
 
-    fun setText(text: CharSequence) {
+    fun setGitDiffText(text: CharSequence) {
         if (!TextUtils.isEmpty(text)) {
             val diff = text.toString()
             val split = diff.split("\\r?\\n|\\r".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
@@ -72,7 +76,7 @@ class GitDiffViewController(
                         val spannableDiff = SpannableString(token)
                         // Span for line color (where transparent is considered as default)
                         if (color != Color.TRANSPARENT) {
-                            val span = DiffLineSpan(color, view.paddingLeft)
+                            val span = DiffLineSpan(color, paddingLeft)
                             spannableDiff.setSpan(span, 0, token.length, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
                         }
                         // Span for text color (where transparent is considered as default)
@@ -84,10 +88,10 @@ class GitDiffViewController(
                         builder.append(spannableDiff)
                     }
                 }
-                view.text = builder
+                setText(builder)
             }
         } else {
-            view.text = text
+            setText(text)
         }
     }
 

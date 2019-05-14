@@ -2,7 +2,7 @@ package ru.terrakok.gitlabclient.extension
 
 import android.content.Context
 import android.content.res.Resources
-import android.support.annotation.DrawableRes
+import androidx.annotation.DrawableRes
 import org.threeten.bp.Duration
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.format.DateTimeFormatter

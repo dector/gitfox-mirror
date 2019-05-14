@@ -4,7 +4,7 @@ import android.os.Bundle
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter
-import kotlinx.android.synthetic.main.fragment_project.*
+import kotlinx.android.synthetic.main.fragment_main_project.*
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
@@ -18,9 +18,9 @@ import ru.terrakok.gitlabclient.ui.global.BaseFragment
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 10.02.18.
  */
-class ProjectFragment : BaseFragment(), ProjectView {
+class MainProjectFragment : BaseFragment(), ProjectView {
 
-    override val layoutRes: Int = R.layout.fragment_project
+    override val layoutRes: Int = R.layout.fragment_main_project
 
     private val currentTabFragment: BaseFragment?
         get() = childFragmentManager.fragments.firstOrNull { !it.isHidden } as? BaseFragment

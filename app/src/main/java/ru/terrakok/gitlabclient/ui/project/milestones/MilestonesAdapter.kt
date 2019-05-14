@@ -1,8 +1,8 @@
 package ru.terrakok.gitlabclient.ui.project.milestones
 
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
-import com.hannesdorfmann.adapterdelegates3.ListDelegationAdapter
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
+import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import ru.terrakok.gitlabclient.entity.milestone.Milestone
 import ru.terrakok.gitlabclient.ui.global.list.MilestonesAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.ProgressAdapterDelegate

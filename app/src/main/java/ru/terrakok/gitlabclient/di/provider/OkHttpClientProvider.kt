@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.toothpick.provider
+package ru.terrakok.gitlabclient.di.provider
 
 import android.content.Context
 import okhttp3.Cache

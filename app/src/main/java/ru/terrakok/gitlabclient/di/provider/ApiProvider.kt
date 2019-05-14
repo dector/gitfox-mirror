@@ -1,15 +1,15 @@
-package ru.terrakok.gitlabclient.toothpick.provider
+package ru.terrakok.gitlabclient.di.provider
 
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import ru.terrakok.gitlabclient.di.ServerPath
+import ru.terrakok.gitlabclient.di.WithErrorHandler
 import ru.terrakok.gitlabclient.model.data.cache.ProjectCache
 import ru.terrakok.gitlabclient.model.data.server.ApiWithCache
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
-import ru.terrakok.gitlabclient.toothpick.qualifier.ServerPath
-import ru.terrakok.gitlabclient.toothpick.qualifier.WithErrorHandler
 import javax.inject.Inject
 import javax.inject.Provider
 

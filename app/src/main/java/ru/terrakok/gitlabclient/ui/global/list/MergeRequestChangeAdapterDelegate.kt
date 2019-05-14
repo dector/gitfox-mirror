@@ -1,15 +1,14 @@
 package ru.terrakok.gitlabclient.ui.global.list
 
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
-import com.hannesdorfmann.adapterdelegates3.AdapterDelegate
+import androidx.recyclerview.widget.RecyclerView
+import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
 import kotlinx.android.synthetic.main.item_merge_request_change.view.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestChange
 import ru.terrakok.gitlabclient.extension.extractFileNameFromPath
 import ru.terrakok.gitlabclient.extension.inflate
-import ru.terrakok.gitlabclient.ui.global.GitDiffViewController
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 26.10.18.
@@ -42,8 +41,6 @@ class MergeRequestChangeAdapterDelegate(
             view.setOnClickListener { clickListener(item) }
         }
 
-        private val gitDiffViewController: GitDiffViewController = GitDiffViewController(itemView.changeFile)
-
         fun bind(item: MergeRequestChange) {
             this.item = item
             with(itemView) {
@@ -56,20 +53,20 @@ class MergeRequestChangeAdapterDelegate(
                     }
                 )
                 changeFileName.text = item.newPath.extractFileNameFromPath()
-                gitDiffViewController.setText(item.diff)
+                gitDiffView.setGitDiffText(item.diff)
                 changeAddedCount.text = context.getString(
                     R.string.merge_request_changes_added_count,
-                    gitDiffViewController.getAddedLineCount()
+                    gitDiffView.getAddedLineCount()
                 )
                 changeDeletedCount.text = context.getString(
                     R.string.merge_request_changes_deleted_count,
-                    gitDiffViewController.getDeletedLineCount()
+                    gitDiffView.getDeletedLineCount()
                 )
             }
         }
 
         fun recycle() {
-            gitDiffViewController.release()
+            itemView.gitDiffView.release()
         }
     }
 }

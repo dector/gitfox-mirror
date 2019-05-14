@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.toothpick.module
+package ru.terrakok.gitlabclient.di.module
 
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
 import toothpick.config.Module

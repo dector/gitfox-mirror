@@ -2,13 +2,13 @@ package ru.terrakok.gitlabclient.presentation.file
 
 import com.arellomobile.mvp.InjectViewState
 import ru.terrakok.cicerone.Router
+import ru.terrakok.gitlabclient.di.FilePath
+import ru.terrakok.gitlabclient.di.FileReference
+import ru.terrakok.gitlabclient.di.PrimitiveWrapper
+import ru.terrakok.gitlabclient.di.ProjectId
 import ru.terrakok.gitlabclient.extension.extractFileNameFromPath
 import ru.terrakok.gitlabclient.model.interactor.project.ProjectInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
-import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
-import ru.terrakok.gitlabclient.toothpick.qualifier.FilePath
-import ru.terrakok.gitlabclient.toothpick.qualifier.FileReference
-import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
 import javax.inject.Inject
 
 /**

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -52,4 +52,4 @@
         app:layout_constraintTop_toBottomOf="@+id/subtitleTextView"
         tools:text="It’s only Monday, but let’s call it Black too! We start the biggest sale as early as possible to bring you all our amazing products with crazy 60% discount. Hurry up, the offer expries soon."/>
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
