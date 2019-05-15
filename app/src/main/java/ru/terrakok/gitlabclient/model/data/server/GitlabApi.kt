@@ -57,7 +57,7 @@ interface GitlabApi {
     fun getFile(
         @Path("id") id: Long,
         @Path("file_path") filePath: String,
-        @Query("ref") branchName: String
+        @Query("ref") ref: String
     ): Single<File>
 
     @GET("$API_PATH/projects/{id}/repository/tree")

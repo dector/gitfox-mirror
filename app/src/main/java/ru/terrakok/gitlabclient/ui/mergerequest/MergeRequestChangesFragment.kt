@@ -21,7 +21,7 @@ class MergeRequestChangesFragment : BaseFragment(), MergeRequestChangesView {
 
     override val layoutRes = R.layout.fragment_mr_changes
 
-    private val adapter by lazy { MergeRequestChangeAdapter() }
+    private val adapter by lazy { MergeRequestChangeAdapter({ presenter.onMergeRequestChangeClick(it) }) }
 
     @InjectPresenter
     lateinit var presenter: MergeRequestChangesPresenter
@@ -71,5 +71,9 @@ class MergeRequestChangesFragment : BaseFragment(), MergeRequestChangesView {
 
     override fun showMessage(message: String) {
         showSnackMessage(message)
+    }
+
+    override fun showFullscreenProgress(show: Boolean) {
+        showProgressDialog(show)
     }
 }
