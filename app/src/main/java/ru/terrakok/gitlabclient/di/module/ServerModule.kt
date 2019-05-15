@@ -8,6 +8,7 @@ import ru.terrakok.gitlabclient.di.provider.ApiProvider
 import ru.terrakok.gitlabclient.di.provider.MarkDownConverterProvider
 import ru.terrakok.gitlabclient.di.provider.OkHttpClientProvider
 import ru.terrakok.gitlabclient.di.provider.OkHttpClientWithErrorHandlerProvider
+import ru.terrakok.gitlabclient.di.provider.LabelSpanConfigProvider
 import ru.terrakok.gitlabclient.entity.app.session.AuthHolder
 import ru.terrakok.gitlabclient.entity.app.session.OAuthParams
 import ru.terrakok.gitlabclient.entity.app.session.UserAccount
@@ -33,7 +34,6 @@ import ru.terrakok.gitlabclient.model.repository.todo.TodoRepository
 import ru.terrakok.gitlabclient.model.repository.user.UserRepository
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
-import ru.terrakok.gitlabclient.toothpick.provider.LabelSpanConfigProvider
 import toothpick.config.Module
 
 /**
