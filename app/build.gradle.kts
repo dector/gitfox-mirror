@@ -1,8 +1,9 @@
+import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
+
 plugins {
     id("com.android.application")
     id("io.fabric")
     kotlin("android")
-    kotlin("android.extensions")
     kotlin("kapt")
     id("org.jetbrains.kotlin.android.extensions")
 }
