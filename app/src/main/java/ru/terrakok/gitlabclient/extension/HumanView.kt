@@ -2,7 +2,7 @@ package ru.terrakok.gitlabclient.extension
 
 import android.content.Context
 import android.content.res.Resources
-import android.support.annotation.DrawableRes
+import androidx.annotation.DrawableRes
 import org.threeten.bp.Duration
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.format.DateTimeFormatter
@@ -167,4 +167,9 @@ fun TargetBadgeStatus.getBadgeColors(context: Context) = when (this) {
     TargetBadgeStatus.OPENED -> Pair(context.color(R.color.green), context.color(R.color.lightGreen))
     TargetBadgeStatus.CLOSED -> Pair(context.color(R.color.red), context.color(R.color.lightRed))
     TargetBadgeStatus.MERGED -> Pair(context.color(R.color.blue), context.color(R.color.lightBlue))
+}
+
+fun String.extractFileNameFromPath(): String {
+    val index = lastIndexOf("/")
+    return substring(if (index != -1) index + 1 else 0)
 }

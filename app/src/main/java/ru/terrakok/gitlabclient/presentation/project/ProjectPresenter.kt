@@ -2,12 +2,12 @@ package ru.terrakok.gitlabclient.presentation.project
 
 import com.arellomobile.mvp.InjectViewState
 import ru.terrakok.gitlabclient.Screens
+import ru.terrakok.gitlabclient.di.PrimitiveWrapper
+import ru.terrakok.gitlabclient.di.ProjectId
 import ru.terrakok.gitlabclient.model.interactor.project.ProjectInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
-import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
-import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
 import javax.inject.Inject
 
 /**

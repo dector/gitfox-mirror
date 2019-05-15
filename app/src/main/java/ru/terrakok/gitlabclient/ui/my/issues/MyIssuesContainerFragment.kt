@@ -1,7 +1,7 @@
 package ru.terrakok.gitlabclient.ui.my.issues
 
 import android.os.Bundle
-import android.support.v4.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentPagerAdapter
 import kotlinx.android.synthetic.main.fragment_my_issues_container.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
@@ -71,8 +71,7 @@ class MyIssuesContainerFragment : BaseFragment() {
     private inner class MyIssuesPagesAdapter : FragmentPagerAdapter(childFragmentManager) {
         override fun getItem(position: Int) = when (position) {
             0 -> Screens.MyIssues(true, showOnlyOpened).fragment
-            1 -> Screens.MyIssues(false, showOnlyOpened).fragment
-            else -> null
+            else -> Screens.MyIssues(false, showOnlyOpened).fragment
         }
 
         override fun getCount() = 2

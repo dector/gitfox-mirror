@@ -29,5 +29,7 @@ data class Issue(
     // This value will only be present for issues which were closed after GitLab 10.6 and
     // when the user account that closed the issue still exists.
     @SerializedName("closed_by") val closedBy: Author?,
-    @SerializedName("closed_at") val closedAt: LocalDateTime?
+    @SerializedName("closed_at") val closedAt: LocalDateTime?,
+    // The merge_requests_count attribute was introduced in GitLab 11.9.
+    @SerializedName("merge_requests_count") val relatedMergeRequestCount: Int
 )

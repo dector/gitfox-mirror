@@ -1,7 +1,7 @@
 package ru.terrakok.gitlabclient.ui.my.todos
 
 import android.os.Bundle
-import android.support.v4.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentPagerAdapter
 import kotlinx.android.synthetic.main.fragment_my_todos_container.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
@@ -45,8 +45,7 @@ class MyTodosContainerFragment : BaseFragment() {
     private inner class MyTodosPagerAdapter : FragmentPagerAdapter(childFragmentManager) {
         override fun getItem(position: Int) = when (position) {
             0 -> Screens.MyTodos(true).fragment
-            1 -> Screens.MyTodos(false).fragment
-            else -> null
+            else -> Screens.MyTodos(false).fragment
         }
 
         override fun getCount() = 2

@@ -2,6 +2,8 @@ package ru.terrakok.gitlabclient.presentation.project.milestones
 
 import com.arellomobile.mvp.InjectViewState
 import ru.terrakok.gitlabclient.Screens
+import ru.terrakok.gitlabclient.di.PrimitiveWrapper
+import ru.terrakok.gitlabclient.di.ProjectId
 import ru.terrakok.gitlabclient.entity.milestone.Milestone
 import ru.terrakok.gitlabclient.entity.milestone.MilestoneState
 import ru.terrakok.gitlabclient.model.interactor.milestone.MilestoneInteractor
@@ -9,8 +11,6 @@ import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.Paginator
-import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
-import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
 import javax.inject.Inject
 
 /**
@@ -70,7 +70,7 @@ class ProjectMilestonesPresenter @Inject constructor(
         }
     )
 
-    fun onMilestoneClick(milestoneId: Long) = router.startFlow(Screens.MilestoneFlow(milestoneId))
+    fun onMilestoneClick(milestoneId: Long) {} //todo: implement milestone screen.
     fun refreshMilestones() = paginator.refresh()
     fun loadNextMilestonesPage() = paginator.loadNewPage()
 

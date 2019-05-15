@@ -1,9 +1,9 @@
 package ru.terrakok.gitlabclient.ui.global.list
 
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
-import com.hannesdorfmann.adapterdelegates3.AdapterDelegate
+import androidx.recyclerview.widget.RecyclerView
+import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.extension.inflate
 

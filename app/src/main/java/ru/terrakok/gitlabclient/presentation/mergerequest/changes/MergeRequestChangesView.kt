@@ -20,4 +20,6 @@ interface MergeRequestChangesView : MvpView {
 
     @StateStrategyType(OneExecutionStateStrategy::class)
     fun showMessage(message: String)
+
+    fun showFullscreenProgress(show: Boolean)
 }

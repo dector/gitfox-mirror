@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        style="@style/ToolbarStyle"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        android:elevation="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_arrow_back_24dp"
+        tools:subtitle="app/src/main/java/ru/terrakok/gitlabclient/entity/app/ProjectFile.kt"
+        tools:title="ProjectFile.kt" />
+
+    <ru.terrakok.gitlabclient.ui.global.view.custom.codehighlight.CodeHighlightView
+        android:id="@+id/projectFileCodeHighlightView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
+    <include
+        android:id="@+id/fullscreenProgressView"
+        layout="@layout/layout_gitlab_progress"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        app:layout_constraintBottom_toBottomOf="@id/projectFileCodeHighlightView"
+        app:layout_constraintEnd_toEndOf="@id/projectFileCodeHighlightView"
+        app:layout_constraintStart_toStartOf="@id/projectFileCodeHighlightView"
+        app:layout_constraintTop_toTopOf="@id/projectFileCodeHighlightView" />
+
+    <ru.terrakok.gitlabclient.ui.global.view.custom.EmptyView
+        android:id="@+id/emptyView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

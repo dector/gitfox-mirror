@@ -1,13 +1,12 @@
 package ru.terrakok.gitlabclient.ui.project.files
 
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
 import android.widget.PopupMenu
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_project_files.*
 import kotlinx.android.synthetic.main.layout_base_list.*
-import kotlinx.android.synthetic.main.layout_zero.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Branch
 import ru.terrakok.gitlabclient.entity.app.ProjectFile
@@ -17,7 +16,6 @@ import ru.terrakok.gitlabclient.presentation.project.files.ProjectFileDestinatio
 import ru.terrakok.gitlabclient.presentation.project.files.ProjectFilesPresenter
 import ru.terrakok.gitlabclient.presentation.project.files.ProjectFilesView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import ru.terrakok.gitlabclient.ui.global.ZeroViewHolder
 import toothpick.Scope
 import toothpick.config.Module
 
@@ -30,7 +28,7 @@ class ProjectFilesFragment : BaseFragment(), ProjectFilesView {
     @InjectPresenter
     lateinit var presenter: ProjectFilesPresenter
 
-    override val scopeModuleInstaller = { scope: Scope ->
+    override fun installModules(scope: Scope) {
         scope.installModules(object : Module() {
             init {
                 bind(ProjectFileDestination::class.java)
@@ -49,7 +47,6 @@ class ProjectFilesFragment : BaseFragment(), ProjectFilesView {
             { presenter.loadNextFilesPage() }
         )
     }
-    private var zeroViewHolder: ZeroViewHolder? = null
 
     private lateinit var projectFileDestination: ProjectFileDestination
 
@@ -84,7 +81,7 @@ class ProjectFilesFragment : BaseFragment(), ProjectFilesView {
         }
 
         swipeToRefresh.setOnRefreshListener { presenter.refreshFiles() }
-        zeroViewHolder = ZeroViewHolder(zeroLayout, { presenter.refreshFiles() })
+        emptyView.setRefreshListener { presenter.refreshFiles() }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -122,13 +119,11 @@ class ProjectFilesFragment : BaseFragment(), ProjectFilesView {
     }
 
     override fun showEmptyView(show: Boolean) {
-        if (show) zeroViewHolder?.showEmptyData()
-        else zeroViewHolder?.hide()
+        emptyView.apply { if (show) showEmptyData() else hide() }
     }
 
     override fun showEmptyError(show: Boolean, message: String?) {
-        if (show) zeroViewHolder?.showEmptyError(message)
-        else zeroViewHolder?.hide()
+        emptyView.apply { if (show) showEmptyError(message) else hide() }
     }
 
     override fun showFiles(show: Boolean, files: List<ProjectFile>) {

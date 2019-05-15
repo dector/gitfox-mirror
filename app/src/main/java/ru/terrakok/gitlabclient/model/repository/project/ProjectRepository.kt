@@ -1,6 +1,8 @@
 package ru.terrakok.gitlabclient.model.repository.project
 
 import io.reactivex.Single
+import ru.terrakok.gitlabclient.di.DefaultPageSize
+import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.Branch
 import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.entity.Sort
@@ -8,8 +10,6 @@ import ru.terrakok.gitlabclient.entity.Visibility
 import ru.terrakok.gitlabclient.entity.app.ProjectFile
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
-import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
-import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultPageSize
 import javax.inject.Inject
 
 /**
@@ -56,12 +56,12 @@ class ProjectRepository @Inject constructor(
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
 
-    fun getBlobFile(
+    fun getProjectFile(
         projectId: Long,
         path: String,
-        branchName: String
+        fileReference: String
     ) = api
-        .getFile(projectId, path, branchName)
+        .getFile(projectId, path, fileReference)
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
 

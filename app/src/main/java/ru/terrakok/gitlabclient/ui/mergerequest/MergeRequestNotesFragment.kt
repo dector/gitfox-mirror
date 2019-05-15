@@ -1,14 +1,13 @@
 package ru.terrakok.gitlabclient.ui.mergerequest
 
 import android.os.Bundle
-import android.support.transition.Fade
-import android.support.transition.TransitionManager
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.Fade
+import androidx.transition.TransitionManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import kotlinx.android.synthetic.main.fragment_issue_notes.*
+import kotlinx.android.synthetic.main.fragment_mr_notes.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.extension.visible
@@ -16,7 +15,6 @@ import ru.terrakok.gitlabclient.presentation.global.NoteWithProjectId
 import ru.terrakok.gitlabclient.presentation.mergerequest.notes.MergeRequestNotesPresenter
 import ru.terrakok.gitlabclient.presentation.mergerequest.notes.MergeRequestNotesView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import ru.terrakok.gitlabclient.ui.global.NewNoteViewController
 import ru.terrakok.gitlabclient.ui.global.list.SimpleDividerDecorator
 import ru.terrakok.gitlabclient.ui.global.list.TargetNotesAdapter
 
@@ -33,7 +31,6 @@ class MergeRequestNotesFragment : BaseFragment(), MergeRequestNotesView {
             addTarget(fabScrollToBottom)
         }
     }
-    private lateinit var newNoteViewController: NewNoteViewController
 
     @InjectPresenter
     lateinit var presenter: MergeRequestNotesPresenter
@@ -63,7 +60,7 @@ class MergeRequestNotesFragment : BaseFragment(), MergeRequestNotesView {
             recyclerView.scrollToPosition(adapter.itemCount - 1)
             setFabScrollVisible(false)
         }
-        newNoteViewController = NewNoteViewController(noteInputLayout as ViewGroup, { presenter.onSendClicked(it) })
+        newNoteView.init { presenter.onSendClicked(it) }
     }
 
     private fun setFabScrollVisible(visible: Boolean) {
@@ -73,7 +70,7 @@ class MergeRequestNotesFragment : BaseFragment(), MergeRequestNotesView {
 
     override fun showEmptyProgress(show: Boolean) {
         fullscreenProgressView.visible(show)
-        noteInputLayout.visible(!show)
+        newNoteView.visible(!show)
     }
 
     override fun showBlockingProgress(show: Boolean) {
@@ -84,7 +81,7 @@ class MergeRequestNotesFragment : BaseFragment(), MergeRequestNotesView {
         adapter.setData(notes)
         if (scrollToEnd) {
             recyclerView.scrollToPosition(adapter.itemCount - 1)
-            newNoteViewController.clearInput()
+            newNoteView.clearInput()
         }
     }
 

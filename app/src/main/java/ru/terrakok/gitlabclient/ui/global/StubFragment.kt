@@ -3,7 +3,7 @@ package ru.terrakok.gitlabclient.ui.global
 import android.os.Bundle
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.toothpick.DI
+import ru.terrakok.gitlabclient.di.DI
 import toothpick.Toothpick
 import javax.inject.Inject
 
