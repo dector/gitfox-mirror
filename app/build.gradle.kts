@@ -4,6 +4,7 @@ plugins {
     kotlin("android")
     kotlin("android.extensions")
     kotlin("kapt")
+    id("org.jetbrains.kotlin.android.extensions")
 }
 
 val buildUid = System.getenv("BUILD_COMMIT_SHA") ?: "local"
@@ -49,14 +50,6 @@ android {
             buildConfigField("String", "OAUTH_CALLBACK", "\"app://gitlab.client/\"")
 
             multiDexEnabled = true
-
-            javaCompileOptions {
-                annotationProcessorOptions {
-                    arguments = mapOf(
-                        "toothpick_registry_package_name" to "ru.terrakok.gitlabclient"
-                    )
-                }
-            }
         }
 
         signingConfigs {

@@ -5,7 +5,7 @@ import android.view.View
 import kotlinx.android.synthetic.main.fragment_privacy_policy.*
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.toothpick.DI
+import ru.terrakok.gitlabclient.di.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import toothpick.Toothpick
 import javax.inject.Inject

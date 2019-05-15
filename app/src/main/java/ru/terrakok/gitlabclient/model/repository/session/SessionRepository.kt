@@ -5,6 +5,7 @@ import io.reactivex.Single
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import ru.terrakok.gitlabclient.di.DefaultServerPath
 import ru.terrakok.gitlabclient.entity.TokenData
 import ru.terrakok.gitlabclient.entity.User
 import ru.terrakok.gitlabclient.entity.app.session.UserAccount
@@ -12,7 +13,6 @@ import ru.terrakok.gitlabclient.model.data.server.ServerError
 import ru.terrakok.gitlabclient.model.data.server.Tls12SocketFactory.Companion.enableTls12
 import ru.terrakok.gitlabclient.model.data.storage.Prefs
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
-import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultServerPath
 import javax.inject.Inject
 
 class SessionRepository @Inject constructor(
