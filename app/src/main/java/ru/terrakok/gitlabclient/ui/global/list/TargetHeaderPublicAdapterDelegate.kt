@@ -1,11 +1,11 @@
 package ru.terrakok.gitlabclient.ui.global.list
 
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
 import com.arellomobile.mvp.MvpDelegate
-import com.hannesdorfmann.adapterdelegates3.AdapterDelegate
 import kotlinx.android.synthetic.main.item_target_badge.view.*
 import kotlinx.android.synthetic.main.item_target_header_public.view.*
 import ru.terrakok.gitlabclient.R
@@ -39,6 +39,9 @@ class TargetHeaderPublicAdapterDelegate(
             commitsTextView.setStartDrawable(context.getTintDrawable(R.drawable.ic_commit, R.color.colorPrimary))
             upVotesTextView.setStartDrawable(context.getTintDrawable(R.drawable.ic_thumb_up, R.color.colorPrimary))
             downVotesTextView.setStartDrawable(context.getTintDrawable(R.drawable.ic_thumb_down, R.color.colorPrimary))
+            relatedMergeRequestCountTextView.setStartDrawable(
+                context.getTintDrawable(R.drawable.ic_merge_18dp, R.color.colorPrimary)
+            )
         }
         return ViewHolder(root)
     }
@@ -86,6 +89,7 @@ class TargetHeaderPublicAdapterDelegate(
                 commitsTextView.visible(false)
                 upVotesTextView.visible(false)
                 downVotesTextView.visible(false)
+                relatedMergeRequestCountTextView.visible(false)
 
                 val badgeViewsCount = badgesContainer.childCount
                 val textBadgesCount = badges.count { it !is TargetBadge.Icon }
@@ -137,6 +141,10 @@ class TargetHeaderPublicAdapterDelegate(
                                     TargetBadgeIcon.DOWN_VOTES -> {
                                         downVotesTextView.text = badge.count.toString()
                                         downVotesTextView.visible(true)
+                                    }
+                                    TargetBadgeIcon.RELATED_MERGE_REQUESTS -> {
+                                        relatedMergeRequestCountTextView.text = badge.count.toString()
+                                        relatedMergeRequestCountTextView.visible(true)
                                     }
                                 }
                             }

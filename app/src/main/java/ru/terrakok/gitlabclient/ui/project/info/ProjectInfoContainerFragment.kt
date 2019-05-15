@@ -1,7 +1,7 @@
 package ru.terrakok.gitlabclient.ui.project.info
 
 import android.os.Bundle
-import android.support.v4.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentPagerAdapter
 import kotlinx.android.synthetic.main.fragment_project_info_container.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
@@ -34,10 +34,9 @@ class ProjectInfoContainerFragment : BaseFragment() {
     }
 
     private inner class ProjectInfoPagesAdapter : FragmentPagerAdapter(childFragmentManager) {
-        override fun getItem(position: Int): BaseFragment? = when (position) {
+        override fun getItem(position: Int): BaseFragment = when (position) {
             0 -> Screens.ProjectInfo.fragment
-            1 -> Screens.ProjectEvents.fragment
-            else -> null
+            else -> Screens.ProjectEvents.fragment
         }
 
         override fun getCount() = 2

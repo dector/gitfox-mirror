@@ -1,12 +1,12 @@
 package ru.terrakok.gitlabclient.model.repository.label
 
+import ru.terrakok.gitlabclient.di.DefaultPageSize
+import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import io.reactivex.Observable
 import io.reactivex.Single
 import ru.terrakok.gitlabclient.entity.Label
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
-import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
-import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultPageSize
 import javax.inject.Inject
 
 /**

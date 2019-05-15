@@ -4,7 +4,7 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
+import androidx.fragment.app.DialogFragment
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.extension.argument
 
@@ -42,7 +42,7 @@ class MessageDialogFragment : DialogFragment() {
             }
         }.create()
 
-    override fun onCancel(dialog: DialogInterface?) {
+    override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
         clickListener.dialogCanceled(startTag)
     }

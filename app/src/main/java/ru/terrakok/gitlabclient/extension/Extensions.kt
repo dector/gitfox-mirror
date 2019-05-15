@@ -7,12 +7,9 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
-import android.support.annotation.ColorInt
-import android.support.annotation.LayoutRes
-import android.support.design.widget.Snackbar
-import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
-import android.support.v4.graphics.drawable.DrawableCompat
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,8 +17,14 @@ import android.view.inputmethod.InputMethodManager
 import android.webkit.URLUtil
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.ColorInt
+import androidx.annotation.LayoutRes
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
+import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.material.snackbar.Snackbar
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 import ru.terrakok.cicerone.commands.BackTo
@@ -178,10 +181,16 @@ fun TargetHeader.Public.openInfo(router: FlowRouter) {
 
 fun Fragment.showSnackMessage(message: String) {
     view?.let {
-        val snackbar = Snackbar.make(it, message, Snackbar.LENGTH_LONG)
-        val messageTextView = snackbar.view.findViewById<TextView>(android.support.design.R.id.snackbar_text)
-        messageTextView.setTextColor(Color.WHITE)
-        snackbar.show()
+        val ssb = SpannableStringBuilder().apply {
+            append(message)
+            setSpan(
+                ForegroundColorSpan(Color.WHITE),
+                0,
+                message.length,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+        Snackbar.make(it, ssb, Snackbar.LENGTH_LONG).show()
     }
 }
 

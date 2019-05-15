@@ -1,12 +1,12 @@
 package ru.terrakok.gitlabclient.ui.project.labels
 
 import android.annotation.SuppressLint
-import android.support.v4.content.ContextCompat
-import android.support.v4.graphics.ColorUtils
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
-import com.hannesdorfmann.adapterdelegates3.AdapterDelegate
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.ColorUtils
+import androidx.recyclerview.widget.RecyclerView
+import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
 import kotlinx.android.synthetic.main.item_label.view.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Color

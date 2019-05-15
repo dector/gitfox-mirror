@@ -1,8 +1,8 @@
 package ru.terrakok.gitlabclient.model.repository.profile
 
+import ru.terrakok.gitlabclient.di.ServerPath
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
-import ru.terrakok.gitlabclient.toothpick.qualifier.ServerPath
 import javax.inject.Inject
 
 /**
