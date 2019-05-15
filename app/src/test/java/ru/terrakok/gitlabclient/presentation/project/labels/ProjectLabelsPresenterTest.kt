@@ -2,12 +2,11 @@ package ru.terrakok.gitlabclient.presentation.project.labels
 
 import com.nhaarman.mockito_kotlin.*
 import io.reactivex.Single
-import org.junit.Assert.assertEquals
 import org.junit.Test
+import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.Label
 import ru.terrakok.gitlabclient.model.interactor.label.LabelInteractor
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
-import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 
 /**
  * @author Maxim Myalkin (MaxMyalkin) on 11.11.2018.

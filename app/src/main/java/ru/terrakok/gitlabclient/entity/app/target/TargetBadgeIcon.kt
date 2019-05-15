@@ -7,5 +7,6 @@ enum class TargetBadgeIcon {
     COMMENTS,
     UP_VOTES,
     DOWN_VOTES,
-    COMMITS;
+    COMMITS,
+    RELATED_MERGE_REQUESTS;
 }
