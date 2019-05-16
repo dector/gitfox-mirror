@@ -14,11 +14,4 @@
         android:title="@string/project_files"
         app:showAsAction="ifRoom" />
 
-    <item
-        android:id="@+id/labelAction"
-        android:icon="@drawable/ic_labels"
-        android:title="@string/project_labels"
-        app:iconTint="@android:color/white"
-        app:showAsAction="ifRoom" />
-
 </menu>

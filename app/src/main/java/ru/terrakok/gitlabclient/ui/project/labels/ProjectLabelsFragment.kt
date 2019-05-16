@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import kotlinx.android.synthetic.main.fragment_project_labels.*
 import kotlinx.android.synthetic.main.layout_base_list.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Label
@@ -38,7 +37,6 @@ class ProjectLabelsFragment : BaseFragment(), ProjectLabelsView {
             adapter = this@ProjectLabelsFragment.adapter
         }
 
-        toolbar.setNavigationOnClickListener { onBackPressed() }
         swipeToRefresh.setOnRefreshListener { presenter.refreshProjectLabels() }
         emptyView.setRefreshListener { presenter.refreshProjectLabels() }
     }
