@@ -7,10 +7,7 @@ import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
 import kotlinx.android.synthetic.main.item_milestone.view.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.milestone.Milestone
-import ru.terrakok.gitlabclient.extension.getHumanName
-import ru.terrakok.gitlabclient.extension.getStateColors
-import ru.terrakok.gitlabclient.extension.inflate
-import ru.terrakok.gitlabclient.extension.visible
+import ru.terrakok.gitlabclient.extension.*
 
 /**
  * @author Valentin Logvinovitch (glvvl) on 17.12.18.
@@ -48,8 +45,8 @@ class MilestonesAdapterDelegate(
                 if (startDate != null && dueDate != null) {
                     dateTextView.text = String.format(
                         context.getString(R.string.project_milestone_date),
-                        startDate,
-                        dueDate
+                        startDate.humanDate(),
+                        dueDate.humanDate()
                     )
                     dateTextView.visible(true)
                 } else {

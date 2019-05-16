@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.Resources
 import androidx.annotation.DrawableRes
 import org.threeten.bp.Duration
+import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import retrofit2.HttpException
@@ -53,6 +54,8 @@ fun LocalDateTime.humanTime(resources: Resources): String {
 
     return resources.getString(R.string.time_ago, timeStr)
 }
+
+fun LocalDate.humanDate() = format(DATE_FORMAT)
 
 fun EventAction.getHumanName(resources: Resources) = when (this) {
     EventAction.UPDATED -> resources.getString(R.string.event_action_updated)
