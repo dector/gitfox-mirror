@@ -43,7 +43,6 @@ class MainProjectFragment : BaseFragment(), ProjectView {
             setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.shareAction -> shareText(shareUrl)
-                    R.id.labelAction -> presenter.onLabelPressed()
                     R.id.milestonesAction -> presenter.onMilestonesClicked()
                     R.id.filesAction -> presenter.onFilesPressed()
                 }
