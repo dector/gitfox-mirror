@@ -128,9 +128,6 @@ class EventRepository @Inject constructor(
             val badges = mutableListOf<TargetBadge>()
             project?.let { badges.add(TargetBadge.Text(it.name, AppTarget.PROJECT, it.id)) }
             badges.add(TargetBadge.Text(event.author.username, AppTarget.USER, event.author.id))
-            event.pushData?.let { pushData ->
-                badges.add(TargetBadge.Icon(TargetBadgeIcon.COMMITS, pushData.commitCount))
-            }
 
             TargetHeader.Public(
                 event.author,
