@@ -6,7 +6,6 @@ import android.net.Uri
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 import ru.terrakok.gitlabclient.entity.issue.IssueState
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
-import ru.terrakok.gitlabclient.entity.milestone.MilestoneState
 import ru.terrakok.gitlabclient.ui.about.AboutFragment
 import ru.terrakok.gitlabclient.ui.auth.AuthFlowFragment
 import ru.terrakok.gitlabclient.ui.auth.AuthFragment
@@ -37,7 +36,6 @@ import ru.terrakok.gitlabclient.ui.project.issues.ProjectIssuesFragment
 import ru.terrakok.gitlabclient.ui.project.labels.ProjectLabelsFragment
 import ru.terrakok.gitlabclient.ui.project.mergerequest.ProjectMergeRequestsContainerFragment
 import ru.terrakok.gitlabclient.ui.project.mergerequest.ProjectMergeRequestsFragment
-import ru.terrakok.gitlabclient.ui.project.milestones.ProjectMilestonesContainerFragment
 import ru.terrakok.gitlabclient.ui.project.milestones.ProjectMilestonesFragment
 import ru.terrakok.gitlabclient.ui.projects.ProjectsContainerFragment
 import ru.terrakok.gitlabclient.ui.projects.ProjectsListFragment
@@ -187,14 +185,8 @@ object Screens {
         override fun getFragment() = ProjectLabelsFragment()
     }
 
-    object ProjectMilestonesContainer : SupportAppScreen() {
-        override fun getFragment() = ProjectMilestonesContainerFragment()
-    }
-
-    data class ProjectMilestones(
-        val milestoneState: MilestoneState
-    ) : SupportAppScreen() {
-        override fun getFragment() = ProjectMilestonesFragment.create(milestoneState)
+    object ProjectMilestones : SupportAppScreen() {
+        override fun getFragment() = ProjectMilestonesFragment()
     }
 
     object ProjectFiles : SupportAppScreen() {
