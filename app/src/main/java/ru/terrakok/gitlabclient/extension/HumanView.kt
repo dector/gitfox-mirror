@@ -173,6 +173,11 @@ fun TargetBadgeStatus.getBadgeColors(context: Context) = when (this) {
     TargetBadgeStatus.MERGED -> Pair(context.color(R.color.blue), context.color(R.color.lightBlue))
 }
 
+fun String.extractFileNameFromPath(): String {
+    val index = lastIndexOf("/")
+    return substring(if (index != -1) index + 1 else 0)
+}
+
 fun MilestoneState.getHumanName(resources: Resources) = when (this) {
     MilestoneState.ACTIVE -> resources.getString(R.string.milestone_active)
     MilestoneState.CLOSED -> resources.getString(R.string.milestone_closed)
