@@ -178,6 +178,9 @@
     <string name="project_labels">Labels</string>
     <string name="project_milestones">Milestones</string>
     <string name="project_files">Files</string>
+    <string name="project_milestone_date">%s - %s</string>
+    <string name="milestone_active">Opened</string>
+    <string name="milestone_closed">Closed</string>
 
     <!--Project files screen-->
     <string name="project_files_show_branches">Branches</string>
