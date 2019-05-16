@@ -13,9 +13,9 @@ import ru.terrakok.gitlabclient.model.repository.todo.TodoRepository
 /**
  * @author Eugene Shapovalov (CraggyHaggy). Date: 21.09.17
  */
-class TodoListInteractorTest {
+class TodoInteractorTest {
 
-    private lateinit var interactor: TodoListInteractor
+    private lateinit var interactor: TodoInteractor
     private lateinit var todoRepository: TodoRepository
     private lateinit var profileRepository: ProfileRepository
 
@@ -27,7 +27,7 @@ class TodoListInteractorTest {
     fun setUp() {
         todoRepository = mock()
         profileRepository = mock()
-        interactor = TodoListInteractor(todoRepository, profileRepository)
+        interactor = TodoInteractor(todoRepository, profileRepository)
     }
 
     @Test

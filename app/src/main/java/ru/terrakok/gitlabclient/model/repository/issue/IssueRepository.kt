@@ -16,6 +16,7 @@ import ru.terrakok.gitlabclient.entity.issue.IssueScope
 import ru.terrakok.gitlabclient.entity.issue.IssueState
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
+import ru.terrakok.gitlabclient.model.data.server.RequestHeadersReader
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import javax.inject.Inject
 
@@ -26,7 +27,8 @@ class IssueRepository @Inject constructor(
     private val api: GitlabApi,
     private val schedulers: SchedulersProvider,
     @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>,
-    private val markDownUrlResolver: MarkDownUrlResolver
+    private val markDownUrlResolver: MarkDownUrlResolver,
+    private val requestHeadersReader: RequestHeadersReader
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
 
@@ -206,4 +208,14 @@ class IssueRepository @Inject constructor(
         .getMilestoneIssues(projectId, milestoneId, page, pageSize)
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
+
+    fun getMyAssignedIssueCount(assigneeId: Int): Single<Int> =
+        api.getMyAssignedIssueHeaders(assigneeId)
+            .flatMap {
+                val xTotal = if (!it.isError) requestHeadersReader.getXTotal(it.response().headers()) else 0
+                Single.just(xTotal)
+            }
+            .onErrorReturn { 0 }
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
 }
