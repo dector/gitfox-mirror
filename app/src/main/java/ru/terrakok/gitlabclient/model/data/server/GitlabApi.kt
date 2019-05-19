@@ -384,7 +384,7 @@ interface GitlabApi {
 
     @HEAD("$API_PATH/issues")
     fun getMyAssignedIssueHeaders(
-        @Query("assignee_id") assigneeId: Int,
+        @Query("scope") scope: IssueScope = IssueScope.ASSIGNED_BY_ME,
         @Query("state") state: IssueState = IssueState.OPENED,
         @Query("per_page") pageSize: Int = 1
     ): Single<Result<Unit>>

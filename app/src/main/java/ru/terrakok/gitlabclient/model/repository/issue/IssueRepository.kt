@@ -211,16 +211,8 @@ class IssueRepository @Inject constructor(
         .observeOn(schedulers.ui())
 
     fun getMyAssignedIssueCount(): Single<Int> =
-        Single
-            .defer {
-                val currentUserAccount = sessionRepository.getCurrentUserAccount()
-                if (currentUserAccount != null) {
-                    api.getMyAssignedIssueHeaders(currentUserAccount.userId.toInt())
-                        .map { it.getXTotalHeader() }
-                } else {
-                    Single.just(0)
-                }
-            }
+        api.getMyAssignedIssueHeaders()
+            .map { it.getXTotalHeader() }
             .subscribeOn(schedulers.io())
             .observeOn(schedulers.ui())
 }
