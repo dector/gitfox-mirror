@@ -14,7 +14,6 @@ import ru.terrakok.gitlabclient.entity.app.session.UserAccount
 import ru.terrakok.gitlabclient.model.data.cache.ProjectCache
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
-import ru.terrakok.gitlabclient.model.data.server.RequestHeadersReader
 import ru.terrakok.gitlabclient.model.interactor.event.EventInteractor
 import ru.terrakok.gitlabclient.model.interactor.issue.IssueInteractor
 import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestInteractor
@@ -58,7 +57,6 @@ class ServerModule(userAccount: UserAccount?) : Module() {
         bind(GitlabApi::class.java).toProvider(ApiProvider::class.java).providesSingletonInScope()
         bind(MarkDownConverter::class.java).toProvider(MarkDownConverterProvider::class.java).providesSingletonInScope()
         bind(MarkDownUrlResolver::class.java)
-        bind(RequestHeadersReader::class.java)
 
         //Auth
         bind(OAuthParams::class.java).toInstance(

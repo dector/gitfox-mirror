@@ -14,9 +14,9 @@ import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestScope
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestViewType
+import ru.terrakok.gitlabclient.extension.getXTotalHeader
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
-import ru.terrakok.gitlabclient.model.data.server.RequestHeadersReader
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import javax.inject.Inject
 
@@ -24,8 +24,7 @@ class MergeRequestRepository @Inject constructor(
     private val api: GitlabApi,
     private val schedulers: SchedulersProvider,
     @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>,
-    private val markDownUrlResolver: MarkDownUrlResolver,
-    private val requestHeadersReader: RequestHeadersReader
+    private val markDownUrlResolver: MarkDownUrlResolver
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
 
@@ -259,11 +258,7 @@ class MergeRequestRepository @Inject constructor(
 
     fun getMyAssignedMergeRequestCount(): Single<Int> =
         api.getMyAssignedMergeRequestHeaders()
-            .flatMap {
-                val xTotal = if (!it.isError) requestHeadersReader.getXTotal(it.response().headers()) else 0
-                Single.just(xTotal)
-            }
-            .onErrorReturn { 0 }
+            .map { it.getXTotalHeader() }
             .subscribeOn(schedulers.io())
             .observeOn(schedulers.ui())
 }

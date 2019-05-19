@@ -11,8 +11,8 @@ import ru.terrakok.gitlabclient.entity.target.TargetType
 import ru.terrakok.gitlabclient.entity.todo.Todo
 import ru.terrakok.gitlabclient.entity.todo.TodoAction
 import ru.terrakok.gitlabclient.entity.todo.TodoState
+import ru.terrakok.gitlabclient.extension.getXTotalHeader
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
-import ru.terrakok.gitlabclient.model.data.server.RequestHeadersReader
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import javax.inject.Inject
 
@@ -22,8 +22,7 @@ import javax.inject.Inject
 class TodoRepository @Inject constructor(
     private val api: GitlabApi,
     private val schedulers: SchedulersProvider,
-    @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>,
-    private val requestHeadersReader: RequestHeadersReader
+    @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
 
@@ -99,11 +98,7 @@ class TodoRepository @Inject constructor(
 
     fun getMyAssignedTodoCount(): Single<Int> =
         api.getMyAssignedTodoHeaders()
-            .flatMap {
-                val xTotal = if (!it.isError) requestHeadersReader.getXTotal(it.response().headers()) else 0
-                Single.just(xTotal)
-            }
-            .onErrorReturn { 0 }
+            .map { it.getXTotalHeader() }
             .subscribeOn(schedulers.io())
             .observeOn(schedulers.ui())
 }
