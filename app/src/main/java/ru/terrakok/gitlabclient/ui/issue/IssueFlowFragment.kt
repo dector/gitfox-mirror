@@ -5,8 +5,10 @@ import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.di.IssueId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
+import ru.terrakok.gitlabclient.entity.app.target.TargetAction
 import ru.terrakok.gitlabclient.extension.argument
 import ru.terrakok.gitlabclient.ui.global.FlowFragment
+import ru.terrakok.gitlabclient.ui.mergerequest.MergeRequestFlowFragment
 import toothpick.Scope
 import toothpick.config.Module
 
@@ -14,6 +16,7 @@ class IssueFlowFragment : FlowFragment() {
 
     private val issueId by argument(ARG_ISSUE_ID, 0L)
     private val projectId by argument(ARG_PROJECT_ID, 0L)
+    private val targetAction by argument<TargetAction>(ARG_TARGET_ACTION)
 
     override fun installModules(scope: Scope) {
         super.installModules(scope)
@@ -26,6 +29,8 @@ class IssueFlowFragment : FlowFragment() {
                     bind(PrimitiveWrapper::class.java)
                         .withName(IssueId::class.java)
                         .toInstance(PrimitiveWrapper(issueId))
+                    bind(TargetAction::class.java)
+                        .toInstance(targetAction)
                 }
             }
         )
@@ -36,11 +41,14 @@ class IssueFlowFragment : FlowFragment() {
     companion object {
         private const val ARG_PROJECT_ID = "arg_project_id"
         private const val ARG_ISSUE_ID = "arg_issue_id"
-        fun create(projectId: Long, issueId: Long) =
+        private const val ARG_TARGET_ACTION = "arg_target_action"
+
+        fun create(projectId: Long, issueId: Long, targetAction: TargetAction) =
             IssueFlowFragment().apply {
                 arguments = Bundle().apply {
                     putLong(ARG_PROJECT_ID, projectId)
                     putLong(ARG_ISSUE_ID, issueId)
+                    putSerializable(ARG_TARGET_ACTION, targetAction)
                 }
             }
     }

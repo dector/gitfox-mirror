@@ -172,7 +172,13 @@ fun TargetHeader.Public.openInfo(router: FlowRouter) {
         }
         AppTarget.ISSUE -> {
             internal?.let { targetInternal ->
-                router.startFlow(Screens.IssueFlow(targetInternal.projectId, targetInternal.targetIid))
+                router.startFlow(
+                    Screens.IssueFlow(
+                        targetInternal.projectId,
+                        targetInternal.targetIid,
+                        action
+                    )
+                )
             }
         }
         else -> {

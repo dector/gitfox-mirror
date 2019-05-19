@@ -4,6 +4,7 @@ import com.arellomobile.mvp.InjectViewState
 import ru.terrakok.gitlabclient.di.IssueId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
+import ru.terrakok.gitlabclient.entity.app.target.TargetAction
 import ru.terrakok.gitlabclient.model.interactor.issue.IssueInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
@@ -18,6 +19,7 @@ import javax.inject.Inject
 class IssueNotesPresenter @Inject constructor(
     @ProjectId projectIdWrapper: PrimitiveWrapper<Long>,
     @IssueId issueIdWrapper: PrimitiveWrapper<Long>,
+    private val targetAction: TargetAction,
     private val issueInteractor: IssueInteractor,
     private val mdConverter: MarkDownConverter,
     private val errorHandler: ErrorHandler
@@ -41,7 +43,12 @@ class IssueNotesPresenter @Inject constructor(
             }
             .toList()
             .subscribe(
-                { viewState.showNotes(it, false) },
+                { notes ->
+                    val selectedNotePosition = targetAction.let { it as? TargetAction.CommentedOn }
+                        ?.noteId
+                        ?.let { noteIdToSelect -> notes.indexOfFirst { it.note.id == noteIdToSelect } }
+                    viewState.showNotes(notes, selectedNotePosition)
+                },
                 { errorHandler.proceed(it, { viewState.showMessage(it) }) }
             )
             .connect()
@@ -62,7 +69,10 @@ class IssueNotesPresenter @Inject constructor(
             .doOnSubscribe { viewState.showBlockingProgress(true) }
             .doAfterTerminate { viewState.showBlockingProgress(false) }
             .subscribe(
-                { viewState.showNotes(it, true) },
+                {
+                    viewState.showNotes(it, it.size - 1)
+                    viewState.clearInput()
+                },
                 { errorHandler.proceed(it, { viewState.showMessage(it) }) }
             )
             .connect()
