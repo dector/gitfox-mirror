@@ -49,7 +49,7 @@ class MarkdownTextView : TextView, MarkdownView {
     }
 
     fun setMarkdown(markdown: String?, projectId: Long? = null) {
-        setText(null)
+        text = null
         if (markdown != null) {
             presenter.setMarkdown(markdown, projectId)
         } else {

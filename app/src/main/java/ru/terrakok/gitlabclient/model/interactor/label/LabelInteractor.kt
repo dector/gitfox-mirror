@@ -1,5 +1,7 @@
 package ru.terrakok.gitlabclient.model.interactor.label
 
+import io.reactivex.Single
+import ru.terrakok.gitlabclient.entity.Label
 import ru.terrakok.gitlabclient.model.repository.label.LabelRepository
 import javax.inject.Inject
 
@@ -14,6 +16,16 @@ class LabelInteractor @Inject constructor(
         projectId: Long,
         page: Int
     ) = labelRepository.getLabelList(projectId, page)
+
+    fun getAllProjectLabels(
+        projectId: Long?
+    ): Single<List<Label>> = Single.defer {
+        if (projectId != null) {
+            labelRepository.getAllProjectLabels(projectId)
+        } else {
+            Single.just(emptyList())
+        }
+    }
 
     fun subscribeToLabel(
         projectId: Long,
