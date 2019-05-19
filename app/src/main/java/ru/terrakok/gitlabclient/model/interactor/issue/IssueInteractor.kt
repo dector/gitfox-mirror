@@ -60,5 +60,5 @@ class IssueInteractor @Inject constructor(
         body: String
     ) = issueRepository.createIssueNote(projectId, issueId, body)
 
-    fun getMyAssignedIssueCount(assigneeId: Int) = issueRepository.getMyAssignedIssueCount(assigneeId)
+    fun getMyAssignedIssueCount() = issueRepository.getMyAssignedIssueCount()
 }

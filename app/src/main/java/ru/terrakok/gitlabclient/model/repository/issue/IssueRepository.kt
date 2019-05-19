@@ -17,6 +17,7 @@ import ru.terrakok.gitlabclient.entity.issue.IssueState
 import ru.terrakok.gitlabclient.extension.getXTotalHeader
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
+import ru.terrakok.gitlabclient.model.repository.session.SessionRepository
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import javax.inject.Inject
 
@@ -27,7 +28,8 @@ class IssueRepository @Inject constructor(
     private val api: GitlabApi,
     private val schedulers: SchedulersProvider,
     @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>,
-    private val markDownUrlResolver: MarkDownUrlResolver
+    private val markDownUrlResolver: MarkDownUrlResolver,
+    private val sessionRepository: SessionRepository
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
 
@@ -208,9 +210,17 @@ class IssueRepository @Inject constructor(
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
 
-    fun getMyAssignedIssueCount(assigneeId: Int): Single<Int> =
-        api.getMyAssignedIssueHeaders(assigneeId)
-            .map { it.getXTotalHeader() }
+    fun getMyAssignedIssueCount(): Single<Int> =
+        Single
+            .defer {
+                val currentUserAccount = sessionRepository.getCurrentUserAccount()
+                if (currentUserAccount != null) {
+                    api.getMyAssignedIssueHeaders(currentUserAccount.userId.toInt())
+                        .map { it.getXTotalHeader() }
+                } else {
+                    Single.just(0)
+                }
+            }
             .subscribeOn(schedulers.io())
             .observeOn(schedulers.ui())
 }
