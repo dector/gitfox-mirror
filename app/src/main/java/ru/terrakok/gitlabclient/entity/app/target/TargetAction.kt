@@ -9,4 +9,6 @@ sealed class TargetAction : Serializable {
 
     data class CommentedOn(val noteId: Long) : TargetAction()
 
+    object Undefined: TargetAction()
+
 }

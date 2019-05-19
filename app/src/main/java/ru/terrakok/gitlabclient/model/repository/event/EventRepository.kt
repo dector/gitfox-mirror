@@ -268,12 +268,15 @@ class EventRepository @Inject constructor(
             }
         }
 
-    private fun getTargetAction(event: Event): TargetAction? =
+    private fun getTargetAction(event: Event): TargetAction =
         when (event.actionName) {
             EventAction.COMMENTED_ON -> {
-                event.note?.id?.let(TargetAction::CommentedOn)
+                event.note
+                    ?.id
+                    ?.let { TargetAction.CommentedOn(it) }
+                    ?: TargetAction.Undefined
             }
-            else -> null
+            else -> TargetAction.Undefined
         }
 
     private fun getBody(event: Event, project: Project?) = when (event.targetType) {

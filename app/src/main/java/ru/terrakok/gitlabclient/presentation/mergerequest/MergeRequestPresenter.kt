@@ -7,7 +7,6 @@ import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.di.MergeRequestId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
-import ru.terrakok.gitlabclient.di.TargetEventAction
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.app.target.TargetAction
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
@@ -26,7 +25,7 @@ import javax.inject.Inject
 class MergeRequestPresenter @Inject constructor(
     @ProjectId projectIdWrapper: PrimitiveWrapper<Long>,
     @MergeRequestId mrIdWrapper: PrimitiveWrapper<Long>,
-    @TargetEventAction targetActionWrapper: PrimitiveWrapper<TargetAction?>,
+    private val targetAction: TargetAction,
     private val mrInteractor: MergeRequestInteractor,
     private val projectInteractor: ProjectInteractor,
     private val resourceManager: ResourceManager,
@@ -36,7 +35,6 @@ class MergeRequestPresenter @Inject constructor(
 
     private val projectId = projectIdWrapper.value
     private val mrId = mrIdWrapper.value
-    private val targetAction = targetActionWrapper.value
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -65,7 +63,7 @@ class MergeRequestPresenter @Inject constructor(
     }
 
     private fun selectActionTab() {
-        targetAction?.let(viewState::selectActionTab)
+        viewState.selectActionTab(targetAction)
     }
 
     fun onBackPressed() = flowRouter.exit()

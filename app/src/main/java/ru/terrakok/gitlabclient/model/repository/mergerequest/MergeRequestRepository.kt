@@ -132,7 +132,7 @@ class MergeRequestRepository @Inject constructor(
             mr.id,
             TargetInternal(mr.projectId, mr.iid),
             badges,
-            null
+            TargetAction.Undefined
         )
     }
 

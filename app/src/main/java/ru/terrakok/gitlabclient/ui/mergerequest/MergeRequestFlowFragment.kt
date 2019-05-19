@@ -5,7 +5,6 @@ import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.di.MergeRequestId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
-import ru.terrakok.gitlabclient.di.TargetEventAction
 import ru.terrakok.gitlabclient.entity.app.target.TargetAction
 import ru.terrakok.gitlabclient.extension.argument
 import ru.terrakok.gitlabclient.ui.global.FlowFragment
@@ -16,7 +15,7 @@ class MergeRequestFlowFragment : FlowFragment() {
 
     private val mrId by argument(ARG_MR_ID, 0L)
     private val projectId by argument(ARG_PROJECT_ID, 0L)
-    private val targetAction by argument<TargetAction?>(ARG_TARGET_ACTION)
+    private val targetAction by argument<TargetAction>(ARG_TARGET_ACTION)
 
     override fun installModules(scope: Scope) {
         super.installModules(scope)
@@ -29,9 +28,8 @@ class MergeRequestFlowFragment : FlowFragment() {
                     bind(PrimitiveWrapper::class.java)
                         .withName(MergeRequestId::class.java)
                         .toInstance(PrimitiveWrapper(mrId))
-                    bind(PrimitiveWrapper::class.java)
-                        .withName(TargetEventAction::class.java)
-                        .toInstance(PrimitiveWrapper(targetAction))
+                    bind(TargetAction::class.java)
+                        .toInstance(targetAction)
                 }
             }
         )
@@ -46,13 +44,13 @@ class MergeRequestFlowFragment : FlowFragment() {
         fun create(
             projectId: Long,
             mrId: Long,
-            targetAction: TargetAction?
+            targetAction: TargetAction
         ) = MergeRequestFlowFragment().apply {
-                arguments = Bundle().apply {
-                    putLong(ARG_PROJECT_ID, projectId)
-                    putLong(ARG_MR_ID, mrId)
-                    putSerializable(ARG_TARGET_ACTION, targetAction)
-                }
+            arguments = Bundle().apply {
+                putLong(ARG_PROJECT_ID, projectId)
+                putLong(ARG_MR_ID, mrId)
+                putSerializable(ARG_TARGET_ACTION, targetAction)
             }
+        }
     }
 }

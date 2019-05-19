@@ -80,7 +80,7 @@ object Screens {
     data class MergeRequestFlow(
         val projectId: Long,
         val mrId: Long,
-        val targetAction: TargetAction?
+        val targetAction: TargetAction
     ) : SupportAppScreen() {
         override fun getFragment() = MergeRequestFlowFragment.create(projectId, mrId, targetAction)
     }

@@ -121,7 +121,7 @@ class IssueRepository @Inject constructor(
             issue.id,
             TargetInternal(issue.projectId, issue.iid),
             badges,
-            null
+            TargetAction.Undefined
         )
     }
 
