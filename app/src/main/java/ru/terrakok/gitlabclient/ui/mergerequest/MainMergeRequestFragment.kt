@@ -7,6 +7,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_main_mr.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
+import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.presentation.mergerequest.MergeRequestPresenter
 import ru.terrakok.gitlabclient.presentation.mergerequest.MergeRequestView
@@ -52,22 +53,36 @@ class MainMergeRequestFragment : BaseFragment(), MergeRequestView {
         showSnackMessage(message)
     }
 
+    override fun selectActionTab(eventAction: EventAction) {
+        when(eventAction) {
+            EventAction.COMMENTED_ON -> { viewPager.currentItem = TAB_NOTES }
+            else -> {}
+        }
+    }
+
     private inner class MergeRequestPagesAdapter : FragmentPagerAdapter(childFragmentManager) {
         override fun getItem(position: Int): BaseFragment = when (position) {
-            0 -> Screens.MergeRequestInfo.fragment
-            1 -> Screens.MergeRequestCommits.fragment
-            2 -> Screens.MergeRequestNotes.fragment
+            TAB_DETAILS -> Screens.MergeRequestInfo.fragment
+            TAB_COMMITS -> Screens.MergeRequestCommits.fragment
+            TAB_NOTES -> Screens.MergeRequestNotes.fragment
             else -> Screens.MergeRequestChanges.fragment
         }
 
         override fun getCount() = 4
 
         override fun getPageTitle(position: Int) = when (position) {
-            0 -> getString(R.string.merge_request_info_tab)
-            1 -> getString(R.string.merge_request_commits_tab)
-            2 -> getString(R.string.merge_request_discussion_tab)
-            3 -> getString(R.string.merge_request_changes_tab)
+            TAB_DETAILS -> getString(R.string.merge_request_info_tab)
+            TAB_COMMITS -> getString(R.string.merge_request_commits_tab)
+            TAB_NOTES -> getString(R.string.merge_request_discussion_tab)
+            TAB_CHANGES -> getString(R.string.merge_request_changes_tab)
             else -> null
         }
+    }
+
+    companion object {
+        private const val TAB_DETAILS = 0
+        private const val TAB_COMMITS = 1
+        private const val TAB_NOTES = 2
+        private const val TAB_CHANGES = 3
     }
 }

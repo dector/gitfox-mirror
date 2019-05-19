@@ -33,6 +33,7 @@ import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.app.target.AppTarget
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
+import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderTitle
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import timber.log.Timber
 
@@ -160,8 +161,15 @@ fun TargetHeader.Public.openInfo(router: FlowRouter) {
             router.startFlow(Screens.UserFlow(targetId))
         }
         AppTarget.MERGE_REQUEST -> {
+            val eventAction = (title as? TargetHeaderTitle.Event)?.action
             internal?.let { targetInternal ->
-                router.startFlow(Screens.MergeRequestFlow(targetInternal.projectId, targetInternal.targetIid))
+                router.startFlow(
+                    Screens.MergeRequestFlow(
+                        targetInternal.projectId,
+                        targetInternal.targetIid,
+                        eventAction
+                    )
+                )
             }
         }
         AppTarget.ISSUE -> {
