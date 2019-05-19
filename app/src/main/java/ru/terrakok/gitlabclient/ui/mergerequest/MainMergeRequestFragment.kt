@@ -7,7 +7,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_main_mr.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
-import ru.terrakok.gitlabclient.entity.event.EventAction
+import ru.terrakok.gitlabclient.entity.app.target.TargetAction
 import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.presentation.mergerequest.MergeRequestPresenter
 import ru.terrakok.gitlabclient.presentation.mergerequest.MergeRequestView
@@ -53,10 +53,11 @@ class MainMergeRequestFragment : BaseFragment(), MergeRequestView {
         showSnackMessage(message)
     }
 
-    override fun selectActionTab(eventAction: EventAction) {
-        when(eventAction) {
-            EventAction.COMMENTED_ON -> { viewPager.currentItem = TAB_NOTES }
-            else -> {}
+    override fun selectActionTab(targetAction: TargetAction) {
+        when (targetAction) {
+            is TargetAction.CommentedOn -> {
+                viewPager.currentItem = TAB_NOTES
+            }
         }
     }
 

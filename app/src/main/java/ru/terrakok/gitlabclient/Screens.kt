@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import ru.terrakok.cicerone.android.support.SupportAppScreen
-import ru.terrakok.gitlabclient.entity.event.EventAction
+import ru.terrakok.gitlabclient.entity.app.target.TargetAction
 import ru.terrakok.gitlabclient.entity.issue.IssueState
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
 import ru.terrakok.gitlabclient.ui.about.AboutFragment
@@ -80,9 +80,9 @@ object Screens {
     data class MergeRequestFlow(
         val projectId: Long,
         val mrId: Long,
-        val eventAction: EventAction?
+        val targetAction: TargetAction?
     ) : SupportAppScreen() {
-        override fun getFragment() = MergeRequestFlowFragment.create(projectId, mrId, eventAction)
+        override fun getFragment() = MergeRequestFlowFragment.create(projectId, mrId, targetAction)
     }
 
     //screens

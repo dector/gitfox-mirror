@@ -4,6 +4,8 @@ import com.arellomobile.mvp.InjectViewState
 import ru.terrakok.gitlabclient.di.MergeRequestId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
+import ru.terrakok.gitlabclient.di.TargetEventAction
+import ru.terrakok.gitlabclient.entity.app.target.TargetAction
 import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
@@ -18,6 +20,7 @@ import javax.inject.Inject
 class MergeRequestNotesPresenter @Inject constructor(
     @ProjectId projectIdWrapper: PrimitiveWrapper<Long>,
     @MergeRequestId mrIdWrapper: PrimitiveWrapper<Long>,
+    @TargetEventAction targetActionWrapper: PrimitiveWrapper<TargetAction?>,
     private val mrInteractor: MergeRequestInteractor,
     private val mdConverter: MarkDownConverter,
     private val errorHandler: ErrorHandler
@@ -25,6 +28,7 @@ class MergeRequestNotesPresenter @Inject constructor(
 
     private val projectId = projectIdWrapper.value
     private val mrId = mrIdWrapper.value
+    private val targetAction = targetActionWrapper.value
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -41,7 +45,12 @@ class MergeRequestNotesPresenter @Inject constructor(
             }
             .toList()
             .subscribe(
-                { viewState.showNotes(it, false) },
+                { notes ->
+                    val selectedNotePosition = targetAction?.let { it as? TargetAction.CommentedOn }
+                        ?.noteId
+                        ?.let { noteIdToSelect -> notes.indexOfFirst { it.note.id == noteIdToSelect } }
+                    viewState.showNotes(notes, selectedNotePosition)
+                },
                 { errorHandler.proceed(it, { viewState.showMessage(it) }) }
             )
             .connect()
@@ -62,7 +71,10 @@ class MergeRequestNotesPresenter @Inject constructor(
             .doOnSubscribe { viewState.showBlockingProgress(true) }
             .doAfterTerminate { viewState.showBlockingProgress(false) }
             .subscribe(
-                { viewState.showNotes(it, true) },
+                {
+                    viewState.showNotes(it, it.size - 1)
+                    viewState.clearInput()
+                },
                 { errorHandler.proceed(it, { viewState.showMessage(it) }) }
             )
             .connect()

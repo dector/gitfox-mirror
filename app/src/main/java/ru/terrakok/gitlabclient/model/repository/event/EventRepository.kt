@@ -143,7 +143,8 @@ class EventRepository @Inject constructor(
                 targetData.target,
                 targetData.id,
                 getTargetInternal(event),
-                badges
+                badges,
+                getTargetAction(event)
             )
         } else {
             TargetHeader.Confidential
@@ -265,6 +266,14 @@ class EventRepository @Inject constructor(
                     null
                 }
             }
+        }
+
+    private fun getTargetAction(event: Event): TargetAction? =
+        when (event.actionName) {
+            EventAction.COMMENTED_ON -> {
+                event.note?.id?.let(TargetAction::CommentedOn)
+            }
+            else -> null
         }
 
     private fun getBody(event: Event, project: Project?) = when (event.targetType) {

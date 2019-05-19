@@ -120,7 +120,8 @@ class IssueRepository @Inject constructor(
             AppTarget.ISSUE,
             issue.id,
             TargetInternal(issue.projectId, issue.iid),
-            badges
+            badges,
+            null
         )
     }
 

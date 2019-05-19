@@ -47,3 +47,6 @@ annotation class FilePath
 
 @Qualifier
 annotation class FileReference
+
+@Qualifier
+annotation class TargetEventAction
