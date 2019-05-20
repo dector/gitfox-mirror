@@ -1,6 +1,3 @@
-import com.android.build.gradle.ProguardFiles.getDefaultProguardFile
-import org.gradle.internal.impldep.com.amazonaws.PredefinedClientConfigurations.defaultConfig
-
 plugins {
     id("com.android.library")
     kotlin("android")
@@ -31,16 +28,23 @@ android {
 }
 
 dependencies {
+    val kotlinVersion = extra["kotlinVersion"] as String
+    val markwonVersion = extra["markwonVersion"] as String
+
     //Markdown to HTML converter
-    compileOnly("ru.noties:markwon:${extra["markwonVersion"] as String}")
+    compileOnly("ru.noties:markwon:$markwonVersion")
+    testImplementation("ru.noties:markwon:$markwonVersion")
 
     //Kotlin
-    compileOnly("org.jetbrains.kotlin:kotlin-stdlib:${extra["kotlinVersion"] as String}")
+    compileOnly("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
+    testImplementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
 
     //JUnit
     testImplementation("junit:junit:4.12")
     //Mockito
-    testImplementation("org.mockito:mockito-core:2.8.9")
+    testImplementation("org.mockito:mockito-core:2.27.0")
     //Mockito Kotlin
-    testImplementation("com.nhaarman:mockito-kotlin-kt1.1:1.5.0")
+    testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.0.0")
+    //Roboelectric (to test Spannable)
+    testImplementation("org.robolectric:robolectric:4.2.1")
 }

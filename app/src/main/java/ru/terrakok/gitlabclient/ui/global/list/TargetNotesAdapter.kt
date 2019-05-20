@@ -1,8 +1,8 @@
 package ru.terrakok.gitlabclient.ui.global.list
 
-import android.support.v7.util.DiffUtil
+import androidx.recyclerview.widget.DiffUtil
 import com.arellomobile.mvp.MvpDelegate
-import com.hannesdorfmann.adapterdelegates3.ListDelegationAdapter
+import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import ru.terrakok.gitlabclient.presentation.global.NoteWithProjectId
 
 class TargetNotesAdapter(

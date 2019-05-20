@@ -1,12 +1,13 @@
 package ru.terrakok.gitlabclient.ui.libraries
 
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.hannesdorfmann.adapterdelegates3.ListDelegationAdapter
+import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import kotlinx.android.synthetic.main.fragment_libraries.*
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.di.DI
 import ru.terrakok.gitlabclient.entity.app.develop.AppLibrary
 import ru.terrakok.gitlabclient.extension.tryOpenLink
 import ru.terrakok.gitlabclient.presentation.libraries.LibrariesPresenter
@@ -19,6 +20,8 @@ import ru.terrakok.gitlabclient.ui.global.list.AppLibraryAdapterDelegate
  */
 class LibrariesFragment : BaseFragment(), LibrariesView {
     override val layoutRes = R.layout.fragment_libraries
+
+    override val parentScopeName = DI.APP_SCOPE
 
     private val adapter: LibraryAdapter by lazy { LibraryAdapter() }
 

@@ -1,8 +1,8 @@
 package ru.terrakok.gitlabclient.ui.global.list
 
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
-import com.hannesdorfmann.adapterdelegates3.ListDelegationAdapter
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
+import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import ru.terrakok.gitlabclient.entity.app.CommitWithAvatarUrl
 
 /**
@@ -80,7 +80,7 @@ class TargetCommitsAdapter(
             return if (newItem is CommitWithAvatarUrl && oldItem is CommitWithAvatarUrl) {
                 newItem == oldItem
             } else {
-                true
+                false
             }
         }
     }

@@ -9,9 +9,9 @@ import com.arellomobile.mvp.MvpDelegate
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import ru.noties.markwon.Markwon
+import ru.terrakok.gitlabclient.di.DI
 import ru.terrakok.gitlabclient.presentation.markdown.MarkdownPresenter
 import ru.terrakok.gitlabclient.presentation.markdown.MarkdownView
-import ru.terrakok.gitlabclient.toothpick.DI
 import timber.log.Timber
 import toothpick.Toothpick
 

@@ -5,6 +5,7 @@ package ru.terrakok.gitlabclient.entity.app.target
  */
 enum class TargetHeaderIcon {
     CREATED,
+    IMPORTED,
     JOINED,
     COMMENTED,
     MERGED,

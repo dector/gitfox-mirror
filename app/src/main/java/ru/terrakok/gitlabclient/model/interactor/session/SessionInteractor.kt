@@ -1,13 +1,13 @@
 package ru.terrakok.gitlabclient.model.interactor.session
 
 import io.reactivex.Completable
+import ru.terrakok.gitlabclient.di.DI
+import ru.terrakok.gitlabclient.di.DefaultServerPath
+import ru.terrakok.gitlabclient.di.module.ServerModule
 import ru.terrakok.gitlabclient.entity.app.session.OAuthParams
 import ru.terrakok.gitlabclient.entity.app.session.UserAccount
 import ru.terrakok.gitlabclient.model.data.cache.ProjectCache
 import ru.terrakok.gitlabclient.model.repository.session.SessionRepository
-import ru.terrakok.gitlabclient.toothpick.DI
-import ru.terrakok.gitlabclient.toothpick.module.ServerModule
-import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultServerPath
 import toothpick.Toothpick
 import java.net.URI
 import java.util.*

@@ -1,7 +1,7 @@
 package ru.terrakok.gitlabclient.ui.project.mergerequest
 
 import android.os.Bundle
-import android.support.v4.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentPagerAdapter
 import kotlinx.android.synthetic.main.fragment_my_merge_requests_container.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
@@ -28,8 +28,7 @@ class ProjectMergeRequestsContainerFragment : BaseFragment() {
         override fun getItem(position: Int) = when (position) {
             0 -> Screens.ProjectMergeRequests(MergeRequestState.OPENED).fragment
             1 -> Screens.ProjectMergeRequests(MergeRequestState.MERGED).fragment
-            2 -> Screens.ProjectMergeRequests(MergeRequestState.CLOSED).fragment
-            else -> null
+            else -> Screens.ProjectMergeRequests(MergeRequestState.CLOSED).fragment
         }
 
         override fun getCount() = 3
