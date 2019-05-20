@@ -1,6 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.project.labels
 
-import com.nhaarman.mockito_kotlin.*
+import com.nhaarman.mockitokotlin2.*
 import io.reactivex.Single
 import org.junit.Test
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper

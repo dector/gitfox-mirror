@@ -1,6 +1,6 @@
 package ru.terrakok.gitlabclient.model.repository.profile
 
-import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockitokotlin2.mock
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
 import org.junit.Assert
