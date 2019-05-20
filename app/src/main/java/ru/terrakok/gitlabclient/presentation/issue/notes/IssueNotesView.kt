@@ -13,9 +13,12 @@ import ru.terrakok.gitlabclient.presentation.global.NoteWithFormattedBody
 interface IssueNotesView : MvpView {
 
     fun showEmptyProgress(show: Boolean)
-    fun showNotes(notes: List<NoteWithFormattedBody>, scrollToEnd: Boolean)
+    fun showNotes(notes: List<NoteWithFormattedBody>, scrollToPosition: Int?)
     fun showBlockingProgress(show: Boolean)
 
     @StateStrategyType(OneExecutionStateStrategy::class)
     fun showMessage(message: String)
+
+    @StateStrategyType(OneExecutionStateStrategy::class)
+    fun clearInput()
 }

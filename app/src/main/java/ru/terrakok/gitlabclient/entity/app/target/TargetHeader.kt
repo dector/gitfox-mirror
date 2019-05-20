@@ -16,7 +16,8 @@ sealed class TargetHeader {
         val target: AppTarget,
         val targetId: Long,
         val internal: TargetInternal?,
-        val badges: List<TargetBadge>
+        val badges: List<TargetBadge>,
+        val action: TargetAction
     ) : TargetHeader()
 
     object Confidential : TargetHeader()
