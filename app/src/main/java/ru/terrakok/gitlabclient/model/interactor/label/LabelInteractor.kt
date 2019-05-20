@@ -2,7 +2,6 @@ package ru.terrakok.gitlabclient.model.interactor.label
 
 import io.reactivex.Single
 import ru.terrakok.gitlabclient.entity.Label
-import ru.terrakok.gitlabclient.model.data.cache.ProjectLabelCache
 import ru.terrakok.gitlabclient.model.repository.label.LabelRepository
 import javax.inject.Inject
 
@@ -10,8 +9,7 @@ import javax.inject.Inject
  * @author Maxim Myalkin (MaxMyalkin) on 30.10.2018.
  */
 class LabelInteractor @Inject constructor(
-    private val labelRepository: LabelRepository,
-    private val projectLabelCache: ProjectLabelCache
+    private val labelRepository: LabelRepository
 ) {
 
     fun getLabelList(
@@ -22,18 +20,11 @@ class LabelInteractor @Inject constructor(
     fun getAllProjectLabels(
         projectId: Long?
     ): Single<List<Label>> = Single.defer {
-            if (projectId != null) {
-                val labels = projectLabelCache.get(projectId)
-                if (labels != null) {
-                    Single.just(labels)
-                } else {
-                    labelRepository
-                        .getAllProjectLabels(projectId)
-                        .doOnSuccess { labels -> projectLabelCache.put(projectId, labels) }
-                }
-            } else {
-                Single.just(emptyList())
-            }
+        if (projectId != null) {
+            labelRepository.getAllProjectLabels(projectId)
+        } else {
+            Single.just(emptyList())
+        }
     }
 
     fun subscribeToLabel(

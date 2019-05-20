@@ -1,8 +1,8 @@
 package ru.terrakok.gitlabclient.model.data.cache
 
+import ru.terrakok.gitlabclient.di.CacheLifetime
+import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.Label
-import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
-import ru.terrakok.gitlabclient.toothpick.qualifier.CacheLifetime
 import timber.log.Timber
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
