@@ -3,6 +3,8 @@ package ru.terrakok.gitlabclient.model.repository.issue
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
+import ru.terrakok.gitlabclient.di.DefaultPageSize
+import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.Note
 import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.entity.Project
@@ -15,8 +17,6 @@ import ru.terrakok.gitlabclient.entity.issue.IssueState
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
-import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
-import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultPageSize
 import javax.inject.Inject
 
 /**
@@ -103,6 +103,7 @@ class IssueRepository @Inject constructor(
         badges.add(TargetBadge.Icon(TargetBadgeIcon.COMMENTS, issue.userNotesCount))
         badges.add(TargetBadge.Icon(TargetBadgeIcon.UP_VOTES, issue.upvotes))
         badges.add(TargetBadge.Icon(TargetBadgeIcon.DOWN_VOTES, issue.downvotes))
+        badges.add(TargetBadge.Icon(TargetBadgeIcon.RELATED_MERGE_REQUESTS, issue.relatedMergeRequestCount))
         issue.labels.forEach { label -> badges.add(TargetBadge.Text(label)) }
 
         return TargetHeader.Public(
@@ -179,7 +180,7 @@ class IssueRepository @Inject constructor(
     private fun getAllIssueNotePages(projectId: Long, issueId: Long, sort: Sort?, orderBy: OrderBy?) =
         Observable.range(1, Int.MAX_VALUE)
             .concatMap { page ->
-                api.getIssueNotes(projectId, issueId, sort, orderBy, page, MAX_PAGE_SIZE)
+                api.getIssueNotes(projectId, issueId, sort, orderBy, page, GitlabApi.MAX_PAGE_SIZE)
                     .toObservable()
             }
             .takeWhile { notes -> notes.isNotEmpty() }
@@ -198,14 +199,11 @@ class IssueRepository @Inject constructor(
 
     fun getMilestoneIssues(
         projectId: Long,
-        milestoneId: Long
-    ) = api
-        .getMilestoneIssues(projectId, milestoneId)
+        milestoneId: Long,
+        page: Int,
+        pageSize: Int = defaultPageSize
+    ): Single<List<Issue>> = api
+        .getMilestoneIssues(projectId, milestoneId, page, pageSize)
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
-
-    companion object {
-        // See GitLab documentation: https://docs.gitlab.com/ee/api/#pagination.
-        private const val MAX_PAGE_SIZE = 100
-    }
 }

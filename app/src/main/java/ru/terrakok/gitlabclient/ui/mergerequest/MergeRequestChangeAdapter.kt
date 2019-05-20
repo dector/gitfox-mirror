@@ -1,18 +1,20 @@
 package ru.terrakok.gitlabclient.ui.mergerequest
 
-import android.support.v7.util.DiffUtil
-import com.hannesdorfmann.adapterdelegates3.ListDelegationAdapter
+import androidx.recyclerview.widget.DiffUtil
+import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestChange
 import ru.terrakok.gitlabclient.ui.global.list.MergeRequestChangeAdapterDelegate
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 26.10.18.
  */
-class MergeRequestChangeAdapter : ListDelegationAdapter<MutableList<MergeRequestChange>>() {
+class MergeRequestChangeAdapter(
+    clickListener: (MergeRequestChange) -> Unit
+) : ListDelegationAdapter<MutableList<MergeRequestChange>>() {
 
     init {
         items = mutableListOf()
-        delegatesManager.addDelegate(MergeRequestChangeAdapterDelegate())
+        delegatesManager.addDelegate(MergeRequestChangeAdapterDelegate(clickListener))
     }
 
     fun setData(data: List<MergeRequestChange>) {

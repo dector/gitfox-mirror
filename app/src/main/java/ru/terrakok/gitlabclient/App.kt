@@ -7,14 +7,11 @@ import com.jakewharton.threetenabp.AndroidThreeTen
 import io.fabric.sdk.android.Fabric
 import ru.noties.markwon.SpannableConfiguration
 import ru.noties.markwon.spans.SpannableTheme
-import ru.terrakok.gitlabclient.toothpick.DI
-import ru.terrakok.gitlabclient.toothpick.module.AppModule
+import ru.terrakok.gitlabclient.di.DI
+import ru.terrakok.gitlabclient.di.module.AppModule
 import timber.log.Timber
 import toothpick.Toothpick
 import toothpick.configuration.Configuration
-import toothpick.registries.FactoryRegistryLocator
-import toothpick.registries.MemberInjectorRegistryLocator
-import java.util.*
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 26.03.17.
@@ -23,7 +20,6 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        appCode = UUID.randomUUID().toString()
 
         initLogger()
         initFabric()
@@ -53,9 +49,7 @@ class App : Application() {
         if (BuildConfig.DEBUG) {
             Toothpick.setConfiguration(Configuration.forDevelopment().preventMultipleRootScopes())
         } else {
-            Toothpick.setConfiguration(Configuration.forProduction().disableReflection())
-            FactoryRegistryLocator.setRootRegistry(ru.terrakok.gitlabclient.FactoryRegistry())
-            MemberInjectorRegistryLocator.setRootRegistry(ru.terrakok.gitlabclient.MemberInjectorRegistry())
+            Toothpick.setConfiguration(Configuration.forProduction())
         }
     }
 
@@ -76,10 +70,5 @@ class App : Application() {
 
     private fun initThreetenABP() {
         AndroidThreeTen.init(this)
-    }
-
-    companion object {
-        lateinit var appCode: String
-            private set
     }
 }

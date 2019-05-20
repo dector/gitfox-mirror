@@ -2,6 +2,8 @@ package ru.terrakok.gitlabclient.model.repository.milestone
 
 import io.reactivex.Completable
 import io.reactivex.Single
+import ru.terrakok.gitlabclient.di.DefaultPageSize
+import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.milestone.Milestone
 import ru.terrakok.gitlabclient.entity.milestone.MilestoneState
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
@@ -10,15 +12,18 @@ import javax.inject.Inject
 
 class MilestoneRepository @Inject constructor(
     private val api: GitlabApi,
-    private val schedulers: SchedulersProvider
+    private val schedulers: SchedulersProvider,
+    @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>
 ) {
+    private val defaultPageSize = defaultPageSizeWrapper.value
+
     fun getMilestones(
         projectId: Long,
-        state: MilestoneState? = null
+        state: MilestoneState? = null,
+        page: Int,
+        pageSize: Int = defaultPageSize
     ): Single<List<Milestone>> = api
-        .getMilestones(
-            projectId, state
-        )
+        .getMilestones(projectId, state, page, pageSize)
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
 

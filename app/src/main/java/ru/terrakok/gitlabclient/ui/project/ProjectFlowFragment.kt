@@ -1,35 +1,22 @@
 package ru.terrakok.gitlabclient.ui.project
 
 import android.os.Bundle
-import com.arellomobile.mvp.MvpView
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
-import ru.terrakok.cicerone.Router
+import ru.terrakok.cicerone.android.support.SupportAppScreen
 import ru.terrakok.gitlabclient.Screens
+import ru.terrakok.gitlabclient.di.PrimitiveWrapper
+import ru.terrakok.gitlabclient.di.ProjectId
 import ru.terrakok.gitlabclient.extension.argument
-import ru.terrakok.gitlabclient.extension.setLaunchScreen
-import ru.terrakok.gitlabclient.presentation.project.ProjectFlowPresenter
-import ru.terrakok.gitlabclient.toothpick.DI
-import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
-import ru.terrakok.gitlabclient.toothpick.module.FlowNavigationModule
-import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
 import ru.terrakok.gitlabclient.ui.global.FlowFragment
 import toothpick.Scope
-import toothpick.Toothpick
 import toothpick.config.Module
 
-/**
- * Created by Konstantin Tskhovrebov (aka @terrakok) on 25.11.17.
- */
-class ProjectFlowFragment : FlowFragment(), MvpView {
+class ProjectFlowFragment : FlowFragment() {
 
     private val projectId by argument(ARG_PROJECT_ID, 0L)
 
-    override val parentScopeName = DI.SERVER_SCOPE
-
-    override val scopeModuleInstaller = { scope: Scope ->
+    override fun installModules(scope: Scope) {
+        super.installModules(scope)
         scope.installModules(
-            FlowNavigationModule(scope.getInstance(Router::class.java)),
             object : Module() {
                 init {
                     bind(PrimitiveWrapper::class.java)
@@ -40,24 +27,7 @@ class ProjectFlowFragment : FlowFragment(), MvpView {
         )
     }
 
-    @InjectPresenter
-    lateinit var presenter: ProjectFlowPresenter
-
-    @ProvidePresenter
-    fun providePresenter(): ProjectFlowPresenter =
-        scope.getInstance(ProjectFlowPresenter::class.java)
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Toothpick.inject(this, scope)
-        if (childFragmentManager.fragments.isEmpty()) {
-            navigator.setLaunchScreen(Screens.ProjectMainFlow)
-        }
-    }
-
-    override fun onExit() {
-        presenter.onExit()
-    }
+    override fun getLaunchScreen() = Screens.MainProject
 
     companion object {
         private const val ARG_PROJECT_ID = "arg_project_id"

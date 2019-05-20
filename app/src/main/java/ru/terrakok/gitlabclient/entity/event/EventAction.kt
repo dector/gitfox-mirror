@@ -12,6 +12,8 @@ enum class EventAction(private val jsonName: String) {
     COMMENTED_ON("commented on"),
     @SerializedName("created")
     CREATED("created"),
+    @SerializedName("imported")
+    IMPORTED("imported"),
     @SerializedName("pushed to")
     PUSHED_TO("pushed to"),
     @SerializedName("pushed new")

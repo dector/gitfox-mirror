@@ -2,7 +2,7 @@ package ru.terrakok.gitlabclient.extension
 
 import android.content.Context
 import android.content.res.Resources
-import android.support.annotation.DrawableRes
+import androidx.annotation.DrawableRes
 import org.threeten.bp.Duration
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.format.DateTimeFormatter
@@ -71,11 +71,13 @@ fun EventAction.getHumanName(resources: Resources) = when (this) {
     EventAction.COMMENTED_ON -> resources.getString(R.string.event_action_commented_on)
     EventAction.JOINED -> resources.getString(R.string.event_action_joined)
     EventAction.CREATED -> resources.getString(R.string.event_action_created)
+    EventAction.IMPORTED -> resources.getString(R.string.event_action_imported)
 }
 
 @DrawableRes
 fun TargetHeaderIcon.getIcon() = when (this) {
     TargetHeaderIcon.CREATED -> R.drawable.ic_event_created_24dp
+    TargetHeaderIcon.IMPORTED -> R.drawable.ic_event_imported_24dp
     TargetHeaderIcon.JOINED -> R.drawable.ic_event_joined_24dp
     TargetHeaderIcon.COMMENTED -> R.drawable.ic_event_commented_24dp
     TargetHeaderIcon.MERGED -> R.drawable.ic_event_merged_24dp
@@ -101,7 +103,11 @@ fun TodoAction.getHumanName(resources: Resources): String = when (this) {
 
 fun TargetHeaderTitle.getHumanName(resources: Resources) = when (this) {
     is TargetHeaderTitle.Event -> {
-        "$userName ${action.getHumanName(resources)} $targetName ${resources.getString(R.string.at)} $projectName"
+        if (action == EventAction.IMPORTED) {
+            "$userName ${action.getHumanName(resources)} $targetName $projectName"
+        } else {
+            "$userName ${action.getHumanName(resources)} $targetName ${resources.getString(R.string.at)} $projectName"
+        }
     }
     is TargetHeaderTitle.Todo -> {
         val actionName = action.getHumanName(resources)
@@ -161,4 +167,9 @@ fun TargetBadgeStatus.getBadgeColors(context: Context) = when (this) {
     TargetBadgeStatus.OPENED -> Pair(context.color(R.color.green), context.color(R.color.lightGreen))
     TargetBadgeStatus.CLOSED -> Pair(context.color(R.color.red), context.color(R.color.lightRed))
     TargetBadgeStatus.MERGED -> Pair(context.color(R.color.blue), context.color(R.color.lightBlue))
+}
+
+fun String.extractFileNameFromPath(): String {
+    val index = lastIndexOf("/")
+    return substring(if (index != -1) index + 1 else 0)
 }
