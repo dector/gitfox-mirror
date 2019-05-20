@@ -52,6 +52,8 @@ class MainFragment : BaseFragment(), MainView {
                 )
                 true
             }
+            val leftMargin = resources.getDimension(R.dimen.bottom_bar_notification_left_margin).toInt()
+            setNotificationMarginLeft(leftMargin, leftMargin)
         }
 
         selectTab(
