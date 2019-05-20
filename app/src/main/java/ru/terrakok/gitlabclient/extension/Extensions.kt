@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.text.SpannableStringBuilder
 import android.text.Spanned
+import android.text.TextUtils
 import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
@@ -19,6 +20,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.annotation.LayoutRes
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.Fragment
@@ -218,4 +220,17 @@ fun Any.objectScopeName() = "${javaClass.simpleName}_${hashCode()}"
 fun View.setBackgroundTintByColor(@ColorInt color: Int) {
     val wrappedDrawable = DrawableCompat.wrap(background)
     DrawableCompat.setTint(wrappedDrawable.mutate(), color)
+}
+
+fun Toolbar.setTitleEllipsize(ellipsize: TextUtils.TruncateAt) {
+    val fakeTitle = "fakeTitle"
+    title = fakeTitle
+    for(i in 0..childCount) {
+        val child = getChildAt(i)
+        if (child is TextView && child.text == fakeTitle) {
+            child.ellipsize = TextUtils.TruncateAt.START
+            break
+        }
+    }
+    title = ""
 }
