@@ -16,8 +16,8 @@ android {
         minSdkVersion(19)
         targetSdkVersion(28)
 
-        versionName = "1.5"
-        versionCode = 15
+        versionName = "1.5.1"
+        versionCode = 16
 
         buildToolsVersion = "28.0.3"
 
