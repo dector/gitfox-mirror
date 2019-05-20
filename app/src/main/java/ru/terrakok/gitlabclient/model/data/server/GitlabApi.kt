@@ -380,18 +380,18 @@ interface GitlabApi {
         @Query("scope") scope: MergeRequestScope = MergeRequestScope.ASSIGNED_TO_ME,
         @Query("state") state: MergeRequestState = MergeRequestState.OPENED,
         @Query("per_page") pageSize: Int = 1
-    ): Single<Result<Unit>>
+    ): Single<Result<Void>>
 
     @HEAD("$API_PATH/issues")
     fun getMyAssignedIssueHeaders(
         @Query("scope") scope: IssueScope = IssueScope.ASSIGNED_BY_ME,
         @Query("state") state: IssueState = IssueState.OPENED,
         @Query("per_page") pageSize: Int = 1
-    ): Single<Result<Unit>>
+    ): Single<Result<Void>>
 
     @HEAD("$API_PATH/todos")
     fun getMyAssignedTodoHeaders(
         @Query("state") state: TodoState = TodoState.PENDING,
         @Query("per_page") pageSize: Int = 1
-    ): Single<Result<Unit>>
+    ): Single<Result<Void>>
 }
