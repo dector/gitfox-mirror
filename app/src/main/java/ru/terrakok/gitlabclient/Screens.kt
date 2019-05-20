@@ -265,11 +265,4 @@ object Screens {
         //todo: implement milestone flow.
         override fun getFragment() = StubFragment()
     }
-
-    data class MemberFlow(
-        val userId: Long
-    ) : SupportAppScreen() {
-        //todo: implement member flow.
-        override fun getFragment() = StubFragment()
-    }
 }

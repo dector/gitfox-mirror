@@ -17,7 +17,7 @@ import javax.inject.Inject
  */
 @InjectViewState
 class ProjectMembersPresenter @Inject constructor(
-    @ProjectId private val projectIdWrapper: PrimitiveWrapper<Long>,
+    @ProjectId projectIdWrapper: PrimitiveWrapper<Long>,
     private val membersInteractor: MembersInteractor,
     private val errorHandler: ErrorHandler,
     private val router: FlowRouter
@@ -68,7 +68,9 @@ class ProjectMembersPresenter @Inject constructor(
         }
     )
 
-    fun onMemberClick(userId: Long) = router.startFlow(Screens.MemberFlow(userId))
+    fun onMemberClick(userId: Long) {
+        //TODO Member Flow(implement this method when Member Flow was be ready).
+    }
     fun refreshMembers() = paginator.refresh()
     fun loadNextMembersPage() = paginator.loadNewPage()
 
