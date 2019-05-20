@@ -19,7 +19,7 @@ import ru.terrakok.gitlabclient.model.interactor.issue.IssueInteractor
 import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestInteractor
 import ru.terrakok.gitlabclient.model.interactor.milestone.MilestoneInteractor
 import ru.terrakok.gitlabclient.model.interactor.project.ProjectInteractor
-import ru.terrakok.gitlabclient.model.interactor.todo.TodoListInteractor
+import ru.terrakok.gitlabclient.model.interactor.todo.TodoInteractor
 import ru.terrakok.gitlabclient.model.interactor.user.UserInteractor
 import ru.terrakok.gitlabclient.model.repository.event.EventRepository
 import ru.terrakok.gitlabclient.model.repository.issue.IssueRepository
@@ -99,6 +99,6 @@ class ServerModule(userAccount: UserAccount?) : Module() {
 
         //Todos
         bind(TodoRepository::class.java)
-        bind(TodoListInteractor::class.java)
+        bind(TodoInteractor::class.java)
     }
 }

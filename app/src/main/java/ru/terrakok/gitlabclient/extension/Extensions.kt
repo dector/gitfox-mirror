@@ -25,6 +25,7 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.snackbar.Snackbar
+import retrofit2.adapter.rxjava2.Result
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 import ru.terrakok.cicerone.commands.BackTo
@@ -206,4 +207,8 @@ fun Any.objectScopeName() = "${javaClass.simpleName}_${hashCode()}"
 fun View.setBackgroundTintByColor(@ColorInt color: Int) {
     val wrappedDrawable = DrawableCompat.wrap(background)
     DrawableCompat.setTint(wrappedDrawable.mutate(), color)
+}
+
+fun Result<*>.getXTotalHeader(): Int {
+    return if (!isError) response().headers().get("X-Total")?.toInt() ?: 0 else 0
 }

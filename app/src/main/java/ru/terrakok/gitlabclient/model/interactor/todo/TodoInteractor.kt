@@ -8,7 +8,7 @@ import javax.inject.Inject
 /**
  * @author Eugene Shapovalov (CraggyHaggy). Date: 21.09.17
  */
-class TodoListInteractor @Inject constructor(
+class TodoInteractor @Inject constructor(
     private val todoRepository: TodoRepository,
     private val profileRepository: ProfileRepository
 ) {
@@ -24,4 +24,6 @@ class TodoListInteractor @Inject constructor(
                 page = page
             )
         }
+
+    fun getMyAssignedTodoCount() = todoRepository.getMyAssignedTodoCount()
 }
