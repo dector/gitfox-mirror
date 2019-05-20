@@ -1,10 +1,11 @@
 package ru.terrakok.gitlabclient.model.repository.label
 
-import ru.terrakok.gitlabclient.di.DefaultPageSize
-import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import io.reactivex.Observable
 import io.reactivex.Single
+import ru.terrakok.gitlabclient.di.DefaultPageSize
+import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.Label
+import ru.terrakok.gitlabclient.model.data.cache.ProjectLabelCache
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import javax.inject.Inject
@@ -15,7 +16,8 @@ import javax.inject.Inject
 class LabelRepository @Inject constructor(
     private val api: GitlabApi,
     @DefaultPageSize defaultPageSizeWrapper: PrimitiveWrapper<Int>,
-    private val schedulers: SchedulersProvider
+    private val schedulers: SchedulersProvider,
+    private val projectLabelCache: ProjectLabelCache
 ) {
 
     private val defaultPageSize: Int = defaultPageSizeWrapper.value
@@ -28,7 +30,19 @@ class LabelRepository @Inject constructor(
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
 
-    fun getAllProjectLabels(
+    fun getAllProjectLabels(projectId: Long): Single<List<Label>> = Single.defer {
+        val labels = projectLabelCache.get(projectId)
+        if (labels != null) {
+            Single.just(labels)
+        } else {
+            getAllProjectLabelsFromServer(projectId)
+                .doOnSuccess { labels -> projectLabelCache.put(projectId, labels) }
+        }
+    }
+        .subscribeOn(schedulers.io())
+        .observeOn(schedulers.ui())
+
+    private fun getAllProjectLabelsFromServer(
         projectId: Long
     ): Single<List<Label>> = Observable.range(1, Integer.MAX_VALUE)
         .concatMapSingle { page -> api.getProjectLabels(projectId, page, defaultPageSize) }
