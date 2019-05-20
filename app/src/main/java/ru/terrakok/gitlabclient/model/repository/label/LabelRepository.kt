@@ -30,17 +30,19 @@ class LabelRepository @Inject constructor(
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
 
-    fun getAllProjectLabels(projectId: Long): Single<List<Label>> = Single.defer {
-        val labels = projectLabelCache.get(projectId)
-        if (labels != null) {
-            Single.just(labels)
-        } else {
-            getAllProjectLabelsFromServer(projectId)
-                .doOnSuccess { labels -> projectLabelCache.put(projectId, labels) }
-        }
-    }
-        .subscribeOn(schedulers.io())
-        .observeOn(schedulers.ui())
+    fun getAllProjectLabels(projectId: Long): Single<List<Label>> =
+        Single
+            .defer {
+                val labels = projectLabelCache.get(projectId)
+                if (labels != null) {
+                    Single.just(labels)
+                } else {
+                    getAllProjectLabelsFromServer(projectId)
+                        .doOnSuccess { labels -> projectLabelCache.put(projectId, labels) }
+                }
+            }
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
 
     private fun getAllProjectLabelsFromServer(
         projectId: Long
