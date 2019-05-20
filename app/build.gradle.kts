@@ -131,7 +131,7 @@ dependencies {
     implementation("ru.noties:markwon:$markwonVersion")
     implementation("ru.noties:markwon-image-loader:$markwonVersion")
     //Bottom navigation bar
-    implementation("com.aurelhubert:ahbottomnavigation:2.1.0")
+    implementation("com.aurelhubert:ahbottomnavigation:2.3.4")
     //Lottie
     implementation("com.airbnb.android:lottie:2.5.1")
     //Date
