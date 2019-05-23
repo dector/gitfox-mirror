@@ -26,6 +26,7 @@ class MergeRequestRepository @Inject constructor(
     private val markDownUrlResolver: MarkDownUrlResolver
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
+    private var mergeRequestSharedSingle: Single<MergeRequest>? = null
 
     fun getMyMergeRequests(
         state: MergeRequestState? = null,
@@ -140,18 +141,27 @@ class MergeRequestRepository @Inject constructor(
         projectId: Long,
         mergeRequestId: Long
     ) = Single
-        .zip(
-            api.getProject(projectId),
-            api.getMergeRequest(projectId, mergeRequestId),
-            BiFunction<Project, MergeRequest, MergeRequest> { project, mr ->
-                val resolved = markDownUrlResolver.resolve(mr.description, project)
-                if (resolved != mr.description) {
-                    mr.copy(description = resolved)
-                } else {
-                    mr
-                }
+        .defer {
+            if (mergeRequestSharedSingle == null) {
+                mergeRequestSharedSingle = Single
+                    .zip(
+                        api.getProject(projectId),
+                        api.getMergeRequest(projectId, mergeRequestId),
+                        BiFunction<Project, MergeRequest, MergeRequest> { project, mr ->
+                            val resolved = markDownUrlResolver.resolve(mr.description, project)
+                            if (resolved != mr.description) {
+                                mr.copy(description = resolved)
+                            } else {
+                                mr
+                            }
+                        }
+                    )
+                    .toObservable()
+                    .share()
+                    .singleOrError()
             }
-        )
+            mergeRequestSharedSingle
+        }
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
 

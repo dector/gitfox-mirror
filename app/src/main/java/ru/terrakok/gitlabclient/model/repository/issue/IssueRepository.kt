@@ -29,6 +29,7 @@ class IssueRepository @Inject constructor(
     private val markDownUrlResolver: MarkDownUrlResolver
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
+    private var issueSharedSingle: Single<Issue>? = null
 
     fun getMyIssues(
         scope: IssueScope? = null,
@@ -129,18 +130,27 @@ class IssueRepository @Inject constructor(
         projectId: Long,
         issueId: Long
     ) = Single
-        .zip(
-            api.getProject(projectId),
-            api.getIssue(projectId, issueId),
-            BiFunction<Project, Issue, Issue> { project, issue ->
-                val resolved = markDownUrlResolver.resolve(issue.description, project)
-                if (resolved != issue.description) {
-                    issue.copy(description = resolved)
-                } else {
-                    issue
-                }
+        .defer {
+            if (issueSharedSingle == null) {
+                issueSharedSingle = Single
+                    .zip(
+                        api.getProject(projectId),
+                        api.getIssue(projectId, issueId),
+                        BiFunction<Project, Issue, Issue> { project, issue ->
+                            val resolved = markDownUrlResolver.resolve(issue.description, project)
+                            if (resolved != issue.description) {
+                                issue.copy(description = resolved)
+                            } else {
+                                issue
+                            }
+                        }
+                    )
+                    .toObservable()
+                    .share()
+                    .singleOrError()
             }
-        )
+            issueSharedSingle
+        }
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
 
