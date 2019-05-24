@@ -3,6 +3,7 @@ package ru.terrakok.gitlabclient.model.data.server
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.threeten.bp.LocalDateTime
+import retrofit2.adapter.rxjava2.Result
 import retrofit2.http.*
 import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.entity.event.Event
@@ -373,4 +374,24 @@ interface GitlabApi {
         @Path("project_id") projectId: Long,
         @Path("label_id") labelId: Long
     ): Single<Label>
+
+    @HEAD("$API_PATH/merge_requests")
+    fun getMyAssignedMergeRequestHeaders(
+        @Query("scope") scope: MergeRequestScope = MergeRequestScope.ASSIGNED_TO_ME,
+        @Query("state") state: MergeRequestState = MergeRequestState.OPENED,
+        @Query("per_page") pageSize: Int = 1
+    ): Single<Result<Void>>
+
+    @HEAD("$API_PATH/issues")
+    fun getMyAssignedIssueHeaders(
+        @Query("scope") scope: IssueScope = IssueScope.ASSIGNED_BY_ME,
+        @Query("state") state: IssueState = IssueState.OPENED,
+        @Query("per_page") pageSize: Int = 1
+    ): Single<Result<Void>>
+
+    @HEAD("$API_PATH/todos")
+    fun getMyAssignedTodoHeaders(
+        @Query("state") state: TodoState = TodoState.PENDING,
+        @Query("per_page") pageSize: Int = 1
+    ): Single<Result<Void>>
 }

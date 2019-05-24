@@ -14,6 +14,7 @@ import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.issue.Issue
 import ru.terrakok.gitlabclient.entity.issue.IssueScope
 import ru.terrakok.gitlabclient.entity.issue.IssueState
+import ru.terrakok.gitlabclient.extension.getXTotalHeader
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
@@ -207,4 +208,10 @@ class IssueRepository @Inject constructor(
         .getMilestoneIssues(projectId, milestoneId, page, pageSize)
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
+
+    fun getMyAssignedIssueCount(): Single<Int> =
+        api.getMyAssignedIssueHeaders()
+            .map { it.getXTotalHeader() }
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
 }

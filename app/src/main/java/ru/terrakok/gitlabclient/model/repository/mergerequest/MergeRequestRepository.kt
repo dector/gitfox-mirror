@@ -14,6 +14,7 @@ import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestScope
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestViewType
+import ru.terrakok.gitlabclient.extension.getXTotalHeader
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
@@ -255,4 +256,10 @@ class MergeRequestRepository @Inject constructor(
         .getMilestoneMergeRequests(projectId, milestoneId, page, pageSize)
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
+
+    fun getMyAssignedMergeRequestCount(): Single<Int> =
+        api.getMyAssignedMergeRequestHeaders()
+            .map { it.getXTotalHeader() }
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
 }
