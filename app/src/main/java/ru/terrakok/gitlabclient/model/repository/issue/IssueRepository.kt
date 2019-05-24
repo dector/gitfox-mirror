@@ -17,7 +17,6 @@ import ru.terrakok.gitlabclient.entity.issue.IssueState
 import ru.terrakok.gitlabclient.extension.getXTotalHeader
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
-import ru.terrakok.gitlabclient.model.repository.session.SessionRepository
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import javax.inject.Inject
 
@@ -28,8 +27,7 @@ class IssueRepository @Inject constructor(
     private val api: GitlabApi,
     private val schedulers: SchedulersProvider,
     @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>,
-    private val markDownUrlResolver: MarkDownUrlResolver,
-    private val sessionRepository: SessionRepository
+    private val markDownUrlResolver: MarkDownUrlResolver
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
 
