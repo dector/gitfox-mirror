@@ -3,9 +3,8 @@ package ru.terrakok.gitlabclient.markwonx
 import org.commonmark.parser.Parser
 import org.junit.Before
 import org.junit.Test
-import ru.terrakok.gitlabclient.markwonx.LabelsTestUtils.SINGLE
-import ru.terrakok.gitlabclient.markwonx.LabelsTestUtils.createArgsForTest
-import ru.terrakok.gitlabclient.markwonx.LabelsTestUtils.makeLabel
+import ru.terrakok.gitlabclient.markwonx.LabelsTestUtils
+import ru.terrakok.gitlabclient.markwonx.MilestoneTestUtils
 import ru.terrakok.gitlabclient.markwonx.label.SimpleExtensionProcessor
 import ru.terrakok.gitlabclient.markwonx.label.SimpleMarkdownDecorator
 import ru.terrakok.gitlabclient.markwonx.label.SimpleNode
@@ -33,8 +32,14 @@ class GitlabExtensionsDelimiterProcessorTest {
 
     @Test
     fun `should replace decorated label extension with label node`() {
-        val parsed = parser.parse(decorator.decorate(makeLabel(SINGLE)))
-        assert(parsed.firstChild.firstChild == SimpleNode(GitlabMarkdownExtension.LABEL, createArgsForTest(SINGLE)))
+        val parsed = parser.parse(decorator.decorate(LabelsTestUtils.makeLabel(LabelsTestUtils.SINGLE)))
+        assert(parsed.firstChild.firstChild == SimpleNode(GitlabMarkdownExtension.LABEL, LabelsTestUtils.createArgsForTest(LabelsTestUtils.SINGLE)))
+    }
+
+    @Test
+    fun `should replace decorated milestone extension with milestone node`() {
+        val parsed = parser.parse(decorator.decorate(MilestoneTestUtils.makeMilestone(MilestoneTestUtils.SINGLE)))
+        assert(parsed.firstChild.firstChild == SimpleNode(GitlabMarkdownExtension.MILESTONE, MilestoneTestUtils.createArgsForTest(MilestoneTestUtils.SINGLE)))
     }
 
 }

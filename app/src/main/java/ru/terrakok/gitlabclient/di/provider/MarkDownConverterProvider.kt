@@ -78,10 +78,12 @@ class MarkDownConverterProvider @Inject constructor(
                 )
             )
 
+            val processor = SimpleExtensionProcessor()
             customDelimiterProcessor(
                 GitlabExtensionsDelimiterProcessor(
                     mapOf(
-                        GitlabMarkdownExtension.LABEL to SimpleExtensionProcessor()
+                        GitlabMarkdownExtension.LABEL to processor,
+                        GitlabMarkdownExtension.MILESTONE to processor
                     )
                 )
             )
@@ -103,7 +105,8 @@ class MarkDownConverterProvider @Inject constructor(
                 spannableConfig,
                 spannableBuilder,
                 mapOf(
-                    GitlabMarkdownExtension.LABEL to SimpleLabelVisitor(labelDescriptions, labelSpanConfig)
+                    GitlabMarkdownExtension.LABEL to SimpleLabelVisitor(labelDescriptions, labelSpanConfig),
+                    GitlabMarkdownExtension.LABEL to SimpleMilestoneVisitor()
                 )
             )
         )

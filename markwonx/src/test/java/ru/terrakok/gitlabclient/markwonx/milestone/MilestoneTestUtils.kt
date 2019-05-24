@@ -42,8 +42,8 @@ object MilestoneTestUtils {
     fun makeMilestone(label: TestMilestone): String {
         val content = getMilestoneContent(label)
         return when (label.type) {
-            MilestoneType.MULTIPLE -> "%\"$content\""
-            else -> "%$content"
+            MilestoneType.MULTIPLE -> "~\"$content\""
+            else -> "~$content"
         }
     }
 
