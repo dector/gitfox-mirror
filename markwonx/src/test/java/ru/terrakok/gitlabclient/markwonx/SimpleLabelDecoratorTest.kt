@@ -32,11 +32,6 @@ class SimpleLabelDecoratorTest {
     }
 
     @Test
-    fun `decorated single word label should become spanned string`() {
-        assertDecorated(SINGLE)
-    }
-
-    @Test
     fun `should decorate cyrillic single word label`() {
         assertDecorated(SINGLE_CYRILLIC)
     }
