@@ -42,7 +42,10 @@ fun Throwable.userMessage(resourceManager: ResourceManager) = when (this) {
 
 private val DATE_FORMAT = DateTimeFormatter.ofPattern("dd MMM yyyy")
 fun LocalDateTime.humanTime(resources: Resources): String {
-    val delta = Duration.between(this, LocalDateTime.now()).seconds
+    val delta = Duration.between(this, LocalDateTime.now())
+        .seconds
+        .let { maxOf(0, it) }
+
     val timeStr =
         when {
             delta < 60 -> resources.getString(R.string.time_sec, delta)
