@@ -7,7 +7,6 @@ object CodeHighlightJsPage {
             "<html>\n" +
             "<head>\n" +
             "   <meta charset=\"utf-8\">\n" +
-            "   <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
             "   <style type=\"text/css\">\n" +
             "       pre {\n" +
             "           margin: 0;\n" +
