@@ -29,7 +29,7 @@ class IssueRepository @Inject constructor(
     private val markDownUrlResolver: MarkDownUrlResolver
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
-    private var issueSharedSingle: Single<Issue>? = null
+    private val issueSharedSingles = mutableMapOf<Pair<Long, Long>, Single<Issue>>()
 
     fun getMyIssues(
         scope: IssueScope? = null,
@@ -131,8 +131,9 @@ class IssueRepository @Inject constructor(
         issueId: Long
     ) = Single
         .defer {
-            if (issueSharedSingle == null) {
-                issueSharedSingle = Single
+            val key = Pair(projectId, issueId)
+            if (!issueSharedSingles.contains(key)) {
+                issueSharedSingles[key] = Single
                     .zip(
                         api.getProject(projectId),
                         api.getIssue(projectId, issueId),
@@ -149,7 +150,7 @@ class IssueRepository @Inject constructor(
                     .share()
                     .singleOrError()
             }
-            issueSharedSingle
+            issueSharedSingles[key]
         }
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
