@@ -7,6 +7,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_main_mr.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
+import ru.terrakok.gitlabclient.entity.app.target.TargetAction
 import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.presentation.issue.IssuePresenter
 import ru.terrakok.gitlabclient.presentation.issue.IssueView
@@ -52,18 +53,31 @@ class MainIssueFragment : BaseFragment(), IssueView {
         showSnackMessage(message)
     }
 
+    override fun selectActionTab(targetAction: TargetAction) {
+        when(targetAction) {
+            is TargetAction.CommentedOn -> {
+                viewPager.currentItem = TAB_NOTES
+            }
+        }
+    }
+
     private inner class IssuePagesAdapter : FragmentPagerAdapter(childFragmentManager) {
         override fun getItem(position: Int): BaseFragment = when (position) {
-            0 -> Screens.IssueInfo.fragment
+            TAB_DETAILS -> Screens.IssueInfo.fragment
             else -> Screens.IssueNotes.fragment
         }
 
         override fun getCount() = 2
 
         override fun getPageTitle(position: Int) = when (position) {
-            0 -> getString(R.string.merge_request_info_tab)
-            1 -> getString(R.string.merge_request_discussion_tab)
+            TAB_DETAILS -> getString(R.string.merge_request_info_tab)
+            TAB_NOTES -> getString(R.string.merge_request_discussion_tab)
             else -> null
         }
+    }
+
+    companion object {
+        private const val TAB_DETAILS = 0
+        private const val TAB_NOTES = 1
     }
 }

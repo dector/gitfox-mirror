@@ -11,7 +11,7 @@ import java.util.*
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 27.02.18.
  */
-class DateDeserializer : JsonDeserializer<LocalDateTime> {
+class LocalDateTimeDeserializer : JsonDeserializer<LocalDateTime> {
     private val offset = TimeZone.getDefault().rawOffset / 1000L
 
     override fun deserialize(

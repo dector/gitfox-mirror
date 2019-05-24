@@ -88,7 +88,8 @@ class TodoRepository @Inject constructor(
             appTarget,
             target.id,
             TargetInternal(target.projectId, target.iid),
-            badges
+            badges,
+            TargetAction.Undefined
         )
     }
 

@@ -1,6 +1,6 @@
 package ru.terrakok.gitlabclient.model.interactor.issues
 
-import com.nhaarman.mockito_kotlin.*
+import com.nhaarman.mockitokotlin2.*
 import io.reactivex.Single
 import org.junit.Before
 import org.junit.Test

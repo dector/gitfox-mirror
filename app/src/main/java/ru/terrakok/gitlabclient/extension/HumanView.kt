@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.Resources
 import androidx.annotation.DrawableRes
 import org.threeten.bp.Duration
+import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import retrofit2.HttpException
@@ -13,6 +14,7 @@ import ru.terrakok.gitlabclient.entity.app.target.TargetBadgeStatus
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderIcon
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderTitle
 import ru.terrakok.gitlabclient.entity.event.EventAction
+import ru.terrakok.gitlabclient.entity.milestone.MilestoneState
 import ru.terrakok.gitlabclient.entity.todo.TodoAction
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import java.io.IOException
@@ -40,7 +42,10 @@ fun Throwable.userMessage(resourceManager: ResourceManager) = when (this) {
 
 private val DATE_FORMAT = DateTimeFormatter.ofPattern("dd MMM yyyy")
 fun LocalDateTime.humanTime(resources: Resources): String {
-    val delta = Duration.between(this, LocalDateTime.now()).seconds
+    val delta = Duration.between(this, LocalDateTime.now())
+        .seconds
+        .let { maxOf(0, it) }
+
     val timeStr =
         when {
             delta < 60 -> resources.getString(R.string.time_sec, delta)
@@ -52,6 +57,8 @@ fun LocalDateTime.humanTime(resources: Resources): String {
 
     return resources.getString(R.string.time_ago, timeStr)
 }
+
+fun LocalDate.humanDate() = format(DATE_FORMAT)
 
 fun EventAction.getHumanName(resources: Resources) = when (this) {
     EventAction.UPDATED -> resources.getString(R.string.event_action_updated)
@@ -172,4 +179,14 @@ fun TargetBadgeStatus.getBadgeColors(context: Context) = when (this) {
 fun String.extractFileNameFromPath(): String {
     val index = lastIndexOf("/")
     return substring(if (index != -1) index + 1 else 0)
+}
+
+fun MilestoneState.getHumanName(resources: Resources) = when (this) {
+    MilestoneState.ACTIVE -> resources.getString(R.string.milestone_active)
+    MilestoneState.CLOSED -> resources.getString(R.string.milestone_closed)
+}
+
+fun MilestoneState.getStateColors(context: Context) = when (this) {
+    MilestoneState.ACTIVE -> Pair(context.color(R.color.green), context.color(R.color.lightGreen))
+    MilestoneState.CLOSED -> Pair(context.color(R.color.red), context.color(R.color.lightRed))
 }

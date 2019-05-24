@@ -16,8 +16,8 @@ android {
         minSdkVersion(19)
         targetSdkVersion(28)
 
-        versionName = "1.4.2"
-        versionCode = 14
+        versionName = "1.5.1"
+        versionCode = 16
 
         buildToolsVersion = "28.0.3"
 
@@ -146,9 +146,9 @@ dependencies {
     //JUnit
     testImplementation("junit:junit:4.12")
     //Mockito
-    testImplementation("org.mockito:mockito-core:2.8.9")
+    testImplementation("org.mockito:mockito-core:2.27.0")
     //Mockito Kotlin
-    testImplementation("com.nhaarman:mockito-kotlin-kt1.1:1.5.0")
+    testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0")
 }
 
 configurations.all {
