@@ -1,6 +1,8 @@
 package ru.terrakok.gitlabclient.di.provider
 
 import android.content.Context
+import io.reactivex.Single
+import io.reactivex.functions.BiFunction
 import okhttp3.OkHttpClient
 import org.commonmark.ext.gfm.strikethrough.StrikethroughExtension
 import org.commonmark.ext.gfm.tables.TablesExtension
@@ -15,10 +17,14 @@ import ru.noties.markwon.tasklist.TaskListExtension
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.di.DefaultServerPath
 import ru.terrakok.gitlabclient.entity.Label
+import ru.terrakok.gitlabclient.entity.milestone.Milestone
 import ru.terrakok.gitlabclient.extension.color
 import ru.terrakok.gitlabclient.markwonx.*
 import ru.terrakok.gitlabclient.markwonx.label.*
+import ru.terrakok.gitlabclient.markwonx.milestone.MilestoneDescription
+import ru.terrakok.gitlabclient.markwonx.milestone.SimpleMilestoneVisitor
 import ru.terrakok.gitlabclient.model.interactor.label.LabelInteractor
+import ru.terrakok.gitlabclient.model.interactor.milestone.MilestoneInteractor
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import java.util.concurrent.Executors
@@ -33,6 +39,7 @@ class MarkDownConverterProvider @Inject constructor(
     private val httpClient: OkHttpClient,
     private val schedulers: SchedulersProvider,
     private val labelInteractor: LabelInteractor,
+    private val milestoneInteractor: MilestoneInteractor,
     private val labelSpanConfig: LabelSpanConfig,
     @DefaultServerPath private val defaultServerPath: String
 ) : Provider<MarkDownConverter> {
@@ -90,12 +97,18 @@ class MarkDownConverterProvider @Inject constructor(
         }.build()
     }
 
-    private fun getCustomVisitor(labels: List<Label>, spannableBuilder: SpannableBuilder): Visitor {
+    private fun getCustomVisitor(labels: List<Label>, milestones: List<Milestone>, spannableBuilder: SpannableBuilder): Visitor {
         val labelDescriptions = labels.map {
             LabelDescription(
                 id = it.id,
                 name = it.name,
                 color = it.color.name
+            )
+        }
+        val milestoneDescriptions = milestones.map {
+            MilestoneDescription(
+                id = it.iid,
+                name = it.title ?: ""
             )
         }
         return CompositeVisitor(
@@ -106,7 +119,7 @@ class MarkDownConverterProvider @Inject constructor(
                 spannableBuilder,
                 mapOf(
                     GitlabMarkdownExtension.LABEL to SimpleLabelVisitor(labelDescriptions, labelSpanConfig),
-                    GitlabMarkdownExtension.LABEL to SimpleMilestoneVisitor()
+                    GitlabMarkdownExtension.MILESTONE to SimpleMilestoneVisitor(milestoneDescriptions)
                 )
             )
         )
@@ -116,7 +129,13 @@ class MarkDownConverterProvider @Inject constructor(
         return MarkDownConverter(
             parser,
             markdownDecorator,
-            { projectId, builder -> labelInteractor.getAllProjectLabels(projectId).map { labels -> getCustomVisitor(labels, builder) } },
+            { projectId, builder ->
+                Single
+                    .zip(labelInteractor.getAllProjectLabels(projectId), milestoneInteractor.getAllProjectMilestones(projectId), BiFunction { labels: List<Label>, milestones: List<Milestone> -> labels to milestones})
+                    .map { (labels, milestones) ->
+                        getCustomVisitor(labels, milestones, builder)
+                    }
+            },
             schedulers
         )
     }

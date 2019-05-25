@@ -34,12 +34,11 @@ class SimpleLabelVisitorTest {
             get()
         }
         decorator = SimpleMarkdownDecorator()
-        val processor = SimpleExtensionProcessor()
         parser = with(Parser.Builder()) {
             customDelimiterProcessor(
                 GitlabExtensionsDelimiterProcessor(
                     mapOf(
-                        GitlabMarkdownExtension.LABEL to processor
+                        GitlabMarkdownExtension.LABEL to SimpleExtensionProcessor()
                     )
                 )
             )
@@ -106,7 +105,7 @@ class SimpleLabelVisitorTest {
     }
 
     @Test
-    fun `should decorate all types of labels in single string also containing normal text`() {
+    fun `should create span for all types of labels in single string`() {
         val all = LabelsTestUtils.EXISTENT_LABELS
         val allStr = all.joinToString(" ") { label -> makeLabel(label) }
         val spannable = convertToSpannable(allStr)

@@ -1,5 +1,7 @@
 package ru.terrakok.gitlabclient.model.interactor.milestone
 
+import io.reactivex.Single
+import ru.terrakok.gitlabclient.entity.milestone.Milestone
 import ru.terrakok.gitlabclient.entity.milestone.MilestoneState
 import ru.terrakok.gitlabclient.model.repository.issue.IssueRepository
 import ru.terrakok.gitlabclient.model.repository.mergerequest.MergeRequestRepository
@@ -18,6 +20,17 @@ class MilestoneInteractor @Inject constructor(
         page: Int
     ) = milestoneRepository
         .getMilestones(projectId, milestoneState, page)
+
+    fun getAllProjectMilestones(
+        projectId: Long?
+    ): Single<List<Milestone>> =
+        Single.defer {
+            if (projectId != null) {
+                milestoneRepository.getAllProjectMilestones(projectId)
+            } else {
+                Single.just(emptyList())
+            }
+        }
 
     fun getMilestone(
         projectId: Long,

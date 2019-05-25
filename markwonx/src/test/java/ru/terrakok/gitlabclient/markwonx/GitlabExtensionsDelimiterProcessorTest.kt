@@ -3,11 +3,10 @@ package ru.terrakok.gitlabclient.markwonx
 import org.commonmark.parser.Parser
 import org.junit.Before
 import org.junit.Test
-import ru.terrakok.gitlabclient.markwonx.LabelsTestUtils
-import ru.terrakok.gitlabclient.markwonx.MilestoneTestUtils
 import ru.terrakok.gitlabclient.markwonx.label.SimpleExtensionProcessor
 import ru.terrakok.gitlabclient.markwonx.label.SimpleMarkdownDecorator
 import ru.terrakok.gitlabclient.markwonx.label.SimpleNode
+import ru.terrakok.gitlabclient.markwonx.milestone.MilestoneTestUtils
 
 class GitlabExtensionsDelimiterProcessorTest {
 

@@ -9,7 +9,7 @@ import ru.terrakok.gitlabclient.markwonx.GitlabMarkdownExtension
 class SimpleLabelVisitor(
     private val labels: List<LabelDescription>,
     private val config: LabelSpanConfig
-): SimpleNodeVisitor {
+) : SimpleNodeVisitor {
 
     override fun visit(args: String, builder: SpannableBuilder) {
         val labelType = args.substringBefore(GitlabMarkdownExtension.OPTS_DELIMITER).let {
@@ -24,13 +24,9 @@ class SimpleLabelVisitor(
                 val id = arg.toLong()
                 labels.firstOrNull { it.id == id }
             }
-            LabelType.SINGLE -> {
+            else -> {
                 labels.firstOrNull { it.name == arg }
             }
-            LabelType.MULTIPLE -> {
-                labels.firstOrNull { it.name == arg }
-            }
-            else -> null
         }
 
         if (label != null) {
@@ -48,7 +44,11 @@ class SimpleLabelVisitor(
             }
 
         } else {
-            builder.append(arg)
+            val content = when(labelType) {
+                LabelType.MULTIPLE -> "~\"$arg\""
+                else -> "~$arg"
+            }
+            builder.append(content)
         }
     }
 

@@ -22,7 +22,7 @@ object MilestoneTestUtils {
     )
     val ID = TestMilestone(
         MilestoneType.ID,
-        MilestoneDescription(3, "Test ID Label")
+        MilestoneDescription(3, "Test ID Milestone")
     )
 
     val EXISTENT_MILESTONES by lazy { listOf(
@@ -42,8 +42,8 @@ object MilestoneTestUtils {
     fun makeMilestone(label: TestMilestone): String {
         val content = getMilestoneContent(label)
         return when (label.type) {
-            MilestoneType.MULTIPLE -> "~\"$content\""
-            else -> "~$content"
+            MilestoneType.MULTIPLE -> "%\"$content\""
+            else -> "%$content"
         }
     }
 
@@ -53,8 +53,8 @@ object MilestoneTestUtils {
         )}"
     }
 
-    fun decorateForTest(label: TestMilestone): String {
-        val args = createArgsForTest(label)
+    fun decorateForTest(milestone: TestMilestone): String {
+        val args = createArgsForTest(milestone)
         return "${GitlabExtensionsDelimiterProcessor.DELIMITER_START}${GitlabMarkdownExtension.MILESTONE}${GitlabMarkdownExtension.OPTS_DELIMITER}$args${GitlabExtensionsDelimiterProcessor.DELIMITER_END}"
     }
 

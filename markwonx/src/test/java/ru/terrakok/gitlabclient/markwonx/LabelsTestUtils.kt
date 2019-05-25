@@ -33,7 +33,7 @@ object LabelsTestUtils {
 
     fun decorateForTest(label: TestLabel): String {
         val args = createArgsForTest(label)
-        return "${GitlabExtensionsDelimiterProcessor.DELIMITER_START}LABEL${GitlabMarkdownExtension.OPTS_DELIMITER}$args${GitlabExtensionsDelimiterProcessor.DELIMITER_END}"
+        return "${GitlabExtensionsDelimiterProcessor.DELIMITER_START}${GitlabMarkdownExtension.MILESTONE}${GitlabMarkdownExtension.OPTS_DELIMITER}$args${GitlabExtensionsDelimiterProcessor.DELIMITER_END}"
     }
 
 }
