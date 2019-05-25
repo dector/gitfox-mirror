@@ -17,6 +17,8 @@ import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestViewType
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
+import ru.terrakok.gitlabclient.model.system.SingleCacheSuccess
+import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 
 class MergeRequestRepository @Inject constructor(
@@ -26,7 +28,7 @@ class MergeRequestRepository @Inject constructor(
     private val markDownUrlResolver: MarkDownUrlResolver
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
-    private val mergeRequestSharedSingles = mutableMapOf<Pair<Long, Long>, Single<MergeRequest>>()
+    private val mergeRequestCachedSingles = ConcurrentHashMap<Pair<Long, Long>, Single<MergeRequest>>()
 
     fun getMyMergeRequests(
         state: MergeRequestState? = null,
@@ -143,8 +145,8 @@ class MergeRequestRepository @Inject constructor(
     ) = Single
         .defer {
             val key = Pair(projectId, mergeRequestId)
-            if (!mergeRequestSharedSingles.contains(key)) {
-                mergeRequestSharedSingles[key] = Single
+            if (!mergeRequestCachedSingles.containsKey(key)) {
+                mergeRequestCachedSingles[key] = Single
                     .zip(
                         api.getProject(projectId),
                         api.getMergeRequest(projectId, mergeRequestId),
@@ -157,11 +159,9 @@ class MergeRequestRepository @Inject constructor(
                             }
                         }
                     )
-                    .toObservable()
-                    .share()
-                    .singleOrError()
+                    .compose { SingleCacheSuccess.create(it) }
             }
-            mergeRequestSharedSingles[key]
+            mergeRequestCachedSingles[key]
         }
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())

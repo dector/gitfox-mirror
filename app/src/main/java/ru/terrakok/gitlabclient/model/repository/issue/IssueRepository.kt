@@ -17,6 +17,8 @@ import ru.terrakok.gitlabclient.entity.issue.IssueState
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
+import ru.terrakok.gitlabclient.model.system.SingleCacheSuccess
+import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 
 /**
@@ -29,7 +31,7 @@ class IssueRepository @Inject constructor(
     private val markDownUrlResolver: MarkDownUrlResolver
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
-    private val issueSharedSingles = mutableMapOf<Pair<Long, Long>, Single<Issue>>()
+    private val issueCachedSingles = ConcurrentHashMap<Pair<Long, Long>, Single<Issue>>()
 
     fun getMyIssues(
         scope: IssueScope? = null,
@@ -132,8 +134,8 @@ class IssueRepository @Inject constructor(
     ) = Single
         .defer {
             val key = Pair(projectId, issueId)
-            if (!issueSharedSingles.contains(key)) {
-                issueSharedSingles[key] = Single
+            if (!issueCachedSingles.containsKey(key)) {
+                issueCachedSingles[key] = Single
                     .zip(
                         api.getProject(projectId),
                         api.getIssue(projectId, issueId),
@@ -146,11 +148,9 @@ class IssueRepository @Inject constructor(
                             }
                         }
                     )
-                    .toObservable()
-                    .share()
-                    .singleOrError()
+                    .compose { SingleCacheSuccess.create(it) }
             }
-            issueSharedSingles[key]
+            issueCachedSingles[key]
         }
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
