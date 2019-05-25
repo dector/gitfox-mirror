@@ -4,6 +4,8 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
 import io.reactivex.Single
 import org.junit.Test
+import org.mockito.BDDMockito.given
+import org.mockito.BDDMockito.then
 import org.mockito.Mockito.*
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.Month
@@ -23,14 +25,8 @@ import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 class EventRepositoryTest {
     private val defaultPageSize = 1
     private val testPage = 2
-    private val testAuthor = Author(1L, "", "", "", "", "")
     private val testEvent = getTestEvent()
-    private val brokenEvent = testEvent.copy(targetType = EventTargetType.NOTE, note = null)
-    private val testEvents = listOf(testEvent, brokenEvent)
     private val testProject = getTestProject(testEvent.projectId)
-    private val testBeforeDay = LocalDateTime.of(2007, Month.DECEMBER, 14, 11, 0)
-    private val testAfterDay = LocalDateTime.of(2007, Month.DECEMBER, 24, 12, 0)
-    private val expectedTargetHeaders = listOf(getExpectedTargetHeaderForIssue(testEvent))
 
     private val api = mock(GitlabApi::class.java)
     private val markDownUrlResolver = mock(MarkDownUrlResolver::class.java)
@@ -41,8 +37,12 @@ class EventRepositoryTest {
             markDownUrlResolver)
 
     @Test
-    fun `get events success`() {
-        `when`(api.getEvents(
+    fun `get events should filter broken events`() {
+        // GIVEN
+        val brokenEvent = testEvent.copy(targetType = EventTargetType.NOTE, note = null)
+        val testEvents = listOf(testEvent, brokenEvent)
+
+        given(api.getEvents(
                 anyOrNull(),
                 anyOrNull(),
                 anyOrNull(),
@@ -50,37 +50,42 @@ class EventRepositoryTest {
                 anyOrNull(),
                 anyOrNull(),
                 anyInt(),
-                anyInt())).thenReturn(Single.just(testEvents))
+                anyInt())).willReturn(Single.just(testEvents))
 
-        `when`(api.getProject(anyLong(), anyBoolean())).thenReturn(Single.just(testProject))
+        given(api.getProject(anyLong(), anyBoolean())).willReturn(Single.just(testProject))
 
-        val testObserver = repository.getEvents(
-                page = testPage,
-                beforeDay = testBeforeDay,
-                afterDay = testAfterDay).test()
+        // WHEN
+        val testObserver = repository.getEvents(page = testPage).test()
         testObserver.awaitTerminalEvent()
 
-        verify(api, times(1)).getEvents(
-                null,
-                null,
-                "2007-12-14",
-                "2007-12-24",
-                Sort.DESC,
-                OrderBy.UPDATED_AT,
-                testPage,
-                defaultPageSize
-        )
-        verify(api, times(1)).getProject(testEvent.projectId)
-        verifyNoMoreInteractions(api)
+        // THEN
+        then(api)
+                .should(times(1))
+                .getEvents(
+                        null,
+                        null,
+                        null,
+                        null,
+                        Sort.DESC,
+                        OrderBy.UPDATED_AT,
+                        testPage,
+                        defaultPageSize)
 
-        testObserver
-                .assertResult(expectedTargetHeaders)
+        then(api)
+                .should(times(1))
+                .getProject(testEvent.projectId)
 
+        then(api)
+                .shouldHaveNoMoreInteractions()
     }
 
     @Test
-    fun `handle empty events list success`() {
-        `when`(api.getEvents(
+    fun `get events should converts dates to string when it provided`() {
+        // GIVEN
+        val testBeforeDay = LocalDateTime.of(2007, Month.DECEMBER, 14, 11, 0)
+        val testAfterDay = LocalDateTime.of(2007, Month.DECEMBER, 24, 12, 0)
+
+        given(api.getEvents(
                 anyOrNull(),
                 anyOrNull(),
                 anyOrNull(),
@@ -88,36 +93,35 @@ class EventRepositoryTest {
                 anyOrNull(),
                 anyOrNull(),
                 anyInt(),
-                anyInt())).thenReturn(Single.just(emptyList()))
+                anyInt())).willReturn(Single.just(listOf(testEvent)))
 
-        val testObserver = repository.getEvents(
-                page = testPage,
-                beforeDay = testBeforeDay,
-                afterDay = testAfterDay).test()
+        // WHEN
+        val testObserver = repository
+                .getEvents(page = testPage, beforeDay = testBeforeDay, afterDay = testAfterDay)
+                .test()
+
         testObserver.awaitTerminalEvent()
 
-        verify(api, times(1)).getEvents(
-                null,
-                null,
-                "2007-12-14",
-                "2007-12-24",
-                Sort.DESC,
-                OrderBy.UPDATED_AT,
-                testPage,
-                defaultPageSize
-        )
-        verifyNoMoreInteractions(api)
-
-        testObserver
-                .assertResult(emptyList())
-
+        // THEN
+        then(api)
+                .should(times(1))
+                .getEvents(
+                        null,
+                        null,
+                        "2007-12-14",
+                        "2007-12-24",
+                        Sort.DESC,
+                        OrderBy.UPDATED_AT,
+                        testPage,
+                        defaultPageSize)
     }
 
     @Test
-    fun `handle get events error success`() {
-        val error = RuntimeException()
+    fun `get events should succeed with valid events`() {
+        // GIVEN
+        val expectedTargetHeader = getExpectedTargetHeaderForIssue(testEvent)
 
-        `when`(api.getEvents(
+        given(api.getEvents(
                 anyOrNull(),
                 anyOrNull(),
                 anyOrNull(),
@@ -125,195 +129,304 @@ class EventRepositoryTest {
                 anyOrNull(),
                 anyOrNull(),
                 anyInt(),
-                anyInt())).thenReturn(Single.error(error))
+                anyInt())).willReturn(Single.just(listOf(testEvent)))
 
-        val testObserver = repository.getEvents(
-                page = testPage,
-                beforeDay = testBeforeDay,
-                afterDay = testAfterDay).test()
+        given(api.getProject(anyLong(), anyBoolean())).willReturn(Single.just(testProject))
+
+        // WHEN
+        val testObserver = repository.getEvents(page = testPage).test()
         testObserver.awaitTerminalEvent()
 
-        verify(api, times(1)).getEvents(
-                null,
-                null,
-                "2007-12-14",
-                "2007-12-24",
-                Sort.DESC,
-                OrderBy.UPDATED_AT,
-                testPage,
-                defaultPageSize
-        )
-        verifyNoMoreInteractions(api)
+        // THEN
+        then(api)
+                .should(times(1))
+                .getEvents(
+                        null,
+                        null,
+                        null,
+                        null,
+                        Sort.DESC,
+                        OrderBy.UPDATED_AT,
+                        testPage,
+                        defaultPageSize)
 
-        testObserver
-                .assertNoValues()
-                .assertError(error)
-                .assertNotComplete()
-    }
+        then(api)
+                .should(times(1))
+                .getProject(testEvent.projectId)
 
-    @Test
-    fun `get project events success`() {
-        `when`(api.getProjectEvents(
-                anyLong(),
-                anyOrNull(),
-                anyOrNull(),
-                anyOrNull(),
-                anyOrNull(),
-                anyOrNull(),
-                anyOrNull(),
-                anyInt(),
-                anyInt())).thenReturn(Single.just(testEvents))
-
-        `when`(api.getProject(anyLong(), anyBoolean())).thenReturn(Single.just(testProject))
-
-        val testObserver = repository.getProjectEvents(
-                projectId = testProject.id,
-                page = testPage,
-                beforeDay = testBeforeDay,
-                afterDay = testAfterDay).test()
-        testObserver.awaitTerminalEvent()
-
-        verify(api, times(1)).getProjectEvents(
-                testProject.id,
-                null,
-                null,
-                "2007-12-14",
-                "2007-12-24",
-                Sort.DESC,
-                OrderBy.UPDATED_AT,
-                testPage,
-                defaultPageSize
-        )
-        verify(api, times(1)).getProject(testEvent.projectId)
-        verifyNoMoreInteractions(api)
-
-        testObserver
-                .assertResult(expectedTargetHeaders)
-    }
-
-    @Test
-    fun `handle empty project events success`() {
-        `when`(api.getProjectEvents(
-                anyLong(),
-                anyOrNull(),
-                anyOrNull(),
-                anyOrNull(),
-                anyOrNull(),
-                anyOrNull(),
-                anyOrNull(),
-                anyInt(),
-                anyInt())).thenReturn(Single.just(emptyList()))
-
-        val testObserver = repository.getProjectEvents(
-                projectId = testProject.id,
-                page = testPage,
-                beforeDay = testBeforeDay,
-                afterDay = testAfterDay).test()
-        testObserver.awaitTerminalEvent()
-
-        verify(api, times(1)).getProjectEvents(
-                testProject.id,
-                null,
-                null,
-                "2007-12-14",
-                "2007-12-24",
-                Sort.DESC,
-                OrderBy.UPDATED_AT,
-                testPage,
-                defaultPageSize
-        )
-        verifyNoMoreInteractions(api)
-
-        testObserver
-                .assertResult(emptyList())
-    }
-
-    @Test
-    fun `handle get project events error success`() {
-        val error = RuntimeException()
-
-        `when`(api.getProjectEvents(
-                anyLong(),
-                anyOrNull(),
-                anyOrNull(),
-                anyOrNull(),
-                anyOrNull(),
-                anyOrNull(),
-                anyOrNull(),
-                anyInt(),
-                anyInt())).thenReturn(Single.error(error))
-
-
-        val testObserver = repository.getProjectEvents(
-                projectId = testProject.id,
-                page = testPage,
-                beforeDay = testBeforeDay,
-                afterDay = testAfterDay).test()
-        testObserver.awaitTerminalEvent()
-
-        verify(api, times(1)).getProjectEvents(
-                testProject.id,
-                null,
-                null,
-                "2007-12-14",
-                "2007-12-24",
-                Sort.DESC,
-                OrderBy.UPDATED_AT,
-                testPage,
-                defaultPageSize
-        )
-        verifyNoMoreInteractions(api)
-
-        testObserver
-                .assertNoValues()
-                .assertError(error)
-                .assertNotComplete()
-    }
-
-    @Test
-    fun `handle note event success`() {
-        val diffNoteEvent = testEvent.copy(targetType = EventTargetType.DIFF_NOTE)
-        val testEvents = listOf(diffNoteEvent, brokenEvent)
-        val resolvedBody = "resolved body"
-        val expectedTargetHeader = getExpectedTargetHeaderForDiffNote(diffNoteEvent, resolvedBody)
-
-        `when`(api.getEvents(
-                anyOrNull(),
-                anyOrNull(),
-                anyOrNull(),
-                anyOrNull(),
-                anyOrNull(),
-                anyOrNull(),
-                anyInt(),
-                anyInt())).thenReturn(Single.just(testEvents))
-
-        `when`(api.getProject(anyLong(), anyBoolean())).thenReturn(Single.just(testProject))
-        `when`(markDownUrlResolver.resolve(anyString(), any())).thenReturn(resolvedBody)
-
-        val testObserver = repository.getEvents(
-                page = testPage,
-                beforeDay = testBeforeDay,
-                afterDay = testAfterDay).test()
-        testObserver.awaitTerminalEvent()
-
-        verify(api, times(1)).getEvents(
-                null,
-                null,
-                "2007-12-14",
-                "2007-12-24",
-                Sort.DESC,
-                OrderBy.UPDATED_AT,
-                testPage,
-                defaultPageSize
-        )
-        verify(api, times(1)).getProject(testEvent.projectId)
-        verify(markDownUrlResolver, times(1))
-                .resolve(diffNoteEvent.note!!.body, testProject)
-        verifyNoMoreInteractions(api)
+        then(api)
+                .shouldHaveNoMoreInteractions()
 
         testObserver
                 .assertResult(listOf(expectedTargetHeader))
+    }
 
+    @Test
+    fun `get events should return empty list when api returns empty list`() {
+        // GIVEN
+        given(api.getEvents(
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull(),
+                anyInt(),
+                anyInt())).willReturn(Single.just(emptyList()))
+
+        // WHEN
+        val testObserver = repository.getEvents(page = testPage).test()
+        testObserver.awaitTerminalEvent()
+
+        // THEN
+        then(api)
+                .should(times(1))
+                .getEvents(
+                        null,
+                        null,
+                        null,
+                        null,
+                        Sort.DESC,
+                        OrderBy.UPDATED_AT,
+                        testPage,
+                        defaultPageSize)
+
+        then(api)
+                .shouldHaveNoMoreInteractions()
+
+        testObserver
+                .assertResult(emptyList())
+    }
+
+    @Test
+    fun `get events should return error when api returns error`() {
+        // GIVEN
+        val error = RuntimeException()
+
+        given(api.getEvents(
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull(),
+                anyInt(),
+                anyInt())).willReturn(Single.error(error))
+
+        // WHEN
+        val testObserver = repository.getEvents(page = testPage).test()
+        testObserver.awaitTerminalEvent()
+
+        // THEN
+        then(api)
+                .should(times(1))
+                .getEvents(
+                        null,
+                        null,
+                        null,
+                        null,
+                        Sort.DESC,
+                        OrderBy.UPDATED_AT,
+                        testPage,
+                        defaultPageSize)
+
+        then(api)
+                .shouldHaveNoMoreInteractions()
+
+        testObserver
+                .assertNoValues()
+                .assertError(error)
+                .assertNotComplete()
+    }
+
+    @Test
+    fun `get project events should succeed with valid events`() {
+        // GIVEN
+        val expectedTargetHeader = getExpectedTargetHeaderForIssue(testEvent)
+
+        given(api.getProjectEvents(
+                anyLong(),
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull(),
+                anyInt(),
+                anyInt())).willReturn(Single.just(listOf(testEvent)))
+
+        given(api.getProject(anyLong(), anyBoolean())).willReturn(Single.just(testProject))
+
+        // WHEN
+        val testObserver = repository
+                .getProjectEvents(projectId = testProject.id, page = testPage)
+                .test()
+
+        testObserver.awaitTerminalEvent()
+
+        // THEN
+        then(api)
+                .should(times(1))
+                .getProjectEvents(
+                        testProject.id,
+                        null,
+                        null,
+                        null,
+                        null,
+                        Sort.DESC,
+                        OrderBy.UPDATED_AT,
+                        testPage,
+                        defaultPageSize)
+
+        then(api)
+                .should(times(1))
+                .getProject(testEvent.projectId)
+
+        then(api)
+                .shouldHaveNoMoreInteractions()
+
+        testObserver
+                .assertResult(listOf(expectedTargetHeader))
+    }
+
+    @Test
+    fun `get project events should return empty list when api returns empty list`() {
+        // GIVEN
+        given(api.getProjectEvents(
+                anyLong(),
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull(),
+                anyInt(),
+                anyInt())).willReturn(Single.just(emptyList()))
+
+        // WHEN
+        val testObserver = repository
+                .getProjectEvents(projectId = testProject.id, page = testPage)
+                .test()
+
+        testObserver.awaitTerminalEvent()
+
+        // THEN
+        then(api)
+                .should(times(1))
+                .getProjectEvents(
+                        testProject.id,
+                        null,
+                        null,
+                        null,
+                        null,
+                        Sort.DESC,
+                        OrderBy.UPDATED_AT,
+                        testPage,
+                        defaultPageSize)
+
+        then(api)
+                .shouldHaveNoMoreInteractions()
+
+        testObserver
+                .assertResult(emptyList())
+    }
+
+    @Test
+    fun `get project events should return error when api returns error`() {
+        // GIVEN
+        val error = RuntimeException()
+
+        given(api.getProjectEvents(
+                anyLong(),
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull(),
+                anyInt(),
+                anyInt())).willReturn(Single.error(error))
+
+        // WHEN
+        val testObserver = repository
+                .getProjectEvents(projectId = testProject.id, page = testPage)
+                .test()
+
+        testObserver.awaitTerminalEvent()
+
+        // THEN
+        then(api)
+                .should(times(1))
+                .getProjectEvents(
+                        testProject.id,
+                        null,
+                        null,
+                        null,
+                        null,
+                        Sort.DESC,
+                        OrderBy.UPDATED_AT,
+                        testPage,
+                        defaultPageSize)
+
+        then(api)
+                .shouldHaveNoMoreInteractions()
+
+        testObserver
+                .assertNoValues()
+                .assertError(error)
+                .assertNotComplete()
+    }
+
+    @Test
+    fun `get events should succeed with valid diff note event`() {
+        // GIVEN
+        val diffNoteEvent = testEvent.copy(targetType = EventTargetType.DIFF_NOTE)
+        val resolvedBody = "resolved body"
+        val expectedTargetHeader = getExpectedTargetHeaderForDiffNote(diffNoteEvent, resolvedBody)
+
+        given(api.getEvents(
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull(),
+                anyInt(),
+                anyInt())).willReturn(Single.just(listOf(diffNoteEvent)))
+
+        given(api.getProject(anyLong(), anyBoolean())).willReturn(Single.just(testProject))
+        given(markDownUrlResolver.resolve(anyString(), any())).willReturn(resolvedBody)
+
+        // WHEN
+        val testObserver = repository.getEvents(page = testPage).test()
+        testObserver.awaitTerminalEvent()
+
+        // THEN
+        then(api)
+                .should(times(1))
+                .getEvents(
+                        null,
+                        null,
+                        null,
+                        null,
+                        Sort.DESC,
+                        OrderBy.UPDATED_AT,
+                        testPage,
+                        defaultPageSize)
+
+        then(api)
+                .should(times(1))
+                .getProject(testEvent.projectId)
+
+        then(api)
+                .shouldHaveNoMoreInteractions()
+
+        then(markDownUrlResolver)
+                .should(times(1))
+                .resolve(diffNoteEvent.note!!.body, testProject)
+
+        testObserver
+                .assertResult(listOf(expectedTargetHeader))
     }
 
     private fun getTestProject(projectId: Long) = Project(
@@ -365,7 +478,7 @@ class EventRepositoryTest {
             666L,
             "title of issue",
             LocalDateTime.of(2018, Month.DECEMBER, 13, 12, 0),
-            testAuthor,
+            Author(1L, "", "", "", "", ""),
             "author",
             null,
             getTestNote()
@@ -374,7 +487,7 @@ class EventRepositoryTest {
     private fun getTestNote() = Note(
             13L,
             "note test body",
-            testAuthor,
+            Author(1L, "", "", "", "", ""),
             LocalDateTime.of(2007, Month.DECEMBER, 14, 11, 0),
             null,
             false,
