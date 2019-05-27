@@ -1,6 +1,7 @@
 package ru.terrakok.gitlabclient.presentation.project.members
 
 import com.arellomobile.mvp.InjectViewState
+import ru.terrakok.cicerone.Screen
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.Member
 import ru.terrakok.gitlabclient.model.interactor.members.MembersInteractor
@@ -69,7 +70,8 @@ class ProjectMembersPresenter @Inject constructor(
     )
 
     fun onMemberClick(userId: Long) {
-        //TODO Member Flow(implement this method when Member Flow was be ready).
+        //TODO Member Flow(refactor this logic when Member Flow was be ready).
+        router.startFlow(Screens.UserFlow(userId))
     }
     fun refreshMembers() = paginator.refresh()
     fun loadNextMembersPage() = paginator.loadNewPage()
