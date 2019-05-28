@@ -9,6 +9,9 @@ import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultPageSize
 import javax.inject.Inject
 
+/**
+ * @author Valentin Logvinovitch (glvvl) on 27.02.19.
+ */
 class MembersRepository @Inject constructor(
     private val api: GitlabApi,
     private val schedulers: SchedulersProvider,
