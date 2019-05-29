@@ -229,7 +229,7 @@ class MergeRequestRepository @Inject constructor(
         .zip(
             getAllMergeRequestParticipants(projectId, mergeRequestId),
             api.getMergeRequestCommits(projectId, mergeRequestId, page, pageSize),
-            BiFunction<List<Author>, List<Commit>, List<CommitWithAvatarUrl>> { participants, commits ->
+            BiFunction<List<ShortUser>, List<Commit>, List<CommitWithAvatarUrl>> { participants, commits ->
                 commits.map { commit ->
                     CommitWithAvatarUrl(
                         commit,

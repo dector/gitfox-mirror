@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.presentation.issue.info
+package ru.terrakok.gitlabclient.presentation.issue.details
 
 import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
@@ -7,12 +7,12 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 import ru.terrakok.gitlabclient.entity.issue.Issue
 
 /**
- * @author Konstantin Tskhovrebov (aka terrakok) on 27.04.17.
+ * Created by Eugene Shapovalov (@CraggyHaggy) on 26.05.19.
  */
 @StateStrategyType(AddToEndSingleStrategy::class)
-interface IssueInfoView : MvpView {
+interface IssueDetailsView : MvpView {
 
-    fun showInfo(issue: Issue)
+    fun showDetails(issue: Issue, mdDescription: CharSequence)
     fun showEmptyProgress(show: Boolean)
 
     @StateStrategyType(OneExecutionStateStrategy::class)

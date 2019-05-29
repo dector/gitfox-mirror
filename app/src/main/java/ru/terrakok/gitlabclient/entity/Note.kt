@@ -7,7 +7,7 @@ import ru.terrakok.gitlabclient.entity.event.EventTargetType
 data class Note(
     @SerializedName("id") val id: Long,
     @SerializedName("body") val body: String,
-    @SerializedName("author") val author: Author,
+    @SerializedName("author") val author: ShortUser,
     @SerializedName("created_at") val createdAt: LocalDateTime,
     @SerializedName("updated_at") val updatedAt: LocalDateTime?,
     @SerializedName("system") val isSystem: Boolean,
