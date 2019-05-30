@@ -4,6 +4,8 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import org.threeten.bp.LocalDateTime
+import ru.terrakok.gitlabclient.di.DefaultPageSize
+import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.PushDataRefType
@@ -16,8 +18,6 @@ import ru.terrakok.gitlabclient.entity.event.EventTargetType
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
-import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
-import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultPageSize
 import javax.inject.Inject
 
 /**
@@ -128,9 +128,6 @@ class EventRepository @Inject constructor(
             val badges = mutableListOf<TargetBadge>()
             project?.let { badges.add(TargetBadge.Text(it.name, AppTarget.PROJECT, it.id)) }
             badges.add(TargetBadge.Text(event.author.username, AppTarget.USER, event.author.id))
-            event.pushData?.let { pushData ->
-                badges.add(TargetBadge.Icon(TargetBadgeIcon.COMMITS, pushData.commitCount))
-            }
 
             TargetHeader.Public(
                 event.author,
@@ -146,7 +143,8 @@ class EventRepository @Inject constructor(
                 targetData.target,
                 targetData.id,
                 getTargetInternal(event),
-                badges
+                badges,
+                getTargetAction(event)
             )
         } else {
             TargetHeader.Confidential
@@ -268,6 +266,17 @@ class EventRepository @Inject constructor(
                     null
                 }
             }
+        }
+
+    private fun getTargetAction(event: Event): TargetAction =
+        when (event.actionName) {
+            EventAction.COMMENTED_ON -> {
+                event.note
+                    ?.id
+                    ?.let { TargetAction.CommentedOn(it) }
+                    ?: TargetAction.Undefined
+            }
+            else -> TargetAction.Undefined
         }
 
     private fun getBody(event: Event, project: Project?) = when (event.targetType) {

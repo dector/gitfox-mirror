@@ -1,25 +1,17 @@
 package ru.terrakok.gitlabclient.ui.project.milestones
 
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.layout_base_list.*
-import kotlinx.android.synthetic.main.layout_zero.*
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
-import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
 import ru.terrakok.gitlabclient.entity.milestone.Milestone
-import ru.terrakok.gitlabclient.entity.milestone.MilestoneState
 import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.project.milestones.ProjectMilestonesPresenter
 import ru.terrakok.gitlabclient.presentation.project.milestones.ProjectMilestonesView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import ru.terrakok.gitlabclient.ui.global.ZeroViewHolder
-import ru.terrakok.gitlabclient.ui.my.TargetsAdapter
-import toothpick.Scope
-import toothpick.config.Module
 
 /**
  * @author Valentin Logvinovitch (glvvl) on 17.12.18.
@@ -27,15 +19,6 @@ import toothpick.config.Module
 class ProjectMilestonesFragment : BaseFragment(), ProjectMilestonesView {
 
     override val layoutRes = R.layout.fragment_project_milestones
-
-    override val scopeModuleInstaller = { scope: Scope ->
-        scope.installModules(object : Module() {
-            init {
-                bind(MilestoneState::class.java)
-                    .toInstance(arguments!!.getSerializable(ARG_MILESTONE_STATE) as MilestoneState)
-            }
-        })
-    }
 
     @InjectPresenter
     lateinit var presenter: ProjectMilestonesPresenter
@@ -46,18 +29,9 @@ class ProjectMilestonesFragment : BaseFragment(), ProjectMilestonesView {
 
     private val adapter: MilestonesAdapter by lazy {
         MilestonesAdapter(
-            { presenter.onMilestoneClick(it) },
+            { presenter.onMilestoneClicked(it) },
             { presenter.loadNextMilestonesPage() }
         )
-    }
-    private var zeroViewHolder: ZeroViewHolder? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        if (arguments?.getSerializable(ARG_MILESTONE_STATE) == null) {
-            throw IllegalArgumentException("Provide milestone state as args.")
-        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -70,7 +44,7 @@ class ProjectMilestonesFragment : BaseFragment(), ProjectMilestonesView {
         }
 
         swipeToRefresh.setOnRefreshListener { presenter.refreshMilestones() }
-        zeroViewHolder = ZeroViewHolder(zeroLayout, { presenter.refreshMilestones() })
+        emptyView.setRefreshListener { presenter.refreshMilestones() }
     }
 
     override fun showRefreshProgress(show: Boolean) {
@@ -90,13 +64,11 @@ class ProjectMilestonesFragment : BaseFragment(), ProjectMilestonesView {
     }
 
     override fun showEmptyView(show: Boolean) {
-        if (show) zeroViewHolder?.showEmptyData()
-        else zeroViewHolder?.hide()
+        emptyView.apply { if (show) showEmptyData() else hide() }
     }
 
     override fun showEmptyError(show: Boolean, message: String?) {
-        if (show) zeroViewHolder?.showEmptyError(message)
-        else zeroViewHolder?.hide()
+        emptyView.apply { if (show) showEmptyError(message) else hide() }
     }
 
     override fun showMilestones(show: Boolean, milestones: List<Milestone>) {
@@ -106,16 +78,5 @@ class ProjectMilestonesFragment : BaseFragment(), ProjectMilestonesView {
 
     override fun showMessage(message: String) {
         showSnackMessage(message)
-    }
-
-    companion object {
-        private const val ARG_MILESTONE_STATE = "arg milestone state"
-
-        fun create(milestoneState: MilestoneState) =
-            ProjectMilestonesFragment().apply {
-                arguments = Bundle().apply {
-                    putSerializable(ARG_MILESTONE_STATE, milestoneState)
-                }
-            }
     }
 }

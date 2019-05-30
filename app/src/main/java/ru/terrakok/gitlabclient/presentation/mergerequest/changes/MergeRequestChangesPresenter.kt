@@ -1,13 +1,15 @@
 package ru.terrakok.gitlabclient.presentation.mergerequest.changes
 
 import com.arellomobile.mvp.InjectViewState
+import ru.terrakok.gitlabclient.Screens
+import ru.terrakok.gitlabclient.di.MergeRequestId
+import ru.terrakok.gitlabclient.di.PrimitiveWrapper
+import ru.terrakok.gitlabclient.di.ProjectId
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestChange
 import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestInteractor
+import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
-import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
-import ru.terrakok.gitlabclient.toothpick.qualifier.MergeRequestId
-import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
 import javax.inject.Inject
 
 /**
@@ -18,7 +20,8 @@ class MergeRequestChangesPresenter @Inject constructor(
     @ProjectId projectIdWrapper: PrimitiveWrapper<Long>,
     @MergeRequestId mrIdWrapper: PrimitiveWrapper<Long>,
     private val mrInteractor: MergeRequestInteractor,
-    private val errorHandler: ErrorHandler
+    private val errorHandler: ErrorHandler,
+    private val flowRouter: FlowRouter
 ) : BasePresenter<MergeRequestChangesView>() {
 
     private val projectId = projectIdWrapper.value
@@ -103,6 +106,17 @@ class MergeRequestChangesPresenter @Inject constructor(
                         }
                     )
                 }
+            )
+            .connect()
+    }
+
+    fun onMergeRequestChangeClick(item: MergeRequestChange) {
+        mrInteractor.getMergeRequest(projectId, mrId)
+            .doOnSubscribe { viewState.showFullscreenProgress(true) }
+            .doAfterTerminate { viewState.showFullscreenProgress(false) }
+            .subscribe(
+                { flowRouter.startFlow(Screens.ProjectFile(projectId, item.newPath, it.sha)) },
+                { errorHandler.proceed(it, { viewState.showMessage(it) }) }
             )
             .connect()
     }

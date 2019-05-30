@@ -1,21 +1,19 @@
 package ru.terrakok.gitlabclient.ui.my.todos
 
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.layout_base_list.*
-import kotlinx.android.synthetic.main.layout_zero.*
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.di.PrimitiveWrapper
+import ru.terrakok.gitlabclient.di.TodoListPendingState
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.my.todos.MyTodoListView
 import ru.terrakok.gitlabclient.presentation.my.todos.MyTodosPresenter
-import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
-import ru.terrakok.gitlabclient.toothpick.qualifier.TodoListPendingState
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import ru.terrakok.gitlabclient.ui.global.ZeroViewHolder
 import ru.terrakok.gitlabclient.ui.my.TargetsAdapter
 import toothpick.Scope
 import toothpick.config.Module
@@ -34,9 +32,8 @@ class MyTodosFragment : BaseFragment(), MyTodoListView {
             { presenter.loadNextTodosPage() }
         )
     }
-    private var zeroViewHolder: ZeroViewHolder? = null
 
-    override val scopeModuleInstaller = { scope: Scope ->
+    override fun installModules(scope: Scope) {
         scope.installModules(object : Module() {
             init {
                 bind(PrimitiveWrapper::class.java)
@@ -63,7 +60,7 @@ class MyTodosFragment : BaseFragment(), MyTodoListView {
         }
 
         swipeToRefresh.setOnRefreshListener { presenter.refreshTodos() }
-        zeroViewHolder = ZeroViewHolder(zeroLayout, { presenter.refreshTodos() })
+        emptyView.setRefreshListener { presenter.refreshTodos() }
     }
 
     override fun showRefreshProgress(show: Boolean) {
@@ -83,13 +80,11 @@ class MyTodosFragment : BaseFragment(), MyTodoListView {
     }
 
     override fun showEmptyView(show: Boolean) {
-        if (show) zeroViewHolder?.showEmptyData()
-        else zeroViewHolder?.hide()
+        emptyView.apply { if (show) showEmptyData() else hide() }
     }
 
     override fun showEmptyError(show: Boolean, message: String?) {
-        if (show) zeroViewHolder?.showEmptyError(message)
-        else zeroViewHolder?.hide()
+        emptyView.apply { if (show) showEmptyError(message) else hide() }
     }
 
     override fun showTodos(show: Boolean, todos: List<TargetHeader>) {

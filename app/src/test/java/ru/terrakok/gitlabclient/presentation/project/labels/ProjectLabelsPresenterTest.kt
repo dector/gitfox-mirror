@@ -1,29 +1,34 @@
 package ru.terrakok.gitlabclient.presentation.project.labels
 
-import com.nhaarman.mockito_kotlin.*
+import com.nhaarman.mockitokotlin2.*
 import io.reactivex.Single
-import org.junit.Assert.assertEquals
 import org.junit.Test
+import ru.terrakok.gitlabclient.di.PrimitiveWrapper
+import ru.terrakok.gitlabclient.entity.Color
 import ru.terrakok.gitlabclient.entity.Label
 import ru.terrakok.gitlabclient.model.interactor.label.LabelInteractor
+import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
-import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
 
 /**
  * @author Maxim Myalkin (MaxMyalkin) on 11.11.2018.
+ *
+ * @author Vitaliy Belyaev on 19.05.2019.
  */
 class ProjectLabelsPresenterTest {
 
-    val projectId = 42L
+    private val projectId = 42L
 
-    val view: ProjectLabelsView = mock()
-    val interactor: LabelInteractor = mock()
-    val errorHandler: ErrorHandler = mock()
+    private val view: ProjectLabelsView = mock()
+    private val interactor: LabelInteractor = mock()
+    private val errorHandler: ErrorHandler = mock()
+    private val flowRouter: FlowRouter = mock()
 
-    val presenter = ProjectLabelsPresenter(
-        PrimitiveWrapper(projectId),
-        interactor,
-        errorHandler
+    private val presenter = ProjectLabelsPresenter(
+            PrimitiveWrapper(projectId),
+            interactor,
+            errorHandler,
+            flowRouter
     )
 
     @Test
@@ -62,8 +67,8 @@ class ProjectLabelsPresenterTest {
         val secondPageLabels = listOf(label(4), label(5), label(6))
 
         whenever(interactor.getLabelList(eq(projectId), any()))
-            .thenReturn(Single.just(firstPageLabels))
-            .thenReturn(Single.just(secondPageLabels))
+                .thenReturn(Single.just(firstPageLabels))
+                .thenReturn(Single.just(secondPageLabels))
 
         presenter.attachView(view)
 
@@ -89,7 +94,7 @@ class ProjectLabelsPresenterTest {
         val error = RuntimeException("error")
 
         whenever(interactor.getLabelList(eq(projectId), any()))
-            .thenReturn(Single.error(error))
+                .thenReturn(Single.error(error))
 
         presenter.attachView(view)
 
@@ -108,8 +113,8 @@ class ProjectLabelsPresenterTest {
         val error = RuntimeException("error")
 
         whenever(interactor.getLabelList(eq(projectId), any()))
-            .thenReturn(Single.just(firstPageLabels))
-            .thenReturn(Single.error(error))
+                .thenReturn(Single.just(firstPageLabels))
+                .thenReturn(Single.error(error))
 
         presenter.attachView(view)
         presenter.loadNextLabelsPage()
@@ -123,16 +128,15 @@ class ProjectLabelsPresenterTest {
 
     private fun label(id: Long, subscribed: Boolean = false): Label {
         return Label(
-            id = id,
-            name = "name$id",
-            color = "color$id",
-            description = null,
-            openIssuesCount = 0,
-            closedIssuesCount = 0,
-            openMergeRequestsCount = 0,
-            subscribed = subscribed,
-            priority = null
+                id = id,
+                name = "name$id",
+                color = Color("green", 12),
+                description = null,
+                openIssuesCount = 0,
+                closedIssuesCount = 0,
+                openMergeRequestsCount = 0,
+                subscribed = subscribed,
+                priority = null
         )
     }
-
 }

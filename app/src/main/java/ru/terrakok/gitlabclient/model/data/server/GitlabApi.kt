@@ -3,27 +3,9 @@ package ru.terrakok.gitlabclient.model.data.server
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.threeten.bp.LocalDateTime
-import retrofit2.http.DELETE
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.PUT
-import retrofit2.http.Path
-import retrofit2.http.Query
-import ru.terrakok.gitlabclient.entity.Author
-import ru.terrakok.gitlabclient.entity.Branch
-import ru.terrakok.gitlabclient.entity.Commit
-import ru.terrakok.gitlabclient.entity.File
-import ru.terrakok.gitlabclient.entity.Label
-import ru.terrakok.gitlabclient.entity.Member
-import ru.terrakok.gitlabclient.entity.Note
-import ru.terrakok.gitlabclient.entity.OrderBy
-import ru.terrakok.gitlabclient.entity.Project
-import ru.terrakok.gitlabclient.entity.RepositoryTreeNode
-import ru.terrakok.gitlabclient.entity.Sort
-import ru.terrakok.gitlabclient.entity.User
-import ru.terrakok.gitlabclient.entity.Visibility
+import retrofit2.adapter.rxjava2.Result
+import retrofit2.http.*
+import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.entity.event.Event
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.event.EventTarget
@@ -77,7 +59,7 @@ interface GitlabApi {
     fun getFile(
         @Path("id") id: Long,
         @Path("file_path") filePath: String,
-        @Query("ref") branchName: String
+        @Query("ref") ref: String
     ): Single<File>
 
     @GET("$API_PATH/projects/{id}/repository/tree")
@@ -393,6 +375,26 @@ interface GitlabApi {
         @Path("project_id") projectId: Long,
         @Path("label_id") labelId: Long
     ): Single<Label>
+
+    @HEAD("$API_PATH/merge_requests")
+    fun getMyAssignedMergeRequestHeaders(
+        @Query("scope") scope: MergeRequestScope = MergeRequestScope.ASSIGNED_TO_ME,
+        @Query("state") state: MergeRequestState = MergeRequestState.OPENED,
+        @Query("per_page") pageSize: Int = 1
+    ): Single<Result<Void>>
+
+    @HEAD("$API_PATH/issues")
+    fun getMyAssignedIssueHeaders(
+        @Query("scope") scope: IssueScope = IssueScope.ASSIGNED_BY_ME,
+        @Query("state") state: IssueState = IssueState.OPENED,
+        @Query("per_page") pageSize: Int = 1
+    ): Single<Result<Void>>
+
+    @HEAD("$API_PATH/todos")
+    fun getMyAssignedTodoHeaders(
+        @Query("state") state: TodoState = TodoState.PENDING,
+        @Query("per_page") pageSize: Int = 1
+    ): Single<Result<Void>>
 
     @GET("$API_PATH/projects/{project_id}/members")
     fun getMembers(

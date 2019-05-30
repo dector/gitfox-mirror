@@ -3,16 +3,16 @@ package ru.terrakok.gitlabclient.presentation.my.todos
 import com.arellomobile.mvp.InjectViewState
 import io.reactivex.Observable
 import ru.terrakok.gitlabclient.Screens
+import ru.terrakok.gitlabclient.di.PrimitiveWrapper
+import ru.terrakok.gitlabclient.di.TodoListPendingState
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.extension.openInfo
-import ru.terrakok.gitlabclient.model.interactor.todo.TodoListInteractor
+import ru.terrakok.gitlabclient.model.interactor.todo.TodoInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.presentation.global.Paginator
-import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
-import ru.terrakok.gitlabclient.toothpick.qualifier.TodoListPendingState
 import javax.inject.Inject
 
 /**
@@ -21,7 +21,7 @@ import javax.inject.Inject
 @InjectViewState
 class MyTodosPresenter @Inject constructor(
     @TodoListPendingState private val pendingStateWrapper: PrimitiveWrapper<Boolean>,
-    private val todoListInteractor: TodoListInteractor,
+    private val todoInteractor: TodoInteractor,
     private val mdConverter: MarkDownConverter,
     private val errorHandler: ErrorHandler,
     private val router: FlowRouter
@@ -37,7 +37,7 @@ class MyTodosPresenter @Inject constructor(
 
     private val paginator = Paginator(
         {
-            todoListInteractor.getMyTodos(isPending, it)
+            todoInteractor.getMyTodos(isPending, it)
                 .flattenAsObservable { it }
                 .concatMap { item ->
                     when (item) {

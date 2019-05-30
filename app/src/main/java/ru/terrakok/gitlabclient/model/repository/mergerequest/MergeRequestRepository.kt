@@ -4,6 +4,8 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import org.threeten.bp.LocalDateTime
+import ru.terrakok.gitlabclient.di.DefaultPageSize
+import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.entity.app.CommitWithAvatarUrl
 import ru.terrakok.gitlabclient.entity.app.target.*
@@ -12,11 +14,10 @@ import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestScope
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestViewType
+import ru.terrakok.gitlabclient.extension.getXTotalHeader
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
-import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
-import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultPageSize
 import javax.inject.Inject
 
 class MergeRequestRepository @Inject constructor(
@@ -131,7 +132,8 @@ class MergeRequestRepository @Inject constructor(
             AppTarget.MERGE_REQUEST,
             mr.id,
             TargetInternal(mr.projectId, mr.iid),
-            badges
+            badges,
+            TargetAction.Undefined
         )
     }
 
@@ -254,4 +256,10 @@ class MergeRequestRepository @Inject constructor(
         .getMilestoneMergeRequests(projectId, milestoneId, page, pageSize)
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
+
+    fun getMyAssignedMergeRequestCount(): Single<Int> =
+        api.getMyAssignedMergeRequestHeaders()
+            .map { it.getXTotalHeader() }
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
 }

@@ -14,7 +14,7 @@ class MilestoneInteractor @Inject constructor(
 
     fun getMilestones(
         projectId: Long,
-        milestoneState: MilestoneState,
+        milestoneState: MilestoneState?,
         page: Int
     ) = milestoneRepository
         .getMilestones(projectId, milestoneState, page)

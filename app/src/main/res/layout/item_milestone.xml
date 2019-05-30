@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -12,33 +12,47 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:ellipsize="end"
         android:lines="1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Konstantin Tskhovrebov" />
+        tools:text="v 1.5" />
 
     <TextView
         android:id="@+id/dateTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:textColor="@color/silver"
         android:textSize="14sp"
         app:layout_constraintLeft_toLeftOf="@id/titleTextView"
         app:layout_constraintTop_toBottomOf="@+id/titleTextView"
-        tools:text="29 min ago" />
+        tools:text="2017-12-31 ― 2017-12-31" />
+
+    <TextView
+        android:id="@+id/stateTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:padding="4dp"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toLeftOf="@id/dateTextView"
+        app:layout_constraintTop_toBottomOf="@id/dateTextView"
+        tools:background="@color/lightRed"
+        tools:text="Opened"
+        tools:textColor="@color/red" />
 
     <View
         android:layout_width="0dp"
         android:layout_height="@dimen/divider_size"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="8dp"
         android:background="@color/divider"
-        app:layout_constraintLeft_toLeftOf="@id/dateTextView"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/dateTextView" />
+        app:layout_constraintTop_toBottomOf="@id/stateTextView" />
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

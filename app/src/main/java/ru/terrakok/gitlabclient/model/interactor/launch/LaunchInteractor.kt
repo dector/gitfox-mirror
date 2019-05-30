@@ -1,9 +1,9 @@
 package ru.terrakok.gitlabclient.model.interactor.launch
 
+import ru.terrakok.gitlabclient.di.DI
+import ru.terrakok.gitlabclient.di.module.ServerModule
 import ru.terrakok.gitlabclient.model.repository.app.AppInfoRepository
 import ru.terrakok.gitlabclient.model.repository.session.SessionRepository
-import ru.terrakok.gitlabclient.toothpick.DI
-import ru.terrakok.gitlabclient.toothpick.module.ServerModule
 import toothpick.Toothpick
 import javax.inject.Inject
 

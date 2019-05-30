@@ -2,15 +2,14 @@ package ru.terrakok.gitlabclient.presentation.project.milestones
 
 import com.arellomobile.mvp.InjectViewState
 import ru.terrakok.gitlabclient.Screens
+import ru.terrakok.gitlabclient.di.PrimitiveWrapper
+import ru.terrakok.gitlabclient.di.ProjectId
 import ru.terrakok.gitlabclient.entity.milestone.Milestone
-import ru.terrakok.gitlabclient.entity.milestone.MilestoneState
 import ru.terrakok.gitlabclient.model.interactor.milestone.MilestoneInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.Paginator
-import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
-import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
 import javax.inject.Inject
 
 /**
@@ -19,10 +18,9 @@ import javax.inject.Inject
 @InjectViewState
 class ProjectMilestonesPresenter @Inject constructor(
     @ProjectId private val projectIdWrapper: PrimitiveWrapper<Long>,
-    private val milestoneState: MilestoneState,
     private val milestoneInteractor: MilestoneInteractor,
     private val errorHandler: ErrorHandler,
-    private val router: FlowRouter
+    private val flowRouter: FlowRouter
 ) : BasePresenter<ProjectMilestonesView>() {
 
     private val projectId = projectIdWrapper.value
@@ -34,7 +32,7 @@ class ProjectMilestonesPresenter @Inject constructor(
     }
 
     private val paginator = Paginator(
-        { milestoneInteractor.getMilestones(projectId, milestoneState, it) },
+        { milestoneInteractor.getMilestones(projectId, null, it) },
         object : Paginator.ViewController<Milestone> {
             override fun showEmptyProgress(show: Boolean) {
                 viewState.showEmptyProgress(show)
@@ -70,7 +68,12 @@ class ProjectMilestonesPresenter @Inject constructor(
         }
     )
 
-    fun onMilestoneClick(milestoneId: Long) = router.startFlow(Screens.MilestoneFlow(milestoneId))
+    fun onMilestoneClicked(milestone: Milestone) {
+        milestone.webUrl?.let {
+            flowRouter.startFlow(Screens.ExternalBrowserFlow(it))
+        }
+    }
+
     fun refreshMilestones() = paginator.refresh()
     fun loadNextMilestonesPage() = paginator.loadNewPage()
 

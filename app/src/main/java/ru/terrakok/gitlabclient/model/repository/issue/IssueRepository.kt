@@ -3,6 +3,8 @@ package ru.terrakok.gitlabclient.model.repository.issue
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
+import ru.terrakok.gitlabclient.di.DefaultPageSize
+import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.Note
 import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.entity.Project
@@ -12,11 +14,10 @@ import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.issue.Issue
 import ru.terrakok.gitlabclient.entity.issue.IssueScope
 import ru.terrakok.gitlabclient.entity.issue.IssueState
+import ru.terrakok.gitlabclient.extension.getXTotalHeader
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
-import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
-import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultPageSize
 import javax.inject.Inject
 
 /**
@@ -103,6 +104,7 @@ class IssueRepository @Inject constructor(
         badges.add(TargetBadge.Icon(TargetBadgeIcon.COMMENTS, issue.userNotesCount))
         badges.add(TargetBadge.Icon(TargetBadgeIcon.UP_VOTES, issue.upvotes))
         badges.add(TargetBadge.Icon(TargetBadgeIcon.DOWN_VOTES, issue.downvotes))
+        badges.add(TargetBadge.Icon(TargetBadgeIcon.RELATED_MERGE_REQUESTS, issue.relatedMergeRequestCount))
         issue.labels.forEach { label -> badges.add(TargetBadge.Text(label)) }
 
         return TargetHeader.Public(
@@ -119,7 +121,8 @@ class IssueRepository @Inject constructor(
             AppTarget.ISSUE,
             issue.id,
             TargetInternal(issue.projectId, issue.iid),
-            badges
+            badges,
+            TargetAction.Undefined
         )
     }
 
@@ -205,4 +208,10 @@ class IssueRepository @Inject constructor(
         .getMilestoneIssues(projectId, milestoneId, page, pageSize)
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
+
+    fun getMyAssignedIssueCount(): Single<Int> =
+        api.getMyAssignedIssueHeaders()
+            .map { it.getXTotalHeader() }
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
 }

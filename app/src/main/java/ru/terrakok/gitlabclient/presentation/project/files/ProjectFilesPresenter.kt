@@ -4,6 +4,9 @@ import com.arellomobile.mvp.InjectViewState
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.Screens
+import ru.terrakok.gitlabclient.di.PrimitiveWrapper
+import ru.terrakok.gitlabclient.di.ProjectId
 import ru.terrakok.gitlabclient.entity.Branch
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.RepositoryTreeNodeType
@@ -14,8 +17,6 @@ import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.Paginator
-import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
-import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
 import javax.inject.Inject
 
 /**
@@ -37,15 +38,12 @@ class ProjectFilesPresenter @Inject constructor(
     init {
         projectFileDestination.setCallback(object : ProjectFileDestination.Callback {
             override fun onMoveForward(fromRoot: Boolean) {
-                val inRoot = projectFileDestination.isInRoot()
-                if (fromRoot) {
-                    viewState.setBranch("")
-                    viewState.showBranchSelection(false)
-                } else if (inRoot) {
-                    viewState.setBranch(projectFileDestination.branchName)
-                    viewState.showBranchSelection(true)
+                with(projectFileDestination) {
+                    if (fromRoot) {
+                        viewState.setBranch(branchName)
+                    }
+                    viewState.setPath(getUIPath(isInRoot(), defaultPath, paths))
                 }
-                viewState.setPath(getUIPath(inRoot, projectFileDestination.defaultPath, projectFileDestination.paths))
 
                 refreshFiles()
             }
@@ -54,14 +52,9 @@ class ProjectFilesPresenter @Inject constructor(
                 if (fromRoot) {
                     router.exit()
                 } else {
-                    val inRoot = projectFileDestination.isInRoot()
-                    if (inRoot) {
-                        viewState.setBranch(projectFileDestination.branchName)
-                        viewState.showBranchSelection(true)
+                    with(projectFileDestination) {
+                        viewState.setPath(getUIPath(isInRoot(), defaultPath, paths))
                     }
-                    viewState.setPath(
-                        getUIPath(inRoot, projectFileDestination.defaultPath, projectFileDestination.paths)
-                    )
 
                     refreshFiles()
                 }
@@ -69,6 +62,9 @@ class ProjectFilesPresenter @Inject constructor(
 
             override fun onBranchChange(branchName: String) {
                 viewState.setBranch(branchName)
+                with(projectFileDestination) {
+                    viewState.setPath(getUIPath(isInRoot(), defaultPath, paths))
+                }
 
                 refreshFiles()
             }
@@ -130,8 +126,16 @@ class ProjectFilesPresenter @Inject constructor(
     }
 
     private fun handleLoadingProjectDetailsError(error: Throwable) {
-        viewState.setPath(resourceManager.getString(R.string.project_files_default_path))
-        viewState.showBranchSelection(false)
+        if (projectFileDestination.isInitiated()) {
+            with(projectFileDestination) {
+                viewState.setBranch(branchName)
+                viewState.setPath(getUIPath(isInRoot(), defaultPath, paths))
+            }
+            viewState.showBranchSelection(true)
+        } else {
+            viewState.setPath(resourceManager.getString(R.string.project_files_default_path))
+            viewState.showBranchSelection(false)
+        }
         if (error is NoBranchesError) {
             viewState.showEmptyError(true, resourceManager.getString(R.string.project_files_no_branches))
         } else {
@@ -202,13 +206,20 @@ class ProjectFilesPresenter @Inject constructor(
     fun loadNextFilesPage() = paginator.loadNewPage()
     fun onShowBranchesClick() = viewState.showBranches(projectBranches)
     fun onBackPressed() = projectFileDestination.moveBack()
+    fun onNavigationCloseClicked() = router.exit()
     fun onBranchClick(branchName: String) = projectFileDestination.changeBranch(branchName)
 
     fun onFileClick(item: ProjectFile) {
         if (item.nodeType == RepositoryTreeNodeType.TREE) {
             projectFileDestination.moveForward(item.name)
         } else {
-            // TODO: file details (Navigate to file details flow).
+            router.startFlow(
+                Screens.ProjectFile(
+                    projectId,
+                    getFilePath(projectFileDestination.isInRoot(), projectFileDestination.paths, item.name),
+                    projectFileDestination.branchName
+                )
+            )
         }
     }
 
@@ -234,6 +245,13 @@ class ProjectFilesPresenter @Inject constructor(
                 ""
             } else {
                 paths.subList(1, paths.size).joinToString(separator = REMOTE_SEPARATOR)
+            }
+
+        private fun getFilePath(inRoot: Boolean, paths: List<String>, fileName: String) =
+            if (inRoot) {
+                fileName
+            } else {
+                "${paths.subList(1, paths.size).joinToString(separator = REMOTE_SEPARATOR)}$REMOTE_SEPARATOR$fileName"
             }
     }
 }

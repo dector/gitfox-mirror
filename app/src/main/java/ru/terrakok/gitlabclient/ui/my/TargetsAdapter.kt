@@ -1,8 +1,8 @@
 package ru.terrakok.gitlabclient.ui.my
 
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
-import com.hannesdorfmann.adapterdelegates3.ListDelegationAdapter
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
+import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.ui.global.list.ProgressAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.ProgressItem
