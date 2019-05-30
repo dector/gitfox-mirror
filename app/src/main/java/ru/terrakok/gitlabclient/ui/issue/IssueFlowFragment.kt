@@ -7,8 +7,8 @@ import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
 import ru.terrakok.gitlabclient.entity.app.target.TargetAction
 import ru.terrakok.gitlabclient.extension.argument
+import ru.terrakok.gitlabclient.model.repository.issue.IssueRepository
 import ru.terrakok.gitlabclient.ui.global.FlowFragment
-import ru.terrakok.gitlabclient.ui.mergerequest.MergeRequestFlowFragment
 import toothpick.Scope
 import toothpick.config.Module
 
@@ -31,6 +31,8 @@ class IssueFlowFragment : FlowFragment() {
                         .toInstance(PrimitiveWrapper(issueId))
                     bind(TargetAction::class.java)
                         .toInstance(targetAction)
+                    bind(IssueRepository::class.java)
+                        .singletonInScope()
                 }
             }
         )
