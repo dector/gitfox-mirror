@@ -189,7 +189,7 @@
                 app:layout_constraintStart_toStartOf="@id/lockIssueTitle"
                 app:layout_constraintTop_toBottomOf="@id/lockIssueTitle"
                 tools:alpha="0.38"
-                tools:text="@string/lock_issue_unlocked" />
+                tools:text="@string/lock_unlocked" />
 
             <TextView
                 android:id="@+id/confidentialityTitle"

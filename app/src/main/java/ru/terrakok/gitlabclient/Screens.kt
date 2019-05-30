@@ -202,6 +202,10 @@ object Screens {
         override fun getFragment() = MainMergeRequestFragment()
     }
 
+    object MergeRequestDetails : SupportAppScreen() {
+        override fun getFragment() = MergeRequestDetailsFragment()
+    }
+
     object MergeRequestInfo : SupportAppScreen() {
         override fun getFragment() = MergeRequestInfoFragment()
     }

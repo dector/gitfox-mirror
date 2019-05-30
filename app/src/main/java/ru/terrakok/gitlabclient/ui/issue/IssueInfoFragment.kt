@@ -88,7 +88,7 @@ class IssueInfoFragment : BaseFragment(), IssueInfoView {
     }
 
     private fun showLockIssue(discussionLocked: Boolean) {
-        val stringRes = if (discussionLocked) R.string.lock_issue_locked else R.string.lock_issue_unlocked
+        val stringRes = if (discussionLocked) R.string.lock_locked else R.string.lock_unlocked
         lockIssueValue.text = getString(stringRes)
         lockIssueValue.alpha = if (discussionLocked) ALPHA_VALUE else ALPHA_NONE
     }
