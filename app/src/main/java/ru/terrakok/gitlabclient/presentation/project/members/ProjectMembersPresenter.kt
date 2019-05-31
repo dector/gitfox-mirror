@@ -75,6 +75,7 @@ class ProjectMembersPresenter @Inject constructor(
     }
     fun refreshMembers() = paginator.refresh()
     fun loadNextMembersPage() = paginator.loadNewPage()
+    fun onBackPressed() = router.exit()
 
     override fun onDestroy() {
         super.onDestroy()

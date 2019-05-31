@@ -170,6 +170,7 @@
 
     <!--Project info screen-->
     <string name="menu_project_milestones">Milestones</string>
+    <string name="menu_project_members">Members</string>
     <string name="menu_project_info">Info</string>
     <string name="menu_project_issue">Issues</string>
     <string name="menu_project_merge_request">Merge Requests</string>
@@ -181,6 +182,7 @@
     <string name="project_milestone_date">%s ― %s</string>
     <string name="milestone_active">Opened</string>
     <string name="milestone_closed">Closed</string>
+    <string name="project_members">Members</string>
 
     <!--Project files screen-->
     <string name="project_files_show_branches">Branches</string>

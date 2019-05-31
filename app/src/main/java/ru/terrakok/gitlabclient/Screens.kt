@@ -3,6 +3,7 @@ package ru.terrakok.gitlabclient
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.support.v4.app.Fragment
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 import ru.terrakok.gitlabclient.entity.app.target.TargetAction
 import ru.terrakok.gitlabclient.entity.issue.IssueState
@@ -36,6 +37,7 @@ import ru.terrakok.gitlabclient.ui.project.info.ProjectInfoFragment
 import ru.terrakok.gitlabclient.ui.project.issues.ProjectIssuesContainerFragment
 import ru.terrakok.gitlabclient.ui.project.issues.ProjectIssuesFragment
 import ru.terrakok.gitlabclient.ui.project.labels.ProjectLabelsFragment
+import ru.terrakok.gitlabclient.ui.project.members.ProjectMembersFragment
 import ru.terrakok.gitlabclient.ui.project.mergerequest.ProjectMergeRequestsContainerFragment
 import ru.terrakok.gitlabclient.ui.project.mergerequest.ProjectMergeRequestsFragment
 import ru.terrakok.gitlabclient.ui.project.milestones.ProjectMilestonesFragment
@@ -191,6 +193,10 @@ object Screens {
 
     object ProjectMilestones : SupportAppScreen() {
         override fun getFragment() = ProjectMilestonesFragment()
+    }
+
+    object ProjectMembers :SupportAppScreen(){
+        override fun getFragment() = ProjectMembersFragment()
     }
 
     object ProjectFiles : SupportAppScreen() {
