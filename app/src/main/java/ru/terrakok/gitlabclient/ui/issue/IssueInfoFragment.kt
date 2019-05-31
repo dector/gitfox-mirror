@@ -49,6 +49,7 @@ class IssueInfoFragment : BaseFragment(), IssueInfoView {
         if (assignees.isNotEmpty()) {
             assigneesNone.visible(false)
             with(assigneesList) {
+                isNestedScrollingEnabled = false
                 layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
                 setHasFixedSize(true)
                 adapter = AssigneesAdapter { presenter.onAssigneeClicked(it) }.apply {

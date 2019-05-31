@@ -209,9 +209,9 @@
     <string name="confidentiality_not_confidential">Not confidential</string>
     <string name="labels_title">Labels</string>
     <string name="time_stats_empty_stats">No estimate or time spent</string>
-    <string name="time_stats_spent_time">Spent: </string>
-    <string name="time_stats_est_time">Est: </string>
-    <string name="time_stats_estimated_time">Estimated: </string>
+    <string name="time_stats_spent_time">Spent:\u0020</string>
+    <string name="time_stats_est_time">Est:\u0020</string>
+    <string name="time_stats_estimated_time">Estimated:\u0020</string>
     <string name="merge_status_title">Merge status</string>
     <string name="lock_merge_request_title">Lock merge request</string>
 
