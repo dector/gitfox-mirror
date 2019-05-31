@@ -3,7 +3,6 @@ package ru.terrakok.gitlabclient
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.support.v4.app.Fragment
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 import ru.terrakok.gitlabclient.entity.app.target.TargetAction
 import ru.terrakok.gitlabclient.entity.issue.IssueState
@@ -195,7 +194,7 @@ object Screens {
         override fun getFragment() = ProjectMilestonesFragment()
     }
 
-    object ProjectMembers :SupportAppScreen(){
+    object ProjectMembers : SupportAppScreen() {
         override fun getFragment() = ProjectMembersFragment()
     }
 

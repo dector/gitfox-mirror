@@ -40,6 +40,4 @@ class ProjectPresenter @Inject constructor(
     fun onBackPressed() = flowRouter.exit()
 
     fun onFilesPressed() = flowRouter.navigateTo(Screens.ProjectFiles)
-
-    fun onMembersClicked() = flowRouter.navigateTo(Screens.ProjectMembers)
 }

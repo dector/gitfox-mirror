@@ -1,16 +1,15 @@
 package ru.terrakok.gitlabclient.presentation.project.members
 
 import com.arellomobile.mvp.InjectViewState
-import ru.terrakok.cicerone.Screen
 import ru.terrakok.gitlabclient.Screens
+import ru.terrakok.gitlabclient.di.PrimitiveWrapper
+import ru.terrakok.gitlabclient.di.ProjectId
 import ru.terrakok.gitlabclient.entity.Member
 import ru.terrakok.gitlabclient.model.interactor.members.MembersInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.Paginator
-import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
-import ru.terrakok.gitlabclient.toothpick.qualifier.ProjectId
 import javax.inject.Inject
 
 /**
@@ -73,6 +72,7 @@ class ProjectMembersPresenter @Inject constructor(
         //TODO Member Flow(refactor this logic when Member Flow was be ready).
         router.startFlow(Screens.UserFlow(userId))
     }
+
     fun refreshMembers() = paginator.refresh()
     fun loadNextMembersPage() = paginator.loadNewPage()
     fun onBackPressed() = router.exit()

@@ -1,9 +1,9 @@
 package ru.terrakok.gitlabclient.ui.global.list
 
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
-import com.hannesdorfmann.adapterdelegates3.AdapterDelegate
+import androidx.recyclerview.widget.RecyclerView
+import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
 import kotlinx.android.synthetic.main.item_member.view.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Member
@@ -34,8 +34,7 @@ class MembersAdapterDelegate(
         private lateinit var data: Member
 
         init {
-            //TODO Member Flow(uncomment next line when Member Flow is ready).
-            // view.setOnClickListener { clickListener(data.id) }
+            view.setOnClickListener { clickListener(data.id) }
         }
 
         fun bind(data: Member) {

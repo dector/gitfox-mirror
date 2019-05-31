@@ -1,12 +1,10 @@
 package ru.terrakok.gitlabclient.ui.project.members
 
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import kotlinx.android.synthetic.main.fragment_project_labels.*
 import kotlinx.android.synthetic.main.layout_base_list.*
-import kotlinx.android.synthetic.main.layout_zero.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Member
 import ru.terrakok.gitlabclient.extension.showSnackMessage
@@ -14,7 +12,6 @@ import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.project.members.ProjectMembersPresenter
 import ru.terrakok.gitlabclient.presentation.project.members.ProjectMembersView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import ru.terrakok.gitlabclient.ui.global.ZeroViewHolder
 
 /**
  * @author Valentin Logvinovitch (glvvl) on 28.02.19.
@@ -36,7 +33,6 @@ class ProjectMembersFragment : BaseFragment(), ProjectMembersView {
             { presenter.loadNextMembersPage() }
         )
     }
-    private var zeroViewHolder: ZeroViewHolder? = null
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -47,9 +43,8 @@ class ProjectMembersFragment : BaseFragment(), ProjectMembersView {
             adapter = this@ProjectMembersFragment.adapter
         }
 
-        toolbar.setNavigationOnClickListener { onBackPressed() }
         swipeToRefresh.setOnRefreshListener { presenter.refreshMembers() }
-        zeroViewHolder = ZeroViewHolder(zeroLayout) { presenter.refreshMembers() }
+        emptyView.setRefreshListener { presenter.refreshMembers() }
     }
 
     override fun showRefreshProgress(show: Boolean) {
@@ -69,13 +64,11 @@ class ProjectMembersFragment : BaseFragment(), ProjectMembersView {
     }
 
     override fun showEmptyView(show: Boolean) {
-        if (show) zeroViewHolder?.showEmptyData()
-        else zeroViewHolder?.hide()
+        emptyView.apply { if (show) showEmptyData() else hide() }
     }
 
     override fun showEmptyError(show: Boolean, message: String?) {
-        if (show) zeroViewHolder?.showEmptyError(message)
-        else zeroViewHolder?.hide()
+        emptyView.apply { if (show) showEmptyError(message) else hide() }
     }
 
     override fun showMembers(show: Boolean, members: List<Member>) {
