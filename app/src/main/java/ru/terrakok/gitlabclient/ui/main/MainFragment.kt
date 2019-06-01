@@ -95,9 +95,15 @@ class MainFragment : BaseFragment(), MainView {
 
     override fun setAssignedNotifications(issueCount: Int, mergeRequestCount: Int, todoCount: Int) {
         with(bottomBar) {
-            setNotification(buildBottomBarNotification(R.color.fruit_salad, issueCount), 1)
-            setNotification(buildBottomBarNotification(R.color.brandy_punch, mergeRequestCount), 2)
-            setNotification(buildBottomBarNotification(R.color.mariner, todoCount), 3)
+            if (issueCount > 0) {
+                setNotification(buildBottomBarNotification(R.color.fruit_salad, issueCount), 1)
+            }
+            if (mergeRequestCount > 0) {
+                setNotification(buildBottomBarNotification(R.color.brandy_punch, mergeRequestCount), 2)
+            }
+            if (todoCount > 0) {
+                setNotification(buildBottomBarNotification(R.color.mariner, todoCount), 3)
+            }
         }
     }
 
