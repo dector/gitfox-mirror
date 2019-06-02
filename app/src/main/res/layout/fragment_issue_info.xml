@@ -13,7 +13,9 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp">
 
             <TextView
                 android:id="@+id/assigneesTitle"
@@ -21,7 +23,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:text="@string/assignees_title"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -32,6 +33,7 @@
                 android:id="@+id/assigneesList"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:overScrollMode="never"
                 app:layout_constraintEnd_toEndOf="@id/assigneesTitle"
                 app:layout_constraintStart_toStartOf="@id/assigneesTitle"
                 app:layout_constraintTop_toBottomOf="@id/assigneesTitle" />
@@ -78,7 +80,7 @@
                 app:layout_constraintStart_toStartOf="@id/milestoneTitle"
                 app:layout_constraintTop_toBottomOf="@id/milestoneTitle"
                 tools:alpha="0.38"
-                tools:text="@string/issue_merge_request_none" />
+                tools:text="dadklakdskldakldkdsakdalkdsadklsadklaskdlkldasklldsadlka" />
 
             <TextView
                 android:id="@+id/dueDateTitle"
@@ -189,7 +191,7 @@
                 app:layout_constraintStart_toStartOf="@id/lockIssueTitle"
                 app:layout_constraintTop_toBottomOf="@id/lockIssueTitle"
                 tools:alpha="0.38"
-                tools:text="@string/lock_issue_unlocked" />
+                tools:text="@string/lock_unlocked" />
 
             <TextView
                 android:id="@+id/confidentialityTitle"

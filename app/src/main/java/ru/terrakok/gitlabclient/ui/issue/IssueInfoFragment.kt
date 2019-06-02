@@ -49,6 +49,7 @@ class IssueInfoFragment : BaseFragment(), IssueInfoView {
         if (assignees.isNotEmpty()) {
             assigneesNone.visible(false)
             with(assigneesList) {
+                isNestedScrollingEnabled = false
                 layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
                 setHasFixedSize(true)
                 adapter = AssigneesAdapter { presenter.onAssigneeClicked(it) }.apply {
@@ -88,7 +89,7 @@ class IssueInfoFragment : BaseFragment(), IssueInfoView {
     }
 
     private fun showLockIssue(discussionLocked: Boolean) {
-        val stringRes = if (discussionLocked) R.string.lock_issue_locked else R.string.lock_issue_unlocked
+        val stringRes = if (discussionLocked) R.string.lock_locked else R.string.lock_unlocked
         lockIssueValue.text = getString(stringRes)
         lockIssueValue.alpha = if (discussionLocked) ALPHA_VALUE else ALPHA_NONE
     }

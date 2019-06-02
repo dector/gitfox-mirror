@@ -3,6 +3,7 @@ package ru.terrakok.gitlabclient.entity.mergerequest
 import com.google.gson.annotations.SerializedName
 import org.threeten.bp.LocalDateTime
 import ru.terrakok.gitlabclient.entity.ShortUser
+import ru.terrakok.gitlabclient.entity.TimeStats
 import ru.terrakok.gitlabclient.entity.milestone.Milestone
 
 data class MergeRequest(
@@ -25,14 +26,13 @@ data class MergeRequest(
     @SerializedName("work_in_progress") val workInProgress: Boolean,
     @SerializedName("milestone") val milestone: Milestone?,
     @SerializedName("merge_when_pipeline_succeeds") val mergeWhenPipelineSucceeds: Boolean,
-    @SerializedName("merge_status") val mergeStatus: String?,
+    @SerializedName("merge_status") val mergeStatus: MergeRequestMergeStatus,
     @SerializedName("sha") val sha: String,
     @SerializedName("merge_commit_sha") val mergeCommitSha: String?,
     @SerializedName("user_notes_count") val userNotesCount: Int,
     @SerializedName("should_remove_source_branch") val shouldRemoveSourceBranch: Boolean,
     @SerializedName("force_remove_source_branch") val forceRemoveSourceBranch: Boolean,
     @SerializedName("web_url") val webUrl: String?,
-    @SerializedName("time_stats") val timeStats: MergeRequestTimeStats?,
     @SerializedName("labels") val labels: List<String>,
     // The closed_by attribute was introduced in GitLab 10.6.
     // This value will only be present for merge requests which were closed/merged after GitLab 10.6
@@ -41,5 +41,8 @@ data class MergeRequest(
     @SerializedName("closed_at") val closedAt: LocalDateTime?,
     @SerializedName("merged_by") val mergedBy: ShortUser?,
     @SerializedName("merged_at") val mergedAt: LocalDateTime?,
-    @SerializedName("changes") val changes: List<MergeRequestChange>?
+    @SerializedName("changes") val changes: List<MergeRequestChange>?,
+    @SerializedName("assignees") val assignees: List<ShortUser>,
+    @SerializedName("time_stats") val timeStats: TimeStats,
+    @SerializedName("discussion_locked") val discussionLocked: Boolean
 )
