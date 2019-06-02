@@ -95,23 +95,22 @@ class MainFragment : BaseFragment(), MainView {
 
     override fun setAssignedNotifications(issueCount: Int, mergeRequestCount: Int, todoCount: Int) {
         with(bottomBar) {
-            if (issueCount > 0) {
-                setNotification(buildBottomBarNotification(R.color.fruit_salad, issueCount), 1)
-            }
-            if (mergeRequestCount > 0) {
-                setNotification(buildBottomBarNotification(R.color.brandy_punch, mergeRequestCount), 2)
-            }
-            if (todoCount > 0) {
-                setNotification(buildBottomBarNotification(R.color.mariner, todoCount), 3)
-            }
+            setNotification(buildBottomBarNotification(R.color.fruit_salad, issueCount), 1)
+            setNotification(buildBottomBarNotification(R.color.brandy_punch, mergeRequestCount), 2)
+            setNotification(buildBottomBarNotification(R.color.mariner, todoCount), 3)
         }
     }
 
-    private fun buildBottomBarNotification(@ColorRes backgroundColor: Int, count: Int) =
-        AHNotification.Builder()
-            .setBackgroundColor(ContextCompat.getColor(requireContext(), backgroundColor))
-            .setText(count.toString())
-            .build()
+    private fun buildBottomBarNotification(@ColorRes backgroundColor: Int, count: Int): AHNotification {
+        return if (count > 0) {
+            AHNotification.Builder()
+                .setBackgroundColor(ContextCompat.getColor(requireContext(), backgroundColor))
+                .setText(count.toString())
+                .build()
+        } else {
+            AHNotification()
+        }
+    }
 
     companion object {
         private val eventsTab = Screens.MyEvents
