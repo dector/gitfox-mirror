@@ -12,10 +12,7 @@ import ru.terrakok.gitlabclient.ui.auth.AuthFlowFragment
 import ru.terrakok.gitlabclient.ui.auth.AuthFragment
 import ru.terrakok.gitlabclient.ui.drawer.DrawerFlowFragment
 import ru.terrakok.gitlabclient.ui.file.ProjectFileFragment
-import ru.terrakok.gitlabclient.ui.issue.IssueFlowFragment
-import ru.terrakok.gitlabclient.ui.issue.IssueInfoFragment
-import ru.terrakok.gitlabclient.ui.issue.IssueNotesFragment
-import ru.terrakok.gitlabclient.ui.issue.MainIssueFragment
+import ru.terrakok.gitlabclient.ui.issue.*
 import ru.terrakok.gitlabclient.ui.libraries.LibrariesFragment
 import ru.terrakok.gitlabclient.ui.main.MainFragment
 import ru.terrakok.gitlabclient.ui.mergerequest.*
@@ -205,6 +202,10 @@ object Screens {
         override fun getFragment() = MainMergeRequestFragment()
     }
 
+    object MergeRequestDetails : SupportAppScreen() {
+        override fun getFragment() = MergeRequestDetailsFragment()
+    }
+
     object MergeRequestInfo : SupportAppScreen() {
         override fun getFragment() = MergeRequestInfoFragment()
     }
@@ -227,6 +228,10 @@ object Screens {
 
     object IssueInfo : SupportAppScreen() {
         override fun getFragment() = IssueInfoFragment()
+    }
+
+    object IssueDetails : SupportAppScreen() {
+        override fun getFragment() = IssueDetailsFragment()
     }
 
     object IssueNotes : SupportAppScreen() {

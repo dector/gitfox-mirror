@@ -5,8 +5,8 @@ import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonParseException
 import org.threeten.bp.OffsetDateTime
-import ru.terrakok.gitlabclient.entity.Author
 import ru.terrakok.gitlabclient.entity.Project
+import ru.terrakok.gitlabclient.entity.ShortUser
 import ru.terrakok.gitlabclient.entity.target.Target
 import ru.terrakok.gitlabclient.entity.target.TargetType
 import ru.terrakok.gitlabclient.entity.target.issue.Issue
@@ -34,7 +34,7 @@ class TodoDeserializer : JsonDeserializer<Todo> {
         Todo(
             jsonObject.get("id").asLong,
             context.deserialize<Project>(jsonObject.get("project"), Project::class.java),
-            context.deserialize<Author>(jsonObject.get("author"), Author::class.java),
+            context.deserialize<ShortUser>(jsonObject.get("author"), ShortUser::class.java),
             context.deserialize<TodoAction>(
                 jsonObject.get("action_name"),
                 TodoAction::class.java

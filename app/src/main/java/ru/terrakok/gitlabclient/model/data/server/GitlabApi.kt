@@ -275,7 +275,7 @@ interface GitlabApi {
         @Path("merge_request_id") mergeRequestId: Long,
         @Query("page") page: Int,
         @Query("per_page") pageSize: Int
-    ): Single<List<Author>>
+    ): Single<List<ShortUser>>
 
     @GET("$API_PATH/projects/{project_id}/merge_requests/{merge_request_id}/changes")
     fun getMergeRequestChanges(

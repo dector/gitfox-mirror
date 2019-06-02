@@ -148,7 +148,8 @@
 
     <!--Merge Request Info screen-->
     <string name="merge_request_title">!%d</string>
-    <string name="merge_request_info_tab">Details</string>
+    <string name="merge_request_details_tab">Details</string>
+    <string name="merge_request_info_tab">Info</string>
     <string name="merge_request_commits_tab">Commits</string>
     <string name="merge_request_discussion_tab">Discussion</string>
     <string name="merge_request_changes_tab">Changes</string>
@@ -186,11 +187,36 @@
     <string name="project_files_show_branches">Branches</string>
     <string name="project_files_default_path">Project Files</string>
     <string name="project_files_no_branches">You have no branches</string>
-    
+    §
     <!--Privacy policy screen-->
     <string name="privacy_policy">Privacy policy</string>
 
     <!--Label screen-->
     <string name="label_description_empty">No description</string>
+
+    <!--Issue/MergeRequest info screen-->
+    <string name="issue_merge_request_none">None</string>
+    <string name="assignees_title">Assignees</string>
+    <string name="milestone_title">Milestone</string>=
+    <string name="due_date_title">Due date</string>
+    <string name="time_stats_title">Time tracker</string>
+    <string name="weight_title">Weight</string>
+    <string name="lock_issue_title">Lock issue</string>
+    <string name="lock_unlocked">Unlocked</string>
+    <string name="lock_locked">Locked</string>
+    <string name="confidentiality_title">Confidentiality</string>
+    <string name="confidentiality_confidential">This issue is confidential</string>
+    <string name="confidentiality_not_confidential">Not confidential</string>
+    <string name="labels_title">Labels</string>
+    <string name="time_stats_empty_stats">No estimate or time spent</string>
+    <string name="time_stats_spent_time">Spent:\u0020</string>
+    <string name="time_stats_est_time">Est:\u0020</string>
+    <string name="time_stats_estimated_time">Estimated:\u0020</string>
+    <string name="merge_status_title">Merge status</string>
+    <string name="lock_merge_request_title">Lock merge request</string>
+
+    <string name="merge_request_status_can_be_merged">Can be merged</string>
+    <string name="merge_request_status_cannot_be_merged">Cannot be merged</string>
+    <string name="merge_request_status_unchecked">Unchecked</string>
 
 </resources>

@@ -18,6 +18,8 @@ import ru.terrakok.gitlabclient.extension.getXTotalHeader
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
+import ru.terrakok.gitlabclient.model.system.SingleCacheSuccess
+import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 
 class MergeRequestRepository @Inject constructor(
@@ -27,6 +29,7 @@ class MergeRequestRepository @Inject constructor(
     private val markDownUrlResolver: MarkDownUrlResolver
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
+    private val mergeRequestCachedSingles = ConcurrentHashMap<Pair<Long, Long>, Single<MergeRequest>>()
 
     fun getMyMergeRequests(
         state: MergeRequestState? = null,
@@ -141,18 +144,26 @@ class MergeRequestRepository @Inject constructor(
         projectId: Long,
         mergeRequestId: Long
     ) = Single
-        .zip(
-            api.getProject(projectId),
-            api.getMergeRequest(projectId, mergeRequestId),
-            BiFunction<Project, MergeRequest, MergeRequest> { project, mr ->
-                val resolved = markDownUrlResolver.resolve(mr.description, project)
-                if (resolved != mr.description) {
-                    mr.copy(description = resolved)
-                } else {
-                    mr
-                }
+        .defer {
+            val key = Pair(projectId, mergeRequestId)
+            if (!mergeRequestCachedSingles.containsKey(key)) {
+                mergeRequestCachedSingles[key] = Single
+                    .zip(
+                        api.getProject(projectId),
+                        api.getMergeRequest(projectId, mergeRequestId),
+                        BiFunction<Project, MergeRequest, MergeRequest> { project, mr ->
+                            val resolved = markDownUrlResolver.resolve(mr.description, project)
+                            if (resolved != mr.description) {
+                                mr.copy(description = resolved)
+                            } else {
+                                mr
+                            }
+                        }
+                    )
+                    .compose { SingleCacheSuccess.create(it) }
             }
-        )
+            mergeRequestCachedSingles[key]
+        }
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
 
@@ -219,7 +230,7 @@ class MergeRequestRepository @Inject constructor(
         .zip(
             getAllMergeRequestParticipants(projectId, mergeRequestId),
             api.getMergeRequestCommits(projectId, mergeRequestId, page, pageSize),
-            BiFunction<List<Author>, List<Commit>, List<CommitWithAvatarUrl>> { participants, commits ->
+            BiFunction<List<ShortUser>, List<Commit>, List<CommitWithAvatarUrl>> { participants, commits ->
                 commits.map { commit ->
                     CommitWithAvatarUrl(
                         commit,

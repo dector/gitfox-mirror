@@ -1,8 +1,8 @@
 package ru.terrakok.gitlabclient.entity.todo
 
 import org.threeten.bp.OffsetDateTime
-import ru.terrakok.gitlabclient.entity.Author
 import ru.terrakok.gitlabclient.entity.Project
+import ru.terrakok.gitlabclient.entity.ShortUser
 import ru.terrakok.gitlabclient.entity.target.Target
 import ru.terrakok.gitlabclient.entity.target.TargetType
 
@@ -12,7 +12,7 @@ import ru.terrakok.gitlabclient.entity.target.TargetType
 data class Todo(
     val id: Long,
     val project: Project,
-    val author: Author,
+    val author: ShortUser,
     val actionName: TodoAction,
     val targetType: TargetType,
     val target: Target,

@@ -14,6 +14,7 @@ import ru.terrakok.gitlabclient.entity.app.target.TargetBadgeStatus
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderIcon
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderTitle
 import ru.terrakok.gitlabclient.entity.event.EventAction
+import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestMergeStatus
 import ru.terrakok.gitlabclient.entity.milestone.MilestoneState
 import ru.terrakok.gitlabclient.entity.todo.TodoAction
 import ru.terrakok.gitlabclient.model.system.ResourceManager
@@ -194,4 +195,10 @@ fun MilestoneState.getHumanName(resources: Resources) = when (this) {
 fun MilestoneState.getStateColors(context: Context) = when (this) {
     MilestoneState.ACTIVE -> Pair(context.color(R.color.green), context.color(R.color.lightGreen))
     MilestoneState.CLOSED -> Pair(context.color(R.color.red), context.color(R.color.lightRed))
+}
+
+fun MergeRequestMergeStatus.getHumanName(resources: Resources) = when (this) {
+    MergeRequestMergeStatus.CANNOT_BE_MERGED -> resources.getString(R.string.merge_request_status_cannot_be_merged)
+    MergeRequestMergeStatus.CAN_BE_MERGED -> resources.getString(R.string.merge_request_status_can_be_merged)
+    MergeRequestMergeStatus.UNCHECKED -> resources.getString(R.string.merge_request_status_unchecked)
 }
