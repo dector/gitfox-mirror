@@ -13,9 +13,9 @@ class AppLauncher @Inject constructor(
     private val router: Router
 ) {
 
-    private val isSignedIn = launchInteractor.signInToSession()
-
     fun coldStart() {
+        val isSignedIn = launchInteractor.signInToSession()
+
         val rootScreen =
             if (isSignedIn) Screens.DrawerFlow
             else Screens.AuthFlow

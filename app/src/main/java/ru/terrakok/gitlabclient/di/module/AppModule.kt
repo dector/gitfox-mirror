@@ -19,7 +19,6 @@ import ru.terrakok.gitlabclient.model.system.AppSchedulers
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.model.system.message.SystemMessageNotifier
-import ru.terrakok.gitlabclient.presentation.AppLauncher
 import toothpick.config.Module
 
 /**
@@ -62,7 +61,5 @@ class AppModule(context: Context) : Module() {
         )
         bind(AppInfoRepository::class.java)
         bind(AppInfoInteractor::class.java)
-
-        bind(AppLauncher::class.java).singletonInScope()
     }
 }
