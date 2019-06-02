@@ -43,10 +43,7 @@ fun Throwable.userMessage(resourceManager: ResourceManager) = when (this) {
 
 private val DATE_FORMAT = DateTimeFormatter.ofPattern("dd MMM yyyy")
 fun OffsetDateTime.humanTime(resources: Resources): String {
-    val now = OffsetDateTime.now()
-    val ui = OffsetDateTime.of(toLocalDateTime(), now.offset)
-
-    val delta = Duration.between(ui, now)
+    val delta = Duration.between(this, OffsetDateTime.now())
         .seconds
         .let { maxOf(0, it) }
 
