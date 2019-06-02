@@ -3,7 +3,7 @@ package ru.terrakok.gitlabclient.model.repository.mergerequest
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
-import org.threeten.bp.LocalDateTime
+import org.threeten.bp.OffsetDateTime
 import ru.terrakok.gitlabclient.di.DefaultPageSize
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.*
@@ -36,8 +36,8 @@ class MergeRequestRepository @Inject constructor(
         milestone: String? = null,
         viewType: MergeRequestViewType? = null,
         labels: String? = null,
-        createdBefore: LocalDateTime? = null,
-        createdAfter: LocalDateTime? = null,
+        createdBefore: OffsetDateTime? = null,
+        createdAfter: OffsetDateTime? = null,
         scope: MergeRequestScope? = null,
         authorId: Int? = null,
         assigneeId: Int? = null,
@@ -69,8 +69,8 @@ class MergeRequestRepository @Inject constructor(
         milestone: String? = null,
         viewType: MergeRequestViewType? = null,
         labels: String? = null,
-        createdBefore: LocalDateTime? = null,
-        createdAfter: LocalDateTime? = null,
+        createdBefore: OffsetDateTime? = null,
+        createdAfter: OffsetDateTime? = null,
         scope: MergeRequestScope? = null,
         authorId: Int? = null,
         assigneeId: Int? = null,

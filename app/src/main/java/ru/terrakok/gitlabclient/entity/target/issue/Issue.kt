@@ -1,6 +1,7 @@
 package ru.terrakok.gitlabclient.entity.target.issue
 
 import com.google.gson.annotations.SerializedName
+import org.threeten.bp.LocalDate
 import ru.terrakok.gitlabclient.entity.Links
 import ru.terrakok.gitlabclient.entity.target.Target
 
@@ -9,7 +10,7 @@ import ru.terrakok.gitlabclient.entity.target.Target
  */
 class Issue : Target() {
     @SerializedName("due_date")
-    val dueDate: String? = null
+    val dueDate: LocalDate? = null
     @SerializedName("confidential")
     private val _confidential: Boolean? = null
     @SerializedName("weight")

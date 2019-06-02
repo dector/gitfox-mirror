@@ -1,5 +1,6 @@
 package ru.terrakok.gitlabclient.model.interactor.milestone
 
+import org.threeten.bp.LocalDate
 import ru.terrakok.gitlabclient.entity.milestone.MilestoneState
 import ru.terrakok.gitlabclient.model.repository.issue.IssueRepository
 import ru.terrakok.gitlabclient.model.repository.mergerequest.MergeRequestRepository
@@ -29,8 +30,8 @@ class MilestoneInteractor @Inject constructor(
         projectId: Long,
         title: String,
         description: String?,
-        dueDate: String?,
-        startDate: String?
+        dueDate: LocalDate?,
+        startDate: LocalDate?
     ) = milestoneRepository
         .createMilestone(projectId, title, description, dueDate, startDate)
 
@@ -39,8 +40,8 @@ class MilestoneInteractor @Inject constructor(
         milestoneId: Long,
         title: String?,
         description: String?,
-        dueDate: String?,
-        startDate: String?
+        dueDate: LocalDate?,
+        startDate: LocalDate?
     ) = milestoneRepository
         .updateMilestone(projectId, milestoneId, title, description, dueDate, startDate)
 
