@@ -2,7 +2,8 @@ package ru.terrakok.gitlabclient.model.data.server
 
 import io.reactivex.Completable
 import io.reactivex.Single
-import org.threeten.bp.LocalDateTime
+import org.threeten.bp.LocalDate
+import org.threeten.bp.OffsetDateTime
 import retrofit2.adapter.rxjava2.Result
 import retrofit2.http.*
 import ru.terrakok.gitlabclient.entity.*
@@ -163,8 +164,8 @@ interface GitlabApi {
         @Query("milestone") milestone: String?,
         @Query("view") viewType: MergeRequestViewType?,
         @Query("labels") labels: String?,
-        @Query("created_before") createdBefore: LocalDateTime?,
-        @Query("created_after") createdAfter: LocalDateTime?,
+        @Query("created_before") createdBefore: OffsetDateTime?,
+        @Query("created_after") createdAfter: OffsetDateTime?,
         @Query("scope") scope: MergeRequestScope?,
         @Query("author_id") authorId: Int?,
         @Query("assignee_id") assigneeId: Int?,
@@ -182,8 +183,8 @@ interface GitlabApi {
         @Query("milestone") milestone: String?,
         @Query("view") viewType: MergeRequestViewType?,
         @Query("labels") labels: String?,
-        @Query("created_before") createdBefore: LocalDateTime?,
-        @Query("created_after") createdAfter: LocalDateTime?,
+        @Query("created_before") createdBefore: OffsetDateTime?,
+        @Query("created_after") createdAfter: OffsetDateTime?,
         @Query("scope") scope: MergeRequestScope?,
         @Query("author_id") authorId: Int?,
         @Query("assignee_id") assigneeId: Int?,
@@ -298,23 +299,23 @@ interface GitlabApi {
 
     @FormUrlEncoded
     @POST("$API_PATH/projects/{project_id}/milestones")
-    fun createMileStone(
+    fun createMilestone(
         @Path("project_id") projectId: Long,
         @Field("title") title: String,
         @Field("description") description: String?,
-        @Field("due_date") dueDate: String?,
-        @Field("start_date") startDate: String?
+        @Field("due_date") dueDate: LocalDate?,
+        @Field("start_date") startDate: LocalDate?
     ): Single<Milestone>
 
     @FormUrlEncoded
     @PUT("$API_PATH/projects/{project_id}/milestones/{milestone_id}")
-    fun updateMileStone(
+    fun updateMilestone(
         @Path("project_id") projectId: Long,
         @Path("milestone_id") mileStoneId: Long,
         @Field("title") title: String?,
         @Field("description") description: String?,
-        @Field("due_date") dueDate: String?,
-        @Field("start_date") startDate: String?
+        @Field("due_date") dueDate: LocalDate?,
+        @Field("start_date") startDate: LocalDate?
     ): Single<Milestone>
 
     @DELETE("$API_PATH/projects/{project_id}/milestones/{milestone_id}")

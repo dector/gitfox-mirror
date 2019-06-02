@@ -1,7 +1,7 @@
 package ru.terrakok.gitlabclient.entity.target
 
 import com.google.gson.annotations.SerializedName
-import org.threeten.bp.LocalDateTime
+import org.threeten.bp.OffsetDateTime
 import ru.terrakok.gitlabclient.entity.Assignee
 import ru.terrakok.gitlabclient.entity.Author
 import ru.terrakok.gitlabclient.entity.milestone.Milestone
@@ -21,9 +21,9 @@ abstract class Target {
     @SerializedName("state")
     private val _state: TargetState? = null
     @SerializedName("updated_at")
-    val updatedAt: LocalDateTime? = null
+    val updatedAt: OffsetDateTime? = null
     @SerializedName("created_at")
-    val createdAt: LocalDateTime? = null
+    val createdAt: OffsetDateTime? = null
     @SerializedName("labels")
     private val _labels: List<String>? = null
     @SerializedName("milestone")

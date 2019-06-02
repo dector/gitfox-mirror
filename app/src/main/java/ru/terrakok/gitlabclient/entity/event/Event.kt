@@ -1,7 +1,7 @@
 package ru.terrakok.gitlabclient.entity.event
 
 import com.google.gson.annotations.SerializedName
-import org.threeten.bp.LocalDateTime
+import org.threeten.bp.OffsetDateTime
 import ru.terrakok.gitlabclient.entity.Author
 import ru.terrakok.gitlabclient.entity.Note
 import ru.terrakok.gitlabclient.entity.PushData
@@ -18,7 +18,7 @@ data class Event(
     @SerializedName("target_type") val targetType: EventTargetType?,
     @SerializedName("author_id") val authorId: Long,
     @SerializedName("target_title") val targetTitle: String?,
-    @SerializedName("created_at") val createdAt: LocalDateTime,
+    @SerializedName("created_at") val createdAt: OffsetDateTime,
     @SerializedName("author") val author: Author,
     @SerializedName("author_username") val authorUsername: String,
     @SerializedName("push_data") val pushData: PushData?,
