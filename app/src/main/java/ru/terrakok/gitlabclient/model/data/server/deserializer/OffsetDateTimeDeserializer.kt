@@ -9,14 +9,11 @@ import java.lang.reflect.Type
 
 class OffsetDateTimeDeserializer : JsonDeserializer<OffsetDateTime> {
 
+    private val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX")
+
     override fun deserialize(
         json: JsonElement,
         typeOfT: Type,
         context: JsonDeserializationContext?
-    ): OffsetDateTime {
-        return OffsetDateTime.parse(
-            json.asJsonPrimitive.asString,
-            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX")
-        )
-    }
+    ): OffsetDateTime = OffsetDateTime.parse(json.asJsonPrimitive.asString, dateTimeFormatter)
 }

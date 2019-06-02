@@ -12,11 +12,11 @@ import java.lang.reflect.Type
  */
 class LocalDateDeserializer : JsonDeserializer<LocalDate> {
 
+    private val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
     override fun deserialize(
         json: JsonElement,
         type: Type,
         jsonDeserializationContext: JsonDeserializationContext
-    ): LocalDate {
-        return LocalDate.parse(json.asJsonPrimitive.asString, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-    }
+    ): LocalDate = LocalDate.parse(json.asJsonPrimitive.asString, dateTimeFormatter)
 }
