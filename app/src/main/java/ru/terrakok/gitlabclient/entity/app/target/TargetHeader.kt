@@ -1,6 +1,6 @@
 package ru.terrakok.gitlabclient.entity.app.target
 
-import org.threeten.bp.LocalDateTime
+import org.threeten.bp.OffsetDateTime
 import ru.terrakok.gitlabclient.entity.Author
 
 /**
@@ -12,7 +12,7 @@ sealed class TargetHeader {
         val icon: TargetHeaderIcon,
         val title: TargetHeaderTitle,
         val body: CharSequence,
-        val date: LocalDateTime,
+        val date: OffsetDateTime,
         val target: AppTarget,
         val targetId: Long,
         val internal: TargetInternal?,
