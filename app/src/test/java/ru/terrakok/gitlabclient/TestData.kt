@@ -8,6 +8,8 @@ import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.event.EventTargetType
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
+import ru.terrakok.gitlabclient.entity.milestone.Milestone
+import ru.terrakok.gitlabclient.entity.milestone.MilestoneState
 
 /**
  * @author Vitaliy Belyaev on 01.06.2019.
@@ -152,4 +154,18 @@ object TestData {
                 TargetAction.Undefined
         )
     }
+
+    fun getMilestone() = Milestone(
+            123L,
+            321L,
+            333L,
+            "milestone description",
+            MilestoneState.ACTIVE,
+            null,
+            null,
+            null,
+            "milestone title",
+            null,
+            "url of milestone"
+    )
 }
