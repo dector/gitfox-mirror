@@ -13,11 +13,13 @@ class AppLauncher @Inject constructor(
     private val router: Router
 ) {
 
-    fun coldStart() {
-        val isSignedIn = launchInteractor.signInToSession()
+    fun onLaunch() {
+        launchInteractor.signInToLastSession()
+    }
 
+    fun coldStart() {
         val rootScreen =
-            if (isSignedIn) Screens.DrawerFlow
+            if (launchInteractor.hasAccount) Screens.DrawerFlow
             else Screens.AuthFlow
 
         if (launchInteractor.isFirstLaunch) {
@@ -25,6 +27,5 @@ class AppLauncher @Inject constructor(
         } else {
             router.newRootScreen(rootScreen)
         }
-
     }
 }

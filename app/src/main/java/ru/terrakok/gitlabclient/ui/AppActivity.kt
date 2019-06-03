@@ -56,6 +56,7 @@ class AppActivity : MvpAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
         Toothpick.inject(this, Toothpick.openScope(DI.APP_SCOPE))
+        appLauncher.onLaunch()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_container)
 
