@@ -187,11 +187,18 @@
     <string name="project_files_show_branches">Branches</string>
     <string name="project_files_default_path">Project Files</string>
     <string name="project_files_no_branches">You have no branches</string>
-    
+
     <!--Privacy policy screen-->
     <string name="privacy_policy">Privacy policy</string>
 
     <!--Label screen-->
     <string name="label_description_empty">No description</string>
+
+    <!--Members screen-->
+    <string name="members_guest">Guest</string>
+    <string name="members_reporter">Reporter</string>
+    <string name="members_developer">Developer</string>
+    <string name="members_maintainer">Maintainer</string>
+    <string name="members_owner">Owner</string>
 
 </resources>

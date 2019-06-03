@@ -396,7 +396,7 @@ interface GitlabApi {
         @Query("per_page") pageSize: Int = 1
     ): Single<Result<Void>>
 
-    @GET("$API_PATH/projects/{project_id}/members/all")
+    @GET("$API_PATH/projects/{project_id}/members")
     fun getMembers(
         @Path("project_id") projectId: Long,
         @Query("page") page: Int,
