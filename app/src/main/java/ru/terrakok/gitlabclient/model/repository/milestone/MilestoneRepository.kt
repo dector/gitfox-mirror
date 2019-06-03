@@ -37,22 +37,23 @@ class MilestoneRepository @Inject constructor(
                 if (milestones != null) {
                     Single.just(milestones)
                 } else {
-                    getAllProjectLabelsFromServer(projectId)
+                    getAllProjectMilestonesFromServer(projectId)
                         .doOnSuccess { milestones -> projectMilestoneCache.put(projectId, milestones) }
                 }
             }
             .subscribeOn(schedulers.io())
             .observeOn(schedulers.ui())
 
-    private fun getAllProjectLabelsFromServer(
+    private fun getAllProjectMilestonesFromServer(
         projectId: Long
-    ): Single<List<Milestone>> = Observable.range(1, Integer.MAX_VALUE)
-        .concatMapSingle { page -> api.getMilestones(projectId, null, page, defaultPageSize) }
-        .takeWhile { milestones -> milestones.isNotEmpty() }
-        .reduce { allMilestones, currentMilestones -> allMilestones + currentMilestones }
-        .toSingle()
-        .subscribeOn(schedulers.io())
-        .observeOn(schedulers.ui())
+    ): Single<List<Milestone>> =
+        Observable.range(1, Integer.MAX_VALUE)
+            .concatMapSingle { page -> api.getMilestones(projectId, null, page, defaultPageSize) }
+            .takeWhile { milestones -> milestones.isNotEmpty() }
+            .reduce { allMilestones, currentMilestones -> allMilestones + currentMilestones }
+            .toSingle()
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
 
     fun getMilestone(
         projectId: Long,

@@ -130,11 +130,12 @@ class MarkDownConverterProvider @Inject constructor(
             parser,
             markdownDecorator,
             { projectId, builder ->
+                val allLabels = labelInteractor.getAllProjectLabels(projectId)
+                val allMilestones = milestoneInteractor.getAllProjectMilestones(projectId)
                 Single
-                    .zip(labelInteractor.getAllProjectLabels(projectId), milestoneInteractor.getAllProjectMilestones(projectId), BiFunction { labels: List<Label>, milestones: List<Milestone> -> labels to milestones})
-                    .map { (labels, milestones) ->
+                    .zip(allLabels, allMilestones, BiFunction { labels, milestones ->
                         getCustomVisitor(labels, milestones, builder)
-                    }
+                    })
             },
             schedulers
         )
