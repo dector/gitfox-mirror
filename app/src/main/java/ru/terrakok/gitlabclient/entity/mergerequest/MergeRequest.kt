@@ -1,7 +1,7 @@
 package ru.terrakok.gitlabclient.entity.mergerequest
 
 import com.google.gson.annotations.SerializedName
-import org.threeten.bp.OffsetDateTime
+import org.threeten.bp.ZonedDateTime
 import ru.terrakok.gitlabclient.entity.ShortUser
 import ru.terrakok.gitlabclient.entity.TimeStats
 import ru.terrakok.gitlabclient.entity.milestone.Milestone
@@ -9,8 +9,8 @@ import ru.terrakok.gitlabclient.entity.milestone.Milestone
 data class MergeRequest(
     @SerializedName("id") val id: Long,
     @SerializedName("iid") val iid: Long,
-    @SerializedName("created_at") val createdAt: OffsetDateTime,
-    @SerializedName("updated_at") val updatedAt: OffsetDateTime?,
+    @SerializedName("created_at") val createdAt: ZonedDateTime,
+    @SerializedName("updated_at") val updatedAt: ZonedDateTime?,
     @SerializedName("target_branch") val targetBranch: String,
     @SerializedName("source_branch") val sourceBranch: String,
     @SerializedName("project_id") val projectId: Long,
@@ -38,9 +38,9 @@ data class MergeRequest(
     // This value will only be present for merge requests which were closed/merged after GitLab 10.6
     // and when the user account that closed/merged the issue still exists.
     @SerializedName("closed_by") val closedBy: ShortUser?,
-    @SerializedName("closed_at") val closedAt: OffsetDateTime?,
+    @SerializedName("closed_at") val closedAt: ZonedDateTime?,
     @SerializedName("merged_by") val mergedBy: ShortUser?,
-    @SerializedName("merged_at") val mergedAt: OffsetDateTime?,
+    @SerializedName("merged_at") val mergedAt: ZonedDateTime?,
     @SerializedName("changes") val changes: List<MergeRequestChange>?,
     @SerializedName("assignees") val assignees: List<ShortUser>,
     @SerializedName("time_stats") val timeStats: TimeStats,

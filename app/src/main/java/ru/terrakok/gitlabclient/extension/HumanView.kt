@@ -5,7 +5,7 @@ import android.content.res.Resources
 import androidx.annotation.DrawableRes
 import org.threeten.bp.Duration
 import org.threeten.bp.LocalDate
-import org.threeten.bp.OffsetDateTime
+import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import retrofit2.HttpException
 import ru.terrakok.gitlabclient.R
@@ -42,8 +42,8 @@ fun Throwable.userMessage(resourceManager: ResourceManager) = when (this) {
 }
 
 private val DATE_FORMAT = DateTimeFormatter.ofPattern("dd MMM yyyy")
-fun OffsetDateTime.humanTime(resources: Resources): String {
-    val delta = Duration.between(this, OffsetDateTime.now())
+fun ZonedDateTime.humanTime(resources: Resources): String {
+    val delta = Duration.between(this, ZonedDateTime.now())
         .seconds
         .let { maxOf(0, it) }
 

@@ -3,7 +3,7 @@ package ru.terrakok.gitlabclient.model.data.server
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.threeten.bp.LocalDate
-import org.threeten.bp.OffsetDateTime
+import org.threeten.bp.ZonedDateTime
 import retrofit2.adapter.rxjava2.Result
 import retrofit2.http.*
 import ru.terrakok.gitlabclient.entity.*
@@ -164,8 +164,8 @@ interface GitlabApi {
         @Query("milestone") milestone: String?,
         @Query("view") viewType: MergeRequestViewType?,
         @Query("labels") labels: String?,
-        @Query("created_before") createdBefore: OffsetDateTime?,
-        @Query("created_after") createdAfter: OffsetDateTime?,
+        @Query("created_before") createdBefore: ZonedDateTime?,
+        @Query("created_after") createdAfter: ZonedDateTime?,
         @Query("scope") scope: MergeRequestScope?,
         @Query("author_id") authorId: Int?,
         @Query("assignee_id") assigneeId: Int?,
@@ -183,8 +183,8 @@ interface GitlabApi {
         @Query("milestone") milestone: String?,
         @Query("view") viewType: MergeRequestViewType?,
         @Query("labels") labels: String?,
-        @Query("created_before") createdBefore: OffsetDateTime?,
-        @Query("created_after") createdAfter: OffsetDateTime?,
+        @Query("created_before") createdBefore: ZonedDateTime?,
+        @Query("created_after") createdAfter: ZonedDateTime?,
         @Query("scope") scope: MergeRequestScope?,
         @Query("author_id") authorId: Int?,
         @Query("assignee_id") assigneeId: Int?,

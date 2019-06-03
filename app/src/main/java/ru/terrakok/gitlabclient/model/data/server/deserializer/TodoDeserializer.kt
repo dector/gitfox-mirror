@@ -4,7 +4,7 @@ import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonParseException
-import org.threeten.bp.OffsetDateTime
+import org.threeten.bp.ZonedDateTime
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.ShortUser
 import ru.terrakok.gitlabclient.entity.target.Target
@@ -51,7 +51,10 @@ class TodoDeserializer : JsonDeserializer<Todo> {
             jsonObject.get("target_url").asString,
             jsonObject.get("body").asString,
             context.deserialize<TodoState>(jsonObject.get("state"), TodoState::class.java),
-            context.deserialize<OffsetDateTime>(jsonObject.get("created_at"), OffsetDateTime::class.java)
+            context.deserialize<ZonedDateTime>(
+                jsonObject.get("created_at"),
+                ZonedDateTime::class.java
+            )
         )
     } else {
         throw JsonParseException("Configure Gson in GsonProvider.")

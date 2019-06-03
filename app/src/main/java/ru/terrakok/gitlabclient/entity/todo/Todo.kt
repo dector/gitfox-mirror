@@ -1,6 +1,6 @@
 package ru.terrakok.gitlabclient.entity.todo
 
-import org.threeten.bp.OffsetDateTime
+import org.threeten.bp.ZonedDateTime
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.ShortUser
 import ru.terrakok.gitlabclient.entity.target.Target
@@ -19,5 +19,5 @@ data class Todo(
     val targetUrl: String,
     val body: String,
     val state: TodoState,
-    val createdAt: OffsetDateTime
+    val createdAt: ZonedDateTime
 )

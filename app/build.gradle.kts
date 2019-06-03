@@ -135,7 +135,7 @@ dependencies {
     //Lottie
     implementation("com.airbnb.android:lottie:2.5.1")
     //Date
-    implementation("com.jakewharton.threetenabp:threetenabp:1.2.0")
+    implementation("com.jakewharton.threetenabp:threetenabp:1.2.1")
     //FlexBox Layout
     implementation("com.google.android:flexbox:1.0.0")
     //Firebase

@@ -3,7 +3,7 @@ package ru.terrakok.gitlabclient.model.repository.event
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
-import org.threeten.bp.OffsetDateTime
+import org.threeten.bp.ZonedDateTime
 import ru.terrakok.gitlabclient.di.DefaultPageSize
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.OrderBy
@@ -34,8 +34,8 @@ class EventRepository @Inject constructor(
     fun getEvents(
         action: EventAction? = null,
         targetType: EventTarget? = null,
-        beforeDay: OffsetDateTime? = null,
-        afterDay: OffsetDateTime? = null,
+        beforeDay: ZonedDateTime? = null,
+        afterDay: ZonedDateTime? = null,
         sort: Sort? = Sort.DESC,
         orderBy: OrderBy = OrderBy.UPDATED_AT,
         page: Int,
@@ -68,8 +68,8 @@ class EventRepository @Inject constructor(
         projectId: Long,
         action: EventAction? = null,
         targetType: EventTarget? = null,
-        beforeDay: OffsetDateTime? = null,
-        afterDay: OffsetDateTime? = null,
+        beforeDay: ZonedDateTime? = null,
+        afterDay: ZonedDateTime? = null,
         sort: Sort? = Sort.DESC,
         orderBy: OrderBy = OrderBy.UPDATED_AT,
         page: Int,

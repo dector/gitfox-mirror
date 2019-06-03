@@ -1,7 +1,7 @@
 package ru.terrakok.gitlabclient.entity
 
 import com.google.gson.annotations.SerializedName
-import org.threeten.bp.OffsetDateTime
+import org.threeten.bp.ZonedDateTime
 
 data class User(
     @SerializedName("id") val id: Long,
@@ -11,7 +11,7 @@ data class User(
     @SerializedName("state") val state: String?,
     @SerializedName("avatar_url") val avatarUrl: String?,
     @SerializedName("web_url") val webUrl: String?,
-    @SerializedName("created_at") val createdAt: OffsetDateTime,
+    @SerializedName("created_at") val createdAt: ZonedDateTime,
     @SerializedName("is_admin") val isAdmin: Boolean,
     @SerializedName("bio") val bio: String?,
     @SerializedName("location") val location: String?,
@@ -20,11 +20,11 @@ data class User(
     @SerializedName("twitter") val twitter: String?,
     @SerializedName("website_url") val websiteUrl: String?,
     @SerializedName("organization") val organization: String?,
-    @SerializedName("last_sign_in_at") val lastSignInAt: OffsetDateTime,
-    @SerializedName("confirmed_at") val confirmedAt: OffsetDateTime,
+    @SerializedName("last_sign_in_at") val lastSignInAt: ZonedDateTime,
+    @SerializedName("confirmed_at") val confirmedAt: ZonedDateTime,
     @SerializedName("color_scheme_id") val colorSchemeId: Long,
     @SerializedName("projects_limit") val projectsLimit: Long,
-    @SerializedName("current_sign_in_at") val currentSignInAt: OffsetDateTime,
+    @SerializedName("current_sign_in_at") val currentSignInAt: ZonedDateTime,
     @SerializedName("identities") val identities: List<Identity>?,
     @SerializedName("can_create_group") val canCreateGroup: Boolean,
     @SerializedName("can_create_project") val canCreateProject: Boolean,
