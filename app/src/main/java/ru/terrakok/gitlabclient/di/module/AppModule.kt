@@ -10,9 +10,6 @@ import ru.terrakok.gitlabclient.BuildConfig
 import ru.terrakok.gitlabclient.di.*
 import ru.terrakok.gitlabclient.di.provider.GsonProvider
 import ru.terrakok.gitlabclient.entity.app.develop.AppInfo
-import ru.terrakok.gitlabclient.model.data.storage.RawAppData
-import ru.terrakok.gitlabclient.model.interactor.app.AppInfoInteractor
-import ru.terrakok.gitlabclient.model.repository.app.AppInfoRepository
 import ru.terrakok.gitlabclient.model.repository.session.SessionRepository
 import ru.terrakok.gitlabclient.model.repository.tools.Base64Tools
 import ru.terrakok.gitlabclient.model.system.AppSchedulers
@@ -36,7 +33,6 @@ class AppModule(context: Context) : Module() {
         bind(ResourceManager::class.java).singletonInScope()
         bind(Base64Tools::class.java).toInstance(Base64Tools())
         bind(AssetManager::class.java).toInstance(context.assets)
-        bind(RawAppData::class.java)
         bind(SystemMessageNotifier::class.java).toInstance(SystemMessageNotifier())
         bind(Gson::class.java).toProvider(GsonProvider::class.java).providesSingletonInScope()
 
@@ -59,7 +55,5 @@ class AppModule(context: Context) : Module() {
                 BuildConfig.FEEDBACK_URL
             )
         )
-        bind(AppInfoRepository::class.java)
-        bind(AppInfoInteractor::class.java)
     }
 }
