@@ -35,7 +35,7 @@ class MergeRequestInfoFragment : BaseFragment(), MergeRequestInfoView {
 
     override fun showInfo(mr: MergeRequest) {
         with(mr) {
-            showAssignees(assignees)
+            showAssignees(assignees ?: assignee?.let { listOf(it) } ?: emptyList())
             showMilestone(milestone)
             showMergeStatus(state, mergeStatus)
             showTimeStats(timeStats)
