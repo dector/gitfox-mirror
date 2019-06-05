@@ -5,8 +5,8 @@ import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.di.MergeRequestId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
-import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestChange
-import ru.terrakok.gitlabclient.model.interactor.MergeRequestInteractor
+import ru.terrakok.gitlabclient.entity.DiffData
+import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
@@ -16,34 +16,34 @@ import javax.inject.Inject
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 12.02.18.
  */
 @InjectViewState
-class MergeRequestChangesPresenter @Inject constructor(
+class MergeRequestDiffDataListPresenter @Inject constructor(
     @ProjectId projectIdWrapper: PrimitiveWrapper<Long>,
     @MergeRequestId mrIdWrapper: PrimitiveWrapper<Long>,
     private val mrInteractor: MergeRequestInteractor,
     private val errorHandler: ErrorHandler,
     private val flowRouter: FlowRouter
-) : BasePresenter<MergeRequestChangesView>() {
+) : BasePresenter<MergeRequestDiffDataListView>() {
 
     private val projectId = projectIdWrapper.value
     private val mrId = mrIdWrapper.value
 
-    private val changes = arrayListOf<MergeRequestChange>()
+    private val diffDataList = arrayListOf<DiffData>()
     private var isEmptyError: Boolean = false
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
         mrInteractor
-            .getMergeRequestChanges(projectId, mrId)
+            .getMergeRequestDiffDataList(projectId, mrId)
             .doOnSubscribe { viewState.showEmptyProgress(true) }
             .doAfterTerminate { viewState.showEmptyProgress(false) }
             .subscribe(
                 {
                     if (it.isNotEmpty()) {
-                        changes.addAll(it)
-                        viewState.showChanges(true, it)
+                        diffDataList.addAll(it)
+                        viewState.showDiffDataList(true, it)
                     } else {
-                        viewState.showChanges(false, it)
+                        viewState.showDiffDataList(false, it)
                         viewState.showEmptyView(true)
                     }
                 },
@@ -55,18 +55,18 @@ class MergeRequestChangesPresenter @Inject constructor(
             .connect()
     }
 
-    fun refreshChanges() {
+    fun refreshDiffDataList() {
         mrInteractor
-            .getMergeRequestChanges(projectId, mrId)
+            .getMergeRequestDiffDataList(projectId, mrId)
             .doOnSubscribe {
                 if (isEmptyError) {
                     viewState.showEmptyError(false, null)
                     isEmptyError = false
                 }
-                if (changes.isEmpty()) {
+                if (diffDataList.isEmpty()) {
                     viewState.showEmptyView(false)
                 }
-                if (changes.isNotEmpty()) {
+                if (diffDataList.isNotEmpty()) {
                     viewState.showRefreshProgress(true)
                 } else {
                     viewState.showEmptyProgress(true)
@@ -74,22 +74,22 @@ class MergeRequestChangesPresenter @Inject constructor(
             }
             .subscribe(
                 {
-                    if (changes.isNotEmpty()) {
+                    if (diffDataList.isNotEmpty()) {
                         viewState.showRefreshProgress(false)
                     } else {
                         viewState.showEmptyProgress(false)
                     }
-                    changes.clear()
+                    diffDataList.clear()
                     if (it.isNotEmpty()) {
-                        changes.addAll(it)
-                        viewState.showChanges(true, it)
+                        diffDataList.addAll(it)
+                        viewState.showDiffDataList(true, it)
                     } else {
-                        viewState.showChanges(false, it)
+                        viewState.showDiffDataList(false, it)
                         viewState.showEmptyView(true)
                     }
                 },
                 {
-                    if (changes.isNotEmpty()) {
+                    if (diffDataList.isNotEmpty()) {
                         viewState.showRefreshProgress(false)
                     } else {
                         viewState.showEmptyProgress(false)
@@ -97,7 +97,7 @@ class MergeRequestChangesPresenter @Inject constructor(
                     errorHandler.proceed(
                         it,
                         {
-                            if (changes.isNotEmpty()) {
+                            if (diffDataList.isNotEmpty()) {
                                 viewState.showMessage(it)
                             } else {
                                 isEmptyError = true
@@ -110,7 +110,7 @@ class MergeRequestChangesPresenter @Inject constructor(
             .connect()
     }
 
-    fun onMergeRequestChangeClick(item: MergeRequestChange) {
+    fun onMergeRequestDiffDataClicked(item: DiffData) {
         mrInteractor.getMergeRequest(projectId, mrId)
             .doOnSubscribe { viewState.showFullscreenProgress(true) }
             .doAfterTerminate { viewState.showFullscreenProgress(false) }

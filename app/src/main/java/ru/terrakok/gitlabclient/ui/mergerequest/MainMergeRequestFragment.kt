@@ -69,7 +69,7 @@ class MainMergeRequestFragment : BaseFragment(), MergeRequestView {
             TAB_INFO -> Screens.MergeRequestInfo.fragment
             TAB_COMMITS -> Screens.MergeRequestCommits.fragment
             TAB_NOTES -> Screens.MergeRequestNotes.fragment
-            else -> Screens.MergeRequestChanges.fragment
+            else -> Screens.MergeRequestDiffDataList.fragment
         }
 
         override fun getCount() = 5
@@ -79,7 +79,7 @@ class MainMergeRequestFragment : BaseFragment(), MergeRequestView {
             TAB_INFO -> getString(R.string.merge_request_info_tab)
             TAB_COMMITS -> getString(R.string.merge_request_commits_tab)
             TAB_NOTES -> getString(R.string.merge_request_discussion_tab)
-            TAB_CHANGES -> getString(R.string.merge_request_changes_tab)
+            TAB_DIFF_DATA -> getString(R.string.merge_request_changes_tab)
             else -> null
         }
     }
@@ -89,6 +89,6 @@ class MainMergeRequestFragment : BaseFragment(), MergeRequestView {
         private const val TAB_INFO = 1
         private const val TAB_COMMITS = 2
         private const val TAB_NOTES = 3
-        private const val TAB_CHANGES = 4
+        private const val TAB_DIFF_DATA = 4
     }
 }

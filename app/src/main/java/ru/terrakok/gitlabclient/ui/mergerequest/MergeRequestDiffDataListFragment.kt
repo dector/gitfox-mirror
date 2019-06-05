@@ -2,36 +2,39 @@ package ru.terrakok.gitlabclient.ui.mergerequest
 
 import android.os.Bundle
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
-import kotlinx.android.synthetic.main.fragment_mr_changes.*
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestChange
-import ru.terrakok.gitlabclient.presentation.mergerequest.changes.MergeRequestChangesPresenter
-import ru.terrakok.gitlabclient.presentation.mergerequest.changes.MergeRequestChangesView
+import ru.terrakok.gitlabclient.entity.DiffData
+import ru.terrakok.gitlabclient.presentation.mergerequest.changes.MergeRequestDiffDataListPresenter
+import ru.terrakok.gitlabclient.presentation.mergerequest.changes.MergeRequestDiffDataListView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import ru.terrakok.gitlabclient.ui.global.list.MergeRequestChangeAdapterDelegate
-import ru.terrakok.gitlabclient.ui.global.list.SimpleDividerDecorator
-import ru.terrakok.gitlabclient.ui.global.list.isSame
-import ru.terrakok.gitlabclient.util.addSystemBottomPadding
-import ru.terrakok.gitlabclient.util.showSnackMessage
-import ru.terrakok.gitlabclient.util.visible
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 25.10.18.
  */
-class MergeRequestChangesFragment : BaseFragment(), MergeRequestChangesView {
+class MergeRequestDiffDataListFragment : BaseFragment(), MergeRequestDiffDataListView {
 
-    override val layoutRes = R.layout.fragment_mr_changes
+    override val layoutRes = R.layout.fragment_mr_diff_data_list
 
     private val adapter by lazy {
         object : AsyncListDifferDelegationAdapter<MergeRequestChange>(
             object : DiffUtil.ItemCallback<MergeRequestChange>() {
-                override fun areItemsTheSame(oldItem: MergeRequestChange, newItem: MergeRequestChange) = oldItem.isSame(newItem)
-                override fun areContentsTheSame(oldItem: MergeRequestChange, newItem: MergeRequestChange) = oldItem == newItem
-                override fun getChangePayload(oldItem: MergeRequestChange, newItem: MergeRequestChange) = Any()
+                override fun areItemsTheSame(
+                    oldItem: MergeRequestChange,
+                    newItem: MergeRequestChange
+                ) = oldItem.isSame(newItem)
+
+                override fun areContentsTheSame(
+                    oldItem: MergeRequestChange,
+                    newItem: MergeRequestChange
+                ) = oldItem == newItem
+
+                override fun getChangePayload(
+                    oldItem: MergeRequestChange,
+                    newItem: MergeRequestChange
+                ) = Any()
             }
         ) {
             init {
@@ -44,11 +47,11 @@ class MergeRequestChangesFragment : BaseFragment(), MergeRequestChangesView {
     }
 
     @InjectPresenter
-    lateinit var presenter: MergeRequestChangesPresenter
+    lateinit var presenter: MergeRequestDiffDataListPresenter
 
     @ProvidePresenter
     fun providePresenter() =
-        scope.getInstance(MergeRequestChangesPresenter::class.java)
+            scope.getInstance(MergeRequestDiffDataListPresenter::class.java)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -58,11 +61,11 @@ class MergeRequestChangesFragment : BaseFragment(), MergeRequestChangesView {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context)
             addItemDecoration(SimpleDividerDecorator(context))
-            adapter = this@MergeRequestChangesFragment.adapter
+            adapter = this@MergeRequestDiffDataListFragment.adapter
         }
 
-        swipeToRefresh.setOnRefreshListener { presenter.refreshChanges() }
-        emptyView.setRefreshListener { presenter.refreshChanges() }
+        swipeToRefresh.setOnRefreshListener { presenter.refreshDiffDataList() }
+        emptyView.setRefreshListener { presenter.refreshDiffDataList() }
     }
 
     override fun showRefreshProgress(show: Boolean) {
@@ -85,9 +88,9 @@ class MergeRequestChangesFragment : BaseFragment(), MergeRequestChangesView {
         emptyView.apply { if (show) showEmptyError(message) else hide() }
     }
 
-    override fun showChanges(show: Boolean, changes: List<MergeRequestChange>) {
+    override fun showDiffDataList(show: Boolean, diffDataList: List<DiffData>) {
         recyclerView.visible(show)
-        postViewAction { adapter.items = changes }
+        postViewAction { adapter.items = diffDataList }
     }
 
     override fun showMessage(message: String) {
