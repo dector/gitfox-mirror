@@ -1,13 +1,10 @@
 package ru.terrakok.gitlabclient.presentation.issue.info
 
 import com.arellomobile.mvp.InjectViewState
-import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.di.IssueId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
-import ru.terrakok.gitlabclient.entity.ShortUser
 import ru.terrakok.gitlabclient.model.interactor.issue.IssueInteractor
-import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import javax.inject.Inject
@@ -20,8 +17,7 @@ class IssueInfoPresenter @Inject constructor(
     @ProjectId private val projectIdWrapper: PrimitiveWrapper<Long>,
     @IssueId private val issueIdWrapper: PrimitiveWrapper<Long>,
     private val issueInteractor: IssueInteractor,
-    private val errorHandler: ErrorHandler,
-    private val router: FlowRouter
+    private val errorHandler: ErrorHandler
 ) : BasePresenter<IssueInfoView>() {
 
     private val projectId = projectIdWrapper.value
@@ -40,6 +36,4 @@ class IssueInfoPresenter @Inject constructor(
             )
             .connect()
     }
-
-    fun onAssigneeClicked(assignee: ShortUser) = router.startFlow(Screens.UserFlow(assignee.id))
 }

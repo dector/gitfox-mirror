@@ -7,7 +7,10 @@ import ru.noties.markwon.Markwon
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
-import ru.terrakok.gitlabclient.extension.*
+import ru.terrakok.gitlabclient.extension.humanTime
+import ru.terrakok.gitlabclient.extension.showSnackMessage
+import ru.terrakok.gitlabclient.extension.tint
+import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.mergerequest.details.MergeRequestDetailsPresenter
 import ru.terrakok.gitlabclient.presentation.mergerequest.details.MergeRequestDetailsView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
@@ -67,7 +70,7 @@ class MergeRequestDetailsFragment : BaseFragment(), MergeRequestDetailsView {
                     }
             }
         }
-        avatarImageView.loadRoundedImage(mr.author.avatarUrl, context)
+        avatarImageView.setUserInfo(mr.author.id, mr.author.avatarUrl)
         Markwon.setText(descriptionTextView, mdDescription)
     }
 

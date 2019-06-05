@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground">
 
-    <ImageView
+    <ru.terrakok.gitlabclient.ui.global.view.custom.UserAvatarView
         android:id="@+id/avatarImageView"
         android:layout_width="48dp"
         android:layout_height="48dp"

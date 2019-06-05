@@ -70,7 +70,7 @@ class TargetHeaderPublicAdapterDelegate(
                 titleTextView.text = item.title.getHumanName(resources)
                 Markwon.setText(descriptionTextView, item.body)
                 descriptionTextView.movementMethod = null //disable internal link click
-                avatarImageView.loadRoundedImage(item.author.avatarUrl)
+                avatarImageView.setUserInfo(item.author.id, item.author.avatarUrl)
                 iconImageView.setImageResource(item.icon.getIcon())
                 dateTextView.text = item.date.humanTime(resources)
 
