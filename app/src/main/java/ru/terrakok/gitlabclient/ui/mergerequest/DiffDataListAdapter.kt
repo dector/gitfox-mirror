@@ -2,22 +2,22 @@ package ru.terrakok.gitlabclient.ui.mergerequest
 
 import androidx.recyclerview.widget.DiffUtil
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
-import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestChange
-import ru.terrakok.gitlabclient.ui.global.list.MergeRequestChangeAdapterDelegate
+import ru.terrakok.gitlabclient.entity.DiffData
+import ru.terrakok.gitlabclient.ui.global.list.DiffDataAdapterDelegate
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 26.10.18.
  */
-class MergeRequestChangeAdapter(
-    clickListener: (MergeRequestChange) -> Unit
-) : ListDelegationAdapter<MutableList<MergeRequestChange>>() {
+class DiffDataListAdapter(
+    clickListener: (DiffData) -> Unit
+) : ListDelegationAdapter<MutableList<DiffData>>() {
 
     init {
         items = mutableListOf()
-        delegatesManager.addDelegate(MergeRequestChangeAdapterDelegate(clickListener))
+        delegatesManager.addDelegate(DiffDataAdapterDelegate(clickListener))
     }
 
-    fun setData(data: List<MergeRequestChange>) {
+    fun setData(data: List<DiffData>) {
         val oldItems = items.toList()
 
         items.clear()
@@ -29,8 +29,8 @@ class MergeRequestChangeAdapter(
     }
 
     private inner class DiffCallback(
-        private val newItems: List<MergeRequestChange>,
-        private val oldItems: List<MergeRequestChange>
+        private val newItems: List<DiffData>,
+        private val oldItems: List<DiffData>
     ) : DiffUtil.Callback() {
 
         override fun getOldListSize() = oldItems.size

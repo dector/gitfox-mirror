@@ -9,7 +9,7 @@
     android:paddingBottom="20dp">
 
     <TextView
-        android:id="@+id/changePath"
+        android:id="@+id/diffDataPath"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -23,19 +23,19 @@
         tools:text="…gitlabclient / model / interactor / issue" />
 
     <ImageView
-        android:id="@+id/changeIcon"
+        android:id="@+id/diffDataIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:layout_marginTop="4dp"
-        app:layout_constraintEnd_toStartOf="@id/changeFileName"
+        app:layout_constraintEnd_toStartOf="@id/diffDataFileName"
         app:layout_constraintHorizontal_chainStyle="spread"
-        app:layout_constraintStart_toStartOf="@id/changePath"
-        app:layout_constraintTop_toTopOf="@id/changeFileName"
+        app:layout_constraintStart_toStartOf="@id/diffDataPath"
+        app:layout_constraintTop_toTopOf="@id/diffDataFileName"
         tools:src="@drawable/ic_file_changed" />
 
     <TextView
-        android:id="@+id/changeFileName"
+        android:id="@+id/diffDataFileName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="12dp"
@@ -43,44 +43,44 @@
         android:singleLine="true"
         android:layout_marginTop="16dp"
         android:textAppearance="@style/TextTitle"
-        app:layout_constraintEnd_toStartOf="@id/changeAddedCount"
+        app:layout_constraintEnd_toStartOf="@id/diffDataAddedCount"
         app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toEndOf="@id/changeIcon"
-        app:layout_constraintTop_toBottomOf="@id/changePath"
+        app:layout_constraintStart_toEndOf="@id/diffDataIcon"
+        app:layout_constraintTop_toBottomOf="@id/diffDataPath"
         tools:text="IssueInteractor" />
 
     <TextView
-        android:id="@+id/changeAddedCount"
+        android:id="@+id/diffDataAddedCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="14dp"
         android:textAppearance="@style/TextTitle"
         android:textColor="@color/green"
-        app:layout_constraintEnd_toStartOf="@id/changeDeletedCount"
-        app:layout_constraintStart_toEndOf="@id/changeFileName"
-        app:layout_constraintTop_toTopOf="@id/changeFileName"
+        app:layout_constraintEnd_toStartOf="@id/diffDataDeletedCount"
+        app:layout_constraintStart_toEndOf="@id/diffDataFileName"
+        app:layout_constraintTop_toTopOf="@id/diffDataFileName"
         tools:text="+5" />
 
     <TextView
-        android:id="@+id/changeDeletedCount"
+        android:id="@+id/diffDataDeletedCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:textAppearance="@style/TextTitle"
         android:textColor="@color/red"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/changeAddedCount"
-        app:layout_constraintTop_toTopOf="@id/changeFileName"
+        app:layout_constraintStart_toEndOf="@id/diffDataAddedCount"
+        app:layout_constraintTop_toTopOf="@id/diffDataFileName"
         tools:text="-2" />
 
     <ru.terrakok.gitlabclient.ui.global.view.custom.GitDiffView
-        android:id="@+id/gitDiffView"
+        android:id="@+id/diffDataDiffView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/changeFileName"
+        app:layout_constraintTop_toBottomOf="@id/diffDataFileName"
         tools:text="@@ -0,0 +1,8 @@\n+package ru.terrakok.gitlabclient.entity.app\n+\n+import ru.terrakok.gitlabclient.entity.Commit\n+\n+/**\n+ * Created by Eugene Shapovalov (@CraggyHaggy) on 20.10.18.\n+ */\n+data class CommitWithAvatarUrl(val commit: Commit, val authorAvatarUrl: String?)\n\\ No newline at end of file\n" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

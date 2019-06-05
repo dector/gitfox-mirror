@@ -4,26 +4,26 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
-import kotlinx.android.synthetic.main.item_merge_request_change.view.*
+import kotlinx.android.synthetic.main.item_diff_data.view.*
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestChange
+import ru.terrakok.gitlabclient.entity.DiffData
 import ru.terrakok.gitlabclient.extension.extractFileNameFromPath
 import ru.terrakok.gitlabclient.extension.inflate
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 26.10.18.
  */
-class MergeRequestChangeAdapterDelegate(
-    private val clickListener: (MergeRequestChange) -> Unit
-) : AdapterDelegate<MutableList<MergeRequestChange>>() {
+class DiffDataAdapterDelegate(
+    private val clickListener: (DiffData) -> Unit
+) : AdapterDelegate<MutableList<DiffData>>() {
 
-    override fun isForViewType(items: MutableList<MergeRequestChange>, position: Int) = true
+    override fun isForViewType(items: MutableList<DiffData>, position: Int) = true
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder =
-        ViewHolder(parent.inflate(R.layout.item_merge_request_change))
+        ViewHolder(parent.inflate(R.layout.item_diff_data))
 
     override fun onBindViewHolder(
-        items: MutableList<MergeRequestChange>,
+        items: MutableList<DiffData>,
         position: Int,
         viewHolder: RecyclerView.ViewHolder,
         payloads: MutableList<Any>
@@ -35,38 +35,38 @@ class MergeRequestChangeAdapterDelegate(
     }
 
     private inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private lateinit var item: MergeRequestChange
+        private lateinit var item: DiffData
 
         init {
             view.setOnClickListener { clickListener(item) }
         }
 
-        fun bind(item: MergeRequestChange) {
+        fun bind(item: DiffData) {
             this.item = item
             with(itemView) {
-                changePath.text = item.newPath
-                changeIcon.setImageResource(
+                diffDataPath.text = item.newPath
+                diffDataIcon.setImageResource(
                     when {
                         item.newFile -> R.drawable.ic_file_added
                         item.deletedFile -> R.drawable.ic_file_deleted
                         else -> R.drawable.ic_file_changed
                     }
                 )
-                changeFileName.text = item.newPath.extractFileNameFromPath()
-                gitDiffView.setGitDiffText(item.diff)
-                changeAddedCount.text = context.getString(
-                    R.string.merge_request_changes_added_count,
-                    gitDiffView.getAddedLineCount()
+                diffDataFileName.text = item.newPath.extractFileNameFromPath()
+                diffDataDiffView.setGitDiffText(item.diff)
+                diffDataAddedCount.text = context.getString(
+                    R.string.item_diff_data_added_count,
+                    diffDataDiffView.getAddedLineCount()
                 )
-                changeDeletedCount.text = context.getString(
-                    R.string.merge_request_changes_deleted_count,
-                    gitDiffView.getDeletedLineCount()
+                diffDataDeletedCount.text = context.getString(
+                    R.string.item_diff_data_deleted_count,
+                    diffDataDiffView.getDeletedLineCount()
                 )
             }
         }
 
         fun recycle() {
-            itemView.gitDiffView.release()
+            itemView.diffDataDiffView.release()
         }
     }
 }
