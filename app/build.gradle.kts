@@ -149,6 +149,8 @@ dependencies {
     testImplementation("org.mockito:mockito-core:2.27.0")
     //Mockito Kotlin
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0")
+    //Date with timezone
+    testImplementation("org.threeten:threetenbp:1.4.0")
 }
 
 configurations.all {
