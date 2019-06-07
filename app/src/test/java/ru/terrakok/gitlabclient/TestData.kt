@@ -155,6 +155,35 @@ object TestData {
         )
     }
 
+    fun getFile() = File(
+            "file name",
+            "file path",
+            500L,
+            "encoding",
+            "file content",
+            "file branch",
+            "blob id",
+            "commit id",
+            "last commit id"
+    )
+
+    fun getRepositoryTreeNode() = RepositoryTreeNode(
+            "some id",
+            "some name",
+            RepositoryTreeNodeType.TREE,
+            "some path",
+            "mode"
+    )
+
+    fun getBranch() = Branch(
+            "some name",
+            merged = false,
+            protected = false,
+            default = true,
+            developersCanPush = true,
+            developersCanMerge = true,
+            canPush = false)
+
     fun getMilestone() = Milestone(
             123L,
             321L,
