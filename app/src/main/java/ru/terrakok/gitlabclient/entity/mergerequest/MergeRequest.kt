@@ -42,7 +42,8 @@ data class MergeRequest(
     @SerializedName("merged_by") val mergedBy: ShortUser?,
     @SerializedName("merged_at") val mergedAt: ZonedDateTime?,
     @SerializedName("changes") val changes: List<MergeRequestChange>?,
-    @SerializedName("assignees") val assignees: List<ShortUser>,
+    // It sometimes can be null.
+    @SerializedName("assignees") val assignees: List<ShortUser>?,
     @SerializedName("time_stats") val timeStats: TimeStats,
     @SerializedName("discussion_locked") val discussionLocked: Boolean
 )

@@ -15,7 +15,8 @@ data class Issue(
     @SerializedName("author") val author: ShortUser,
     @SerializedName("milestone") val milestone: Milestone?,
     @SerializedName("project_id") val projectId: Long,
-    @SerializedName("assignees") val assignees: List<ShortUser>,
+    // Assignees can be null in MergeRequest, so assume it can be null too.
+    @SerializedName("assignees") val assignees: List<ShortUser>?,
     @SerializedName("updated_at") val updatedAt: ZonedDateTime?,
     @SerializedName("title") val title: String?,
     @SerializedName("created_at") val createdAt: ZonedDateTime,
@@ -35,5 +36,6 @@ data class Issue(
     @SerializedName("merge_requests_count") val relatedMergeRequestCount: Int,
     @SerializedName("time_stats") val timeStats: TimeStats,
     @SerializedName("weight") val weight: Int?,
-    @SerializedName("discussion_locked") val discussionLocked: Boolean
+    @SerializedName("discussion_locked") val discussionLocked: Boolean,
+    @SerializedName("assignee") val assignee: ShortUser?
 )

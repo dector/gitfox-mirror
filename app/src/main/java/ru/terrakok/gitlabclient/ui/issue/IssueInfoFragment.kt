@@ -34,7 +34,7 @@ class IssueInfoFragment : BaseFragment(), IssueInfoView {
 
     override fun showInfo(issue: Issue) {
         with(issue) {
-            showAssignees(assignees)
+            showAssignees(assignees ?: assignee?.let { listOf(it) } ?: emptyList())
             showMilestone(milestone)
             showDueDate(dueDate)
             showTimeStats(timeStats)
