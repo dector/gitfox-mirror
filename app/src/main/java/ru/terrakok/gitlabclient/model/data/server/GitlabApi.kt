@@ -278,7 +278,7 @@ interface GitlabApi {
     ): Single<List<ShortUser>>
 
     @GET("$API_PATH/projects/{project_id}/merge_requests/{merge_request_id}/changes")
-    fun getMergeRequestChanges(
+    fun getMergeRequestDiffDataList(
         @Path("project_id") projectId: Long,
         @Path("merge_request_id") mergeRequestId: Long
     ): Single<MergeRequest>

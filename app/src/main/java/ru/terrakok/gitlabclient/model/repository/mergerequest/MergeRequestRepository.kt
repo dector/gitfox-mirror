@@ -252,9 +252,9 @@ class MergeRequestRepository @Inject constructor(
             .flatMapIterable { it }
             .toList()
 
-    fun getMergeRequestChanges(projectId: Long, mergeRequestId: Long) =
-        api.getMergeRequestChanges(projectId, mergeRequestId)
-            .map { it.changes ?: arrayListOf() }
+    fun getMergeRequestDiffDataList(projectId: Long, mergeRequestId: Long) =
+        api.getMergeRequestDiffDataList(projectId, mergeRequestId)
+            .map { it.diffDataList ?: arrayListOf() }
             .subscribeOn(schedulers.io())
             .observeOn(schedulers.ui())
 

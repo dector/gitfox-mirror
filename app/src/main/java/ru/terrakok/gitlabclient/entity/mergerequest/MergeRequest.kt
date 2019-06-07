@@ -2,6 +2,7 @@ package ru.terrakok.gitlabclient.entity.mergerequest
 
 import com.google.gson.annotations.SerializedName
 import org.threeten.bp.ZonedDateTime
+import ru.terrakok.gitlabclient.entity.DiffData
 import ru.terrakok.gitlabclient.entity.ShortUser
 import ru.terrakok.gitlabclient.entity.TimeStats
 import ru.terrakok.gitlabclient.entity.milestone.Milestone
@@ -41,7 +42,7 @@ data class MergeRequest(
     @SerializedName("closed_at") val closedAt: ZonedDateTime?,
     @SerializedName("merged_by") val mergedBy: ShortUser?,
     @SerializedName("merged_at") val mergedAt: ZonedDateTime?,
-    @SerializedName("changes") val changes: List<MergeRequestChange>?,
+    @SerializedName("changes") val diffDataList: List<DiffData>?,
     @SerializedName("assignees") val assignees: List<ShortUser>,
     @SerializedName("time_stats") val timeStats: TimeStats,
     @SerializedName("discussion_locked") val discussionLocked: Boolean

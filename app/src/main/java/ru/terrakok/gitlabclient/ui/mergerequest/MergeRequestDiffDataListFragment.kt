@@ -6,29 +6,29 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.layout_base_list.*
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestChange
+import ru.terrakok.gitlabclient.entity.DiffData
 import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.extension.visible
-import ru.terrakok.gitlabclient.presentation.mergerequest.changes.MergeRequestChangesPresenter
-import ru.terrakok.gitlabclient.presentation.mergerequest.changes.MergeRequestChangesView
+import ru.terrakok.gitlabclient.presentation.mergerequest.changes.MergeRequestDiffDataListPresenter
+import ru.terrakok.gitlabclient.presentation.mergerequest.changes.MergeRequestDiffDataListView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.list.SimpleDividerDecorator
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 25.10.18.
  */
-class MergeRequestChangesFragment : BaseFragment(), MergeRequestChangesView {
+class MergeRequestDiffDataListFragment : BaseFragment(), MergeRequestDiffDataListView {
 
-    override val layoutRes = R.layout.fragment_mr_changes
+    override val layoutRes = R.layout.fragment_mr_diff_data_list
 
-    private val adapter by lazy { MergeRequestChangeAdapter({ presenter.onMergeRequestChangeClick(it) }) }
+    private val adapter by lazy { DiffDataListAdapter({ presenter.onMergeRequestDiffDataClicked(it) }) }
 
     @InjectPresenter
-    lateinit var presenter: MergeRequestChangesPresenter
+    lateinit var presenter: MergeRequestDiffDataListPresenter
 
     @ProvidePresenter
     fun providePresenter() =
-        scope.getInstance(MergeRequestChangesPresenter::class.java)
+        scope.getInstance(MergeRequestDiffDataListPresenter::class.java)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -37,11 +37,11 @@ class MergeRequestChangesFragment : BaseFragment(), MergeRequestChangesView {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context)
             addItemDecoration(SimpleDividerDecorator(context))
-            adapter = this@MergeRequestChangesFragment.adapter
+            adapter = this@MergeRequestDiffDataListFragment.adapter
         }
 
-        swipeToRefresh.setOnRefreshListener { presenter.refreshChanges() }
-        emptyView.setRefreshListener { presenter.refreshChanges() }
+        swipeToRefresh.setOnRefreshListener { presenter.refreshDiffDataList() }
+        emptyView.setRefreshListener { presenter.refreshDiffDataList() }
     }
 
     override fun showRefreshProgress(show: Boolean) {
@@ -64,9 +64,9 @@ class MergeRequestChangesFragment : BaseFragment(), MergeRequestChangesView {
         emptyView.apply { if (show) showEmptyError(message) else hide() }
     }
 
-    override fun showChanges(show: Boolean, changes: List<MergeRequestChange>) {
+    override fun showDiffDataList(show: Boolean, diffDataList: List<DiffData>) {
         recyclerView.visible(show)
-        postViewAction { adapter.setData(changes) }
+        postViewAction { adapter.setData(diffDataList) }
     }
 
     override fun showMessage(message: String) {
