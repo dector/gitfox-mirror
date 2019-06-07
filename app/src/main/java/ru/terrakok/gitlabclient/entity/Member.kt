@@ -3,7 +3,7 @@ package ru.terrakok.gitlabclient.entity
 import com.google.gson.annotations.SerializedName
 
 data class Member(
-    @SerializedName("id") val id: Int,
+    @SerializedName("id") val id: Long,
     @SerializedName("username") val username: String,
     @SerializedName("name") val name: String,
     @SerializedName("state") val state: String?,
