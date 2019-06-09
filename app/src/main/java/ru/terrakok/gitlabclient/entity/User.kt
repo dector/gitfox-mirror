@@ -30,4 +30,7 @@ data class User(
     @SerializedName("can_create_project") val canCreateProject: Boolean,
     @SerializedName("two_factor_enabled") val twoFactorEnabled: Boolean,
     @SerializedName("external") val external: Boolean
-)
+) {
+
+    fun toShortUser() = ShortUser(id, state, name, webUrl, avatarUrl, username)
+}

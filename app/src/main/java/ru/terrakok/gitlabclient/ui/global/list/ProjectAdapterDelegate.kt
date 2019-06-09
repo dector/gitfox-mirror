@@ -10,8 +10,8 @@ import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.Visibility
 import ru.terrakok.gitlabclient.extension.getTintDrawable
 import ru.terrakok.gitlabclient.extension.inflate
-import ru.terrakok.gitlabclient.extension.loadRoundedImage
 import ru.terrakok.gitlabclient.extension.setStartDrawable
+import ru.terrakok.gitlabclient.ui.global.view.custom.bindProject
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 18.06.17.
@@ -63,7 +63,7 @@ class ProjectAdapterDelegate(private val clickListener: (Project) -> Unit) : Ada
                         else -> R.drawable.ic_globe_18dp
                     }
                 )
-                avatarImageView.loadRoundedImage(project.avatarUrl)
+                avatarImageView.bindProject(project)
             }
         }
     }

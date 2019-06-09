@@ -14,6 +14,7 @@ import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.mergerequest.details.MergeRequestDetailsPresenter
 import ru.terrakok.gitlabclient.presentation.mergerequest.details.MergeRequestDetailsView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.ui.global.view.custom.bindShortUser
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 31.05.19.
@@ -70,7 +71,7 @@ class MergeRequestDetailsFragment : BaseFragment(), MergeRequestDetailsView {
                     }
             }
         }
-        avatarImageView.setUserInfo(mr.author.id, mr.author.avatarUrl)
+        avatarImageView.bindShortUser(mr.author, true)
         Markwon.setText(descriptionTextView, mdDescription)
     }
 

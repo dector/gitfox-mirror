@@ -9,6 +9,7 @@ import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.CommitWithShortUser
 import ru.terrakok.gitlabclient.extension.humanTime
 import ru.terrakok.gitlabclient.extension.inflate
+import ru.terrakok.gitlabclient.ui.global.view.custom.bindShortUser
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 20.10.18.
@@ -34,8 +35,9 @@ class CommitAdapterDelegate : AdapterDelegate<MutableList<Any>>() {
         fun bind(commitWithShortUser: CommitWithShortUser) {
             this.commitWithShortUser = commitWithShortUser
             with(itemView) {
-                commitWithShortUser.shortUser?.run {
-                    avatarImageView.setUserInfo(id, avatarUrl)
+                val shortUser = commitWithShortUser.shortUser
+                if (shortUser != null) {
+                    avatarImageView.bindShortUser(shortUser, true)
                 }
                 titleTextView.text = commitWithShortUser.commit.title
                 descriptionTextView.text = String.format(

@@ -8,6 +8,7 @@ import kotlinx.android.synthetic.main.item_assignee.view.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.ShortUser
 import ru.terrakok.gitlabclient.extension.inflate
+import ru.terrakok.gitlabclient.ui.global.view.custom.bindShortUser
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 26.05.19.
@@ -35,7 +36,7 @@ class AssigneesAdapterDelegate : AdapterDelegate<MutableList<ShortUser>>() {
             with(itemView) {
                 titleTextView.text = item.name
                 subtitleTextView.text = item.username
-                avatarImageView.setUserInfo(item.id, item.avatarUrl)
+                avatarImageView.bindShortUser(item, true)
             }
         }
     }

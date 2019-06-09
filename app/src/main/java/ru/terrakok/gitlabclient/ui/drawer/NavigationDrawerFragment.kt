@@ -9,7 +9,6 @@ import kotlinx.android.synthetic.main.item_user_acount.view.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.session.UserAccount
 import ru.terrakok.gitlabclient.extension.inflate
-import ru.terrakok.gitlabclient.extension.loadRoundedImage
 import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerPresenter
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView
@@ -17,6 +16,7 @@ import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuIte
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem.*
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.MessageDialogFragment
+import ru.terrakok.gitlabclient.ui.global.view.custom.bindUserAccount
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 04.04.17
@@ -71,13 +71,13 @@ class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView, MessageDi
     override fun setAccounts(accounts: List<UserAccount>, currentAccount: UserAccount) {
         nickTV.text = currentAccount.userName
         serverNameTV.text = currentAccount.serverPath
-        avatarImageView.setUserInfo(currentAccount.userId, currentAccount.avatarUrl)
+        avatarImageView.bindUserAccount(currentAccount, true)
 
         accountsContainer.removeAllViews()
         accounts.forEach { acc ->
             accountsContainer.inflate(R.layout.item_user_acount)
                 .apply {
-                    avatarImageView.loadRoundedImage(acc.avatarUrl, context)
+                    avatarImageView.bindUserAccount(acc, false)
                     nameTextView.text = acc.userName
                     serverTextView.text = acc.serverPath
                     selectorView.visible(acc == currentAccount)

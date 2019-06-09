@@ -14,15 +14,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ru.terrakok.gitlabclient.ui.global.view.custom.UserAvatarView
+            <ru.terrakok.gitlabclient.ui.global.view.custom.AvatarView
                 android:id="@+id/avatarImageView"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:src="@drawable/default_img" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/titleTextView"

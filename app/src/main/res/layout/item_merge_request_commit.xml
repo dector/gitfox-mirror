@@ -7,13 +7,12 @@
     android:background="?attr/selectableItemBackground"
     android:paddingBottom="16dp">
 
-    <ru.terrakok.gitlabclient.ui.global.view.custom.UserAvatarView
+    <ru.terrakok.gitlabclient.ui.global.view.custom.AvatarView
         android:id="@+id/avatarImageView"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:src="@drawable/default_img"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

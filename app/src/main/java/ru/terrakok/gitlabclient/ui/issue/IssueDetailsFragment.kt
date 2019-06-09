@@ -14,6 +14,7 @@ import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.issue.details.IssueDetailsPresenter
 import ru.terrakok.gitlabclient.presentation.issue.details.IssueDetailsView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.ui.global.view.custom.bindShortUser
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 26.05.19.
@@ -56,7 +57,7 @@ class IssueDetailsFragment : BaseFragment(), IssueDetailsView {
                 }
             }
         }
-        avatarImageView.setUserInfo(issue.author.id, issue.author.avatarUrl)
+        avatarImageView.bindShortUser(issue.author, true)
         Markwon.setText(descriptionTextView, mdDescription)
     }
 

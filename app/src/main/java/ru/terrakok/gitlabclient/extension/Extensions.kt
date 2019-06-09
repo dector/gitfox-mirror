@@ -24,8 +24,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.Fragment
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.snackbar.Snackbar
 import retrofit2.adapter.rxjava2.Result
 import ru.terrakok.cicerone.Navigator
@@ -138,20 +136,6 @@ fun Fragment.sendEmail(email: String?) {
             )
         )
     }
-}
-
-fun ImageView.loadRoundedImage(
-    url: String?,
-    ctx: Context? = null
-) {
-    Glide.with(ctx ?: context)
-        .load(url)
-        .apply(RequestOptions().apply {
-            placeholder(R.drawable.default_img)
-            error(R.drawable.default_img)
-        })
-        .apply(RequestOptions.circleCropTransform())
-        .into(this)
 }
 
 fun TargetHeader.Public.openInfo(router: FlowRouter) {

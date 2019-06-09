@@ -22,12 +22,11 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ru.terrakok.gitlabclient.ui.global.view.custom.UserAvatarView
+        <ru.terrakok.gitlabclient.ui.global.view.custom.AvatarView
             android:id="@+id/avatarImageView"
             android:layout_width="72dp"
             android:layout_height="72dp"
             android:layout_margin="16dp"
-            android:src="@drawable/default_img"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
