@@ -28,6 +28,7 @@ import ru.terrakok.gitlabclient.entity.todo.TodoState
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 28.03.17
  */
 interface GitlabApi {
+
     companion object {
         const val API_PATH = "api/v4"
         // See GitLab documentation: https://docs.gitlab.com/ee/api/#pagination.
@@ -395,4 +396,39 @@ interface GitlabApi {
         @Query("state") state: TodoState = TodoState.PENDING,
         @Query("per_page") pageSize: Int = 1
     ): Single<Result<Void>>
+
+    @GET("$API_PATH/projects/{project_id}/members")
+    fun getMembers(
+        @Path("project_id") projectId: Long,
+        @Query("page") page: Int,
+        @Query("per_page") pageSize: Int
+    ): Single<List<Member>>
+
+    @GET("$API_PATH/projects/{project_id}/members/{member_id}")
+    fun getMember(
+        @Path("project_id") projectId: Long,
+        @Path("member_id") memberId: Long
+    ): Single<Member>
+
+    @POST("$API_PATH/projects/{project_id}/members")
+    fun addMember(
+        @Path("project_id") projectId: Long,
+        @Field("user_id") userId: Long,
+        @Field("access_level") accessLevel: Long,
+        @Field("expires_at") expiresDate: String?
+    ): Completable
+
+    @PUT("$API_PATH/projects/{project_id}/members/{user_id}")
+    fun editMember(
+        @Path("project_id") projectId: Long,
+        @Path("user_id") userId: Long,
+        @Field("access_level") accessLevel: Long,
+        @Field("expires_at") expiresDate: String?
+    ): Completable
+
+    @DELETE("$API_PATH/projects/{project_id}/members/{user_id}")
+    fun deleteMember(
+        @Path("project_id") projectId: Long,
+        @Path("user_id") userId: Long
+        ): Completable
 }
