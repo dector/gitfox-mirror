@@ -101,11 +101,16 @@ class MainFragment : BaseFragment(), MainView {
         }
     }
 
-    private fun buildBottomBarNotification(@ColorRes backgroundColor: Int, count: Int) =
-        AHNotification.Builder()
-            .setBackgroundColor(ContextCompat.getColor(requireContext(), backgroundColor))
-            .setText(count.toString())
-            .build()
+    private fun buildBottomBarNotification(@ColorRes backgroundColor: Int, count: Int): AHNotification {
+        return if (count > 0) {
+            AHNotification.Builder()
+                .setBackgroundColor(ContextCompat.getColor(requireContext(), backgroundColor))
+                .setText(count.toString())
+                .build()
+        } else {
+            AHNotification()
+        }
+    }
 
     companion object {
         private val eventsTab = Screens.MyEvents

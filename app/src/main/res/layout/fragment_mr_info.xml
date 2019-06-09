@@ -12,75 +12,193 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/avatarImageView"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:src="@drawable/default_img" />
+            android:layout_height="wrap_content"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp">
 
             <TextView
-                android:id="@+id/titleTextView"
+                android:id="@+id/assigneesTitle"
+                style="@style/TextSubhead"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:textColor="@color/primary_text"
-                android:textSize="18sp"
-                app:fontFamily="@font/roboto_medium"
+                android:text="@string/assignees_title"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/avatarImageView"
-                app:layout_constraintTop_toTopOf="@id/avatarImageView"
-                tools:text="MergeRequest title" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
-                android:id="@+id/stateImageView"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_marginTop="6dp"
-                android:src="@drawable/circle"
-                app:layout_constraintEnd_toStartOf="@id/subtitleTextView"
-                app:layout_constraintStart_toStartOf="@id/titleTextView"
-                app:layout_constraintTop_toBottomOf="@id/titleTextView" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/assigneesList"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:overScrollMode="never"
+                app:layout_constraintEnd_toEndOf="@id/assigneesTitle"
+                app:layout_constraintStart_toStartOf="@id/assigneesTitle"
+                app:layout_constraintTop_toBottomOf="@id/assigneesTitle" />
 
             <TextView
-                android:id="@+id/subtitleTextView"
+                android:id="@+id/assigneesNone"
+                style="@style/TextSubtitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:alpha="0.38"
+                android:text="@string/issue_merge_request_none"
+                app:layout_constraintEnd_toEndOf="@id/assigneesTitle"
+                app:layout_constraintStart_toStartOf="@id/assigneesTitle"
+                app:layout_constraintTop_toBottomOf="@id/assigneesTitle" />
+
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/assigneesDivider"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="assigneesList, assigneesNone" />
+
+            <TextView
+                android:id="@+id/milestoneTitle"
+                style="@style/TextSubhead"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:text="@string/milestone_title"
+                app:layout_constraintEnd_toStartOf="@id/mergeStatusTitle"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/assigneesDivider" />
+
+            <TextView
+                android:id="@+id/milestoneValue"
+                style="@style/TextSubtitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                app:layout_constraintEnd_toEndOf="@id/milestoneTitle"
+                app:layout_constraintStart_toStartOf="@id/milestoneTitle"
+                app:layout_constraintTop_toBottomOf="@id/milestoneTitle"
+                tools:alpha="0.38"
+                tools:text="@string/issue_merge_request_none" />
+
+            <TextView
+                android:id="@+id/mergeStatusTitle"
+                style="@style/TextSubhead"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="16dp"
-                android:textColor="@color/secondary_text"
-                android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/stateImageView"
-                app:layout_constraintTop_toBottomOf="@id/titleTextView"
-                tools:text="Opened by CraggyHaggy 3d ago" />
-
-            <View
-                android:id="@+id/divider"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/divider_size"
                 android:layout_marginTop="16dp"
-                android:background="@color/divider"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/subtitleTextView" />
+                android:layout_marginEnd="16dp"
+                android:text="@string/merge_status_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/milestoneTitle"
+                app:layout_constraintTop_toBottomOf="@id/assigneesDivider" />
 
             <TextView
-                android:id="@+id/descriptionTextView"
+                android:id="@+id/mergeStatusValue"
+                style="@style/TextSubtitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:linksClickable="true"
-                android:padding="16dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/divider" />
+                android:layout_marginTop="4dp"
+                app:layout_constraintEnd_toEndOf="@id/mergeStatusTitle"
+                app:layout_constraintStart_toStartOf="@id/mergeStatusTitle"
+                app:layout_constraintTop_toBottomOf="@id/mergeStatusTitle"
+                tools:text="Can be merged" />
+
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/firstDivider"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="milestoneValue, mergeStatusValue" />
+
+            <TextView
+                android:id="@+id/timeStatsTitle"
+                style="@style/TextSubhead"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:text="@string/time_stats_title"
+                app:layout_constraintEnd_toStartOf="@id/lockMergeRequestTitle"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/firstDivider" />
+
+            <ru.terrakok.gitlabclient.ui.global.view.custom.TimeStatsView
+                android:id="@+id/timeStatsValue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                app:layout_constraintEnd_toEndOf="@id/timeStatsTitle"
+                app:layout_constraintStart_toStartOf="@id/timeStatsTitle"
+                app:layout_constraintTop_toBottomOf="@id/timeStatsTitle" />
+
+            <TextView
+                android:id="@+id/lockMergeRequestTitle"
+                style="@style/TextSubhead"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/lock_merge_request_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/timeStatsTitle"
+                app:layout_constraintTop_toBottomOf="@id/firstDivider" />
+
+            <TextView
+                android:id="@+id/lockMergeRequestValue"
+                style="@style/TextSubtitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                app:layout_constraintEnd_toEndOf="@id/lockMergeRequestTitle"
+                app:layout_constraintStart_toStartOf="@id/lockMergeRequestTitle"
+                app:layout_constraintTop_toBottomOf="@id/lockMergeRequestTitle"
+                tools:alpha="0.38"
+                tools:text="@string/issue_merge_request_none" />
+
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/secondDivider"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="timeStatsValue, lockMergeRequestValue" />
+
+            <TextView
+                android:id="@+id/labelsTitle"
+                style="@style/TextSubhead"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/labels_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/secondDivider" />
+
+            <com.google.android.flexbox.FlexboxLayout
+                android:id="@+id/labelsValue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                app:flexWrap="wrap"
+                app:layout_constraintEnd_toEndOf="@id/labelsTitle"
+                app:layout_constraintStart_toStartOf="@id/labelsTitle"
+                app:layout_constraintTop_toBottomOf="@id/labelsTitle" />
+
+            <TextView
+                android:id="@+id/labelsNone"
+                style="@style/TextSubtitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:alpha="0.38"
+                android:text="@string/issue_merge_request_none"
+                app:layout_constraintEnd_toEndOf="@id/labelsTitle"
+                app:layout_constraintStart_toStartOf="@id/labelsTitle"
+                app:layout_constraintTop_toBottomOf="@id/labelsTitle" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

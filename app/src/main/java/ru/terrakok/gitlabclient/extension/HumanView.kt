@@ -5,7 +5,7 @@ import android.content.res.Resources
 import androidx.annotation.DrawableRes
 import org.threeten.bp.Duration
 import org.threeten.bp.LocalDate
-import org.threeten.bp.LocalDateTime
+import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import retrofit2.HttpException
 import ru.terrakok.gitlabclient.R
@@ -14,6 +14,7 @@ import ru.terrakok.gitlabclient.entity.app.target.TargetBadgeStatus
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderIcon
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderTitle
 import ru.terrakok.gitlabclient.entity.event.EventAction
+import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestMergeStatus
 import ru.terrakok.gitlabclient.entity.milestone.MilestoneState
 import ru.terrakok.gitlabclient.entity.todo.TodoAction
 import ru.terrakok.gitlabclient.model.system.ResourceManager
@@ -41,8 +42,8 @@ fun Throwable.userMessage(resourceManager: ResourceManager) = when (this) {
 }
 
 private val DATE_FORMAT = DateTimeFormatter.ofPattern("dd MMM yyyy")
-fun LocalDateTime.humanTime(resources: Resources): String {
-    val delta = Duration.between(this, LocalDateTime.now())
+fun ZonedDateTime.humanTime(resources: Resources): String {
+    val delta = Duration.between(this, ZonedDateTime.now())
         .seconds
         .let { maxOf(0, it) }
 
@@ -58,7 +59,7 @@ fun LocalDateTime.humanTime(resources: Resources): String {
     return resources.getString(R.string.time_ago, timeStr)
 }
 
-fun LocalDate.humanDate() = format(DATE_FORMAT)
+fun LocalDate.humanDate(): String = format(DATE_FORMAT)
 
 fun EventAction.getHumanName(resources: Resources) = when (this) {
     EventAction.UPDATED -> resources.getString(R.string.event_action_updated)
@@ -135,7 +136,9 @@ fun TargetHeaderTitle.getHumanName(resources: Resources) = when (this) {
 
         when (action) {
             TodoAction.ASSIGNED -> {
-                "$author $actionName $targetName ${resources.getString(R.string.at)} $projectName ${resources.getString(R.string.to)} $assignee"
+                "$author $actionName $targetName ${resources.getString(R.string.at)} $projectName ${resources.getString(
+                    R.string.to
+                )} $assignee"
             }
             TodoAction.DIRECTLY_ADDRESSED,
             TodoAction.MENTIONED -> {
@@ -189,4 +192,10 @@ fun MilestoneState.getHumanName(resources: Resources) = when (this) {
 fun MilestoneState.getStateColors(context: Context) = when (this) {
     MilestoneState.ACTIVE -> Pair(context.color(R.color.green), context.color(R.color.lightGreen))
     MilestoneState.CLOSED -> Pair(context.color(R.color.red), context.color(R.color.lightRed))
+}
+
+fun MergeRequestMergeStatus.getHumanName(resources: Resources) = when (this) {
+    MergeRequestMergeStatus.CANNOT_BE_MERGED -> resources.getString(R.string.merge_request_status_cannot_be_merged)
+    MergeRequestMergeStatus.CAN_BE_MERGED -> resources.getString(R.string.merge_request_status_can_be_merged)
+    MergeRequestMergeStatus.UNCHECKED -> resources.getString(R.string.merge_request_status_unchecked)
 }
