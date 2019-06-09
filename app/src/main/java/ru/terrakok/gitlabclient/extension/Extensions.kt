@@ -229,7 +229,7 @@ fun Toolbar.setTitleEllipsize(ellipsize: TextUtils.TruncateAt) {
     for(i in 0..childCount) {
         val child = getChildAt(i)
         if (child is TextView && child.text == fakeTitle) {
-            child.ellipsize = TextUtils.TruncateAt.START
+            child.ellipsize = ellipsize
             break
         }
     }

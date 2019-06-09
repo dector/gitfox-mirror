@@ -25,12 +25,15 @@ class LaunchInteractor @Inject constructor(
             }
         }
 
-    fun signInToSession(): Boolean {
-        val account = sessionRepository.getCurrentUserAccount()
-        Toothpick.closeScope(DI.SERVER_SCOPE)
-        Toothpick
-            .openScopes(DI.APP_SCOPE, DI.SERVER_SCOPE)
-            .installModules(ServerModule(account))
-        return account != null
+    val hasAccount: Boolean
+        get() = sessionRepository.getCurrentUserAccount() != null
+
+    fun signInToLastSession() {
+        if (!Toothpick.isScopeOpen(DI.SERVER_SCOPE)) {
+            val account = sessionRepository.getCurrentUserAccount()
+            Toothpick
+                .openScopes(DI.APP_SCOPE, DI.SERVER_SCOPE)
+                .installModules(ServerModule(account))
+        }
     }
 }

@@ -8,6 +8,7 @@ import org.junit.Test
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.verify
 import org.threeten.bp.LocalDateTime
+import org.threeten.bp.ZonedDateTime
 import ru.terrakok.gitlabclient.TestSchedulers
 import ru.terrakok.gitlabclient.entity.User
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
@@ -23,7 +24,8 @@ class ProfileRepositoryTest {
 
     private val testServer = "Test server"
     private val testError = RuntimeException("test error")
-    private val testDate = LocalDateTime.of(2018, 1, 1, 0, 0)
+    private val testDate =
+        ZonedDateTime.of(LocalDateTime.of(2018, 1, 1, 0, 0), ZonedDateTime.now().offset)
     private val testUser = User(
             id = 1L,
             username = "",
