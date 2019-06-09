@@ -36,7 +36,7 @@ class AssigneesAdapterDelegate : AdapterDelegate<MutableList<ShortUser>>() {
             with(itemView) {
                 titleTextView.text = item.name
                 subtitleTextView.text = item.username
-                avatarImageView.bindShortUser(item, true)
+                avatarImageView.bindShortUser(item)
             }
         }
     }

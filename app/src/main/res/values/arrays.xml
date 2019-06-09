@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <array name="avatar_short_name_text_sizes">
+        <item>14sp</item>
+        <item>18sp</item>
+        <item>24sp</item>
+    </array>
+
+</resources>

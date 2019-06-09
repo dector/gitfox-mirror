@@ -37,7 +37,7 @@ class CommitAdapterDelegate : AdapterDelegate<MutableList<Any>>() {
             with(itemView) {
                 val shortUser = commitWithShortUser.shortUser
                 if (shortUser != null) {
-                    avatarImageView.bindShortUser(shortUser, true)
+                    avatarImageView.bindShortUser(shortUser)
                 }
                 titleTextView.text = commitWithShortUser.commit.title
                 descriptionTextView.text = String.format(

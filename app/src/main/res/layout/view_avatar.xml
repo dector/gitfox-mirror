@@ -4,28 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:layout_height="48dp"
-    tools:layout_width="48dp"
+    tools:layout_height="72dp"
+    tools:layout_width="72dp"
     tools:parentTag="FrameLayout">
 
     <ImageView
         android:id="@+id/avatarImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:src="@drawable/default_img"/>
+        tools:src="@drawable/default_img" />
 
     <TextView
-        android:id="@+id/avatarName"
+        android:id="@+id/avatarShortName"
         style="@style/TextSubtitle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
+        android:padding="10dp"
         android:textColor="@color/white"
         android:textStyle="bold"
-        android:visibility="gone"
+        app:autoSizePresetSizes="@array/avatar_short_name_text_sizes"
+        app:autoSizeTextType="uniform"
         tools:background="@drawable/circle"
-        tools:text="ES"
-        tools:textSize="18sp"
-        tools:visibility="gone" />
+        tools:text="ES" />
 
 </merge>

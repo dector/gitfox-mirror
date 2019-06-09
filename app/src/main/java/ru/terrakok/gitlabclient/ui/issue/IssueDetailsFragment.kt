@@ -57,7 +57,7 @@ class IssueDetailsFragment : BaseFragment(), IssueDetailsView {
                 }
             }
         }
-        avatarImageView.bindShortUser(issue.author, true)
+        avatarImageView.bindShortUser(issue.author)
         Markwon.setText(descriptionTextView, mdDescription)
     }
 

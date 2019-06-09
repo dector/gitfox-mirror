@@ -37,7 +37,7 @@ class UserNoteAdapterDelegate : AdapterDelegate<MutableList<Any>>() {
         fun bind(data: NoteWithFormattedBody) {
             this.note = data.note
             with(itemView) {
-                avatarImageView.bindShortUser(note.author, true)
+                avatarImageView.bindShortUser(note.author)
                 titleTextView.text = note.author.name
                 subtitleTextView.text = note.createdAt.humanTime(context.resources)
                 Markwon.setText(descriptionTextView, data.body)

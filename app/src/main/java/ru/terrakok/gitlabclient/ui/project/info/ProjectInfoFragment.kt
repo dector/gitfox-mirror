@@ -47,7 +47,7 @@ class ProjectInfoFragment : BaseFragment(), ProjectInfoView {
         starsTextView.text = project.starCount.toString()
         forksTextView.text = project.forksCount.toString()
 
-        avatarImageView.bindProject(project)
+        avatarImageView.bindProject(project, false)
         iconImageView.setBackgroundResource(R.drawable.circle)
         iconImageView.setImageResource(
             when (project.visibility) {

@@ -3,7 +3,6 @@ package ru.terrakok.gitlabclient.ui.global.view.custom
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
-import android.util.TypedValue
 import android.view.View
 import android.widget.FrameLayout
 import com.bumptech.glide.Glide
@@ -30,7 +29,7 @@ class AvatarView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
-    private val nameBackgroundColors = intArrayOf(
+    private val shortNameBackgroundColors = intArrayOf(
         R.color.green,
         R.color.silver,
         R.color.grey,
@@ -41,37 +40,32 @@ class AvatarView @JvmOverloads constructor(
         R.color.mariner
     )
 
-    private var nameBackgroundColor = R.color.green
-    private var isTextSizeSet = false
-
     init {
         View.inflate(context, R.layout.view_avatar, this)
     }
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-
-        if (!isTextSizeSet && measuredWidth > 0) {
-            val width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48f, resources.displayMetrics).toInt()
-            val textSize = when {
-                measuredWidth < width -> 16f
-                measuredWidth == width -> 18f
-                else -> 22f
-            }
-            avatarName.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize)
-            isTextSizeSet = true
-        }
-    }
-
     fun setData(id: Long, name: String, avatarUrl: String?, clickAction: () -> Unit = {}) {
-        nameBackgroundColor = nameBackgroundColors[(id % nameBackgroundColors.size).toInt()]
-
         Glide.with(avatarImage)
             .clear(avatarImage)
 
+        val names = name.split(" ")
+        val shortName = when (names.size) {
+            0 -> ""
+            1 -> getShortNameFromSingleWord(names[0])
+            else -> getShortNameFromMultipleWords(names)
+        }
+        if (shortName.length == SHORT_NAME_LENGTH) {
+            avatarShortName.text = shortName
+            val shortNameBackgroundColor = shortNameBackgroundColors[(id % shortNameBackgroundColors.size).toInt()]
+            avatarShortName.background = context.getTintDrawable(R.drawable.circle, shortNameBackgroundColor)
+            avatarShortName.visible(true)
+        } else {
+            avatarImage.setImageResource(R.drawable.default_img)
+            avatarShortName.visible(false)
+        }
+
         Glide.with(avatarImage)
             .load(avatarUrl)
-            .apply(RequestOptions.placeholderOf(R.drawable.default_img))
             .listener(
                 object : RequestListener<Drawable> {
                     override fun onLoadFailed(
@@ -80,7 +74,6 @@ class AvatarView @JvmOverloads constructor(
                         target: Target<Drawable>?,
                         isFirstResource: Boolean
                     ): Boolean {
-                        handleLoadFailed(name)
                         return true
                     }
 
@@ -91,6 +84,7 @@ class AvatarView @JvmOverloads constructor(
                         dataSource: DataSource?,
                         isFirstResource: Boolean
                     ): Boolean {
+                        avatarShortName.visible(false)
                         return false
                     }
                 }
@@ -99,26 +93,6 @@ class AvatarView @JvmOverloads constructor(
             .into(avatarImage)
 
         setOnClickListener { clickAction() }
-    }
-
-    private fun handleLoadFailed(name: String) {
-        val names = name.split(" ")
-        val shortName = when (names.size) {
-            0 -> ""
-            1 -> getShortNameFromSingleWord(names[0])
-            else -> getShortNameFromMultipleWords(names)
-        }
-
-        if (shortName.length == SHORT_NAME_LENGTH) {
-            avatarName.text = shortName
-            avatarName.background = context.getTintDrawable(R.drawable.circle, nameBackgroundColor)
-            avatarImage.visible(false)
-            avatarName.visible(true)
-        } else {
-            avatarImage.setImageResource(R.drawable.default_img)
-            avatarImage.visible(true)
-            avatarName.visible(false)
-        }
     }
 
     private fun getShortNameFromSingleWord(name: String): String {
@@ -153,7 +127,7 @@ class AvatarView @JvmOverloads constructor(
     }
 }
 
-fun AvatarView.bindShortUser(shortUser: ShortUser, withNavigation: Boolean) {
+fun AvatarView.bindShortUser(shortUser: ShortUser, withNavigation: Boolean = true) {
     with(shortUser) {
         if (withNavigation) {
             val router = Toothpick.openScope(DI.APP_SCOPE).getInstance(Router::class.java)
@@ -175,8 +149,13 @@ fun AvatarView.bindUserAccount(userAccount: UserAccount, withNavigation: Boolean
     }
 }
 
-fun AvatarView.bindProject(project: Project) {
+fun AvatarView.bindProject(project: Project, withNavigation: Boolean = true) {
     with(project) {
-        setData(id, name, avatarUrl, {})
+        if (withNavigation) {
+            val router = Toothpick.openScope(DI.APP_SCOPE).getInstance(Router::class.java)
+            setData(id, name, avatarUrl) { router.navigateTo(Screens.ProjectFlow(id)) }
+        } else {
+            setData(id, name, avatarUrl)
+        }
     }
 }

@@ -71,7 +71,7 @@ class MergeRequestDetailsFragment : BaseFragment(), MergeRequestDetailsView {
                     }
             }
         }
-        avatarImageView.bindShortUser(mr.author, true)
+        avatarImageView.bindShortUser(mr.author)
         Markwon.setText(descriptionTextView, mdDescription)
     }
 
