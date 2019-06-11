@@ -8,12 +8,6 @@
     tools:layout_width="72dp"
     tools:parentTag="FrameLayout">
 
-    <ImageView
-        android:id="@+id/avatarImage"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:src="@drawable/default_img" />
-
     <TextView
         android:id="@+id/avatarShortName"
         style="@style/TextSubtitle"
@@ -27,5 +21,10 @@
         app:autoSizeTextType="uniform"
         tools:background="@drawable/circle"
         tools:text="ES" />
+
+    <ImageView
+        android:id="@+id/avatarImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </merge>

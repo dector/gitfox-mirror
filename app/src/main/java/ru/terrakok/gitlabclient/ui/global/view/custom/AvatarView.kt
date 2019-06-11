@@ -18,9 +18,9 @@ import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.di.DI
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.ShortUser
+import ru.terrakok.gitlabclient.entity.User
 import ru.terrakok.gitlabclient.entity.app.session.UserAccount
 import ru.terrakok.gitlabclient.extension.getTintDrawable
-import ru.terrakok.gitlabclient.extension.visible
 import toothpick.Toothpick
 
 class AvatarView @JvmOverloads constructor(
@@ -39,14 +39,14 @@ class AvatarView @JvmOverloads constructor(
         R.color.blue,
         R.color.mariner
     )
+    private val whiteCircle = context.getTintDrawable(R.drawable.circle, R.color.white)
 
     init {
         View.inflate(context, R.layout.view_avatar, this)
     }
 
     fun setData(id: Long, name: String, avatarUrl: String?, clickAction: () -> Unit = {}) {
-        Glide.with(avatarImage)
-            .clear(avatarImage)
+        resetAvatar()
 
         val names = name.split(" ")
         val shortName = when (names.size) {
@@ -58,10 +58,8 @@ class AvatarView @JvmOverloads constructor(
             avatarShortName.text = shortName
             val shortNameBackgroundColor = shortNameBackgroundColors[(id % shortNameBackgroundColors.size).toInt()]
             avatarShortName.background = context.getTintDrawable(R.drawable.circle, shortNameBackgroundColor)
-            avatarShortName.visible(true)
         } else {
             avatarImage.setImageResource(R.drawable.default_img)
-            avatarShortName.visible(false)
         }
 
         Glide.with(avatarImage)
@@ -84,7 +82,7 @@ class AvatarView @JvmOverloads constructor(
                         dataSource: DataSource?,
                         isFirstResource: Boolean
                     ): Boolean {
-                        avatarShortName.visible(false)
+                        avatarImage.background = whiteCircle
                         return false
                     }
                 }
@@ -93,6 +91,12 @@ class AvatarView @JvmOverloads constructor(
             .into(avatarImage)
 
         setOnClickListener { clickAction() }
+    }
+
+    private fun resetAvatar() {
+        avatarImage.background = null
+        Glide.with(avatarImage)
+            .clear(avatarImage)
     }
 
     private fun getShortNameFromSingleWord(name: String): String {
@@ -127,14 +131,16 @@ class AvatarView @JvmOverloads constructor(
     }
 }
 
-fun AvatarView.bindShortUser(shortUser: ShortUser, withNavigation: Boolean = true) {
+fun AvatarView.bindShortUser(shortUser: ShortUser) {
     with(shortUser) {
-        if (withNavigation) {
-            val router = Toothpick.openScope(DI.APP_SCOPE).getInstance(Router::class.java)
-            setData(id, name, avatarUrl) { router.navigateTo(Screens.UserFlow(id)) }
-        } else {
-            setData(id, name, avatarUrl)
-        }
+        val router = Toothpick.openScope(DI.APP_SCOPE).getInstance(Router::class.java)
+        setData(id, name, avatarUrl) { router.navigateTo(Screens.UserFlow(id)) }
+    }
+}
+
+fun AvatarView.bindUser(user: User) {
+    with(user) {
+        setData(id, name, avatarUrl)
     }
 }
 

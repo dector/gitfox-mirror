@@ -14,6 +14,7 @@ import ru.terrakok.gitlabclient.presentation.user.info.UserInfoPresenter
 import ru.terrakok.gitlabclient.presentation.user.info.UserInfoView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.view.custom.bindShortUser
+import ru.terrakok.gitlabclient.ui.global.view.custom.bindUser
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 25.11.17.
@@ -58,7 +59,7 @@ class UserInfoFragment : BaseFragment(), UserInfoView {
     override fun showUser(user: User) {
         this.user = user
         toolbar.title = user.username
-        avatarImageView.bindShortUser(user.toShortUser(), false)
+        avatarImageView.bindUser(user)
         usernameTextView.text = user.name
         userIdTextView.text = "@${user.username}"
 
