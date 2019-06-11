@@ -1,20 +1,15 @@
 package ru.terrakok.gitlabclient.model.repository.session
 
 import com.google.gson.Gson
-import com.nhaarman.mockitokotlin2.anyOrNull
-import okhttp3.*
 import org.junit.Assert
 import org.junit.Test
-import org.mockito.BDDMockito.*
+import org.mockito.BDDMockito.given
+import org.mockito.BDDMockito.then
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.times
-import org.mockito.internal.util.reflection.FieldSetter
 import ru.terrakok.gitlabclient.TestData
 import ru.terrakok.gitlabclient.TestSchedulers
-import ru.terrakok.gitlabclient.entity.TokenData
-import ru.terrakok.gitlabclient.entity.app.session.OAuthParams
 import ru.terrakok.gitlabclient.model.data.storage.Prefs
-import java.io.Reader
 
 /**
  * @author Vitaliy Belyaev on 08.06.2019.
