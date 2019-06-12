@@ -24,6 +24,4 @@ class TodoInteractor @Inject constructor(
                 page = page
             )
         }
-
-    fun getMyAssignedTodoCount() = todoRepository.getMyAssignedTodoCount()
 }

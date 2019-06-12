@@ -1,11 +1,7 @@
 package ru.terrakok.gitlabclient.presentation.main
 
 import com.arellomobile.mvp.InjectViewState
-import io.reactivex.Single
-import io.reactivex.functions.Function3
-import ru.terrakok.gitlabclient.model.interactor.issue.IssueInteractor
-import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestInteractor
-import ru.terrakok.gitlabclient.model.interactor.todo.TodoInteractor
+import ru.terrakok.gitlabclient.model.interactor.account.AccountInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import javax.inject.Inject
 
@@ -14,25 +10,15 @@ import javax.inject.Inject
  */
 @InjectViewState
 class MainPresenter @Inject constructor(
-    private val issueInteractor: IssueInteractor,
-    private val mergeRequestInteractor: MergeRequestInteractor,
-    private val todoInteractor: TodoInteractor
+    private val accountInteractor: AccountInteractor
 ) : BasePresenter<MainView>() {
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
-        Single
-            .zip(
-                issueInteractor.getMyAssignedIssueCount(),
-                mergeRequestInteractor.getMyAssignedMergeRequestCount(),
-                todoInteractor.getMyAssignedTodoCount(),
-                Function3<Int, Int, Int, Triple<Int, Int, Int>> { issueCount, mergeRequestCount, todoCount ->
-                    Triple(issueCount, mergeRequestCount, todoCount)
-                }
-            )
+        accountInteractor.getAccountMainBadges()
             .subscribe(
-                { viewState.setAssignedNotifications(it.first, it.second, it.third) },
+                { viewState.setAssignedNotifications(it) },
                 {
                     // TODO: user activity badges (Maybe we can retry this request, until it finishes correctly?).
                 }

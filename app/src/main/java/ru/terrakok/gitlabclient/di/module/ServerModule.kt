@@ -13,6 +13,7 @@ import ru.terrakok.gitlabclient.entity.app.session.OAuthParams
 import ru.terrakok.gitlabclient.entity.app.session.UserAccount
 import ru.terrakok.gitlabclient.model.data.cache.ProjectCache
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
+import ru.terrakok.gitlabclient.model.data.state.AccountMainBadgesStateModel
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import toothpick.config.Module
@@ -52,5 +53,8 @@ class ServerModule(userAccount: UserAccount?) : Module() {
 
         //Error handler with logout logic
         bind(ErrorHandler::class.java).singletonInScope()
+
+        //Account badges
+        bind(AccountMainBadgesStateModel::class.java).toInstance(AccountMainBadgesStateModel())
     }
 }
