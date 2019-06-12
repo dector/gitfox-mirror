@@ -47,7 +47,8 @@ class MilestoneRepository @Inject constructor(
     private fun getAllProjectMilestonesFromServer(
         projectId: Long
     ): Single<List<Milestone>> =
-        Observable.range(1, Integer.MAX_VALUE)
+        Observable
+            .range(1, Integer.MAX_VALUE)
             .concatMapSingle { page -> api.getMilestones(projectId, null, page, defaultPageSize) }
             .takeWhile { milestones -> milestones.isNotEmpty() }
             .reduce { allMilestones, currentMilestones -> allMilestones + currentMilestones }

@@ -55,7 +55,13 @@ object MilestoneTestUtils {
 
     fun decorateForTest(milestone: TestMilestone): String {
         val args = createArgsForTest(milestone)
-        return "${GitlabExtensionsDelimiterProcessor.DELIMITER_START}${GitlabMarkdownExtension.MILESTONE}${GitlabMarkdownExtension.OPTS_DELIMITER}$args${GitlabExtensionsDelimiterProcessor.DELIMITER_END}"
+        return listOf(
+            GitlabExtensionsDelimiterProcessor.DELIMITER_START,
+            GitlabMarkdownExtension.MILESTONE,
+            GitlabMarkdownExtension.OPTS_DELIMITER,
+            args,
+            GitlabExtensionsDelimiterProcessor.DELIMITER_END
+        ).joinToString()
     }
 
 }
