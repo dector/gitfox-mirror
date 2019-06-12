@@ -3,9 +3,8 @@ package ru.terrakok.gitlabclient.presentation.project.labels
 import com.nhaarman.mockitokotlin2.*
 import io.reactivex.Single
 import org.junit.Test
+import ru.terrakok.gitlabclient.TestData
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
-import ru.terrakok.gitlabclient.entity.Color
-import ru.terrakok.gitlabclient.entity.Label
 import ru.terrakok.gitlabclient.model.interactor.label.LabelInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
@@ -126,17 +125,5 @@ class ProjectLabelsPresenterTest {
         }
     }
 
-    private fun label(id: Long, subscribed: Boolean = false): Label {
-        return Label(
-                id = id,
-                name = "name$id",
-                color = Color("green", 12),
-                description = null,
-                openIssuesCount = 0,
-                closedIssuesCount = 0,
-                openMergeRequestsCount = 0,
-                subscribed = subscribed,
-                priority = null
-        )
-    }
+    private fun label(id: Long, subscribed: Boolean = false) = TestData.getLabel(id, subscribed)
 }

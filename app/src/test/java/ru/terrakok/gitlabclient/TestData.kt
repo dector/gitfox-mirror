@@ -137,10 +137,10 @@ object TestData {
             webUrl = "https://gitlab.com/terrakok/gitlab-client",
             tagList = null,
             owner = null,
-            name = "",
+            name = "GitFox",
             nameWithNamespace = "",
             path = "test path",
-            pathWithNamespace = "",
+            pathWithNamespace = "terrakok/gitlab-client",
             issuesEnabled = false,
             openIssuesCount = 0L,
             mergeRequestsEnabled = false,
@@ -240,13 +240,13 @@ object TestData {
         )
     }
 
-    fun getFile() = File(
+    fun getFile(content: String = "file content", branch: String = "test_br") = File(
             "file name",
             "file path",
             500L,
             "encoding",
-            "file content",
-            "file branch",
+            content,
+            branch,
             "blob id",
             "commit id",
             "last commit id"
@@ -281,6 +281,18 @@ object TestData {
             "milestone title",
             null,
             "url of milestone"
+    )
+
+    fun getLabel(id: Long = 555L, subscribed: Boolean = false) = Label(
+            id = id,
+            name = "name$id",
+            color = Color("green", 12),
+            description = "description",
+            openIssuesCount = 0,
+            closedIssuesCount = 0,
+            openMergeRequestsCount = 0,
+            subscribed = subscribed,
+            priority = null
     )
 
     fun getUserAccount() = UserAccount(
