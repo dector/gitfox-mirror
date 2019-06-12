@@ -1,5 +1,6 @@
 package ru.terrakok.gitlabclient.ui.mergerequest
 
+import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -33,6 +34,18 @@ class MergeRequestInfoFragment : BaseFragment(), MergeRequestInfoView {
     fun providePresenter() =
         scope.getInstance(MergeRequestInfoPresenter::class.java)
 
+    private val assigneesAdapter by lazy { AssigneesAdapter() }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        with(assigneesList) {
+            isNestedScrollingEnabled = false
+            layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+            setHasFixedSize(true)
+            adapter = assigneesAdapter
+        }
+    }
+
     override fun showInfo(mr: MergeRequest) {
         with(mr) {
             showAssignees(assignees ?: assignee?.let { listOf(it) } ?: emptyList())
@@ -47,14 +60,7 @@ class MergeRequestInfoFragment : BaseFragment(), MergeRequestInfoView {
     private fun showAssignees(assignees: List<ShortUser>) {
         if (assignees.isNotEmpty()) {
             assigneesNone.visible(false)
-            with(assigneesList) {
-                isNestedScrollingEnabled = false
-                layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
-                setHasFixedSize(true)
-                adapter = AssigneesAdapter { presenter.onAssigneeClicked(it) }.apply {
-                    setData(assignees)
-                }
-            }
+            assigneesAdapter.setData(assignees)
         } else {
             assigneesList.visible(false)
         }

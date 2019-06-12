@@ -40,6 +40,4 @@ class MergeRequestInfoPresenter @Inject constructor(
             )
             .connect()
     }
-
-    fun onAssigneeClicked(assignee: ShortUser) = router.startFlow(Screens.UserFlow(assignee.id))
 }

@@ -7,7 +7,7 @@ import org.threeten.bp.ZonedDateTime
 import ru.terrakok.gitlabclient.di.DefaultPageSize
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.*
-import ru.terrakok.gitlabclient.entity.app.CommitWithAvatarUrl
+import ru.terrakok.gitlabclient.entity.app.CommitWithShortUser
 import ru.terrakok.gitlabclient.entity.app.target.*
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
@@ -230,11 +230,11 @@ class MergeRequestRepository @Inject constructor(
         .zip(
             getAllMergeRequestParticipants(projectId, mergeRequestId),
             api.getMergeRequestCommits(projectId, mergeRequestId, page, pageSize),
-            BiFunction<List<ShortUser>, List<Commit>, List<CommitWithAvatarUrl>> { participants, commits ->
+            BiFunction<List<ShortUser>, List<Commit>, List<CommitWithShortUser>> { participants, commits ->
                 commits.map { commit ->
-                    CommitWithAvatarUrl(
+                    CommitWithShortUser(
                         commit,
-                        participants.find { it.name == commit.authorName || it.username == commit.authorName }?.avatarUrl
+                        participants.find { it.name == commit.authorName || it.username == commit.authorName }
                     )
                 }
             }

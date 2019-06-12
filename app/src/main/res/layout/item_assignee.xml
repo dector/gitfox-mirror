@@ -6,13 +6,12 @@
     android:layout_height="wrap_content"
     android:paddingTop="16dp">
 
-    <ImageView
+    <ru.terrakok.gitlabclient.ui.global.view.custom.AvatarView
         android:id="@+id/avatarImageView"
-        android:layout_width="38dp"
-        android:layout_height="38dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/default_img" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/titleTextView"
