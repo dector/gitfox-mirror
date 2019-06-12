@@ -11,4 +11,4 @@ data class Member(
     @SerializedName("web_url") val webUrl: String?,
     @SerializedName("expires_at") val expiresDate: String?,
     @SerializedName("access_level") val accessLevel: Long
-    )
+)

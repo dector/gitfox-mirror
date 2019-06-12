@@ -16,6 +16,7 @@ import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.di.DI
+import ru.terrakok.gitlabclient.entity.Member
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.ShortUser
 import ru.terrakok.gitlabclient.entity.User
@@ -56,8 +57,10 @@ class AvatarView @JvmOverloads constructor(
         }
         if (shortName.length == SHORT_NAME_LENGTH) {
             avatarShortName.text = shortName
-            val shortNameBackgroundColor = shortNameBackgroundColors[(id % shortNameBackgroundColors.size).toInt()]
-            avatarShortName.background = context.getTintDrawable(R.drawable.circle, shortNameBackgroundColor)
+            val shortNameBackgroundColor =
+                shortNameBackgroundColors[(id % shortNameBackgroundColors.size).toInt()]
+            avatarShortName.background =
+                context.getTintDrawable(R.drawable.circle, shortNameBackgroundColor)
         } else {
             avatarImage.setImageResource(R.drawable.default_img)
         }
@@ -131,20 +134,40 @@ class AvatarView @JvmOverloads constructor(
     }
 }
 
-fun AvatarView.bindShortUser(shortUser: ShortUser) {
+fun AvatarView.bindShortUser(shortUser: ShortUser, withNavigation: Boolean = true) {
     with(shortUser) {
-        val router = Toothpick.openScope(DI.APP_SCOPE).getInstance(Router::class.java)
-        setData(id, name, avatarUrl) { router.navigateTo(Screens.UserFlow(id)) }
+        if (withNavigation) {
+            val router = Toothpick.openScope(DI.APP_SCOPE).getInstance(Router::class.java)
+            setData(id, name, avatarUrl) { router.navigateTo(Screens.UserFlow(id)) }
+        } else {
+            setData(id, name, avatarUrl)
+        }
     }
 }
 
-fun AvatarView.bindUser(user: User) {
+fun AvatarView.bindUser(user: User, withNavigation: Boolean = true) {
     with(user) {
-        setData(id, name, avatarUrl)
+        if (withNavigation) {
+            val router = Toothpick.openScope(DI.APP_SCOPE).getInstance(Router::class.java)
+            setData(id, name, avatarUrl) { router.navigateTo(Screens.UserFlow(id)) }
+        } else {
+            setData(id, name, avatarUrl)
+        }
     }
 }
 
-fun AvatarView.bindUserAccount(userAccount: UserAccount, withNavigation: Boolean) {
+fun AvatarView.bindMember(member: Member, withNavigation: Boolean = true) {
+    with(member) {
+        if (withNavigation) {
+            val router = Toothpick.openScope(DI.APP_SCOPE).getInstance(Router::class.java)
+            setData(id, name, avatarUrl) { router.navigateTo(Screens.UserFlow(id)) }
+        } else {
+            setData(id, name, avatarUrl)
+        }
+    }
+}
+
+fun AvatarView.bindUserAccount(userAccount: UserAccount, withNavigation: Boolean = true) {
     with(userAccount) {
         if (withNavigation) {
             val router = Toothpick.openScope(DI.APP_SCOPE).getInstance(Router::class.java)

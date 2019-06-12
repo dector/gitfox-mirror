@@ -71,7 +71,7 @@ class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView, MessageDi
     override fun setAccounts(accounts: List<UserAccount>, currentAccount: UserAccount) {
         nickTV.text = currentAccount.userName
         serverNameTV.text = currentAccount.serverPath
-        avatarImageView.bindUserAccount(currentAccount, true)
+        avatarImageView.bindUserAccount(currentAccount)
 
         accountsContainer.removeAllViews()
         accounts.forEach { acc ->

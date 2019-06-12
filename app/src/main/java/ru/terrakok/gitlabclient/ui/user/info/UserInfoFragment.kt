@@ -13,7 +13,6 @@ import ru.terrakok.gitlabclient.extension.tryOpenLink
 import ru.terrakok.gitlabclient.presentation.user.info.UserInfoPresenter
 import ru.terrakok.gitlabclient.presentation.user.info.UserInfoView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import ru.terrakok.gitlabclient.ui.global.view.custom.bindShortUser
 import ru.terrakok.gitlabclient.ui.global.view.custom.bindUser
 
 /**
@@ -59,7 +58,7 @@ class UserInfoFragment : BaseFragment(), UserInfoView {
     override fun showUser(user: User) {
         this.user = user
         toolbar.title = user.username
-        avatarImageView.bindUser(user)
+        avatarImageView.bindUser(user, false)
         usernameTextView.text = user.name
         userIdTextView.text = "@${user.username}"
 

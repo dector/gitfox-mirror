@@ -8,7 +8,7 @@ import kotlinx.android.synthetic.main.item_member.view.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Member
 import ru.terrakok.gitlabclient.extension.inflate
-import ru.terrakok.gitlabclient.extension.loadRoundedImage
+import ru.terrakok.gitlabclient.ui.global.view.custom.bindMember
 
 /**
  * @author Valentin Logvinovitch (glvvl) on 28.02.19.
@@ -46,7 +46,7 @@ class MembersAdapterDelegate(
         fun bind(data: Member) {
             this.data = data
             with(itemView) {
-                avatarImageView.loadRoundedImage(data.avatarUrl)
+                avatarView.bindMember(data)
                 nameTextView.text = data.name
                 roleTextView.text = data.accessLevel.accessToString()
             }
