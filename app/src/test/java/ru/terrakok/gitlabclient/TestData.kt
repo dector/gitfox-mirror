@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.Month
 import ru.terrakok.gitlabclient.entity.*
+import ru.terrakok.gitlabclient.entity.app.session.UserAccount
 import ru.terrakok.gitlabclient.entity.app.target.*
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.event.EventTargetType
@@ -280,6 +281,15 @@ object TestData {
             "milestone title",
             null,
             "url of milestone"
+    )
+
+    fun getUserAccount() = UserAccount(
+            13L,
+            "token",
+            "user_server_path",
+            "user_avatar_url",
+            "user_name",
+            true
     )
 
     fun getTodo() = GsonBuilder()
