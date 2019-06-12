@@ -9,12 +9,12 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.times
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.Month
+import ru.terrakok.gitlabclient.TestData
 import ru.terrakok.gitlabclient.TestSchedulers
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.Author
 import ru.terrakok.gitlabclient.entity.Note
 import ru.terrakok.gitlabclient.entity.Project
-import ru.terrakok.gitlabclient.entity.Visibility
 import ru.terrakok.gitlabclient.entity.app.target.*
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.event.EventTargetType
@@ -30,7 +30,7 @@ class IssueRepositoryTest {
     private val defaultPageSize = 1
     private val testPage = 2
     private val testIssue = getTestIssue()
-    private val testProject = getTestProject(testIssue.projectId)
+    private val testProject = TestData.getProject(testIssue.projectId)
 
     private val api = mock(GitlabApi::class.java)
     private val markDownUrlResolver = mock(MarkDownUrlResolver::class.java)
@@ -443,7 +443,6 @@ class IssueRepositoryTest {
         testObserver.awaitTerminalEvent()
 
         // THEN
-
         then(api)
                 .should(times(1))
                 .getMilestoneIssues(
@@ -456,46 +455,6 @@ class IssueRepositoryTest {
 
         testObserver.assertResult(listOf(testIssue))
     }
-
-    private fun getTestProject(projectId: Long) = Project(
-            id = projectId,
-            description = null,
-            defaultBranch = "test_br",
-            visibility = Visibility.PUBLIC,
-            sshUrlToRepo = null,
-            httpUrlToRepo = null,
-            webUrl = "https://gitlab.com/terrakok/gitlab-client",
-            tagList = null,
-            owner = null,
-            name = "testProjectName",
-            nameWithNamespace = "",
-            path = "test path",
-            pathWithNamespace = "",
-            issuesEnabled = false,
-            openIssuesCount = 0L,
-            mergeRequestsEnabled = false,
-            jobsEnabled = false,
-            wikiEnabled = false,
-            snippetsEnabled = false,
-            containerRegistryEnabled = false,
-            createdAt = null,
-            lastActivityAt = null,
-            creatorId = 0L,
-            namespace = null,
-            permissions = null,
-            archived = false,
-            avatarUrl = null,
-            sharedRunnersEnabled = false,
-            forksCount = 0L,
-            starCount = 0L,
-            runnersToken = null,
-            publicJobs = false,
-            sharedWithGroups = null,
-            onlyAllowMergeIfPipelineSucceeds = false,
-            onlyAllowMergeIfAllDiscussionsAreResolved = false,
-            requestAccessEnabled = false,
-            readmeUrl = "https://gitlab.com/terrakok/gitlab-client/blob/test_br/README.md"
-    )
 
     private fun getTestIssue() = Issue(
             123L,

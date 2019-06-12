@@ -8,10 +8,9 @@ import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.BDDMockito.*
 import org.mockito.Mockito.mock
+import ru.terrakok.gitlabclient.TestData
 import ru.terrakok.gitlabclient.TestSchedulers
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
-import ru.terrakok.gitlabclient.entity.Color
-import ru.terrakok.gitlabclient.entity.Label
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 
 /**
@@ -20,17 +19,7 @@ import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 class LabelRepositoryTest {
     private val defaultPageSize = 2
     private val projectId = 123L
-    private val testLabel = Label(
-            234L,
-            "test label",
-            Color("black", 123),
-            "description",
-            2,
-            3,
-            1,
-            false,
-            1
-    )
+    private val testLabel = TestData.getLabel()
 
     private val api = mock(GitlabApi::class.java)
     private val repository = LabelRepository(

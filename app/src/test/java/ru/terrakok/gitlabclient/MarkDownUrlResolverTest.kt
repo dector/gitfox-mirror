@@ -2,8 +2,6 @@ package ru.terrakok.gitlabclient
 
 import org.junit.Assert
 import org.junit.Test
-import ru.terrakok.gitlabclient.entity.Project
-import ru.terrakok.gitlabclient.entity.Visibility
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 
 /**
@@ -12,12 +10,7 @@ import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 class MarkDownUrlResolverTest {
 
     private val markDownUrlResolver = MarkDownUrlResolver()
-
-    private val project = Project(
-        1, null, "", Visibility.PUBLIC, "", "", "", null, null, "GitFox", "", "",
-        "terrakok/gitlab-client", true, 1, true, true, true, true, true, null, null, 1, null, null, false, null, true,
-        1, 1, null, true, null, true, true, true, null
-    )
+    private val project = TestData.getProject(1)
 
     @Test
     fun check_markdown_without_image() {

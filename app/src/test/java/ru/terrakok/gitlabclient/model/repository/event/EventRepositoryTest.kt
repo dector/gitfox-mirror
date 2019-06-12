@@ -9,9 +9,12 @@ import org.mockito.BDDMockito.then
 import org.mockito.Mockito.*
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.Month
+import ru.terrakok.gitlabclient.TestData
 import ru.terrakok.gitlabclient.TestSchedulers
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
-import ru.terrakok.gitlabclient.entity.*
+import ru.terrakok.gitlabclient.entity.Author
+import ru.terrakok.gitlabclient.entity.OrderBy
+import ru.terrakok.gitlabclient.entity.Sort
 import ru.terrakok.gitlabclient.entity.app.target.*
 import ru.terrakok.gitlabclient.entity.event.Event
 import ru.terrakok.gitlabclient.entity.event.EventAction
@@ -26,7 +29,7 @@ class EventRepositoryTest {
     private val defaultPageSize = 1
     private val testPage = 2
     private val testEvent = getTestEvent()
-    private val testProject = getTestProject(testEvent.projectId)
+    private val testProject = TestData.getProject(testEvent.projectId)
 
     private val api = mock(GitlabApi::class.java)
     private val markDownUrlResolver = mock(MarkDownUrlResolver::class.java)
@@ -429,46 +432,6 @@ class EventRepositoryTest {
                 .assertResult(listOf(expectedTargetHeader))
     }
 
-    private fun getTestProject(projectId: Long) = Project(
-            id = projectId,
-            description = null,
-            defaultBranch = "test_br",
-            visibility = Visibility.PUBLIC,
-            sshUrlToRepo = null,
-            httpUrlToRepo = null,
-            webUrl = "https://gitlab.com/terrakok/gitlab-client",
-            tagList = null,
-            owner = null,
-            name = "",
-            nameWithNamespace = "",
-            path = "test path",
-            pathWithNamespace = "",
-            issuesEnabled = false,
-            openIssuesCount = 0L,
-            mergeRequestsEnabled = false,
-            jobsEnabled = false,
-            wikiEnabled = false,
-            snippetsEnabled = false,
-            containerRegistryEnabled = false,
-            createdAt = null,
-            lastActivityAt = null,
-            creatorId = 0L,
-            namespace = null,
-            permissions = null,
-            archived = false,
-            avatarUrl = null,
-            sharedRunnersEnabled = false,
-            forksCount = 0L,
-            starCount = 0L,
-            runnersToken = null,
-            publicJobs = false,
-            sharedWithGroups = null,
-            onlyAllowMergeIfPipelineSucceeds = false,
-            onlyAllowMergeIfAllDiscussionsAreResolved = false,
-            requestAccessEnabled = false,
-            readmeUrl = "https://gitlab.com/terrakok/gitlab-client/blob/test_br/README.md"
-    )
-
     private fun getTestEvent() = Event(
             123L,
             EventAction.CREATED,
@@ -481,19 +444,8 @@ class EventRepositoryTest {
             Author(1L, "", "", "", "", ""),
             "author",
             null,
-            getTestNote()
+            TestData.getNote()
     )
-
-    private fun getTestNote() = Note(
-            13L,
-            "note test body",
-            Author(1L, "", "", "", "", ""),
-            LocalDateTime.of(2007, Month.DECEMBER, 14, 11, 0),
-            null,
-            false,
-            435L,
-            EventTargetType.ISSUE,
-            333L)
 
     private fun getExpectedTargetHeaderForIssue(event: Event): TargetHeader {
         return TargetHeader.Public(
