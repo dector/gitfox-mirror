@@ -1,5 +1,6 @@
 package ru.terrakok.gitlabclient
 
+import com.google.gson.GsonBuilder
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.Month
 import ru.terrakok.gitlabclient.entity.*
@@ -10,11 +11,94 @@ import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
 import ru.terrakok.gitlabclient.entity.milestone.Milestone
 import ru.terrakok.gitlabclient.entity.milestone.MilestoneState
+import ru.terrakok.gitlabclient.entity.target.TargetState
+import ru.terrakok.gitlabclient.entity.target.TargetType
+import ru.terrakok.gitlabclient.entity.todo.Todo
+import ru.terrakok.gitlabclient.entity.todo.TodoAction
+import ru.terrakok.gitlabclient.model.data.server.deserializer.LocalDateTimeDeserializer
+import ru.terrakok.gitlabclient.model.data.server.deserializer.TodoDeserializer
 
 /**
  * @author Vitaliy Belyaev on 01.06.2019.
  */
 object TestData {
+
+    val todoJson =
+            """
+      {
+        "id": 102,
+        "project": {
+          "id": 2,
+          "name": "Gitlab Ce",
+          "name_with_namespace": "Gitlab Org / Gitlab Ce",
+          "path": "gitlab-ce",
+          "path_with_namespace": "gitlab-org/gitlab-ce"
+        },
+        "author": {
+          "name": "Administrator",
+          "username": "root",
+          "id": 1,
+          "state": "active",
+          "avatar_url": "http://www.gravatar.com/avatar/e64c7d89f26bd1972efa854d13d7dd61?s=80&d=identicon",
+          "web_url": "https://gitlab.example.com/root"
+        },
+        "action_name": "marked",
+        "target_type": "MergeRequest",
+        "target": {
+          "id": 34,
+          "iid": 7,
+          "project_id": 2,
+          "title": "Dolores in voluptatem tenetur praesentium omnis repellendus voluptatem quaerat.",
+          "description": "Et ea et omnis illum cupiditate. Dolor aspernatur tenetur ducimus facilis est nihil. Quo esse cupiditate molestiae illo corrupti qui quidem dolor.",
+          "state": "opened",
+          "created_at": "2016-06-17T07:49:24.419Z",
+          "updated_at": "2016-06-17T07:52:43.484Z",
+          "target_branch": "tutorials_git_tricks",
+          "source_branch": "DNSBL_docs",
+          "upvotes": 0,
+          "downvotes": 0,
+          "author": {
+            "name": "Maxie Medhurst",
+            "username": "craig_rutherford",
+            "id": 12,
+            "state": "active",
+            "avatar_url": "http://www.gravatar.com/avatar/a0d477b3ea21970ce6ffcbb817b0b435?s=80&d=identicon",
+            "web_url": "https://gitlab.example.com/craig_rutherford"
+          },
+          "assignee": {
+            "name": "Administrator",
+            "username": "root",
+            "id": 1,
+            "state": "active",
+            "avatar_url": "http://www.gravatar.com/avatar/e64c7d89f26bd1972efa854d13d7dd61?s=80&d=identicon",
+            "web_url": "https://gitlab.example.com/root"
+          },
+          "source_project_id": 2,
+          "target_project_id": 2,
+          "labels": [],
+          "work_in_progress": false,
+          "milestone": {
+            "id": 32,
+            "iid": 2,
+            "project_id": 2,
+            "title": "v1.0",
+            "description": "Assumenda placeat ea voluptatem voluptate qui.",
+            "state": "active",
+            "created_at": "2016-06-17T07:47:34.163Z",
+            "updated_at": "2016-06-17T07:47:34.163Z",
+            "due_date": null
+          },
+          "merge_when_pipeline_succeeds": false,
+          "merge_status": "cannot_be_merged",
+          "subscribed": true,
+          "user_notes_count": 7
+        },
+        "target_url": "https://gitlab.example.com/gitlab-org/gitlab-ce/merge_requests/7",
+        "body": "Dolores in voluptatem tenetur praesentium omnis repellendus voluptatem quaerat.",
+        "state": "pending",
+        "created_at": "2016-06-17T07:52:35.225Z"
+      }
+      """
 
     fun getCommit() = Commit(
             "dsf233fef2fes34",
@@ -197,4 +281,75 @@ object TestData {
             null,
             "url of milestone"
     )
+
+    fun getTodo() = GsonBuilder()
+            .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeDeserializer())
+            .registerTypeAdapter(Todo::class.java, TodoDeserializer())
+            .create().fromJson(todoJson, Todo::class.java)
+
+    fun getUser() = User(
+            4321L, "username", "email@mail.com", "Name", null,
+            null, null,
+            LocalDateTime.of(2007, Month.DECEMBER, 14, 11, 0),
+            false, null, null, null, null, null,
+            null, null,
+            LocalDateTime.of(2009, Month.DECEMBER, 14, 11, 0),
+            LocalDateTime.of(2008, Month.DECEMBER, 14, 11, 0),
+            2424L, 32L,
+            LocalDateTime.of(2008, Month.DECEMBER, 14, 11, 0),
+            null, canCreateGroup = false, canCreateProject = false,
+            twoFactorEnabled = true, external = false
+    )
+
+    fun getTargetHeaderForTodo(todo: Todo, currentUser: User): TargetHeader {
+        val target = todo.target
+        val assignee = if (todo.actionName != TodoAction.MARKED) {
+            currentUser.let {
+                Assignee(it.id, it.state, it.name, it.webUrl, it.avatarUrl, it.username)
+            }
+        } else {
+            null
+        }
+        val appTarget = when (todo.targetType) {
+            TargetType.MERGE_REQUEST -> AppTarget.MERGE_REQUEST
+            TargetType.ISSUE -> AppTarget.ISSUE
+        }
+        val targetName = when (todo.targetType) {
+            TargetType.MERGE_REQUEST -> "${AppTarget.MERGE_REQUEST} !${target.iid}"
+            TargetType.ISSUE -> "${AppTarget.ISSUE} #${target.iid}"
+        }
+        val badges = mutableListOf<TargetBadge>()
+        badges.add(
+                TargetBadge.Status(
+                        when (target.state) {
+                            TargetState.OPENED -> TargetBadgeStatus.OPENED
+                            TargetState.CLOSED -> TargetBadgeStatus.CLOSED
+                            TargetState.MERGED -> TargetBadgeStatus.MERGED
+                        }
+                )
+        )
+        badges.add(TargetBadge.Text(todo.author.username, AppTarget.USER, todo.author.id))
+        badges.add(TargetBadge.Text(todo.project.name, AppTarget.PROJECT, todo.project.id))
+
+        return TargetHeader.Public(
+                todo.author,
+                TargetHeaderIcon.NONE,
+                TargetHeaderTitle.Todo(
+                        todo.author.name,
+                        assignee?.name,
+                        todo.actionName,
+                        targetName,
+                        todo.project.nameWithNamespace,
+                        todo.author.id == currentUser.id,
+                        assignee?.id == currentUser.id
+                ),
+                todo.body,
+                todo.createdAt,
+                appTarget,
+                target.id,
+                TargetInternal(target.projectId, target.iid),
+                badges,
+                TargetAction.Undefined
+        )
+    }
 }
