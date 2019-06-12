@@ -1,9 +1,9 @@
 package ru.terrakok.gitlabclient.ui.global
 
 import android.os.Bundle
+import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.extension.argument
-import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
+import ru.terrakok.gitlabclient.di.DI
 import toothpick.Toothpick
 import javax.inject.Inject
 
@@ -11,28 +11,19 @@ import javax.inject.Inject
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 05.09.18.
  */
 class StubFragment : BaseFragment() {
+    override val parentScopeName = DI.APP_SCOPE
+
     override val layoutRes = R.layout.fragment_stub
 
-    private val scopeName: String by argument(ARG_SCOPE)
-
     @Inject
-    lateinit var router: FlowRouter
+    lateinit var router: Router
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Toothpick.inject(this, Toothpick.openScope(scopeName))
         super.onCreate(savedInstanceState)
+        Toothpick.inject(this, scope)
     }
 
     override fun onBackPressed() {
         router.exit()
-    }
-
-    companion object {
-        private const val ARG_SCOPE = "arg_scope"
-        fun create(scope: String) = StubFragment().apply {
-            arguments = Bundle().apply {
-                putString(ARG_SCOPE, scope)
-            }
-        }
     }
 }

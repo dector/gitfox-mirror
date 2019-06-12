@@ -1,5 +1,7 @@
 package ru.terrakok.gitlabclient.model.interactor.milestone
 
+import io.reactivex.Single
+import ru.terrakok.gitlabclient.entity.milestone.Milestone
 import ru.terrakok.gitlabclient.entity.milestone.MilestoneState
 import ru.terrakok.gitlabclient.model.repository.issue.IssueRepository
 import ru.terrakok.gitlabclient.model.repository.mergerequest.MergeRequestRepository
@@ -14,21 +16,27 @@ class MilestoneInteractor @Inject constructor(
 
     fun getMilestones(
         projectId: Long,
-        milestoneState: MilestoneState
+        milestoneState: MilestoneState,
+        page: Int
     ) = milestoneRepository
-        .getMilestones(
-            projectId = projectId,
-            state = milestoneState
-        )
+        .getMilestones(projectId, milestoneState, page)
+
+    fun getAllProjectMilestones(
+        projectId: Long?
+    ): Single<List<Milestone>> =
+        Single.defer {
+            if (projectId != null) {
+                milestoneRepository.getAllProjectMilestones(projectId)
+            } else {
+                Single.just(emptyList())
+            }
+        }
 
     fun getMilestone(
         projectId: Long,
         milestoneId: Long
     ) = milestoneRepository
-        .getMilestone(
-            projectId = projectId,
-            milestoneId = milestoneId
-        )
+        .getMilestone(projectId, milestoneId)
 
     fun createMilestone(
         projectId: Long,
@@ -37,13 +45,7 @@ class MilestoneInteractor @Inject constructor(
         dueDate: String?,
         startDate: String?
     ) = milestoneRepository
-        .createMilestone(
-            projectId = projectId,
-            title = title,
-            description = description,
-            dueDate = dueDate,
-            startDate = startDate
-        )
+        .createMilestone(projectId, title, description, dueDate, startDate)
 
     fun updateMilestone(
         projectId: Long,
@@ -53,14 +55,7 @@ class MilestoneInteractor @Inject constructor(
         dueDate: String?,
         startDate: String?
     ) = milestoneRepository
-        .updateMilestone(
-            projectId = projectId,
-            milestoneId = milestoneId,
-            title = title,
-            description = description,
-            dueDate = dueDate,
-            startDate = startDate
-        )
+        .updateMilestone(projectId, milestoneId, title, description, dueDate, startDate)
 
     fun deleteMilestone(
         projectId: Long,
@@ -69,11 +64,13 @@ class MilestoneInteractor @Inject constructor(
 
     fun getAssignedIssues(
         projectId: Long,
-        milestoneId: Long
-    ) = issueRepository.getMilestoneIssues(projectId, milestoneId)
+        milestoneId: Long,
+        page: Int
+    ) = issueRepository.getMilestoneIssues(projectId, milestoneId, page)
 
     fun getAssignedMergeRequests(
         projectId: Long,
-        milestoneId: Long
-    ) = mergeRequestRepository.getMilestoneMergeRequests(projectId, milestoneId)
+        milestoneId: Long,
+        page: Int
+    ) = mergeRequestRepository.getMilestoneMergeRequests(projectId, milestoneId, page)
 }

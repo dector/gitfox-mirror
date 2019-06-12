@@ -1,12 +1,9 @@
 package ru.terrakok.gitlabclient.ui.drawer
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentTransaction
-import android.support.v4.view.GravityCompat
-import com.arellomobile.mvp.MvpView
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
+import androidx.core.view.GravityCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.drawer_flow_fragment.*
 import ru.terrakok.cicerone.Navigator
@@ -16,27 +13,28 @@ import ru.terrakok.cicerone.android.support.SupportAppNavigator
 import ru.terrakok.cicerone.commands.Command
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
+import ru.terrakok.gitlabclient.di.module.FlowNavigationModule
+import ru.terrakok.gitlabclient.di.module.GlobalMenuModule
 import ru.terrakok.gitlabclient.extension.setLaunchScreen
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
-import ru.terrakok.gitlabclient.presentation.launch.DrawerFlowPresenter
-import ru.terrakok.gitlabclient.toothpick.DI
-import ru.terrakok.gitlabclient.toothpick.module.FlowNavigationModule
-import ru.terrakok.gitlabclient.toothpick.module.GlobalMenuModule
 import ru.terrakok.gitlabclient.ui.about.AboutFragment
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import ru.terrakok.gitlabclient.ui.main.MainFlowFragment
+import ru.terrakok.gitlabclient.ui.main.MainFragment
 import ru.terrakok.gitlabclient.ui.projects.ProjectsContainerFragment
 import toothpick.Scope
 import toothpick.Toothpick
 import javax.inject.Inject
 
-class DrawerFlowFragment : BaseFragment(), MvpView {
+class DrawerFlowFragment : BaseFragment() {
     @Inject
     lateinit var menuController: GlobalMenuController
 
     @Inject
     lateinit var navigatorHolder: NavigatorHolder
+
+    @Inject
+    lateinit var router: Router
 
     private var menuStateDisposable: Disposable? = null
 
@@ -48,16 +46,7 @@ class DrawerFlowFragment : BaseFragment(), MvpView {
     private val drawerFragment
         get() = childFragmentManager.findFragmentById(R.id.navDrawerContainer) as? NavigationDrawerFragment
 
-    @InjectPresenter
-    lateinit var presenter: DrawerFlowPresenter
-
-    @ProvidePresenter
-    fun providePresenter(): DrawerFlowPresenter =
-        scope.getInstance(DrawerFlowPresenter::class.java)
-
-
-    override val parentScopeName = DI.SERVER_SCOPE
-    override val scopeModuleInstaller = { scope: Scope ->
+    override fun installModules(scope: Scope) {
         scope.installModules(
             FlowNavigationModule(scope.getInstance(Router::class.java)),
             GlobalMenuModule()
@@ -73,7 +62,7 @@ class DrawerFlowFragment : BaseFragment(), MvpView {
             }
 
             override fun activityBack() {
-                presenter.onExit()
+                router.exit()
             }
 
             override fun setupFragmentTransaction(
@@ -82,7 +71,7 @@ class DrawerFlowFragment : BaseFragment(), MvpView {
                 nextFragment: Fragment?,
                 fragmentTransaction: FragmentTransaction
             ) {
-                //fix incorrect order lifecycle callback of MainFlowFragment
+                //fix incorrect order lifecycle callback of MainFragment
                 fragmentTransaction.setReorderingAllowed(true)
             }
         }
@@ -98,7 +87,7 @@ class DrawerFlowFragment : BaseFragment(), MvpView {
                 .replace(R.id.navDrawerContainer, NavigationDrawerFragment())
                 .commitNow()
 
-            navigator.setLaunchScreen(Screens.MainFlow)
+            navigator.setLaunchScreen(Screens.Main)
         } else {
             updateNavDrawer()
         }
@@ -128,7 +117,7 @@ class DrawerFlowFragment : BaseFragment(), MvpView {
         drawerFragment?.let { drawerFragment ->
             currentFragment?.let {
                 when (it) {
-                    is MainFlowFragment -> drawerFragment.onScreenChanged(NavigationDrawerView.MenuItem.ACTIVITY)
+                    is MainFragment -> drawerFragment.onScreenChanged(NavigationDrawerView.MenuItem.ACTIVITY)
                     is ProjectsContainerFragment -> drawerFragment.onScreenChanged(NavigationDrawerView.MenuItem.PROJECTS)
                     is AboutFragment -> drawerFragment.onScreenChanged(NavigationDrawerView.MenuItem.ABOUT)
                 }
@@ -141,7 +130,7 @@ class DrawerFlowFragment : BaseFragment(), MvpView {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             openNavDrawer(false)
         } else {
-            currentFragment?.onBackPressed() ?: presenter.onExit()
+            currentFragment?.onBackPressed() ?: router.exit()
         }
     }
 }

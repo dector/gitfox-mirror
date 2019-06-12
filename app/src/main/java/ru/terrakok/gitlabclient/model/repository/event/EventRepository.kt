@@ -4,6 +4,8 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import org.threeten.bp.LocalDateTime
+import ru.terrakok.gitlabclient.di.DefaultPageSize
+import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.PushDataRefType
@@ -16,8 +18,6 @@ import ru.terrakok.gitlabclient.entity.event.EventTargetType
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
-import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
-import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultPageSize
 import javax.inject.Inject
 
 /**
@@ -147,13 +147,15 @@ class EventRepository @Inject constructor(
                 targetData.id,
                 getTargetInternal(event),
                 badges
-        )} else {
+            )
+        } else {
             TargetHeader.Confidential
         }
     }
 
     private fun getIcon(action: EventAction) = when (action) {
         EventAction.CREATED -> TargetHeaderIcon.CREATED
+        EventAction.IMPORTED -> TargetHeaderIcon.IMPORTED
         EventAction.JOINED -> TargetHeaderIcon.JOINED
         EventAction.COMMENTED_ON,
         EventAction.COMMENTED -> TargetHeaderIcon.COMMENTED
@@ -239,6 +241,8 @@ class EventRepository @Inject constructor(
                             event.projectId
                         )
                     }
+                } else if (event.actionName == EventAction.IMPORTED) {
+                    TargetData(AppTarget.PROJECT, AppTarget.PROJECT.toString(), event.projectId)
                 } else {
                     TargetData(AppTarget.PROJECT, "${AppTarget.PROJECT} ${event.projectId}", event.projectId)
                 }

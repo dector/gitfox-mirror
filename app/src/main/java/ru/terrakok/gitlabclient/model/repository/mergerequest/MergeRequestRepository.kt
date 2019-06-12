@@ -4,6 +4,8 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import org.threeten.bp.LocalDateTime
+import ru.terrakok.gitlabclient.di.DefaultPageSize
+import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.entity.app.CommitWithAvatarUrl
 import ru.terrakok.gitlabclient.entity.app.target.*
@@ -15,8 +17,6 @@ import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestViewType
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
-import ru.terrakok.gitlabclient.toothpick.PrimitiveWrapper
-import ru.terrakok.gitlabclient.toothpick.qualifier.DefaultPageSize
 import javax.inject.Inject
 
 class MergeRequestRepository @Inject constructor(
@@ -191,7 +191,7 @@ class MergeRequestRepository @Inject constructor(
     private fun getAllMergeRequestNotePages(projectId: Long, mergeRequestId: Long, sort: Sort?, orderBy: OrderBy?) =
         Observable.range(1, Int.MAX_VALUE)
             .concatMap { page ->
-                api.getMergeRequestNotes(projectId, mergeRequestId, sort, orderBy, page, MAX_PAGE_SIZE)
+                api.getMergeRequestNotes(projectId, mergeRequestId, sort, orderBy, page, GitlabApi.MAX_PAGE_SIZE)
                     .toObservable()
             }
             .takeWhile { notes -> notes.isNotEmpty() }
@@ -232,7 +232,7 @@ class MergeRequestRepository @Inject constructor(
     private fun getAllMergeRequestParticipants(projectId: Long, mergeRequestId: Long) =
         Observable.range(1, Int.MAX_VALUE)
             .concatMap { page ->
-                api.getMergeRequestParticipants(projectId, mergeRequestId, page, MAX_PAGE_SIZE)
+                api.getMergeRequestParticipants(projectId, mergeRequestId, page, GitlabApi.MAX_PAGE_SIZE)
                     .toObservable()
             }
             .takeWhile { participants -> participants.isNotEmpty() }
@@ -247,14 +247,11 @@ class MergeRequestRepository @Inject constructor(
 
     fun getMilestoneMergeRequests(
         projectId: Long,
-        milestoneId: Long
-    ) = api
-        .getMilestoneMergeRequests(projectId, milestoneId)
+        milestoneId: Long,
+        page: Int,
+        pageSize: Int = defaultPageSize
+    ): Single<List<MergeRequest>> = api
+        .getMilestoneMergeRequests(projectId, milestoneId, page, pageSize)
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
-
-    companion object {
-        // See GitLab documentation: https://docs.gitlab.com/ee/api/#pagination.
-        private const val MAX_PAGE_SIZE = 100
-    }
 }

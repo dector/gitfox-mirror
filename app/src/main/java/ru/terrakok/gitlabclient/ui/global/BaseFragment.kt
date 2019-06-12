@@ -5,13 +5,13 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.arellomobile.mvp.MvpAppCompatFragment
-import ru.terrakok.gitlabclient.App
+import ru.terrakok.gitlabclient.di.DI
 import ru.terrakok.gitlabclient.extension.objectScopeName
+import timber.log.Timber
 import toothpick.Scope
 import toothpick.Toothpick
 
 private const val PROGRESS_TAG = "bf_progress"
-private const val STATE_LAUNCH_FLAG = "state_launch_flag"
 private const val STATE_SCOPE_NAME = "state_scope_name"
 
 /**
@@ -26,25 +26,26 @@ abstract class BaseFragment : MvpAppCompatFragment() {
 
     protected open val parentScopeName: String by lazy {
         (parentFragment as? BaseFragment)?.fragmentScopeName
-            ?: throw RuntimeException("Must be parent fragment!")
+            ?: DI.SERVER_SCOPE
     }
-
-    protected open val scopeModuleInstaller: (Scope) -> Unit = {}
 
     private lateinit var fragmentScopeName: String
     protected lateinit var scope: Scope
         private set
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        val savedAppCode = savedInstanceState?.getString(STATE_LAUNCH_FLAG)
+    protected open fun installModules(scope: Scope) {}
 
-        //False - if fragment was restored without new app process (for example: activity rotation)
-        val isNewInAppProcess = savedAppCode != App.appCode
+    override fun onCreate(savedInstanceState: Bundle?) {
         fragmentScopeName = savedInstanceState?.getString(STATE_SCOPE_NAME) ?: objectScopeName()
-        scope = Toothpick.openScopes(parentScopeName, fragmentScopeName)
-            .apply {
-                if (isNewInAppProcess) scopeModuleInstaller(this)
-            }
+
+        if (Toothpick.isScopeOpen(fragmentScopeName)) {
+            Timber.d("Get exist UI scope: $fragmentScopeName")
+            scope = Toothpick.openScope(fragmentScopeName)
+        } else {
+            Timber.d("Init new UI scope: $fragmentScopeName")
+            scope = Toothpick.openScopes(parentScopeName, fragmentScopeName)
+            installModules(scope)
+        }
 
         super.onCreate(savedInstanceState)
     }
@@ -70,10 +71,31 @@ abstract class BaseFragment : MvpAppCompatFragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString(STATE_LAUNCH_FLAG, App.appCode)
-        outState.putString(STATE_SCOPE_NAME, fragmentScopeName)
         instanceStateSaved = true
+        outState.putString(STATE_SCOPE_NAME, fragmentScopeName)
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (needCloseScope()) {
+            //destroy this fragment with scope
+            Timber.d("Destroy UI scope: $fragmentScopeName")
+            Toothpick.closeScope(scope.name)
+        }
+    }
+
+    //This is android, baby!
+    private fun isRealRemoving(): Boolean =
+        (isRemoving && !instanceStateSaved) //because isRemoving == true for fragment in backstack on screen rotation
+            || ((parentFragment as? BaseFragment)?.isRealRemoving() ?: false)
+
+    //It will be valid only for 'onDestroy()' method
+    private fun needCloseScope(): Boolean =
+        when {
+            activity?.isChangingConfigurations == true -> false
+            activity?.isFinishing == true -> true
+            else -> isRealRemoving()
+        }
 
     protected fun showProgressDialog(progress: Boolean) {
         if (!isAdded || instanceStateSaved) return

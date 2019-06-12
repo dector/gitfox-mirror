@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -73,8 +73,8 @@
         app:layout_constraintTop_toTopOf="@id/changeFileName"
         tools:text="-2" />
 
-    <TextView
-        android:id="@+id/changeFile"
+    <ru.terrakok.gitlabclient.ui.global.view.custom.GitDiffView
+        android:id="@+id/gitDiffView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
@@ -83,4 +83,4 @@
         app:layout_constraintTop_toBottomOf="@id/changeFileName"
         tools:text="@@ -0,0 +1,8 @@\n+package ru.terrakok.gitlabclient.entity.app\n+\n+import ru.terrakok.gitlabclient.entity.Commit\n+\n+/**\n+ * Created by Eugene Shapovalov (@CraggyHaggy) on 20.10.18.\n+ */\n+data class CommitWithAvatarUrl(val commit: Commit, val authorAvatarUrl: String?)\n\\ No newline at end of file\n" />
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

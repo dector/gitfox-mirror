@@ -43,14 +43,20 @@ class ProjectInteractor @Inject constructor(
 
     fun getProject(id: Long) = projectRepository.getProject(id)
 
+    fun getProjectRawFile(projectId: Long, path: String, fileReference: String): Single<String> =
+        projectRepository.getProjectFile(projectId, path, fileReference)
+            .observeOn(schedulers.computation())
+            .map { file -> base64Tools.decode(file.content) }
+            .observeOn(schedulers.ui())
+
     fun getProjectReadme(project: Project) =
         Single
             .defer {
-                if (project.readmeUrl != null) {
+                if (project.defaultBranch != null && project.readmeUrl != null) {
                     val readmePath = project.readmeUrl.substringAfter(
                         "${project.webUrl}/blob/${project.defaultBranch}/"
                     )
-                    projectRepository.getFile(project.id, readmePath, project.defaultBranch)
+                    projectRepository.getProjectFile(project.id, readmePath, project.defaultBranch)
                 } else {
                     Single.error(ReadmeNotFound())
                 }
@@ -59,7 +65,16 @@ class ProjectInteractor @Inject constructor(
             .map { file -> base64Tools.decode(file.content) }
             .observeOn(schedulers.ui())
 
-    fun getProjectLabels(projectId: Long) = projectRepository.getProjectLabels(projectId)
+    fun getProjectFiles(
+        projectId: Long,
+        path: String,
+        branchName: String,
+        page: Int
+    ) = projectRepository.getProjectFiles(projectId = projectId, path = path, branchName = branchName, page = page)
+
+    fun getProjectBranches(
+        projectId: Long
+    ) = projectRepository.getProjectBranches(projectId)
 
     class ReadmeNotFound : Exception()
 }

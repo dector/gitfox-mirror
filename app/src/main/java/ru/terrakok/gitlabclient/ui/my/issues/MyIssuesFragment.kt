@@ -1,11 +1,10 @@
 package ru.terrakok.gitlabclient.ui.my.issues
 
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.layout_base_list.*
-import kotlinx.android.synthetic.main.layout_zero.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.extension.showSnackMessage
@@ -13,7 +12,6 @@ import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.my.issues.MyIssuesPresenter
 import ru.terrakok.gitlabclient.presentation.my.issues.MyIssuesView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import ru.terrakok.gitlabclient.ui.global.ZeroViewHolder
 import ru.terrakok.gitlabclient.ui.my.TargetsAdapter
 import toothpick.Scope
 import toothpick.config.Module
@@ -36,9 +34,8 @@ class MyIssuesFragment : BaseFragment(), MyIssuesView {
             { presenter.loadNextIssuesPage() }
         )
     }
-    private var zeroViewHolder: ZeroViewHolder? = null
 
-    override val scopeModuleInstaller = { scope: Scope ->
+    override fun installModules(scope: Scope) {
         scope.installModules(object : Module() {
             init {
                 bind(MyIssuesPresenter.Filter::class.java)
@@ -66,7 +63,7 @@ class MyIssuesFragment : BaseFragment(), MyIssuesView {
         }
 
         swipeToRefresh.setOnRefreshListener { presenter.refreshIssues() }
-        zeroViewHolder = ZeroViewHolder(zeroLayout, { presenter.refreshIssues() })
+        emptyView.setRefreshListener { presenter.refreshIssues() }
     }
 
     fun showOnlyOpened(onlyOpened: Boolean) {
@@ -95,13 +92,11 @@ class MyIssuesFragment : BaseFragment(), MyIssuesView {
     }
 
     override fun showEmptyView(show: Boolean) {
-        if (show) zeroViewHolder?.showEmptyData()
-        else zeroViewHolder?.hide()
+        emptyView.apply { if (show) showEmptyData() else hide() }
     }
 
     override fun showEmptyError(show: Boolean, message: String?) {
-        if (show) zeroViewHolder?.showEmptyError(message)
-        else zeroViewHolder?.hide()
+        emptyView.apply { if (show) showEmptyError(message) else hide() }
     }
 
     override fun showIssues(show: Boolean, issues: List<TargetHeader>) {

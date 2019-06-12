@@ -6,7 +6,7 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         style="@style/ToolbarStyle"
         android:layout_width="match_parent"
@@ -23,7 +23,7 @@
             android:layout_height="0dp"
             android:orientation="vertical">
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -91,7 +91,7 @@
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/userBioTextView"/>
 
-            </android.support.constraint.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <Space
                 android:layout_width="match_parent"

@@ -1,7 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.markdown
 
 import com.arellomobile.mvp.InjectViewState
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import ru.terrakok.gitlabclient.markwonx.GitlabMarkdownExtension
 import ru.terrakok.gitlabclient.markwonx.MarkdownClickMediator
@@ -9,30 +8,27 @@ import ru.terrakok.gitlabclient.markwonx.label.LabelDescription
 import ru.terrakok.gitlabclient.markwonx.milestone.MilestoneDescription
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
-import ru.terrakok.gitlabclient.presentation.global.ProjectMarkDownConverterProvider
 import timber.log.Timber
+import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import javax.inject.Inject
 
 @InjectViewState
 class MarkdownPresenter @Inject constructor(
-    private val mdConverterProvider: ProjectMarkDownConverterProvider,
+    private val mdConverter: MarkDownConverter,
     private val errorHandler: ErrorHandler,
     private val markdownClickMediator: MarkdownClickMediator
 ) : BasePresenter<MarkdownView>() {
 
-    var conversionDisposable: Disposable? = null
+    private var conversionDisposable: Disposable? = null
 
     fun setMarkdown(markdown: String, projectId: Long?) {
         conversionDisposable?.dispose()
-        conversionDisposable = mdConverterProvider
-            .getMarkdownConverter(projectId)
-            .flatMap { it.markdownToSpannable(markdown) }
-            .observeOn(AndroidSchedulers.mainThread())
+        conversionDisposable = mdConverter
+            .markdownToSpannable(markdown, projectId)
             .subscribe(
                 { viewState.setMarkdownText(it) },
                 { errorHandler.proceed(it) }
             )
-        conversionDisposable?.connect()
     }
 
     override fun onFirstViewAttach() {
@@ -56,4 +52,8 @@ class MarkdownPresenter @Inject constructor(
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        conversionDisposable?.dispose()
+    }
 }

@@ -3,12 +3,11 @@ package ru.terrakok.gitlabclient.ui.auth
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
-import android.support.annotation.RequiresApi
 import android.webkit.*
+import androidx.annotation.RequiresApi
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_auth.*
-import kotlinx.android.synthetic.main.layout_zero.*
 import ru.terrakok.gitlabclient.BuildConfig
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.extension.showSnackMessage
@@ -16,7 +15,6 @@ import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.auth.AuthPresenter
 import ru.terrakok.gitlabclient.presentation.auth.AuthView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import ru.terrakok.gitlabclient.ui.global.ZeroViewHolder
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 27.03.17
@@ -25,7 +23,6 @@ class AuthFragment : BaseFragment(), AuthView, CustomServerAuthFragment.OnClickL
 
     override val layoutRes = R.layout.fragment_auth
     override val customLogin = { url: String, token: String -> presenter.loginOnCustomServer(url, token) }
-    private var zeroViewHolder: ZeroViewHolder? = null
 
     @InjectPresenter
     lateinit var presenter: AuthPresenter
@@ -91,11 +88,11 @@ class AuthFragment : BaseFragment(), AuthView, CustomServerAuthFragment.OnClickL
             }
         }
 
-        zeroViewHolder = ZeroViewHolder(zeroLayout, { presenter.refresh() })
+        emptyView.setRefreshListener { presenter.refresh() }
     }
 
     private fun showEmptyView(show: Boolean) {
-        zeroViewHolder?.apply { if (show) showEmptyError() else hide() }
+        emptyView.apply { if (show) showEmptyError() else hide() }
         webView.visible(!show)
     }
 
