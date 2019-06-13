@@ -83,7 +83,7 @@ class MilestoneRepositoryTest {
     @Test
     fun `create milestone should succeed with valid api response`() {
         // GIVEN
-        given(api.createMileStone(
+        given(api.createMilestone(
                 anyLong(),
                 anyString(),
                 anyOrNull(),
@@ -104,7 +104,7 @@ class MilestoneRepositoryTest {
         // THEN
         then(api)
                 .should(times(1))
-                .createMileStone(
+                .createMilestone(
                         testMilestone.projectId,
                         testMilestone.title!!,
                         null,
@@ -119,7 +119,7 @@ class MilestoneRepositoryTest {
     @Test
     fun `update milestone should succeed with valid api response`() {
         // GIVEN
-        given(api.updateMileStone(
+        given(api.updateMilestone(
                 anyLong(),
                 anyLong(),
                 anyOrNull(),
@@ -142,7 +142,7 @@ class MilestoneRepositoryTest {
         // THEN
         then(api)
                 .should(times(1))
-                .updateMileStone(
+                .updateMilestone(
                         testMilestone.projectId,
                         testMilestone.id,
                         null,

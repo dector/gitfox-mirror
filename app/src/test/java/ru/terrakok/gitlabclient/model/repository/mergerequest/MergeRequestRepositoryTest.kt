@@ -13,8 +13,8 @@ import org.mockito.Mockito.times
 import ru.terrakok.gitlabclient.TestData
 import ru.terrakok.gitlabclient.TestSchedulers
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
-import ru.terrakok.gitlabclient.entity.Author
-import ru.terrakok.gitlabclient.entity.app.CommitWithAvatarUrl
+import ru.terrakok.gitlabclient.entity.ShortUser
+import ru.terrakok.gitlabclient.entity.app.CommitWithShortUser
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestChange
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
@@ -405,20 +405,20 @@ class MergeRequestRepositoryTest {
         val projectId = 123L
         val mergeRequestId = 321L
         val testCommit = TestData.getCommit()
-        val testAuthor = Author(
-                11L, "state", "url", testCommit.authorName,
+        val testShortUser = ShortUser(
+                11L, "state", testCommit.authorName, "url",
                 "avatar", "username")
 
         val commitThatNotMatchAnyParticipant = testCommit.copy(authorName = "Mr Lost")
-        val authorThatNotMatchAnyCommit = testAuthor.copy(name = "Mr No Commiter")
+        val authorThatNotMatchAnyCommit = testShortUser.copy(name = "Mr No Commiter")
 
         val expected = listOf(
-                CommitWithAvatarUrl(testCommit, testAuthor.avatarUrl),
-                CommitWithAvatarUrl(commitThatNotMatchAnyParticipant, null))
+                CommitWithShortUser(testCommit, testShortUser),
+                CommitWithShortUser(commitThatNotMatchAnyParticipant, null))
 
         given(api.getMergeRequestParticipants(
                 anyLong(), anyLong(), anyInt(), anyInt())).willReturn(Single.just(
-                listOf(testAuthor, authorThatNotMatchAnyCommit)))
+                listOf(testShortUser, authorThatNotMatchAnyCommit)))
 
         given(api.getMergeRequestParticipants(
                 anyLong(), anyLong(), eq(2), anyInt())).willReturn(Single.just(emptyList()))
