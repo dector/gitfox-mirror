@@ -21,6 +21,12 @@ android {
 
         buildToolsVersion = "28.0.3"
 
+        lintOptions {
+            isWarningsAsErrors = true
+            isIgnoreTestSources = true
+            setLintConfig(file("${project.rootDir}/lint_rules.xml"))
+        }
+
         defaultConfig {
             buildConfigField("String", "VERSION_UID", "\"$buildUid\"")
             buildConfigField("String", "APP_DESCRIPTION", "\"Gitfox is an Android client for Gitlab.\"")

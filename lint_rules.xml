@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<lint>
+    <issue id="InvalidPackage">
+        <ignore path="**/toothpick-runtime-2.1.0.jar" />
+    </issue>
+    <issue id="ObsoleteLintCustomCheck">
+        <ignore regexp="timber.lint" />
+    </issue>
+    <issue id="ContentDescription" severity="ignore" />
+    <issue id="SetJavaScriptEnabled" severity="ignore" />
+    <issue id="Autofill" severity="ignore" />
+    <issue id="MergeRootFrame" severity="ignore" />
+    <issue id="Overdraw" severity="ignore" />
+</lint>

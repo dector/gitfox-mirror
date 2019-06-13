@@ -39,7 +39,7 @@ class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView, MessageDi
         super.onActivityCreated(savedInstanceState)
 
         showAccountsList(false)
-        avatarImageView.setOnClickListener { presenter.onUserClick() }
+        avatarView.setOnClickListener { presenter.onUserClick() }
         dropDownImageView.setOnClickListener {
             showAccountsList(accountsContainer.visibility == View.GONE)
         }
@@ -71,7 +71,7 @@ class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView, MessageDi
     override fun setAccounts(accounts: List<UserAccount>, currentAccount: UserAccount) {
         nickTV.text = currentAccount.userName
         serverNameTV.text = currentAccount.serverPath
-        avatarImageView.loadRoundedImage(currentAccount.avatarUrl, context)
+        avatarView.loadRoundedImage(currentAccount.avatarUrl, context)
 
         accountsContainer.removeAllViews()
         accounts.forEach { acc ->
