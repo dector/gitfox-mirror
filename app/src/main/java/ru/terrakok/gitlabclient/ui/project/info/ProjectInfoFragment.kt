@@ -9,10 +9,14 @@ import ru.noties.markwon.Markwon
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.Visibility
-import ru.terrakok.gitlabclient.extension.*
+import ru.terrakok.gitlabclient.extension.getTintDrawable
+import ru.terrakok.gitlabclient.extension.setStartDrawable
+import ru.terrakok.gitlabclient.extension.showSnackMessage
+import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.project.info.ProjectInfoPresenter
 import ru.terrakok.gitlabclient.presentation.project.info.ProjectInfoView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.ui.global.view.custom.bindProject
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 27.04.17.
@@ -43,7 +47,7 @@ class ProjectInfoFragment : BaseFragment(), ProjectInfoView {
         starsTextView.text = project.starCount.toString()
         forksTextView.text = project.forksCount.toString()
 
-        avatarImageView.loadRoundedImage(project.avatarUrl, context)
+        avatarImageView.bindProject(project, false)
         iconImageView.setBackgroundResource(R.drawable.circle)
         iconImageView.setImageResource(
             when (project.visibility) {

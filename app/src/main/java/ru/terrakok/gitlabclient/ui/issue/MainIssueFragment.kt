@@ -54,7 +54,7 @@ class MainIssueFragment : BaseFragment(), IssueView {
     }
 
     override fun selectActionTab(targetAction: TargetAction) {
-        when(targetAction) {
+        when (targetAction) {
             is TargetAction.CommentedOn -> {
                 viewPager.currentItem = TAB_NOTES
             }
@@ -63,14 +63,16 @@ class MainIssueFragment : BaseFragment(), IssueView {
 
     private inner class IssuePagesAdapter : FragmentPagerAdapter(childFragmentManager) {
         override fun getItem(position: Int): BaseFragment = when (position) {
-            TAB_DETAILS -> Screens.IssueInfo.fragment
+            TAB_DETAILS -> Screens.IssueDetails.fragment
+            TAB_INFO -> Screens.IssueInfo.fragment
             else -> Screens.IssueNotes.fragment
         }
 
-        override fun getCount() = 2
+        override fun getCount() = 3
 
         override fun getPageTitle(position: Int) = when (position) {
-            TAB_DETAILS -> getString(R.string.merge_request_info_tab)
+            TAB_DETAILS -> getString(R.string.merge_request_details_tab)
+            TAB_INFO -> getString(R.string.merge_request_info_tab)
             TAB_NOTES -> getString(R.string.merge_request_discussion_tab)
             else -> null
         }
@@ -78,6 +80,7 @@ class MainIssueFragment : BaseFragment(), IssueView {
 
     companion object {
         private const val TAB_DETAILS = 0
-        private const val TAB_NOTES = 1
+        private const val TAB_INFO = 1
+        private const val TAB_NOTES = 2
     }
 }

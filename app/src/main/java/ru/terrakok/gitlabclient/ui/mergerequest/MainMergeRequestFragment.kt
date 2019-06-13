@@ -63,16 +63,18 @@ class MainMergeRequestFragment : BaseFragment(), MergeRequestView {
 
     private inner class MergeRequestPagesAdapter : FragmentPagerAdapter(childFragmentManager) {
         override fun getItem(position: Int): BaseFragment = when (position) {
-            TAB_DETAILS -> Screens.MergeRequestInfo.fragment
+            TAB_DETAILS -> Screens.MergeRequestDetails.fragment
+            TAB_INFO -> Screens.MergeRequestInfo.fragment
             TAB_COMMITS -> Screens.MergeRequestCommits.fragment
             TAB_NOTES -> Screens.MergeRequestNotes.fragment
             else -> Screens.MergeRequestChanges.fragment
         }
 
-        override fun getCount() = 4
+        override fun getCount() = 5
 
         override fun getPageTitle(position: Int) = when (position) {
-            TAB_DETAILS -> getString(R.string.merge_request_info_tab)
+            TAB_DETAILS -> getString(R.string.merge_request_details_tab)
+            TAB_INFO -> getString(R.string.merge_request_info_tab)
             TAB_COMMITS -> getString(R.string.merge_request_commits_tab)
             TAB_NOTES -> getString(R.string.merge_request_discussion_tab)
             TAB_CHANGES -> getString(R.string.merge_request_changes_tab)
@@ -82,8 +84,9 @@ class MainMergeRequestFragment : BaseFragment(), MergeRequestView {
 
     companion object {
         private const val TAB_DETAILS = 0
-        private const val TAB_COMMITS = 1
-        private const val TAB_NOTES = 2
-        private const val TAB_CHANGES = 3
+        private const val TAB_INFO = 1
+        private const val TAB_COMMITS = 2
+        private const val TAB_NOTES = 3
+        private const val TAB_CHANGES = 4
     }
 }

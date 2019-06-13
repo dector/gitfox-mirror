@@ -6,10 +6,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
 import kotlinx.android.synthetic.main.item_merge_request_commit.view.*
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.app.CommitWithAvatarUrl
+import ru.terrakok.gitlabclient.entity.app.CommitWithShortUser
 import ru.terrakok.gitlabclient.extension.humanTime
 import ru.terrakok.gitlabclient.extension.inflate
-import ru.terrakok.gitlabclient.extension.loadRoundedImage
+import ru.terrakok.gitlabclient.ui.global.view.custom.bindShortUser
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 20.10.18.
@@ -17,7 +17,7 @@ import ru.terrakok.gitlabclient.extension.loadRoundedImage
 class CommitAdapterDelegate : AdapterDelegate<MutableList<Any>>() {
 
     override fun isForViewType(items: MutableList<Any>, position: Int) =
-        items[position] is CommitWithAvatarUrl
+        items[position] is CommitWithShortUser
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder =
         ViewHolder(parent.inflate(R.layout.item_merge_request_commit))
@@ -27,20 +27,23 @@ class CommitAdapterDelegate : AdapterDelegate<MutableList<Any>>() {
         position: Int,
         viewHolder: RecyclerView.ViewHolder,
         payloads: MutableList<Any>
-    ) = (viewHolder as ViewHolder).bind(items[position] as CommitWithAvatarUrl)
+    ) = (viewHolder as ViewHolder).bind(items[position] as CommitWithShortUser)
 
     private inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private lateinit var commitWithAvatarUrl: CommitWithAvatarUrl
+        private lateinit var commitWithShortUser: CommitWithShortUser
 
-        fun bind(commitWithAvatarUrl: CommitWithAvatarUrl) {
-            this.commitWithAvatarUrl = commitWithAvatarUrl
+        fun bind(commitWithShortUser: CommitWithShortUser) {
+            this.commitWithShortUser = commitWithShortUser
             with(itemView) {
-                avatarImageView.loadRoundedImage(commitWithAvatarUrl.authorAvatarUrl)
-                titleTextView.text = commitWithAvatarUrl.commit.title
+                val shortUser = commitWithShortUser.shortUser
+                if (shortUser != null) {
+                    avatarImageView.bindShortUser(shortUser)
+                }
+                titleTextView.text = commitWithShortUser.commit.title
                 descriptionTextView.text = String.format(
                     context.getString(R.string.merge_request_commits_description),
-                    commitWithAvatarUrl.commit.authorName,
-                    commitWithAvatarUrl.commit.authoredDate.humanTime(resources)
+                    commitWithShortUser.commit.authorName,
+                    commitWithShortUser.commit.authoredDate.humanTime(resources)
                 )
             }
         }

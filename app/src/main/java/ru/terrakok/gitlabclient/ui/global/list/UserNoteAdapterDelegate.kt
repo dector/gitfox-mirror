@@ -10,8 +10,8 @@ import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Note
 import ru.terrakok.gitlabclient.extension.humanTime
 import ru.terrakok.gitlabclient.extension.inflate
-import ru.terrakok.gitlabclient.extension.loadRoundedImage
 import ru.terrakok.gitlabclient.presentation.global.NoteWithFormattedBody
+import ru.terrakok.gitlabclient.ui.global.view.custom.bindShortUser
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 18.06.17.
@@ -37,7 +37,7 @@ class UserNoteAdapterDelegate : AdapterDelegate<MutableList<Any>>() {
         fun bind(data: NoteWithFormattedBody) {
             this.note = data.note
             with(itemView) {
-                avatarImageView.loadRoundedImage(note.author.avatarUrl)
+                avatarImageView.bindShortUser(note.author)
                 titleTextView.text = note.author.name
                 subtitleTextView.text = note.createdAt.humanTime(context.resources)
                 Markwon.setText(descriptionTextView, data.body)
