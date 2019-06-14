@@ -21,6 +21,12 @@ android {
 
         buildToolsVersion = "28.0.3"
 
+        lintOptions {
+            isWarningsAsErrors = true
+            isIgnoreTestSources = true
+            setLintConfig(file("${project.rootDir}/lint_rules.xml"))
+        }
+
         defaultConfig {
             buildConfigField("String", "VERSION_UID", "\"$buildUid\"")
             buildConfigField("String", "APP_DESCRIPTION", "\"Gitfox is an Android client for Gitlab.\"")
@@ -149,6 +155,8 @@ dependencies {
     testImplementation("org.mockito:mockito-core:2.27.0")
     //Mockito Kotlin
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0")
+    //Date with timezone
+    testImplementation("org.threeten:threetenbp:1.4.0")
 }
 
 configurations.all {
