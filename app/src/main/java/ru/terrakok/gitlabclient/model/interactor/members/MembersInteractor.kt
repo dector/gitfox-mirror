@@ -10,6 +10,8 @@ class MembersInteractor @Inject constructor(
     private val membersRepository: MembersRepository
 ) {
 
+    val memberChanges = membersRepository.memberChanges
+
     fun getMembers(projectId: Long, page: Int) =
             membersRepository.getMembers(projectId, page)
 

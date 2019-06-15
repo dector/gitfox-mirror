@@ -12,6 +12,9 @@ class TodoInteractor @Inject constructor(
     private val todoRepository: TodoRepository,
     private val profileRepository: ProfileRepository
 ) {
+
+    val todoChanges = todoRepository.todoChanges
+
     fun getMyTodos(
         isPending: Boolean,
         page: Int

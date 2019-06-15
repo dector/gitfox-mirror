@@ -44,7 +44,9 @@ class MyEventsPresenter @Inject constructor(
                 }
                 .toList()
         },
-        object : Paginator.ViewController<TargetHeader> {
+        Observable.empty(), //without auto refresh
+        object :
+            Paginator.ViewController<TargetHeader> {
             override fun showEmptyProgress(show: Boolean) {
                 viewState.showEmptyProgress(show)
             }

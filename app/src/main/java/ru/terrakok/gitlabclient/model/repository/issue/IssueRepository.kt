@@ -16,6 +16,7 @@ import ru.terrakok.gitlabclient.entity.issue.IssueScope
 import ru.terrakok.gitlabclient.entity.issue.IssueState
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
+import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
@@ -25,12 +26,15 @@ import javax.inject.Inject
  */
 class IssueRepository @Inject constructor(
     private val api: GitlabApi,
+    serverChanges: ServerChanges,
     private val schedulers: SchedulersProvider,
     @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>,
     private val markDownUrlResolver: MarkDownUrlResolver
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
     private val issueRequests = ConcurrentHashMap<Pair<Long, Long>, Single<Issue>>()
+
+    val issueChanges = serverChanges.issueChanges
 
     fun getMyIssues(
         scope: IssueScope? = null,

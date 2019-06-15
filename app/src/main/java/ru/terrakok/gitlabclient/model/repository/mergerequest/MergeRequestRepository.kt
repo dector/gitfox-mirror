@@ -16,18 +16,22 @@ import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestViewType
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
+import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 
 class MergeRequestRepository @Inject constructor(
     private val api: GitlabApi,
+    serverChanges: ServerChanges,
     private val schedulers: SchedulersProvider,
     @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>,
     private val markDownUrlResolver: MarkDownUrlResolver
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
     private val mrRequests = ConcurrentHashMap<Pair<Long, Long>, Single<MergeRequest>>()
+
+    val mergeRequestChanges = serverChanges.mergeRequestChanges
 
     fun getMyMergeRequests(
         state: MergeRequestState? = null,

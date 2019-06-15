@@ -5,6 +5,7 @@ import io.reactivex.Observable
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.extension.openInfo
+import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 import ru.terrakok.gitlabclient.model.interactor.issue.IssueInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
@@ -21,6 +22,7 @@ class MyIssuesPresenter @Inject constructor(
     initFilter: Filter,
     private val issueInteractor: IssueInteractor,
     private val mdConverter: MarkDownConverter,
+    private val serverChanges: ServerChanges,
     private val errorHandler: ErrorHandler,
     private val router: FlowRouter
 ) : BasePresenter<MyIssuesView>() {
@@ -32,6 +34,9 @@ class MyIssuesPresenter @Inject constructor(
         super.onFirstViewAttach()
 
         refreshIssues()
+        serverChanges.issueChanges
+            .subscribe { paginator.refresh() }
+            .connect()
     }
 
     private val paginator = Paginator(
@@ -50,7 +55,9 @@ class MyIssuesPresenter @Inject constructor(
                 }
                 .toList()
         },
-        object : Paginator.ViewController<TargetHeader> {
+        issueInteractor.issueChanges,
+        object :
+            Paginator.ViewController<TargetHeader> {
             override fun showEmptyProgress(show: Boolean) {
                 viewState.showEmptyProgress(show)
             }

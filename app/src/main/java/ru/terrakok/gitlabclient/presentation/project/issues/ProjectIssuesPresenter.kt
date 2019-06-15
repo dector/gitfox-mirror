@@ -40,19 +40,20 @@ class ProjectIssuesPresenter @Inject constructor(
     private val paginator = Paginator(
         {
             issueInteractor.getIssues(projectId, issueState, it)
-                    .flattenAsObservable { it }
-                    .concatMap { item ->
-                        when (item) {
-                            is TargetHeader.Public -> {
-                                mdConverter.markdownToSpannable(item.body.toString())
-                                    .map { md -> item.copy(body = md) }
-                                    .toObservable()
-                            }
-                            is TargetHeader.Confidential -> Observable.just(item)
+                .flattenAsObservable { it }
+                .concatMap { item ->
+                    when (item) {
+                        is TargetHeader.Public -> {
+                            mdConverter.markdownToSpannable(item.body.toString())
+                                .map { md -> item.copy(body = md) }
+                                .toObservable()
                         }
+                        is TargetHeader.Confidential -> Observable.just(item)
                     }
-                    .toList()
+                }
+                .toList()
         },
+        issueInteractor.issueChanges,
         object : Paginator.ViewController<TargetHeader> {
             override fun showEmptyProgress(show: Boolean) {
                 viewState.showEmptyProgress(show)

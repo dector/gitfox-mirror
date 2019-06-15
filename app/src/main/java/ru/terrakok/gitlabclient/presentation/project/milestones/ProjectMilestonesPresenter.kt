@@ -33,7 +33,9 @@ class ProjectMilestonesPresenter @Inject constructor(
 
     private val paginator = Paginator(
         { milestoneInteractor.getMilestones(projectId, null, it) },
-        object : Paginator.ViewController<Milestone> {
+        milestoneInteractor.milestoneChanges,
+        object :
+            Paginator.ViewController<Milestone> {
             override fun showEmptyProgress(show: Boolean) {
                 viewState.showEmptyProgress(show)
             }

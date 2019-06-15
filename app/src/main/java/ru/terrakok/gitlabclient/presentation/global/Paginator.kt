@@ -1,5 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.global
 
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 
@@ -8,6 +9,7 @@ import io.reactivex.disposables.Disposable
  */
 class Paginator<T>(
     private val requestFactory: (Int) -> Single<List<T>>,
+    private val invalidator: Observable<out Any>,
     private val viewController: ViewController<T>
 ) {
 
@@ -26,7 +28,8 @@ class Paginator<T>(
     private var currentState: State<T> = EMPTY()
     private var currentPage = 0
     private val currentData = mutableListOf<T>()
-    private var disposable: Disposable? = null
+    private var invalidatorDisposable: Disposable? = null
+    private var requestDisposable: Disposable? = null
 
     fun restart() {
         currentState.restart()
@@ -44,9 +47,18 @@ class Paginator<T>(
         currentState.release()
     }
 
+    private fun subscribeOnInvalidator() {
+        invalidatorDisposable = invalidator.subscribe { refresh() }
+    }
+
+    private fun dispose() {
+        invalidatorDisposable?.dispose()
+        requestDisposable?.dispose()
+    }
+
     private fun loadPage(page: Int) {
-        disposable?.dispose()
-        disposable = requestFactory.invoke(page)
+        dispose()
+        requestDisposable = requestFactory.invoke(page)
             .subscribe(
                 { currentState.newData(it) },
                 { currentState.fail(it) }
@@ -68,11 +80,12 @@ class Paginator<T>(
             currentState = EMPTY_PROGRESS()
             viewController.showEmptyProgress(true)
             loadPage(FIRST_PAGE)
+            subscribeOnInvalidator()
         }
 
         override fun release() {
             currentState = RELEASED()
-            disposable?.dispose()
+            dispose()
         }
     }
 
@@ -105,7 +118,7 @@ class Paginator<T>(
 
         override fun release() {
             currentState = RELEASED()
-            disposable?.dispose()
+            dispose()
         }
     }
 
@@ -127,7 +140,7 @@ class Paginator<T>(
 
         override fun release() {
             currentState = RELEASED()
-            disposable?.dispose()
+            dispose()
         }
     }
 
@@ -149,7 +162,7 @@ class Paginator<T>(
 
         override fun release() {
             currentState = RELEASED()
-            disposable?.dispose()
+            dispose()
         }
     }
 
@@ -176,7 +189,7 @@ class Paginator<T>(
 
         override fun release() {
             currentState = RELEASED()
-            disposable?.dispose()
+            dispose()
         }
     }
 
@@ -215,7 +228,7 @@ class Paginator<T>(
 
         override fun release() {
             currentState = RELEASED()
-            disposable?.dispose()
+            dispose()
         }
     }
 
@@ -257,7 +270,7 @@ class Paginator<T>(
 
         override fun release() {
             currentState = RELEASED()
-            disposable?.dispose()
+            dispose()
         }
     }
 
@@ -278,7 +291,7 @@ class Paginator<T>(
 
         override fun release() {
             currentState = RELEASED()
-            disposable?.dispose()
+            dispose()
         }
     }
 
