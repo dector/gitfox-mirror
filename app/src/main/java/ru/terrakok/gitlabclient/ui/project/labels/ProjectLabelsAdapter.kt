@@ -90,5 +90,4 @@ class ProjectLabelsAdapter(
     companion object {
         private const val NEXT_PAGE_OFFSET = 10
     }
-
 }

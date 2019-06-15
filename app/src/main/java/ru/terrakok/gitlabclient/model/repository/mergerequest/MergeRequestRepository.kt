@@ -3,6 +3,8 @@ package ru.terrakok.gitlabclient.model.repository.mergerequest
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
+import java.util.concurrent.ConcurrentHashMap
+import javax.inject.Inject
 import org.threeten.bp.ZonedDateTime
 import ru.terrakok.gitlabclient.di.DefaultPageSize
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
@@ -19,8 +21,6 @@ import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.model.system.SingleCacheSuccess
-import java.util.concurrent.ConcurrentHashMap
-import javax.inject.Inject
 
 class MergeRequestRepository @Inject constructor(
     private val api: GitlabApi,

@@ -146,10 +146,12 @@ fun ImageView.loadRoundedImage(
 ) {
     Glide.with(ctx ?: context)
         .load(url)
-        .apply(RequestOptions().apply {
-            placeholder(R.drawable.default_img)
-            error(R.drawable.default_img)
-        })
+        .apply(
+            RequestOptions().apply {
+                placeholder(R.drawable.default_img)
+                error(R.drawable.default_img)
+            }
+        )
         .apply(RequestOptions.circleCropTransform())
         .into(this)
 }
@@ -187,7 +189,7 @@ fun TargetHeader.Public.openInfo(router: FlowRouter) {
         else -> {
             internal?.let { targetInternal ->
                 Timber.i("Temporary open project flow")
-                //todo
+                // TODO: target click navigation (Handle new events).
                 router.startFlow(Screens.ProjectFlow(targetInternal.projectId))
             }
         }
@@ -226,7 +228,7 @@ fun View.setBackgroundTintByColor(@ColorInt color: Int) {
 fun Toolbar.setTitleEllipsize(ellipsize: TextUtils.TruncateAt) {
     val fakeTitle = "fakeTitle"
     title = fakeTitle
-    for(i in 0..childCount) {
+    for (i in 0..childCount) {
         val child = getChildAt(i)
         if (child is TextView && child.text == fakeTitle) {
             child.ellipsize = ellipsize

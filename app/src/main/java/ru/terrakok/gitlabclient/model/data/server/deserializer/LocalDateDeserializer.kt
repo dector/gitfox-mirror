@@ -3,9 +3,9 @@ package ru.terrakok.gitlabclient.model.data.server.deserializer
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
+import java.lang.reflect.Type
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
-import java.lang.reflect.Type
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 16.05.19.

@@ -4,10 +4,9 @@ import android.content.res.AssetManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import io.reactivex.Single
-import ru.terrakok.gitlabclient.entity.app.develop.AppDeveloper
-import ru.terrakok.gitlabclient.entity.app.develop.AppLibrary
 import java.io.InputStreamReader
 import javax.inject.Inject
+import ru.terrakok.gitlabclient.entity.app.develop.AppLibrary
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 03.12.17.
@@ -24,5 +23,4 @@ class RawAppData @Inject constructor(
             Single.just<T>(gson.fromJson(InputStreamReader(stream), object : TypeToken<T>() {}.type))
         }
     }
-
 }

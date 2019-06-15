@@ -3,8 +3,8 @@ package ru.terrakok.gitlabclient.model.data.server.deserializer
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
-import ru.terrakok.gitlabclient.entity.Color
 import java.lang.reflect.Type
+import ru.terrakok.gitlabclient.entity.Color
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 04.01.19.

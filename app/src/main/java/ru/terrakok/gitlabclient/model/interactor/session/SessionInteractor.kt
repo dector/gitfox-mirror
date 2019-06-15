@@ -1,6 +1,9 @@
 package ru.terrakok.gitlabclient.model.interactor.session
 
 import io.reactivex.Completable
+import java.net.URI
+import java.util.*
+import javax.inject.Inject
 import ru.terrakok.gitlabclient.di.DI
 import ru.terrakok.gitlabclient.di.DefaultServerPath
 import ru.terrakok.gitlabclient.di.module.ServerModule
@@ -9,9 +12,6 @@ import ru.terrakok.gitlabclient.entity.app.session.UserAccount
 import ru.terrakok.gitlabclient.model.data.cache.ProjectCache
 import ru.terrakok.gitlabclient.model.repository.session.SessionRepository
 import toothpick.Toothpick
-import java.net.URI
-import java.util.*
-import javax.inject.Inject
 
 class SessionInteractor @Inject constructor(
     @DefaultServerPath serverPath: String,
@@ -57,7 +57,7 @@ class SessionInteractor @Inject constructor(
             .doOnSuccess { switchAccount(it) }
             .ignoreElement()
 
-    //return hasOtherAccount
+    // Return hasOtherAccount
     fun logout(): Boolean {
         val currentAccount = sessionRepository.getCurrentUserAccount()
         if (currentAccount != null) {
@@ -67,7 +67,7 @@ class SessionInteractor @Inject constructor(
         }
     }
 
-    //return hasOtherAccount
+    // Return hasOtherAccount
     fun logout(accountId: String): Boolean {
         projectCache.clear()
         val newAccount = sessionRepository.logout(accountId)

@@ -2,6 +2,7 @@ package ru.terrakok.gitlabclient.presentation.project.issues
 
 import com.arellomobile.mvp.InjectViewState
 import io.reactivex.Observable
+import javax.inject.Inject
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
@@ -14,7 +15,6 @@ import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.presentation.global.Paginator
-import javax.inject.Inject
 
 /**
  * @author Eugene Shapovalov (CraggyHaggy). Date: 27.08.18
@@ -40,18 +40,18 @@ class ProjectIssuesPresenter @Inject constructor(
     private val paginator = Paginator(
         {
             issueInteractor.getIssues(projectId, issueState, it)
-                    .flattenAsObservable { it }
-                    .concatMap { item ->
-                        when (item) {
-                            is TargetHeader.Public -> {
-                                mdConverter.markdownToSpannable(item.body.toString())
-                                    .map { md -> item.copy(body = md) }
-                                    .toObservable()
-                            }
-                            is TargetHeader.Confidential -> Observable.just(item)
+                .flattenAsObservable { it }
+                .concatMap { item ->
+                    when (item) {
+                        is TargetHeader.Public -> {
+                            mdConverter.markdownToSpannable(item.body.toString())
+                                .map { md -> item.copy(body = md) }
+                                .toObservable()
                         }
+                        is TargetHeader.Confidential -> Observable.just(item)
                     }
-                    .toList()
+                }
+                .toList()
         },
         object : Paginator.ViewController<TargetHeader> {
             override fun showEmptyProgress(show: Boolean) {

@@ -1,6 +1,7 @@
 package ru.terrakok.gitlabclient.model.repository.project
 
 import io.reactivex.Single
+import javax.inject.Inject
 import ru.terrakok.gitlabclient.di.DefaultPageSize
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.Branch
@@ -10,7 +11,6 @@ import ru.terrakok.gitlabclient.entity.Visibility
 import ru.terrakok.gitlabclient.entity.app.ProjectFile
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
-import javax.inject.Inject
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 24.04.17.
