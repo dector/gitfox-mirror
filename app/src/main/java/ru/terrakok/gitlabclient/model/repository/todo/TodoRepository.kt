@@ -95,7 +95,7 @@ class TodoRepository @Inject constructor(
         )
     }
 
-    fun markPendingTodoAsDone(id: Int) = api.markPendingTodoAsDone(id)
+    fun markPendingTodoAsDone(id: Long) = api.markPendingTodoAsDone(id)
 
     fun markAllPendingTodosAsDone() = api.markAllPendingTodosAsDone()
 }
