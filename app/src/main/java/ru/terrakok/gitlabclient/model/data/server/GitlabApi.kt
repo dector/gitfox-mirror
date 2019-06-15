@@ -220,7 +220,7 @@ interface GitlabApi {
 
     @POST("$API_PATH/todos/{id}/mark_as_done")
     fun markPendingTodoAsDone(
-        @Path("id") id: Int
+        @Path("id") id: Long
     ): Single<Todo>
 
     @POST("$API_PATH/todos/mark_as_done")

@@ -51,13 +51,13 @@ class Paginator<T>(
         invalidatorDisposable = invalidator.subscribe { refresh() }
     }
 
-    private fun dispose() {
+    private fun disposeAll() {
         invalidatorDisposable?.dispose()
         requestDisposable?.dispose()
     }
 
     private fun loadPage(page: Int) {
-        dispose()
+        requestDisposable?.dispose()
         requestDisposable = requestFactory.invoke(page)
             .subscribe(
                 { currentState.newData(it) },
@@ -85,7 +85,7 @@ class Paginator<T>(
 
         override fun release() {
             currentState = RELEASED()
-            dispose()
+            disposeAll()
         }
     }
 
@@ -118,7 +118,7 @@ class Paginator<T>(
 
         override fun release() {
             currentState = RELEASED()
-            dispose()
+            disposeAll()
         }
     }
 
@@ -140,7 +140,7 @@ class Paginator<T>(
 
         override fun release() {
             currentState = RELEASED()
-            dispose()
+            disposeAll()
         }
     }
 
@@ -162,7 +162,7 @@ class Paginator<T>(
 
         override fun release() {
             currentState = RELEASED()
-            dispose()
+            disposeAll()
         }
     }
 
@@ -189,7 +189,7 @@ class Paginator<T>(
 
         override fun release() {
             currentState = RELEASED()
-            dispose()
+            disposeAll()
         }
     }
 
@@ -228,7 +228,7 @@ class Paginator<T>(
 
         override fun release() {
             currentState = RELEASED()
-            dispose()
+            disposeAll()
         }
     }
 
@@ -270,7 +270,7 @@ class Paginator<T>(
 
         override fun release() {
             currentState = RELEASED()
-            dispose()
+            disposeAll()
         }
     }
 
@@ -291,7 +291,7 @@ class Paginator<T>(
 
         override fun release() {
             currentState = RELEASED()
-            dispose()
+            disposeAll()
         }
     }
 

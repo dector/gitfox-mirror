@@ -5,6 +5,7 @@ import io.reactivex.Single
 import org.threeten.bp.LocalDate
 import ru.terrakok.gitlabclient.entity.Label
 import ru.terrakok.gitlabclient.entity.milestone.Milestone
+import ru.terrakok.gitlabclient.entity.todo.Todo
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 
 /**
@@ -83,4 +84,12 @@ class ApiWithChangesRegistration(
     override fun deleteMember(projectId: Long, userId: Long): Completable =
         serverApi.deleteMember(projectId, userId)
             .doOnComplete { serverChanges.memberChanged(userId) }
+
+    override fun markPendingTodoAsDone(id: Long): Single<Todo> =
+        serverApi.markPendingTodoAsDone(id)
+            .doOnSuccess { serverChanges.todoChanged(id) }
+
+    override fun markAllPendingTodosAsDone(): Completable =
+        serverApi.markAllPendingTodosAsDone()
+            .doOnComplete { serverChanges.todoChanged() }
 }
