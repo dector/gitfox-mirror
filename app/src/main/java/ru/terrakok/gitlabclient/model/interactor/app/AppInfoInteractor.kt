@@ -1,7 +1,7 @@
 package ru.terrakok.gitlabclient.model.interactor.app
 
-import ru.terrakok.gitlabclient.model.repository.app.AppInfoRepository
 import javax.inject.Inject
+import ru.terrakok.gitlabclient.model.repository.app.AppInfoRepository
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 03.12.17.

@@ -1,8 +1,9 @@
 package ru.terrakok.gitlabclient.ui.global
 
-import android.os.Bundle
+import android.os.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import javax.inject.Inject
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
@@ -14,7 +15,6 @@ import ru.terrakok.gitlabclient.di.module.FlowNavigationModule
 import ru.terrakok.gitlabclient.extension.setLaunchScreen
 import toothpick.Scope
 import toothpick.Toothpick
-import javax.inject.Inject
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 03.09.18.
@@ -49,7 +49,7 @@ abstract class FlowFragment : BaseFragment() {
                 nextFragment: Fragment?,
                 fragmentTransaction: FragmentTransaction
             ) {
-                //fix incorrect order lifecycle callback of MainFragment
+                // Fix incorrect order lifecycle callback of MainFragment
                 fragmentTransaction.setReorderingAllowed(true)
             }
         }

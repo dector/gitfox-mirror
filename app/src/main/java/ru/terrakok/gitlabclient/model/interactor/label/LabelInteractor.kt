@@ -1,7 +1,7 @@
 package ru.terrakok.gitlabclient.model.interactor.label
 
-import ru.terrakok.gitlabclient.model.repository.label.LabelRepository
 import javax.inject.Inject
+import ru.terrakok.gitlabclient.model.repository.label.LabelRepository
 
 /**
  * @author Maxim Myalkin (MaxMyalkin) on 30.10.2018.
@@ -24,5 +24,4 @@ class LabelInteractor @Inject constructor(
         projectId: Long,
         labelId: Long
     ) = labelRepository.unsubscribeFromLabel(projectId, labelId)
-
 }

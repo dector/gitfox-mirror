@@ -23,7 +23,7 @@ import toothpick.config.Module
  */
 class AppModule(context: Context) : Module() {
     init {
-        //Global
+        // Global
         bind(Context::class.java).toInstance(context)
         bind(String::class.java).withName(DefaultServerPath::class.java).toInstance(BuildConfig.ORIGIN_GITLAB_ENDPOINT)
         bind(String::class.java).withName(AppDevelopersPath::class.java).toInstance(BuildConfig.APP_DEVELOPERS_PATH)
@@ -36,15 +36,15 @@ class AppModule(context: Context) : Module() {
         bind(SystemMessageNotifier::class.java).toInstance(SystemMessageNotifier())
         bind(Gson::class.java).toProvider(GsonProvider::class.java).providesSingletonInScope()
 
-        //Navigation
+        // Navigation
         val cicerone = Cicerone.create()
         bind(Router::class.java).toInstance(cicerone.router)
         bind(NavigatorHolder::class.java).toInstance(cicerone.navigatorHolder)
 
-        //Session
+        // Session
         bind(SessionRepository::class.java).singletonInScope()
 
-        //AppInfo
+        // AppInfo
         bind(AppInfo::class.java).toInstance(
             AppInfo(
                 BuildConfig.VERSION_NAME,

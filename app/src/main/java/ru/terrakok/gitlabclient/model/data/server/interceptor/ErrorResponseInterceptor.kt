@@ -15,6 +15,5 @@ class ErrorResponseInterceptor : Interceptor {
         if (code in 400..500) throw ServerError(code)
 
         return response
-
     }
 }

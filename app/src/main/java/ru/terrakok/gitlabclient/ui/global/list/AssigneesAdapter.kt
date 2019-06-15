@@ -22,7 +22,7 @@ class AssigneesAdapter(
         items.clear()
         items.addAll(assignees)
 
-        //yes, on main thread...
+        // Yes, on main thread...
         DiffUtil
             .calculateDiff(DiffCallback(items, oldData), false)
             .dispatchUpdatesTo(this)

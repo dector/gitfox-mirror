@@ -1,11 +1,11 @@
 package ru.terrakok.gitlabclient.ui.global
 
 import android.os.Bundle
+import javax.inject.Inject
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.di.DI
 import toothpick.Toothpick
-import javax.inject.Inject
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 05.09.18.

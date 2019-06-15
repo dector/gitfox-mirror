@@ -1,9 +1,9 @@
 package ru.terrakok.gitlabclient.presentation
 
+import javax.inject.Inject
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.model.interactor.launch.LaunchInteractor
-import javax.inject.Inject
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 03.09.18.

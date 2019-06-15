@@ -25,10 +25,10 @@ class ProjectLabelsPresenterTest {
     private val flowRouter: FlowRouter = mock()
 
     private val presenter = ProjectLabelsPresenter(
-            PrimitiveWrapper(projectId),
-            interactor,
-            errorHandler,
-            flowRouter
+        PrimitiveWrapper(projectId),
+        interactor,
+        errorHandler,
+        flowRouter
     )
 
     @Test
@@ -67,8 +67,8 @@ class ProjectLabelsPresenterTest {
         val secondPageLabels = listOf(label(4), label(5), label(6))
 
         whenever(interactor.getLabelList(eq(projectId), any()))
-                .thenReturn(Single.just(firstPageLabels))
-                .thenReturn(Single.just(secondPageLabels))
+            .thenReturn(Single.just(firstPageLabels))
+            .thenReturn(Single.just(secondPageLabels))
 
         presenter.attachView(view)
 
@@ -94,7 +94,7 @@ class ProjectLabelsPresenterTest {
         val error = RuntimeException("error")
 
         whenever(interactor.getLabelList(eq(projectId), any()))
-                .thenReturn(Single.error(error))
+            .thenReturn(Single.error(error))
 
         presenter.attachView(view)
 
@@ -113,8 +113,8 @@ class ProjectLabelsPresenterTest {
         val error = RuntimeException("error")
 
         whenever(interactor.getLabelList(eq(projectId), any()))
-                .thenReturn(Single.just(firstPageLabels))
-                .thenReturn(Single.error(error))
+            .thenReturn(Single.just(firstPageLabels))
+            .thenReturn(Single.error(error))
 
         presenter.attachView(view)
         presenter.loadNextLabelsPage()
@@ -128,15 +128,15 @@ class ProjectLabelsPresenterTest {
 
     private fun label(id: Long, subscribed: Boolean = false): Label {
         return Label(
-                id = id,
-                name = "name$id",
-                color = Color("green", 12),
-                description = null,
-                openIssuesCount = 0,
-                closedIssuesCount = 0,
-                openMergeRequestsCount = 0,
-                subscribed = subscribed,
-                priority = null
+            id = id,
+            name = "name$id",
+            color = Color("green", 12),
+            description = null,
+            openIssuesCount = 0,
+            closedIssuesCount = 0,
+            openMergeRequestsCount = 0,
+            subscribed = subscribed,
+            priority = null
         )
     }
 }

@@ -30,7 +30,7 @@ class TargetsAdapter(
         items.addAll(events)
         if (progress) items.add(ProgressItem())
 
-        //yes, on main thread...
+        // Yes, on main thread...
         DiffUtil
             .calculateDiff(DiffCallback(items, oldData), false)
             .dispatchUpdatesTo(this)
@@ -74,8 +74,8 @@ class TargetsAdapter(
             val newItem = newItems[newItemPosition]
 
             return if (newItem is TargetHeader.Public && oldItem is TargetHeader.Public) {
-                newItem.target == oldItem.target && newItem.targetId == oldItem.targetId
-                        && newItem.date == oldItem.date
+                newItem.target == oldItem.target && newItem.targetId == oldItem.targetId &&
+                    newItem.date == oldItem.date
             } else if (newItem is TargetHeader.Confidential && oldItem is TargetHeader.Confidential) {
                 true
             } else {

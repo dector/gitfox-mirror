@@ -6,6 +6,8 @@ plugins {
     id("org.jetbrains.kotlin.android.extensions")
 }
 
+apply(from = "${project.rootDir}/codequality/ktlint.gradle.kts")
+
 val buildUid = System.getenv("BUILD_COMMIT_SHA") ?: "local"
 android {
     compileSdkVersion(28)
@@ -24,7 +26,7 @@ android {
         lintOptions {
             isWarningsAsErrors = true
             isIgnoreTestSources = true
-            setLintConfig(file("${project.rootDir}/lint_rules.xml"))
+            setLintConfig(file("${project.rootDir}/codequality/lint_rules.xml"))
         }
 
         defaultConfig {

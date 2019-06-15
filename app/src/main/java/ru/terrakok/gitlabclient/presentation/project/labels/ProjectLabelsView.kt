@@ -21,5 +21,4 @@ interface ProjectLabelsView : MvpView {
 
     @StateStrategyType(OneExecutionStateStrategy::class)
     fun showMessage(message: String)
-
 }

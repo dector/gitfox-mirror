@@ -1,6 +1,7 @@
 package ru.terrakok.gitlabclient.presentation.project.labels
 
 import com.arellomobile.mvp.InjectViewState
+import javax.inject.Inject
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
 import ru.terrakok.gitlabclient.entity.Label
@@ -9,7 +10,6 @@ import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.Paginator
-import javax.inject.Inject
 
 /**
  * @author Maxim Myalkin (MaxMyalkin) on 11.11.2018.
@@ -80,5 +80,4 @@ class ProjectLabelsPresenter @Inject constructor(
         super.onDestroy()
         paginator.release()
     }
-
 }
