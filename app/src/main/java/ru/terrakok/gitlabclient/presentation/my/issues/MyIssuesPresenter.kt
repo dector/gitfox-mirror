@@ -34,9 +34,6 @@ class MyIssuesPresenter @Inject constructor(
         super.onFirstViewAttach()
 
         refreshIssues()
-        serverChanges.issueChanges
-            .subscribe { paginator.refresh() }
-            .connect()
     }
 
     private val paginator = Paginator(
@@ -56,8 +53,7 @@ class MyIssuesPresenter @Inject constructor(
                 .toList()
         },
         issueInteractor.issueChanges,
-        object :
-            Paginator.ViewController<TargetHeader> {
+        object : Paginator.ViewController<TargetHeader> {
             override fun showEmptyProgress(show: Boolean) {
                 viewState.showEmptyProgress(show)
             }
