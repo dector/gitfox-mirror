@@ -1,11 +1,11 @@
 package ru.terrakok.gitlabclient.model.interactor.issue
 
-import javax.inject.Inject
 import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.entity.Sort
 import ru.terrakok.gitlabclient.entity.issue.IssueScope
 import ru.terrakok.gitlabclient.entity.issue.IssueState
 import ru.terrakok.gitlabclient.model.repository.issue.IssueRepository
+import javax.inject.Inject
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 15.06.17.

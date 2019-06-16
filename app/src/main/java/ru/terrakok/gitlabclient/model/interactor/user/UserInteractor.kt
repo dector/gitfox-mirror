@@ -1,7 +1,7 @@
 package ru.terrakok.gitlabclient.model.interactor.user
 
-import javax.inject.Inject
 import ru.terrakok.gitlabclient.model.repository.user.UserRepository
+import javax.inject.Inject
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 25.11.17.

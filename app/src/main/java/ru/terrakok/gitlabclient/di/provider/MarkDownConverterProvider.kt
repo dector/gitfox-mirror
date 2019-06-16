@@ -1,9 +1,6 @@
 package ru.terrakok.gitlabclient.di.provider
 
 import android.content.Context
-import java.util.concurrent.Executors
-import javax.inject.Inject
-import javax.inject.Provider
 import okhttp3.OkHttpClient
 import ru.noties.markwon.SpannableConfiguration
 import ru.noties.markwon.UrlProcessorRelativeToAbsolute
@@ -14,6 +11,9 @@ import ru.terrakok.gitlabclient.di.DefaultServerPath
 import ru.terrakok.gitlabclient.extension.color
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
+import java.util.concurrent.Executors
+import javax.inject.Inject
+import javax.inject.Provider
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 28.02.18.

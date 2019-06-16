@@ -3,11 +3,11 @@ package ru.terrakok.gitlabclient.presentation.main
 import com.arellomobile.mvp.InjectViewState
 import io.reactivex.Single
 import io.reactivex.functions.Function3
-import javax.inject.Inject
 import ru.terrakok.gitlabclient.model.interactor.issue.IssueInteractor
 import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestInteractor
 import ru.terrakok.gitlabclient.model.interactor.todo.TodoInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
+import javax.inject.Inject
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 20.05.19.

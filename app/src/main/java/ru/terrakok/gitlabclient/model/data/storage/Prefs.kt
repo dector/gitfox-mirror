@@ -3,8 +3,8 @@ package ru.terrakok.gitlabclient.model.data.storage
 import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import javax.inject.Inject
 import ru.terrakok.gitlabclient.entity.app.session.UserAccount
+import javax.inject.Inject
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 28.03.17

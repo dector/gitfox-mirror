@@ -11,7 +11,6 @@ tasks.register<JavaExec>("ktlint") {
     args(
         "src/**/*.kt",
         "--format",
-        "--experimental",
         "--reporter=plain",
         "--reporter=checkstyle,output=${buildDir}/reports/checkstyle/ktlint-report.xml"
     )

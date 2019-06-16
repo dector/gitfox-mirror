@@ -1,11 +1,11 @@
 package ru.terrakok.gitlabclient.model.repository.app
 
 import io.reactivex.Single
-import javax.inject.Inject
 import ru.terrakok.gitlabclient.entity.app.develop.AppInfo
 import ru.terrakok.gitlabclient.model.data.storage.Prefs
 import ru.terrakok.gitlabclient.model.data.storage.RawAppData
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
+import javax.inject.Inject
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 03.12.17.

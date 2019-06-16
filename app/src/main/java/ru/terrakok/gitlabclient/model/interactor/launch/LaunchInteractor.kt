@@ -1,11 +1,11 @@
 package ru.terrakok.gitlabclient.model.interactor.launch
 
-import javax.inject.Inject
 import ru.terrakok.gitlabclient.di.DI
 import ru.terrakok.gitlabclient.di.module.ServerModule
 import ru.terrakok.gitlabclient.model.repository.app.AppInfoRepository
 import ru.terrakok.gitlabclient.model.repository.session.SessionRepository
 import toothpick.Toothpick
+import javax.inject.Inject
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 26.09.18.

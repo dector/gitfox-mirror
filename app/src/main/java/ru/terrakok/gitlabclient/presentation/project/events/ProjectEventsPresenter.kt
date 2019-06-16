@@ -2,7 +2,6 @@ package ru.terrakok.gitlabclient.presentation.project.events
 
 import com.arellomobile.mvp.InjectViewState
 import io.reactivex.Observable
-import javax.inject.Inject
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
@@ -14,6 +13,7 @@ import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.presentation.global.Paginator
+import javax.inject.Inject
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 15.06.17.

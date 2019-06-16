@@ -1,10 +1,10 @@
 package ru.terrakok.gitlabclient.model.repository.label
 
-import javax.inject.Inject
 import ru.terrakok.gitlabclient.di.DefaultPageSize
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
+import javax.inject.Inject
 
 /**
  * @author Maxim Myalkin (MaxMyalkin) on 30.10.2018.

@@ -4,7 +4,6 @@ import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonParseException
-import java.lang.reflect.Type
 import org.threeten.bp.ZonedDateTime
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.ShortUser
@@ -15,6 +14,7 @@ import ru.terrakok.gitlabclient.entity.target.mergerequest.MergeRequest
 import ru.terrakok.gitlabclient.entity.todo.Todo
 import ru.terrakok.gitlabclient.entity.todo.TodoAction
 import ru.terrakok.gitlabclient.entity.todo.TodoState
+import java.lang.reflect.Type
 
 /**
  * @author Eugene Shapovalov (CraggyHaggy). Date: 13.09.17

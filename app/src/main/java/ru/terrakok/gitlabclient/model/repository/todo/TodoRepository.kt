@@ -1,7 +1,6 @@
 package ru.terrakok.gitlabclient.model.repository.todo
 
 import io.reactivex.Single
-import javax.inject.Inject
 import ru.terrakok.gitlabclient.di.DefaultPageSize
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.ShortUser
@@ -15,6 +14,7 @@ import ru.terrakok.gitlabclient.entity.todo.TodoState
 import ru.terrakok.gitlabclient.extension.getXTotalHeader
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
+import javax.inject.Inject
 
 /**
  * @author Eugene Shapovalov (CraggyHaggy). Date: 20.09.17

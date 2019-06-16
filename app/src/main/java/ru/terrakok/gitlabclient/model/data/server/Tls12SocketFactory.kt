@@ -1,16 +1,16 @@
 package ru.terrakok.gitlabclient.model.data.server
 
 import android.os.Build
+import okhttp3.ConnectionSpec
+import okhttp3.OkHttpClient
+import okhttp3.TlsVersion
+import timber.log.Timber
 import java.io.IOException
 import java.net.InetAddress
 import java.net.Socket
 import java.net.UnknownHostException
 import java.security.KeyStore
 import javax.net.ssl.*
-import okhttp3.ConnectionSpec
-import okhttp3.OkHttpClient
-import okhttp3.TlsVersion
-import timber.log.Timber
 
 /**
  * Implementation of [SSLSocketFactory] that adds [TlsVersion.TLS_1_2] as an enabled protocol for every [SSLSocket]

@@ -1,7 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.project.milestones
 
 import com.arellomobile.mvp.InjectViewState
-import javax.inject.Inject
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
@@ -11,6 +10,7 @@ import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.Paginator
+import javax.inject.Inject
 
 /**
  * @author Valentin Logvinovitch (glvvl) on 24.11.18.

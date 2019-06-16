@@ -1,9 +1,9 @@
 package ru.terrakok.gitlabclient.di.provider
 
-import javax.inject.Inject
-import javax.inject.Provider
 import okhttp3.OkHttpClient
 import ru.terrakok.gitlabclient.model.data.server.interceptor.ErrorResponseInterceptor
+import javax.inject.Inject
+import javax.inject.Provider
 
 /**
  * @author Myalkin Maxim (@MaxMyalkin) on 29.10.18.

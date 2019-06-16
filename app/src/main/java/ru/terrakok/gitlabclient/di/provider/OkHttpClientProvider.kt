@@ -1,9 +1,6 @@
 package ru.terrakok.gitlabclient.di.provider
 
 import android.content.Context
-import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-import javax.inject.Provider
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -12,6 +9,9 @@ import ru.terrakok.gitlabclient.entity.app.session.AuthHolder
 import ru.terrakok.gitlabclient.model.data.server.Tls12SocketFactory.Companion.enableTls12
 import ru.terrakok.gitlabclient.model.data.server.interceptor.AuthHeaderInterceptor
 import ru.terrakok.gitlabclient.model.data.server.interceptor.CurlLoggingInterceptor
+import java.util.concurrent.TimeUnit
+import javax.inject.Inject
+import javax.inject.Provider
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 20.06.17.
