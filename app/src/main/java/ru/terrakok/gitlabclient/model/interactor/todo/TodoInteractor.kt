@@ -1,9 +1,9 @@
 package ru.terrakok.gitlabclient.model.interactor.todo
 
-import javax.inject.Inject
 import ru.terrakok.gitlabclient.entity.todo.TodoState
 import ru.terrakok.gitlabclient.model.repository.profile.ProfileRepository
 import ru.terrakok.gitlabclient.model.repository.todo.TodoRepository
+import javax.inject.Inject
 
 /**
  * @author Eugene Shapovalov (CraggyHaggy). Date: 21.09.17

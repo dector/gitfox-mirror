@@ -1,7 +1,7 @@
 package ru.terrakok.gitlabclient.model.interactor.event
 
-import javax.inject.Inject
 import ru.terrakok.gitlabclient.model.repository.event.EventRepository
+import javax.inject.Inject
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 22.07.17.

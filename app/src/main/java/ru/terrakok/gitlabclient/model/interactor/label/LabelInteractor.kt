@@ -1,7 +1,7 @@
 package ru.terrakok.gitlabclient.model.interactor.label
 
-import javax.inject.Inject
 import ru.terrakok.gitlabclient.model.repository.label.LabelRepository
+import javax.inject.Inject
 
 /**
  * @author Maxim Myalkin (MaxMyalkin) on 30.10.2018.

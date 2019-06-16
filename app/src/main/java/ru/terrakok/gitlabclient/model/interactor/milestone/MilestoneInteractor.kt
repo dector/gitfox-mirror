@@ -1,11 +1,11 @@
 package ru.terrakok.gitlabclient.model.interactor.milestone
 
-import javax.inject.Inject
 import org.threeten.bp.LocalDate
 import ru.terrakok.gitlabclient.entity.milestone.MilestoneState
 import ru.terrakok.gitlabclient.model.repository.issue.IssueRepository
 import ru.terrakok.gitlabclient.model.repository.mergerequest.MergeRequestRepository
 import ru.terrakok.gitlabclient.model.repository.milestone.MilestoneRepository
+import javax.inject.Inject
 
 class MilestoneInteractor @Inject constructor(
     private val milestoneRepository: MilestoneRepository,

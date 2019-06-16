@@ -1,7 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.issue.info
 
 import com.arellomobile.mvp.InjectViewState
-import javax.inject.Inject
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.di.IssueId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
@@ -11,6 +10,7 @@ import ru.terrakok.gitlabclient.model.interactor.issue.IssueInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
+import javax.inject.Inject
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 05.01.18.

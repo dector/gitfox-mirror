@@ -1,11 +1,11 @@
 package ru.terrakok.gitlabclient.model.interactor.mergerequest
 
-import javax.inject.Inject
 import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.entity.Sort
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestScope
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
 import ru.terrakok.gitlabclient.model.repository.mergerequest.MergeRequestRepository
+import javax.inject.Inject
 
 class MergeRequestInteractor @Inject constructor(
     private val mergeRequestRepository: MergeRequestRepository

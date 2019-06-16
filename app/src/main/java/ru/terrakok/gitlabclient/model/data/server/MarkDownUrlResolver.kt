@@ -1,7 +1,7 @@
 package ru.terrakok.gitlabclient.model.data.server
 
-import javax.inject.Inject
 import ru.terrakok.gitlabclient.entity.Project
+import javax.inject.Inject
 
 /**
  * @author Eugene Shapovalov (CraggyHaggy) on 09.04.18.
