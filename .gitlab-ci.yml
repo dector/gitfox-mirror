@@ -45,7 +45,13 @@ ktlint:
 unitTests:
   stage: test
   script:
-    - ./gradlew test
+    - ./gradlew testDebugUnitTest
+  artifacts:
+    when: on_failure
+    name: "unitTests_${BUILD_NUMBER}_${BUILD_COMMIT_SHA}"
+    expire_in: 1 days
+    paths:
+      - app/build/reports/tests/
   only:
     - merge_requests
 
