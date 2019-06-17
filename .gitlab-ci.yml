@@ -1,4 +1,4 @@
-image: jangrewe/gitlab-ci-android
+image: innowisegroup/docker-android-sdk
 
 before_script:
   - export GRADLE_USER_HOME=$(pwd)/.gradle
