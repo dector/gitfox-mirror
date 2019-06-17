@@ -2,8 +2,6 @@ image: jangrewe/gitlab-ci-android:28
 
 before_script:
   - export GRADLE_USER_HOME=$(pwd)/.gradle
-  - export BUILD_NUMBER=$(git rev-list --count ${CI_BUILD_REF})
-  - export BUILD_COMMIT_SHA=${CI_COMMIT_SHA}
   - chmod +x ./gradlew
 
 cache:
@@ -22,7 +20,7 @@ lint:
     - ./gradlew lintDebug
   artifacts:
     when: on_failure
-    name: "lint_${BUILD_NUMBER}_${BUILD_COMMIT_SHA}"
+    name: "lint_${CI_JOB_NAME}_${CI_COMMIT_REF_NAME}"
     expire_in: 1 days
     paths:
       - app/build/reports/lint-results-debug.xml
@@ -35,7 +33,7 @@ ktlint:
     - ./gradlew ktlint
   artifacts:
     when: on_failure
-    name: "ktlint_${BUILD_NUMBER}_${BUILD_COMMIT_SHA}"
+    name: "ktlint_${CI_JOB_NAME}_${CI_COMMIT_REF_NAME}"
     expire_in: 1 days
     paths:
       - app/build/reports/checkstyle/ktlint-report.xml
@@ -48,7 +46,7 @@ unitTests:
     - ./gradlew testDebugUnitTest
   artifacts:
     when: on_failure
-    name: "unitTests_${BUILD_NUMBER}_${BUILD_COMMIT_SHA}"
+    name: "unitTests_${CI_JOB_NAME}_${CI_COMMIT_REF_NAME}"
     expire_in: 1 days
     paths:
       - app/build/reports/tests/
@@ -60,7 +58,8 @@ build:
   script:
     - ./gradlew assembleDebug
   artifacts:
-    name: "${CI_PROJECT_NAME}_${CI_COMMIT_REF_NAME}_${CI_COMMIT_SHA}"
+    name: "build_${CI_PROJECT_NAME}+${CI_COMMIT_REF_NAME}"
+    expire_in: 1h
     paths:
       - app/build/outputs/
   only:
