@@ -147,7 +147,7 @@ dependencies {
     //FlexBox Layout
     implementation("com.google.android:flexbox:1.0.0")
     //Firebase
-    implementation("com.google.firebase:firebase-core:16.0.9")
+    implementation("com.google.firebase:firebase-core:17.0.0")
     //Crashlytics
     implementation("com.crashlytics.sdk.android:crashlytics:2.10.1")
 
