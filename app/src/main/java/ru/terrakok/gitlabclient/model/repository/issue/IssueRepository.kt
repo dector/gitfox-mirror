@@ -17,6 +17,8 @@ import ru.terrakok.gitlabclient.entity.issue.IssueState
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
+import ru.terrakok.gitlabclient.model.system.SingleCacheSuccess
+import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 
 /**
@@ -29,6 +31,7 @@ class IssueRepository @Inject constructor(
     private val markDownUrlResolver: MarkDownUrlResolver
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
+    private val issueCachedSingles = ConcurrentHashMap<Pair<Long, Long>, Single<Issue>>()
 
     fun getMyIssues(
         scope: IssueScope? = null,
@@ -129,18 +132,26 @@ class IssueRepository @Inject constructor(
         projectId: Long,
         issueId: Long
     ) = Single
-        .zip(
-            api.getProject(projectId),
-            api.getIssue(projectId, issueId),
-            BiFunction<Project, Issue, Issue> { project, issue ->
-                val resolved = markDownUrlResolver.resolve(issue.description, project)
-                if (resolved != issue.description) {
-                    issue.copy(description = resolved)
-                } else {
-                    issue
-                }
+        .defer {
+            val key = Pair(projectId, issueId)
+            if (!issueCachedSingles.containsKey(key)) {
+                issueCachedSingles[key] = Single
+                    .zip(
+                        api.getProject(projectId),
+                        api.getIssue(projectId, issueId),
+                        BiFunction<Project, Issue, Issue> { project, issue ->
+                            val resolved = markDownUrlResolver.resolve(issue.description, project)
+                            if (resolved != issue.description) {
+                                issue.copy(description = resolved)
+                            } else {
+                                issue
+                            }
+                        }
+                    )
+                    .compose { SingleCacheSuccess.create(it) }
             }
-        )
+            issueCachedSingles[key]
+        }
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
 

@@ -3,12 +3,15 @@ package ru.terrakok.gitlabclient
 import com.google.gson.GsonBuilder
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.Month
+import org.threeten.bp.ZoneOffset
+import org.threeten.bp.ZonedDateTime
 import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.entity.app.session.UserAccount
 import ru.terrakok.gitlabclient.entity.app.target.*
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.event.EventTargetType
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
+import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestMergeStatus
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
 import ru.terrakok.gitlabclient.entity.milestone.Milestone
 import ru.terrakok.gitlabclient.entity.milestone.MilestoneState
@@ -16,8 +19,8 @@ import ru.terrakok.gitlabclient.entity.target.TargetState
 import ru.terrakok.gitlabclient.entity.target.TargetType
 import ru.terrakok.gitlabclient.entity.todo.Todo
 import ru.terrakok.gitlabclient.entity.todo.TodoAction
-import ru.terrakok.gitlabclient.model.data.server.deserializer.LocalDateTimeDeserializer
 import ru.terrakok.gitlabclient.model.data.server.deserializer.TodoDeserializer
+import ru.terrakok.gitlabclient.model.data.server.deserializer.ZonedDateTimeDeserializer
 
 /**
  * @author Vitaliy Belyaev on 01.06.2019.
@@ -101,17 +104,20 @@ object TestData {
       }
       """
 
+    fun getTestDate(): ZonedDateTime = ZonedDateTime.of(LocalDateTime.of(
+            2007, Month.JULY, 14, 11, 0), ZoneOffset.UTC)
+
     fun getCommit() = Commit(
             "dsf233fef2fes34",
             "dsf233",
             "commit title",
             "Mr Maintainer",
             null,
-            LocalDateTime.of(2007, Month.JULY, 14, 11, 0),
+            getTestDate(),
             null,
             null,
             null,
-            LocalDateTime.of(2007, Month.JUNE, 23, 11, 0),
+            getTestDate(),
             "commit message",
             listOf("wqdwqe23s3e", "fesfesf232")
     )
@@ -119,8 +125,8 @@ object TestData {
     fun getNote() = Note(
             13L,
             "note test body",
-            Author(11L, "state", "url", "name", "avatar", "username"),
-            LocalDateTime.of(2007, Month.DECEMBER, 14, 11, 0),
+            ShortUser(11L, "state", "name", "url", "avatar", "username"),
+            getTestDate(),
             null,
             false,
             435L,
@@ -170,7 +176,7 @@ object TestData {
     fun getMergeRequest() = MergeRequest(
             321123L,
             5555L,
-            LocalDateTime.of(2007, Month.DECEMBER, 14, 11, 0),
+            getTestDate(),
             null,
             "target branch",
             "source branch",
@@ -179,7 +185,7 @@ object TestData {
             MergeRequestState.OPENED,
             2,
             1,
-            Author(11L, "state", "url", "name", "avatar", "username"),
+            ShortUser(11L, "state", "name", "url", "avatar", "username"),
             null,
             8888,
             7777,
@@ -187,20 +193,22 @@ object TestData {
             false,
             null,
             true,
-            null,
+            MergeRequestMergeStatus.CAN_BE_MERGED,
             "sha",
             null,
             3,
             true,
             false,
             null,
-            null,
             listOf("label 1", "label 2"),
             null,
             null,
             null,
             null,
-            null
+            null,
+            null,
+            TimeStats(43, 34, null, null),
+            false
     )
 
     fun getExpectedTargetHeader(mr: MergeRequest, project: Project): TargetHeader {
@@ -305,20 +313,20 @@ object TestData {
     )
 
     fun getTodo() = GsonBuilder()
-            .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeDeserializer())
+            .registerTypeAdapter(ZonedDateTime::class.java, ZonedDateTimeDeserializer())
             .registerTypeAdapter(Todo::class.java, TodoDeserializer())
             .create().fromJson(todoJson, Todo::class.java)
 
     fun getUser() = User(
             4321L, "username", "email@mail.com", "Name", null,
             null, null,
-            LocalDateTime.of(2007, Month.DECEMBER, 14, 11, 0),
+            getTestDate(),
             false, null, null, null, null, null,
             null, null,
-            LocalDateTime.of(2009, Month.DECEMBER, 14, 11, 0),
-            LocalDateTime.of(2008, Month.DECEMBER, 14, 11, 0),
+            getTestDate(),
+            getTestDate(),
             2424L, 32L,
-            LocalDateTime.of(2008, Month.DECEMBER, 14, 11, 0),
+            getTestDate(),
             null, canCreateGroup = false, canCreateProject = false,
             twoFactorEnabled = true, external = false
     )
@@ -327,7 +335,7 @@ object TestData {
         val target = todo.target
         val assignee = if (todo.actionName != TodoAction.MARKED) {
             currentUser.let {
-                Assignee(it.id, it.state, it.name, it.webUrl, it.avatarUrl, it.username)
+                ShortUser(it.id, it.state, it.name, it.webUrl, it.avatarUrl, it.username)
             }
         } else {
             null

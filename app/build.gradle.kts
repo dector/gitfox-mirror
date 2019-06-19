@@ -16,8 +16,8 @@ android {
         minSdkVersion(19)
         targetSdkVersion(28)
 
-        versionName = "1.5.1"
-        versionCode = 16
+        versionName = "1.5.5"
+        versionCode = 20
 
         buildToolsVersion = "28.0.3"
 
@@ -94,7 +94,7 @@ dependencies {
 
     //Support
     implementation("androidx.appcompat:appcompat:1.0.2")
-    implementation("com.google.android.material:material:1.1.0-alpha06")
+    implementation("com.google.android.material:material:1.1.0-alpha07")
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.constraintlayout:constraintlayout:1.1.3")
     //Kotlin
@@ -131,17 +131,17 @@ dependencies {
     implementation("ru.noties:markwon:$markwonVersion")
     implementation("ru.noties:markwon-image-loader:$markwonVersion")
     //Bottom navigation bar
-    implementation("com.aurelhubert:ahbottomnavigation:2.1.0")
+    implementation("com.aurelhubert:ahbottomnavigation:2.3.4")
     //Lottie
     implementation("com.airbnb.android:lottie:2.5.1")
     //Date
-    implementation("com.jakewharton.threetenabp:threetenabp:1.0.5")
+    implementation("com.jakewharton.threetenabp:threetenabp:1.2.1")
     //FlexBox Layout
     implementation("com.google.android:flexbox:1.0.0")
     //Firebase
     implementation("com.google.firebase:firebase-core:16.0.9")
     //Crashlytics
-    implementation("com.crashlytics.sdk.android:crashlytics:2.10.0")
+    implementation("com.crashlytics.sdk.android:crashlytics:2.10.1")
 
     //JUnit
     testImplementation("junit:junit:4.12")

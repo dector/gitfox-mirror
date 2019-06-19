@@ -7,17 +7,14 @@ import org.junit.Test
 import org.mockito.BDDMockito.*
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.times
-import org.threeten.bp.LocalDateTime
-import org.threeten.bp.Month
 import ru.terrakok.gitlabclient.TestData
 import ru.terrakok.gitlabclient.TestSchedulers
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
-import ru.terrakok.gitlabclient.entity.Author
-import ru.terrakok.gitlabclient.entity.Note
 import ru.terrakok.gitlabclient.entity.Project
+import ru.terrakok.gitlabclient.entity.ShortUser
+import ru.terrakok.gitlabclient.entity.TimeStats
 import ru.terrakok.gitlabclient.entity.app.target.*
 import ru.terrakok.gitlabclient.entity.event.EventAction
-import ru.terrakok.gitlabclient.entity.event.EventTargetType
 import ru.terrakok.gitlabclient.entity.issue.Issue
 import ru.terrakok.gitlabclient.entity.issue.IssueState
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
@@ -30,6 +27,7 @@ class IssueRepositoryTest {
     private val defaultPageSize = 1
     private val testPage = 2
     private val testIssue = getTestIssue()
+    private val testNote = TestData.getNote()
     private val testProject = TestData.getProject(testIssue.projectId)
 
     private val api = mock(GitlabApi::class.java)
@@ -220,17 +218,6 @@ class IssueRepositoryTest {
     @Test
     fun `get issue notes should return notes with modified body`() {
         // GIVEN
-        val testNote = Note(
-                13L,
-                "note test body",
-                Author(1L, "", "", "", "", ""),
-                LocalDateTime.of(2007, Month.DECEMBER, 14, 11, 0),
-                null,
-                false,
-                435L,
-                EventTargetType.ISSUE,
-                333L)
-
         val resolvedBody = "body that differs from issue description"
         val expected = testNote.copy(body = resolvedBody)
 
@@ -283,17 +270,6 @@ class IssueRepositoryTest {
     @Test
     fun `get issue notes should return notes without modifications`() {
         // GIVEN
-        val testNote = Note(
-                13L,
-                "note test body",
-                Author(1L, "", "", "", "", ""),
-                LocalDateTime.of(2007, Month.DECEMBER, 14, 11, 0),
-                null,
-                false,
-                435L,
-                EventTargetType.ISSUE,
-                333L)
-
         val resolvedBody = testNote.body
 
         given(api.getIssueNotes(
@@ -345,17 +321,6 @@ class IssueRepositoryTest {
     @Test
     fun `get all issue notes should return notes from all pages`() {
         // GIVEN
-        val testNote = Note(
-                13L,
-                "note test body",
-                Author(1L, "", "", "", "", ""),
-                LocalDateTime.of(2007, Month.DECEMBER, 14, 11, 0),
-                null,
-                false,
-                435L,
-                EventTargetType.ISSUE,
-                333L)
-
         given(api.getIssueNotes(
                 anyLong(),
                 anyLong(),
@@ -461,13 +426,13 @@ class IssueRepositoryTest {
             3342424L,
             IssueState.OPENED,
             "issue description",
-            Author(1L, "", "", "", "", ""),
+            ShortUser(1L, "", "", "", "", ""),
             null,
             9876L,
             emptyList(),
             null,
             null,
-            LocalDateTime.of(2007, Month.DECEMBER, 14, 11, 0),
+            TestData.getTestDate(),
             listOf("test label 1", "test label 2"),
             13,
             null,
@@ -477,7 +442,11 @@ class IssueRepositoryTest {
             0,
             null,
             null,
-            2
+            2,
+            TimeStats(32, 23, null, null),
+            null,
+            false,
+            null
     )
 
     private fun getExpectedTargetHeader(issue: Issue, project: Project): TargetHeader {

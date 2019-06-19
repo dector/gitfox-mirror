@@ -6,7 +6,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.layout_base_list.*
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.app.CommitWithAvatarUrl
+import ru.terrakok.gitlabclient.entity.app.CommitWithShortUser
 import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.mergerequest.commits.MergeRequestCommitsPresenter
@@ -69,7 +69,7 @@ class MergeRequestCommitsFragment : BaseFragment(), MergeRequestCommitsView {
         emptyView.apply { if (show) showEmptyError(message) else hide() }
     }
 
-    override fun showCommits(show: Boolean, commits: List<CommitWithAvatarUrl>) {
+    override fun showCommits(show: Boolean, commits: List<CommitWithShortUser>) {
         recyclerView.visible(show)
         postViewAction { adapter.setData(commits) }
     }

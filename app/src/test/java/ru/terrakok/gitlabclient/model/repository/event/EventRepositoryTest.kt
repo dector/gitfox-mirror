@@ -9,11 +9,13 @@ import org.mockito.BDDMockito.then
 import org.mockito.Mockito.*
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.Month
+import org.threeten.bp.ZoneOffset
+import org.threeten.bp.ZonedDateTime
 import ru.terrakok.gitlabclient.TestData
 import ru.terrakok.gitlabclient.TestSchedulers
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
-import ru.terrakok.gitlabclient.entity.Author
 import ru.terrakok.gitlabclient.entity.OrderBy
+import ru.terrakok.gitlabclient.entity.ShortUser
 import ru.terrakok.gitlabclient.entity.Sort
 import ru.terrakok.gitlabclient.entity.app.target.*
 import ru.terrakok.gitlabclient.entity.event.Event
@@ -85,8 +87,10 @@ class EventRepositoryTest {
     @Test
     fun `get events should converts dates to string when it provided`() {
         // GIVEN
-        val testBeforeDay = LocalDateTime.of(2007, Month.DECEMBER, 14, 11, 0)
-        val testAfterDay = LocalDateTime.of(2007, Month.DECEMBER, 24, 12, 0)
+        val testBeforeDay = ZonedDateTime.of(LocalDateTime.of(
+                2007, Month.DECEMBER, 14, 11, 0), ZoneOffset.UTC)
+        val testAfterDay = ZonedDateTime.of(LocalDateTime.of(
+                2007, Month.DECEMBER, 24, 12, 0), ZoneOffset.UTC)
 
         given(api.getEvents(
                 anyOrNull(),
@@ -440,8 +444,8 @@ class EventRepositoryTest {
             EventTargetType.ISSUE,
             666L,
             "title of issue",
-            LocalDateTime.of(2018, Month.DECEMBER, 13, 12, 0),
-            Author(1L, "", "", "", "", ""),
+            TestData.getTestDate(),
+            ShortUser(1L, "", "", "", "", ""),
             "author",
             null,
             TestData.getNote()
