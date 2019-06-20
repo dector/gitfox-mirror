@@ -1,6 +1,7 @@
 package ru.terrakok.gitlabclient.presentation.mergerequest.commits
 
 import com.arellomobile.mvp.InjectViewState
+import io.reactivex.Observable
 import ru.terrakok.gitlabclient.di.MergeRequestId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
@@ -35,6 +36,7 @@ class MergeRequestCommitsPresenter @Inject constructor(
 
     private val paginator = Paginator(
         { page -> mrInteractor.getMergeRequestCommits(projectId, mrId, page) },
+        Observable.empty(), //without auto refresh
         object : Paginator.ViewController<CommitWithShortUser> {
             override fun showEmptyProgress(show: Boolean) {
                 viewState.showEmptyProgress(show)

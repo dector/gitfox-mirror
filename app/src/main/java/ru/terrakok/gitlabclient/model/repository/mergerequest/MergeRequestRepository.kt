@@ -16,19 +16,22 @@ import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestViewType
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
+import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
-import ru.terrakok.gitlabclient.model.system.SingleCacheSuccess
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 
 class MergeRequestRepository @Inject constructor(
     private val api: GitlabApi,
+    serverChanges: ServerChanges,
     private val schedulers: SchedulersProvider,
     @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>,
     private val markDownUrlResolver: MarkDownUrlResolver
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
-    private val mergeRequestCachedSingles = ConcurrentHashMap<Pair<Long, Long>, Single<MergeRequest>>()
+    private val mrRequests = ConcurrentHashMap<Pair<Long, Long>, Single<MergeRequest>>()
+
+    val mergeRequestChanges = serverChanges.mergeRequestChanges
 
     fun getMyMergeRequests(
         state: MergeRequestState? = null,
@@ -145,23 +148,21 @@ class MergeRequestRepository @Inject constructor(
     ) = Single
         .defer {
             val key = Pair(projectId, mergeRequestId)
-            if (!mergeRequestCachedSingles.containsKey(key)) {
-                mergeRequestCachedSingles[key] = Single
+            mrRequests.getOrPut(key) {
+                Single
                     .zip(
                         api.getProject(projectId),
                         api.getMergeRequest(projectId, mergeRequestId),
                         BiFunction<Project, MergeRequest, MergeRequest> { project, mr ->
                             val resolved = markDownUrlResolver.resolve(mr.description, project)
-                            if (resolved != mr.description) {
-                                mr.copy(description = resolved)
-                            } else {
-                                mr
-                            }
+                            if (resolved != mr.description) mr.copy(description = resolved)
+                            else mr
                         }
                     )
-                    .compose { SingleCacheSuccess.create(it) }
+                    .toObservable()
+                    .share()
+                    .firstOrError()
             }
-            mergeRequestCachedSingles[key]
         }
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())

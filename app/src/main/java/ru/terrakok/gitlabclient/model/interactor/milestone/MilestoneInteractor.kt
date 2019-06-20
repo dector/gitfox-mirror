@@ -13,6 +13,8 @@ class MilestoneInteractor @Inject constructor(
     private val issueRepository: IssueRepository
 ) {
 
+    val milestoneChanges = milestoneRepository.milestoneChanges
+
     fun getMilestones(
         projectId: Long,
         milestoneState: MilestoneState?,

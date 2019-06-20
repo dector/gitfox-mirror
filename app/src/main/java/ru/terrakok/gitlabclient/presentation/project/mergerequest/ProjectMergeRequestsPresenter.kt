@@ -40,20 +40,22 @@ class ProjectMergeRequestsPresenter @Inject constructor(
     private val paginator = Paginator(
         {
             mergeRequestInteractor.getMergeRequests(projectId, mergeRequestState, it)
-                    .flattenAsObservable { it }
-                    .concatMap { item ->
-                        when (item) {
-                            is TargetHeader.Public -> {
-                                mdConverter.markdownToSpannable(item.body.toString())
-                                    .map { md -> item.copy(body = md) }
-                                    .toObservable()
-                            }
-                            is TargetHeader.Confidential -> Observable.just(item)
+                .flattenAsObservable { it }
+                .concatMap { item ->
+                    when (item) {
+                        is TargetHeader.Public -> {
+                            mdConverter.markdownToSpannable(item.body.toString())
+                                .map { md -> item.copy(body = md) }
+                                .toObservable()
                         }
+                        is TargetHeader.Confidential -> Observable.just(item)
                     }
-                    .toList()
+                }
+                .toList()
         },
-        object : Paginator.ViewController<TargetHeader> {
+        mergeRequestInteractor.mergeRequestChanges,
+        object :
+            Paginator.ViewController<TargetHeader> {
             override fun showEmptyProgress(show: Boolean) {
                 viewState.showEmptyProgress(show)
             }
