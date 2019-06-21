@@ -10,6 +10,7 @@ import ru.terrakok.gitlabclient.entity.Sort
 import ru.terrakok.gitlabclient.entity.Visibility
 import ru.terrakok.gitlabclient.entity.app.ProjectFile
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
+import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 
 /**
@@ -17,10 +18,13 @@ import ru.terrakok.gitlabclient.model.system.SchedulersProvider
  */
 class ProjectRepository @Inject constructor(
     private val api: GitlabApi,
+    serverChanges: ServerChanges,
     private val schedulers: SchedulersProvider,
     @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
+
+    val projectChanges = serverChanges.projectChanges
 
     fun getProjectsList(
         archived: Boolean? = null,

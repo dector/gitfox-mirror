@@ -18,8 +18,8 @@ android {
         minSdkVersion(19)
         targetSdkVersion(28)
 
-        versionName = "1.5.4"
-        versionCode = 19
+        versionName = "1.5.5"
+        versionCode = 20
 
         buildToolsVersion = "28.0.3"
 

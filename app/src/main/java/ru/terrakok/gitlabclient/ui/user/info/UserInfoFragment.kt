@@ -6,10 +6,14 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_user_info.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.User
-import ru.terrakok.gitlabclient.extension.*
+import ru.terrakok.gitlabclient.extension.shareText
+import ru.terrakok.gitlabclient.extension.showSnackMessage
+import ru.terrakok.gitlabclient.extension.showTextOrHide
+import ru.terrakok.gitlabclient.extension.tryOpenLink
 import ru.terrakok.gitlabclient.presentation.user.info.UserInfoPresenter
 import ru.terrakok.gitlabclient.presentation.user.info.UserInfoView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.ui.global.view.custom.bindUser
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 25.11.17.
@@ -54,7 +58,7 @@ class UserInfoFragment : BaseFragment(), UserInfoView {
     override fun showUser(user: User) {
         this.user = user
         toolbar.title = user.username
-        avatarImageView.loadRoundedImage(user.avatarUrl, context)
+        avatarImageView.bindUser(user, false)
         usernameTextView.text = user.name
         userIdTextView.text = "@${user.username}"
 

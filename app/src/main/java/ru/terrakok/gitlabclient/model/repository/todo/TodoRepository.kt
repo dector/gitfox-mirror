@@ -1,6 +1,5 @@
 package ru.terrakok.gitlabclient.model.repository.todo
 
-import io.reactivex.Single
 import ru.terrakok.gitlabclient.di.DefaultPageSize
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.ShortUser
@@ -11,8 +10,8 @@ import ru.terrakok.gitlabclient.entity.target.TargetType
 import ru.terrakok.gitlabclient.entity.todo.Todo
 import ru.terrakok.gitlabclient.entity.todo.TodoAction
 import ru.terrakok.gitlabclient.entity.todo.TodoState
-import ru.terrakok.gitlabclient.extension.getXTotalHeader
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
+import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import javax.inject.Inject
 
@@ -21,10 +20,13 @@ import javax.inject.Inject
  */
 class TodoRepository @Inject constructor(
     private val api: GitlabApi,
+    serverChanges: ServerChanges,
     private val schedulers: SchedulersProvider,
     @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
+
+    val todoChanges = serverChanges.todoChanges
 
     fun getTodos(
         currentUser: User,
@@ -93,13 +95,7 @@ class TodoRepository @Inject constructor(
         )
     }
 
-    fun markPendingTodoAsDone(id: Int) = api.markPendingTodoAsDone(id)
+    fun markPendingTodoAsDone(id: Long) = api.markPendingTodoAsDone(id)
 
     fun markAllPendingTodosAsDone() = api.markAllPendingTodosAsDone()
-
-    fun getMyAssignedTodoCount(): Single<Int> =
-        api.getMyAssignedTodoHeaders()
-            .map { it.getXTotalHeader() }
-            .subscribeOn(schedulers.io())
-            .observeOn(schedulers.ui())
 }

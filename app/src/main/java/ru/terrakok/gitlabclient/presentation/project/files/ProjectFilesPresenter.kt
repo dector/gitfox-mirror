@@ -1,6 +1,7 @@
 package ru.terrakok.gitlabclient.presentation.project.files
 
 import com.arellomobile.mvp.InjectViewState
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import ru.terrakok.gitlabclient.R
@@ -152,6 +153,7 @@ class ProjectFilesPresenter @Inject constructor(
                 it
             )
         },
+        Observable.empty(), // without auto refresh
         object : Paginator.ViewController<ProjectFile> {
             override fun showEmptyProgress(show: Boolean) {
                 viewState.showEmptyProgress(show)

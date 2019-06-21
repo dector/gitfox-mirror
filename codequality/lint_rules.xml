@@ -11,4 +11,5 @@
     <issue id="Autofill" severity="ignore" />
     <issue id="MergeRootFrame" severity="ignore" />
     <issue id="Overdraw" severity="ignore" />
+    <issue id="GradleDependency" severity="ignore" />
 </lint>

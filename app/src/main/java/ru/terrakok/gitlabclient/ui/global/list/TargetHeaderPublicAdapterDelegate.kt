@@ -14,6 +14,7 @@ import ru.terrakok.gitlabclient.entity.app.target.TargetBadgeIcon
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderIcon
 import ru.terrakok.gitlabclient.extension.*
+import ru.terrakok.gitlabclient.ui.global.view.custom.bindShortUser
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 18.06.17.
@@ -70,7 +71,7 @@ class TargetHeaderPublicAdapterDelegate(
                 titleTextView.text = item.title.getHumanName(resources)
                 Markwon.setText(descriptionTextView, item.body)
                 descriptionTextView.movementMethod = null // Disable internal link click
-                avatarImageView.loadRoundedImage(item.author.avatarUrl)
+                avatarImageView.bindShortUser(item.author)
                 iconImageView.setImageResource(item.icon.getIcon())
                 dateTextView.text = item.date.humanTime(resources)
 

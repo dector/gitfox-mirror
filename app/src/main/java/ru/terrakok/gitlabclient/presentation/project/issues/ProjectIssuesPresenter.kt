@@ -53,6 +53,7 @@ class ProjectIssuesPresenter @Inject constructor(
                 }
                 .toList()
         },
+        issueInteractor.issueChanges,
         object : Paginator.ViewController<TargetHeader> {
             override fun showEmptyProgress(show: Boolean) {
                 viewState.showEmptyProgress(show)

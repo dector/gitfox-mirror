@@ -53,7 +53,6 @@ abstract class Target {
     val title get() = _title!!
     val state get() = _state!!
     val labels get() = _labels!!
-    val assignees get() = _assignees!!
     val userNotesCount get() = _userNotesCount!!
     val upVotes get() = _upVotes!!
     val downVotes get() = _downVotes!!

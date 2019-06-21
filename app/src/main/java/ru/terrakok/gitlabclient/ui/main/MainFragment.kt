@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.fragment_main.*
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
+import ru.terrakok.gitlabclient.entity.app.AccountMainBadges
 import ru.terrakok.gitlabclient.extension.color
 import ru.terrakok.gitlabclient.presentation.main.MainPresenter
 import ru.terrakok.gitlabclient.presentation.main.MainView
@@ -93,11 +94,16 @@ class MainFragment : BaseFragment(), MainView {
         currentTabFragment?.onBackPressed()
     }
 
-    override fun setAssignedNotifications(issueCount: Int, mergeRequestCount: Int, todoCount: Int) {
+    override fun setAssignedNotifications(badges: AccountMainBadges) {
         with(bottomBar) {
-            setNotification(buildBottomBarNotification(R.color.fruit_salad, issueCount), 1)
-            setNotification(buildBottomBarNotification(R.color.brandy_punch, mergeRequestCount), 2)
-            setNotification(buildBottomBarNotification(R.color.mariner, todoCount), 3)
+            setNotification(buildBottomBarNotification(R.color.fruit_salad, badges.issueCount), 1)
+            setNotification(
+                buildBottomBarNotification(
+                    R.color.brandy_punch,
+                    badges.mergeRequestCount
+                ), 2
+            )
+            setNotification(buildBottomBarNotification(R.color.mariner, badges.todoCount), 3)
         }
     }
 

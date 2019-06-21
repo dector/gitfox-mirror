@@ -7,13 +7,11 @@ import ru.terrakok.gitlabclient.entity.ShortUser
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 26.05.19.
  */
-class AssigneesAdapter(
-    clickListener: (ShortUser) -> Unit
-) : ListDelegationAdapter<MutableList<ShortUser>>() {
+class AssigneesAdapter : ListDelegationAdapter<MutableList<ShortUser>>() {
 
     init {
         items = mutableListOf()
-        delegatesManager.addDelegate(AssigneesAdapterDelegate(clickListener))
+        delegatesManager.addDelegate(AssigneesAdapterDelegate())
     }
 
     fun setData(assignees: List<ShortUser>) {

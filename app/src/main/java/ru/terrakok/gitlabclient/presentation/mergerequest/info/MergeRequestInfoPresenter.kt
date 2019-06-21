@@ -1,11 +1,9 @@
 package ru.terrakok.gitlabclient.presentation.mergerequest.info
 
 import com.arellomobile.mvp.InjectViewState
-import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.di.MergeRequestId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
-import ru.terrakok.gitlabclient.entity.ShortUser
 import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
@@ -40,6 +38,4 @@ class MergeRequestInfoPresenter @Inject constructor(
             )
             .connect()
     }
-
-    fun onAssigneeClicked(assignee: ShortUser) = router.startFlow(Screens.UserFlow(assignee.id))
 }

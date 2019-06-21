@@ -7,10 +7,14 @@ import ru.noties.markwon.Markwon
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.issue.Issue
 import ru.terrakok.gitlabclient.entity.issue.IssueState
-import ru.terrakok.gitlabclient.extension.*
+import ru.terrakok.gitlabclient.extension.color
+import ru.terrakok.gitlabclient.extension.humanTime
+import ru.terrakok.gitlabclient.extension.showSnackMessage
+import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.issue.details.IssueDetailsPresenter
 import ru.terrakok.gitlabclient.presentation.issue.details.IssueDetailsView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.ui.global.view.custom.bindShortUser
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 26.05.19.
@@ -53,7 +57,7 @@ class IssueDetailsFragment : BaseFragment(), IssueDetailsView {
                 }
             }
         }
-        avatarImageView.loadRoundedImage(issue.author.avatarUrl, context)
+        avatarImageView.bindShortUser(issue.author)
         Markwon.setText(descriptionTextView, mdDescription)
     }
 

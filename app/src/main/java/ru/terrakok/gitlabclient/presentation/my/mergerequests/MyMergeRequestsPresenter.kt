@@ -47,7 +47,9 @@ class MyMergeRequestsPresenter @Inject constructor(
                 }
                 .toList()
         },
-        object : Paginator.ViewController<TargetHeader> {
+        interactor.mergeRequestChanges,
+        object :
+            Paginator.ViewController<TargetHeader> {
             override fun showEmptyProgress(show: Boolean) {
                 viewState.showEmptyProgress(show)
             }

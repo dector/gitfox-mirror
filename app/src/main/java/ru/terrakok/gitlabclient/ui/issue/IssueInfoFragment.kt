@@ -1,5 +1,6 @@
 package ru.terrakok.gitlabclient.ui.issue
 
+import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -32,9 +33,21 @@ class IssueInfoFragment : BaseFragment(), IssueInfoView {
     fun providePresenter(): IssueInfoPresenter =
         scope.getInstance(IssueInfoPresenter::class.java)
 
+    private val assigneesAdapter by lazy { AssigneesAdapter() }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        with(assigneesList) {
+            isNestedScrollingEnabled = false
+            layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+            setHasFixedSize(true)
+            adapter = assigneesAdapter
+        }
+    }
+
     override fun showInfo(issue: Issue) {
         with(issue) {
-            showAssignees(assignees)
+            showAssignees(assignees ?: assignee?.let { listOf(it) } ?: emptyList())
             showMilestone(milestone)
             showDueDate(dueDate)
             showTimeStats(timeStats)
@@ -48,14 +61,7 @@ class IssueInfoFragment : BaseFragment(), IssueInfoView {
     private fun showAssignees(assignees: List<ShortUser>) {
         if (assignees.isNotEmpty()) {
             assigneesNone.visible(false)
-            with(assigneesList) {
-                isNestedScrollingEnabled = false
-                layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
-                setHasFixedSize(true)
-                adapter = AssigneesAdapter { presenter.onAssigneeClicked(it) }.apply {
-                    setData(assignees)
-                }
-            }
+            assigneesAdapter.setData(assignees)
         } else {
             assigneesList.visible(false)
         }
