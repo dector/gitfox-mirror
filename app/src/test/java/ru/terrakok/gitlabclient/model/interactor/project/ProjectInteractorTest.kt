@@ -265,7 +265,7 @@ class ProjectInteractorTest {
         val testObserver: TestObserver<String> = interactor.getProjectReadme(projectWithoutReadme).test()
         testObserver.awaitTerminalEvent()
 
-        verifyZeroInteractions(repo)
+        verify(repo, times(1)).projectChanges
         verifyZeroInteractions(base64Tools)
 
         testObserver
