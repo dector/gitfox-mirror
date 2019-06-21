@@ -249,7 +249,7 @@ class EventRepository @Inject constructor(
             }
         }
 
-    private fun getTargetInternal(event: Event): TargetInternal? =
+    private fun getTargetInternal(event: Event): TargetInternal =
         when (event.targetType) {
             EventTargetType.DIFF_NOTE,
             EventTargetType.NOTE -> {
@@ -258,14 +258,14 @@ class EventRepository @Inject constructor(
                 } else if (event.targetIid != null) {
                     TargetInternal(event.projectId, event.targetIid)
                 } else {
-                    null
+                    TargetInternal(event.projectId)
                 }
             }
             else -> {
                 if (event.targetIid != null) {
                     TargetInternal(event.projectId, event.targetIid)
                 } else {
-                    null
+                    TargetInternal(event.projectId)
                 }
             }
         }

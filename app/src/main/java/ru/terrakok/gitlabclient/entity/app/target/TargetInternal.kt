@@ -5,5 +5,5 @@ package ru.terrakok.gitlabclient.entity.app.target
  */
 data class TargetInternal(
     val projectId: Long,
-    val targetIid: Long
+    val targetIid: Long? = null
 )

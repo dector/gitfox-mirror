@@ -22,15 +22,8 @@ class MilestoneInteractor @Inject constructor(
         .getMilestones(projectId, milestoneState, page)
 
     fun getAllProjectMilestones(
-        projectId: Long?
-    ): Single<List<Milestone>> =
-        Single.defer {
-            if (projectId != null) {
-                milestoneRepository.getAllProjectMilestones(projectId)
-            } else {
-                Single.just(emptyList())
-            }
-        }
+        projectId: Long
+    ): Single<List<Milestone>> = milestoneRepository.getAllProjectMilestones(projectId)
 
     fun getMilestone(
         projectId: Long,

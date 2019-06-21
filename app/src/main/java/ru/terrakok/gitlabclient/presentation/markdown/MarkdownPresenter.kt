@@ -15,7 +15,7 @@ class MarkdownPresenter @Inject constructor(
 
     private var conversionDisposable: Disposable? = null
 
-    fun setMarkdown(markdown: String, projectId: Long?) {
+    fun setMarkdown(markdown: String, projectId: Long) {
         conversionDisposable?.dispose()
         conversionDisposable = mdConverter
             .markdownToSpannable(markdown, projectId)

@@ -4,8 +4,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
 import com.arellomobile.mvp.MvpDelegate
+import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
 import kotlinx.android.synthetic.main.item_target_badge.view.*
 import kotlinx.android.synthetic.main.item_target_header_public.view.*
 import ru.terrakok.gitlabclient.R
@@ -70,7 +70,7 @@ class TargetHeaderPublicAdapterDelegate(
             with(itemView) {
                 titleTextView.text = item.title.getHumanName(resources)
                 descriptionTextView.initWithParentDelegate(mvpDelegate)
-                descriptionTextView.setMarkdown(item.body, item.internal?.projectId)
+                descriptionTextView.setMarkdown(item.body, item.internal.projectId)
                 descriptionTextView.movementMethod = null //disable internal link click
                 avatarImageView.loadRoundedImage(item.author.avatarUrl)
                 iconImageView.setImageResource(item.icon.getIcon())

@@ -18,15 +18,8 @@ class LabelInteractor @Inject constructor(
     ) = labelRepository.getLabelList(projectId, page)
 
     fun getAllProjectLabels(
-        projectId: Long?
-    ): Single<List<Label>> =
-        Single.defer {
-            if (projectId != null) {
-                labelRepository.getAllProjectLabels(projectId)
-            } else {
-                Single.just(emptyList())
-            }
-        }
+        projectId: Long
+    ): Single<List<Label>> = labelRepository.getAllProjectLabels(projectId)
 
     fun subscribeToLabel(
         projectId: Long,

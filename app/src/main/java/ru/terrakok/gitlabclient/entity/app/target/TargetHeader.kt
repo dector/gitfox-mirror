@@ -15,7 +15,7 @@ sealed class TargetHeader {
         val date: LocalDateTime,
         val target: AppTarget,
         val targetId: Long,
-        val internal: TargetInternal?,
+        val internal: TargetInternal,
         val badges: List<TargetBadge>
     ) : TargetHeader()
 

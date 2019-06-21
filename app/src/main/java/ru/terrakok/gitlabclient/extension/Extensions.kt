@@ -160,21 +160,19 @@ fun TargetHeader.Public.openInfo(router: FlowRouter) {
             router.startFlow(Screens.UserFlow(targetId))
         }
         AppTarget.MERGE_REQUEST -> {
-            internal?.let { targetInternal ->
-                router.startFlow(Screens.MergeRequestFlow(targetInternal.projectId, targetInternal.targetIid))
+            internal.targetIid?.let { targetIid ->
+                router.startFlow(Screens.MergeRequestFlow(internal.projectId, targetIid))
             }
         }
         AppTarget.ISSUE -> {
-            internal?.let { targetInternal ->
-                router.startFlow(Screens.IssueFlow(targetInternal.projectId, targetInternal.targetIid))
+            internal.targetIid?.let { targetIid ->
+                router.startFlow(Screens.IssueFlow(internal.projectId, targetIid))
             }
         }
         else -> {
-            internal?.let { targetInternal ->
-                Timber.i("Temporary open project flow")
-                //todo
-                router.startFlow(Screens.ProjectFlow(targetInternal.projectId))
-            }
+            Timber.i("Temporary open project flow")
+            //todo
+            router.startFlow(Screens.ProjectFlow(internal.projectId))
         }
     }
 }
