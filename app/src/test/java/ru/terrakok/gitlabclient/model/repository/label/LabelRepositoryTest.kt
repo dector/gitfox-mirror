@@ -12,6 +12,7 @@ import ru.terrakok.gitlabclient.TestData
 import ru.terrakok.gitlabclient.TestSchedulers
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
+import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 
 /**
  * @author Vitaliy Belyaev on 26.05.2019.
@@ -24,6 +25,7 @@ class LabelRepositoryTest {
     private val api = mock(GitlabApi::class.java)
     private val repository = LabelRepository(
             api,
+            ServerChanges(TestSchedulers()),
             PrimitiveWrapper(defaultPageSize),
             TestSchedulers())
 

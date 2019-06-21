@@ -5,6 +5,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import org.junit.Test
 import org.mockito.ArgumentMatchers.anyInt
+import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.then
 import org.mockito.Mockito
@@ -14,6 +15,7 @@ import ru.terrakok.gitlabclient.TestSchedulers
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.todo.TodoState
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
+import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 
 
 /**
@@ -28,6 +30,7 @@ class TodoRepositoryTest {
     private val api = Mockito.mock(GitlabApi::class.java)
     private val repository = TodoRepository(
             api,
+            ServerChanges(TestSchedulers()),
             TestSchedulers(),
             PrimitiveWrapper(defaultPageSize))
 
@@ -59,16 +62,16 @@ class TodoRepositoryTest {
     fun `mark pending todo done should return todo with done state`() {
         // GIVEN
         val doneTodo = testTodo.copy(state = TodoState.DONE)
-        given(api.markPendingTodoAsDone(anyInt())).willReturn(Single.just(doneTodo))
+        given(api.markPendingTodoAsDone(anyLong())).willReturn(Single.just(doneTodo))
 
         // WHEN
-        val testObserver = repository.markPendingTodoAsDone(testTodo.id.toInt()).test()
+        val testObserver = repository.markPendingTodoAsDone(testTodo.id).test()
         testObserver.awaitTerminalEvent()
 
         // THEN
         then(api)
                 .should(times(1))
-                .markPendingTodoAsDone(testTodo.id.toInt())
+                .markPendingTodoAsDone(testTodo.id)
 
         then(api).shouldHaveNoMoreInteractions()
 

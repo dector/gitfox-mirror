@@ -18,6 +18,7 @@ import ru.terrakok.gitlabclient.entity.app.CommitWithShortUser
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestChange
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
+import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 
 /**
  * @author Vitaliy Belyaev on 01.06.2019.
@@ -32,6 +33,7 @@ class MergeRequestRepositoryTest {
     private val markDownUrlResolver = Mockito.mock(MarkDownUrlResolver::class.java)
     private val repository = MergeRequestRepository(
             api,
+            ServerChanges(TestSchedulers()),
             TestSchedulers(),
             PrimitiveWrapper(defaultPageSize),
             markDownUrlResolver)

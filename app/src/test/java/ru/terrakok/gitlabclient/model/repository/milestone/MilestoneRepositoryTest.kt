@@ -13,6 +13,7 @@ import ru.terrakok.gitlabclient.TestData
 import ru.terrakok.gitlabclient.TestSchedulers
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
+import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 
 /**
  * @author Vitaliy Belyaev on 03.06.2019.
@@ -25,6 +26,7 @@ class MilestoneRepositoryTest {
     private val api = Mockito.mock(GitlabApi::class.java)
     private val repository = MilestoneRepository(
             api,
+            ServerChanges(TestSchedulers()),
             TestSchedulers(),
             PrimitiveWrapper(defaultPageSize))
 

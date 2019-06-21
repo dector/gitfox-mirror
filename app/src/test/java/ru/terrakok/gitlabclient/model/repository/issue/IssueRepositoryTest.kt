@@ -19,6 +19,7 @@ import ru.terrakok.gitlabclient.entity.issue.Issue
 import ru.terrakok.gitlabclient.entity.issue.IssueState
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
+import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 
 /**
  * @author Vitaliy Belyaev on 28.05.2019.
@@ -34,6 +35,7 @@ class IssueRepositoryTest {
     private val markDownUrlResolver = mock(MarkDownUrlResolver::class.java)
     private val repository = IssueRepository(
             api,
+            ServerChanges(TestSchedulers()),
             TestSchedulers(),
             PrimitiveWrapper(defaultPageSize),
             markDownUrlResolver)

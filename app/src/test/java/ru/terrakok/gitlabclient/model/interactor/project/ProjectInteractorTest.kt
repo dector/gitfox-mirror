@@ -173,7 +173,7 @@ class ProjectInteractorTest {
     fun get_project_readme() {
         val raw = "lorem ipsum"
         val testFileContent = "bG9yZW0gaXBzdW0=" //base64 for raw
-        val testFile =TestData.getFile(testFileContent, testProject.defaultBranch!!)
+        val testFile = TestData.getFile(testFileContent, testProject.defaultBranch!!)
 
         `when`(repo.getProjectFile(anyLong(), anyString(), anyString())).thenReturn(Single.just(testFile))
         `when`(base64Tools.decode(anyString())).thenReturn(raw)
@@ -198,7 +198,7 @@ class ProjectInteractorTest {
         val testObserver: TestObserver<String> = interactor.getProjectReadme(projectWithoutReadme).test()
         testObserver.awaitTerminalEvent()
 
-        verifyZeroInteractions(repo)
+        verify(repo, times(1)).projectChanges
         verifyZeroInteractions(base64Tools)
 
         testObserver

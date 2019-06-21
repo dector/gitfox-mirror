@@ -1,7 +1,9 @@
 package ru.terrakok.gitlabclient.presentation.project.labels
 
 import com.nhaarman.mockitokotlin2.*
+import io.reactivex.Observable
 import io.reactivex.Single
+import org.junit.Before
 import org.junit.Test
 import ru.terrakok.gitlabclient.TestData
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
@@ -23,12 +25,19 @@ class ProjectLabelsPresenterTest {
     private val errorHandler: ErrorHandler = mock()
     private val flowRouter: FlowRouter = mock()
 
-    private val presenter = ProjectLabelsPresenter(
-            PrimitiveWrapper(projectId),
-            interactor,
-            errorHandler,
-            flowRouter
-    )
+    lateinit var presenter: ProjectLabelsPresenter
+
+    @Before
+    fun setUp() {
+        whenever(interactor.labelChanges).thenReturn(Observable.empty())
+
+        presenter = ProjectLabelsPresenter(
+                PrimitiveWrapper(projectId),
+                interactor,
+                errorHandler,
+                flowRouter
+        )
+    }
 
     @Test
     fun `show empty label list`() {
