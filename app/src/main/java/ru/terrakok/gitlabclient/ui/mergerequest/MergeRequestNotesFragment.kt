@@ -77,15 +77,16 @@ class MergeRequestNotesFragment : BaseFragment(), MergeRequestNotesView {
         showProgressDialog(show)
     }
 
-    override fun showNotes(notes: List<NoteWithProjectId>, scrollToEnd: Boolean) {
+    override fun showNotes(notes: List<NoteWithProjectId>, scrollToPosition: Int?) {
         adapter.setData(notes)
-        if (scrollToEnd) {
-            recyclerView.scrollToPosition(adapter.itemCount - 1)
-            newNoteView.clearInput()
-        }
+        scrollToPosition?.let { recyclerView.scrollToPosition(it) }
     }
 
     override fun showMessage(message: String) {
         showSnackMessage(message)
+    }
+
+    override fun clearInput() {
+        newNoteView.clearInput()
     }
 }

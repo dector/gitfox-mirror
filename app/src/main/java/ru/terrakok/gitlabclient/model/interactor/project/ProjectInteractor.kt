@@ -17,6 +17,8 @@ class ProjectInteractor @Inject constructor(
     private val base64Tools: Base64Tools
 ) {
 
+    val projectChanges = projectRepository.projectChanges
+
     fun getMainProjects(page: Int) = projectRepository
         .getProjectsList(
             page = page,

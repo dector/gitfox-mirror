@@ -1,9 +1,9 @@
 package ru.terrakok.gitlabclient.entity.target
 
 import com.google.gson.annotations.SerializedName
-import org.threeten.bp.LocalDateTime
-import ru.terrakok.gitlabclient.entity.Assignee
-import ru.terrakok.gitlabclient.entity.Author
+import org.threeten.bp.ZonedDateTime
+import ru.terrakok.gitlabclient.entity.ShortUser
+import ru.terrakok.gitlabclient.entity.TimeStats
 import ru.terrakok.gitlabclient.entity.milestone.Milestone
 
 /**
@@ -21,19 +21,19 @@ abstract class Target {
     @SerializedName("state")
     private val _state: TargetState? = null
     @SerializedName("updated_at")
-    val updatedAt: LocalDateTime? = null
+    val updatedAt: ZonedDateTime? = null
     @SerializedName("created_at")
-    val createdAt: LocalDateTime? = null
+    val createdAt: ZonedDateTime? = null
     @SerializedName("labels")
     private val _labels: List<String>? = null
     @SerializedName("milestone")
     val milestone: Milestone? = null
     @SerializedName("assignees")
-    private val _assignees: List<Assignee>? = null
+    private val _assignees: List<ShortUser>? = null
     @SerializedName("author")
-    val _author: Author? = null
+    val _author: ShortUser? = null
     @SerializedName("assignee")
-    val assignee: Assignee? = null
+    val assignee: ShortUser? = null
     @SerializedName("user_notes_count")
     private val _userNotesCount: Int? = null
     @SerializedName("upvotes")
@@ -53,7 +53,6 @@ abstract class Target {
     val title get() = _title!!
     val state get() = _state!!
     val labels get() = _labels!!
-    val assignees get() = _assignees!!
     val userNotesCount get() = _userNotesCount!!
     val upVotes get() = _upVotes!!
     val downVotes get() = _downVotes!!

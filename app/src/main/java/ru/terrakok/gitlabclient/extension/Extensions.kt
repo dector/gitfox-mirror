@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.text.SpannableStringBuilder
 import android.text.Spanned
+import android.text.TextUtils
 import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
@@ -19,11 +20,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.annotation.LayoutRes
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.Fragment
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.snackbar.Snackbar
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.android.support.SupportAppScreen
@@ -137,20 +137,6 @@ fun Fragment.sendEmail(email: String?) {
     }
 }
 
-fun ImageView.loadRoundedImage(
-    url: String?,
-    ctx: Context? = null
-) {
-    Glide.with(ctx ?: context)
-        .load(url)
-        .apply(RequestOptions().apply {
-            placeholder(R.drawable.default_img)
-            error(R.drawable.default_img)
-        })
-        .apply(RequestOptions.circleCropTransform())
-        .into(this)
-}
-
 fun TargetHeader.Public.openInfo(router: FlowRouter) {
     when (target) {
         AppTarget.PROJECT -> {
@@ -161,12 +147,24 @@ fun TargetHeader.Public.openInfo(router: FlowRouter) {
         }
         AppTarget.MERGE_REQUEST -> {
             internal?.let { targetInternal ->
-                router.startFlow(Screens.MergeRequestFlow(targetInternal.projectId, targetInternal.targetIid))
+                router.startFlow(
+                    Screens.MergeRequestFlow(
+                        targetInternal.projectId,
+                        targetInternal.targetIid,
+                        action
+                    )
+                )
             }
         }
         AppTarget.ISSUE -> {
             internal?.let { targetInternal ->
-                router.startFlow(Screens.IssueFlow(targetInternal.projectId, targetInternal.targetIid))
+                router.startFlow(
+                    Screens.IssueFlow(
+                        targetInternal.projectId,
+                        targetInternal.targetIid,
+                        action
+                    )
+                )
             }
         }
         else -> {
@@ -206,4 +204,17 @@ fun Any.objectScopeName() = "${javaClass.simpleName}_${hashCode()}"
 fun View.setBackgroundTintByColor(@ColorInt color: Int) {
     val wrappedDrawable = DrawableCompat.wrap(background)
     DrawableCompat.setTint(wrappedDrawable.mutate(), color)
+}
+
+fun Toolbar.setTitleEllipsize(ellipsize: TextUtils.TruncateAt) {
+    val fakeTitle = "fakeTitle"
+    title = fakeTitle
+    for(i in 0..childCount) {
+        val child = getChildAt(i)
+        if (child is TextView && child.text == fakeTitle) {
+            child.ellipsize = ellipsize
+            break
+        }
+    }
+    title = ""
 }

@@ -1,7 +1,10 @@
 package ru.terrakok.gitlabclient
 
 import android.app.Application
+import android.content.Context
 import android.graphics.Color
+import android.os.Build
+import androidx.multidex.MultiDex
 import com.crashlytics.android.Crashlytics
 import com.jakewharton.threetenabp.AndroidThreeTen
 import io.fabric.sdk.android.Fabric
@@ -17,6 +20,14 @@ import toothpick.configuration.Configuration
  * @author Konstantin Tskhovrebov (aka terrakok) on 26.03.17.
  */
 class App : Application() {
+
+    override fun attachBaseContext(base: Context?) {
+        super.attachBaseContext(base)
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            MultiDex.install(this)
+        }
+    }
 
     override fun onCreate() {
         super.onCreate()

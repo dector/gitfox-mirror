@@ -7,14 +7,13 @@ import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
 import kotlinx.android.synthetic.main.item_milestone.view.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.milestone.Milestone
-import ru.terrakok.gitlabclient.extension.humanTime
-import ru.terrakok.gitlabclient.extension.inflate
+import ru.terrakok.gitlabclient.extension.*
 
 /**
  * @author Valentin Logvinovitch (glvvl) on 17.12.18.
  */
 class MilestonesAdapterDelegate(
-    private val clickListener: (Long) -> Unit
+    private val clickListener: (Milestone) -> Unit
 ) : AdapterDelegate<MutableList<Any>>() {
 
     override fun isForViewType(items: MutableList<Any>, position: Int) =
@@ -31,18 +30,32 @@ class MilestonesAdapterDelegate(
     ) = (viewHolder as ViewHolder).bind(items[position] as Milestone)
 
     private inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private lateinit var milestone: Milestone
+        private lateinit var item: Milestone
 
         init {
-            //TODO Milestone Flow(uncomment next line when Milestone Flow is ready).
-            // view.setOnClickListener { clickListener(milestone.id) }
+            view.setOnClickListener { clickListener(item) }
         }
 
-        fun bind(data: Milestone) {
-            this.milestone = data
+        fun bind(item: Milestone) {
+            this.item = item
             with(itemView) {
-                titleTextView.text = data.title
-                dateTextView.text = data.createdAt?.humanTime(resources)
+                titleTextView.text = item.title
+                val startDate = item.startDate
+                val dueDate = item.dueDate
+                if (startDate != null && dueDate != null) {
+                    dateTextView.text = String.format(
+                        context.getString(R.string.project_milestone_date),
+                        startDate.humanDate(),
+                        dueDate.humanDate()
+                    )
+                    dateTextView.visible(true)
+                } else {
+                    dateTextView.visible(false)
+                }
+                val (textColor, bgColor) = item.state.getStateColors(context)
+                stateTextView.setTextColor(textColor)
+                stateTextView.setBackgroundColor(bgColor)
+                stateTextView.text = item.state.getHumanName(resources)
             }
         }
     }

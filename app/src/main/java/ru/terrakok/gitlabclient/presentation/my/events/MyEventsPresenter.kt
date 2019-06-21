@@ -1,6 +1,7 @@
 package ru.terrakok.gitlabclient.presentation.my.events
 
 import com.arellomobile.mvp.InjectViewState
+import io.reactivex.Observable
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.extension.openInfo
@@ -31,7 +32,9 @@ class MyEventsPresenter @Inject constructor(
 
     private val paginator = Paginator(
         { eventInteractor.getEvents(it) },
-        object : Paginator.ViewController<TargetHeader> {
+        Observable.empty(), //without auto refresh
+        object :
+            Paginator.ViewController<TargetHeader> {
             override fun showEmptyProgress(show: Boolean) {
                 viewState.showEmptyProgress(show)
             }

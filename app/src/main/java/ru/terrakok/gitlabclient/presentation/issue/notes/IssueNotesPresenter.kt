@@ -4,10 +4,11 @@ import com.arellomobile.mvp.InjectViewState
 import ru.terrakok.gitlabclient.di.IssueId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
+import ru.terrakok.gitlabclient.entity.app.target.TargetAction
 import ru.terrakok.gitlabclient.model.interactor.issue.IssueInteractor
-import ru.terrakok.gitlabclient.presentation.global.NoteWithProjectId
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
+import ru.terrakok.gitlabclient.presentation.global.NoteWithProjectId
 import javax.inject.Inject
 
 /**
@@ -17,6 +18,7 @@ import javax.inject.Inject
 class IssueNotesPresenter @Inject constructor(
     @ProjectId projectIdWrapper: PrimitiveWrapper<Long>,
     @IssueId issueIdWrapper: PrimitiveWrapper<Long>,
+    private val targetAction: TargetAction,
     private val issueInteractor: IssueInteractor,
     private val errorHandler: ErrorHandler
 ) : BasePresenter<IssueNotesView>() {
@@ -32,12 +34,22 @@ class IssueNotesPresenter @Inject constructor(
             .doOnSubscribe { viewState.showEmptyProgress(true) }
             .doAfterTerminate { viewState.showEmptyProgress(false) }
             .subscribe(
-                { viewState.showNotes(it.map {
-                    NoteWithProjectId(
-                        it,
-                        projectId
-                    )
-                }, false) },
+                { notes ->
+                    val notesWithProjectId =
+                        notes.map {
+                            NoteWithProjectId(
+                                it,
+                                projectId
+                            )
+                        }
+
+                    val selectedNotePosition =
+                        targetAction
+                            .let { it as? TargetAction.CommentedOn }
+                            ?.noteId
+                            ?.let { noteIdToSelect -> notes.indexOfFirst { note -> note.id == noteIdToSelect } }
+                    viewState.showNotes(notesWithProjectId, selectedNotePosition)
+                },
                 { errorHandler.proceed(it, { viewState.showMessage(it) }) }
             )
             .connect()
@@ -51,12 +63,15 @@ class IssueNotesPresenter @Inject constructor(
             .doOnSubscribe { viewState.showBlockingProgress(true) }
             .doAfterTerminate { viewState.showBlockingProgress(false) }
             .subscribe(
-                { viewState.showNotes(it.map {
+                {
+                    viewState.showNotes(it.map {
                     NoteWithProjectId(
                         it,
                         projectId
                     )
-                }, true) },
+                }, it.size - 1)
+                    viewState.clearInput()
+                },
                 { errorHandler.proceed(it, { viewState.showMessage(it) }) }
             )
             .connect()

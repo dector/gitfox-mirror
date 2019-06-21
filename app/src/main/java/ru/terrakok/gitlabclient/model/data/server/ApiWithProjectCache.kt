@@ -10,7 +10,7 @@ import ru.terrakok.gitlabclient.model.data.cache.ProjectCache
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 14.10.18.
  */
-class ApiWithCache(
+class ApiWithProjectCache(
     private val serverApi: GitlabApi,
     private val projectCache: ProjectCache
 ) : GitlabApi by serverApi {
