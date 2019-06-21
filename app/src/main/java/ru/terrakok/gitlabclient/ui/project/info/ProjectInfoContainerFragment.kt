@@ -36,14 +36,20 @@ class ProjectInfoContainerFragment : BaseFragment() {
     private inner class ProjectInfoPagesAdapter : FragmentPagerAdapter(childFragmentManager) {
         override fun getItem(position: Int): BaseFragment = when (position) {
             0 -> Screens.ProjectInfo.fragment
-            else -> Screens.ProjectEvents.fragment
+            1 -> Screens.ProjectEvents.fragment
+            2 -> Screens.ProjectLabels.fragment
+            3 -> Screens.ProjectMilestones.fragment
+            else -> Screens.ProjectMembers.fragment
         }
 
-        override fun getCount() = 2
+        override fun getCount() = 5
 
         override fun getPageTitle(position: Int) = when (position) {
             0 -> getString(R.string.project_info)
             1 -> getString(R.string.project_events)
+            2 -> getString(R.string.project_labels)
+            3 -> getString(R.string.project_milestones)
+            4 -> getString(R.string.project_members)
             else -> null
         }
     }

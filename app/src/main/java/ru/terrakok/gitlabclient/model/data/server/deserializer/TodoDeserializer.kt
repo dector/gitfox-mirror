@@ -4,9 +4,9 @@ import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonParseException
-import org.threeten.bp.LocalDateTime
-import ru.terrakok.gitlabclient.entity.Author
+import org.threeten.bp.ZonedDateTime
 import ru.terrakok.gitlabclient.entity.Project
+import ru.terrakok.gitlabclient.entity.ShortUser
 import ru.terrakok.gitlabclient.entity.target.Target
 import ru.terrakok.gitlabclient.entity.target.TargetType
 import ru.terrakok.gitlabclient.entity.target.issue.Issue
@@ -34,7 +34,7 @@ class TodoDeserializer : JsonDeserializer<Todo> {
         Todo(
             jsonObject.get("id").asLong,
             context.deserialize<Project>(jsonObject.get("project"), Project::class.java),
-            context.deserialize<Author>(jsonObject.get("author"), Author::class.java),
+            context.deserialize<ShortUser>(jsonObject.get("author"), ShortUser::class.java),
             context.deserialize<TodoAction>(
                 jsonObject.get("action_name"),
                 TodoAction::class.java
@@ -51,7 +51,10 @@ class TodoDeserializer : JsonDeserializer<Todo> {
             jsonObject.get("target_url").asString,
             jsonObject.get("body").asString,
             context.deserialize<TodoState>(jsonObject.get("state"), TodoState::class.java),
-            context.deserialize<LocalDateTime>(jsonObject.get("created_at"), LocalDateTime::class.java)
+            context.deserialize<ZonedDateTime>(
+                jsonObject.get("created_at"),
+                ZonedDateTime::class.java
+            )
         )
     } else {
         throw JsonParseException("Configure Gson in GsonProvider.")

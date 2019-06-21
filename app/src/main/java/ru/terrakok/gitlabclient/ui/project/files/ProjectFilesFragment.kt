@@ -1,6 +1,7 @@
 package ru.terrakok.gitlabclient.ui.project.files
 
 import android.os.Bundle
+import android.text.TextUtils
 import android.widget.PopupMenu
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -10,6 +11,7 @@ import kotlinx.android.synthetic.main.layout_base_list.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Branch
 import ru.terrakok.gitlabclient.entity.app.ProjectFile
+import ru.terrakok.gitlabclient.extension.setTitleEllipsize
 import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.project.files.ProjectFileDestination
@@ -68,7 +70,7 @@ class ProjectFilesFragment : BaseFragment(), ProjectFilesView {
         }
         toolbar.apply {
             inflateMenu(R.menu.project_files_menu)
-            setNavigationOnClickListener { presenter.onBackPressed() }
+            setNavigationOnClickListener { presenter.onNavigationCloseClicked() }
             setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.showBranchesAction -> {
@@ -78,6 +80,7 @@ class ProjectFilesFragment : BaseFragment(), ProjectFilesView {
                     else -> false
                 }
             }
+            setTitleEllipsize(TextUtils.TruncateAt.START)
         }
 
         swipeToRefresh.setOnRefreshListener { presenter.refreshFiles() }

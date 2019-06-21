@@ -4,6 +4,7 @@ import com.arellomobile.mvp.InjectViewState
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.extension.openInfo
+import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 import ru.terrakok.gitlabclient.model.interactor.issue.IssueInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
@@ -18,6 +19,7 @@ import javax.inject.Inject
 class MyIssuesPresenter @Inject constructor(
     initFilter: Filter,
     private val issueInteractor: IssueInteractor,
+    private val serverChanges: ServerChanges,
     private val errorHandler: ErrorHandler,
     private val router: FlowRouter
 ) : BasePresenter<MyIssuesView>() {
@@ -33,6 +35,7 @@ class MyIssuesPresenter @Inject constructor(
 
     private val paginator = Paginator(
         { issueInteractor.getMyIssues(filter.createdByMe, filter.onlyOpened, it) },
+        issueInteractor.issueChanges,
         object : Paginator.ViewController<TargetHeader> {
             override fun showEmptyProgress(show: Boolean) {
                 viewState.showEmptyProgress(show)

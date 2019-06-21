@@ -1,8 +1,9 @@
 package ru.terrakok.gitlabclient.entity.app
 
 import ru.terrakok.gitlabclient.entity.Commit
+import ru.terrakok.gitlabclient.entity.ShortUser
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 20.10.18.
  */
-data class CommitWithAvatarUrl(val commit: Commit, val authorAvatarUrl: String?)
+data class CommitWithShortUser(val commit: Commit, val shortUser: ShortUser?)

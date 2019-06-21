@@ -1,10 +1,13 @@
 package ru.terrakok.gitlabclient.presentation.mergerequest.info
 
 import com.arellomobile.mvp.InjectViewState
+import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.di.MergeRequestId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
+import ru.terrakok.gitlabclient.entity.ShortUser
 import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestInteractor
+import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import javax.inject.Inject
@@ -17,7 +20,8 @@ class MergeRequestInfoPresenter @Inject constructor(
     @ProjectId projectIdWrapper: PrimitiveWrapper<Long>,
     @MergeRequestId mrIdWrapper: PrimitiveWrapper<Long>,
     private val mrInteractor: MergeRequestInteractor,
-    private val errorHandler: ErrorHandler
+    private val errorHandler: ErrorHandler,
+    private val router: FlowRouter
 ) : BasePresenter<MergeRequestInfoView>() {
 
     private val projectId = projectIdWrapper.value

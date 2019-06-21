@@ -3,7 +3,7 @@ package ru.terrakok.gitlabclient.model.repository.event
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
-import org.threeten.bp.LocalDateTime
+import org.threeten.bp.ZonedDateTime
 import ru.terrakok.gitlabclient.di.DefaultPageSize
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.OrderBy
@@ -34,8 +34,8 @@ class EventRepository @Inject constructor(
     fun getEvents(
         action: EventAction? = null,
         targetType: EventTarget? = null,
-        beforeDay: LocalDateTime? = null,
-        afterDay: LocalDateTime? = null,
+        beforeDay: ZonedDateTime? = null,
+        afterDay: ZonedDateTime? = null,
         sort: Sort? = Sort.DESC,
         orderBy: OrderBy = OrderBy.UPDATED_AT,
         page: Int,
@@ -68,8 +68,8 @@ class EventRepository @Inject constructor(
         projectId: Long,
         action: EventAction? = null,
         targetType: EventTarget? = null,
-        beforeDay: LocalDateTime? = null,
-        afterDay: LocalDateTime? = null,
+        beforeDay: ZonedDateTime? = null,
+        afterDay: ZonedDateTime? = null,
         sort: Sort? = Sort.DESC,
         orderBy: OrderBy = OrderBy.UPDATED_AT,
         page: Int,
@@ -128,9 +128,6 @@ class EventRepository @Inject constructor(
             val badges = mutableListOf<TargetBadge>()
             project?.let { badges.add(TargetBadge.Text(it.name, AppTarget.PROJECT, it.id)) }
             badges.add(TargetBadge.Text(event.author.username, AppTarget.USER, event.author.id))
-            event.pushData?.let { pushData ->
-                badges.add(TargetBadge.Icon(TargetBadgeIcon.COMMITS, pushData.commitCount))
-            }
 
             TargetHeader.Public(
                 event.author,
@@ -146,7 +143,8 @@ class EventRepository @Inject constructor(
                 targetData.target,
                 targetData.id,
                 getTargetInternal(event),
-                badges
+                badges,
+                getTargetAction(event)
             )
         } else {
             TargetHeader.Confidential
@@ -268,6 +266,17 @@ class EventRepository @Inject constructor(
                     null
                 }
             }
+        }
+
+    private fun getTargetAction(event: Event): TargetAction =
+        when (event.actionName) {
+            EventAction.COMMENTED_ON -> {
+                event.note
+                    ?.id
+                    ?.let { TargetAction.CommentedOn(it) }
+                    ?: TargetAction.Undefined
+            }
+            else -> TargetAction.Undefined
         }
 
     private fun getBody(event: Event, project: Project?) = when (event.targetType) {

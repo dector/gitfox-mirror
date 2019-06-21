@@ -42,11 +42,10 @@ class ProjectFileDestination {
     fun isInitiated() = defaultPath.isNotEmpty() && branchName.isNotEmpty() && paths.isNotEmpty()
 
     fun moveToRoot() {
-        val fromRoot = isInitiated() && !isInRoot()
         if (!isInitiated()) {
             paths.add(ROOT_PATH)
         }
-        callback?.onMoveForward(fromRoot)
+        callback?.onMoveForward(true)
     }
 
     fun moveForward(path: String) {
@@ -65,12 +64,12 @@ class ProjectFileDestination {
 
     fun isInRoot() = paths.size <= 1
 
-    fun changeBranch(branchName: String) {
-        if (this.branchName != branchName) {
-            this.branchName = branchName
-            this.paths.clear()
-            this.paths.add(ROOT_PATH)
-            callback?.onBranchChange(branchName)
+    fun changeBranch(newBranchName: String) {
+        if (branchName != newBranchName) {
+            branchName = newBranchName
+            paths.clear()
+            paths.add(ROOT_PATH)
+            callback?.onBranchChange(newBranchName)
         }
     }
 

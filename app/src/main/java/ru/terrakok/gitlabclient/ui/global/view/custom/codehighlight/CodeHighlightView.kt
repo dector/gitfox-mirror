@@ -25,6 +25,7 @@ class CodeHighlightView @JvmOverloads constructor(
         settings.apply {
             javaScriptEnabled = true
             scrollBarStyle = View.SCROLLBARS_INSIDE_OVERLAY
+            useWideViewPort = true
             setSupportZoom(true)
             builtInZoomControls = true
             displayZoomControls = false

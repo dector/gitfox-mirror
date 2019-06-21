@@ -7,6 +7,7 @@ import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.Label
 import ru.terrakok.gitlabclient.model.data.cache.ProjectLabelCache
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
+import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import javax.inject.Inject
 
@@ -15,12 +16,15 @@ import javax.inject.Inject
  */
 class LabelRepository @Inject constructor(
     private val api: GitlabApi,
+    serverChanges: ServerChanges,
     @DefaultPageSize defaultPageSizeWrapper: PrimitiveWrapper<Int>,
     private val schedulers: SchedulersProvider,
     private val projectLabelCache: ProjectLabelCache
 ) {
 
     private val defaultPageSize: Int = defaultPageSizeWrapper.value
+
+    val labelChanges = serverChanges.labelChanges
 
     fun getLabelList(
         projectId: Long,

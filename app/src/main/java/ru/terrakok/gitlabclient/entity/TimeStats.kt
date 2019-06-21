@@ -1,8 +1,11 @@
-package ru.terrakok.gitlabclient.entity.mergerequest
+package ru.terrakok.gitlabclient.entity
 
 import com.google.gson.annotations.SerializedName
 
-data class MergeRequestTimeStats(
+/**
+ * @author Eugene Shapovalov (CraggyHaggy). Date: 18.09.17
+ */
+data class TimeStats(
     @SerializedName("time_estimate") val timeEstimate: Int,
     @SerializedName("total_time_spent") val totalTimeSpent: Int,
     @SerializedName("human_time_estimate") val humanTimeEstimate: String?,
