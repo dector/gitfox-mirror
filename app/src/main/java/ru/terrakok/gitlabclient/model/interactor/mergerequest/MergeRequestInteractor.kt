@@ -10,6 +10,9 @@ import javax.inject.Inject
 class MergeRequestInteractor @Inject constructor(
     private val mergeRequestRepository: MergeRequestRepository
 ) {
+
+    val mergeRequestChanges = mergeRequestRepository.mergeRequestChanges
+
     fun getMyMergeRequests(
         createdByMe: Boolean,
         onlyOpened: Boolean,

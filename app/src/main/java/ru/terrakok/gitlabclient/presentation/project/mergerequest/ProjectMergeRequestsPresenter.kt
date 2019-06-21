@@ -36,7 +36,9 @@ class ProjectMergeRequestsPresenter @Inject constructor(
 
     private val paginator = Paginator(
         { mergeRequestInteractor.getMergeRequests(projectId, mergeRequestState, it) },
-        object : Paginator.ViewController<TargetHeader> {
+        mergeRequestInteractor.mergeRequestChanges,
+        object :
+            Paginator.ViewController<TargetHeader> {
             override fun showEmptyProgress(show: Boolean) {
                 viewState.showEmptyProgress(show)
             }

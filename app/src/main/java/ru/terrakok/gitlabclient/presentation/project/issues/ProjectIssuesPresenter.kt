@@ -35,7 +35,7 @@ class ProjectIssuesPresenter @Inject constructor(
     }
 
     private val paginator = Paginator(
-        { issueInteractor.getIssues(projectId, issueState, it) },
+        { issueInteractor.getIssues(projectId, issueState, it) },issueInteractor.issueChanges,
         object : Paginator.ViewController<TargetHeader> {
             override fun showEmptyProgress(show: Boolean) {
                 viewState.showEmptyProgress(show)

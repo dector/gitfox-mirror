@@ -4,19 +4,15 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import ru.terrakok.cicerone.android.support.SupportAppScreen
+import ru.terrakok.gitlabclient.entity.app.target.TargetAction
 import ru.terrakok.gitlabclient.entity.issue.IssueState
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
-import ru.terrakok.gitlabclient.entity.milestone.MilestoneState
 import ru.terrakok.gitlabclient.ui.about.AboutFragment
 import ru.terrakok.gitlabclient.ui.auth.AuthFlowFragment
 import ru.terrakok.gitlabclient.ui.auth.AuthFragment
 import ru.terrakok.gitlabclient.ui.drawer.DrawerFlowFragment
 import ru.terrakok.gitlabclient.ui.file.ProjectFileFragment
-import ru.terrakok.gitlabclient.ui.global.StubFragment
-import ru.terrakok.gitlabclient.ui.issue.IssueFlowFragment
-import ru.terrakok.gitlabclient.ui.issue.IssueInfoFragment
-import ru.terrakok.gitlabclient.ui.issue.IssueNotesFragment
-import ru.terrakok.gitlabclient.ui.issue.MainIssueFragment
+import ru.terrakok.gitlabclient.ui.issue.*
 import ru.terrakok.gitlabclient.ui.libraries.LibrariesFragment
 import ru.terrakok.gitlabclient.ui.main.MainFragment
 import ru.terrakok.gitlabclient.ui.mergerequest.*
@@ -37,9 +33,9 @@ import ru.terrakok.gitlabclient.ui.project.info.ProjectInfoFragment
 import ru.terrakok.gitlabclient.ui.project.issues.ProjectIssuesContainerFragment
 import ru.terrakok.gitlabclient.ui.project.issues.ProjectIssuesFragment
 import ru.terrakok.gitlabclient.ui.project.labels.ProjectLabelsFragment
+import ru.terrakok.gitlabclient.ui.project.members.ProjectMembersFragment
 import ru.terrakok.gitlabclient.ui.project.mergerequest.ProjectMergeRequestsContainerFragment
 import ru.terrakok.gitlabclient.ui.project.mergerequest.ProjectMergeRequestsFragment
-import ru.terrakok.gitlabclient.ui.project.milestones.ProjectMilestonesContainerFragment
 import ru.terrakok.gitlabclient.ui.project.milestones.ProjectMilestonesFragment
 import ru.terrakok.gitlabclient.ui.projects.ProjectsContainerFragment
 import ru.terrakok.gitlabclient.ui.projects.ProjectsListFragment
@@ -74,16 +70,18 @@ object Screens {
 
     data class IssueFlow(
         val projectId: Long,
-        val issueId: Long
+        val issueId: Long,
+        val targetAction: TargetAction
     ) : SupportAppScreen() {
-        override fun getFragment() = IssueFlowFragment.create(projectId, issueId)
+        override fun getFragment() = IssueFlowFragment.create(projectId, issueId, targetAction)
     }
 
     data class MergeRequestFlow(
         val projectId: Long,
-        val mrId: Long
+        val mrId: Long,
+        val targetAction: TargetAction
     ) : SupportAppScreen() {
-        override fun getFragment() = MergeRequestFlowFragment.create(projectId, mrId)
+        override fun getFragment() = MergeRequestFlowFragment.create(projectId, mrId, targetAction)
     }
 
     //screens
@@ -189,14 +187,12 @@ object Screens {
         override fun getFragment() = ProjectLabelsFragment()
     }
 
-    object ProjectMilestonesContainer : SupportAppScreen() {
-        override fun getFragment() = ProjectMilestonesContainerFragment()
+    object ProjectMilestones : SupportAppScreen() {
+        override fun getFragment() = ProjectMilestonesFragment()
     }
 
-    data class ProjectMilestones(
-        val milestoneState: MilestoneState
-    ) : SupportAppScreen() {
-        override fun getFragment() = ProjectMilestonesFragment.create(milestoneState)
+    object ProjectMembers : SupportAppScreen() {
+        override fun getFragment() = ProjectMembersFragment()
     }
 
     object ProjectFiles : SupportAppScreen() {
@@ -209,6 +205,10 @@ object Screens {
 
     object MainMergeRequest : SupportAppScreen() {
         override fun getFragment() = MainMergeRequestFragment()
+    }
+
+    object MergeRequestDetails : SupportAppScreen() {
+        override fun getFragment() = MergeRequestDetailsFragment()
     }
 
     object MergeRequestInfo : SupportAppScreen() {
@@ -233,6 +233,10 @@ object Screens {
 
     object IssueInfo : SupportAppScreen() {
         override fun getFragment() = IssueInfoFragment()
+    }
+
+    object IssueDetails : SupportAppScreen() {
+        override fun getFragment() = IssueDetailsFragment()
     }
 
     object IssueNotes : SupportAppScreen() {

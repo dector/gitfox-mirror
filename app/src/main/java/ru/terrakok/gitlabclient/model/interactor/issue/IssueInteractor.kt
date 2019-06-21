@@ -13,6 +13,9 @@ import javax.inject.Inject
 class IssueInteractor @Inject constructor(
     private val issueRepository: IssueRepository
 ) {
+
+    val issueChanges = issueRepository.issueChanges
+
     fun getMyIssues(
         createdByMe: Boolean,
         onlyOpened: Boolean,

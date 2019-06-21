@@ -12,6 +12,8 @@ class LabelInteractor @Inject constructor(
     private val labelRepository: LabelRepository
 ) {
 
+    val labelChanges = labelRepository.labelChanges
+
     fun getLabelList(
         projectId: Long,
         page: Int

@@ -30,9 +30,8 @@ class ProjectLabelsPresenter @Inject constructor(
     }
 
     private val paginator = Paginator(
-        { page ->
-            labelInteractor.getLabelList(projectId, page)
-        },
+        { page -> labelInteractor.getLabelList(projectId, page) },
+        labelInteractor.labelChanges,
         object : Paginator.ViewController<Label> {
             override fun showEmptyProgress(show: Boolean) {
                 viewState.showEmptyProgress(show)
