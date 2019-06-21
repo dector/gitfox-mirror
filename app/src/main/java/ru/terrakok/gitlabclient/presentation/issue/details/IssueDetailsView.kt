@@ -12,7 +12,7 @@ import ru.terrakok.gitlabclient.entity.issue.Issue
 @StateStrategyType(AddToEndSingleStrategy::class)
 interface IssueDetailsView : MvpView {
 
-    fun showDetails(issue: Issue, mdDescription: CharSequence)
+    fun showDetails(issue: Issue)
     fun showEmptyProgress(show: Boolean)
 
     @StateStrategyType(OneExecutionStateStrategy::class)

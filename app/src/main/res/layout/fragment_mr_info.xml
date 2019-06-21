@@ -188,7 +188,7 @@
                 app:layout_constraintStart_toStartOf="@id/labelsTitle"
                 app:layout_constraintTop_toBottomOf="@id/labelsTitle" />
 
-            <ru.terrakok.gitlabclient.ui.global.markdown.MarkdownTextView
+            <TextView
                 android:id="@+id/labelsNone"
                 style="@style/TextSubtitle"
                 android:layout_width="0dp"

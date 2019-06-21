@@ -44,7 +44,7 @@ class MergeRequestNotesPresenter @Inject constructor(
                         targetAction
                             .let { it as? TargetAction.CommentedOn }
                             ?.noteId
-                            ?.let { noteIdToSelect -> notes.indexOfFirst { it.note.id == noteIdToSelect } }
+                            ?.let { noteIdToSelect -> notes.indexOfFirst { note -> note.id == noteIdToSelect } }
                     viewState.showNotes(notesWithProjectId, selectedNotePosition)
                 },
                 { errorHandler.proceed(it, { viewState.showMessage(it) }) }

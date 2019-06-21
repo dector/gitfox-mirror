@@ -1,6 +1,7 @@
 package ru.terrakok.gitlabclient.presentation.project.events
 
 import com.arellomobile.mvp.InjectViewState
+import io.reactivex.Observable
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId

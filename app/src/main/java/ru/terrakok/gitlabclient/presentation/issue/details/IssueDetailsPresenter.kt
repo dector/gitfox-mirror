@@ -30,15 +30,10 @@ class IssueDetailsPresenter @Inject constructor(
 
         issueInteractor
             .getIssue(projectId, issueId)
-            .flatMap { issue ->
-                mdConverter
-                    .markdownToSpannable(issue.description)
-                    .map { Pair(issue, it) }
-            }
             .doOnSubscribe { viewState.showEmptyProgress(true) }
             .doAfterTerminate { viewState.showEmptyProgress(false) }
             .subscribe(
-                { (issue, mdDescription) -> viewState.showDetails(issue, mdDescription) },
+                { issue -> viewState.showDetails(issue) },
                 { errorHandler.proceed(it, { viewState.showMessage(it) }) }
             )
             .connect()

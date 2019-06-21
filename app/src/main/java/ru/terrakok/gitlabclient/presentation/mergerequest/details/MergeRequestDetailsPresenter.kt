@@ -30,15 +30,10 @@ class MergeRequestDetailsPresenter @Inject constructor(
 
         mrInteractor
             .getMergeRequest(projectId, mrId)
-            .flatMap { mr ->
-                mdConverter
-                    .markdownToSpannable(mr.description)
-                    .map { Pair(mr, it) }
-            }
             .doOnSubscribe { viewState.showEmptyProgress(true) }
             .doAfterTerminate { viewState.showEmptyProgress(false) }
             .subscribe(
-                { (mr, mdDescription) -> viewState.showDetails(mr, mdDescription) },
+                { mr -> viewState.showDetails(mr) },
                 { errorHandler.proceed(it, { viewState.showMessage(it) }) }
             )
             .connect()

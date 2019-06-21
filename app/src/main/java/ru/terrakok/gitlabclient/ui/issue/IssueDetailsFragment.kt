@@ -1,9 +1,10 @@
 package ru.terrakok.gitlabclient.ui.issue
 
+import android.os.Bundle
+import android.view.View
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_issue_details.*
-import ru.noties.markwon.Markwon
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.issue.Issue
 import ru.terrakok.gitlabclient.entity.issue.IssueState
@@ -30,7 +31,12 @@ class IssueDetailsFragment : BaseFragment(), IssueDetailsView {
     fun providePresenter(): IssueDetailsPresenter =
         scope.getInstance(IssueDetailsPresenter::class.java)
 
-    override fun showDetails(issue: Issue, mdDescription: CharSequence) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        descriptionTextView.initWithParentDelegate(mvpDelegate)
+    }
+
+    override fun showDetails(issue: Issue) {
         titleTextView.text = issue.title
         stateImageView.setImageResource(R.drawable.circle)
         when (issue.state) {
@@ -58,7 +64,7 @@ class IssueDetailsFragment : BaseFragment(), IssueDetailsView {
             }
         }
         avatarImageView.bindShortUser(issue.author)
-        Markwon.setText(descriptionTextView, mdDescription)
+        descriptionTextView.setMarkdown(issue.description, issue.projectId)
     }
 
     override fun showEmptyProgress(show: Boolean) {

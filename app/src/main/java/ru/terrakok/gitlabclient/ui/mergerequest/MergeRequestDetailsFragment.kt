@@ -1,9 +1,10 @@
 package ru.terrakok.gitlabclient.ui.mergerequest
 
+import android.os.Bundle
+import android.view.View
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_mr_details.*
-import ru.noties.markwon.Markwon
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
@@ -30,7 +31,12 @@ class MergeRequestDetailsFragment : BaseFragment(), MergeRequestDetailsView {
     fun providePresenter() =
         scope.getInstance(MergeRequestDetailsPresenter::class.java)
 
-    override fun showDetails(mr: MergeRequest, mdDescription: CharSequence) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        descriptionTextView.initWithParentDelegate(mvpDelegate)
+    }
+
+    override fun showDetails(mr: MergeRequest) {
         titleTextView.text = mr.title
         when (mr.state) {
             MergeRequestState.OPENED -> {
@@ -72,7 +78,7 @@ class MergeRequestDetailsFragment : BaseFragment(), MergeRequestDetailsView {
             }
         }
         avatarImageView.bindShortUser(mr.author)
-        Markwon.setText(descriptionTextView, mdDescription)
+        descriptionTextView.setMarkdown(mr.description, mr.projectId)
     }
 
     override fun showEmptyProgress(show: Boolean) {

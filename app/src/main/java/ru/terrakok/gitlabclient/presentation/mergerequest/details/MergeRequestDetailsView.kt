@@ -12,7 +12,7 @@ import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
 @StateStrategyType(AddToEndSingleStrategy::class)
 interface MergeRequestDetailsView : MvpView {
 
-    fun showDetails(mr: MergeRequest, mdDescription: CharSequence)
+    fun showDetails(mr: MergeRequest)
     fun showEmptyProgress(show: Boolean)
 
     @StateStrategyType(OneExecutionStateStrategy::class)

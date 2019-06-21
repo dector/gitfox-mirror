@@ -6,9 +6,9 @@ import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
 import ru.terrakok.gitlabclient.entity.app.target.TargetAction
 import ru.terrakok.gitlabclient.model.interactor.issue.IssueInteractor
-import ru.terrakok.gitlabclient.presentation.global.NoteWithProjectId
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
+import ru.terrakok.gitlabclient.presentation.global.NoteWithProjectId
 import javax.inject.Inject
 
 /**
@@ -47,8 +47,8 @@ class IssueNotesPresenter @Inject constructor(
                         targetAction
                             .let { it as? TargetAction.CommentedOn }
                             ?.noteId
-                            ?.let { noteIdToSelect -> notes.indexOfFirst { it.note.id == noteIdToSelect } }
-                    viewState.showNotes(notes, selectedNotePosition)
+                            ?.let { noteIdToSelect -> notes.indexOfFirst { note -> note.id == noteIdToSelect } }
+                    viewState.showNotes(notesWithProjectId, selectedNotePosition)
                 },
                 { errorHandler.proceed(it, { viewState.showMessage(it) }) }
             )
