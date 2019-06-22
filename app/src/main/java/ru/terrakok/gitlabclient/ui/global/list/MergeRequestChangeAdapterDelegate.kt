@@ -13,6 +13,10 @@ import ru.terrakok.gitlabclient.extension.inflate
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 26.10.18.
  */
+
+fun MergeRequestChange.isSame(other: MergeRequestChange) =
+    diff == other.diff
+
 class MergeRequestChangeAdapterDelegate(
     private val clickListener: (MergeRequestChange) -> Unit
 ) : AdapterDelegate<MutableList<MergeRequestChange>>() {

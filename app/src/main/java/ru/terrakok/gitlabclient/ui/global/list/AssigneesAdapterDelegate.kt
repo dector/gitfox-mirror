@@ -13,6 +13,10 @@ import ru.terrakok.gitlabclient.ui.global.view.custom.bindShortUser
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 26.05.19.
  */
+
+fun ShortUser.isSame(other: ShortUser) =
+    id == other.id
+
 class AssigneesAdapterDelegate : AdapterDelegate<MutableList<ShortUser>>() {
 
     override fun isForViewType(items: MutableList<ShortUser>, position: Int) = true
