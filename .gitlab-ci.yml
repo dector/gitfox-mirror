@@ -2,6 +2,7 @@ image: jangrewe/gitlab-ci-android:28
 
 before_script:
   - export GRADLE_USER_HOME=$(pwd)/.gradle
+  - export BUILD_COMMIT_SHA=${CI_COMMIT_SHA}
   - chmod +x ./gradlew
 
 cache:
