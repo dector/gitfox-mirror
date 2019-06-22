@@ -19,6 +19,7 @@ import ru.terrakok.gitlabclient.extension.*
 import ru.terrakok.gitlabclient.presentation.issue.info.IssueInfoPresenter
 import ru.terrakok.gitlabclient.presentation.issue.info.IssueInfoView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.ui.global.list.AssigneesAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.isSame
 
 /**
@@ -36,13 +37,18 @@ class IssueInfoFragment : BaseFragment(), IssueInfoView {
         scope.getInstance(IssueInfoPresenter::class.java)
 
     private val assigneesAdapter by lazy {
-        AsyncListDifferDelegationAdapter<ShortUser>(
+        object : AsyncListDifferDelegationAdapter<ShortUser>(
             object : DiffUtil.ItemCallback<ShortUser>() {
                 override fun areItemsTheSame(oldItem: ShortUser, newItem: ShortUser) = oldItem.isSame(newItem)
                 override fun areContentsTheSame(oldItem: ShortUser, newItem: ShortUser) = oldItem == newItem
                 override fun getChangePayload(oldItem: ShortUser, newItem: ShortUser) = Any()
             }
-        )
+        ) {
+            init {
+                items = mutableListOf()
+                delegatesManager.addDelegate(AssigneesAdapterDelegate())
+            }
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
