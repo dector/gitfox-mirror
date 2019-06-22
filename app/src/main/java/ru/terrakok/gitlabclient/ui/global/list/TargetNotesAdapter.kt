@@ -1,5 +1,6 @@
 package ru.terrakok.gitlabclient.ui.global.list
 
+import android.annotation.SuppressLint
 import androidx.recyclerview.widget.DiffUtil
 import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
 import ru.terrakok.gitlabclient.presentation.global.NoteWithFormattedBody
@@ -15,6 +16,7 @@ class TargetNotesAdapter : AsyncListDifferDelegationAdapter<Any>(
             } else false
         }
 
+        @SuppressLint("DiffUtilEquals")
         override fun areContentsTheSame(oldItem: Any, newItem: Any) = oldItem == newItem
         override fun getChangePayload(oldItem: Any, newItem: Any) = Any()
     }
