@@ -1,19 +1,20 @@
 package ru.terrakok.gitlabclient.ui.projects
 
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import kotlinx.android.synthetic.main.layout_base_list.*
+import kotlinx.android.synthetic.main.fragment_projects.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectListMode
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.extension.showSnackMessage
-import ru.terrakok.gitlabclient.extension.visible
+import ru.terrakok.gitlabclient.presentation.global.Paginator
 import ru.terrakok.gitlabclient.presentation.projects.ProjectsListPresenter
 import ru.terrakok.gitlabclient.presentation.projects.ProjectsListView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.ui.global.list.ProjectAdapterDelegate
+import ru.terrakok.gitlabclient.ui.global.list.isSame
 import toothpick.Scope
 import toothpick.config.Module
 
@@ -21,9 +22,6 @@ import toothpick.config.Module
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 29.03.17
  */
 class ProjectsListFragment : BaseFragment(), ProjectsListView {
-
-    private val adapter = ProjectsAdapter({ presenter.loadNextProjectsPage() }, { presenter.onProjectClicked(it) })
-
     override val layoutRes = R.layout.fragment_projects
 
     override fun installModules(scope: Scope) {
@@ -45,46 +43,24 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.setHasFixedSize(true)
-        recyclerView.adapter = adapter
-
-        swipeToRefresh.setOnRefreshListener { presenter.refreshProjects() }
-        emptyView.setRefreshListener { presenter.refreshProjects() }
+        paginalRenderView.init(
+            { presenter.refreshProjects() },
+            { presenter.loadNextProjectsPage() },
+            { o, n ->
+                if (o is Project && n is Project) {
+                    o.isSame(n)
+                } else false
+            },
+            ProjectAdapterDelegate { presenter.onProjectClicked(it.id) }
+        )
     }
 
-    override fun showRefreshProgress(show: Boolean) {
-        postViewAction { swipeToRefresh.isRefreshing = show }
-    }
-
-    override fun showEmptyProgress(show: Boolean) {
-        fullscreenProgressView.visible(show)
-
-        // Trick for disable and hide swipeToRefresh on fullscreen progress
-        swipeToRefresh.visible(!show)
-        postViewAction { swipeToRefresh.isRefreshing = false }
-    }
-
-    override fun showEmptyView(show: Boolean) {
-        emptyView.apply { if (show) showEmptyData() else hide() }
-    }
-
-    override fun showEmptyError(show: Boolean, message: String?) {
-        emptyView.apply { if (show) showEmptyError(message) else hide() }
-    }
-
-    override fun showProjects(show: Boolean, projects: List<Project>) {
-        recyclerView.visible(show)
-        postViewAction { adapter.setData(projects) }
+    override fun renderPaginatorState(state: Paginator.State<Project>) {
+        paginalRenderView.render(state)
     }
 
     override fun showMessage(message: String) {
         showSnackMessage(message)
-    }
-
-    override fun showPageProgress(isVisible: Boolean) {
-        postViewAction { adapter.showProgress(isVisible) }
     }
 
     override fun onBackPressed() = presenter.onBackPressed()

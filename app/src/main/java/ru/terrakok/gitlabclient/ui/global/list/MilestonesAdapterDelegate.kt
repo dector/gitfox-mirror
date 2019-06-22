@@ -12,6 +12,9 @@ import ru.terrakok.gitlabclient.extension.*
 /**
  * @author Valentin Logvinovitch (glvvl) on 17.12.18.
  */
+
+fun Milestone.isSame(other: Milestone) = id == other.id
+
 class MilestonesAdapterDelegate(
     private val clickListener: (Milestone) -> Unit
 ) : AdapterDelegate<MutableList<Any>>() {

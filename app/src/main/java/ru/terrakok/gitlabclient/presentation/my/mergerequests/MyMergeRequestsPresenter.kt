@@ -2,7 +2,7 @@ package ru.terrakok.gitlabclient.presentation.my.mergerequests
 
 import com.arellomobile.mvp.InjectViewState
 import io.reactivex.Observable
-import ru.terrakok.gitlabclient.Screens
+import io.reactivex.disposables.Disposable
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.extension.openInfo
 import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestInteractor
@@ -24,16 +24,29 @@ class MyMergeRequestsPresenter @Inject constructor(
     data class Filter(val createdByMe: Boolean, val onlyOpened: Boolean)
 
     private var filter = initFilter
+    private var pageDisposable: Disposable? = null
+    private val paginator = Paginator.Store<TargetHeader>().apply {
+        render = { viewState.renderPaginatorState(it) }
+        sideEffectListener = { effect ->
+            when (effect) {
+                is Paginator.SideEffect.LoadPage -> loadNewPage(effect.currentPage)
+            }
+        }
+    }
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
         refreshMergeRequests()
+        interactor.mergeRequestChanges
+            .subscribe { paginator.proceed(Paginator.Action.Refresh) }
+            .connect()
     }
 
-    private val paginator = Paginator(
-        {
-            interactor.getMyMergeRequests(filter.createdByMe, filter.onlyOpened, it)
+    private fun loadNewPage(currentPage: Int) {
+        pageDisposable?.dispose()
+        pageDisposable =
+            interactor.getMyMergeRequests(filter.createdByMe, filter.onlyOpened, currentPage + 1)
                 .flattenAsObservable { it }
                 .concatMap { item ->
                     when (item) {
@@ -46,58 +59,26 @@ class MyMergeRequestsPresenter @Inject constructor(
                     }
                 }
                 .toList()
-        },
-        interactor.mergeRequestChanges,
-        object :
-            Paginator.ViewController<TargetHeader> {
-            override fun showEmptyProgress(show: Boolean) {
-                viewState.showEmptyProgress(show)
-            }
-
-            override fun showEmptyError(show: Boolean, error: Throwable?) {
-                if (error != null) {
-                    errorHandler.proceed(error, { viewState.showEmptyError(show, it) })
-                } else {
-                    viewState.showEmptyError(show, null)
-                }
-            }
-
-            override fun showErrorMessage(error: Throwable) {
-                errorHandler.proceed(error, { viewState.showMessage(it) })
-            }
-
-            override fun showEmptyView(show: Boolean) {
-                viewState.showEmptyView(show)
-            }
-
-            override fun showData(show: Boolean, data: List<TargetHeader>) {
-                viewState.showMergeRequests(show, data)
-            }
-
-            override fun showRefreshProgress(show: Boolean) {
-                viewState.showRefreshProgress(show)
-            }
-
-            override fun showPageProgress(show: Boolean) {
-                viewState.showPageProgress(show)
-            }
-        }
-    )
+                .subscribe(
+                    { data ->
+                        paginator.proceed(Paginator.Action.NewPage(data))
+                    },
+                    { e ->
+                        errorHandler.proceed(e)
+                        paginator.proceed(Paginator.Action.PageError(e))
+                    }
+                )
+        pageDisposable?.connect()
+    }
 
     fun applyNewFilter(filter: Filter) {
         if (this.filter != filter) {
             this.filter = filter
-            paginator.restart()
+            paginator.proceed(Paginator.Action.Restart)
         }
     }
 
     fun onMergeRequestClick(item: TargetHeader.Public) = item.openInfo(router)
-    fun onUserClick(userId: Long) = router.startFlow(Screens.UserFlow(userId))
-    fun refreshMergeRequests() = paginator.refresh()
-    fun loadNextMergeRequestsPage() = paginator.loadNewPage()
-
-    override fun onDestroy() {
-        super.onDestroy()
-        paginator.release()
-    }
+    fun refreshMergeRequests() = paginator.proceed(Paginator.Action.Refresh)
+    fun loadNextMergeRequestsPage() = paginator.proceed(Paginator.Action.LoadMore)
 }

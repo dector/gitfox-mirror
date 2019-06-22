@@ -17,6 +17,9 @@ import ru.terrakok.gitlabclient.extension.setBackgroundTintByColor
 /**
  * @author Maxim Myalkin (MaxMyalkin) on 15.12.2018.
  */
+
+fun Label.isSame(other: Label) = id == other.id
+
 class ProjectLabelAdapterDelegate : AdapterDelegate<MutableList<Any>>() {
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {

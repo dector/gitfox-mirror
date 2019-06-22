@@ -1,6 +1,7 @@
 package ru.terrakok.gitlabclient.presentation.project.milestones
 
 import com.arellomobile.mvp.InjectViewState
+import io.reactivex.disposables.Disposable
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
@@ -24,51 +25,40 @@ class ProjectMilestonesPresenter @Inject constructor(
 ) : BasePresenter<ProjectMilestonesView>() {
 
     private val projectId = projectIdWrapper.value
+    private var pageDisposable: Disposable? = null
+    private val paginator = Paginator.Store<Milestone>().apply {
+        render = { viewState.renderPaginatorState(it) }
+        sideEffectListener = { effect ->
+            when (effect) {
+                is Paginator.SideEffect.LoadPage -> loadNewPage(effect.currentPage)
+            }
+        }
+    }
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
         refreshMilestones()
+        milestoneInteractor.milestoneChanges
+            .subscribe { paginator.proceed(Paginator.Action.Refresh) }
+            .connect()
     }
 
-    private val paginator = Paginator(
-        { milestoneInteractor.getMilestones(projectId, null, it) },
-        milestoneInteractor.milestoneChanges,
-        object :
-            Paginator.ViewController<Milestone> {
-            override fun showEmptyProgress(show: Boolean) {
-                viewState.showEmptyProgress(show)
-            }
-
-            override fun showEmptyError(show: Boolean, error: Throwable?) {
-                if (error != null) {
-                    errorHandler.proceed(error, { viewState.showEmptyError(show, it) })
-                } else {
-                    viewState.showEmptyError(show, null)
-                }
-            }
-
-            override fun showErrorMessage(error: Throwable) {
-                errorHandler.proceed(error, { viewState.showMessage(it) })
-            }
-
-            override fun showEmptyView(show: Boolean) {
-                viewState.showEmptyView(show)
-            }
-
-            override fun showData(show: Boolean, data: List<Milestone>) {
-                viewState.showMilestones(show, data)
-            }
-
-            override fun showRefreshProgress(show: Boolean) {
-                viewState.showRefreshProgress(show)
-            }
-
-            override fun showPageProgress(show: Boolean) {
-                viewState.showPageProgress(show)
-            }
-        }
-    )
+    private fun loadNewPage(currentPage: Int) {
+        pageDisposable?.dispose()
+        pageDisposable =
+            milestoneInteractor.getMilestones(projectId, null, currentPage + 1)
+                .subscribe(
+                    { data ->
+                        paginator.proceed(Paginator.Action.NewPage(data))
+                    },
+                    { e ->
+                        errorHandler.proceed(e)
+                        paginator.proceed(Paginator.Action.PageError(e))
+                    }
+                )
+        pageDisposable?.connect()
+    }
 
     fun onMilestoneClicked(milestone: Milestone) {
         milestone.webUrl?.let {
@@ -76,12 +66,6 @@ class ProjectMilestonesPresenter @Inject constructor(
         }
     }
 
-    fun refreshMilestones() = paginator.refresh()
-    fun loadNextMilestonesPage() = paginator.loadNewPage()
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        paginator.release()
-    }
+    fun refreshMilestones() = paginator.proceed(Paginator.Action.Refresh)
+    fun loadNextMilestonesPage() = paginator.proceed(Paginator.Action.LoadMore)
 }
