@@ -85,7 +85,7 @@ class IssueInfoFragment : BaseFragment(), IssueInfoView {
         dueDateValue.alpha = if (dueDate != null) ALPHA_VALUE else ALPHA_NONE
     }
 
-    private fun showTimeStats(timeStats: TimeStats) {
+    private fun showTimeStats(timeStats: TimeStats?) {
         timeStatsValue.setTimeStats(timeStats)
     }
 

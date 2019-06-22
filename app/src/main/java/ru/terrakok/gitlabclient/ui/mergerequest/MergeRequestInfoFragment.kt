@@ -84,7 +84,7 @@ class MergeRequestInfoFragment : BaseFragment(), MergeRequestInfoView {
         mergeStatusValue.alpha = if (state == MergeRequestState.OPENED) ALPHA_VALUE else ALPHA_NONE
     }
 
-    private fun showTimeStats(timeStats: TimeStats) {
+    private fun showTimeStats(timeStats: TimeStats?) {
         timeStatsValue.setTimeStats(timeStats)
     }
 
