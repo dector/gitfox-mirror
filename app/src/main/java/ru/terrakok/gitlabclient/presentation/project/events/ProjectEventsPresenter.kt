@@ -44,10 +44,10 @@ class ProjectEventsPresenter @Inject constructor(
         refreshEvents()
     }
 
-    private fun loadNewPage(currentPage: Int) {
+    private fun loadNewPage(page: Int) {
         pageDisposable?.dispose()
         pageDisposable =
-            eventInteractor.getProjectEvents(projectId, currentPage + 1)
+            eventInteractor.getProjectEvents(projectId, page)
                 .flattenAsObservable { it }
                 .concatMap { item ->
                     when (item) {
@@ -62,7 +62,7 @@ class ProjectEventsPresenter @Inject constructor(
                 .toList()
                 .subscribe(
                     { data ->
-                        paginator.proceed(Paginator.Action.NewPage(data))
+                        paginator.proceed(Paginator.Action.NewPage(page, data))
                     },
                     { e ->
                         errorHandler.proceed(e)

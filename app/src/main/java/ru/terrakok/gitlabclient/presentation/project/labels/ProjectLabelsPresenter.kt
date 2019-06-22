@@ -42,13 +42,13 @@ class ProjectLabelsPresenter @Inject constructor(
             .connect()
     }
 
-    private fun loadNewPage(currentPage: Int) {
+    private fun loadNewPage(page: Int) {
         pageDisposable?.dispose()
         pageDisposable =
-            labelInteractor.getLabelList(projectId, currentPage + 1)
+            labelInteractor.getLabelList(projectId, page)
                 .subscribe(
                     { data ->
-                        paginator.proceed(Paginator.Action.NewPage(data))
+                        paginator.proceed(Paginator.Action.NewPage(page, data))
                     },
                     { e ->
                         errorHandler.proceed(e)

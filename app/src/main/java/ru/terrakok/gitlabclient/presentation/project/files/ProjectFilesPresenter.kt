@@ -92,7 +92,7 @@ class ProjectFilesPresenter @Inject constructor(
         }
     }
 
-    private fun loadNewPage(currentPage: Int) {
+    private fun loadNewPage(page: Int) {
         pageDisposable?.dispose()
         pageDisposable =
             projectInteractor
@@ -100,11 +100,11 @@ class ProjectFilesPresenter @Inject constructor(
                     projectId,
                     getRemotePath(projectFileDestination.isInRoot(), projectFileDestination.paths),
                     projectFileDestination.branchName,
-                    currentPage + 1
+                    page
                 )
                 .subscribe(
                     { data ->
-                        paginator.proceed(Paginator.Action.NewPage(data))
+                        paginator.proceed(Paginator.Action.NewPage(page, data))
                     },
                     { e ->
                         errorHandler.proceed(e)

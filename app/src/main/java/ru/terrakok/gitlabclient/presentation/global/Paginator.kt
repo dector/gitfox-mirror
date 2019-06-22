@@ -1,10 +1,13 @@
 package ru.terrakok.gitlabclient.presentation.global
 
+import timber.log.Timber
+
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 2019-06-21.
  */
 object Paginator {
     data class State<T>(
+        val pageCount: Int,
         val refreshProgress: Boolean,
         val items: List<T>,
         val pageProgress: Boolean,
@@ -15,7 +18,7 @@ object Paginator {
         object Refresh : Action()
         object Restart : Action()
         object LoadMore : Action()
-        data class NewPage<T>(val items: List<T>) : Action()
+        data class NewPage<T>(val pageNumber: Int, val items: List<T>) : Action()
         data class PageError(val error: Throwable) : Action()
     }
 
@@ -29,32 +32,32 @@ object Paginator {
                 if (state.refreshProgress) {
                     state
                 } else {
-                    sideEffectListener(SideEffect.LoadPage(0))
-                    State(true, state.items, false, state.error)
+                    sideEffectListener(SideEffect.LoadPage(1))
+                    state.copy(refreshProgress = true, pageProgress = false, error = null)
                 }
             }
             is Action.Restart -> {
-                sideEffectListener(SideEffect.LoadPage(0))
-                State(true, emptyList(), false, null)
+                sideEffectListener(SideEffect.LoadPage(1))
+                State(0, true, emptyList(), false, null)
             }
             is Action.LoadMore -> {
                 if (state.refreshProgress || state.pageProgress) {
                     state
                 } else {
-                    sideEffectListener(SideEffect.LoadPage(state.items.size / 20))
-                    State(false, state.items, true, state.error)
+                    sideEffectListener(SideEffect.LoadPage(state.pageCount + 1))
+                    state.copy(pageProgress = true)
                 }
             }
             is Action.NewPage<*> -> {
                 action.items as List<T>
                 when {
-                    state.refreshProgress -> State(false, action.items, false, null)
-                    state.pageProgress -> State(false, state.items + action.items, false, null)
+                    state.refreshProgress -> State(1, false, action.items, false, null)
+                    state.pageProgress -> State(action.pageNumber, false, state.items + action.items, false, null)
                     else -> state
                 }
             }
             is Action.PageError -> {
-                State(false, state.items, false, action.error)
+                state.copy(refreshProgress = false, pageProgress = false, error = action.error)
             }
         }
 
@@ -66,11 +69,16 @@ object Paginator {
             }
         var sideEffectListener: (SideEffect) -> Unit = {}
 
-        private var state: State<T> = State(false, emptyList(), false, null)
+        private var state: State<T> = State(0, false, emptyList(), false, null)
 
         fun proceed(action: Action) {
-            state = reducer(action, state, sideEffectListener)
-            render(state)
+            Timber.d("Action: $action")
+            val newState = reducer(action, state, sideEffectListener)
+            if (newState != state) {
+                state = newState
+                Timber.d("New state: $state")
+                render(state)
+            }
         }
     }
 }

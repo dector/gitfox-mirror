@@ -44,13 +44,13 @@ class ProjectMilestonesPresenter @Inject constructor(
             .connect()
     }
 
-    private fun loadNewPage(currentPage: Int) {
+    private fun loadNewPage(page: Int) {
         pageDisposable?.dispose()
         pageDisposable =
-            milestoneInteractor.getMilestones(projectId, null, currentPage + 1)
+            milestoneInteractor.getMilestones(projectId, null, page)
                 .subscribe(
                     { data ->
-                        paginator.proceed(Paginator.Action.NewPage(data))
+                        paginator.proceed(Paginator.Action.NewPage(page, data))
                     },
                     { e ->
                         errorHandler.proceed(e)

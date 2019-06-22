@@ -50,13 +50,13 @@ class ProjectsListPresenter @Inject constructor(
             .connect()
     }
 
-    private fun loadNewPage(currentPage: Int) {
+    private fun loadNewPage(page: Int) {
         pageDisposable?.dispose()
         pageDisposable =
-            getProjectsSingle(currentPage + 1)
+            getProjectsSingle(page)
                 .subscribe(
                     { data ->
-                        paginator.proceed(Paginator.Action.NewPage(data))
+                        paginator.proceed(Paginator.Action.NewPage(page, data))
                     },
                     { e ->
                         errorHandler.proceed(e)

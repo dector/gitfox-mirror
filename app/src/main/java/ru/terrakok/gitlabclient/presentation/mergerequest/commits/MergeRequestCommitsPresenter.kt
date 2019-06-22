@@ -41,13 +41,13 @@ class MergeRequestCommitsPresenter @Inject constructor(
         refreshCommits()
     }
 
-    private fun loadNewPage(currentPage: Int) {
+    private fun loadNewPage(page: Int) {
         pageDisposable?.dispose()
         pageDisposable =
-            mrInteractor.getMergeRequestCommits(projectId, mrId, currentPage + 1)
+            mrInteractor.getMergeRequestCommits(projectId, mrId, page)
                 .subscribe(
                     { data ->
-                        paginator.proceed(Paginator.Action.NewPage(data))
+                        paginator.proceed(Paginator.Action.NewPage(page, data))
                     },
                     { e ->
                         errorHandler.proceed(e)

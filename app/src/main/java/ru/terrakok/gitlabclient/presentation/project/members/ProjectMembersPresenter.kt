@@ -44,13 +44,13 @@ class ProjectMembersPresenter @Inject constructor(
             .connect()
     }
 
-    private fun loadNewPage(currentPage: Int) {
+    private fun loadNewPage(page: Int) {
         pageDisposable?.dispose()
         pageDisposable =
-            membersInteractor.getMembers(projectId, currentPage + 1)
+            membersInteractor.getMembers(projectId, page)
                 .subscribe(
                     { data ->
-                        paginator.proceed(Paginator.Action.NewPage(data))
+                        paginator.proceed(Paginator.Action.NewPage(page, data))
                     },
                     { e ->
                         errorHandler.proceed(e)

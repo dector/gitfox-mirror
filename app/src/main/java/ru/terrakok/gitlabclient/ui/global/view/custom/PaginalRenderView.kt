@@ -12,11 +12,16 @@ import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
 import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
 import kotlinx.android.synthetic.main.view_paginal_render.view.*
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.di.DI
 import ru.terrakok.gitlabclient.extension.inflate
+import ru.terrakok.gitlabclient.extension.userMessage
 import ru.terrakok.gitlabclient.extension.visible
+import ru.terrakok.gitlabclient.model.system.ResourceManager
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 import ru.terrakok.gitlabclient.ui.global.list.ProgressAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.ProgressItem
+import toothpick.Toothpick
+import javax.inject.Inject
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 2019-06-22.
@@ -27,6 +32,9 @@ class PaginalRenderView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
+    @Inject
+    lateinit var resourceManager: ResourceManager
+
     private var refreshCallback: (() -> Unit)? = null
     private var nextPageCallback: (() -> Unit)? = null
     private var itemDiff: ((old: Any, new: Any) -> Boolean)? = null
@@ -34,6 +42,7 @@ class PaginalRenderView @JvmOverloads constructor(
     private var adapter: PaginalAdapter? = null
 
     init {
+        Toothpick.inject(this, Toothpick.openScope(DI.APP_SCOPE))
         inflate(R.layout.view_paginal_render, true)
         swipeToRefresh.setOnRefreshListener { refreshCallback?.invoke() }
         emptyView.setRefreshListener { refreshCallback?.invoke() }
@@ -59,11 +68,16 @@ class PaginalRenderView @JvmOverloads constructor(
 
     fun <T : Any> render(state: Paginator.State<T>) {
         post {
+            swipeToRefresh.visible(true)
             if (state.refreshProgress) {
                 if (state.items.isEmpty()) {
+                    swipeToRefresh.isRefreshing = false
                     fullscreenProgressView.visible(true)
+                    //trick for disable and hide swipeToRefresh on fullscreen progress
+                    swipeToRefresh.visible(false)
                 } else {
                     swipeToRefresh.isRefreshing = true
+                    fullscreenProgressView.visible(false)
                 }
             } else {
                 fullscreenProgressView.visible(false)
@@ -72,10 +86,11 @@ class PaginalRenderView @JvmOverloads constructor(
 
             adapter?.update(state.items, state.pageProgress)
             if (state.error != null) {
+                val msg = state.error.userMessage(resourceManager)
                 if (state.items.isEmpty()) {
-                    emptyView.showEmptyError(state.error.toString())
+                    emptyView.showEmptyError(msg)
                 } else {
-                    Snackbar.make(this, state.error.toString(), Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(this, msg, Snackbar.LENGTH_SHORT).show()
                 }
             } else {
                 if (state.items.isEmpty() && !state.refreshProgress) {

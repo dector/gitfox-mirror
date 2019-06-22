@@ -47,10 +47,10 @@ class MyTodosPresenter @Inject constructor(
             .connect()
     }
 
-    private fun loadNewPage(currentPage: Int) {
+    private fun loadNewPage(page: Int) {
         pageDisposable?.dispose()
         pageDisposable =
-            todoInteractor.getMyTodos(isPending, currentPage + 1)
+            todoInteractor.getMyTodos(isPending, page)
                 .flattenAsObservable { it }
                 .concatMap { item ->
                     when (item) {
@@ -65,7 +65,7 @@ class MyTodosPresenter @Inject constructor(
                 .toList()
                 .subscribe(
                     { data ->
-                        paginator.proceed(Paginator.Action.NewPage(data))
+                        paginator.proceed(Paginator.Action.NewPage(page, data))
                     },
                     { e ->
                         errorHandler.proceed(e)

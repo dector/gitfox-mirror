@@ -43,10 +43,10 @@ class MyMergeRequestsPresenter @Inject constructor(
             .connect()
     }
 
-    private fun loadNewPage(currentPage: Int) {
+    private fun loadNewPage(page: Int) {
         pageDisposable?.dispose()
         pageDisposable =
-            interactor.getMyMergeRequests(filter.createdByMe, filter.onlyOpened, currentPage + 1)
+            interactor.getMyMergeRequests(filter.createdByMe, filter.onlyOpened, page)
                 .flattenAsObservable { it }
                 .concatMap { item ->
                     when (item) {
@@ -61,7 +61,7 @@ class MyMergeRequestsPresenter @Inject constructor(
                 .toList()
                 .subscribe(
                     { data ->
-                        paginator.proceed(Paginator.Action.NewPage(data))
+                        paginator.proceed(Paginator.Action.NewPage(page, data))
                     },
                     { e ->
                         errorHandler.proceed(e)

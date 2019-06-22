@@ -49,10 +49,10 @@ class ProjectMergeRequestsPresenter @Inject constructor(
             .connect()
     }
 
-    private fun loadNewPage(currentPage: Int) {
+    private fun loadNewPage(page: Int) {
         pageDisposable?.dispose()
         pageDisposable =
-            mergeRequestInteractor.getMergeRequests(projectId, mergeRequestState, currentPage + 1)
+            mergeRequestInteractor.getMergeRequests(projectId, mergeRequestState, page)
                 .flattenAsObservable { it }
                 .concatMap { item ->
                     when (item) {
@@ -67,7 +67,7 @@ class ProjectMergeRequestsPresenter @Inject constructor(
                 .toList()
                 .subscribe(
                     { data ->
-                        paginator.proceed(Paginator.Action.NewPage(data))
+                        paginator.proceed(Paginator.Action.NewPage(page, data))
                     },
                     { e ->
                         errorHandler.proceed(e)
