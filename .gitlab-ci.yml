@@ -70,7 +70,7 @@ buildDebugPG:
     name: "buildDebugPG_${CI_COMMIT_REF_NAME}"
     expire_in: 7d
     paths:
-      - app/build/outputs/debugPG
+      - app/build/outputs/apk/debugPG
   only:
     refs:
       - develop
