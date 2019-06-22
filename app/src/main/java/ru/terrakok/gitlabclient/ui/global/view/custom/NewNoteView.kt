@@ -22,7 +22,6 @@ class NewNoteView @JvmOverloads constructor(
     fun init(onSendClickListener: (String) -> Unit) {
         newNoteEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
-
             }
 
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {

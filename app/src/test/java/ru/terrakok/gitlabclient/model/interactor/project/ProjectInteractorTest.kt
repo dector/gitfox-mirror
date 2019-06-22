@@ -24,49 +24,50 @@ class ProjectInteractorTest {
     private val testError = RuntimeException("test error")
     private val testPage = 13
     private val testProject = Project(
-            id = 42L,
-            description = null,
-            defaultBranch = "test_br",
-            visibility = Visibility.PUBLIC,
-            sshUrlToRepo = null,
-            httpUrlToRepo = null,
-            webUrl = "https://gitlab.com/terrakok/gitlab-client",
-            tagList = null,
-            owner = null,
-            name = "",
-            nameWithNamespace = "",
-            path = "test path",
-            pathWithNamespace = "",
-            issuesEnabled = false,
-            openIssuesCount = 0L,
-            mergeRequestsEnabled = false,
-            jobsEnabled = false,
-            wikiEnabled = false,
-            snippetsEnabled = false,
-            containerRegistryEnabled = false,
-            createdAt = null,
-            lastActivityAt = null,
-            creatorId = 0L,
-            namespace = null,
-            permissions = null,
-            archived = false,
-            avatarUrl = null,
-            sharedRunnersEnabled = false,
-            forksCount = 0L,
-            starCount = 0L,
-            runnersToken = null,
-            publicJobs = false,
-            sharedWithGroups = null,
-            onlyAllowMergeIfPipelineSucceeds = false,
-            onlyAllowMergeIfAllDiscussionsAreResolved = false,
-            requestAccessEnabled = false,
-            readmeUrl = "https://gitlab.com/terrakok/gitlab-client/blob/test_br/README.md"
+        id = 42L,
+        description = null,
+        defaultBranch = "test_br",
+        visibility = Visibility.PUBLIC,
+        sshUrlToRepo = null,
+        httpUrlToRepo = null,
+        webUrl = "https://gitlab.com/terrakok/gitlab-client",
+        tagList = null,
+        owner = null,
+        name = "",
+        nameWithNamespace = "",
+        path = "test path",
+        pathWithNamespace = "",
+        issuesEnabled = false,
+        openIssuesCount = 0L,
+        mergeRequestsEnabled = false,
+        jobsEnabled = false,
+        wikiEnabled = false,
+        snippetsEnabled = false,
+        containerRegistryEnabled = false,
+        createdAt = null,
+        lastActivityAt = null,
+        creatorId = 0L,
+        namespace = null,
+        permissions = null,
+        archived = false,
+        avatarUrl = null,
+        sharedRunnersEnabled = false,
+        forksCount = 0L,
+        starCount = 0L,
+        runnersToken = null,
+        publicJobs = false,
+        sharedWithGroups = null,
+        onlyAllowMergeIfPipelineSucceeds = false,
+        onlyAllowMergeIfAllDiscussionsAreResolved = false,
+        requestAccessEnabled = false,
+        readmeUrl = "https://gitlab.com/terrakok/gitlab-client/blob/test_br/README.md"
     )
     private val testProjectsList = listOf(testProject)
 
     @Test
     fun get_main_projects() {
-        `when`(repo.getProjectsList(
+        `when`(
+            repo.getProjectsList(
                 archived = any(),
                 visibility = any(),
                 orderBy = any(),
@@ -77,26 +78,30 @@ class ProjectInteractorTest {
                 membership = any(),
                 starred = any(),
                 page = anyInt(),
-                pageSize = anyInt())).thenReturn(Single.just(testProjectsList))
+                pageSize = anyInt()
+            )
+        ).thenReturn(Single.just(testProjectsList))
 
         val testObserver = interactor.getMainProjects(testPage).test()
         testObserver.awaitTerminalEvent()
 
         verify(repo, times(1)).getProjectsList(
-                page = testPage,
-                membership = true,
-                orderBy = OrderBy.LAST_ACTIVITY_AT,
-                archived = false)
+            page = testPage,
+            membership = true,
+            orderBy = OrderBy.LAST_ACTIVITY_AT,
+            archived = false
+        )
 
         testObserver
-                .assertNoErrors()
-                .assertValue(testProjectsList)
-                .assertComplete()
+            .assertNoErrors()
+            .assertValue(testProjectsList)
+            .assertComplete()
     }
 
     @Test
     fun get_my_projects() {
-        `when`(repo.getProjectsList(
+        `when`(
+            repo.getProjectsList(
                 archived = any(),
                 visibility = any(),
                 orderBy = any(),
@@ -107,26 +112,30 @@ class ProjectInteractorTest {
                 membership = any(),
                 starred = any(),
                 page = anyInt(),
-                pageSize = anyInt())).thenReturn(Single.just(testProjectsList))
+                pageSize = anyInt()
+            )
+        ).thenReturn(Single.just(testProjectsList))
 
         val testObserver = interactor.getMyProjects(testPage).test()
         testObserver.awaitTerminalEvent()
 
         verify(repo, times(1)).getProjectsList(
-                page = testPage,
-                owned = true,
-                orderBy = OrderBy.LAST_ACTIVITY_AT,
-                archived = false)
+            page = testPage,
+            owned = true,
+            orderBy = OrderBy.LAST_ACTIVITY_AT,
+            archived = false
+        )
 
         testObserver
-                .assertNoErrors()
-                .assertValue(testProjectsList)
-                .assertComplete()
+            .assertNoErrors()
+            .assertValue(testProjectsList)
+            .assertComplete()
     }
 
     @Test
     fun get_starred_projects() {
-        `when`(repo.getProjectsList(
+        `when`(
+            repo.getProjectsList(
                 archived = any(),
                 visibility = any(),
                 orderBy = any(),
@@ -137,21 +146,24 @@ class ProjectInteractorTest {
                 membership = any(),
                 starred = any(),
                 page = anyInt(),
-                pageSize = anyInt())).thenReturn(Single.just(testProjectsList))
+                pageSize = anyInt()
+            )
+        ).thenReturn(Single.just(testProjectsList))
 
         val testObserver = interactor.getStarredProjects(testPage).test()
         testObserver.awaitTerminalEvent()
 
         verify(repo, times(1)).getProjectsList(
-                page = testPage,
-                starred = true,
-                orderBy = OrderBy.LAST_ACTIVITY_AT,
-                archived = false)
+            page = testPage,
+            starred = true,
+            orderBy = OrderBy.LAST_ACTIVITY_AT,
+            archived = false
+        )
 
         testObserver
-                .assertNoErrors()
-                .assertValue(testProjectsList)
-                .assertComplete()
+            .assertNoErrors()
+            .assertValue(testProjectsList)
+            .assertComplete()
     }
 
     @Test
@@ -163,9 +175,9 @@ class ProjectInteractorTest {
 
         verify(repo, times(1)).getProject(testProject.id)
         testObserver
-                .assertNoErrors()
-                .assertValue(testProject)
-                .assertComplete()
+            .assertNoErrors()
+            .assertValue(testProject)
+            .assertComplete()
     }
 
     @Test
@@ -177,56 +189,58 @@ class ProjectInteractorTest {
 
         verify(repo, times(1)).getProject(testProject.id)
         testObserver
-                .assertNoValues()
-                .assertError(testError)
+            .assertNoValues()
+            .assertError(testError)
     }
 
     @Test
     fun get_project_raw_file() {
         val raw = "lorem ipsum"
-        val testFileContent = "bG9yZW0gaXBzdW0=" //base64 for raw
+        val testFileContent = "bG9yZW0gaXBzdW0=" // Base64 for raw
         val testFile = File(
-                "",
-                "",
-                0L,
-                "",
-                testFileContent,
-                testProject.defaultBranch!!,
-                "",
-                "",
-                "")
+            "",
+            "",
+            0L,
+            "",
+            testFileContent,
+            testProject.defaultBranch!!,
+            "",
+            "",
+            ""
+        )
 
         `when`(repo.getProjectFile(anyLong(), anyString(), anyString())).thenReturn(Single.just(testFile))
         `when`(base64Tools.decode(anyString())).thenReturn(raw)
 
         val testObserver = interactor
-                .getProjectRawFile(testProject.id, "README.md", testProject.defaultBranch!!)
-                .test()
+            .getProjectRawFile(testProject.id, "README.md", testProject.defaultBranch!!)
+            .test()
         testObserver.awaitTerminalEvent()
 
         verify(repo, times(1))
-                .getProjectFile(testProject.id, "README.md", testProject.defaultBranch!!)
+            .getProjectFile(testProject.id, "README.md", testProject.defaultBranch!!)
         verify(base64Tools, times(1)).decode(testFileContent)
         testObserver
-                .assertNoErrors()
-                .assertValue(raw)
-                .assertComplete()
+            .assertNoErrors()
+            .assertValue(raw)
+            .assertComplete()
     }
 
     @Test
     fun get_project_readme() {
         val raw = "lorem ipsum"
-        val testFileContent = "bG9yZW0gaXBzdW0=" //base64 for raw
+        val testFileContent = "bG9yZW0gaXBzdW0=" // Base64 for raw
         val testFile = File(
-                "",
-                "",
-                0L,
-                "",
-                testFileContent,
-                testProject.defaultBranch!!,
-                "",
-                "",
-                "")
+            "",
+            "",
+            0L,
+            "",
+            testFileContent,
+            testProject.defaultBranch!!,
+            "",
+            "",
+            ""
+        )
 
         `when`(repo.getProjectFile(anyLong(), anyString(), anyString())).thenReturn(Single.just(testFile))
         `when`(base64Tools.decode(anyString())).thenReturn(raw)
@@ -235,13 +249,13 @@ class ProjectInteractorTest {
         testObserver.awaitTerminalEvent()
 
         verify(repo, times(1))
-                .getProjectFile(testProject.id, "README.md", testProject.defaultBranch!!)
+            .getProjectFile(testProject.id, "README.md", testProject.defaultBranch!!)
         verify(base64Tools, times(1)).decode(testFileContent)
 
         testObserver
-                .assertNoErrors()
-                .assertValue(raw)
-                .assertComplete()
+            .assertNoErrors()
+            .assertValue(raw)
+            .assertComplete()
     }
 
     @Test
@@ -251,12 +265,12 @@ class ProjectInteractorTest {
         val testObserver: TestObserver<String> = interactor.getProjectReadme(projectWithoutReadme).test()
         testObserver.awaitTerminalEvent()
 
-        verifyZeroInteractions(repo)
+        verify(repo, times(1)).projectChanges
         verifyZeroInteractions(base64Tools)
 
         testObserver
-                .assertNoValues()
-                .assertError { it is ProjectInteractor.ReadmeNotFound }
+            .assertNoValues()
+            .assertError { it is ProjectInteractor.ReadmeNotFound }
     }
 
     @Test
@@ -267,56 +281,62 @@ class ProjectInteractorTest {
         testObserver.awaitTerminalEvent()
 
         verify(repo, times(1))
-                .getProjectFile(testProject.id, "README.md", testProject.defaultBranch!!)
+            .getProjectFile(testProject.id, "README.md", testProject.defaultBranch!!)
         verifyZeroInteractions(base64Tools)
 
         testObserver
-                .assertNoValues()
-                .assertError(testError)
+            .assertNoValues()
+            .assertError(testError)
     }
 
     @Test
     fun get_projects_files() {
         val projectFilesList = listOf(ProjectFile("1", "name", testNodeType))
 
-        `when`(repo.getProjectFiles(
+        `when`(
+            repo.getProjectFiles(
                 anyLong(),
                 anyString(),
                 anyString(),
                 any(),
                 anyInt(),
-                anyInt())).thenReturn(Single.just(projectFilesList))
+                anyInt()
+            )
+        ).thenReturn(Single.just(projectFilesList))
 
         val testObserver = interactor.getProjectFiles(
-                testProject.id,
-                testProject.path,
-                testProject.defaultBranch!!,
-                testPage).test()
+            testProject.id,
+            testProject.path,
+            testProject.defaultBranch!!,
+            testPage
+        ).test()
         testObserver.awaitTerminalEvent()
 
         verify(repo, times(1))
-                .getProjectFiles(
-                        projectId = testProject.id,
-                        path = testProject.path,
-                        branchName = testProject.defaultBranch!!,
-                        page = testPage)
+            .getProjectFiles(
+                projectId = testProject.id,
+                path = testProject.path,
+                branchName = testProject.defaultBranch!!,
+                page = testPage
+            )
 
         testObserver
-                .assertNoErrors()
-                .assertValue(projectFilesList)
-                .assertComplete()
+            .assertNoErrors()
+            .assertValue(projectFilesList)
+            .assertComplete()
     }
 
     @Test
     fun get_projects_branches() {
         val testBranch = Branch(
-                "1",
-                merged = true,
-                protected = true,
-                default = true,
-                developersCanPush = true,
-                developersCanMerge = true,
-                canPush = true)
+            "1",
+            merged = true,
+            protected = true,
+            default = true,
+            developersCanPush = true,
+            developersCanMerge = true,
+            canPush = true
+        )
 
         val testBranches = listOf(testBranch)
 
@@ -328,8 +348,8 @@ class ProjectInteractorTest {
         verify(repo, times(1)).getProjectBranches(testProject.id)
 
         testObserver
-                .assertNoErrors()
-                .assertValue(testBranches)
-                .assertComplete()
+            .assertNoErrors()
+            .assertValue(testBranches)
+            .assertComplete()
     }
 }

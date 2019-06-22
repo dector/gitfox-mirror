@@ -1,7 +1,9 @@
 package ru.terrakok.gitlabclient.presentation.project.labels
 
 import com.nhaarman.mockitokotlin2.*
+import io.reactivex.Observable
 import io.reactivex.Single
+import org.junit.Before
 import org.junit.Test
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.Color
@@ -24,12 +26,19 @@ class ProjectLabelsPresenterTest {
     private val errorHandler: ErrorHandler = mock()
     private val flowRouter: FlowRouter = mock()
 
-    private val presenter = ProjectLabelsPresenter(
+    lateinit var presenter: ProjectLabelsPresenter
+
+    @Before
+    fun setUp() {
+        whenever(interactor.labelChanges).thenReturn(Observable.empty())
+
+        presenter = ProjectLabelsPresenter(
             PrimitiveWrapper(projectId),
             interactor,
             errorHandler,
             flowRouter
-    )
+        )
+    }
 
     @Test
     fun `show empty label list`() {
@@ -67,8 +76,8 @@ class ProjectLabelsPresenterTest {
         val secondPageLabels = listOf(label(4), label(5), label(6))
 
         whenever(interactor.getLabelList(eq(projectId), any()))
-                .thenReturn(Single.just(firstPageLabels))
-                .thenReturn(Single.just(secondPageLabels))
+            .thenReturn(Single.just(firstPageLabels))
+            .thenReturn(Single.just(secondPageLabels))
 
         presenter.attachView(view)
 
@@ -94,7 +103,7 @@ class ProjectLabelsPresenterTest {
         val error = RuntimeException("error")
 
         whenever(interactor.getLabelList(eq(projectId), any()))
-                .thenReturn(Single.error(error))
+            .thenReturn(Single.error(error))
 
         presenter.attachView(view)
 
@@ -113,8 +122,8 @@ class ProjectLabelsPresenterTest {
         val error = RuntimeException("error")
 
         whenever(interactor.getLabelList(eq(projectId), any()))
-                .thenReturn(Single.just(firstPageLabels))
-                .thenReturn(Single.error(error))
+            .thenReturn(Single.just(firstPageLabels))
+            .thenReturn(Single.error(error))
 
         presenter.attachView(view)
         presenter.loadNextLabelsPage()
@@ -128,15 +137,15 @@ class ProjectLabelsPresenterTest {
 
     private fun label(id: Long, subscribed: Boolean = false): Label {
         return Label(
-                id = id,
-                name = "name$id",
-                color = Color("green", 12),
-                description = null,
-                openIssuesCount = 0,
-                closedIssuesCount = 0,
-                openMergeRequestsCount = 0,
-                subscribed = subscribed,
-                priority = null
+            id = id,
+            name = "name$id",
+            color = Color("green", 12),
+            description = null,
+            openIssuesCount = 0,
+            closedIssuesCount = 0,
+            openMergeRequestsCount = 0,
+            subscribed = subscribed,
+            priority = null
         )
     }
 }

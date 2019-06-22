@@ -430,5 +430,5 @@ interface GitlabApi {
     fun deleteMember(
         @Path("project_id") projectId: Long,
         @Path("user_id") userId: Long
-        ): Completable
+    ): Completable
 }

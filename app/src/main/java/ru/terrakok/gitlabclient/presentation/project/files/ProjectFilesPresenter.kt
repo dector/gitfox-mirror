@@ -153,7 +153,7 @@ class ProjectFilesPresenter @Inject constructor(
                 it
             )
         },
-        Observable.empty(), //without auto refresh
+        Observable.empty(), // without auto refresh
         object : Paginator.ViewController<ProjectFile> {
             override fun showEmptyProgress(show: Boolean) {
                 viewState.showEmptyProgress(show)

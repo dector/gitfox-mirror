@@ -47,7 +47,7 @@ import ru.terrakok.gitlabclient.ui.user.info.UserInfoFragment
  */
 object Screens {
 
-    //flows
+    // Flows
     object AuthFlow : SupportAppScreen() {
         override fun getFragment() = AuthFlowFragment()
     }
@@ -84,7 +84,7 @@ object Screens {
         override fun getFragment() = MergeRequestFlowFragment.create(projectId, mrId, targetAction)
     }
 
-    //screens
+    // Screens
     object Main : SupportAppScreen() {
         override fun getFragment() = MainFragment()
     }
@@ -255,7 +255,7 @@ object Screens {
         override fun getFragment() = ProjectFileFragment.create(projectId, filePath, fileReference)
     }
 
-    //external flows
+    // External flows
     data class ExternalBrowserFlow(
         val url: String
     ) : SupportAppScreen() {

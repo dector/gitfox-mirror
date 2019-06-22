@@ -81,7 +81,7 @@ class MyMergeRequestsFragment : BaseFragment(), MyMergeRequestListView {
     override fun showEmptyProgress(show: Boolean) {
         fullscreenProgressView.visible(show)
 
-        //trick for disable and hide swipeToRefresh on fullscreen progress
+        // Trick for disable and hide swipeToRefresh on fullscreen progress
         swipeToRefresh.visible(!show)
         postViewAction { swipeToRefresh.isRefreshing = false }
     }

@@ -71,5 +71,4 @@ class ProjectLabelAdapterDelegate : AdapterDelegate<MutableList<Any>>() {
             private const val DARK_COLOR_THRESHOLD = .5f
         }
     }
-
 }

@@ -1,8 +1,7 @@
-image: jangrewe/gitlab-ci-android
+image: jangrewe/gitlab-ci-android:28
 
 before_script:
   - export GRADLE_USER_HOME=$(pwd)/.gradle
-  - export BUILD_NUMBER=$(git rev-list --count ${CI_BUILD_REF})
   - export BUILD_COMMIT_SHA=${CI_COMMIT_SHA}
   - chmod +x ./gradlew
 
@@ -12,26 +11,66 @@ cache:
     - .gradle/
 
 stages:
+  - code_quality
   - test
   - build
+
+lint:
+  stage: code_quality
+  script:
+    - ./gradlew lintDebug
+  artifacts:
+    when: on_failure
+    name: "lint_${CI_COMMIT_REF_NAME}"
+    expire_in: 1 days
+    paths:
+      - app/build/reports/lint-results-debug.xml
+  only:
+    - merge_requests
+
+ktlint:
+  stage: code_quality
+  script:
+    - ./gradlew ktlint
+  artifacts:
+    when: on_failure
+    name: "ktlint_${CI_COMMIT_REF_NAME}"
+    expire_in: 1 days
+    paths:
+      - app/build/reports/checkstyle/ktlint-report.xml
+  only:
+    - merge_requests
 
 unitTests:
   stage: test
   script:
-    - ./gradlew test
+    - ./gradlew testDebugUnitTest
+  artifacts:
+    when: on_failure
+    name: "unitTests_${CI_COMMIT_REF_NAME}"
+    expire_in: 1 days
+    paths:
+      - app/build/reports/tests/
   only:
-    - release
-    - master
+    - merge_requests
 
 build:
   stage: build
   script:
     - ./gradlew assembleDebug
-  artifacts:
-    name: "${CI_PROJECT_NAME}_${CI_COMMIT_REF_NAME}_${CI_COMMIT_SHA}"
-    paths:
-    - app/build/outputs/
   only:
-    - develop
-    - release
-    - master
+    - merge_requests
+
+buildDebugPG:
+  stage: build
+  script:
+    - ./gradlew assembleDebugPG
+  artifacts:
+    when: on_success
+    name: "buildDebugPG_${CI_COMMIT_REF_NAME}"
+    expire_in: 7d
+    paths:
+      - app/build/outputs/debugPG
+  only:
+    refs:
+      - develop

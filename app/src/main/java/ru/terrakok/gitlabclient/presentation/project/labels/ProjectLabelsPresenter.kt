@@ -79,5 +79,4 @@ class ProjectLabelsPresenter @Inject constructor(
         super.onDestroy()
         paginator.release()
     }
-
 }

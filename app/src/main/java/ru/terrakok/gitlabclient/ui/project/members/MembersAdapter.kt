@@ -30,7 +30,7 @@ class MembersAdapter(
         items.addAll(events)
         if (progress) items.add(ProgressItem())
 
-        //yes, on main thread...
+        // Yes, on main thread...
         DiffUtil
                 .calculateDiff(DiffCallback(items, oldData), false)
                 .dispatchUpdatesTo(this)

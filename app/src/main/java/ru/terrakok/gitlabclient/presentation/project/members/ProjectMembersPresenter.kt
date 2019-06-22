@@ -70,7 +70,7 @@ class ProjectMembersPresenter @Inject constructor(
     )
 
     fun onMemberClick(userId: Long) {
-        //TODO Member Flow(refactor this logic when Member Flow was be ready).
+        // TODO Member Flow(refactor this logic when Member Flow was be ready).
         router.startFlow(Screens.UserFlow(userId))
     }
 
