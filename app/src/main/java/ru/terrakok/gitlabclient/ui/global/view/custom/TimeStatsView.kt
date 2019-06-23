@@ -29,28 +29,32 @@ class TimeStatsView @JvmOverloads constructor(
         inflate(context, R.layout.view_time_stats, this)
     }
 
-    fun setTimeStats(timeStats: TimeStats) {
+    fun setTimeStats(timeStats: TimeStats?) {
         emptyTimeStats.visible(false)
         singleTimeStats.visible(false)
         progressGroup.visible(false)
 
-        when {
-            timeStats.totalTimeSpent > 0 && timeStats.timeEstimate > 0 -> initProgressViews(timeStats)
-            timeStats.totalTimeSpent > 0 -> {
-                initSingleSpentView(
-                    resources.getString(R.string.time_stats_spent_time),
-                    timeStats.humanTotalTimeSpent,
-                    singleTimeStats
-                )
+        if (timeStats != null) {
+            when {
+                timeStats.totalTimeSpent > 0 && timeStats.timeEstimate > 0 -> initProgressViews(timeStats)
+                timeStats.totalTimeSpent > 0 -> {
+                    initSingleSpentView(
+                        resources.getString(R.string.time_stats_spent_time),
+                        timeStats.humanTotalTimeSpent,
+                        singleTimeStats
+                    )
+                }
+                timeStats.timeEstimate > 0 -> {
+                    initSingleSpentView(
+                        resources.getString(R.string.time_stats_estimated_time),
+                        timeStats.humanTimeEstimate,
+                        singleTimeStats
+                    )
+                }
+                else -> emptyTimeStats.visible(true)
             }
-            timeStats.timeEstimate > 0 -> {
-                initSingleSpentView(
-                    resources.getString(R.string.time_stats_estimated_time),
-                    timeStats.humanTimeEstimate,
-                    singleTimeStats
-                )
-            }
-            else -> emptyTimeStats.visible(true)
+        } else {
+            emptyTimeStats.visible(true)
         }
     }
 

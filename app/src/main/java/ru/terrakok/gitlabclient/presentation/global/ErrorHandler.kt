@@ -1,5 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.global
 
+import android.annotation.SuppressLint
 import com.jakewharton.rxrelay2.PublishRelay
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.R
@@ -44,6 +45,7 @@ class ErrorHandler @Inject constructor(
         }
     }
 
+    @SuppressLint("CheckResult")
     private fun subscribeOnAuthErrors() {
         authErrorRelay
             .throttleFirst(50, TimeUnit.MILLISECONDS)

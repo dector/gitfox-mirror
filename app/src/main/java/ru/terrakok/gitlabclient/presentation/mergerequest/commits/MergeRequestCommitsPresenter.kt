@@ -36,7 +36,7 @@ class MergeRequestCommitsPresenter @Inject constructor(
 
     private val paginator = Paginator(
         { page -> mrInteractor.getMergeRequestCommits(projectId, mrId, page) },
-        Observable.empty(), //without auto refresh
+        Observable.empty(), // Without auto refresh
         object : Paginator.ViewController<CommitWithShortUser> {
             override fun showEmptyProgress(show: Boolean) {
                 viewState.showEmptyProgress(show)

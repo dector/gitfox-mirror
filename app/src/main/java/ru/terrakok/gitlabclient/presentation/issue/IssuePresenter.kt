@@ -40,7 +40,6 @@ class IssuePresenter @Inject constructor(
         super.onFirstViewAttach()
         updateToolbarTitle()
         selectActionTab()
-
     }
 
     private fun updateToolbarTitle() {
