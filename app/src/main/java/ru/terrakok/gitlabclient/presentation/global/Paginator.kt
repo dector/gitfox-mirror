@@ -1,6 +1,11 @@
 package ru.terrakok.gitlabclient.presentation.global
 
+import com.jakewharton.rxrelay2.PublishRelay
+import io.reactivex.Observable
+import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import timber.log.Timber
+import java.util.concurrent.Executors
+import javax.inject.Inject
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 2019-06-21.
@@ -61,19 +66,26 @@ object Paginator {
             }
         }
 
-    class Store<T> {
+    class Store<T> @Inject constructor(schedulers: SchedulersProvider) {
+        private var state: State<T> = State(0, false, emptyList(), false, null)
         var render: (State<T>) -> Unit = {}
             set(value) {
                 field = value
                 value(state)
             }
-        var sideEffectListener: (SideEffect) -> Unit = {}
 
-        private var state: State<T> = State(0, false, emptyList(), false, null)
+        private val sideEffectsExecutor = Executors.newSingleThreadExecutor()
+        private val sideEffectRelay = PublishRelay.create<SideEffect>()
+        val sideEffects: Observable<SideEffect> =
+            sideEffectRelay
+                .hide()
+                .observeOn(schedulers.ui())
 
         fun proceed(action: Action) {
             Timber.d("Action: $action")
-            val newState = reducer(action, state, sideEffectListener)
+            val newState = reducer(action, state) { sideEffect ->
+                sideEffectsExecutor.submit { sideEffectRelay.accept(sideEffect) }
+            }
             if (newState != state) {
                 state = newState
                 Timber.d("New state: $state")

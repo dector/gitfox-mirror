@@ -22,7 +22,8 @@ class ProjectsListPresenter @Inject constructor(
     @ProjectListMode private val modeWrapper: PrimitiveWrapper<Int>,
     private val router: FlowRouter,
     private val interactor: ProjectInteractor,
-    private val errorHandler: ErrorHandler
+    private val errorHandler: ErrorHandler,
+    private val paginator: Paginator.Store<Project>
 ) : BasePresenter<ProjectsListView>() {
 
     companion object {
@@ -33,13 +34,14 @@ class ProjectsListPresenter @Inject constructor(
 
     private val mode = modeWrapper.value
     private var pageDisposable: Disposable? = null
-    private val paginator = Paginator.Store<Project>().apply {
-        render = { viewState.renderPaginatorState(it) }
-        sideEffectListener = { effect ->
+
+    init {
+        paginator.render = { viewState.renderPaginatorState(it) }
+        paginator.sideEffects.subscribe { effect ->
             when (effect) {
                 is Paginator.SideEffect.LoadPage -> loadNewPage(effect.currentPage)
             }
-        }
+        }.connect()
     }
 
     override fun onFirstViewAttach() {

@@ -20,18 +20,22 @@ class ProjectLabelsPresenter @Inject constructor(
     @ProjectId projectIdWrapper: PrimitiveWrapper<Long>,
     private val labelInteractor: LabelInteractor,
     private val errorHandler: ErrorHandler,
-    private val flowRouter: FlowRouter
+    private val flowRouter: FlowRouter,
+    private val paginator: Paginator.Store<Label>
 ) : BasePresenter<ProjectLabelsView>() {
 
     private val projectId = projectIdWrapper.value
     private var pageDisposable: Disposable? = null
-    private val paginator = Paginator.Store<Label>().apply {
-        render = { viewState.renderPaginatorState(it) }
-        sideEffectListener = { effect ->
-            when (effect) {
-                is Paginator.SideEffect.LoadPage -> loadNewPage(effect.currentPage)
+
+    init {
+        paginator.render = { viewState.renderPaginatorState(it) }
+        paginator.sideEffects
+            .subscribe { effect ->
+                when (effect) {
+                    is Paginator.SideEffect.LoadPage -> loadNewPage(effect.currentPage)
+                }
             }
-        }
+            .connect()
     }
 
     override fun onFirstViewAttach() {

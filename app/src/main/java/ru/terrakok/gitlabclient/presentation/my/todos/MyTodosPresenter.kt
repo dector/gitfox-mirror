@@ -24,18 +24,20 @@ class MyTodosPresenter @Inject constructor(
     private val todoInteractor: TodoInteractor,
     private val mdConverter: MarkDownConverter,
     private val errorHandler: ErrorHandler,
-    private val router: FlowRouter
+    private val router: FlowRouter,
+    private val paginator: Paginator.Store<TargetHeader>
 ) : BasePresenter<MyTodoListView>() {
 
     private val isPending = pendingStateWrapper.value
     private var pageDisposable: Disposable? = null
-    private val paginator = Paginator.Store<TargetHeader>().apply {
-        render = { viewState.renderPaginatorState(it) }
-        sideEffectListener = { effect ->
+
+    init {
+        paginator.render = { viewState.renderPaginatorState(it) }
+        paginator.sideEffects.subscribe { effect ->
             when (effect) {
                 is Paginator.SideEffect.LoadPage -> loadNewPage(effect.currentPage)
             }
-        }
+        }.connect()
     }
 
     override fun onFirstViewAttach() {

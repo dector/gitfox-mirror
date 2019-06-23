@@ -30,20 +30,22 @@ class ProjectFilesPresenter @Inject constructor(
     private val errorHandler: ErrorHandler,
     private val router: FlowRouter,
     private val projectFileDestination: ProjectFileDestination,
-    private val resourceManager: ResourceManager
+    private val resourceManager: ResourceManager,
+    private val paginator: Paginator.Store<ProjectFile>
 ) : BasePresenter<ProjectFilesView>() {
 
     private val projectId = projectIdWrapper.value
     private val projectBranches = arrayListOf<Branch>()
 
     private var pageDisposable: Disposable? = null
-    private val paginator = Paginator.Store<ProjectFile>().apply {
-        render = { viewState.renderPaginatorState(it) }
-        sideEffectListener = { effect ->
+
+    init {
+        paginator.render = { viewState.renderPaginatorState(it) }
+        paginator.sideEffects.subscribe { effect ->
             when (effect) {
                 is Paginator.SideEffect.LoadPage -> loadNewPage(effect.currentPage)
             }
-        }
+        }.connect()
     }
 
     init {

@@ -20,19 +20,21 @@ class MergeRequestCommitsPresenter @Inject constructor(
     @ProjectId projectIdWrapper: PrimitiveWrapper<Long>,
     @MergeRequestId mrIdWrapper: PrimitiveWrapper<Long>,
     private val mrInteractor: MergeRequestInteractor,
-    private val errorHandler: ErrorHandler
+    private val errorHandler: ErrorHandler,
+    private val paginator: Paginator.Store<CommitWithShortUser>
 ) : BasePresenter<MergeRequestCommitsView>() {
 
     private val projectId = projectIdWrapper.value
     private val mrId = mrIdWrapper.value
     private var pageDisposable: Disposable? = null
-    private val paginator = Paginator.Store<CommitWithShortUser>().apply {
-        render = { viewState.renderPaginatorState(it) }
-        sideEffectListener = { effect ->
+
+    init {
+        paginator.render = { viewState.renderPaginatorState(it) }
+        paginator.sideEffects.subscribe { effect ->
             when (effect) {
                 is Paginator.SideEffect.LoadPage -> loadNewPage(effect.currentPage)
             }
-        }
+        }.connect()
     }
 
     override fun onFirstViewAttach() {

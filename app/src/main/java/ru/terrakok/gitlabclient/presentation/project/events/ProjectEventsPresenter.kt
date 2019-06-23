@@ -3,7 +3,6 @@ package ru.terrakok.gitlabclient.presentation.project.events
 import com.arellomobile.mvp.InjectViewState
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
-import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
@@ -25,18 +24,20 @@ class ProjectEventsPresenter @Inject constructor(
     private val eventInteractor: EventInteractor,
     private val mdConverter: MarkDownConverter,
     private val errorHandler: ErrorHandler,
-    private val router: FlowRouter
+    private val router: FlowRouter,
+    private val paginator: Paginator.Store<TargetHeader>
 ) : BasePresenter<ProjectEventsView>() {
 
     private val projectId = projectIdWrapper.value
     private var pageDisposable: Disposable? = null
-    private val paginator = Paginator.Store<TargetHeader>().apply {
-        render = { viewState.renderPaginatorState(it) }
-        sideEffectListener = { effect ->
+
+    init {
+        paginator.render = { viewState.renderPaginatorState(it) }
+        paginator.sideEffects.subscribe { effect ->
             when (effect) {
                 is Paginator.SideEffect.LoadPage -> loadNewPage(effect.currentPage)
             }
-        }
+        }.connect()
     }
 
     override fun onFirstViewAttach() {
