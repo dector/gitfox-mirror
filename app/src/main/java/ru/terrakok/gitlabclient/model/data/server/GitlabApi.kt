@@ -79,6 +79,12 @@ interface GitlabApi {
         @Query("stats") stats: Boolean = true
     ): Single<Commit>
 
+    @GET("$API_PATH/projects/{project_id}/repository/commits/{sha}/diff")
+    fun getCommitDiffData(
+        @Path("project_id") projectId: Long,
+        @Path("sha") sha: String
+    ): Single<List<DiffData>>
+
     @GET("$API_PATH/projects/{project_id}/repository/commits/")
     fun getRepositoryCommits(
         @Path("project_id") projectId: Long,
