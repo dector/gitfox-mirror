@@ -42,7 +42,7 @@ class MergeRequestCommitsFragment : BaseFragment(), MergeRequestCommitsView {
         )
     }
 
-    override fun renderPaginatorState(state: Paginator.State<CommitWithShortUser>) {
+    override fun renderPaginatorState(state: Paginator.State) {
         paginalRenderView.render(state)
     }
 

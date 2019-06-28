@@ -42,7 +42,7 @@ class ProjectMilestonesFragment : BaseFragment(), ProjectMilestonesView {
         )
     }
 
-    override fun renderPaginatorState(state: Paginator.State<Milestone>) {
+    override fun renderPaginatorState(state: Paginator.State) {
         paginalRenderView.render(state)
     }
 

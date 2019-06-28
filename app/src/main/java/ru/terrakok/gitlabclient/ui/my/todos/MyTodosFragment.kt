@@ -58,7 +58,7 @@ class MyTodosFragment : BaseFragment(), MyTodoListView {
         )
     }
 
-    override fun renderPaginatorState(state: Paginator.State<TargetHeader>) {
+    override fun renderPaginatorState(state: Paginator.State) {
         paginalRenderView.render(state)
     }
 

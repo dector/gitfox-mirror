@@ -43,7 +43,7 @@ class ProjectLabelsFragment : BaseFragment(), ProjectLabelsView {
         presenter.onBackPressed()
     }
 
-    override fun renderPaginatorState(state: Paginator.State<Label>) {
+    override fun renderPaginatorState(state: Paginator.State) {
         paginalRenderView.render(state)
     }
 

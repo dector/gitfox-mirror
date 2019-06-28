@@ -5,7 +5,6 @@ import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 import ru.terrakok.gitlabclient.entity.Branch
-import ru.terrakok.gitlabclient.entity.app.ProjectFile
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 
 /**
@@ -19,7 +18,7 @@ interface ProjectFilesView : MvpView {
     fun showBlockingProgress(show: Boolean)
     fun showBranchSelection(show: Boolean)
 
-    fun renderPaginatorState(state: Paginator.State<ProjectFile>)
+    fun renderPaginatorState(state: Paginator.State)
 
     @StateStrategyType(OneExecutionStateStrategy::class)
     fun showBranches(branches: List<Branch>)

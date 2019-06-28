@@ -57,10 +57,17 @@ fun Context.getTintDrawable(drawableRes: Int, colorRes: Int): Drawable {
     return wrapped
 }
 
-fun Context.getTintDrawable(drawableRes: Int, colorResources: IntArray, states: Array<IntArray>): Drawable {
+fun Context.getTintDrawable(
+    drawableRes: Int,
+    colorResources: IntArray,
+    states: Array<IntArray>
+): Drawable {
     val source = ContextCompat.getDrawable(this, drawableRes)!!.mutate()
     val wrapped = DrawableCompat.wrap(source)
-    DrawableCompat.setTintList(wrapped, ColorStateList(states, colorResources.map { color(it) }.toIntArray()))
+    DrawableCompat.setTintList(
+        wrapped,
+        ColorStateList(states, colorResources.map { color(it) }.toIntArray())
+    )
     return wrapped
 }
 
@@ -178,18 +185,20 @@ fun TargetHeader.Public.openInfo(router: FlowRouter) {
 }
 
 fun Fragment.showSnackMessage(message: String) {
-    view?.let {
-        val ssb = SpannableStringBuilder().apply {
-            append(message)
-            setSpan(
-                ForegroundColorSpan(Color.WHITE),
-                0,
-                message.length,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-        }
-        Snackbar.make(it, ssb, Snackbar.LENGTH_LONG).show()
+    view?.showSnackMessage(message)
+}
+
+fun View.showSnackMessage(message: String) {
+    val ssb = SpannableStringBuilder().apply {
+        append(message)
+        setSpan(
+            ForegroundColorSpan(Color.WHITE),
+            0,
+            message.length,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
     }
+    Snackbar.make(this, ssb, Snackbar.LENGTH_LONG).show()
 }
 
 fun Activity.hideKeyboard() {

@@ -4,7 +4,6 @@ import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
-import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 
 /**
@@ -13,7 +12,7 @@ import ru.terrakok.gitlabclient.presentation.global.Paginator
 
 @StateStrategyType(AddToEndSingleStrategy::class)
 interface ProjectsListView : MvpView {
-    fun renderPaginatorState(state: Paginator.State<Project>)
+    fun renderPaginatorState(state: Paginator.State)
 
     @StateStrategyType(OneExecutionStateStrategy::class)
     fun showMessage(message: String)

@@ -42,7 +42,7 @@ class ProjectMembersFragment : BaseFragment(), ProjectMembersView {
         )
     }
 
-    override fun renderPaginatorState(state: Paginator.State<Member>) {
+    override fun renderPaginatorState(state: Paginator.State) {
         paginalRenderView.render(state)
     }
 

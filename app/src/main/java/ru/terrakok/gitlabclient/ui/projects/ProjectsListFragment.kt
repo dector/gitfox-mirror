@@ -55,7 +55,7 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
         )
     }
 
-    override fun renderPaginatorState(state: Paginator.State<Project>) {
+    override fun renderPaginatorState(state: Paginator.State) {
         paginalRenderView.render(state)
     }
 

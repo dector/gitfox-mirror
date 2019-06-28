@@ -7,7 +7,6 @@ import android.widget.FrameLayout
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
 import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
 import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
 import kotlinx.android.synthetic.main.view_paginal_render.view.*
@@ -66,37 +65,64 @@ class PaginalRenderView @JvmOverloads constructor(
         recyclerView.adapter = adapter
     }
 
-    fun <T : Any> render(state: Paginator.State<T>) {
+    fun render(state: Paginator.State) {
         post {
-            swipeToRefresh.visible(true)
-            if (state.refreshProgress) {
-                if (state.items.isEmpty()) {
+            when (state) {
+                is Paginator.State.Empty -> {
+                    swipeToRefresh.isRefreshing = false
+                    fullscreenProgressView.visible(false)
+                    adapter?.fullData = true
+                    adapter?.update(emptyList(), false)
+                    emptyView.showEmptyData()
+                    swipeToRefresh.visible(true)
+                }
+                is Paginator.State.EmptyProgress -> {
                     swipeToRefresh.isRefreshing = false
                     fullscreenProgressView.visible(true)
-                    //trick for disable and hide swipeToRefresh on fullscreen progress
+                    adapter?.fullData = false
+                    adapter?.update(emptyList(), false)
+                    emptyView.hide()
                     swipeToRefresh.visible(false)
-                } else {
+                }
+                is Paginator.State.EmptyError -> {
+                    swipeToRefresh.isRefreshing = false
+                    fullscreenProgressView.visible(false)
+                    adapter?.fullData = false
+                    adapter?.update(emptyList(), false)
+                    emptyView.showEmptyError(state.error.userMessage(resourceManager))
+                    swipeToRefresh.visible(true)
+                }
+                is Paginator.State.Data<*> -> {
+                    swipeToRefresh.isRefreshing = false
+                    fullscreenProgressView.visible(false)
+                    adapter?.fullData = false
+                    adapter?.update(state.data as List<Any>, false)
+                    emptyView.hide()
+                    swipeToRefresh.visible(true)
+                }
+                is Paginator.State.Refresh<*> -> {
                     swipeToRefresh.isRefreshing = true
                     fullscreenProgressView.visible(false)
-                }
-            } else {
-                fullscreenProgressView.visible(false)
-                swipeToRefresh.isRefreshing = false
-            }
-
-            adapter?.update(state.items, state.pageProgress)
-            if (state.error != null) {
-                val msg = state.error.userMessage(resourceManager)
-                if (state.items.isEmpty()) {
-                    emptyView.showEmptyError(msg)
-                } else {
-                    Snackbar.make(this, msg, Snackbar.LENGTH_SHORT).show()
-                }
-            } else {
-                if (state.items.isEmpty() && !state.refreshProgress) {
-                    emptyView.showEmptyData()
-                } else {
+                    adapter?.fullData = false
+                    adapter?.update(state.data as List<Any>, false)
                     emptyView.hide()
+                    swipeToRefresh.visible(true)
+                }
+                is Paginator.State.NewPageProgress<*> -> {
+                    swipeToRefresh.isRefreshing = false
+                    fullscreenProgressView.visible(false)
+                    adapter?.fullData = false
+                    adapter?.update(state.data as List<Any>, true)
+                    emptyView.hide()
+                    swipeToRefresh.visible(true)
+                }
+                is Paginator.State.FullData<*> -> {
+                    swipeToRefresh.isRefreshing = false
+                    fullscreenProgressView.visible(false)
+                    adapter?.fullData = true
+                    adapter?.update(state.data as List<Any>, false)
+                    emptyView.hide()
+                    swipeToRefresh.visible(true)
                 }
             }
         }
@@ -116,6 +142,7 @@ class PaginalRenderView @JvmOverloads constructor(
                 override fun areContentsTheSame(oldItem: Any, newItem: Any) = oldItem == newItem
             }
         ) {
+        var fullData = false
 
         init {
             items = mutableListOf()
@@ -136,7 +163,7 @@ class PaginalRenderView @JvmOverloads constructor(
             payloads: MutableList<Any?>
         ) {
             super.onBindViewHolder(holder, position, payloads)
-            if (position >= items.size - 10) nextPageCallback?.invoke()
+            if (!fullData && position >= items.size - 10) nextPageCallback?.invoke()
         }
     }
 }

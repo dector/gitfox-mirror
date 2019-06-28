@@ -99,7 +99,7 @@ class ProjectFilesFragment : BaseFragment(), ProjectFilesView {
         toolbar.subtitle = branchName
     }
 
-    override fun renderPaginatorState(state: Paginator.State<ProjectFile>) {
+    override fun renderPaginatorState(state: Paginator.State) {
         paginalRenderView.render(state)
     }
 
