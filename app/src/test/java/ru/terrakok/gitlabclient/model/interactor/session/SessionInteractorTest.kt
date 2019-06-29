@@ -9,10 +9,11 @@ import org.junit.Test
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.verify
+import ru.terrakok.gitlabclient.TestData
 import ru.terrakok.gitlabclient.entity.app.session.OAuthParams
-import ru.terrakok.gitlabclient.entity.app.session.UserAccount
 import ru.terrakok.gitlabclient.model.data.cache.ProjectCache
 import ru.terrakok.gitlabclient.model.repository.session.SessionRepository
+
 
 /**
  * @author Artur Badretdinov (Gaket)
@@ -27,25 +28,18 @@ class SessionInteractorTest {
     private lateinit var projectCache: ProjectCache
 
     private val OAUTH_PARAMS =
-        OAuthParams("appId", "appKey", "redirect_url")
-    private val testAccount = UserAccount(
-        13L,
-        "token",
-        "user_server_path",
-        "user_avatar_url",
-        "user_name",
-        true
-    )
-
+            OAuthParams("appId", "appKey", "redirect_url")
+    private val testAccount = TestData.getUserAccount()
+    
     @Before
     fun setUp() {
         repository = mock()
         projectCache = mock()
         interactor = SessionInteractor(
-            "some server path",
-            repository,
-            OAUTH_PARAMS,
-            projectCache
+                "some server path",
+                repository,
+                OAUTH_PARAMS,
+                projectCache
         )
     }
 
@@ -114,35 +108,32 @@ class SessionInteractorTest {
         Assert.assertFalse(result)
     }
 
+
     @Test
     fun login_through_oauth_with_valid_hash() {
         val code = "helloReader"
         val hash = interactor.oauthUrl.substringAfterLast("=")
         val testUrl = "http://something.com/test?code=$code&state=happiness$hash"
 
-        `when`(
-            repository.login(
+        `when`(repository.login(
                 ArgumentMatchers.anyString(),
                 ArgumentMatchers.anyString(),
                 ArgumentMatchers.anyString(),
-                ArgumentMatchers.anyString()
-            )
-        ).thenReturn(Single.just(testAccount))
+                ArgumentMatchers.anyString())).thenReturn(Single.just(testAccount))
 
         val testObserver: TestObserver<Void> = interactor.login(testUrl).test()
         testObserver.awaitTerminalEvent()
 
         verify(repository).login(
-            OAUTH_PARAMS.appId,
-            OAUTH_PARAMS.appKey,
-            code,
-            OAUTH_PARAMS.redirectUrl
-        )
+                OAUTH_PARAMS.appId,
+                OAUTH_PARAMS.appKey,
+                code,
+                OAUTH_PARAMS.redirectUrl)
 
         testObserver
-            .assertNoValues()
-            .assertNoErrors()
-            .assertComplete()
+                .assertNoValues()
+                .assertNoErrors()
+                .assertComplete()
     }
 
     @Test
@@ -151,13 +142,14 @@ class SessionInteractorTest {
         val hash = "invalidHash"
         val testUrl = "http://something.com/test?code=$code&state=happiness$hash"
 
+
         val testObserver: TestObserver<Void> = interactor.login(testUrl).test()
         testObserver.awaitTerminalEvent()
 
         testObserver
-            .assertNoValues()
-            .assertError { it is RuntimeException }
-            .assertErrorMessage("Not valid oauth hash!")
+                .assertNoValues()
+                .assertError { it is RuntimeException }
+                .assertErrorMessage("Not valid oauth hash!")
     }
 
     @Test
@@ -165,12 +157,9 @@ class SessionInteractorTest {
         val customServerPath = "custom server path"
         val privateToken = "private token"
 
-        `when`(
-            repository.login(
+        `when`(repository.login(
                 ArgumentMatchers.anyString(),
-                ArgumentMatchers.anyString()
-            )
-        ).thenReturn(Single.just(testAccount))
+                ArgumentMatchers.anyString())).thenReturn(Single.just(testAccount))
 
         val testObserver: TestObserver<Void> = interactor.login(customServerPath, privateToken).test()
         testObserver.awaitTerminalEvent()
@@ -178,8 +167,8 @@ class SessionInteractorTest {
         verify(repository).login(privateToken, customServerPath)
 
         testObserver
-            .assertNoValues()
-            .assertNoErrors()
-            .assertComplete()
+                .assertNoValues()
+                .assertNoErrors()
+                .assertComplete()
     }
 }
