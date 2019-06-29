@@ -24,13 +24,8 @@ class TargetHeaderConfidentialAdapterDelegate : AdapterDelegate<MutableList<Any>
         position: Int,
         viewHolder: RecyclerView.ViewHolder,
         payloads: MutableList<Any>
-    ) = (viewHolder as ViewHolder).bind(items[position] as TargetHeader.Confidential)
-
-    private inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private lateinit var item: TargetHeader.Confidential
-
-        fun bind(item: TargetHeader.Confidential) {
-            this.item = item
-        }
+    ) {
     }
+
+    private inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
 }

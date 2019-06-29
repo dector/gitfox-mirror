@@ -4,10 +4,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
-import kotlinx.android.synthetic.main.item_system_note.view.*
+import kotlinx.android.extensions.LayoutContainer
+import kotlinx.android.synthetic.main.item_system_note.*
 import ru.noties.markwon.Markwon
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.Note
 import ru.terrakok.gitlabclient.extension.inflate
 import ru.terrakok.gitlabclient.presentation.global.NoteWithFormattedBody
 
@@ -29,15 +29,13 @@ class SystemNoteAdapterDelegate : AdapterDelegate<MutableList<Any>>() {
         payloads: MutableList<Any>
     ) = (viewHolder as ViewHolder).bind(items[position] as NoteWithFormattedBody)
 
-    private inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private lateinit var note: Note
+    private inner class ViewHolder(
+        override val containerView: View
+    ) : RecyclerView.ViewHolder(containerView), LayoutContainer {
 
         fun bind(data: NoteWithFormattedBody) {
-            this.note = data.note
-            with(itemView) {
-                titleTextView.text = note.author.name
-                Markwon.setText(subtitleTextView, data.body)
-            }
+            titleTextView.text = data.note.author.name
+            Markwon.setText(subtitleTextView, data.body)
         }
     }
 }

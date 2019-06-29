@@ -4,6 +4,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
+import kotlinx.android.extensions.LayoutContainer
+import kotlinx.android.synthetic.main.item_merge_request_change.*
 import kotlinx.android.synthetic.main.item_merge_request_change.view.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestChange
@@ -38,39 +40,40 @@ class MergeRequestChangeAdapterDelegate(
         (viewHolder as ViewHolder).recycle()
     }
 
-    private inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    private inner class ViewHolder(
+        override val containerView: View
+    ) : RecyclerView.ViewHolder(containerView), LayoutContainer {
+
         private lateinit var item: MergeRequestChange
 
         init {
-            view.setOnClickListener { clickListener(item) }
+            containerView.setOnClickListener { clickListener(item) }
         }
 
         fun bind(item: MergeRequestChange) {
             this.item = item
-            with(itemView) {
-                changePath.text = item.newPath
-                changeIcon.setImageResource(
-                    when {
-                        item.newFile -> R.drawable.ic_file_added
-                        item.deletedFile -> R.drawable.ic_file_deleted
-                        else -> R.drawable.ic_file_changed
-                    }
-                )
-                changeFileName.text = item.newPath.extractFileNameFromPath()
-                gitDiffView.setGitDiffText(item.diff)
-                changeAddedCount.text = context.getString(
-                    R.string.merge_request_changes_added_count,
-                    gitDiffView.getAddedLineCount()
-                )
-                changeDeletedCount.text = context.getString(
-                    R.string.merge_request_changes_deleted_count,
-                    gitDiffView.getDeletedLineCount()
-                )
-            }
+            changePath.text = item.newPath
+            changeIcon.setImageResource(
+                when {
+                    item.newFile -> R.drawable.ic_file_added
+                    item.deletedFile -> R.drawable.ic_file_deleted
+                    else -> R.drawable.ic_file_changed
+                }
+            )
+            changeFileName.text = item.newPath.extractFileNameFromPath()
+            gitDiffView.setGitDiffText(item.diff)
+            changeAddedCount.text = changeAddedCount.context.getString(
+                R.string.merge_request_changes_added_count,
+                gitDiffView.getAddedLineCount()
+            )
+            changeDeletedCount.text = changeAddedCount.context.getString(
+                R.string.merge_request_changes_deleted_count,
+                gitDiffView.getDeletedLineCount()
+            )
         }
 
         fun recycle() {
-            itemView.gitDiffView.release()
+            containerView.gitDiffView.release()
         }
     }
 }
