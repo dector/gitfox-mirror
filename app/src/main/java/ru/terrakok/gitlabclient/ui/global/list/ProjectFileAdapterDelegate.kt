@@ -4,7 +4,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
-import kotlinx.android.synthetic.main.item_project_file.view.*
+import kotlinx.android.extensions.LayoutContainer
+import kotlinx.android.synthetic.main.item_project_file.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.RepositoryTreeNodeType
 import ru.terrakok.gitlabclient.entity.app.ProjectFile
@@ -33,24 +34,25 @@ class ProjectFileAdapterDelegate(
         payloads: MutableList<Any>
     ) = (viewHolder as ViewHolder).bind(items[position] as ProjectFile)
 
-    private inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    private inner class ViewHolder(
+        override val containerView: View
+    ) : RecyclerView.ViewHolder(containerView), LayoutContainer {
+
         private lateinit var item: ProjectFile
 
         init {
-            view.setOnClickListener { fileClickListener(item) }
+            containerView.setOnClickListener { fileClickListener(item) }
         }
 
         fun bind(item: ProjectFile) {
             this.item = item
-            with(itemView) {
-                projectFileIcon.setImageResource(
-                    when (item.nodeType) {
-                        RepositoryTreeNodeType.BLOB -> R.drawable.ic_file
-                        RepositoryTreeNodeType.TREE -> R.drawable.ic_folder
-                    }
-                )
-                projectFileName.text = item.name
-            }
+            projectFileIcon.setImageResource(
+                when (item.nodeType) {
+                    RepositoryTreeNodeType.BLOB -> R.drawable.ic_file
+                    RepositoryTreeNodeType.TREE -> R.drawable.ic_folder
+                }
+            )
+            projectFileName.text = item.name
         }
     }
 }

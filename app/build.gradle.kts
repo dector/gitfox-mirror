@@ -93,6 +93,10 @@ android {
     }
 }
 
+androidExtensions {
+    isExperimental = true
+}
+
 dependencies {
     val moxyVersion = "1.7.0"
     val toothpickVersion = "2.1.0"

@@ -7,6 +7,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import androidx.recyclerview.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
+import kotlinx.android.extensions.LayoutContainer
+import kotlinx.android.synthetic.main.item_label.*
 import kotlinx.android.synthetic.main.item_label.view.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Color
@@ -39,15 +41,17 @@ class ProjectLabelAdapterDelegate : AdapterDelegate<MutableList<Any>>() {
         (holder as ViewHolder).bind(items[position] as Label)
     }
 
-    private class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    private inner class ViewHolder(
+        override val containerView: View
+    ) : RecyclerView.ViewHolder(containerView), LayoutContainer {
 
         @SuppressLint("SetTextI18n")
-        fun bind(item: Label) = with(itemView) {
+        fun bind(item: Label) {
             labelTitleTextView.text = item.name
 
             val descriptionIsEmpty = item.description.isNullOrBlank()
             labelDescriptionTextView.text = if (descriptionIsEmpty) {
-                context.getString(R.string.label_description_empty)
+                labelDescriptionTextView.context.getString(R.string.label_description_empty)
             } else {
                 item.description
             }
@@ -68,10 +72,6 @@ class ProjectLabelAdapterDelegate : AdapterDelegate<MutableList<Any>>() {
             setTextColor(textColor)
         }
 
-        private fun isColorDark(color: Int) = ColorUtils.calculateLuminance(color) < DARK_COLOR_THRESHOLD
-
-        companion object {
-            private const val DARK_COLOR_THRESHOLD = .5f
-        }
+        private fun isColorDark(color: Int) = ColorUtils.calculateLuminance(color) < 0.5f
     }
 }
