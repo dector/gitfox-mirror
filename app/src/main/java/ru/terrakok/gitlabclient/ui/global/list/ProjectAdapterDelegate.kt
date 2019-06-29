@@ -16,6 +16,9 @@ import ru.terrakok.gitlabclient.ui.global.view.custom.bindProject
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 18.06.17.
  */
+
+fun Project.isSame(other: Project) = id == other.id
+
 class ProjectAdapterDelegate(private val clickListener: (Project) -> Unit) : AdapterDelegate<MutableList<Any>>() {
 
     override fun isForViewType(items: MutableList<Any>, position: Int) =

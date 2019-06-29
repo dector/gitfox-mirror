@@ -1,6 +1,7 @@
 package ru.terrakok.gitlabclient.presentation.project.labels
 
 import com.arellomobile.mvp.InjectViewState
+import io.reactivex.disposables.Disposable
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
 import ru.terrakok.gitlabclient.entity.Label
@@ -19,64 +20,52 @@ class ProjectLabelsPresenter @Inject constructor(
     @ProjectId projectIdWrapper: PrimitiveWrapper<Long>,
     private val labelInteractor: LabelInteractor,
     private val errorHandler: ErrorHandler,
-    private val flowRouter: FlowRouter
+    private val flowRouter: FlowRouter,
+    private val paginator: Paginator.Store<Label>
 ) : BasePresenter<ProjectLabelsView>() {
 
     private val projectId = projectIdWrapper.value
+    private var pageDisposable: Disposable? = null
+
+    init {
+        paginator.render = { viewState.renderPaginatorState(it) }
+        paginator.sideEffects
+            .subscribe { effect ->
+                when (effect) {
+                    is Paginator.SideEffect.LoadPage -> loadNewPage(effect.currentPage)
+                    is Paginator.SideEffect.ErrorEvent -> {
+                        errorHandler.proceed(effect.error) { viewState.showMessage(it) }
+                    }
+                }
+            }
+            .connect()
+    }
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         refreshProjectLabels()
+        labelInteractor.labelChanges
+            .subscribe { paginator.proceed(Paginator.Action.Refresh) }
+            .connect()
     }
 
-    private val paginator = Paginator(
-        { page -> labelInteractor.getLabelList(projectId, page) },
-        labelInteractor.labelChanges,
-        object : Paginator.ViewController<Label> {
-            override fun showEmptyProgress(show: Boolean) {
-                viewState.showEmptyProgress(show)
-            }
-
-            override fun showEmptyError(show: Boolean, error: Throwable?) {
-                if (error != null) {
-                    errorHandler.proceed(error) { viewState.showEmptyError(show, it) }
-                } else {
-                    viewState.showEmptyError(show, null)
-                }
-            }
-
-            override fun showErrorMessage(error: Throwable) {
-                errorHandler.proceed(error) { viewState.showMessage(it) }
-            }
-
-            override fun showEmptyView(show: Boolean) {
-                viewState.showEmptyView(show)
-            }
-
-            override fun showData(show: Boolean, data: List<Label>) {
-                viewState.showLabels(show, data)
-            }
-
-            override fun showRefreshProgress(show: Boolean) {
-                viewState.showRefreshProgress(show)
-            }
-
-            override fun showPageProgress(show: Boolean) {
-                viewState.showPageProgress(show)
-            }
-        }
-    )
-
-    fun refreshProjectLabels() {
-        paginator.refresh()
+    private fun loadNewPage(page: Int) {
+        pageDisposable?.dispose()
+        pageDisposable =
+            labelInteractor.getLabelList(projectId, page)
+                .subscribe(
+                    { data ->
+                        paginator.proceed(Paginator.Action.NewPage(page, data))
+                    },
+                    { e ->
+                        errorHandler.proceed(e)
+                        paginator.proceed(Paginator.Action.PageError(e))
+                    }
+                )
+        pageDisposable?.connect()
     }
 
-    fun loadNextLabelsPage() = paginator.loadNewPage()
-
+    fun refreshProjectLabels() = paginator.proceed(Paginator.Action.Refresh)
+    fun loadNextLabelsPage() = paginator.proceed(Paginator.Action.LoadMore)
     fun onBackPressed() = flowRouter.exit()
-
-    override fun onDestroy() {
-        super.onDestroy()
-        paginator.release()
-    }
 }

@@ -14,6 +14,9 @@
         app:navigationIcon="@drawable/ic_menu_white_24dp"
         app:title="@string/gitlab_activity"/>
 
-    <include layout="@layout/layout_base_list"/>
+    <ru.terrakok.gitlabclient.ui.global.view.custom.PaginalRenderView
+        android:id="@+id/paginalRenderView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

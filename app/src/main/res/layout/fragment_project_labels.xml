@@ -3,5 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include layout="@layout/layout_base_list" />
+    <ru.terrakok.gitlabclient.ui.global.view.custom.PaginalRenderView
+        android:id="@+id/paginalRenderView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </FrameLayout>
