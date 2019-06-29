@@ -78,7 +78,7 @@ class MergeRequestNotesFragment : BaseFragment(), MergeRequestNotesView {
     }
 
     override fun showNotes(notes: List<NoteWithFormattedBody>, scrollToPosition: Int?) {
-        adapter.setData(notes)
+        adapter.items = notes
         scrollToPosition?.let { recyclerView.scrollToPosition(it) }
     }
 

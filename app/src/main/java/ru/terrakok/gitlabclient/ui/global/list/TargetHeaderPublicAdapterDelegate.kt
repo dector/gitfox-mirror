@@ -19,8 +19,13 @@ import ru.terrakok.gitlabclient.ui.global.view.custom.bindShortUser
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 18.06.17.
  */
+
+fun TargetHeader.Public.isSame(other: TargetHeader.Public) =
+    target == other.target
+        && targetId == other.targetId
+        && date == other.date
+
 class TargetHeaderPublicAdapterDelegate(
-    private val avatarClickListener: (Long) -> Unit,
     private val clickListener: (TargetHeader.Public) -> Unit
 ) : AdapterDelegate<MutableList<Any>>() {
 
@@ -58,7 +63,6 @@ class TargetHeaderPublicAdapterDelegate(
 
         init {
             view.setOnClickListener { clickListener(item) }
-            view.avatarImageView.setOnClickListener { avatarClickListener(item.author.id) }
 
             (1..5).forEach {
                 view.badgesContainer.inflate(R.layout.item_target_badge, true)

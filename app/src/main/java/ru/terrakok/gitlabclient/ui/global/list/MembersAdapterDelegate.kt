@@ -13,6 +13,9 @@ import ru.terrakok.gitlabclient.ui.global.view.custom.bindMember
 /**
  * @author Valentin Logvinovitch (glvvl) on 28.02.19.
  */
+
+fun Member.isSame(other: Member) = id == other.id
+
 class MembersAdapterDelegate(
     private val clickListener: (Long) -> Unit
 ) : AdapterDelegate<MutableList<Any>>() {

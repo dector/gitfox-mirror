@@ -14,6 +14,9 @@ import ru.terrakok.gitlabclient.ui.global.view.custom.bindShortUser
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 20.10.18.
  */
+
+fun CommitWithShortUser.isSame(other: CommitWithShortUser) = commit.id == other.commit.id
+
 class CommitAdapterDelegate : AdapterDelegate<MutableList<Any>>() {
 
     override fun isForViewType(items: MutableList<Any>, position: Int) =

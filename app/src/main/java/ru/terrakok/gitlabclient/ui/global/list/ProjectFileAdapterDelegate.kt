@@ -13,6 +13,9 @@ import ru.terrakok.gitlabclient.extension.inflate
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 02.11.18.
  */
+
+fun ProjectFile.isSame(other: ProjectFile) = id == other.id
+
 class ProjectFileAdapterDelegate(
     private val fileClickListener: (ProjectFile) -> Unit
 ) : AdapterDelegate<MutableList<Any>>() {
