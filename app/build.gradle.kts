@@ -119,7 +119,7 @@ dependencies {
     implementation("com.github.stephanenicolas.toothpick:toothpick-runtime:$toothpickVersion")
     kapt("com.github.stephanenicolas.toothpick:toothpick-compiler:$toothpickVersion")
     //Gson
-    implementation("com.google.code.gson:gson:2.8.2")
+    implementation("com.google.code.gson:gson:2.8.5")
     //Retrofit
     implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
     implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
