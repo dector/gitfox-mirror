@@ -1,8 +1,7 @@
 package ru.terrakok.gitlabclient.presentation.project.events
 
 import com.arellomobile.mvp.InjectViewState
-import io.reactivex.Observable
-import ru.terrakok.gitlabclient.Screens
+import io.reactivex.disposables.Disposable
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
@@ -22,63 +21,48 @@ class ProjectEventsPresenter @Inject constructor(
     @ProjectId private val projectIdWrapper: PrimitiveWrapper<Long>,
     private val eventInteractor: EventInteractor,
     private val errorHandler: ErrorHandler,
-    private val router: FlowRouter
+    private val router: FlowRouter,
+    private val paginator: Paginator.Store<TargetHeader>
 ) : BasePresenter<ProjectEventsView>() {
 
     private val projectId = projectIdWrapper.value
+    private var pageDisposable: Disposable? = null
+
+    init {
+        paginator.render = { viewState.renderPaginatorState(it) }
+        paginator.sideEffects.subscribe { effect ->
+            when (effect) {
+                is Paginator.SideEffect.LoadPage -> loadNewPage(effect.currentPage)
+                is Paginator.SideEffect.ErrorEvent -> {
+                    errorHandler.proceed(effect.error) { viewState.showMessage(it) }
+                }
+            }
+        }.connect()
+    }
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-
         refreshEvents()
     }
 
-    private val paginator = Paginator(
-        { eventInteractor.getProjectEvents(projectId, it) },
-        Observable.empty(), //without auto refresh
-        object : Paginator.ViewController<TargetHeader> {
-            override fun showEmptyProgress(show: Boolean) {
-                viewState.showEmptyProgress(show)
-            }
-
-            override fun showEmptyError(show: Boolean, error: Throwable?) {
-                if (error != null) {
-                    errorHandler.proceed(error, { viewState.showEmptyError(show, it) })
-                } else {
-                    viewState.showEmptyError(show, null)
-                }
-            }
-
-            override fun showErrorMessage(error: Throwable) {
-                errorHandler.proceed(error, { viewState.showMessage(it) })
-            }
-
-            override fun showEmptyView(show: Boolean) {
-                viewState.showEmptyView(show)
-            }
-
-            override fun showData(show: Boolean, data: List<TargetHeader>) {
-                viewState.showEvents(show, data)
-            }
-
-            override fun showRefreshProgress(show: Boolean) {
-                viewState.showRefreshProgress(show)
-            }
-
-            override fun showPageProgress(show: Boolean) {
-                viewState.showPageProgress(show)
-            }
-        }
-    )
+    private fun loadNewPage(page: Int) {
+        pageDisposable?.dispose()
+        pageDisposable =
+            eventInteractor.getProjectEvents(projectId, page)
+                .subscribe(
+                    { data ->
+                        paginator.proceed(Paginator.Action.NewPage(page, data))
+                    },
+                    { e ->
+                        errorHandler.proceed(e)
+                        paginator.proceed(Paginator.Action.PageError(e))
+                    }
+                )
+        pageDisposable?.connect()
+    }
 
     fun onItemClick(item: TargetHeader.Public) = item.openInfo(router)
-    fun onUserClick(userId: Long) = router.startFlow(Screens.UserFlow(userId))
-    fun refreshEvents() = paginator.refresh()
-    fun loadNextEventsPage() = paginator.loadNewPage()
+    fun refreshEvents() = paginator.proceed(Paginator.Action.Refresh)
+    fun loadNextEventsPage() = paginator.proceed(Paginator.Action.LoadMore)
     fun onBackPressed() = router.exit()
-
-    override fun onDestroy() {
-        super.onDestroy()
-        paginator.release()
-    }
 }

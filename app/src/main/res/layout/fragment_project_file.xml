@@ -10,7 +10,6 @@
         style="@style/ToolbarStyle"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
-        android:elevation="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

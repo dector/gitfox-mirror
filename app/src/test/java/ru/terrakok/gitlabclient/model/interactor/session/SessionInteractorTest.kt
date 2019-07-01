@@ -9,8 +9,8 @@ import org.junit.Test
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.verify
+import ru.terrakok.gitlabclient.TestData
 import ru.terrakok.gitlabclient.entity.app.session.OAuthParams
-import ru.terrakok.gitlabclient.entity.app.session.UserAccount
 import ru.terrakok.gitlabclient.model.data.cache.ProjectCache
 import ru.terrakok.gitlabclient.model.repository.session.SessionRepository
 
@@ -29,14 +29,8 @@ class SessionInteractorTest {
 
     private val OAUTH_PARAMS =
             OAuthParams("appId", "appKey", "redirect_url")
-    private val testAccount = UserAccount(
-            13L,
-            "token",
-            "user_server_path",
-            "user_avatar_url",
-            "user_name",
-            true)
-
+    private val testAccount = TestData.getUserAccount()
+    
     @Before
     fun setUp() {
         repository = mock()

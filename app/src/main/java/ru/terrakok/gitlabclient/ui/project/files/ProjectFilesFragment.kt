@@ -3,21 +3,21 @@ package ru.terrakok.gitlabclient.ui.project.files
 import android.os.Bundle
 import android.text.TextUtils
 import android.widget.PopupMenu
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_project_files.*
-import kotlinx.android.synthetic.main.layout_base_list.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Branch
 import ru.terrakok.gitlabclient.entity.app.ProjectFile
 import ru.terrakok.gitlabclient.extension.setTitleEllipsize
 import ru.terrakok.gitlabclient.extension.showSnackMessage
-import ru.terrakok.gitlabclient.extension.visible
+import ru.terrakok.gitlabclient.presentation.global.Paginator
 import ru.terrakok.gitlabclient.presentation.project.files.ProjectFileDestination
 import ru.terrakok.gitlabclient.presentation.project.files.ProjectFilesPresenter
 import ru.terrakok.gitlabclient.presentation.project.files.ProjectFilesView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.ui.global.list.ProjectFileAdapterDelegate
+import ru.terrakok.gitlabclient.ui.global.list.isSame
 import toothpick.Scope
 import toothpick.config.Module
 
@@ -43,13 +43,6 @@ class ProjectFilesFragment : BaseFragment(), ProjectFilesView {
     fun providePresenter(): ProjectFilesPresenter =
         scope.getInstance(ProjectFilesPresenter::class.java)
 
-    private val adapter: ProjectFilesAdapter by lazy {
-        ProjectFilesAdapter(
-            { presenter.onFileClick(it) },
-            { presenter.loadNextFilesPage() }
-        )
-    }
-
     private lateinit var projectFileDestination: ProjectFileDestination
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,12 +55,6 @@ class ProjectFilesFragment : BaseFragment(), ProjectFilesView {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        recyclerView.apply {
-            layoutManager = LinearLayoutManager(context)
-            setHasFixedSize(true)
-            adapter = this@ProjectFilesFragment.adapter
-        }
         toolbar.apply {
             inflateMenu(R.menu.project_files_menu)
             setNavigationOnClickListener { presenter.onNavigationCloseClicked() }
@@ -82,9 +69,16 @@ class ProjectFilesFragment : BaseFragment(), ProjectFilesView {
             }
             setTitleEllipsize(TextUtils.TruncateAt.START)
         }
-
-        swipeToRefresh.setOnRefreshListener { presenter.refreshFiles() }
-        emptyView.setRefreshListener { presenter.refreshFiles() }
+        paginalRenderView.init(
+            { presenter.refreshFiles() },
+            { presenter.loadNextFilesPage() },
+            { o, n ->
+                if (o is ProjectFile && n is ProjectFile) {
+                    o.isSame(n)
+                } else false
+            },
+            ProjectFileAdapterDelegate { presenter.onFileClick(it) }
+        )
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -105,33 +99,8 @@ class ProjectFilesFragment : BaseFragment(), ProjectFilesView {
         toolbar.subtitle = branchName
     }
 
-    override fun showRefreshProgress(show: Boolean) {
-        postViewAction { swipeToRefresh.isRefreshing = show }
-    }
-
-    override fun showEmptyProgress(show: Boolean) {
-        fullscreenProgressView.visible(show)
-
-        //trick for disable and hide swipeToRefresh on fullscreen progress
-        swipeToRefresh.visible(!show)
-        postViewAction { swipeToRefresh.isRefreshing = false }
-    }
-
-    override fun showPageProgress(show: Boolean) {
-        postViewAction { adapter.showProgress(show) }
-    }
-
-    override fun showEmptyView(show: Boolean) {
-        emptyView.apply { if (show) showEmptyData() else hide() }
-    }
-
-    override fun showEmptyError(show: Boolean, message: String?) {
-        emptyView.apply { if (show) showEmptyError(message) else hide() }
-    }
-
-    override fun showFiles(show: Boolean, files: List<ProjectFile>) {
-        recyclerView.visible(show)
-        postViewAction { adapter.setData(files) }
+    override fun renderPaginatorState(state: Paginator.State) {
+        paginalRenderView.render(state)
     }
 
     override fun showBlockingProgress(show: Boolean) {

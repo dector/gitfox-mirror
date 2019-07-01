@@ -4,8 +4,11 @@ import io.reactivex.Single
 import io.reactivex.observers.TestObserver
 import org.junit.Test
 import org.mockito.Mockito.*
+import ru.terrakok.gitlabclient.TestData
 import ru.terrakok.gitlabclient.TestSchedulers
-import ru.terrakok.gitlabclient.entity.*
+import ru.terrakok.gitlabclient.entity.Branch
+import ru.terrakok.gitlabclient.entity.OrderBy
+import ru.terrakok.gitlabclient.entity.RepositoryTreeNodeType
 import ru.terrakok.gitlabclient.entity.app.ProjectFile
 import ru.terrakok.gitlabclient.model.repository.project.ProjectRepository
 import ru.terrakok.gitlabclient.model.repository.tools.Base64Tools
@@ -23,45 +26,7 @@ class ProjectInteractorTest {
 
     private val testError = RuntimeException("test error")
     private val testPage = 13
-    private val testProject = Project(
-            id = 42L,
-            description = null,
-            defaultBranch = "test_br",
-            visibility = Visibility.PUBLIC,
-            sshUrlToRepo = null,
-            httpUrlToRepo = null,
-            webUrl = "https://gitlab.com/terrakok/gitlab-client",
-            tagList = null,
-            owner = null,
-            name = "",
-            nameWithNamespace = "",
-            path = "test path",
-            pathWithNamespace = "",
-            issuesEnabled = false,
-            openIssuesCount = 0L,
-            mergeRequestsEnabled = false,
-            jobsEnabled = false,
-            wikiEnabled = false,
-            snippetsEnabled = false,
-            containerRegistryEnabled = false,
-            createdAt = null,
-            lastActivityAt = null,
-            creatorId = 0L,
-            namespace = null,
-            permissions = null,
-            archived = false,
-            avatarUrl = null,
-            sharedRunnersEnabled = false,
-            forksCount = 0L,
-            starCount = 0L,
-            runnersToken = null,
-            publicJobs = false,
-            sharedWithGroups = null,
-            onlyAllowMergeIfPipelineSucceeds = false,
-            onlyAllowMergeIfAllDiscussionsAreResolved = false,
-            requestAccessEnabled = false,
-            readmeUrl = "https://gitlab.com/terrakok/gitlab-client/blob/test_br/README.md"
-    )
+    private val testProject = TestData.getProject(42L)
     private val testProjectsList = listOf(testProject)
 
     @Test
@@ -185,16 +150,7 @@ class ProjectInteractorTest {
     fun get_project_raw_file() {
         val raw = "lorem ipsum"
         val testFileContent = "bG9yZW0gaXBzdW0=" //base64 for raw
-        val testFile = File(
-                "",
-                "",
-                0L,
-                "",
-                testFileContent,
-                testProject.defaultBranch!!,
-                "",
-                "",
-                "")
+        val testFile = TestData.getFile(testFileContent, testProject.defaultBranch!!)
 
         `when`(repo.getProjectFile(anyLong(), anyString(), anyString())).thenReturn(Single.just(testFile))
         `when`(base64Tools.decode(anyString())).thenReturn(raw)
@@ -217,16 +173,7 @@ class ProjectInteractorTest {
     fun get_project_readme() {
         val raw = "lorem ipsum"
         val testFileContent = "bG9yZW0gaXBzdW0=" //base64 for raw
-        val testFile = File(
-                "",
-                "",
-                0L,
-                "",
-                testFileContent,
-                testProject.defaultBranch!!,
-                "",
-                "",
-                "")
+        val testFile = TestData.getFile(testFileContent, testProject.defaultBranch!!)
 
         `when`(repo.getProjectFile(anyLong(), anyString(), anyString())).thenReturn(Single.just(testFile))
         `when`(base64Tools.decode(anyString())).thenReturn(raw)
@@ -251,7 +198,7 @@ class ProjectInteractorTest {
         val testObserver: TestObserver<String> = interactor.getProjectReadme(projectWithoutReadme).test()
         testObserver.awaitTerminalEvent()
 
-        verifyZeroInteractions(repo)
+        verify(repo, times(1)).projectChanges
         verifyZeroInteractions(base64Tools)
 
         testObserver

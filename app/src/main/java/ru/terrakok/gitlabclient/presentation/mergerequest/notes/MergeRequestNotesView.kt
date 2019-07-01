@@ -21,5 +21,4 @@ interface MergeRequestNotesView : MvpView {
 
     @StateStrategyType(OneExecutionStateStrategy::class)
     fun clearInput()
-
 }

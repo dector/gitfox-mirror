@@ -58,8 +58,8 @@ abstract class BaseFragment : MvpAppCompatFragment() {
         instanceStateSaved = false
     }
 
-    //fix for async views (like swipeToRefresh and RecyclerView)
-    //if synchronously call actions on swipeToRefresh in sequence show and hide then swipeToRefresh will not hidden
+    // Fix for async views (like swipeToRefresh and RecyclerView)
+    // If synchronously call actions on swipeToRefresh in sequence show and hide then swipeToRefresh will not hidden
     protected fun postViewAction(action: () -> Unit) {
         viewHandler.post(action)
     }
@@ -78,18 +78,18 @@ abstract class BaseFragment : MvpAppCompatFragment() {
     override fun onDestroy() {
         super.onDestroy()
         if (needCloseScope()) {
-            //destroy this fragment with scope
+            // Destroy this fragment with scope
             Timber.d("Destroy UI scope: $fragmentScopeName")
             Toothpick.closeScope(scope.name)
         }
     }
 
-    //This is android, baby!
+    // This is android, baby!
     private fun isRealRemoving(): Boolean =
-        (isRemoving && !instanceStateSaved) //because isRemoving == true for fragment in backstack on screen rotation
-            || ((parentFragment as? BaseFragment)?.isRealRemoving() ?: false)
+        (isRemoving && !instanceStateSaved) || // Because isRemoving == true for fragment in backstack on screen rotation
+            ((parentFragment as? BaseFragment)?.isRealRemoving() ?: false)
 
-    //It will be valid only for 'onDestroy()' method
+    // It will be valid only for 'onDestroy()' method
     private fun needCloseScope(): Boolean =
         when {
             activity?.isChangingConfigurations == true -> false

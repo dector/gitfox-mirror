@@ -12,7 +12,6 @@ import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import toothpick.Toothpick
 import javax.inject.Inject
 
-
 class ProjectsContainerFragment : BaseFragment() {
     @Inject
     lateinit var menuController: GlobalMenuController

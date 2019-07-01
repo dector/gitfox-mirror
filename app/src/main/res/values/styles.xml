@@ -41,12 +41,15 @@
     </style>
 
     <!--STYLES-->
-    <style name="ToolbarStyle" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+    <style name="Base.ToolbarStyle" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:background">@color/colorPrimary</item>
         <item name="android:theme">@style/ToolbarTheme</item>
-        <item name="android:elevation">8dp</item>
         <item name="popupTheme">@style/PopupToolbarTheme</item>
     </style>
+
+    <style name="ToolbarStyle" parent="Base.ToolbarStyle" />
+
+    <style name="ToolbarWithTabsStyle" parent="Base.ToolbarStyle" />
 
     <style name="FloatingActionButtonStyle" parent="Widget.Design.FloatingActionButton">
         <item name="backgroundTint">?attr/colorPrimary</item>

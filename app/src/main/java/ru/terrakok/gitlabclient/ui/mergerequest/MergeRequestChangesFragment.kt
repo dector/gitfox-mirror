@@ -1,10 +1,12 @@
 package ru.terrakok.gitlabclient.ui.mergerequest
 
 import android.os.Bundle
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import kotlinx.android.synthetic.main.layout_base_list.*
+import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
+import kotlinx.android.synthetic.main.fragment_mr_changes.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestChange
 import ru.terrakok.gitlabclient.extension.showSnackMessage
@@ -12,7 +14,9 @@ import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.mergerequest.changes.MergeRequestChangesPresenter
 import ru.terrakok.gitlabclient.presentation.mergerequest.changes.MergeRequestChangesView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.ui.global.list.MergeRequestChangeAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.SimpleDividerDecorator
+import ru.terrakok.gitlabclient.ui.global.list.isSame
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 25.10.18.
@@ -21,7 +25,22 @@ class MergeRequestChangesFragment : BaseFragment(), MergeRequestChangesView {
 
     override val layoutRes = R.layout.fragment_mr_changes
 
-    private val adapter by lazy { MergeRequestChangeAdapter({ presenter.onMergeRequestChangeClick(it) }) }
+    private val adapter by lazy {
+        object : AsyncListDifferDelegationAdapter<MergeRequestChange>(
+            object : DiffUtil.ItemCallback<MergeRequestChange>() {
+                override fun areItemsTheSame(oldItem: MergeRequestChange, newItem: MergeRequestChange) = oldItem.isSame(newItem)
+                override fun areContentsTheSame(oldItem: MergeRequestChange, newItem: MergeRequestChange) = oldItem == newItem
+                override fun getChangePayload(oldItem: MergeRequestChange, newItem: MergeRequestChange) = Any()
+            }
+        ) {
+            init {
+                items = mutableListOf()
+                delegatesManager.addDelegate(
+                    MergeRequestChangeAdapterDelegate { presenter.onMergeRequestChangeClick(it) }
+                )
+            }
+        }
+    }
 
     @InjectPresenter
     lateinit var presenter: MergeRequestChangesPresenter
@@ -51,7 +70,7 @@ class MergeRequestChangesFragment : BaseFragment(), MergeRequestChangesView {
     override fun showEmptyProgress(show: Boolean) {
         fullscreenProgressView.visible(show)
 
-        //trick for disable and hide swipeToRefresh on fullscreen progress
+        // Trick for disable and hide swipeToRefresh on fullscreen progress
         swipeToRefresh.visible(!show)
         postViewAction { swipeToRefresh.isRefreshing = false }
     }
@@ -66,7 +85,7 @@ class MergeRequestChangesFragment : BaseFragment(), MergeRequestChangesView {
 
     override fun showChanges(show: Boolean, changes: List<MergeRequestChange>) {
         recyclerView.visible(show)
-        postViewAction { adapter.setData(changes) }
+        postViewAction { adapter.items = changes }
     }
 
     override fun showMessage(message: String) {

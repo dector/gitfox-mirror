@@ -5,9 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.arellomobile.mvp.MvpDelegate
 import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
-import kotlinx.android.synthetic.main.item_user_note.view.*
+import kotlinx.android.extensions.LayoutContainer
+import kotlinx.android.synthetic.main.item_user_note.*
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.Note
 import ru.terrakok.gitlabclient.extension.humanTime
 import ru.terrakok.gitlabclient.extension.inflate
 import ru.terrakok.gitlabclient.presentation.global.NoteWithProjectId
@@ -33,18 +33,17 @@ class UserNoteAdapterDelegate(
         payloads: MutableList<Any>
     ) = (viewHolder as ViewHolder).bind(items[position] as NoteWithProjectId)
 
-    private inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private lateinit var note: Note
+    private inner class ViewHolder(
+        override val containerView: View
+    ) : RecyclerView.ViewHolder(containerView), LayoutContainer {
 
         fun bind(data: NoteWithProjectId) {
-            this.note = data.note
-            with(itemView) {
-                avatarImageView.bindShortUser(note.author)
-                titleTextView.text = note.author.name
-                subtitleTextView.text = note.createdAt.humanTime(context.resources)
-                descriptionTextView.initWithParentDelegate(mvpDelegate)
-                descriptionTextView.setMarkdown(note.body, data.projectId)
-            }
+            val note = data.note
+            avatarImageView.bindShortUser(note.author)
+            titleTextView.text = note.author.name
+            subtitleTextView.text = note.createdAt.humanTime(subtitleTextView.context.resources)
+            descriptionTextView.initWithParentDelegate(mvpDelegate)
+            descriptionTextView.setMarkdown(note.body, data.projectId)
         }
     }
 }
