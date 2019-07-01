@@ -38,6 +38,7 @@ class ProjectInfoFragment : BaseFragment(), ProjectInfoView {
         with(view) {
             starsTextView.setStartDrawable(context.getTintDrawable(R.drawable.ic_star_black_24dp, R.color.colorPrimary))
             forksTextView.setStartDrawable(context.getTintDrawable(R.drawable.ic_fork, R.color.colorPrimary))
+            issuesTextView.setStartDrawable(context.getTintDrawable(R.drawable.ic_issues_18dp, R.color.colorPrimary))
         }
     }
 
@@ -46,6 +47,7 @@ class ProjectInfoFragment : BaseFragment(), ProjectInfoView {
         descriptionTextView.text = project.description
         starsTextView.text = project.starCount.toString()
         forksTextView.text = project.forksCount.toString()
+        issuesTextView.text = project.openIssuesCount.toString()
 
         avatarImageView.bindProject(project, false)
         iconImageView.setBackgroundResource(R.drawable.circle)
