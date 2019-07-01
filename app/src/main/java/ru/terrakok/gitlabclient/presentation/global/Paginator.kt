@@ -1,299 +1,149 @@
 package ru.terrakok.gitlabclient.presentation.global
 
+import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Observable
-import io.reactivex.Single
-import io.reactivex.disposables.Disposable
+import ru.terrakok.gitlabclient.model.system.SchedulersProvider
+import timber.log.Timber
+import java.util.concurrent.Executors
+import javax.inject.Inject
 
 /**
- * Created by Konstantin Tskhovrebov (aka @terrakok) on 22.07.17.
+ * Created by Konstantin Tskhovrebov (aka @terrakok) on 2019-06-21.
  */
-class Paginator<T>(
-    private val requestFactory: (Int) -> Single<List<T>>,
-    private val invalidator: Observable<out Any>,
-    private val viewController: ViewController<T>
-) {
+object Paginator {
 
-    interface ViewController<T> {
-        fun showEmptyProgress(show: Boolean)
-        fun showEmptyError(show: Boolean, error: Throwable? = null)
-        fun showEmptyView(show: Boolean)
-        fun showData(show: Boolean, data: List<T> = emptyList())
-        fun showErrorMessage(error: Throwable)
-        fun showRefreshProgress(show: Boolean)
-        fun showPageProgress(show: Boolean)
+    sealed class State {
+        object Empty : State()
+        object EmptyProgress : State()
+        data class EmptyError(val error: Throwable) : State()
+        data class Data<T>(val pageCount: Int, val data: List<T>) : State()
+        data class Refresh<T>(val pageCount: Int, val data: List<T>) : State()
+        data class NewPageProgress<T>(val pageCount: Int, val data: List<T>) : State()
+        data class FullData<T>(val pageCount: Int, val data: List<T>) : State()
     }
 
-    private val FIRST_PAGE = 1
-
-    private var currentState: State<T> = EMPTY()
-    private var currentPage = 0
-    private val currentData = mutableListOf<T>()
-    private var invalidatorDisposable: Disposable? = null
-    private var requestDisposable: Disposable? = null
-
-    fun restart() {
-        currentState.restart()
+    sealed class Action {
+        object Refresh : Action()
+        object Restart : Action()
+        object LoadMore : Action()
+        data class NewPage<T>(val pageNumber: Int, val items: List<T>) : Action()
+        data class PageError(val error: Throwable) : Action()
     }
 
-    fun refresh() {
-        currentState.refresh()
+    sealed class SideEffect {
+        data class LoadPage(val currentPage: Int) : SideEffect()
+        data class ErrorEvent(val error: Throwable) : SideEffect()
     }
 
-    fun loadNewPage() {
-        currentState.loadNewPage()
-    }
-
-    fun release() {
-        currentState.release()
-    }
-
-    private fun subscribeOnInvalidator() {
-        invalidatorDisposable = invalidator.subscribe { refresh() }
-    }
-
-    private fun disposeAll() {
-        invalidatorDisposable?.dispose()
-        requestDisposable?.dispose()
-    }
-
-    private fun loadPage(page: Int) {
-        requestDisposable?.dispose()
-        requestDisposable = requestFactory.invoke(page)
-            .subscribe(
-                { currentState.newData(it) },
-                { currentState.fail(it) }
-            )
-    }
-
-    private interface State<T> {
-        fun restart() {}
-        fun refresh() {}
-        fun loadNewPage() {}
-        fun release() {}
-        fun newData(data: List<T>) {}
-        fun fail(error: Throwable) {}
-    }
-
-    private inner class EMPTY : State<T> {
-
-        override fun refresh() {
-            currentState = EMPTY_PROGRESS()
-            viewController.showEmptyProgress(true)
-            loadPage(FIRST_PAGE)
-            subscribeOnInvalidator()
-        }
-
-        override fun release() {
-            currentState = RELEASED()
-            disposeAll()
-        }
-    }
-
-    private inner class EMPTY_PROGRESS : State<T> {
-
-        override fun restart() {
-            loadPage(FIRST_PAGE)
-        }
-
-        override fun newData(data: List<T>) {
-            if (data.isNotEmpty()) {
-                currentState = DATA()
-                currentData.clear()
-                currentData.addAll(data)
-                currentPage = FIRST_PAGE
-                viewController.showData(true, currentData)
-                viewController.showEmptyProgress(false)
-            } else {
-                currentState = EMPTY_DATA()
-                viewController.showEmptyProgress(false)
-                viewController.showEmptyView(true)
+    private fun <T> reducer(
+        action: Action,
+        state: State,
+        sideEffectListener: (SideEffect) -> Unit
+    ): State =
+        when (action) {
+            is Action.Refresh -> {
+                sideEffectListener(SideEffect.LoadPage(1))
+                when (state) {
+                    is State.Empty -> State.EmptyProgress
+                    is State.EmptyError -> State.EmptyProgress
+                    is State.Data<*> -> State.Refresh(state.pageCount, state.data as List<T>)
+                    is State.NewPageProgress<*> -> State.Refresh(
+                        state.pageCount,
+                        state.data as List<T>
+                    )
+                    is State.FullData<*> -> State.Refresh(state.pageCount, state.data as List<T>)
+                    else -> state
+                }
+            }
+            is Action.Restart -> {
+                sideEffectListener(SideEffect.LoadPage(1))
+                when (state) {
+                    is State.Empty -> State.EmptyProgress
+                    is State.EmptyError -> State.EmptyProgress
+                    is State.Data<*> -> State.EmptyProgress
+                    is State.Refresh<*> -> State.EmptyProgress
+                    is State.NewPageProgress<*> -> State.EmptyProgress
+                    is State.FullData<*> -> State.EmptyProgress
+                    else -> state
+                }
+            }
+            is Action.LoadMore -> {
+                when (state) {
+                    is State.Data<*> -> {
+                        sideEffectListener(SideEffect.LoadPage(state.pageCount + 1))
+                        State.NewPageProgress(state.pageCount, state.data as List<T>)
+                    }
+                    else -> state
+                }
+            }
+            is Action.NewPage<*> -> {
+                val items = action.items as List<T>
+                when (state) {
+                    is State.EmptyProgress -> {
+                        if (items.isEmpty()) {
+                            State.Empty
+                        } else {
+                            State.Data(1, items)
+                        }
+                    }
+                    is State.Refresh<*> -> {
+                        if (items.isEmpty()) {
+                            State.Empty
+                        } else {
+                            State.Data(1, items)
+                        }
+                    }
+                    is State.NewPageProgress<*> -> {
+                        if (items.isEmpty()) {
+                            State.FullData(state.pageCount, state.data as List<T>)
+                        } else {
+                            State.Data(state.pageCount + 1, state.data as List<T> + items)
+                        }
+                    }
+                    else -> state
+                }
+            }
+            is Action.PageError -> {
+                when (state) {
+                    is State.EmptyProgress -> State.EmptyError(action.error)
+                    is State.Refresh<*> -> {
+                        sideEffectListener(Paginator.SideEffect.ErrorEvent(action.error))
+                        State.Data(state.pageCount, state.data as List<T>)
+                    }
+                    is State.NewPageProgress<*> -> {
+                        sideEffectListener(Paginator.SideEffect.ErrorEvent(action.error))
+                        State.Data(state.pageCount, state.data as List<T>)
+                    }
+                    else -> state
+                }
             }
         }
 
-        override fun fail(error: Throwable) {
-            currentState = EMPTY_ERROR()
-            viewController.showEmptyProgress(false)
-            viewController.showEmptyError(true, error)
-        }
+    class Store<T> @Inject constructor(schedulers: SchedulersProvider) {
+        private var state: State = Paginator.State.Empty
+        var render: (State) -> Unit = {}
+            set(value) {
+                field = value
+                value(state)
+            }
 
-        override fun release() {
-            currentState = RELEASED()
-            disposeAll()
-        }
-    }
+        private val sideEffectsExecutor = Executors.newSingleThreadExecutor()
+        private val sideEffectRelay = PublishRelay.create<SideEffect>()
+        val sideEffects: Observable<SideEffect> =
+            sideEffectRelay
+                .hide()
+                .observeOn(schedulers.ui())
 
-    private inner class EMPTY_ERROR : State<T> {
-
-        override fun restart() {
-            currentState = EMPTY_PROGRESS()
-            viewController.showEmptyError(false)
-            viewController.showEmptyProgress(true)
-            loadPage(FIRST_PAGE)
-        }
-
-        override fun refresh() {
-            currentState = EMPTY_PROGRESS()
-            viewController.showEmptyError(false)
-            viewController.showEmptyProgress(true)
-            loadPage(FIRST_PAGE)
-        }
-
-        override fun release() {
-            currentState = RELEASED()
-            disposeAll()
-        }
-    }
-
-    private inner class EMPTY_DATA : State<T> {
-
-        override fun restart() {
-            currentState = EMPTY_PROGRESS()
-            viewController.showEmptyView(false)
-            viewController.showEmptyProgress(true)
-            loadPage(FIRST_PAGE)
-        }
-
-        override fun refresh() {
-            currentState = EMPTY_PROGRESS()
-            viewController.showEmptyView(false)
-            viewController.showEmptyProgress(true)
-            loadPage(FIRST_PAGE)
-        }
-
-        override fun release() {
-            currentState = RELEASED()
-            disposeAll()
-        }
-    }
-
-    private inner class DATA : State<T> {
-
-        override fun restart() {
-            currentState = EMPTY_PROGRESS()
-            viewController.showData(false)
-            viewController.showEmptyProgress(true)
-            loadPage(FIRST_PAGE)
-        }
-
-        override fun refresh() {
-            currentState = REFRESH()
-            viewController.showRefreshProgress(true)
-            loadPage(FIRST_PAGE)
-        }
-
-        override fun loadNewPage() {
-            currentState = PAGE_PROGRESS()
-            viewController.showPageProgress(true)
-            loadPage(currentPage + 1)
-        }
-
-        override fun release() {
-            currentState = RELEASED()
-            disposeAll()
-        }
-    }
-
-    private inner class REFRESH : State<T> {
-
-        override fun restart() {
-            currentState = EMPTY_PROGRESS()
-            viewController.showData(false)
-            viewController.showRefreshProgress(false)
-            viewController.showEmptyProgress(true)
-            loadPage(FIRST_PAGE)
-        }
-
-        override fun newData(data: List<T>) {
-            if (data.isNotEmpty()) {
-                currentState = DATA()
-                currentData.clear()
-                currentData.addAll(data)
-                currentPage = FIRST_PAGE
-                viewController.showRefreshProgress(false)
-                viewController.showData(true, currentData)
-            } else {
-                currentState = EMPTY_DATA()
-                currentData.clear()
-                viewController.showData(false)
-                viewController.showRefreshProgress(false)
-                viewController.showEmptyView(true)
+        fun proceed(action: Action) {
+            Timber.d("Action: $action")
+            val newState = reducer<T>(action, state) { sideEffect ->
+                sideEffectsExecutor.submit { sideEffectRelay.accept(sideEffect) }
+            }
+            if (newState != state) {
+                state = newState
+                Timber.d("New state: $state")
+                render(state)
             }
         }
-
-        override fun fail(error: Throwable) {
-            currentState = DATA()
-            viewController.showRefreshProgress(false)
-            viewController.showErrorMessage(error)
-        }
-
-        override fun release() {
-            currentState = RELEASED()
-            disposeAll()
-        }
     }
-
-    private inner class PAGE_PROGRESS : State<T> {
-
-        override fun restart() {
-            currentState = EMPTY_PROGRESS()
-            viewController.showData(false)
-            viewController.showPageProgress(false)
-            viewController.showEmptyProgress(true)
-            loadPage(FIRST_PAGE)
-        }
-
-        override fun newData(data: List<T>) {
-            if (data.isNotEmpty()) {
-                currentState = DATA()
-                currentData.addAll(data)
-                currentPage++
-                viewController.showPageProgress(false)
-                viewController.showData(true, currentData)
-            } else {
-                currentState = ALL_DATA()
-                viewController.showPageProgress(false)
-            }
-        }
-
-        override fun refresh() {
-            currentState = REFRESH()
-            viewController.showPageProgress(false)
-            viewController.showRefreshProgress(true)
-            loadPage(FIRST_PAGE)
-        }
-
-        override fun fail(error: Throwable) {
-            currentState = DATA()
-            viewController.showPageProgress(false)
-            viewController.showErrorMessage(error)
-        }
-
-        override fun release() {
-            currentState = RELEASED()
-            disposeAll()
-        }
-    }
-
-    private inner class ALL_DATA : State<T> {
-
-        override fun restart() {
-            currentState = EMPTY_PROGRESS()
-            viewController.showData(false)
-            viewController.showEmptyProgress(true)
-            loadPage(FIRST_PAGE)
-        }
-
-        override fun refresh() {
-            currentState = REFRESH()
-            viewController.showRefreshProgress(true)
-            loadPage(FIRST_PAGE)
-        }
-
-        override fun release() {
-            currentState = RELEASED()
-            disposeAll()
-        }
-    }
-
-    private inner class RELEASED : State<T>
 }

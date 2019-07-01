@@ -57,7 +57,7 @@ class SessionInteractor @Inject constructor(
             .doOnSuccess { switchAccount(it) }
             .ignoreElement()
 
-    //return hasOtherAccount
+    // Return hasOtherAccount
     fun logout(): Boolean {
         val currentAccount = sessionRepository.getCurrentUserAccount()
         if (currentAccount != null) {
@@ -67,7 +67,7 @@ class SessionInteractor @Inject constructor(
         }
     }
 
-    //return hasOtherAccount
+    // Return hasOtherAccount
     fun logout(accountId: String): Boolean {
         projectCache.clear()
         val newAccount = sessionRepository.logout(accountId)

@@ -6,6 +6,8 @@ plugins {
     id("org.jetbrains.kotlin.android.extensions")
 }
 
+apply(from = "${project.rootDir}/codequality/ktlint.gradle.kts")
+
 val buildUid = System.getenv("BUILD_COMMIT_SHA") ?: "local"
 android {
     compileSdkVersion(28)
@@ -20,6 +22,12 @@ android {
         versionCode = 20
 
         buildToolsVersion = "28.0.3"
+
+        lintOptions {
+            isWarningsAsErrors = true
+            isIgnoreTestSources = true
+            setLintConfig(file("${project.rootDir}/codequality/lint_rules.xml"))
+        }
 
         defaultConfig {
             buildConfigField("String", "VERSION_UID", "\"$buildUid\"")
@@ -85,6 +93,10 @@ android {
     }
 }
 
+androidExtensions {
+    isExperimental = true
+}
+
 dependencies {
     val moxyVersion = "1.7.0"
     val toothpickVersion = "2.1.0"
@@ -111,7 +123,7 @@ dependencies {
     implementation("com.github.stephanenicolas.toothpick:toothpick-runtime:$toothpickVersion")
     kapt("com.github.stephanenicolas.toothpick:toothpick-compiler:$toothpickVersion")
     //Gson
-    implementation("com.google.code.gson:gson:2.8.2")
+    implementation("com.google.code.gson:gson:2.8.5")
     //Retrofit
     implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
     implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
@@ -139,7 +151,7 @@ dependencies {
     //FlexBox Layout
     implementation("com.google.android:flexbox:1.0.0")
     //Firebase
-    implementation("com.google.firebase:firebase-core:16.0.9")
+    implementation("com.google.firebase:firebase-core:17.0.0")
     //Crashlytics
     implementation("com.crashlytics.sdk.android:crashlytics:2.10.1")
 
@@ -152,6 +164,8 @@ dependencies {
     testImplementation("org.mockito:mockito-core:2.27.0")
     //Mockito Kotlin
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0")
+    //Date with timezone
+    testImplementation("org.threeten:threetenbp:1.4.0")
 }
 
 configurations.all {

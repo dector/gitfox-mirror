@@ -3,24 +3,20 @@ package ru.terrakok.gitlabclient.entity.app.target
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 26.12.17.
  */
-sealed class TargetBadge(
-    val target: AppTarget?,
-    val targetId: Long?,
-    val internal: TargetInternal?
-) {
-    class Text(
-        val text: String,
-        target: AppTarget? = null,
-        targetId: Long? = null,
-        internal: TargetInternal? = null
-    ) : TargetBadge(target, targetId, internal)
+sealed class TargetBadge {
+    data class Text(
+            val text: String,
+            val target: AppTarget? = null,
+            val targetId: Long? = null,
+            val internal: TargetInternal? = null
+    ) : TargetBadge()
 
-    class Icon(
-        val icon: TargetBadgeIcon,
-        val count: Int
-    ) : TargetBadge(null, null, null)
+    data class Icon(
+            val icon: TargetBadgeIcon,
+            val count: Int
+    ) : TargetBadge()
 
-    class Status(
-        val status: TargetBadgeStatus
-    ) : TargetBadge(null, null, null)
+    data class Status(
+            val status: TargetBadgeStatus
+    ) : TargetBadge()
 }

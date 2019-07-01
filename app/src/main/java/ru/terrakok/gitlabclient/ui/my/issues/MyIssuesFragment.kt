@@ -1,18 +1,19 @@
 package ru.terrakok.gitlabclient.ui.my.issues
 
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import kotlinx.android.synthetic.main.layout_base_list.*
+import kotlinx.android.synthetic.main.fragment_my_issues.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.extension.showSnackMessage
-import ru.terrakok.gitlabclient.extension.visible
+import ru.terrakok.gitlabclient.presentation.global.Paginator
 import ru.terrakok.gitlabclient.presentation.my.issues.MyIssuesPresenter
 import ru.terrakok.gitlabclient.presentation.my.issues.MyIssuesView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import ru.terrakok.gitlabclient.ui.my.TargetsAdapter
+import ru.terrakok.gitlabclient.ui.global.list.TargetHeaderConfidentialAdapterDelegate
+import ru.terrakok.gitlabclient.ui.global.list.TargetHeaderPublicAdapterDelegate
+import ru.terrakok.gitlabclient.ui.global.list.isSame
 import toothpick.Scope
 import toothpick.config.Module
 
@@ -25,15 +26,6 @@ class MyIssuesFragment : BaseFragment(), MyIssuesView {
 
     @InjectPresenter
     lateinit var presenter: MyIssuesPresenter
-
-    private val adapter: TargetsAdapter by lazy {
-        TargetsAdapter(
-            mvpDelegate,
-            { presenter.onUserClick(it) },
-            { presenter.onIssueClick(it) },
-            { presenter.loadNextIssuesPage() }
-        )
-    }
 
     override fun installModules(scope: Scope) {
         scope.installModules(object : Module() {
@@ -55,15 +47,17 @@ class MyIssuesFragment : BaseFragment(), MyIssuesView {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        recyclerView.apply {
-            layoutManager = LinearLayoutManager(context)
-            setHasFixedSize(true)
-            adapter = this@MyIssuesFragment.adapter
-        }
-
-        swipeToRefresh.setOnRefreshListener { presenter.refreshIssues() }
-        emptyView.setRefreshListener { presenter.refreshIssues() }
+        paginalRenderView.init(
+            { presenter.refreshIssues() },
+            { presenter.loadNextIssuesPage() },
+            { o, n ->
+                if (o is TargetHeader.Public && n is TargetHeader.Public) {
+                    o.isSame(n)
+                } else false
+            },
+            TargetHeaderPublicAdapterDelegate { presenter.onIssueClick(it) },
+            TargetHeaderConfidentialAdapterDelegate()
+        )
     }
 
     fun showOnlyOpened(onlyOpened: Boolean) {
@@ -75,33 +69,8 @@ class MyIssuesFragment : BaseFragment(), MyIssuesView {
         )
     }
 
-    override fun showRefreshProgress(show: Boolean) {
-        postViewAction { swipeToRefresh.isRefreshing = show }
-    }
-
-    override fun showEmptyProgress(show: Boolean) {
-        fullscreenProgressView.visible(show)
-
-        //trick for disable and hide swipeToRefresh on fullscreen progress
-        swipeToRefresh.visible(!show)
-        postViewAction { swipeToRefresh.isRefreshing = false }
-    }
-
-    override fun showPageProgress(show: Boolean) {
-        postViewAction { adapter.showProgress(show) }
-    }
-
-    override fun showEmptyView(show: Boolean) {
-        emptyView.apply { if (show) showEmptyData() else hide() }
-    }
-
-    override fun showEmptyError(show: Boolean, message: String?) {
-        emptyView.apply { if (show) showEmptyError(message) else hide() }
-    }
-
-    override fun showIssues(show: Boolean, issues: List<TargetHeader>) {
-        recyclerView.visible(show)
-        postViewAction { adapter.setData(issues) }
+    override fun renderPaginatorState(state: Paginator.State) {
+        paginalRenderView.render(state)
     }
 
     override fun showMessage(message: String) {

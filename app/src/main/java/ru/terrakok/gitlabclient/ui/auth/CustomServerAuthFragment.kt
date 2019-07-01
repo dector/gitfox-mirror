@@ -13,7 +13,6 @@ import okhttp3.HttpUrl
 import ru.terrakok.gitlabclient.BuildConfig
 import ru.terrakok.gitlabclient.R
 
-
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 17.09.17.
  */

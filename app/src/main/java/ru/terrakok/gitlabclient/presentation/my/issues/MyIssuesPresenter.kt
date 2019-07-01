@@ -1,10 +1,9 @@
 package ru.terrakok.gitlabclient.presentation.my.issues
 
 import com.arellomobile.mvp.InjectViewState
-import ru.terrakok.gitlabclient.Screens
+import io.reactivex.disposables.Disposable
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.extension.openInfo
-import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 import ru.terrakok.gitlabclient.model.interactor.issue.IssueInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
@@ -19,72 +18,71 @@ import javax.inject.Inject
 class MyIssuesPresenter @Inject constructor(
     initFilter: Filter,
     private val issueInteractor: IssueInteractor,
-    private val serverChanges: ServerChanges,
     private val errorHandler: ErrorHandler,
-    private val router: FlowRouter
+    private val router: FlowRouter,
+    private val paginator: Paginator.Store<TargetHeader>
 ) : BasePresenter<MyIssuesView>() {
     data class Filter(val createdByMe: Boolean, val onlyOpened: Boolean)
 
     private var filter = initFilter
+    private var pageDisposable: Disposable? = null
+
+    init {
+        paginator.render = { viewState.renderPaginatorState(it) }
+        paginator.sideEffects.subscribe { effect ->
+            when (effect) {
+                is Paginator.SideEffect.LoadPage -> loadNewPage(effect.currentPage)
+                is Paginator.SideEffect.ErrorEvent -> {
+                    errorHandler.proceed(effect.error) { viewState.showMessage(it) }
+                }
+            }
+        }.connect()
+    }
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-
         refreshIssues()
+        issueInteractor.issueChanges
+            .subscribe { paginator.proceed(Paginator.Action.Refresh) }
+            .connect()
     }
 
-    private val paginator = Paginator(
-        { issueInteractor.getMyIssues(filter.createdByMe, filter.onlyOpened, it) },
-        issueInteractor.issueChanges,
-        object : Paginator.ViewController<TargetHeader> {
-            override fun showEmptyProgress(show: Boolean) {
-                viewState.showEmptyProgress(show)
-            }
-
-            override fun showEmptyError(show: Boolean, error: Throwable?) {
-                if (error != null) {
-                    errorHandler.proceed(error, { viewState.showEmptyError(show, it) })
-                } else {
-                    viewState.showEmptyError(show, null)
+    private fun loadNewPage(page: Int) {
+        pageDisposable?.dispose()
+        pageDisposable =
+            issueInteractor.getMyIssues(filter.createdByMe, filter.onlyOpened, page)
+                .flattenAsObservable { it }
+                .concatMap { item ->
+                    when (item) {
+                        is TargetHeader.Public -> {
+                            mdConverter.markdownToSpannable(item.body.toString())
+                                .map { md -> item.copy(body = md) }
+                                .toObservable()
+                        }
+                        is TargetHeader.Confidential -> Observable.just(item)
+                    }
                 }
-            }
-
-            override fun showErrorMessage(error: Throwable) {
-                errorHandler.proceed(error, { viewState.showMessage(it) })
-            }
-
-            override fun showEmptyView(show: Boolean) {
-                viewState.showEmptyView(show)
-            }
-
-            override fun showData(show: Boolean, data: List<TargetHeader>) {
-                viewState.showIssues(show, data)
-            }
-
-            override fun showRefreshProgress(show: Boolean) {
-                viewState.showRefreshProgress(show)
-            }
-
-            override fun showPageProgress(show: Boolean) {
-                viewState.showPageProgress(show)
-            }
-        }
-    )
+                .toList()
+                .subscribe(
+                    { data ->
+                        paginator.proceed(Paginator.Action.NewPage(page, data))
+                    },
+                    { e ->
+                        errorHandler.proceed(e)
+                        paginator.proceed(Paginator.Action.PageError(e))
+                    }
+                )
+        pageDisposable?.connect()
+    }
 
     fun applyNewFilter(filter: Filter) {
         if (this.filter != filter) {
             this.filter = filter
-            paginator.restart()
+            paginator.proceed(Paginator.Action.Restart)
         }
     }
 
     fun onIssueClick(item: TargetHeader.Public) = item.openInfo(router)
-    fun onUserClick(userId: Long) = router.startFlow(Screens.UserFlow(userId))
-    fun refreshIssues() = paginator.refresh()
-    fun loadNextIssuesPage() = paginator.loadNewPage()
-
-    override fun onDestroy() {
-        super.onDestroy()
-        paginator.release()
-    }
+    fun refreshIssues() = paginator.proceed(Paginator.Action.Refresh)
+    fun loadNextIssuesPage() = paginator.proceed(Paginator.Action.LoadMore)
 }
