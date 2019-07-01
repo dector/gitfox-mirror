@@ -13,11 +13,11 @@ import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 class MarkDownConverter(
     private val parser: Parser,
     private val decorator: MarkdownDecorator,
-    private val visitorFactory: (projectId: Long, builder: SpannableBuilder) -> Single<Visitor>,
+    private val visitorFactory: (projectId: Long?, builder: SpannableBuilder) -> Single<Visitor>,
     private val schedulers: SchedulersProvider
 ) {
 
-    fun markdownToSpannable(raw: String, projectId: Long): Single<CharSequence> = Single.defer {
+    fun markdownToSpannable(raw: String, projectId: Long?): Single<CharSequence> = Single.defer {
         val builder = SpannableBuilder()
         visitorFactory(projectId, builder)
             .map { visitor ->

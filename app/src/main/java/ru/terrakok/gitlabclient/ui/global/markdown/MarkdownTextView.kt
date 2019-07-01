@@ -48,7 +48,7 @@ class MarkdownTextView : TextView, MarkdownView {
         mvpDelegate.onAttach()
     }
 
-    fun setMarkdown(markdown: String?, projectId: Long) {
+    fun setMarkdown(markdown: String?, projectId: Long?) {
         text = null
         if (markdown != null) {
             presenter.setMarkdown(markdown, projectId)

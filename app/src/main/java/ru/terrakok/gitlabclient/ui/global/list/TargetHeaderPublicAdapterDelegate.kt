@@ -71,7 +71,7 @@ class TargetHeaderPublicAdapterDelegate(
             with(itemView) {
                 titleTextView.text = item.title.getHumanName(resources)
                 descriptionTextView.initWithParentDelegate(mvpDelegate)
-                descriptionTextView.setMarkdown(item.body, item.internal.projectId)
+                descriptionTextView.setMarkdown(item.body, item.internal?.projectId)
                 descriptionTextView.movementMethod = null //disable internal link click
                 avatarImageView.bindShortUser(item.author)
                 iconImageView.setImageResource(item.icon.getIcon())
