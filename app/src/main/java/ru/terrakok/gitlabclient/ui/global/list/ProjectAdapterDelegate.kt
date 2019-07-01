@@ -42,6 +42,12 @@ class ProjectAdapterDelegate(private val clickListener: (Project) -> Unit) :
                     R.color.colorPrimary
                 )
             )
+            issuesTextView.setStartDrawable(
+                context.getTintDrawable(
+                    R.drawable.ic_issues_18dp,
+                    R.color.colorPrimary
+                )
+            )
         }
         return ViewHolder(root)
     }
@@ -74,6 +80,7 @@ class ProjectAdapterDelegate(private val clickListener: (Project) -> Unit) :
 
             starsTextView.text = project.starCount.toString()
             forksTextView.text = project.forksCount.toString()
+            issuesTextView.text = project.openIssuesCount.toString()
 
             iconImageView.setImageResource(
                 when (project.visibility) {

@@ -53,7 +53,7 @@
         tools:text="I am having the exact same issue when installing 9.4 from source. I can login via LDAP but I cannot login as the default …" />
 
     <TextView
-        android:id="@+id/starsTextView"
+        android:id="@+id/issuesTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -64,9 +64,9 @@
         android:textSize="14sp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/descriptionTextView"
-        tools:drawableStart="@drawable/ic_star_black_24dp"
+        tools:drawableStart="@drawable/ic_issues_18dp"
         tools:drawableTint="@color/colorPrimary"
-        tools:text="2911" />
+        tools:text="242" />
 
     <TextView
         android:id="@+id/forksTextView"
@@ -78,11 +78,27 @@
         android:gravity="center_vertical|end"
         android:textColor="@color/colorPrimary"
         android:textSize="14sp"
-        app:layout_constraintRight_toLeftOf="@+id/starsTextView"
+        app:layout_constraintRight_toLeftOf="@+id/issuesTextView"
         app:layout_constraintTop_toBottomOf="@+id/descriptionTextView"
         tools:drawableStart="@drawable/ic_fork"
         tools:drawableTint="@color/colorPrimary"
         tools:text="2900" />
+
+    <TextView
+        android:id="@+id/starsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:drawablePadding="4dp"
+        android:gravity="center_vertical|end"
+        android:textColor="@color/colorPrimary"
+        android:textSize="14sp"
+        app:layout_constraintRight_toLeftOf="@+id/forksTextView"
+        app:layout_constraintTop_toBottomOf="@+id/descriptionTextView"
+        tools:drawableStart="@drawable/ic_star_black_24dp"
+        tools:drawableTint="@color/colorPrimary"
+        tools:text="2911" />
 
     <View
         android:layout_width="0dp"

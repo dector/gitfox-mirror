@@ -52,7 +52,7 @@
                 tools:text="GitLab Community Edition" />
 
             <TextView
-                android:id="@+id/forksTextView"
+                android:id="@+id/starsTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
@@ -62,12 +62,28 @@
                 android:textSize="16sp"
                 app:layout_constraintLeft_toLeftOf="@id/titleTextView"
                 app:layout_constraintTop_toBottomOf="@id/titleTextView"
+                tools:drawableStart="@drawable/ic_star_black_24dp"
+                tools:drawableTint="@color/colorPrimary"
+                tools:text="68" />
+
+            <TextView
+                android:id="@+id/forksTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
+                android:drawablePadding="4dp"
+                android:gravity="center_vertical|end"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp"
+                app:layout_constraintLeft_toRightOf="@id/starsTextView"
+                app:layout_constraintTop_toBottomOf="@id/titleTextView"
                 tools:drawableStart="@drawable/ic_fork"
                 tools:drawableTint="@color/colorPrimary"
                 tools:text="34" />
 
             <TextView
-                android:id="@+id/starsTextView"
+                android:id="@+id/issuesTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -78,9 +94,9 @@
                 android:textSize="16sp"
                 app:layout_constraintLeft_toRightOf="@id/forksTextView"
                 app:layout_constraintTop_toBottomOf="@id/titleTextView"
-                tools:drawableStart="@drawable/ic_star_black_24dp"
+                tools:drawableStart="@drawable/ic_issues_18dp"
                 tools:drawableTint="@color/colorPrimary"
-                tools:text="68" />
+                tools:text="21" />
 
             <TextView
                 android:id="@+id/descriptionTextView"
