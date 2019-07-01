@@ -1,7 +1,7 @@
 package ru.terrakok.gitlabclient.presentation.my.todos
 
 import com.arellomobile.mvp.InjectViewState
-import ru.terrakok.gitlabclient.Screens
+import io.reactivex.disposables.Disposable
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.TodoListPendingState
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
@@ -21,62 +21,63 @@ class MyTodosPresenter @Inject constructor(
     @TodoListPendingState private val pendingStateWrapper: PrimitiveWrapper<Boolean>,
     private val todoInteractor: TodoInteractor,
     private val errorHandler: ErrorHandler,
-    private val router: FlowRouter
+    private val router: FlowRouter,
+    private val paginator: Paginator.Store<TargetHeader>
 ) : BasePresenter<MyTodoListView>() {
 
     private val isPending = pendingStateWrapper.value
+    private var pageDisposable: Disposable? = null
+
+    init {
+        paginator.render = { viewState.renderPaginatorState(it) }
+        paginator.sideEffects.subscribe { effect ->
+            when (effect) {
+                is Paginator.SideEffect.LoadPage -> loadNewPage(effect.currentPage)
+                is Paginator.SideEffect.ErrorEvent -> {
+                    errorHandler.proceed(effect.error) { viewState.showMessage(it) }
+                }
+            }
+        }.connect()
+    }
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
         refreshTodos()
+        todoInteractor.todoChanges
+            .subscribe { paginator.proceed(Paginator.Action.Refresh) }
+            .connect()
     }
 
-    private val paginator = Paginator(
-        { todoInteractor.getMyTodos(isPending, it) },todoInteractor.todoChanges,
-        object :
-            Paginator.ViewController<TargetHeader> {
-            override fun showEmptyProgress(show: Boolean) {
-                viewState.showEmptyProgress(show)
-            }
-
-            override fun showEmptyError(show: Boolean, error: Throwable?) {
-                if (error != null) {
-                    errorHandler.proceed(error, { viewState.showEmptyError(show, it) })
-                } else {
-                    viewState.showEmptyError(show, null)
+    private fun loadNewPage(page: Int) {
+        pageDisposable?.dispose()
+        pageDisposable =
+            todoInteractor.getMyTodos(isPending, page)
+                .flattenAsObservable { it }
+                .concatMap { item ->
+                    when (item) {
+                        is TargetHeader.Public -> {
+                            mdConverter.markdownToSpannable(item.body.toString())
+                                .map { md -> item.copy(body = md) }
+                                .toObservable()
+                        }
+                        is TargetHeader.Confidential -> Observable.just(item)
+                    }
                 }
-            }
-
-            override fun showEmptyView(show: Boolean) {
-                viewState.showEmptyView(show)
-            }
-
-            override fun showData(show: Boolean, data: List<TargetHeader>) {
-                viewState.showTodos(show, data)
-            }
-
-            override fun showErrorMessage(error: Throwable) {
-                errorHandler.proceed(error, { viewState.showMessage(it) })
-            }
-
-            override fun showRefreshProgress(show: Boolean) {
-                viewState.showRefreshProgress(show)
-            }
-
-            override fun showPageProgress(show: Boolean) {
-                viewState.showPageProgress(show)
-            }
-        }
-    )
+                .toList()
+                .subscribe(
+                    { data ->
+                        paginator.proceed(Paginator.Action.NewPage(page, data))
+                    },
+                    { e ->
+                        errorHandler.proceed(e)
+                        paginator.proceed(Paginator.Action.PageError(e))
+                    }
+                )
+        pageDisposable?.connect()
+    }
 
     fun onTodoClick(item: TargetHeader.Public) = item.openInfo(router)
-    fun onUserClick(userId: Long) = router.startFlow(Screens.UserFlow(userId))
-    fun refreshTodos() = paginator.refresh()
-    fun loadNextTodosPage() = paginator.loadNewPage()
-
-    override fun onDestroy() {
-        super.onDestroy()
-        paginator.release()
-    }
+    fun refreshTodos() = paginator.proceed(Paginator.Action.Refresh)
+    fun loadNextTodosPage() = paginator.proceed(Paginator.Action.LoadMore)
 }

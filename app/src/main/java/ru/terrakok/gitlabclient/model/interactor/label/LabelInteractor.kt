@@ -39,5 +39,4 @@ class LabelInteractor @Inject constructor(
         projectId: Long,
         labelId: Long
     ) = labelRepository.unsubscribeFromLabel(projectId, labelId)
-
 }

@@ -1,7 +1,6 @@
 package ru.terrakok.gitlabclient.ui.user
 
 import android.os.Bundle
-import ru.terrakok.cicerone.android.support.SupportAppScreen
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.UserId

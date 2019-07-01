@@ -31,12 +31,12 @@ class ServerModule(userAccount: UserAccount?) : Module() {
             bind(AuthHolder::class.java).toInstance(AuthHolder(userAccount.token, userAccount.isOAuth))
             bind(String::class.java).withName(ServerPath::class.java).toInstance(userAccount.serverPath)
         } else {
-            //for authorization screen
+            // For authorization screen
             bind(AuthHolder::class.java).toInstance(AuthHolder(null, true))
             bind(String::class.java).withName(ServerPath::class.java).toInstance(BuildConfig.ORIGIN_GITLAB_ENDPOINT)
         }
 
-        //Network
+        // Network
         bind(OkHttpClient::class.java).toProvider(OkHttpClientProvider::class.java).providesSingletonInScope()
         bind(OkHttpClient::class.java).withName(WithErrorHandler::class.java)
             .toProvider(OkHttpClientWithErrorHandlerProvider::class.java)
@@ -48,7 +48,7 @@ class ServerModule(userAccount: UserAccount?) : Module() {
         bind(GitlabApi::class.java).toProvider(ApiProvider::class.java).providesSingletonInScope()
         bind(MarkDownConverter::class.java).toProvider(MarkDownConverterProvider::class.java).providesSingletonInScope()
 
-        //Auth
+        // Auth
         bind(OAuthParams::class.java).toInstance(
             OAuthParams(
                 BuildConfig.OAUTH_APP_ID,
@@ -57,7 +57,7 @@ class ServerModule(userAccount: UserAccount?) : Module() {
             )
         )
 
-        //Error handler with logout logic
+        // Error handler with logout logic
         bind(ErrorHandler::class.java).singletonInScope()
     }
 }

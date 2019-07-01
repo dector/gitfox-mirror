@@ -24,13 +24,13 @@ import android.text.TextUtils
 import android.text.style.ForegroundColorSpan
 import android.text.style.LineBackgroundSpan
 import android.util.AttributeSet
-import android.widget.TextView
+import androidx.appcompat.widget.AppCompatTextView
 
 class GitDiffView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : TextView(context, attrs, defStyleAttr) {
+) : AppCompatTextView(context, attrs, defStyleAttr) {
 
     private val additionColor: Int = Color.parseColor("#CCFFCC")
     private val deletionColor: Int = Color.parseColor("#FFDDDD")

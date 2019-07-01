@@ -23,8 +23,6 @@
 
     <!--Auth screen-->
     <string name="auth_title">Authorization</string>
-    <string name="invalid_hash">Invalid auth response!</string>
-    <string name="auth_error">Unknown error! Try again later</string>
     <string name="custom_auth_menu">Custom server</string>
     <string name="custom_authorization">Enter your access token</string>
     <string name="server_path">Url:</string>
@@ -36,7 +34,6 @@
     <string name="empty_token">Empty token!</string>
 
     <!--About screen-->
-    <string name="about_title">About</string>
     <string name="about_info">Info</string>
     <string name="about_feedback">Write feedback</string>
     <string name="about_open_source_libraries">Open Source Libraries</string>
@@ -57,8 +54,6 @@
     <!--Navigation drawer-->
     <string name="projects_item">Projects</string>
     <string name="activity_item">Activity</string>
-    <string name="groups_item">Groups</string>
-    <string name="settings_item">Settings</string>
     <string name="about_item">About</string>
     <string name="exit">exit</string>
     <string name="logout_question">Logout?</string>
@@ -80,8 +75,6 @@
     <!--My Issues screen-->
     <string name="issues_created_by_me">Created</string>
     <string name="issues_assigned_by_me">Assigned</string>
-    <string name="by_author" formatted="false">by %s</string>
-    <string name="sharp_id" formatted="false">#%d</string>
     <string name="time_sec" formatted="false">%d sec</string>
     <string name="time_min" formatted="false">%d min</string>
     <string name="time_hour" formatted="false">%d h</string>
@@ -89,16 +82,6 @@
     <string name="time_ago" formatted="false">%s ago</string>
 
     <!--My Events Screen-->
-    <string name="full_event_target_user">user</string>
-    <string name="full_event_target_project">project</string>
-    <string name="full_event_target_issue">issue</string>
-    <string name="full_event_target_merge_request">merge request</string>
-    <string name="full_event_target_commit">commit</string>
-    <string name="full_event_target_snippet">snippet</string>
-    <string name="full_event_target_milestone">milestone</string>
-    <string name="full_event_target_branch">branch</string>
-    <string name="full_event_target_tag">tag</string>
-
     <string name="event_action_closed">closed</string>
     <string name="event_action_commented_on">commented on</string>
     <string name="event_action_created">created</string>
@@ -127,7 +110,6 @@
     <!--My Merge Requests Screen-->
     <string name="merge_request_created_by_me">Created</string>
     <string name="merge_request_assigned_by_me">Assigned</string>
-    <string name="merge_request_item_opened_at_by_author" formatted="false">opened %s by %s</string>
 
     <!--Zero screen-->
     <string name="empty_error">Oops!</string>
@@ -170,7 +152,6 @@
     <string name="issue_discussion_note_hint">Write a comment</string>
 
     <!--Project info screen-->
-    <string name="menu_project_milestones">Milestones</string>
     <string name="menu_project_info">Info</string>
     <string name="menu_project_issue">Issues</string>
     <string name="menu_project_merge_request">Merge Requests</string>
@@ -226,5 +207,8 @@
     <string name="members_developer">Developer</string>
     <string name="members_maintainer">Maintainer</string>
     <string name="members_owner">Owner</string>
+
+    <!--Stub screen-->
+    <string name="stub_screen_message">Under construction</string>
 
 </resources>

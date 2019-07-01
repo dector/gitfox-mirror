@@ -78,7 +78,7 @@ class IssueNotesFragment : BaseFragment(), IssueNotesView {
     }
 
     override fun showNotes(notes: List<NoteWithProjectId>, scrollToPosition: Int?) {
-        adapter.setData(notes)
+        adapter.items = notes
         scrollToPosition?.let { recyclerView.scrollToPosition(it) }
     }
 

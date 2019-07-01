@@ -59,7 +59,6 @@ class Tls12SocketFactory(private val delegate: SSLSocketFactory) : SSLSocketFact
 
                     sslSocketFactory(tlsSocketFactory, trustManager)
 
-
                     val tls12ConnectionSpec = ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
                         .tlsVersions(TlsVersion.TLS_1_2)
                         .build()
@@ -71,7 +70,6 @@ class Tls12SocketFactory(private val delegate: SSLSocketFactory) : SSLSocketFact
                             ConnectionSpec.CLEARTEXT
                         )
                     )
-
                 } catch (e: Exception) {
                     Timber.e(e, "Error while setting TLS 1.2 compatibility")
                 }

@@ -34,7 +34,7 @@ data class Issue(
     @SerializedName("closed_at") val closedAt: ZonedDateTime?,
     // The merge_requests_count attribute was introduced in GitLab 11.9.
     @SerializedName("merge_requests_count") val relatedMergeRequestCount: Int,
-    @SerializedName("time_stats") val timeStats: TimeStats,
+    @SerializedName("time_stats") val timeStats: TimeStats?,
     @SerializedName("weight") val weight: Int?,
     @SerializedName("discussion_locked") val discussionLocked: Boolean,
     @SerializedName("assignee") val assignee: ShortUser?

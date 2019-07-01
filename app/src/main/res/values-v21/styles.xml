@@ -1,0 +1,8 @@
+<resources>
+
+    <!--STYLES-->
+    <style name="ToolbarStyle" parent="Base.ToolbarStyle">
+        <item name="android:elevation">8dp</item>
+    </style>
+
+</resources>

@@ -4,10 +4,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
+import kotlinx.android.extensions.LayoutContainer
+import kotlinx.android.synthetic.main.item_system_note.*
+import ru.noties.markwon.Markwon
 import com.arellomobile.mvp.MvpDelegate
-import kotlinx.android.synthetic.main.item_system_note.view.*
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.Note
 import ru.terrakok.gitlabclient.extension.inflate
 import ru.terrakok.gitlabclient.presentation.global.NoteWithProjectId
 
@@ -31,16 +32,14 @@ class SystemNoteAdapterDelegate(
         payloads: MutableList<Any>
     ) = (viewHolder as ViewHolder).bind(items[position] as NoteWithProjectId)
 
-    private inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private lateinit var note: Note
+    private inner class ViewHolder(
+        override val containerView: View
+    ) : RecyclerView.ViewHolder(containerView), LayoutContainer {
 
         fun bind(data: NoteWithProjectId) {
-            this.note = data.note
-            with(itemView) {
-                titleTextView.text = note.author.name
-                subtitleTextView.initWithParentDelegate(mvpDelegate)
-                subtitleTextView.setMarkdown(note.body, data.projectId)
-            }
+            titleTextView.text = data.note.author.name
+            subtitleTextView.initWithParentDelegate(mvpDelegate)
+            subtitleTextView.setMarkdown(note.body, data.projectId)
         }
     }
 }

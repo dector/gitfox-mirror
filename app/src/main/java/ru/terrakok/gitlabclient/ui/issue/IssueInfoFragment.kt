@@ -1,10 +1,12 @@
 package ru.terrakok.gitlabclient.ui.issue
 
 import android.os.Bundle
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
 import kotlinx.android.synthetic.main.fragment_issue_info.*
 import kotlinx.android.synthetic.main.item_target_badge.view.*
 import org.threeten.bp.LocalDate
@@ -17,7 +19,8 @@ import ru.terrakok.gitlabclient.extension.*
 import ru.terrakok.gitlabclient.presentation.issue.info.IssueInfoPresenter
 import ru.terrakok.gitlabclient.presentation.issue.info.IssueInfoView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import ru.terrakok.gitlabclient.ui.global.list.AssigneesAdapter
+import ru.terrakok.gitlabclient.ui.global.list.AssigneesAdapterDelegate
+import ru.terrakok.gitlabclient.ui.global.list.isSame
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 03.02.18.
@@ -33,7 +36,20 @@ class IssueInfoFragment : BaseFragment(), IssueInfoView {
     fun providePresenter(): IssueInfoPresenter =
         scope.getInstance(IssueInfoPresenter::class.java)
 
-    private val assigneesAdapter by lazy { AssigneesAdapter() }
+    private val assigneesAdapter by lazy {
+        object : AsyncListDifferDelegationAdapter<ShortUser>(
+            object : DiffUtil.ItemCallback<ShortUser>() {
+                override fun areItemsTheSame(oldItem: ShortUser, newItem: ShortUser) = oldItem.isSame(newItem)
+                override fun areContentsTheSame(oldItem: ShortUser, newItem: ShortUser) = oldItem == newItem
+                override fun getChangePayload(oldItem: ShortUser, newItem: ShortUser) = Any()
+            }
+        ) {
+            init {
+                items = mutableListOf()
+                delegatesManager.addDelegate(AssigneesAdapterDelegate())
+            }
+        }
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -61,7 +77,7 @@ class IssueInfoFragment : BaseFragment(), IssueInfoView {
     private fun showAssignees(assignees: List<ShortUser>) {
         if (assignees.isNotEmpty()) {
             assigneesNone.visible(false)
-            assigneesAdapter.setData(assignees)
+            assigneesAdapter.items = assignees
         } else {
             assigneesList.visible(false)
         }
@@ -85,7 +101,7 @@ class IssueInfoFragment : BaseFragment(), IssueInfoView {
         dueDateValue.alpha = if (dueDate != null) ALPHA_VALUE else ALPHA_NONE
     }
 
-    private fun showTimeStats(timeStats: TimeStats) {
+    private fun showTimeStats(timeStats: TimeStats?) {
         timeStatsValue.setTimeStats(timeStats)
     }
 
