@@ -58,7 +58,7 @@ class ProjectIssuesFragment : BaseFragment(), ProjectIssuesView {
                     o.isSame(n)
                 } else false
             },
-            TargetHeaderPublicAdapterDelegate { presenter.onIssueClick(it) },
+            TargetHeaderPublicAdapterDelegate(mvpDelegate) { presenter.onIssueClick(it) },
             TargetHeaderConfidentialAdapterDelegate()
         )
     }

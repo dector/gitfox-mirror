@@ -4,8 +4,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.arellomobile.mvp.MvpDelegate
 import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
+import com.arellomobile.mvp.MvpDelegate
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_target_badge.view.*
 import kotlinx.android.synthetic.main.item_target_header_public.*

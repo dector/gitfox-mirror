@@ -39,7 +39,7 @@ class MyEventsFragment : BaseFragment(), MyEventsView {
                     o.isSame(n)
                 } else false
             },
-            TargetHeaderPublicAdapterDelegate { presenter.onItemClick(it) },
+            TargetHeaderPublicAdapterDelegate(mvpDelegate) { presenter.onItemClick(it) },
             TargetHeaderConfidentialAdapterDelegate()
         )
     }

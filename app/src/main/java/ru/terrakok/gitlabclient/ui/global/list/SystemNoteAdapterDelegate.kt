@@ -3,11 +3,10 @@ package ru.terrakok.gitlabclient.ui.global.list
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.arellomobile.mvp.MvpDelegate
 import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_system_note.*
-import ru.noties.markwon.Markwon
-import com.arellomobile.mvp.MvpDelegate
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.extension.inflate
 import ru.terrakok.gitlabclient.presentation.global.NoteWithProjectId
@@ -39,7 +38,7 @@ class SystemNoteAdapterDelegate(
         fun bind(data: NoteWithProjectId) {
             titleTextView.text = data.note.author.name
             subtitleTextView.initWithParentDelegate(mvpDelegate)
-            subtitleTextView.setMarkdown(note.body, data.projectId)
+            subtitleTextView.setMarkdown(data.note.body, data.projectId)
         }
     }
 }

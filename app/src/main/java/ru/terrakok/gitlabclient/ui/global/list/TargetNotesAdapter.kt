@@ -6,7 +6,7 @@ import com.arellomobile.mvp.MvpDelegate
 import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
 import ru.terrakok.gitlabclient.presentation.global.NoteWithProjectId
 
-fun NoteWithFormattedBody.isSame(other: NoteWithFormattedBody) =
+fun NoteWithProjectId.isSame(other: NoteWithProjectId) =
     note.id == other.note.id
 
 class TargetNotesAdapter(
@@ -14,7 +14,7 @@ class TargetNotesAdapter(
 ) : AsyncListDifferDelegationAdapter<Any>(
     object : DiffUtil.ItemCallback<Any>() {
         override fun areItemsTheSame(oldItem: Any, newItem: Any): Boolean {
-            return if (oldItem is NoteWithFormattedBody && newItem is NoteWithFormattedBody) {
+            return if (oldItem is NoteWithProjectId && newItem is NoteWithProjectId) {
                 oldItem.isSame(newItem)
             } else false
         }

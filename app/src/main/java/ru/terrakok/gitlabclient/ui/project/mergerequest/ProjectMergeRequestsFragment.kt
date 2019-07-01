@@ -58,7 +58,7 @@ class ProjectMergeRequestsFragment : BaseFragment(), ProjectMergeRequestsView {
                     o.isSame(n)
                 } else false
             },
-            TargetHeaderPublicAdapterDelegate { presenter.onMergeRequestClick(it) },
+            TargetHeaderPublicAdapterDelegate(mvpDelegate) { presenter.onMergeRequestClick(it) },
             TargetHeaderConfidentialAdapterDelegate()
         )
     }

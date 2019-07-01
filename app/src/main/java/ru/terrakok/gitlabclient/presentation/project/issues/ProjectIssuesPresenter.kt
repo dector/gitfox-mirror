@@ -55,18 +55,6 @@ class ProjectIssuesPresenter @Inject constructor(
         pageDisposable?.dispose()
         pageDisposable =
             issueInteractor.getIssues(projectId, issueState, page)
-                .flattenAsObservable { it }
-                .concatMap { item ->
-                    when (item) {
-                        is TargetHeader.Public -> {
-                            mdConverter.markdownToSpannable(item.body.toString())
-                                .map { md -> item.copy(body = md) }
-                                .toObservable()
-                        }
-                        is TargetHeader.Confidential -> Observable.just(item)
-                    }
-                }
-                .toList()
                 .subscribe(
                     { data ->
                         paginator.proceed(Paginator.Action.NewPage(page, data))

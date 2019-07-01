@@ -53,7 +53,7 @@ class MyTodosFragment : BaseFragment(), MyTodoListView {
                     o.isSame(n)
                 } else false
             },
-            TargetHeaderPublicAdapterDelegate { presenter.onTodoClick(it) },
+            TargetHeaderPublicAdapterDelegate(mvpDelegate) { presenter.onTodoClick(it) },
             TargetHeaderConfidentialAdapterDelegate()
         )
     }

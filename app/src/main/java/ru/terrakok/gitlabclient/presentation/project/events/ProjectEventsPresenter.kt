@@ -1,7 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.project.events
 
 import com.arellomobile.mvp.InjectViewState
-import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
@@ -50,18 +49,6 @@ class ProjectEventsPresenter @Inject constructor(
         pageDisposable?.dispose()
         pageDisposable =
             eventInteractor.getProjectEvents(projectId, page)
-                .flattenAsObservable { it }
-                .concatMap { item ->
-                    when (item) {
-                        is TargetHeader.Public -> {
-                            mdConverter.markdownToSpannable(item.body.toString())
-                                .map { md -> item.copy(body = md) }
-                                .toObservable()
-                        }
-                        is TargetHeader.Confidential -> Observable.just(item)
-                    }
-                }
-                .toList()
                 .subscribe(
                     { data ->
                         paginator.proceed(Paginator.Action.NewPage(page, data))
