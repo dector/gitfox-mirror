@@ -21,12 +21,19 @@ class MergeRequestCommitsFragment : BaseFragment(), MergeRequestCommitsView {
 
     override val layoutRes = R.layout.fragment_mr_commits
 
+    private val adapter by lazy {
+        TargetCommitsAdapter(
+            { presenter.loadNextCommitsPage() },
+            { presenter.onCommitClicked(it) }
+        )
+    }
+
     @InjectPresenter
     lateinit var presenter: MergeRequestCommitsPresenter
 
     @ProvidePresenter
     fun providePresenter() =
-        scope.getInstance(MergeRequestCommitsPresenter::class.java)
+            scope.getInstance(MergeRequestCommitsPresenter::class.java)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

@@ -1,10 +1,14 @@
 package ru.terrakok.gitlabclient.presentation.mergerequest.commits
 
 import com.arellomobile.mvp.InjectViewState
+import ru.terrakok.gitlabclient.Screens
 import io.reactivex.disposables.Disposable
 import ru.terrakok.gitlabclient.di.MergeRequestId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
+import ru.terrakok.gitlabclient.entity.app.CommitWithAvatarUrl
+import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestInteractor
+import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.entity.app.CommitWithShortUser
 import ru.terrakok.gitlabclient.model.interactor.MergeRequestInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
@@ -21,7 +25,8 @@ class MergeRequestCommitsPresenter @Inject constructor(
     @MergeRequestId mrIdWrapper: PrimitiveWrapper<Long>,
     private val mrInteractor: MergeRequestInteractor,
     private val errorHandler: ErrorHandler,
-    private val paginator: Paginator.Store<CommitWithShortUser>
+    private val paginator: Paginator.Store<CommitWithShortUser>,
+    private val flowRouter: FlowRouter
 ) : BasePresenter<MergeRequestCommitsView>() {
 
     private val projectId = projectIdWrapper.value
@@ -64,4 +69,8 @@ class MergeRequestCommitsPresenter @Inject constructor(
 
     fun refreshCommits() = paginator.proceed(Paginator.Action.Refresh)
     fun loadNextCommitsPage() = paginator.proceed(Paginator.Action.LoadMore)
+
+
+    fun onCommitClicked(commitId: String) =
+            flowRouter.startFlow(Screens.CommitFlow(commitId, projectId))
 }
