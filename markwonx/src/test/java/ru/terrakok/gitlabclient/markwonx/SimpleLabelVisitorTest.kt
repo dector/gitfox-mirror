@@ -51,7 +51,7 @@ class SimpleLabelVisitorTest {
             SpannableConfiguration.create(context),
             spannableBuilder,
             mapOf(
-                GitlabMarkdownExtension.LABEL to SimpleLabelVisitor(LabelsTestUtils.EXISTENT_LABELS.map { it.label }, LabelSpanConfig(0))
+                GitlabMarkdownExtension.LABEL to SimpleLabelVisitor(LabelsTestUtils.EXISTENT_LABELS.map { it.label }, LabelSpanConfig(0), MarkdownClickMediator())
             )
         )
     }
