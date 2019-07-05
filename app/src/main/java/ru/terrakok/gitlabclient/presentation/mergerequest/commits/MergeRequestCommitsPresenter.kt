@@ -72,5 +72,5 @@ class MergeRequestCommitsPresenter @Inject constructor(
 
 
     fun onCommitClicked(commitId: String) =
-            flowRouter.startFlow(Screens.CommitFlow(commitId, projectId))
+            flowRouter.startFlow(Screens.Commit(commitId, projectId))
 }

@@ -3,6 +3,7 @@ package ru.terrakok.gitlabclient.presentation.commit
 import com.arellomobile.mvp.InjectViewState
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
+import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.di.CommitId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
@@ -10,7 +11,6 @@ import ru.terrakok.gitlabclient.di.ProjectId
 import ru.terrakok.gitlabclient.entity.Commit
 import ru.terrakok.gitlabclient.entity.DiffData
 import ru.terrakok.gitlabclient.model.interactor.commit.CommitInteractor
-import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import javax.inject.Inject
@@ -20,7 +20,7 @@ import javax.inject.Inject
  */
 @InjectViewState
 class CommitPresenter @Inject constructor(
-    private val router: FlowRouter,
+    private val router: Router,
     @ProjectId private val projectIdWrapper: PrimitiveWrapper<Long>,
     @CommitId private val commitId: String,
     private val commitInteractor: CommitInteractor,
@@ -112,7 +112,7 @@ class CommitPresenter @Inject constructor(
     }
 
     fun onDiffDataClicked(item: DiffData) =
-            router.startFlow(Screens.ProjectFile(projectId, item.newPath, commitId))
+            router.navigateTo(Screens.ProjectFile(projectId, item.newPath, commitId))
 
     fun onBackPressed() = router.exit()
 }

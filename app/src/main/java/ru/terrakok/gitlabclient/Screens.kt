@@ -10,7 +10,6 @@ import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
 import ru.terrakok.gitlabclient.ui.about.AboutFragment
 import ru.terrakok.gitlabclient.ui.auth.AuthFlowFragment
 import ru.terrakok.gitlabclient.ui.auth.AuthFragment
-import ru.terrakok.gitlabclient.ui.commit.CommitFlowFragment
 import ru.terrakok.gitlabclient.ui.commit.CommitFragment
 import ru.terrakok.gitlabclient.ui.drawer.DrawerFlowFragment
 import ru.terrakok.gitlabclient.ui.file.ProjectFileFragment
@@ -45,7 +44,6 @@ import ru.terrakok.gitlabclient.ui.project.info.ProjectInfoFragment
 import ru.terrakok.gitlabclient.ui.project.issues.ProjectIssuesContainerFragment
 import ru.terrakok.gitlabclient.ui.project.issues.ProjectIssuesFragment
 import ru.terrakok.gitlabclient.ui.project.labels.ProjectLabelsFragment
-import ru.terrakok.gitlabclient.ui.project.members.ProjectMembersFragment
 import ru.terrakok.gitlabclient.ui.project.mergerequest.ProjectMergeRequestsContainerFragment
 import ru.terrakok.gitlabclient.ui.project.mergerequest.ProjectMergeRequestsFragment
 import ru.terrakok.gitlabclient.ui.project.milestones.ProjectMilestonesFragment
@@ -267,8 +265,12 @@ object Screens {
         override fun getFragment() = PrivacyPolicyFragment()
     }
 
-    object Commit : SupportAppScreen() {
-        override fun getFragment() = CommitFragment()
+    data class Commit(
+        val commitId: String,
+        val projectId: Long
+    ) : SupportAppScreen() {
+
+        override fun getFragment() = CommitFragment.create(commitId, projectId)
     }
 
     data class ProjectFile(
