@@ -17,6 +17,7 @@ import ru.terrakok.gitlabclient.entity.app.target.*
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.issue.Issue
 import ru.terrakok.gitlabclient.entity.issue.IssueState
+import ru.terrakok.gitlabclient.extension.humanDate
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
@@ -34,18 +35,20 @@ class IssueRepositoryTest {
     private val api = mock(GitlabApi::class.java)
     private val markDownUrlResolver = mock(MarkDownUrlResolver::class.java)
     private val repository = IssueRepository(
-            api,
-            ServerChanges(TestSchedulers()),
-            TestSchedulers(),
-            PrimitiveWrapper(defaultPageSize),
-            markDownUrlResolver)
+        api,
+        ServerChanges(TestSchedulers()),
+        TestSchedulers(),
+        PrimitiveWrapper(defaultPageSize),
+        markDownUrlResolver
+    )
 
     @Test
     fun `get my issues should succeed with valid api response`() {
         // GIVEN
         val expectedTargetHeader = getExpectedTargetHeader(testIssue, testProject)
 
-        given(api.getMyIssues(
+        given(
+            api.getMyIssues(
                 anyOrNull(),
                 anyOrNull(),
                 anyOrNull(),
@@ -55,35 +58,38 @@ class IssueRepositoryTest {
                 anyOrNull(),
                 anyOrNull(),
                 anyInt(),
-                anyInt())).willReturn(Single.just(listOf(testIssue)))
+                anyInt()
+            )
+        ).willReturn(Single.just(listOf(testIssue)))
 
         given(api.getProject(anyLong(), anyBoolean())).willReturn(Single.just(testProject))
 
         // WHEN
         val testObserver = repository
-                .getMyIssues(page = testPage, pageSize = defaultPageSize)
-                .test()
+            .getMyIssues(page = testPage, pageSize = defaultPageSize)
+            .test()
 
         testObserver.awaitTerminalEvent()
 
         // THEN
         then(api)
-                .should(times(1))
-                .getMyIssues(
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        testPage,
-                        defaultPageSize)
+            .should(times(1))
+            .getMyIssues(
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                testPage,
+                defaultPageSize
+            )
 
         then(api)
-                .should(times(1))
-                .getProject(testIssue.projectId, true)
+            .should(times(1))
+            .getProject(testIssue.projectId, true)
 
         then(api).shouldHaveNoMoreInteractions()
 
@@ -95,7 +101,8 @@ class IssueRepositoryTest {
         // GIVEN
         val expectedTargetHeader = getExpectedTargetHeader(testIssue, testProject)
 
-        given(api.getIssues(
+        given(
+            api.getIssues(
                 anyLong(),
                 anyOrNull(),
                 anyOrNull(),
@@ -106,36 +113,39 @@ class IssueRepositoryTest {
                 anyOrNull(),
                 anyOrNull(),
                 anyInt(),
-                anyInt())).willReturn(Single.just(listOf(testIssue)))
+                anyInt()
+            )
+        ).willReturn(Single.just(listOf(testIssue)))
 
         given(api.getProject(anyLong(), anyBoolean())).willReturn(Single.just(testProject))
 
         // WHEN
         val testObserver = repository
-                .getIssues(projectId = testIssue.projectId, page = testPage, pageSize = defaultPageSize)
-                .test()
+            .getIssues(projectId = testIssue.projectId, page = testPage, pageSize = defaultPageSize)
+            .test()
 
         testObserver.awaitTerminalEvent()
 
         // THEN
         then(api)
-                .should(times(1))
-                .getIssues(
-                        testIssue.projectId,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        testPage,
-                        defaultPageSize)
+            .should(times(1))
+            .getIssues(
+                testIssue.projectId,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                testPage,
+                defaultPageSize
+            )
 
         then(api)
-                .should(times(1))
-                .getProject(testIssue.projectId, true)
+            .should(times(1))
+            .getProject(testIssue.projectId, true)
 
         then(api).shouldHaveNoMoreInteractions()
 
@@ -148,32 +158,35 @@ class IssueRepositoryTest {
         val resolvedBody = "body that differs from issue description"
         val expectedIssue = testIssue.copy(description = resolvedBody)
 
-        given(api.getIssue(
+        given(
+            api.getIssue(
                 anyLong(),
-                anyLong())).willReturn(Single.just(testIssue))
+                anyLong()
+            )
+        ).willReturn(Single.just(testIssue))
 
         given(api.getProject(anyLong(), anyBoolean())).willReturn(Single.just(testProject))
         given(markDownUrlResolver.resolve(anyString(), any())).willReturn(resolvedBody)
 
         // WHEN
         val testObserver = repository
-                .getIssue(testIssue.projectId, testIssue.id)
-                .test()
+            .getIssue(testIssue.projectId, testIssue.id)
+            .test()
 
         testObserver.awaitTerminalEvent()
 
         // THEN
         then(api)
-                .should(times(1))
-                .getProject(testIssue.projectId, true)
+            .should(times(1))
+            .getProject(testIssue.projectId, true)
 
         then(api)
-                .should(times(1))
-                .getIssue(testIssue.projectId, testIssue.id)
+            .should(times(1))
+            .getIssue(testIssue.projectId, testIssue.id)
 
         then(markDownUrlResolver)
-                .should(times(1))
-                .resolve(testIssue.description, testProject)
+            .should(times(1))
+            .resolve(testIssue.description, testProject)
 
         then(api).shouldHaveNoMoreInteractions()
 
@@ -185,32 +198,35 @@ class IssueRepositoryTest {
         // GIVEN
         val resolvedBody = testIssue.description
 
-        given(api.getIssue(
+        given(
+            api.getIssue(
                 anyLong(),
-                anyLong())).willReturn(Single.just(testIssue))
+                anyLong()
+            )
+        ).willReturn(Single.just(testIssue))
 
         given(api.getProject(anyLong(), anyBoolean())).willReturn(Single.just(testProject))
         given(markDownUrlResolver.resolve(anyString(), any())).willReturn(resolvedBody)
 
         // WHEN
         val testObserver = repository
-                .getIssue(testIssue.projectId, testIssue.id)
-                .test()
+            .getIssue(testIssue.projectId, testIssue.id)
+            .test()
 
         testObserver.awaitTerminalEvent()
 
         // THEN
         then(api)
-                .should(times(1))
-                .getProject(testIssue.projectId, true)
+            .should(times(1))
+            .getProject(testIssue.projectId, true)
 
         then(api)
-                .should(times(1))
-                .getIssue(testIssue.projectId, testIssue.id)
+            .should(times(1))
+            .getIssue(testIssue.projectId, testIssue.id)
 
         then(markDownUrlResolver)
-                .should(times(1))
-                .resolve(testIssue.description, testProject)
+            .should(times(1))
+            .resolve(testIssue.description, testProject)
 
         then(api).shouldHaveNoMoreInteractions()
 
@@ -223,46 +239,51 @@ class IssueRepositoryTest {
         val resolvedBody = "body that differs from issue description"
         val expected = testNote.copy(body = resolvedBody)
 
-        given(api.getIssueNotes(
+        given(
+            api.getIssueNotes(
                 anyLong(),
                 anyLong(),
                 anyOrNull(),
                 anyOrNull(),
                 anyInt(),
-                anyInt())).willReturn(Single.just(listOf(testNote)))
+                anyInt()
+            )
+        ).willReturn(Single.just(listOf(testNote)))
 
         given(api.getProject(anyLong(), anyBoolean())).willReturn(Single.just(testProject))
         given(markDownUrlResolver.resolve(anyString(), any())).willReturn(resolvedBody)
 
         // WHEN
         val testObserver = repository.getIssueNotes(
-                testIssue.projectId,
-                testIssue.id,
-                null,
-                null,
-                testPage,
-                defaultPageSize).test()
+            testIssue.projectId,
+            testIssue.id,
+            null,
+            null,
+            testPage,
+            defaultPageSize
+        ).test()
 
         testObserver.awaitTerminalEvent()
 
         // THEN
         then(api)
-                .should(times(1))
-                .getProject(testIssue.projectId, true)
+            .should(times(1))
+            .getProject(testIssue.projectId, true)
 
         then(api)
-                .should(times(1))
-                .getIssueNotes(
-                        testIssue.projectId,
-                        testIssue.id,
-                        null,
-                        null,
-                        testPage,
-                        defaultPageSize)
+            .should(times(1))
+            .getIssueNotes(
+                testIssue.projectId,
+                testIssue.id,
+                null,
+                null,
+                testPage,
+                defaultPageSize
+            )
 
         then(markDownUrlResolver)
-                .should(times(1))
-                .resolve(testNote.body, testProject)
+            .should(times(1))
+            .resolve(testNote.body, testProject)
 
         then(api).shouldHaveNoMoreInteractions()
 
@@ -274,46 +295,51 @@ class IssueRepositoryTest {
         // GIVEN
         val resolvedBody = testNote.body
 
-        given(api.getIssueNotes(
+        given(
+            api.getIssueNotes(
                 anyLong(),
                 anyLong(),
                 anyOrNull(),
                 anyOrNull(),
                 anyInt(),
-                anyInt())).willReturn(Single.just(listOf(testNote)))
+                anyInt()
+            )
+        ).willReturn(Single.just(listOf(testNote)))
 
         given(api.getProject(anyLong(), anyBoolean())).willReturn(Single.just(testProject))
         given(markDownUrlResolver.resolve(anyString(), any())).willReturn(resolvedBody)
 
         // WHEN
         val testObserver = repository.getIssueNotes(
-                testIssue.projectId,
-                testIssue.id,
-                null,
-                null,
-                testPage,
-                defaultPageSize).test()
+            testIssue.projectId,
+            testIssue.id,
+            null,
+            null,
+            testPage,
+            defaultPageSize
+        ).test()
 
         testObserver.awaitTerminalEvent()
 
         // THEN
         then(api)
-                .should(times(1))
-                .getProject(testIssue.projectId, true)
+            .should(times(1))
+            .getProject(testIssue.projectId, true)
 
         then(api)
-                .should(times(1))
-                .getIssueNotes(
-                        testIssue.projectId,
-                        testIssue.id,
-                        null,
-                        null,
-                        testPage,
-                        defaultPageSize)
+            .should(times(1))
+            .getIssueNotes(
+                testIssue.projectId,
+                testIssue.id,
+                null,
+                null,
+                testPage,
+                defaultPageSize
+            )
 
         then(markDownUrlResolver)
-                .should(times(1))
-                .resolve(testNote.body, testProject)
+            .should(times(1))
+            .resolve(testNote.body, testProject)
 
         then(api).shouldHaveNoMoreInteractions()
 
@@ -323,31 +349,38 @@ class IssueRepositoryTest {
     @Test
     fun `get all issue notes should return notes from all pages`() {
         // GIVEN
-        given(api.getIssueNotes(
+        given(
+            api.getIssueNotes(
                 anyLong(),
                 anyLong(),
                 anyOrNull(),
                 anyOrNull(),
                 anyInt(),
-                anyInt())).willReturn(Single.just(listOf(testNote)))
+                anyInt()
+            )
+        ).willReturn(Single.just(listOf(testNote)))
 
-        given(api.getIssueNotes(
+        given(
+            api.getIssueNotes(
                 anyLong(),
                 anyLong(),
                 anyOrNull(),
                 anyOrNull(),
                 eq(3),
-                anyInt())).willReturn(Single.just(emptyList()))
+                anyInt()
+            )
+        ).willReturn(Single.just(emptyList()))
 
         given(api.getProject(anyLong(), anyBoolean())).willReturn(Single.just(testProject))
         given(markDownUrlResolver.resolve(anyString(), any())).willReturn(testNote.body)
 
         // WHEN
         val testObserver = repository.getAllIssueNotes(
-                testIssue.projectId,
-                testIssue.id,
-                null,
-                null).test()
+            testIssue.projectId,
+            testIssue.id,
+            null,
+            null
+        ).test()
 
         testObserver.awaitTerminalEvent()
 
@@ -356,32 +389,35 @@ class IssueRepositoryTest {
 
         then(api).should(inOrder).getProject(testIssue.projectId, true)
         then(api).should(inOrder).getIssueNotes(
-                testIssue.projectId,
-                testIssue.id,
-                null,
-                null,
-                1,
-                GitlabApi.MAX_PAGE_SIZE)
+            testIssue.projectId,
+            testIssue.id,
+            null,
+            null,
+            1,
+            GitlabApi.MAX_PAGE_SIZE
+        )
 
         then(api).should(inOrder).getIssueNotes(
-                testIssue.projectId,
-                testIssue.id,
-                null,
-                null,
-                2,
-                GitlabApi.MAX_PAGE_SIZE)
+            testIssue.projectId,
+            testIssue.id,
+            null,
+            null,
+            2,
+            GitlabApi.MAX_PAGE_SIZE
+        )
 
         then(api).should(inOrder).getIssueNotes(
-                testIssue.projectId,
-                testIssue.id,
-                null,
-                null,
-                3,
-                GitlabApi.MAX_PAGE_SIZE)
+            testIssue.projectId,
+            testIssue.id,
+            null,
+            null,
+            3,
+            GitlabApi.MAX_PAGE_SIZE
+        )
 
         then(markDownUrlResolver)
-                .should(times(2))
-                .resolve(testNote.body, testProject)
+            .should(times(2))
+            .resolve(testNote.body, testProject)
 
         then(api).shouldHaveNoMoreInteractions()
         then(markDownUrlResolver).shouldHaveNoMoreInteractions()
@@ -394,29 +430,34 @@ class IssueRepositoryTest {
         // GIVEN
         val testMilestoneId = 3232L
 
-        given(api.getMilestoneIssues(
+        given(
+            api.getMilestoneIssues(
                 anyLong(),
                 anyLong(),
                 anyInt(),
-                anyInt())).willReturn(Single.just(listOf(testIssue)))
+                anyInt()
+            )
+        ).willReturn(Single.just(listOf(testIssue)))
 
         // WHEN
         val testObserver = repository.getMilestoneIssues(
-                testIssue.projectId,
-                testMilestoneId,
-                testPage,
-                defaultPageSize).test()
+            testIssue.projectId,
+            testMilestoneId,
+            testPage,
+            defaultPageSize
+        ).test()
 
         testObserver.awaitTerminalEvent()
 
         // THEN
         then(api)
-                .should(times(1))
-                .getMilestoneIssues(
-                        testIssue.projectId,
-                        testMilestoneId,
-                        testPage,
-                        defaultPageSize)
+            .should(times(1))
+            .getMilestoneIssues(
+                testIssue.projectId,
+                testMilestoneId,
+                testPage,
+                defaultPageSize
+            )
 
         then(api).shouldHaveNoMoreInteractions()
 
@@ -424,31 +465,32 @@ class IssueRepositoryTest {
     }
 
     private fun getTestIssue() = Issue(
-            123L,
-            3342424L,
-            IssueState.OPENED,
-            "issue description",
-            ShortUser(1L, "", "", "", "", ""),
-            null,
-            9876L,
-            emptyList(),
-            null,
-            null,
-            TestData.getTestDate(),
-            listOf("test label 1", "test label 2"),
-            13,
-            null,
-            null,
-            false,
-            3,
-            0,
-            null,
-            null,
-            2,
-            TimeStats(32, 23, null, null),
-            null,
-            false,
-            null
+        123L,
+        3342424L,
+        IssueState.OPENED,
+        "issue description",
+        ShortUser(1L, "", "", "", "", ""),
+        null,
+        9876L,
+        emptyList(),
+        null,
+        null,
+        TestData.getTestDate(),
+        listOf("test label 1", "test label 2"),
+        13,
+        null,
+        null,
+        false,
+        3,
+        0,
+        null,
+        null,
+        2,
+        TimeStats(32, 23, null, null),
+        null,
+        false,
+        null,
+        null
     )
 
     private fun getExpectedTargetHeader(issue: Issue, project: Project): TargetHeader {
@@ -456,28 +498,66 @@ class IssueRepositoryTest {
         badges.add(TargetBadge.Status(TargetBadgeStatus.OPENED))
         badges.add(TargetBadge.Text(project.name, AppTarget.PROJECT, project.id))
         badges.add(TargetBadge.Text(issue.author.username, AppTarget.USER, issue.author.id))
-        badges.add(TargetBadge.Icon(TargetBadgeIcon.COMMENTS, issue.userNotesCount))
-        badges.add(TargetBadge.Icon(TargetBadgeIcon.UP_VOTES, issue.upvotes))
-        badges.add(TargetBadge.Icon(TargetBadgeIcon.DOWN_VOTES, issue.downvotes))
-        badges.add(TargetBadge.Icon(TargetBadgeIcon.RELATED_MERGE_REQUESTS, issue.relatedMergeRequestCount))
+        if (issue.userNotesCount > 0) {
+            badges.add(TargetBadge.Icon(TargetBadgeIcon.COMMENTS, issue.userNotesCount.toString()))
+        }
+        if (issue.upvotes > 0) {
+            badges.add(TargetBadge.Icon(TargetBadgeIcon.UP_VOTES, issue.upvotes.toString()))
+        }
+        if (issue.downvotes > 0) {
+            badges.add(TargetBadge.Icon(TargetBadgeIcon.DOWN_VOTES, issue.downvotes.toString()))
+        }
+        if (issue.relatedMergeRequestCount > 0) {
+            badges.add(
+                TargetBadge.Icon(
+                    TargetBadgeIcon.RELATED_MERGE_REQUESTS,
+                    issue.relatedMergeRequestCount.toString()
+                )
+            )
+        }
+        if (issue.confidential) {
+            badges.add(TargetBadge.Icon(TargetBadgeIcon.CONFIDENTIAL, ""))
+        }
+        if (issue.discussionLocked) {
+            badges.add(TargetBadge.Icon(TargetBadgeIcon.LOCKED, ""))
+        }
+        issue.weight?.let { weight ->
+            badges.add(TargetBadge.Icon(TargetBadgeIcon.WEIGHT, weight.toString()))
+        }
+        issue.dueDate?.let { dueDate ->
+            badges.add(TargetBadge.Icon(TargetBadgeIcon.DUE_DATE_EXPIRED, dueDate.humanDate()))
+        }
+        issue.milestone?.let { milestone ->
+            badges.add(TargetBadge.Icon(TargetBadgeIcon.MILESTONE, milestone.title ?: ""))
+        }
+        issue.taskCompletionStatus?.let { taskCompStatus ->
+            if (taskCompStatus.count > 0) {
+                badges.add(
+                    TargetBadge.Icon(
+                        TargetBadgeIcon.TASK_COMPLETION,
+                        "${taskCompStatus.completedCount}/${taskCompStatus.count}"
+                    )
+                )
+            }
+        }
         issue.labels.forEach { label -> badges.add(TargetBadge.Text(label)) }
 
         return TargetHeader.Public(
-                issue.author,
-                TargetHeaderIcon.NONE,
-                TargetHeaderTitle.Event(
-                        issue.author.name,
-                        EventAction.CREATED,
-                        "${AppTarget.ISSUE} #${issue.iid}",
-                        project.name
-                ),
-                issue.title ?: "",
-                issue.createdAt,
-                AppTarget.ISSUE,
-                issue.id,
-                TargetInternal(issue.projectId, issue.iid),
-                badges,
-                TargetAction.Undefined
+            issue.author,
+            TargetHeaderIcon.NONE,
+            TargetHeaderTitle.Event(
+                issue.author.name,
+                EventAction.CREATED,
+                "${AppTarget.ISSUE} #${issue.iid}",
+                project.name
+            ),
+            issue.title ?: "",
+            issue.createdAt,
+            AppTarget.ISSUE,
+            issue.id,
+            TargetInternal(issue.projectId, issue.iid),
+            badges,
+            TargetAction.Undefined
         )
     }
 }

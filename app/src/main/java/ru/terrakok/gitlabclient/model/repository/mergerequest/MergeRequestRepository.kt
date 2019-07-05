@@ -118,9 +118,30 @@ class MergeRequestRepository @Inject constructor(
         )
         badges.add(TargetBadge.Text(project.name, AppTarget.PROJECT, project.id))
         badges.add(TargetBadge.Text(mr.author.username, AppTarget.USER, mr.author.id))
-        badges.add(TargetBadge.Icon(TargetBadgeIcon.COMMENTS, mr.userNotesCount))
-        badges.add(TargetBadge.Icon(TargetBadgeIcon.UP_VOTES, mr.upvotes))
-        badges.add(TargetBadge.Icon(TargetBadgeIcon.DOWN_VOTES, mr.downvotes))
+        if (mr.userNotesCount > 0) {
+            badges.add(TargetBadge.Icon(TargetBadgeIcon.COMMENTS, mr.userNotesCount.toString()))
+        }
+        if (mr.upvotes > 0) {
+            badges.add(TargetBadge.Icon(TargetBadgeIcon.UP_VOTES, mr.upvotes.toString()))
+        }
+        if (mr.downvotes > 0) {
+            badges.add(TargetBadge.Icon(TargetBadgeIcon.DOWN_VOTES, mr.downvotes.toString()))
+        }
+        mr.milestone?.let { milestone ->
+            badges.add(TargetBadge.Icon(TargetBadgeIcon.MILESTONE, milestone.title ?: ""))
+        }
+        mr.taskCompletionStatus?.let { taskCompStatus ->
+            if (taskCompStatus.count > 0) {
+                badges.add(
+                    TargetBadge.Icon(
+                        TargetBadgeIcon.TASK_COMPLETION,
+                        "${taskCompStatus.completedCount}/${taskCompStatus.count}"
+                    )
+                )
+            }
+        }
+        if (mr.discussionLocked) badges.add(TargetBadge.Icon(TargetBadgeIcon.LOCKED, ""))
+
         mr.labels.forEach { label -> badges.add(TargetBadge.Text(label)) }
 
         return TargetHeader.Public(
@@ -201,10 +222,22 @@ class MergeRequestRepository @Inject constructor(
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
 
-    private fun getAllMergeRequestNotePages(projectId: Long, mergeRequestId: Long, sort: Sort?, orderBy: OrderBy?) =
+    private fun getAllMergeRequestNotePages(
+        projectId: Long,
+        mergeRequestId: Long,
+        sort: Sort?,
+        orderBy: OrderBy?
+    ) =
         Observable.range(1, Int.MAX_VALUE)
             .concatMap { page ->
-                api.getMergeRequestNotes(projectId, mergeRequestId, sort, orderBy, page, GitlabApi.MAX_PAGE_SIZE)
+                api.getMergeRequestNotes(
+                    projectId,
+                    mergeRequestId,
+                    sort,
+                    orderBy,
+                    page,
+                    GitlabApi.MAX_PAGE_SIZE
+                )
                     .toObservable()
             }
             .takeWhile { notes -> notes.isNotEmpty() }
@@ -245,7 +278,12 @@ class MergeRequestRepository @Inject constructor(
     private fun getAllMergeRequestParticipants(projectId: Long, mergeRequestId: Long) =
         Observable.range(1, Int.MAX_VALUE)
             .concatMap { page ->
-                api.getMergeRequestParticipants(projectId, mergeRequestId, page, GitlabApi.MAX_PAGE_SIZE)
+                api.getMergeRequestParticipants(
+                    projectId,
+                    mergeRequestId,
+                    page,
+                    GitlabApi.MAX_PAGE_SIZE
+                )
                     .toObservable()
             }
             .takeWhile { participants -> participants.isNotEmpty() }

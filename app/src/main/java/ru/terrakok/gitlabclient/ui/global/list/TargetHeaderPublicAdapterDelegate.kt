@@ -3,16 +3,15 @@ package ru.terrakok.gitlabclient.ui.global.list
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_target_badge.view.*
 import kotlinx.android.synthetic.main.item_target_header_public.*
-import kotlinx.android.synthetic.main.item_target_header_public.view.*
 import ru.noties.markwon.Markwon
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.target.TargetBadge
-import ru.terrakok.gitlabclient.entity.app.target.TargetBadgeIcon
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderIcon
 import ru.terrakok.gitlabclient.extension.*
@@ -34,39 +33,8 @@ class TargetHeaderPublicAdapterDelegate(
     override fun isForViewType(items: MutableList<Any>, position: Int) =
         items[position] is TargetHeader.Public
 
-    override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
-        val root = parent.inflate(R.layout.item_target_header_public)
-        with(root) {
-            commentsTextView.setStartDrawable(
-                context.getTintDrawable(
-                    R.drawable.ic_event_commented_24dp,
-                    R.color.colorPrimary
-                )
-            )
-            commitsTextView.setStartDrawable(
-                context.getTintDrawable(
-                    R.drawable.ic_commit,
-                    R.color.colorPrimary
-                )
-            )
-            upVotesTextView.setStartDrawable(
-                context.getTintDrawable(
-                    R.drawable.ic_thumb_up,
-                    R.color.colorPrimary
-                )
-            )
-            downVotesTextView.setStartDrawable(
-                context.getTintDrawable(
-                    R.drawable.ic_thumb_down,
-                    R.color.colorPrimary
-                )
-            )
-            relatedMergeRequestCountTextView.setStartDrawable(
-                context.getTintDrawable(R.drawable.ic_merge_18dp, R.color.colorPrimary)
-            )
-        }
-        return ViewHolder(root)
-    }
+    override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder =
+        ViewHolder(parent.inflate(R.layout.item_target_header_public))
 
     override fun onBindViewHolder(
         items: MutableList<Any>,
@@ -84,9 +52,8 @@ class TargetHeaderPublicAdapterDelegate(
         init {
             containerView.setOnClickListener { clickListener(item) }
 
-            repeat(5) {
-                badgesContainer.inflate(R.layout.item_target_badge, true)
-            }
+            badgesContainer.prepare(R.layout.item_target_badge, 5)
+            iconsContainer.prepare(R.layout.item_target_icon, 5)
         }
 
         fun bind(item: TargetHeader.Public) {
@@ -105,73 +72,55 @@ class TargetHeaderPublicAdapterDelegate(
         }
 
         private fun bindBadges(badges: List<TargetBadge>) {
-            commentsTextView.visible(false)
-            commitsTextView.visible(false)
-            upVotesTextView.visible(false)
-            downVotesTextView.visible(false)
-            relatedMergeRequestCountTextView.visible(false)
-
-            val badgeViewsCount = badgesContainer.childCount
             val textBadgesCount = badges.count { it !is TargetBadge.Icon }
-            if (textBadgesCount > badgeViewsCount) {
-                (1..textBadgesCount - badgeViewsCount).forEach {
-                    badgesContainer.inflate(R.layout.item_target_badge, true)
-                }
-            }
+            badgesContainer.prepare(R.layout.item_target_badge, textBadgesCount)
 
-            (0 until badgesContainer.childCount).forEach { i ->
-                badgesContainer.getChildAt(i).visible(false)
-            }
+            val iconBadgesCount = badges.size - textBadgesCount
+            iconsContainer.prepare(R.layout.item_target_icon, iconBadgesCount)
 
-            var i = 0
+            var textBadgesCounter = 0
+            var iconBadgesCounter = 0
             badges.forEach { badge ->
                 when (badge) {
                     is TargetBadge.Text -> {
-                        val badgeView = badgesContainer.getChildAt(i) as TextView
+                        val badgeView = badgesContainer.getChildAt(textBadgesCounter) as TextView
                         badgeView.textTextView.text = badge.text
                         badgeView.textTextView.setTextColor(badgeView.context.color(R.color.colorPrimary))
                         badgeView.textTextView.setBackgroundColor(badgeView.context.color(R.color.colorPrimaryLight))
                         badgeView.visible(true)
-                        i++
+                        textBadgesCounter++
                     }
                     is TargetBadge.Status -> {
-                        val badgeView = badgesContainer.getChildAt(i) as TextView
+                        val badgeView = badgesContainer.getChildAt(textBadgesCounter) as TextView
                         badgeView.textTextView.text = badge.status.getHumanName(badgeView.resources)
                         val (textColor, bgColor) = badge.status.getBadgeColors(badgeView.context)
                         badgeView.textTextView.setTextColor(textColor)
                         badgeView.textTextView.setBackgroundColor(bgColor)
                         badgeView.visible(true)
-                        i++
+                        textBadgesCounter++
                     }
                     is TargetBadge.Icon -> {
-                        if (badge.count > 0) {
-                            when (badge.icon) {
-                                TargetBadgeIcon.COMMENTS -> {
-                                    commentsTextView.text = badge.count.toString()
-                                    commentsTextView.visible(true)
-                                }
-                                TargetBadgeIcon.COMMITS -> {
-                                    commitsTextView.text = badge.count.toString()
-                                    commitsTextView.visible(true)
-                                }
-                                TargetBadgeIcon.UP_VOTES -> {
-                                    upVotesTextView.text = badge.count.toString()
-                                    upVotesTextView.visible(true)
-                                }
-                                TargetBadgeIcon.DOWN_VOTES -> {
-                                    downVotesTextView.text = badge.count.toString()
-                                    downVotesTextView.visible(true)
-                                }
-                                TargetBadgeIcon.RELATED_MERGE_REQUESTS -> {
-                                    relatedMergeRequestCountTextView.text =
-                                        badge.count.toString()
-                                    relatedMergeRequestCountTextView.visible(true)
-                                }
-                            }
-                        }
+                        val iconBadgeView = iconsContainer.getChildAt(iconBadgesCounter) as TextView
+                        iconBadgeView.text = badge.value
+                        val iconRes = badge.icon.getIcon()
+                        val colorRes = badge.icon.getColor()
+                        val icon = iconBadgeView.context.getTintDrawable(iconRes, colorRes)
+                        iconBadgeView.setTextColor(iconBadgeView.context.color(colorRes))
+                        iconBadgeView.setStartDrawable(icon)
+                        iconBadgeView.visible(true)
+                        iconBadgesCounter++
                     }
                 }
             }
+        }
+
+        private fun ViewGroup.prepare(@LayoutRes layoutId: Int, viewsCount: Int) {
+            val viewsToInflate = viewsCount - childCount
+            if (viewsToInflate > 0) {
+                repeat(viewsToInflate) { inflate(layoutId, true) }
+            }
+
+            (0 until childCount).forEach { i -> getChildAt(i).visible(false) }
         }
     }
 }

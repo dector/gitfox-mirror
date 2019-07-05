@@ -14,6 +14,7 @@ import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.issue.Issue
 import ru.terrakok.gitlabclient.entity.issue.IssueScope
 import ru.terrakok.gitlabclient.entity.issue.IssueState
+import ru.terrakok.gitlabclient.extension.humanDate
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
@@ -74,7 +75,19 @@ class IssueRepository @Inject constructor(
         page: Int,
         pageSize: Int = defaultPageSize
     ) = api
-        .getIssues(projectId, scope, state, labels, milestone, iids, orderBy, sort, search, page, pageSize)
+        .getIssues(
+            projectId,
+            scope,
+            state,
+            labels,
+            milestone,
+            iids,
+            orderBy,
+            sort,
+            search,
+            page,
+            pageSize
+        )
         .flatMap { issues ->
             Single.zip(
                 Single.just(issues),
@@ -106,10 +119,49 @@ class IssueRepository @Inject constructor(
         )
         badges.add(TargetBadge.Text(project.name, AppTarget.PROJECT, project.id))
         badges.add(TargetBadge.Text(issue.author.username, AppTarget.USER, issue.author.id))
-        badges.add(TargetBadge.Icon(TargetBadgeIcon.COMMENTS, issue.userNotesCount))
-        badges.add(TargetBadge.Icon(TargetBadgeIcon.UP_VOTES, issue.upvotes))
-        badges.add(TargetBadge.Icon(TargetBadgeIcon.DOWN_VOTES, issue.downvotes))
-        badges.add(TargetBadge.Icon(TargetBadgeIcon.RELATED_MERGE_REQUESTS, issue.relatedMergeRequestCount))
+        if (issue.userNotesCount > 0) {
+            badges.add(TargetBadge.Icon(TargetBadgeIcon.COMMENTS, issue.userNotesCount.toString()))
+        }
+        if (issue.upvotes > 0) {
+            badges.add(TargetBadge.Icon(TargetBadgeIcon.UP_VOTES, issue.upvotes.toString()))
+        }
+        if (issue.downvotes > 0) {
+            badges.add(TargetBadge.Icon(TargetBadgeIcon.DOWN_VOTES, issue.downvotes.toString()))
+        }
+        if (issue.relatedMergeRequestCount > 0) {
+            badges.add(
+                TargetBadge.Icon(
+                    TargetBadgeIcon.RELATED_MERGE_REQUESTS,
+                    issue.relatedMergeRequestCount.toString()
+                )
+            )
+        }
+        if (issue.confidential) {
+            badges.add(TargetBadge.Icon(TargetBadgeIcon.CONFIDENTIAL, ""))
+        }
+        if (issue.discussionLocked) {
+            badges.add(TargetBadge.Icon(TargetBadgeIcon.LOCKED, ""))
+        }
+        issue.weight?.let { weight ->
+            badges.add(TargetBadge.Icon(TargetBadgeIcon.WEIGHT, weight.toString()))
+        }
+        issue.dueDate?.let { dueDate ->
+            badges.add(TargetBadge.Icon(TargetBadgeIcon.DUE_DATE_EXPIRED, dueDate.humanDate()))
+        }
+        issue.milestone?.let { milestone ->
+            badges.add(TargetBadge.Icon(TargetBadgeIcon.MILESTONE, milestone.title ?: ""))
+        }
+        issue.taskCompletionStatus?.let { taskCompStatus ->
+            if(taskCompStatus.count > 0) {
+                badges.add(
+                    TargetBadge.Icon(
+                        TargetBadgeIcon.TASK_COMPLETION,
+                        "${taskCompStatus.completedCount}/${taskCompStatus.count}"
+                    )
+                )
+            }
+        }
+
         issue.labels.forEach { label -> badges.add(TargetBadge.Text(label)) }
 
         return TargetHeader.Public(
@@ -190,7 +242,12 @@ class IssueRepository @Inject constructor(
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
 
-    private fun getAllIssueNotePages(projectId: Long, issueId: Long, sort: Sort?, orderBy: OrderBy?) =
+    private fun getAllIssueNotePages(
+        projectId: Long,
+        issueId: Long,
+        sort: Sort?,
+        orderBy: OrderBy?
+    ) =
         Observable.range(1, Int.MAX_VALUE)
             .concatMap { page ->
                 api.getIssueNotes(projectId, issueId, sort, orderBy, page, GitlabApi.MAX_PAGE_SIZE)
