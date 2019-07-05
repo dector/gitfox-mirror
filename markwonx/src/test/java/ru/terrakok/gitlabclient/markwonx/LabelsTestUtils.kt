@@ -39,7 +39,7 @@ object LabelsTestUtils {
             GitlabMarkdownExtension.OPTS_DELIMITER,
             args,
             GitlabExtensionsDelimiterProcessor.DELIMITER_END
-        ).joinToString()
+        ).joinToString("")
     }
 
 }
