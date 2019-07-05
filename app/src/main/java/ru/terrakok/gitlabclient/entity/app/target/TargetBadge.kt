@@ -5,18 +5,18 @@ package ru.terrakok.gitlabclient.entity.app.target
  */
 sealed class TargetBadge {
     data class Text(
-            val text: String,
-            val target: AppTarget? = null,
-            val targetId: Long? = null,
-            val internal: TargetInternal? = null
+        val text: String,
+        val target: AppTarget? = null,
+        val targetId: Long? = null,
+        val internal: TargetInternal? = null
     ) : TargetBadge()
 
     data class Icon(
-            val icon: TargetBadgeIcon,
-            val count: Int
+        val icon: TargetBadgeIcon,
+        val value: String
     ) : TargetBadge()
 
     data class Status(
-            val status: TargetBadgeStatus
+        val status: TargetBadgeStatus
     ) : TargetBadge()
 }

@@ -2,6 +2,7 @@ package ru.terrakok.gitlabclient.extension
 
 import android.content.Context
 import android.content.res.Resources
+import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import org.threeten.bp.Duration
 import org.threeten.bp.LocalDate
@@ -10,6 +11,7 @@ import org.threeten.bp.format.DateTimeFormatter
 import retrofit2.HttpException
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.develop.LicenseType
+import ru.terrakok.gitlabclient.entity.app.target.TargetBadgeIcon
 import ru.terrakok.gitlabclient.entity.app.target.TargetBadgeStatus
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderIcon
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderTitle
@@ -52,7 +54,10 @@ fun ZonedDateTime.humanTime(resources: Resources): String {
             delta < 60 -> resources.getString(R.string.time_sec, delta)
             delta < 60 * 60 -> resources.getString(R.string.time_min, delta / 60)
             delta < 60 * 60 * 24 -> resources.getString(R.string.time_hour, delta / (60 * 60))
-            delta < 60 * 60 * 24 * 7 -> resources.getString(R.string.time_day, delta / (60 * 60 * 24))
+            delta < 60 * 60 * 24 * 7 -> resources.getString(
+                R.string.time_day,
+                delta / (60 * 60 * 24)
+            )
             else -> return this.toLocalDate().format(DATE_FORMAT)
         }
 
@@ -142,22 +147,51 @@ fun TargetHeaderTitle.getHumanName(resources: Resources) = when (this) {
             }
             TodoAction.DIRECTLY_ADDRESSED,
             TodoAction.MENTIONED -> {
-                "$author $actionName $assignee ${resources.getString(R.string.on)} $targetName ${resources.getString(R.string.at)} $projectName"
+                "$author $actionName $assignee ${resources.getString(R.string.on)} $targetName ${resources.getString(
+                    R.string.at
+                )} $projectName"
             }
             TodoAction.MARKED -> {
-                "$author $actionName ${resources.getString(R.string.for_str)} $targetName ${resources.getString(R.string.at)} $projectName"
+                "$author $actionName ${resources.getString(R.string.for_str)} $targetName ${resources.getString(
+                    R.string.at
+                )} $projectName"
             }
             TodoAction.UNMERGEABLE -> {
                 "$actionName $targetName ${resources.getString(R.string.at)} $projectName"
             }
             TodoAction.BUILD_FAILED -> {
-                "$actionName ${resources.getString(R.string.for_str)} $targetName ${resources.getString(R.string.at)} $projectName"
+                "$actionName ${resources.getString(R.string.for_str)} $targetName ${resources.getString(
+                    R.string.at
+                )} $projectName"
             }
             TodoAction.APPROVAL_REQUIRED -> {
-                "$author $actionName ${resources.getString(R.string.for_str)} $targetName ${resources.getString(R.string.at)} $projectName"
+                "$author $actionName ${resources.getString(R.string.for_str)} $targetName ${resources.getString(
+                    R.string.at
+                )} $projectName"
             }
         }
     }
+}
+
+@DrawableRes
+fun TargetBadgeIcon.getIcon(): Int = when (this) {
+    TargetBadgeIcon.COMMENTS -> R.drawable.ic_event_commented_24dp
+    TargetBadgeIcon.COMMITS -> R.drawable.ic_commit
+    TargetBadgeIcon.UP_VOTES -> R.drawable.ic_thumb_up
+    TargetBadgeIcon.DOWN_VOTES -> R.drawable.ic_thumb_down
+    TargetBadgeIcon.RELATED_MERGE_REQUESTS -> R.drawable.ic_merge_18dp
+    TargetBadgeIcon.WEIGHT -> R.drawable.ic_weight_18dp
+    TargetBadgeIcon.CONFIDENTIAL -> R.drawable.ic_confidential_18dp
+    TargetBadgeIcon.LOCKED -> R.drawable.ic_lock_white_18dp
+    TargetBadgeIcon.DUE_DATE_EXPIRED -> R.drawable.ic_due_date_expired_18dp
+    TargetBadgeIcon.MILESTONE -> R.drawable.ic_milestone_18dp
+    TargetBadgeIcon.TASK_COMPLETION -> R.drawable.ic_task_completion_18dp
+}
+
+@ColorRes
+fun TargetBadgeIcon.getColor(): Int = when {
+    this == TargetBadgeIcon.DUE_DATE_EXPIRED -> R.color.red
+    else -> R.color.colorPrimary
 }
 
 fun LicenseType.getHumanName(resources: Resources) = when (this) {
@@ -174,7 +208,10 @@ fun TargetBadgeStatus.getHumanName(resources: Resources) = when (this) {
 }
 
 fun TargetBadgeStatus.getBadgeColors(context: Context) = when (this) {
-    TargetBadgeStatus.OPENED -> Pair(context.color(R.color.green), context.color(R.color.lightGreen))
+    TargetBadgeStatus.OPENED -> Pair(
+        context.color(R.color.green),
+        context.color(R.color.lightGreen)
+    )
     TargetBadgeStatus.CLOSED -> Pair(context.color(R.color.red), context.color(R.color.lightRed))
     TargetBadgeStatus.MERGED -> Pair(context.color(R.color.blue), context.color(R.color.lightBlue))
 }

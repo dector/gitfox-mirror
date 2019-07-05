@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZonedDateTime
 import ru.terrakok.gitlabclient.entity.ShortUser
+import ru.terrakok.gitlabclient.entity.TaskCompletionStatus
 import ru.terrakok.gitlabclient.entity.TimeStats
 import ru.terrakok.gitlabclient.entity.milestone.Milestone
 
@@ -37,5 +38,7 @@ data class Issue(
     @SerializedName("time_stats") val timeStats: TimeStats?,
     @SerializedName("weight") val weight: Int?,
     @SerializedName("discussion_locked") val discussionLocked: Boolean,
-    @SerializedName("assignee") val assignee: ShortUser?
+    @SerializedName("assignee") val assignee: ShortUser?,
+    @SerializedName("task_completion_status") val taskCompletionStatus: TaskCompletionStatus?
 )
+
