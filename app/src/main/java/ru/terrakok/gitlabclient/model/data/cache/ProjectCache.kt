@@ -21,5 +21,4 @@ class ProjectCache @Inject constructor(
             put(it.id, it)
         }
     }
-
 }

@@ -48,7 +48,7 @@ class AppActivity : MvpAppCompatActivity() {
                 nextFragment: Fragment?,
                 fragmentTransaction: FragmentTransaction
             ) {
-                //fix incorrect order lifecycle callback of MainFragment
+                // Fix incorrect order lifecycle callback of MainFragment
                 fragmentTransaction.setReorderingAllowed(true)
             }
         }
@@ -56,6 +56,7 @@ class AppActivity : MvpAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
         Toothpick.inject(this, Toothpick.openScope(DI.APP_SCOPE))
+        appLauncher.onLaunch()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_container)
 

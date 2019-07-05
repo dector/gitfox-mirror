@@ -13,9 +13,12 @@ import ru.terrakok.gitlabclient.presentation.global.NoteWithProjectId
 interface MergeRequestNotesView : MvpView {
 
     fun showEmptyProgress(show: Boolean)
-    fun showNotes(notes: List<NoteWithProjectId>, scrollToEnd: Boolean)
+    fun showNotes(notes: List<NoteWithProjectId>, scrollToPosition: Int?)
     fun showBlockingProgress(show: Boolean)
 
     @StateStrategyType(OneExecutionStateStrategy::class)
     fun showMessage(message: String)
+
+    @StateStrategyType(OneExecutionStateStrategy::class)
+    fun clearInput()
 }

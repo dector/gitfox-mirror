@@ -8,6 +8,7 @@ import ru.terrakok.gitlabclient.di.IssueId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
 import ru.terrakok.gitlabclient.entity.Project
+import ru.terrakok.gitlabclient.entity.app.target.TargetAction
 import ru.terrakok.gitlabclient.entity.issue.Issue
 import ru.terrakok.gitlabclient.model.interactor.issue.IssueInteractor
 import ru.terrakok.gitlabclient.model.interactor.project.ProjectInteractor
@@ -24,6 +25,7 @@ import javax.inject.Inject
 class IssuePresenter @Inject constructor(
     @ProjectId projectIdWrapper: PrimitiveWrapper<Long>,
     @IssueId issueIdWrapper: PrimitiveWrapper<Long>,
+    private val targetAction: TargetAction,
     private val issueInteractor: IssueInteractor,
     private val projectInteractor: ProjectInteractor,
     private val resourceManager: ResourceManager,
@@ -36,7 +38,11 @@ class IssuePresenter @Inject constructor(
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
+        updateToolbarTitle()
+        selectActionTab()
+    }
 
+    private fun updateToolbarTitle() {
         Single
             .zip(
                 issueInteractor.getIssue(projectId, issueId),
@@ -54,6 +60,10 @@ class IssuePresenter @Inject constructor(
                 { errorHandler.proceed(it, { viewState.showMessage(it) }) }
             )
             .connect()
+    }
+
+    private fun selectActionTab() {
+        viewState.selectActionTab(targetAction)
     }
 
     fun onBackPressed() = flowRouter.exit()

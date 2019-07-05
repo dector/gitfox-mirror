@@ -3,11 +3,11 @@ package ru.terrakok.gitlabclient.model.repository.mergerequest
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
-import org.threeten.bp.LocalDateTime
+import org.threeten.bp.ZonedDateTime
 import ru.terrakok.gitlabclient.di.DefaultPageSize
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.*
-import ru.terrakok.gitlabclient.entity.app.CommitWithAvatarUrl
+import ru.terrakok.gitlabclient.entity.app.CommitWithShortUser
 import ru.terrakok.gitlabclient.entity.app.target.*
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
@@ -16,24 +16,30 @@ import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestViewType
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
+import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
+import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 
 class MergeRequestRepository @Inject constructor(
     private val api: GitlabApi,
+    serverChanges: ServerChanges,
     private val schedulers: SchedulersProvider,
     @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>,
     private val markDownUrlResolver: MarkDownUrlResolver
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
+    private val mrRequests = ConcurrentHashMap<Pair<Long, Long>, Single<MergeRequest>>()
+
+    val mergeRequestChanges = serverChanges.mergeRequestChanges
 
     fun getMyMergeRequests(
         state: MergeRequestState? = null,
         milestone: String? = null,
         viewType: MergeRequestViewType? = null,
         labels: String? = null,
-        createdBefore: LocalDateTime? = null,
-        createdAfter: LocalDateTime? = null,
+        createdBefore: ZonedDateTime? = null,
+        createdAfter: ZonedDateTime? = null,
         scope: MergeRequestScope? = null,
         authorId: Int? = null,
         assigneeId: Int? = null,
@@ -65,8 +71,8 @@ class MergeRequestRepository @Inject constructor(
         milestone: String? = null,
         viewType: MergeRequestViewType? = null,
         labels: String? = null,
-        createdBefore: LocalDateTime? = null,
-        createdAfter: LocalDateTime? = null,
+        createdBefore: ZonedDateTime? = null,
+        createdAfter: ZonedDateTime? = null,
         scope: MergeRequestScope? = null,
         authorId: Int? = null,
         assigneeId: Int? = null,
@@ -131,7 +137,8 @@ class MergeRequestRepository @Inject constructor(
             AppTarget.MERGE_REQUEST,
             mr.id,
             TargetInternal(mr.projectId, mr.iid),
-            badges
+            badges,
+            TargetAction.Undefined
         )
     }
 
@@ -139,18 +146,24 @@ class MergeRequestRepository @Inject constructor(
         projectId: Long,
         mergeRequestId: Long
     ) = Single
-        .zip(
-            api.getProject(projectId),
-            api.getMergeRequest(projectId, mergeRequestId),
-            BiFunction<Project, MergeRequest, MergeRequest> { project, mr ->
-                val resolved = markDownUrlResolver.resolve(mr.description, project)
-                if (resolved != mr.description) {
-                    mr.copy(description = resolved)
-                } else {
-                    mr
-                }
+        .defer {
+            val key = Pair(projectId, mergeRequestId)
+            mrRequests.getOrPut(key) {
+                Single
+                    .zip(
+                        api.getProject(projectId),
+                        api.getMergeRequest(projectId, mergeRequestId),
+                        BiFunction<Project, MergeRequest, MergeRequest> { project, mr ->
+                            val resolved = markDownUrlResolver.resolve(mr.description, project)
+                            if (resolved != mr.description) mr.copy(description = resolved)
+                            else mr
+                        }
+                    )
+                    .toObservable()
+                    .share()
+                    .firstOrError()
             }
-        )
+        }
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
 
@@ -217,11 +230,11 @@ class MergeRequestRepository @Inject constructor(
         .zip(
             getAllMergeRequestParticipants(projectId, mergeRequestId),
             api.getMergeRequestCommits(projectId, mergeRequestId, page, pageSize),
-            BiFunction<List<Author>, List<Commit>, List<CommitWithAvatarUrl>> { participants, commits ->
+            BiFunction<List<ShortUser>, List<Commit>, List<CommitWithShortUser>> { participants, commits ->
                 commits.map { commit ->
-                    CommitWithAvatarUrl(
+                    CommitWithShortUser(
                         commit,
-                        participants.find { it.name == commit.authorName || it.username == commit.authorName }?.avatarUrl
+                        participants.find { it.name == commit.authorName || it.username == commit.authorName }
                     )
                 }
             }

@@ -1,6 +1,7 @@
 package ru.terrakok.gitlabclient.presentation.projects
 
 import com.arellomobile.mvp.InjectViewState
+import io.reactivex.disposables.Disposable
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectListMode
@@ -21,7 +22,8 @@ class ProjectsListPresenter @Inject constructor(
     @ProjectListMode private val modeWrapper: PrimitiveWrapper<Int>,
     private val router: FlowRouter,
     private val interactor: ProjectInteractor,
-    private val errorHandler: ErrorHandler
+    private val errorHandler: ErrorHandler,
+    private val paginator: Paginator.Store<Project>
 ) : BasePresenter<ProjectsListView>() {
 
     companion object {
@@ -31,49 +33,43 @@ class ProjectsListPresenter @Inject constructor(
     }
 
     private val mode = modeWrapper.value
+    private var pageDisposable: Disposable? = null
+
+    init {
+        paginator.render = { viewState.renderPaginatorState(it) }
+        paginator.sideEffects.subscribe { effect ->
+            when (effect) {
+                is Paginator.SideEffect.LoadPage -> loadNewPage(effect.currentPage)
+                is Paginator.SideEffect.ErrorEvent -> {
+                    errorHandler.proceed(effect.error) { viewState.showMessage(it) }
+                }
+            }
+        }.connect()
+    }
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-
         refreshProjects()
+        interactor.projectChanges
+            .subscribe { paginator.proceed(Paginator.Action.Refresh) }
+            .connect()
     }
 
-    private val paginator = Paginator(
-        { getProjectsSingle(it) },
-        object : Paginator.ViewController<Project> {
-            override fun showEmptyProgress(show: Boolean) {
-                viewState.showEmptyProgress(show)
-            }
-
-            override fun showEmptyError(show: Boolean, error: Throwable?) {
-                if (error != null) {
-                    errorHandler.proceed(error, { viewState.showEmptyError(show, it) })
-                } else {
-                    viewState.showEmptyError(show, null)
-                }
-            }
-
-            override fun showErrorMessage(error: Throwable) {
-                errorHandler.proceed(error, { viewState.showMessage(it) })
-            }
-
-            override fun showEmptyView(show: Boolean) {
-                viewState.showEmptyView(show)
-            }
-
-            override fun showData(show: Boolean, data: List<Project>) {
-                viewState.showProjects(show, data)
-            }
-
-            override fun showRefreshProgress(show: Boolean) {
-                viewState.showRefreshProgress(show)
-            }
-
-            override fun showPageProgress(show: Boolean) {
-                viewState.showPageProgress(show)
-            }
-        }
-    )
+    private fun loadNewPage(page: Int) {
+        pageDisposable?.dispose()
+        pageDisposable =
+            getProjectsSingle(page)
+                .subscribe(
+                    { data ->
+                        paginator.proceed(Paginator.Action.NewPage(page, data))
+                    },
+                    { e ->
+                        errorHandler.proceed(e)
+                        paginator.proceed(Paginator.Action.PageError(e))
+                    }
+                )
+        pageDisposable?.connect()
+    }
 
     private fun getProjectsSingle(page: Int) = when (mode) {
         STARRED_PROJECTS -> interactor.getStarredProjects(page)
@@ -81,14 +77,8 @@ class ProjectsListPresenter @Inject constructor(
         else -> interactor.getMainProjects(page)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        paginator.release()
-    }
-
-    fun refreshProjects() = paginator.refresh()
-    fun loadNextProjectsPage() = paginator.loadNewPage()
-
+    fun refreshProjects() = paginator.proceed(Paginator.Action.Refresh)
+    fun loadNextProjectsPage() = paginator.proceed(Paginator.Action.LoadMore)
     fun onProjectClicked(id: Long) = router.startFlow(Screens.ProjectFlow(id))
     fun onBackPressed() = router.exit()
 }

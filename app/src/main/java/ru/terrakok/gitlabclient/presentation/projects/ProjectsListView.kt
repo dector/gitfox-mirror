@@ -4,7 +4,7 @@ import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
-import ru.terrakok.gitlabclient.entity.Project
+import ru.terrakok.gitlabclient.presentation.global.Paginator
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 29.03.17
@@ -12,12 +12,7 @@ import ru.terrakok.gitlabclient.entity.Project
 
 @StateStrategyType(AddToEndSingleStrategy::class)
 interface ProjectsListView : MvpView {
-    fun showRefreshProgress(show: Boolean)
-    fun showEmptyProgress(show: Boolean)
-    fun showPageProgress(show: Boolean)
-    fun showEmptyView(show: Boolean)
-    fun showEmptyError(show: Boolean, message: String?)
-    fun showProjects(show: Boolean, projects: List<Project>)
+    fun renderPaginatorState(state: Paginator.State)
 
     @StateStrategyType(OneExecutionStateStrategy::class)
     fun showMessage(message: String)

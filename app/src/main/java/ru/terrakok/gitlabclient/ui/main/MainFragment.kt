@@ -1,22 +1,36 @@
 package ru.terrakok.gitlabclient.ui.main
 
 import android.os.Bundle
+import androidx.annotation.ColorRes
+import androidx.core.content.ContextCompat
+import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter
+import com.aurelhubert.ahbottomnavigation.notification.AHNotification
 import kotlinx.android.synthetic.main.fragment_main.*
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
+import ru.terrakok.gitlabclient.entity.app.AccountMainBadges
 import ru.terrakok.gitlabclient.extension.color
+import ru.terrakok.gitlabclient.presentation.main.MainPresenter
+import ru.terrakok.gitlabclient.presentation.main.MainView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 02.04.17
  */
-class MainFragment : BaseFragment() {
+class MainFragment : BaseFragment(), MainView {
     override val layoutRes = R.layout.fragment_main
 
     private val currentTabFragment: BaseFragment?
         get() = childFragmentManager.fragments.firstOrNull { !it.isHidden } as? BaseFragment
+
+    @InjectPresenter
+    lateinit var presenter: MainPresenter
+
+    @ProvidePresenter
+    fun providePresenter(): MainPresenter = scope.getInstance(MainPresenter::class.java)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -39,6 +53,8 @@ class MainFragment : BaseFragment() {
                 )
                 true
             }
+            val leftMargin = resources.getDimension(R.dimen.bottom_bar_notification_left_margin).toInt()
+            setNotificationMarginLeft(leftMargin, leftMargin)
         }
 
         selectTab(
@@ -76,6 +92,30 @@ class MainFragment : BaseFragment() {
 
     override fun onBackPressed() {
         currentTabFragment?.onBackPressed()
+    }
+
+    override fun setAssignedNotifications(badges: AccountMainBadges) {
+        with(bottomBar) {
+            setNotification(buildBottomBarNotification(R.color.fruit_salad, badges.issueCount), 1)
+            setNotification(
+                buildBottomBarNotification(
+                    R.color.brandy_punch,
+                    badges.mergeRequestCount
+                ), 2
+            )
+            setNotification(buildBottomBarNotification(R.color.mariner, badges.todoCount), 3)
+        }
+    }
+
+    private fun buildBottomBarNotification(@ColorRes backgroundColor: Int, count: Int): AHNotification {
+        return if (count > 0) {
+            AHNotification.Builder()
+                .setBackgroundColor(ContextCompat.getColor(requireContext(), backgroundColor))
+                .setText(count.toString())
+                .build()
+        } else {
+            AHNotification()
+        }
     }
 
     companion object {

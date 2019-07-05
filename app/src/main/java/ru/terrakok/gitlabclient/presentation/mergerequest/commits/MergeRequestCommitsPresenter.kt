@@ -1,10 +1,11 @@
 package ru.terrakok.gitlabclient.presentation.mergerequest.commits
 
 import com.arellomobile.mvp.InjectViewState
+import io.reactivex.disposables.Disposable
 import ru.terrakok.gitlabclient.di.MergeRequestId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
-import ru.terrakok.gitlabclient.entity.app.CommitWithAvatarUrl
+import ru.terrakok.gitlabclient.entity.app.CommitWithShortUser
 import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
@@ -19,11 +20,25 @@ class MergeRequestCommitsPresenter @Inject constructor(
     @ProjectId projectIdWrapper: PrimitiveWrapper<Long>,
     @MergeRequestId mrIdWrapper: PrimitiveWrapper<Long>,
     private val mrInteractor: MergeRequestInteractor,
-    private val errorHandler: ErrorHandler
+    private val errorHandler: ErrorHandler,
+    private val paginator: Paginator.Store<CommitWithShortUser>
 ) : BasePresenter<MergeRequestCommitsView>() {
 
     private val projectId = projectIdWrapper.value
     private val mrId = mrIdWrapper.value
+    private var pageDisposable: Disposable? = null
+
+    init {
+        paginator.render = { viewState.renderPaginatorState(it) }
+        paginator.sideEffects.subscribe { effect ->
+            when (effect) {
+                is Paginator.SideEffect.LoadPage -> loadNewPage(effect.currentPage)
+                is Paginator.SideEffect.ErrorEvent -> {
+                    errorHandler.proceed(effect.error) { viewState.showMessage(it) }
+                }
+            }
+        }.connect()
+    }
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -31,48 +46,22 @@ class MergeRequestCommitsPresenter @Inject constructor(
         refreshCommits()
     }
 
-    private val paginator = Paginator(
-        { page -> mrInteractor.getMergeRequestCommits(projectId, mrId, page) },
-        object : Paginator.ViewController<CommitWithAvatarUrl> {
-            override fun showEmptyProgress(show: Boolean) {
-                viewState.showEmptyProgress(show)
-            }
-
-            override fun showEmptyError(show: Boolean, error: Throwable?) {
-                if (error != null) {
-                    errorHandler.proceed(error, { viewState.showEmptyError(show, it) })
-                } else {
-                    viewState.showEmptyError(show, null)
-                }
-            }
-
-            override fun showErrorMessage(error: Throwable) {
-                errorHandler.proceed(error, { viewState.showMessage(it) })
-            }
-
-            override fun showEmptyView(show: Boolean) {
-                viewState.showEmptyView(show)
-            }
-
-            override fun showData(show: Boolean, data: List<CommitWithAvatarUrl>) {
-                viewState.showCommits(show, data)
-            }
-
-            override fun showRefreshProgress(show: Boolean) {
-                viewState.showRefreshProgress(show)
-            }
-
-            override fun showPageProgress(show: Boolean) {
-                viewState.showPageProgress(show)
-            }
-        }
-    )
-
-    fun refreshCommits() = paginator.refresh()
-    fun loadNextCommitsPage() = paginator.loadNewPage()
-
-    override fun onDestroy() {
-        super.onDestroy()
-        paginator.release()
+    private fun loadNewPage(page: Int) {
+        pageDisposable?.dispose()
+        pageDisposable =
+            mrInteractor.getMergeRequestCommits(projectId, mrId, page)
+                .subscribe(
+                    { data ->
+                        paginator.proceed(Paginator.Action.NewPage(page, data))
+                    },
+                    { e ->
+                        errorHandler.proceed(e)
+                        paginator.proceed(Paginator.Action.PageError(e))
+                    }
+                )
+        pageDisposable?.connect()
     }
+
+    fun refreshCommits() = paginator.proceed(Paginator.Action.Refresh)
+    fun loadNextCommitsPage() = paginator.proceed(Paginator.Action.LoadMore)
 }

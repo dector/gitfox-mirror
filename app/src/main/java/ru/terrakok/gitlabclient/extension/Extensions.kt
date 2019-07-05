@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.text.SpannableStringBuilder
 import android.text.Spanned
+import android.text.TextUtils
 import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
@@ -19,11 +20,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.annotation.LayoutRes
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.Fragment
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.snackbar.Snackbar
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.android.support.SupportAppScreen
@@ -57,10 +57,17 @@ fun Context.getTintDrawable(drawableRes: Int, colorRes: Int): Drawable {
     return wrapped
 }
 
-fun Context.getTintDrawable(drawableRes: Int, colorResources: IntArray, states: Array<IntArray>): Drawable {
+fun Context.getTintDrawable(
+    drawableRes: Int,
+    colorResources: IntArray,
+    states: Array<IntArray>
+): Drawable {
     val source = ContextCompat.getDrawable(this, drawableRes)!!.mutate()
     val wrapped = DrawableCompat.wrap(source)
-    DrawableCompat.setTintList(wrapped, ColorStateList(states, colorResources.map { color(it) }.toIntArray()))
+    DrawableCompat.setTintList(
+        wrapped,
+        ColorStateList(states, colorResources.map { color(it) }.toIntArray())
+    )
     return wrapped
 }
 
@@ -137,20 +144,6 @@ fun Fragment.sendEmail(email: String?) {
     }
 }
 
-fun ImageView.loadRoundedImage(
-    url: String?,
-    ctx: Context? = null
-) {
-    Glide.with(ctx ?: context)
-        .load(url)
-        .apply(RequestOptions().apply {
-            placeholder(R.drawable.default_img)
-            error(R.drawable.default_img)
-        })
-        .apply(RequestOptions.circleCropTransform())
-        .into(this)
-}
-
 fun TargetHeader.Public.openInfo(router: FlowRouter) {
     when (target) {
         AppTarget.PROJECT -> {
@@ -160,19 +153,31 @@ fun TargetHeader.Public.openInfo(router: FlowRouter) {
             router.startFlow(Screens.UserFlow(targetId))
         }
         AppTarget.MERGE_REQUEST -> {
-            internal?.let { targetInternal ->
-                router.startFlow(Screens.MergeRequestFlow(targetInternal.projectId, targetInternal.targetIid))
+            internal?.let { targetInternal  ->
+                router.startFlow(
+                    Screens.MergeRequestFlow(
+                        targetInternal.projectId,
+                        targetInternal.targetIid,
+                        action
+                    )
+                )
             }
         }
         AppTarget.ISSUE -> {
-            internal?.let { targetInternal ->
-                router.startFlow(Screens.IssueFlow(targetInternal.projectId, targetInternal.targetIid))
+            internal?.let { targetInternal  ->
+                router.startFlow(
+                    Screens.IssueFlow(
+                        targetInternal.projectId,
+                        targetInternal.targetIid,
+                        action
+                    )
+                )
             }
         }
         else -> {
             internal?.let { targetInternal ->
                 Timber.i("Temporary open project flow")
-                //todo
+                // TODO: target click navigation (Handle new events).
                 router.startFlow(Screens.ProjectFlow(targetInternal.projectId))
             }
         }
@@ -180,18 +185,20 @@ fun TargetHeader.Public.openInfo(router: FlowRouter) {
 }
 
 fun Fragment.showSnackMessage(message: String) {
-    view?.let {
-        val ssb = SpannableStringBuilder().apply {
-            append(message)
-            setSpan(
-                ForegroundColorSpan(Color.WHITE),
-                0,
-                message.length,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-        }
-        Snackbar.make(it, ssb, Snackbar.LENGTH_LONG).show()
+    view?.showSnackMessage(message)
+}
+
+fun View.showSnackMessage(message: String) {
+    val ssb = SpannableStringBuilder().apply {
+        append(message)
+        setSpan(
+            ForegroundColorSpan(Color.WHITE),
+            0,
+            message.length,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
     }
+    Snackbar.make(this, ssb, Snackbar.LENGTH_LONG).show()
 }
 
 fun Activity.hideKeyboard() {
@@ -206,4 +213,17 @@ fun Any.objectScopeName() = "${javaClass.simpleName}_${hashCode()}"
 fun View.setBackgroundTintByColor(@ColorInt color: Int) {
     val wrappedDrawable = DrawableCompat.wrap(background)
     DrawableCompat.setTint(wrappedDrawable.mutate(), color)
+}
+
+fun Toolbar.setTitleEllipsize(ellipsize: TextUtils.TruncateAt) {
+    val fakeTitle = "fakeTitle"
+    title = fakeTitle
+    for (i in 0..childCount) {
+        val child = getChildAt(i)
+        if (child is TextView && child.text == fakeTitle) {
+            child.ellipsize = ellipsize
+            break
+        }
+    }
+    title = ""
 }

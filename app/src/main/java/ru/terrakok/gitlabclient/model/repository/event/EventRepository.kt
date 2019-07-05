@@ -3,7 +3,7 @@ package ru.terrakok.gitlabclient.model.repository.event
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
-import org.threeten.bp.LocalDateTime
+import org.threeten.bp.ZonedDateTime
 import ru.terrakok.gitlabclient.di.DefaultPageSize
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.OrderBy
@@ -34,8 +34,8 @@ class EventRepository @Inject constructor(
     fun getEvents(
         action: EventAction? = null,
         targetType: EventTarget? = null,
-        beforeDay: LocalDateTime? = null,
-        afterDay: LocalDateTime? = null,
+        beforeDay: ZonedDateTime? = null,
+        afterDay: ZonedDateTime? = null,
         sort: Sort? = Sort.DESC,
         orderBy: OrderBy = OrderBy.UPDATED_AT,
         page: Int,
@@ -68,8 +68,8 @@ class EventRepository @Inject constructor(
         projectId: Long,
         action: EventAction? = null,
         targetType: EventTarget? = null,
-        beforeDay: LocalDateTime? = null,
-        afterDay: LocalDateTime? = null,
+        beforeDay: ZonedDateTime? = null,
+        afterDay: ZonedDateTime? = null,
         sort: Sort? = Sort.DESC,
         orderBy: OrderBy = OrderBy.UPDATED_AT,
         page: Int,
@@ -106,9 +106,9 @@ class EventRepository @Inject constructor(
      * On web these events are filtered.
      */
     private fun isNoteBroken(event: Event) =
-        event.targetType != null
-            && (event.targetType == EventTargetType.DIFF_NOTE || event.targetType == EventTargetType.NOTE)
-            && event.note == null
+        event.targetType != null &&
+            (event.targetType == EventTargetType.DIFF_NOTE || event.targetType == EventTargetType.NOTE) &&
+            event.note == null
 
     private fun getDistinctProjects(events: List<Event>): Single<Map<Long, Project>> {
         return Observable.fromIterable(events)
@@ -128,9 +128,6 @@ class EventRepository @Inject constructor(
             val badges = mutableListOf<TargetBadge>()
             project?.let { badges.add(TargetBadge.Text(it.name, AppTarget.PROJECT, it.id)) }
             badges.add(TargetBadge.Text(event.author.username, AppTarget.USER, event.author.id))
-            event.pushData?.let { pushData ->
-                badges.add(TargetBadge.Icon(TargetBadgeIcon.COMMITS, pushData.commitCount))
-            }
 
             TargetHeader.Public(
                 event.author,
@@ -146,7 +143,8 @@ class EventRepository @Inject constructor(
                 targetData.target,
                 targetData.id,
                 getTargetInternal(event),
-                badges
+                badges,
+                getTargetAction(event)
             )
         } else {
             TargetHeader.Confidential
@@ -158,19 +156,24 @@ class EventRepository @Inject constructor(
         EventAction.IMPORTED -> TargetHeaderIcon.IMPORTED
         EventAction.JOINED -> TargetHeaderIcon.JOINED
         EventAction.COMMENTED_ON,
-        EventAction.COMMENTED -> TargetHeaderIcon.COMMENTED
+        EventAction.COMMENTED ->
+            TargetHeaderIcon.COMMENTED
         EventAction.MERGED,
-        EventAction.ACCEPTED -> TargetHeaderIcon.MERGED
+        EventAction.ACCEPTED ->
+            TargetHeaderIcon.MERGED
         EventAction.CLOSED -> TargetHeaderIcon.CLOSED
         EventAction.DELETED,
-        EventAction.DESTROYED -> TargetHeaderIcon.DESTROYED
+        EventAction.DESTROYED ->
+            TargetHeaderIcon.DESTROYED
         EventAction.EXPIRED -> TargetHeaderIcon.EXPIRED
         EventAction.LEFT -> TargetHeaderIcon.LEFT
         EventAction.OPENED,
-        EventAction.REOPENED -> TargetHeaderIcon.REOPENED
+        EventAction.REOPENED ->
+            TargetHeaderIcon.REOPENED
         EventAction.PUSHED,
         EventAction.PUSHED_NEW,
-        EventAction.PUSHED_TO -> TargetHeaderIcon.PUSHED
+        EventAction.PUSHED_TO ->
+            TargetHeaderIcon.PUSHED
         EventAction.UPDATED -> TargetHeaderIcon.UPDATED
     }
 
@@ -270,6 +273,17 @@ class EventRepository @Inject constructor(
             }
         }
 
+    private fun getTargetAction(event: Event): TargetAction =
+        when (event.actionName) {
+            EventAction.COMMENTED_ON -> {
+                event.note
+                    ?.id
+                    ?.let { TargetAction.CommentedOn(it) }
+                    ?: TargetAction.Undefined
+            }
+            else -> TargetAction.Undefined
+        }
+
     private fun getBody(event: Event, project: Project?) = when (event.targetType) {
         EventTargetType.NOTE,
         EventTargetType.DIFF_NOTE -> {
@@ -281,7 +295,8 @@ class EventRepository @Inject constructor(
         }
         EventTargetType.ISSUE,
         EventTargetType.MERGE_REQUEST,
-        EventTargetType.MILESTONE -> event.targetTitle
+        EventTargetType.MILESTONE ->
+            event.targetTitle
         else -> event.pushData?.commitTitle
     }
 

@@ -12,11 +12,13 @@
         style="@style/ToolbarStyle"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:elevation="0dp"
-        app:navigationIcon="@drawable/ic_arrow_back_24dp"
+        app:navigationIcon="@drawable/ic_close_white_24dp"
         tools:subtitle="develop"
         tools:title="Files" />
 
-    <include layout="@layout/layout_base_list" />
+    <ru.terrakok.gitlabclient.ui.global.view.custom.PaginalRenderView
+        android:id="@+id/paginalRenderView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

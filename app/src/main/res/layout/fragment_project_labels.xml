@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        style="@style/ToolbarStyle"
+    <ru.terrakok.gitlabclient.ui.global.view.custom.PaginalRenderView
+        android:id="@+id/paginalRenderView"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        app:navigationIcon="@drawable/ic_arrow_back_24dp"
-        app:title="@string/project_labels" />
-
-    <include layout="@layout/layout_base_list" />
-</LinearLayout>
+        android:layout_height="match_parent"/>
+</FrameLayout>

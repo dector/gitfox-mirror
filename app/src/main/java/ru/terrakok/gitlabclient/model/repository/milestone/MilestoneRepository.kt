@@ -3,22 +3,27 @@ package ru.terrakok.gitlabclient.model.repository.milestone
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import org.threeten.bp.LocalDate
 import ru.terrakok.gitlabclient.di.DefaultPageSize
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.milestone.Milestone
 import ru.terrakok.gitlabclient.entity.milestone.MilestoneState
 import ru.terrakok.gitlabclient.model.data.cache.ProjectMilestoneCache
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
+import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import javax.inject.Inject
 
 class MilestoneRepository @Inject constructor(
     private val api: GitlabApi,
+    serverChanges: ServerChanges,
     private val schedulers: SchedulersProvider,
     @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>,
     private val projectMilestoneCache: ProjectMilestoneCache
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
+
+    val milestoneChanges = serverChanges.milestoneChanges
 
     fun getMilestones(
         projectId: Long,
@@ -68,10 +73,10 @@ class MilestoneRepository @Inject constructor(
         projectId: Long,
         title: String,
         description: String? = null,
-        dueDate: String? = null,
-        startDate: String? = null
+        dueDate: LocalDate? = null,
+        startDate: LocalDate? = null
     ): Single<Milestone> = api
-        .createMileStone(projectId, title, description, dueDate, startDate)
+        .createMilestone(projectId, title, description, dueDate, startDate)
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
 
@@ -80,10 +85,10 @@ class MilestoneRepository @Inject constructor(
         milestoneId: Long,
         title: String? = null,
         description: String? = null,
-        dueDate: String? = null,
-        startDate: String? = null
+        dueDate: LocalDate? = null,
+        startDate: LocalDate? = null
     ): Single<Milestone> = api
-        .updateMileStone(projectId, milestoneId, title, description, dueDate, startDate)
+        .updateMilestone(projectId, milestoneId, title, description, dueDate, startDate)
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
 

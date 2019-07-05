@@ -1,5 +1,6 @@
 package ru.terrakok.gitlabclient.model.interactor.milestone
 
+import org.threeten.bp.LocalDate
 import io.reactivex.Single
 import ru.terrakok.gitlabclient.entity.milestone.Milestone
 import ru.terrakok.gitlabclient.entity.milestone.MilestoneState
@@ -14,23 +15,18 @@ class MilestoneInteractor @Inject constructor(
     private val issueRepository: IssueRepository
 ) {
 
+    val milestoneChanges = milestoneRepository.milestoneChanges
+
     fun getMilestones(
         projectId: Long,
-        milestoneState: MilestoneState,
+        milestoneState: MilestoneState?,
         page: Int
     ) = milestoneRepository
         .getMilestones(projectId, milestoneState, page)
 
     fun getAllProjectMilestones(
-        projectId: Long?
-    ): Single<List<Milestone>> =
-        Single.defer {
-            if (projectId != null) {
-                milestoneRepository.getAllProjectMilestones(projectId)
-            } else {
-                Single.just(emptyList())
-            }
-        }
+        projectId: Long
+    ): Single<List<Milestone>> = milestoneRepository.getAllProjectMilestones(projectId)
 
     fun getMilestone(
         projectId: Long,
@@ -42,8 +38,8 @@ class MilestoneInteractor @Inject constructor(
         projectId: Long,
         title: String,
         description: String?,
-        dueDate: String?,
-        startDate: String?
+        dueDate: LocalDate?,
+        startDate: LocalDate?
     ) = milestoneRepository
         .createMilestone(projectId, title, description, dueDate, startDate)
 
@@ -52,8 +48,8 @@ class MilestoneInteractor @Inject constructor(
         milestoneId: Long,
         title: String?,
         description: String?,
-        dueDate: String?,
-        startDate: String?
+        dueDate: LocalDate?,
+        startDate: LocalDate?
     ) = milestoneRepository
         .updateMilestone(projectId, milestoneId, title, description, dueDate, startDate)
 

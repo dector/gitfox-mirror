@@ -2,11 +2,12 @@ package ru.terrakok.gitlabclient.presentation.project.files
 
 import com.arellomobile.mvp.InjectViewState
 import io.reactivex.Single
+import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
-import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.Branch
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.RepositoryTreeNodeType
@@ -29,24 +30,36 @@ class ProjectFilesPresenter @Inject constructor(
     private val errorHandler: ErrorHandler,
     private val router: FlowRouter,
     private val projectFileDestination: ProjectFileDestination,
-    private val resourceManager: ResourceManager
+    private val resourceManager: ResourceManager,
+    private val paginator: Paginator.Store<ProjectFile>
 ) : BasePresenter<ProjectFilesView>() {
 
     private val projectId = projectIdWrapper.value
     private val projectBranches = arrayListOf<Branch>()
 
+    private var pageDisposable: Disposable? = null
+
+    init {
+        paginator.render = { viewState.renderPaginatorState(it) }
+        paginator.sideEffects.subscribe { effect ->
+            when (effect) {
+                is Paginator.SideEffect.LoadPage -> loadNewPage(effect.currentPage)
+                is Paginator.SideEffect.ErrorEvent -> {
+                    errorHandler.proceed(effect.error) { viewState.showMessage(it) }
+                }
+            }
+        }.connect()
+    }
+
     init {
         projectFileDestination.setCallback(object : ProjectFileDestination.Callback {
             override fun onMoveForward(fromRoot: Boolean) {
-                val inRoot = projectFileDestination.isInRoot()
-                if (fromRoot) {
-                    viewState.setBranch("")
-                    viewState.showBranchSelection(false)
-                } else if (inRoot) {
-                    viewState.setBranch(projectFileDestination.branchName)
-                    viewState.showBranchSelection(true)
+                with(projectFileDestination) {
+                    if (fromRoot) {
+                        viewState.setBranch(branchName)
+                    }
+                    viewState.setPath(getUIPath(isInRoot(), defaultPath, paths))
                 }
-                viewState.setPath(getUIPath(inRoot, projectFileDestination.defaultPath, projectFileDestination.paths))
 
                 refreshFiles()
             }
@@ -55,14 +68,9 @@ class ProjectFilesPresenter @Inject constructor(
                 if (fromRoot) {
                     router.exit()
                 } else {
-                    val inRoot = projectFileDestination.isInRoot()
-                    if (inRoot) {
-                        viewState.setBranch(projectFileDestination.branchName)
-                        viewState.showBranchSelection(true)
+                    with(projectFileDestination) {
+                        viewState.setPath(getUIPath(isInRoot(), defaultPath, paths))
                     }
-                    viewState.setPath(
-                        getUIPath(inRoot, projectFileDestination.defaultPath, projectFileDestination.paths)
-                    )
 
                     refreshFiles()
                 }
@@ -70,6 +78,9 @@ class ProjectFilesPresenter @Inject constructor(
 
             override fun onBranchChange(branchName: String) {
                 viewState.setBranch(branchName)
+                with(projectFileDestination) {
+                    viewState.setPath(getUIPath(isInRoot(), defaultPath, paths))
+                }
 
                 refreshFiles()
             }
@@ -84,6 +95,28 @@ class ProjectFilesPresenter @Inject constructor(
         } else {
             loadProjectWithBranches()
         }
+    }
+
+    private fun loadNewPage(page: Int) {
+        pageDisposable?.dispose()
+        pageDisposable =
+            projectInteractor
+                .getProjectFiles(
+                    projectId,
+                    getRemotePath(projectFileDestination.isInRoot(), projectFileDestination.paths),
+                    projectFileDestination.branchName,
+                    page
+                )
+                .subscribe(
+                    { data ->
+                        paginator.proceed(Paginator.Action.NewPage(page, data))
+                    },
+                    { e ->
+                        errorHandler.proceed(e)
+                        paginator.proceed(Paginator.Action.PageError(e))
+                    }
+                )
+        pageDisposable?.connect()
     }
 
     private fun loadBranches() {
@@ -131,78 +164,35 @@ class ProjectFilesPresenter @Inject constructor(
     }
 
     private fun handleLoadingProjectDetailsError(error: Throwable) {
-        viewState.setPath(resourceManager.getString(R.string.project_files_default_path))
-        viewState.showBranchSelection(false)
-        if (error is NoBranchesError) {
-            viewState.showEmptyError(true, resourceManager.getString(R.string.project_files_no_branches))
+        if (projectFileDestination.isInitiated()) {
+            with(projectFileDestination) {
+                viewState.setBranch(branchName)
+                viewState.setPath(getUIPath(isInRoot(), defaultPath, paths))
+            }
+            viewState.showBranchSelection(true)
         } else {
-            errorHandler.proceed(error, { viewState.showEmptyError(true, it) })
+            viewState.setPath(resourceManager.getString(R.string.project_files_default_path))
+            viewState.showBranchSelection(false)
+        }
+        if (error is NoBranchesError) {
+            viewState.showMessage(resourceManager.getString(R.string.project_files_no_branches))
+        } else {
+            errorHandler.proceed(error) { viewState.showMessage(it) }
         }
     }
 
-    private val paginator = Paginator(
-        {
-            projectInteractor.getProjectFiles(
-                projectId,
-                getRemotePath(projectFileDestination.isInRoot(), projectFileDestination.paths),
-                projectFileDestination.branchName,
-                it
-            )
-        },
-        object : Paginator.ViewController<ProjectFile> {
-            override fun showEmptyProgress(show: Boolean) {
-                viewState.showEmptyProgress(show)
-            }
-
-            override fun showEmptyError(show: Boolean, error: Throwable?) {
-                if (error != null) {
-                    errorHandler.proceed(error, { viewState.showEmptyError(show, it) })
-                } else {
-                    viewState.showEmptyError(show, null)
-                }
-            }
-
-            override fun showErrorMessage(error: Throwable) {
-                // Hide old files to prevent navigation into the same directories.
-                viewState.showEmptyView(true)
-                viewState.showFiles(false, emptyList())
-                errorHandler.proceed(error, { viewState.showEmptyError(true, it) })
-            }
-
-            override fun showEmptyView(show: Boolean) {
-                viewState.showEmptyView(show)
-            }
-
-            override fun showData(show: Boolean, data: List<ProjectFile>) {
-                // Hide empty view, if it was hidden in case of error.
-                viewState.showEmptyView(false)
-                viewState.showFiles(show, data)
-            }
-
-            override fun showRefreshProgress(show: Boolean) {
-                viewState.showRefreshProgress(show)
-            }
-
-            override fun showPageProgress(show: Boolean) {
-                viewState.showPageProgress(show)
-            }
-        }
-    )
-
     fun refreshFiles() {
         if (projectFileDestination.isInitiated()) {
-            paginator.refresh()
+            paginator.proceed(Paginator.Action.Refresh)
         } else {
-            viewState.showEmptyError(false, null)
-            viewState.showRefreshProgress(false)
-
             loadProjectWithBranches()
         }
     }
 
-    fun loadNextFilesPage() = paginator.loadNewPage()
+    fun loadNextFilesPage() = paginator.proceed(Paginator.Action.LoadMore)
     fun onShowBranchesClick() = viewState.showBranches(projectBranches)
     fun onBackPressed() = projectFileDestination.moveBack()
+    fun onNavigationCloseClicked() = router.exit()
     fun onBranchClick(branchName: String) = projectFileDestination.changeBranch(branchName)
 
     fun onFileClick(item: ProjectFile) {
@@ -217,12 +207,6 @@ class ProjectFilesPresenter @Inject constructor(
                 )
             )
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        paginator.release()
     }
 
     companion object {

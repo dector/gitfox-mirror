@@ -1,55 +1,33 @@
 package ru.terrakok.gitlabclient.ui.global.list
 
+import android.annotation.SuppressLint
 import androidx.recyclerview.widget.DiffUtil
 import com.arellomobile.mvp.MvpDelegate
-import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
+import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
 import ru.terrakok.gitlabclient.presentation.global.NoteWithProjectId
+
+fun NoteWithProjectId.isSame(other: NoteWithProjectId) =
+    note.id == other.note.id
 
 class TargetNotesAdapter(
     mvpDelegate: MvpDelegate<*>
-) : ListDelegationAdapter<MutableList<Any>>() {
+) : AsyncListDifferDelegationAdapter<Any>(
+    object : DiffUtil.ItemCallback<Any>() {
+        override fun areItemsTheSame(oldItem: Any, newItem: Any): Boolean {
+            return if (oldItem is NoteWithProjectId && newItem is NoteWithProjectId) {
+                oldItem.isSame(newItem)
+            } else false
+        }
+
+        @SuppressLint("DiffUtilEquals")
+        override fun areContentsTheSame(oldItem: Any, newItem: Any) = oldItem == newItem
+        override fun getChangePayload(oldItem: Any, newItem: Any) = Any()
+    }
+) {
 
     init {
         items = mutableListOf()
         delegatesManager.addDelegate(UserNoteAdapterDelegate(mvpDelegate))
         delegatesManager.addDelegate(SystemNoteAdapterDelegate(mvpDelegate))
-    }
-
-    override fun getItemId(position: Int): Long {
-        return (items[position] as NoteWithProjectId).note.id
-    }
-
-    fun setData(data: List<NoteWithProjectId>) {
-        val oldItems = items.toList()
-
-        items.clear()
-        items.addAll(data)
-
-        DiffUtil
-            .calculateDiff(DiffCallback(items, oldItems), false)
-            .dispatchUpdatesTo(this)
-    }
-
-    private inner class DiffCallback(
-        private val newItems: List<Any>,
-        private val oldItems: List<Any>
-    ) : DiffUtil.Callback() {
-
-        override fun getOldListSize() = oldItems.size
-        override fun getNewListSize() = newItems.size
-
-        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            val oldItem = oldItems[oldItemPosition] as NoteWithProjectId
-            val newItem = newItems[newItemPosition] as NoteWithProjectId
-
-            return newItem.note.id == oldItem.note.id
-        }
-
-        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            val oldItem = oldItems[oldItemPosition] as NoteWithProjectId
-            val newItem = newItems[newItemPosition] as NoteWithProjectId
-
-            return newItem == oldItem
-        }
     }
 }

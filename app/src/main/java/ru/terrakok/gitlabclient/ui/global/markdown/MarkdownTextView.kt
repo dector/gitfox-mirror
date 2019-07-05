@@ -1,10 +1,8 @@
 package ru.terrakok.gitlabclient.ui.global.markdown
 
-import android.annotation.TargetApi
 import android.content.Context
-import android.os.Build
 import android.util.AttributeSet
-import android.widget.TextView
+import androidx.appcompat.widget.AppCompatTextView
 import com.arellomobile.mvp.MvpDelegate
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -19,16 +17,15 @@ import timber.log.Timber
 import toothpick.Toothpick
 import toothpick.config.Module
 
-class MarkdownTextView : TextView, MarkdownView {
-
-    @JvmOverloads
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : super(
-        context,
-        attrs,
-        defStyleAttr,
-        defStyleRes
-    )
+class MarkdownTextView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : AppCompatTextView(
+    context,
+    attrs,
+    defStyleAttr
+), MarkdownView {
 
     private lateinit var parentDelegate: MvpDelegate<*>
     private val mvpDelegate: MvpDelegate<MarkdownTextView> by lazy {
@@ -69,7 +66,7 @@ class MarkdownTextView : TextView, MarkdownView {
         mvpDelegate.onAttach()
     }
 
-    fun setMarkdown(markdown: String?, projectId: Long? = null) {
+    fun setMarkdown(markdown: String?, projectId: Long?) {
         text = null
         if (markdown != null) {
             presenter.setMarkdown(markdown, projectId)

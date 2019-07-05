@@ -4,17 +4,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
-import kotlinx.android.synthetic.main.item_milestone.view.*
+import kotlinx.android.extensions.LayoutContainer
+import kotlinx.android.synthetic.main.item_milestone.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.milestone.Milestone
-import ru.terrakok.gitlabclient.extension.humanTime
-import ru.terrakok.gitlabclient.extension.inflate
+import ru.terrakok.gitlabclient.extension.*
 
 /**
  * @author Valentin Logvinovitch (glvvl) on 17.12.18.
  */
+
+fun Milestone.isSame(other: Milestone) = id == other.id
+
 class MilestonesAdapterDelegate(
-    private val clickListener: (Long) -> Unit
+    private val clickListener: (Milestone) -> Unit
 ) : AdapterDelegate<MutableList<Any>>() {
 
     override fun isForViewType(items: MutableList<Any>, position: Int) =
@@ -30,20 +33,35 @@ class MilestonesAdapterDelegate(
         payloads: MutableList<Any>
     ) = (viewHolder as ViewHolder).bind(items[position] as Milestone)
 
-    private inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private lateinit var milestone: Milestone
+    private inner class ViewHolder(
+        override val containerView: View
+    ) : RecyclerView.ViewHolder(containerView), LayoutContainer {
+
+        private lateinit var item: Milestone
 
         init {
-            //TODO Milestone Flow(uncomment next line when Milestone Flow is ready).
-            // view.setOnClickListener { clickListener(milestone.id) }
+            containerView.setOnClickListener { clickListener(item) }
         }
 
-        fun bind(data: Milestone) {
-            this.milestone = data
-            with(itemView) {
-                titleTextView.text = data.title
-                dateTextView.text = data.createdAt?.humanTime(resources)
+        fun bind(item: Milestone) {
+            this.item = item
+            titleTextView.text = item.title
+            val startDate = item.startDate
+            val dueDate = item.dueDate
+            if (startDate != null && dueDate != null) {
+                dateTextView.text = String.format(
+                    dateTextView.context.getString(R.string.project_milestone_date),
+                    startDate.humanDate(),
+                    dueDate.humanDate()
+                )
+                dateTextView.visible(true)
+            } else {
+                dateTextView.visible(false)
             }
+            val (textColor, bgColor) = item.state.getStateColors(stateTextView.context)
+            stateTextView.setTextColor(textColor)
+            stateTextView.setBackgroundColor(bgColor)
+            stateTextView.text = item.state.getHumanName(stateTextView.resources)
         }
     }
 }

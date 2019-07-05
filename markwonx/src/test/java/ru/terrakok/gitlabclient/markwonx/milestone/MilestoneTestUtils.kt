@@ -61,7 +61,7 @@ object MilestoneTestUtils {
             GitlabMarkdownExtension.OPTS_DELIMITER,
             args,
             GitlabExtensionsDelimiterProcessor.DELIMITER_END
-        ).joinToString()
+        ).joinToString("")
     }
 
 }

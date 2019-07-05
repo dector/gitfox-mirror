@@ -2,7 +2,7 @@ package ru.terrakok.gitlabclient.model.repository.todo
 
 import ru.terrakok.gitlabclient.di.DefaultPageSize
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
-import ru.terrakok.gitlabclient.entity.Assignee
+import ru.terrakok.gitlabclient.entity.ShortUser
 import ru.terrakok.gitlabclient.entity.User
 import ru.terrakok.gitlabclient.entity.app.target.*
 import ru.terrakok.gitlabclient.entity.target.TargetState
@@ -11,6 +11,7 @@ import ru.terrakok.gitlabclient.entity.todo.Todo
 import ru.terrakok.gitlabclient.entity.todo.TodoAction
 import ru.terrakok.gitlabclient.entity.todo.TodoState
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
+import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import javax.inject.Inject
 
@@ -19,10 +20,13 @@ import javax.inject.Inject
  */
 class TodoRepository @Inject constructor(
     private val api: GitlabApi,
+    serverChanges: ServerChanges,
     private val schedulers: SchedulersProvider,
     @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
+
+    val todoChanges = serverChanges.todoChanges
 
     fun getTodos(
         currentUser: User,
@@ -43,7 +47,7 @@ class TodoRepository @Inject constructor(
         val target = todo.target
         val assignee = if (todo.actionName != TodoAction.MARKED) {
             currentUser.let {
-                Assignee(it.id, it.state, it.name, it.webUrl, it.avatarUrl, it.username)
+                ShortUser(it.id, it.state, it.name, it.webUrl, it.avatarUrl, it.username)
             }
         } else {
             null
@@ -86,11 +90,12 @@ class TodoRepository @Inject constructor(
             appTarget,
             target.id,
             TargetInternal(target.projectId, target.iid),
-            badges
+            badges,
+            TargetAction.Undefined
         )
     }
 
-    fun markPendingTodoAsDone(id: Int) = api.markPendingTodoAsDone(id)
+    fun markPendingTodoAsDone(id: Long) = api.markPendingTodoAsDone(id)
 
     fun markAllPendingTodosAsDone() = api.markAllPendingTodosAsDone()
 }

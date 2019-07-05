@@ -98,7 +98,11 @@ class MarkDownConverterProvider @Inject constructor(
         }.build()
     }
 
-    private fun getCustomVisitor(labels: List<Label>, milestones: List<Milestone>, spannableBuilder: SpannableBuilder): Visitor {
+    private fun getCustomVisitor(
+        labels: List<Label>,
+        milestones: List<Milestone>,
+        spannableBuilder: SpannableBuilder
+    ): Visitor {
         val labelDescriptions = labels.map {
             LabelDescription(
                 id = it.id,
@@ -131,12 +135,18 @@ class MarkDownConverterProvider @Inject constructor(
             parser,
             markdownDecorator,
             { projectId, builder ->
-                val allLabels = labelInteractor.getAllProjectLabels(projectId)
-                val allMilestones = milestoneInteractor.getAllProjectMilestones(projectId)
-                Single
-                    .zip(allLabels, allMilestones, BiFunction { labels, milestones ->
-                        getCustomVisitor(labels, milestones, builder)
-                    })
+                Single.defer {
+                    if (projectId != null) {
+                        val allLabels = labelInteractor.getAllProjectLabels(projectId)
+                        val allMilestones = milestoneInteractor.getAllProjectMilestones(projectId)
+                        Single
+                            .zip(allLabels, allMilestones, BiFunction { labels, milestones ->
+                                getCustomVisitor(labels, milestones, builder)
+                            })
+                    } else {
+                        Single.fromCallable { getCustomVisitor(emptyList(), emptyList(), builder) }
+                    }
+                }
             },
             schedulers
         )

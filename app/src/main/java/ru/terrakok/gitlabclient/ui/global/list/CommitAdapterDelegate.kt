@@ -4,20 +4,24 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
-import kotlinx.android.synthetic.main.item_merge_request_commit.view.*
+import kotlinx.android.extensions.LayoutContainer
+import kotlinx.android.synthetic.main.item_merge_request_commit.*
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.app.CommitWithAvatarUrl
+import ru.terrakok.gitlabclient.entity.app.CommitWithShortUser
 import ru.terrakok.gitlabclient.extension.humanTime
 import ru.terrakok.gitlabclient.extension.inflate
-import ru.terrakok.gitlabclient.extension.loadRoundedImage
+import ru.terrakok.gitlabclient.ui.global.view.custom.bindShortUser
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 20.10.18.
  */
+
+fun CommitWithShortUser.isSame(other: CommitWithShortUser) = commit.id == other.commit.id
+
 class CommitAdapterDelegate : AdapterDelegate<MutableList<Any>>() {
 
     override fun isForViewType(items: MutableList<Any>, position: Int) =
-        items[position] is CommitWithAvatarUrl
+        items[position] is CommitWithShortUser
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder =
         ViewHolder(parent.inflate(R.layout.item_merge_request_commit))
@@ -27,22 +31,20 @@ class CommitAdapterDelegate : AdapterDelegate<MutableList<Any>>() {
         position: Int,
         viewHolder: RecyclerView.ViewHolder,
         payloads: MutableList<Any>
-    ) = (viewHolder as ViewHolder).bind(items[position] as CommitWithAvatarUrl)
+    ) = (viewHolder as ViewHolder).bind(items[position] as CommitWithShortUser)
 
-    private inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private lateinit var commitWithAvatarUrl: CommitWithAvatarUrl
+    private inner class ViewHolder(
+        override val containerView: View
+    ) : RecyclerView.ViewHolder(containerView), LayoutContainer {
 
-        fun bind(commitWithAvatarUrl: CommitWithAvatarUrl) {
-            this.commitWithAvatarUrl = commitWithAvatarUrl
-            with(itemView) {
-                avatarImageView.loadRoundedImage(commitWithAvatarUrl.authorAvatarUrl)
-                titleTextView.text = commitWithAvatarUrl.commit.title
-                descriptionTextView.text = String.format(
-                    context.getString(R.string.merge_request_commits_description),
-                    commitWithAvatarUrl.commit.authorName,
-                    commitWithAvatarUrl.commit.authoredDate.humanTime(resources)
-                )
-            }
+        fun bind(commitWithShortUser: CommitWithShortUser) {
+            commitWithShortUser.shortUser?.let { avatarImageView.bindShortUser(it) }
+            titleTextView.text = commitWithShortUser.commit.title
+            descriptionTextView.text = String.format(
+                descriptionTextView.context.getString(R.string.merge_request_commits_description),
+                commitWithShortUser.commit.authorName,
+                commitWithShortUser.commit.authoredDate.humanTime(descriptionTextView.resources)
+            )
         }
     }
 }
