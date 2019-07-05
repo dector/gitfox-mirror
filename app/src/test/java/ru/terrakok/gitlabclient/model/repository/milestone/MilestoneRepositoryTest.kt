@@ -12,6 +12,7 @@ import org.mockito.Mockito.times
 import ru.terrakok.gitlabclient.TestData
 import ru.terrakok.gitlabclient.TestSchedulers
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
+import ru.terrakok.gitlabclient.model.data.cache.ProjectMilestoneCache
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 
@@ -28,7 +29,9 @@ class MilestoneRepositoryTest {
             api,
             ServerChanges(TestSchedulers()),
             TestSchedulers(),
-            PrimitiveWrapper(defaultPageSize))
+            PrimitiveWrapper(defaultPageSize),
+            ProjectMilestoneCache(PrimitiveWrapper(1000))
+    )
 
     @Test
     fun `get milestones should succeed with valid api response`() {
