@@ -39,6 +39,11 @@ dependencies {
     compileOnly("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
     testImplementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
 
+    //RxJava
+    compileOnly("io.reactivex.rxjava2:rxjava:2.2.3")
+    compileOnly("io.reactivex.rxjava2:rxandroid:2.1.0")
+    compileOnly("com.jakewharton.rxrelay2:rxrelay:2.1.0")
+
     //JUnit
     testImplementation("junit:junit:4.12")
     //Mockito

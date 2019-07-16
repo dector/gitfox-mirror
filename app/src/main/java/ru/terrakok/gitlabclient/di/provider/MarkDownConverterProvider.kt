@@ -41,6 +41,7 @@ class MarkDownConverterProvider @Inject constructor(
     private val labelInteractor: LabelInteractor,
     private val milestoneInteractor: MilestoneInteractor,
     private val labelSpanConfig: LabelSpanConfig,
+    private val markdownClickMediator: MarkdownClickMediator,
     @DefaultServerPath private val defaultServerPath: String
 ) : Provider<MarkDownConverter> {
 
@@ -122,8 +123,8 @@ class MarkDownConverterProvider @Inject constructor(
                 spannableConfig,
                 spannableBuilder,
                 mapOf(
-                    GitlabMarkdownExtension.LABEL to SimpleLabelVisitor(labelDescriptions, labelSpanConfig),
-                    GitlabMarkdownExtension.MILESTONE to SimpleMilestoneVisitor(milestoneDescriptions)
+                    GitlabMarkdownExtension.LABEL to SimpleLabelVisitor(labelDescriptions, labelSpanConfig, markdownClickMediator),
+                    GitlabMarkdownExtension.MILESTONE to SimpleMilestoneVisitor(milestoneDescriptions, markdownClickMediator)
                 )
             )
         )

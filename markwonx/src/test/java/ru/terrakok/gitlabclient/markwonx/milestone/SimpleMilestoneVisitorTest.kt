@@ -14,6 +14,7 @@ import ru.noties.markwon.SpannableBuilder
 import ru.noties.markwon.SpannableConfiguration
 import ru.terrakok.gitlabclient.markwonx.GitlabExtensionsDelimiterProcessor
 import ru.terrakok.gitlabclient.markwonx.GitlabMarkdownExtension
+import ru.terrakok.gitlabclient.markwonx.MarkdownClickMediator
 import ru.terrakok.gitlabclient.markwonx.label.SimpleExtensionProcessor
 import ru.terrakok.gitlabclient.markwonx.label.SimpleMarkdownDecorator
 import ru.terrakok.gitlabclient.markwonx.label.SimpleVisitor
@@ -55,7 +56,7 @@ class SimpleMilestoneVisitorTest {
             SpannableConfiguration.create(context),
             spannableBuilder,
             mapOf(
-                GitlabMarkdownExtension.MILESTONE to SimpleMilestoneVisitor(MilestoneTestUtils.EXISTENT_MILESTONES.map { it.milestone })
+                GitlabMarkdownExtension.MILESTONE to SimpleMilestoneVisitor(MilestoneTestUtils.EXISTENT_MILESTONES.map { it.milestone }, MarkdownClickMediator())
             )
         )
     }

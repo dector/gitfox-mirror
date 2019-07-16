@@ -5,10 +5,12 @@ import android.graphics.Typeface
 import android.text.style.StyleSpan
 import ru.noties.markwon.SpannableBuilder
 import ru.terrakok.gitlabclient.markwonx.GitlabMarkdownExtension
+import ru.terrakok.gitlabclient.markwonx.MarkdownClickMediator
 
 class SimpleLabelVisitor(
     private val labels: List<LabelDescription>,
-    private val config: LabelSpanConfig
+    private val config: LabelSpanConfig,
+    private val clicksMediator: MarkdownClickMediator
 ) : SimpleNodeVisitor {
 
     override fun visit(args: String, builder: SpannableBuilder) {
@@ -40,11 +42,14 @@ class SimpleLabelVisitor(
                 null
             }
             if (color != null) {
-                builder.setSpan(LabelSpan(label, color, config, {}), length)
+                val span = LabelSpan(label, color, config) {
+                    clicksMediator.markdownClicked(GitlabMarkdownExtension.LABEL, label)
+                }
+                builder.setSpan(span, length)
             }
 
         } else {
-            val content = when(labelType) {
+            val content = when (labelType) {
                 LabelType.MULTIPLE -> "~\"$arg\""
                 else -> "~$arg"
             }

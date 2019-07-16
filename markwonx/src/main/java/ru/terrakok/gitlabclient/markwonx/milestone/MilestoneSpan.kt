@@ -4,9 +4,10 @@ import android.text.style.ClickableSpan
 import android.view.View
 
 class MilestoneSpan(
-    val milestone: MilestoneDescription
-): ClickableSpan() {
+    val milestone: MilestoneDescription,
+    val onMilestoneClick: (MilestoneDescription) -> Unit
+) : ClickableSpan() {
     override fun onClick(widget: View) {
-
+        onMilestoneClick(milestone)
     }
 }
