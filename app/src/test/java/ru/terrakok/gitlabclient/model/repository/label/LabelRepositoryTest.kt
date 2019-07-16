@@ -11,6 +11,7 @@ import org.mockito.Mockito.mock
 import ru.terrakok.gitlabclient.TestData
 import ru.terrakok.gitlabclient.TestSchedulers
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
+import ru.terrakok.gitlabclient.model.data.cache.ProjectLabelCache
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 
@@ -27,7 +28,9 @@ class LabelRepositoryTest {
             api,
             ServerChanges(TestSchedulers()),
             PrimitiveWrapper(defaultPageSize),
-            TestSchedulers())
+            TestSchedulers(),
+            ProjectLabelCache(PrimitiveWrapper(1000))
+        )
 
     @Test
     fun `get label list should succeed with valid input`() {

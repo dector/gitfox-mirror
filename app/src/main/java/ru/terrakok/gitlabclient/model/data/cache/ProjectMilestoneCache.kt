@@ -2,12 +2,12 @@ package ru.terrakok.gitlabclient.model.data.cache
 
 import ru.terrakok.gitlabclient.di.CacheLifetime
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
-import ru.terrakok.gitlabclient.entity.Label
+import ru.terrakok.gitlabclient.entity.milestone.Milestone
 import javax.inject.Inject
 
-class ProjectLabelCache @Inject constructor(
+class ProjectMilestoneCache @Inject constructor(
     @CacheLifetime lifetimeWrapper: PrimitiveWrapper<Long>
-) : ExpirableCache<Long, List<Label>>(lifetimeWrapper.value) {
+) : ExpirableCache<Long, List<Milestone>>(lifetimeWrapper.value) {
 
-    override val itemType = "project label"
+    override val itemType = "project milestone"
 }

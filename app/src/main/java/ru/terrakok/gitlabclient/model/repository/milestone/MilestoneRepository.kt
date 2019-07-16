@@ -1,12 +1,14 @@
 package ru.terrakok.gitlabclient.model.repository.milestone
 
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.Single
 import org.threeten.bp.LocalDate
 import ru.terrakok.gitlabclient.di.DefaultPageSize
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.milestone.Milestone
 import ru.terrakok.gitlabclient.entity.milestone.MilestoneState
+import ru.terrakok.gitlabclient.model.data.cache.ProjectMilestoneCache
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
@@ -16,7 +18,8 @@ class MilestoneRepository @Inject constructor(
     private val api: GitlabApi,
     serverChanges: ServerChanges,
     private val schedulers: SchedulersProvider,
-    @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>
+    @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>,
+    private val projectMilestoneCache: ProjectMilestoneCache
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
 
@@ -31,6 +34,32 @@ class MilestoneRepository @Inject constructor(
         .getMilestones(projectId, state, page, pageSize)
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
+
+    fun getAllProjectMilestones(projectId: Long): Single<List<Milestone>> =
+        Single
+            .defer {
+                val milestones = projectMilestoneCache.get(projectId)
+                if (milestones != null) {
+                    Single.just(milestones)
+                } else {
+                    getAllProjectMilestonesFromServer(projectId)
+                        .doOnSuccess { milestones -> projectMilestoneCache.put(projectId, milestones) }
+                }
+            }
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
+
+    private fun getAllProjectMilestonesFromServer(
+        projectId: Long
+    ): Single<List<Milestone>> =
+        Observable
+            .range(1, Integer.MAX_VALUE)
+            .concatMapSingle { page -> api.getMilestones(projectId, null, page, defaultPageSize) }
+            .takeWhile { milestones -> milestones.isNotEmpty() }
+            .reduce { allMilestones, currentMilestones -> allMilestones + currentMilestones }
+            .toSingle()
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
 
     fun getMilestone(
         projectId: Long,
