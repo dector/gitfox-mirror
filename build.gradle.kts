@@ -2,18 +2,15 @@ buildscript {
     repositories {
         google()
         jcenter()
-        maven { url = uri("https://maven.fabric.io/public") }
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:3.4.1")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.40")
-        classpath("com.google.gms:google-services:4.2.0")
-        classpath("io.fabric.tools:gradle:1.29.0")
+        classpath("com.android.tools.build:gradle:3.4.2")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.50")
     }
 }
 
 allprojects {
-    extra["kotlinVersion"] = "1.3.40"
+    extra["kotlinVersion"] = "1.3.50"
     repositories {
         google()
         jcenter()

@@ -1,6 +1,5 @@
 plugins {
     id("com.android.application")
-    id("io.fabric")
     kotlin("android")
     kotlin("kapt")
     id("org.jetbrains.kotlin.android.extensions")
@@ -98,15 +97,9 @@ androidExtensions {
 }
 
 dependencies {
-    val moxyVersion = "1.7.0"
-    val toothpickVersion = "2.1.0"
-    val retrofitVersion = "2.2.0"
-    val markwonVersion = "2.0.0"
-    val glideVersion = "4.8.0"
-
     //Support
     implementation("androidx.appcompat:appcompat:1.0.2")
-    implementation("com.google.android.material:material:1.1.0-alpha07")
+    implementation("com.google.android.material:material:1.0.0")
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.constraintlayout:constraintlayout:1.1.3")
     //Kotlin
@@ -114,17 +107,20 @@ dependencies {
     //Log
     implementation("com.jakewharton.timber:timber:4.7.0")
     //MVP Moxy
+    val moxyVersion = "1.7.0"
     kapt("tech.schoolhelper:moxy-x-compiler:$moxyVersion")
     implementation("tech.schoolhelper:moxy-x:$moxyVersion")
     implementation("tech.schoolhelper:moxy-x-androidx:$moxyVersion")
     //Cicerone Navigation
     implementation("ru.terrakok.cicerone:cicerone:5.0.0")
     //DI
+    val toothpickVersion = "2.1.0"
     implementation("com.github.stephanenicolas.toothpick:toothpick-runtime:$toothpickVersion")
     kapt("com.github.stephanenicolas.toothpick:toothpick-compiler:$toothpickVersion")
     //Gson
     implementation("com.google.code.gson:gson:2.8.5")
     //Retrofit
+    val retrofitVersion = "2.2.0"
     implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
     implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
     implementation("com.squareup.okhttp3:logging-interceptor:3.11.0")
@@ -136,10 +132,12 @@ dependencies {
     //Adapter simplify
     implementation("com.hannesdorfmann:adapterdelegates4:4.0.0")
     //Image load and cache
+    val glideVersion = "4.8.0"
     implementation("com.github.bumptech.glide:glide:$glideVersion")
     kapt("com.github.bumptech.glide:compiler:$glideVersion")
     implementation("com.github.bumptech.glide:okhttp3-integration:$glideVersion")
     //Markdown to HTML converter
+    val markwonVersion = "2.0.0"
     implementation("ru.noties:markwon:$markwonVersion")
     implementation("ru.noties:markwon-image-loader:$markwonVersion")
     //Bottom navigation bar
@@ -150,10 +148,6 @@ dependencies {
     implementation("com.jakewharton.threetenabp:threetenabp:1.2.1")
     //FlexBox Layout
     implementation("com.google.android:flexbox:1.0.0")
-    //Firebase
-    implementation("com.google.firebase:firebase-core:17.0.0")
-    //Crashlytics
-    implementation("com.crashlytics.sdk.android:crashlytics:2.10.1")
 
     //JUnit
     testImplementation("junit:junit:4.12")
@@ -176,5 +170,3 @@ gradle.buildFinished {
     println("VersionCode: ${android.defaultConfig.versionCode}")
     println("BuildUid: $buildUid")
 }
-
-apply(plugin = "com.google.gms.google-services")

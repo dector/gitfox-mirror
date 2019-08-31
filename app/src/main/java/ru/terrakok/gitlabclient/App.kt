@@ -5,9 +5,7 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Build
 import androidx.multidex.MultiDex
-import com.crashlytics.android.Crashlytics
 import com.jakewharton.threetenabp.AndroidThreeTen
-import io.fabric.sdk.android.Fabric
 import ru.noties.markwon.SpannableConfiguration
 import ru.noties.markwon.spans.SpannableTheme
 import ru.terrakok.gitlabclient.di.DI
@@ -33,7 +31,6 @@ class App : Application() {
         super.onCreate()
 
         initLogger()
-        initFabric()
         initToothpick()
         initAppScope()
         initMarkwon()
@@ -43,16 +40,6 @@ class App : Application() {
     private fun initLogger() {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
-        }
-    }
-
-    private fun initFabric() {
-        if (!BuildConfig.DEBUG) {
-            Fabric.with(
-                Fabric.Builder(this)
-                    .kits(Crashlytics())
-                    .build()
-            )
         }
     }
 
