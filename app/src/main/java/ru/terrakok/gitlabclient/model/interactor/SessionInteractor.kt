@@ -8,7 +8,6 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import ru.terrakok.gitlabclient.di.DI
 import ru.terrakok.gitlabclient.di.DefaultServerPath
-import ru.terrakok.gitlabclient.di.ServerPath
 import ru.terrakok.gitlabclient.di.module.ServerModule
 import ru.terrakok.gitlabclient.entity.TokenData
 import ru.terrakok.gitlabclient.entity.User
@@ -25,7 +24,6 @@ import java.util.*
 import javax.inject.Inject
 
 class SessionInteractor @Inject constructor(
-    @ServerPath serverPath: String,
     @DefaultServerPath private val defaultServerPath: String,
     private val prefs: Prefs,
     private val oauthParams: OAuthParams,
@@ -38,7 +36,7 @@ class SessionInteractor @Inject constructor(
         .enableTls12()
         .build()
 
-    val oauthUrl = "${serverPath}oauth/authorize?client_id=${oauthParams.appId}" +
+    val oauthUrl = "${defaultServerPath}oauth/authorize?client_id=${oauthParams.appId}" +
             "&redirect_uri=${oauthParams.redirectUrl}&response_type=code&state=$hash"
 
     fun checkOAuthRedirect(url: String) = url.indexOf(oauthParams.redirectUrl) == 0
