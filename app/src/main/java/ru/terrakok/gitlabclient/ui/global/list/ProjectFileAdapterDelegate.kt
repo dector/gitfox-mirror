@@ -9,7 +9,7 @@ import kotlinx.android.synthetic.main.item_project_file.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.RepositoryTreeNodeType
 import ru.terrakok.gitlabclient.entity.app.ProjectFile
-import ru.terrakok.gitlabclient.extension.inflate
+import ru.terrakok.gitlabclient.util.inflate
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 02.11.18.

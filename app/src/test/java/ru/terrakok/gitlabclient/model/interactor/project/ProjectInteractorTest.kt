@@ -10,8 +10,8 @@ import ru.terrakok.gitlabclient.entity.Branch
 import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.entity.RepositoryTreeNodeType
 import ru.terrakok.gitlabclient.entity.app.ProjectFile
-import ru.terrakok.gitlabclient.model.repository.project.ProjectRepository
-import ru.terrakok.gitlabclient.model.repository.tools.Base64Tools
+import ru.terrakok.gitlabclient.model.interactor.ProjectInteractor
+import ru.terrakok.gitlabclient.util.Base64Tools
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 28.05.17.
@@ -20,9 +20,13 @@ import ru.terrakok.gitlabclient.model.repository.tools.Base64Tools
  */
 class ProjectInteractorTest {
     private val base64Tools = mock(Base64Tools::class.java)
-    private val repo = mock(ProjectRepository::class.java)
+    private val repo = mock(ProjectInteractor::class.java)
     private val testNodeType = mock(RepositoryTreeNodeType::class.java)
-    private val interactor = ProjectInteractor(repo, TestSchedulers(), base64Tools)
+    private val interactor = ProjectInteractor(
+        repo,
+        TestSchedulers(),
+        base64Tools
+    )
 
     private val testError = RuntimeException("test error")
     private val testPage = 13

@@ -8,9 +8,9 @@ import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_merge_request_commit.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.CommitWithShortUser
-import ru.terrakok.gitlabclient.extension.humanTime
-import ru.terrakok.gitlabclient.extension.inflate
 import ru.terrakok.gitlabclient.ui.global.view.custom.bindShortUser
+import ru.terrakok.gitlabclient.util.humanTime
+import ru.terrakok.gitlabclient.util.inflate
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 20.10.18.

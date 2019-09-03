@@ -6,12 +6,12 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_project_file.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.di.*
-import ru.terrakok.gitlabclient.extension.argument
-import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.file.ProjectFilePresenter
 import ru.terrakok.gitlabclient.presentation.file.ProjectFileView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.view.custom.codehighlight.CodeHighlightView
+import ru.terrakok.gitlabclient.util.argument
+import ru.terrakok.gitlabclient.util.visible
 import toothpick.Scope
 import toothpick.config.Module
 

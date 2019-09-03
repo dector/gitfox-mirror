@@ -10,8 +10,8 @@ import ru.terrakok.gitlabclient.di.ProjectId
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.app.target.TargetAction
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
-import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestInteractor
-import ru.terrakok.gitlabclient.model.interactor.project.ProjectInteractor
+import ru.terrakok.gitlabclient.model.interactor.MergeRequestInteractor
+import ru.terrakok.gitlabclient.model.interactor.ProjectInteractor
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter

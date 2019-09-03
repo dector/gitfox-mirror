@@ -6,13 +6,13 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_mr_commits.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.CommitWithShortUser
-import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 import ru.terrakok.gitlabclient.presentation.mergerequest.commits.MergeRequestCommitsPresenter
 import ru.terrakok.gitlabclient.presentation.mergerequest.commits.MergeRequestCommitsView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.list.CommitAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.isSame
+import ru.terrakok.gitlabclient.util.showSnackMessage
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 20.10.18.

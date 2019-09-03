@@ -10,12 +10,11 @@ import ru.terrakok.gitlabclient.BuildConfig
 import ru.terrakok.gitlabclient.di.*
 import ru.terrakok.gitlabclient.di.provider.GsonProvider
 import ru.terrakok.gitlabclient.entity.app.develop.AppInfo
-import ru.terrakok.gitlabclient.model.repository.session.SessionRepository
-import ru.terrakok.gitlabclient.model.repository.tools.Base64Tools
 import ru.terrakok.gitlabclient.model.system.AppSchedulers
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.model.system.message.SystemMessageNotifier
+import ru.terrakok.gitlabclient.util.Base64Tools
 import toothpick.config.Module
 
 /**
@@ -40,9 +39,6 @@ class AppModule(context: Context) : Module() {
         val cicerone = Cicerone.create()
         bind(Router::class.java).toInstance(cicerone.router)
         bind(NavigatorHolder::class.java).toInstance(cicerone.navigatorHolder)
-
-        // Session
-        bind(SessionRepository::class.java).singletonInScope()
 
         // AppInfo
         bind(AppInfo::class.java).toInstance(

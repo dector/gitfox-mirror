@@ -37,6 +37,13 @@ class Prefs @Inject constructor(
         set(value) {
             authPrefs.edit().putString(KEY_USER_ACCOUNTS, gson.toJson(value)).apply()
         }
+
+    fun getCurrentUserAccount(): UserAccount? {
+        selectedAccount?.let { id ->
+            return accounts.find { it.id == id }
+        }
+        return null
+    }
     //endregion
 
     //region app

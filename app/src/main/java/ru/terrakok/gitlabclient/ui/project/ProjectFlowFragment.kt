@@ -4,8 +4,8 @@ import android.os.Bundle
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
-import ru.terrakok.gitlabclient.extension.argument
 import ru.terrakok.gitlabclient.ui.global.FlowFragment
+import ru.terrakok.gitlabclient.util.argument
 import toothpick.Scope
 import toothpick.config.Module
 

@@ -12,7 +12,7 @@ import org.mockito.Mockito.verify
 import ru.terrakok.gitlabclient.TestData
 import ru.terrakok.gitlabclient.entity.app.session.OAuthParams
 import ru.terrakok.gitlabclient.model.data.cache.ProjectCache
-import ru.terrakok.gitlabclient.model.repository.session.SessionRepository
+import ru.terrakok.gitlabclient.model.interactor.SessionInteractor
 
 
 /**
@@ -24,7 +24,7 @@ import ru.terrakok.gitlabclient.model.repository.session.SessionRepository
 class SessionInteractorTest {
 
     private lateinit var interactor: SessionInteractor
-    private lateinit var repository: SessionRepository
+    private lateinit var repository: SessionInteractor
     private lateinit var projectCache: ProjectCache
 
     private val OAUTH_PARAMS =
@@ -36,10 +36,10 @@ class SessionInteractorTest {
         repository = mock()
         projectCache = mock()
         interactor = SessionInteractor(
-                "some server path",
-                repository,
-                OAUTH_PARAMS,
-                projectCache
+            "some server path",
+            repository,
+            OAUTH_PARAMS,
+            projectCache
         )
     }
 

@@ -6,13 +6,13 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_project_milestones.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.milestone.Milestone
-import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 import ru.terrakok.gitlabclient.presentation.project.milestones.ProjectMilestonesPresenter
 import ru.terrakok.gitlabclient.presentation.project.milestones.ProjectMilestonesView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.list.MilestonesAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.isSame
+import ru.terrakok.gitlabclient.util.showSnackMessage
 
 /**
  * @author Valentin Logvinovitch (glvvl) on 17.12.18.

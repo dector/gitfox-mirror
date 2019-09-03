@@ -15,13 +15,13 @@ import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.di.module.FlowNavigationModule
 import ru.terrakok.gitlabclient.di.module.GlobalMenuModule
-import ru.terrakok.gitlabclient.extension.setLaunchScreen
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
 import ru.terrakok.gitlabclient.ui.about.AboutFragment
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.main.MainFragment
 import ru.terrakok.gitlabclient.ui.projects.ProjectsContainerFragment
+import ru.terrakok.gitlabclient.util.setLaunchScreen
 import toothpick.Scope
 import toothpick.Toothpick
 import javax.inject.Inject

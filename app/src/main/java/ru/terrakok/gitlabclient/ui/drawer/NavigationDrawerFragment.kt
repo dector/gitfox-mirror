@@ -8,8 +8,6 @@ import kotlinx.android.synthetic.main.fragment_nav_drawer.*
 import kotlinx.android.synthetic.main.item_user_acount.view.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.session.UserAccount
-import ru.terrakok.gitlabclient.extension.inflate
-import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerPresenter
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem
@@ -17,6 +15,8 @@ import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuIte
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.MessageDialogFragment
 import ru.terrakok.gitlabclient.ui.global.view.custom.bindUserAccount
+import ru.terrakok.gitlabclient.util.inflate
+import ru.terrakok.gitlabclient.util.visible
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 04.04.17

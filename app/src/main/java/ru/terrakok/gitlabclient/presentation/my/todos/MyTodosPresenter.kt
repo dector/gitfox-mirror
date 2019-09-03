@@ -6,13 +6,14 @@ import io.reactivex.disposables.Disposable
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.TodoListPendingState
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
-import ru.terrakok.gitlabclient.extension.openInfo
-import ru.terrakok.gitlabclient.model.interactor.todo.TodoInteractor
+import ru.terrakok.gitlabclient.model.interactor.AccountInteractor
+import ru.terrakok.gitlabclient.model.interactor.TodoInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.presentation.global.Paginator
+import ru.terrakok.gitlabclient.util.openInfo
 import javax.inject.Inject
 
 /**
@@ -21,6 +22,7 @@ import javax.inject.Inject
 @InjectViewState
 class MyTodosPresenter @Inject constructor(
     @TodoListPendingState private val pendingStateWrapper: PrimitiveWrapper<Boolean>,
+    private val accountInteractor: AccountInteractor,
     private val todoInteractor: TodoInteractor,
     private val mdConverter: MarkDownConverter,
     private val errorHandler: ErrorHandler,
@@ -55,7 +57,7 @@ class MyTodosPresenter @Inject constructor(
     private fun loadNewPage(page: Int) {
         pageDisposable?.dispose()
         pageDisposable =
-            todoInteractor.getMyTodos(isPending, page)
+            accountInteractor.getMyTodos(isPending, page)
                 .flattenAsObservable { it }
                 .concatMap { item ->
                     when (item) {

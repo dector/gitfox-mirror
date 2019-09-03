@@ -9,14 +9,14 @@ import ru.noties.markwon.Markwon
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.Visibility
-import ru.terrakok.gitlabclient.extension.getTintDrawable
-import ru.terrakok.gitlabclient.extension.setStartDrawable
-import ru.terrakok.gitlabclient.extension.showSnackMessage
-import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.project.info.ProjectInfoPresenter
 import ru.terrakok.gitlabclient.presentation.project.info.ProjectInfoView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.view.custom.bindProject
+import ru.terrakok.gitlabclient.util.getTintDrawable
+import ru.terrakok.gitlabclient.util.setStartDrawable
+import ru.terrakok.gitlabclient.util.showSnackMessage
+import ru.terrakok.gitlabclient.util.visible
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 27.04.17.

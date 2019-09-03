@@ -6,7 +6,7 @@ import android.content.DialogInterface
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.extension.argument
+import ru.terrakok.gitlabclient.util.argument
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 03.09.18.

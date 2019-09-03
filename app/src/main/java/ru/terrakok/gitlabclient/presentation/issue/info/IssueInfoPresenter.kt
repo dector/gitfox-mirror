@@ -4,7 +4,7 @@ import com.arellomobile.mvp.InjectViewState
 import ru.terrakok.gitlabclient.di.IssueId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
-import ru.terrakok.gitlabclient.model.interactor.issue.IssueInteractor
+import ru.terrakok.gitlabclient.model.interactor.IssueInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import javax.inject.Inject

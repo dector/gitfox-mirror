@@ -2,7 +2,7 @@ package ru.terrakok.gitlabclient.presentation
 
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.Screens
-import ru.terrakok.gitlabclient.model.interactor.launch.LaunchInteractor
+import ru.terrakok.gitlabclient.model.interactor.LaunchInteractor
 import javax.inject.Inject
 
 /**

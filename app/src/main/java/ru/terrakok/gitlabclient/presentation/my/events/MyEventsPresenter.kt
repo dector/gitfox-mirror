@@ -4,10 +4,10 @@ import com.arellomobile.mvp.InjectViewState
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
-import ru.terrakok.gitlabclient.extension.openInfo
-import ru.terrakok.gitlabclient.model.interactor.event.EventInteractor
+import ru.terrakok.gitlabclient.model.interactor.EventInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.*
+import ru.terrakok.gitlabclient.util.openInfo
 import javax.inject.Inject
 
 /**
@@ -45,7 +45,7 @@ class MyEventsPresenter @Inject constructor(
     private fun loadNewPage(page: Int) {
         pageDisposable?.dispose()
         pageDisposable =
-            eventInteractor.getEvents(page)
+            eventInteractor.getEvents(page = page)
                 .flattenAsObservable { it }
                 .concatMap { item ->
                     when (item) {

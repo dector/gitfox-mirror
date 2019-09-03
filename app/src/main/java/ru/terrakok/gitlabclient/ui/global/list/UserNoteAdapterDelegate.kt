@@ -8,10 +8,10 @@ import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_user_note.*
 import ru.noties.markwon.Markwon
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.extension.humanTime
-import ru.terrakok.gitlabclient.extension.inflate
 import ru.terrakok.gitlabclient.presentation.global.NoteWithFormattedBody
 import ru.terrakok.gitlabclient.ui.global.view.custom.bindShortUser
+import ru.terrakok.gitlabclient.util.humanTime
+import ru.terrakok.gitlabclient.util.inflate
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 18.06.17.

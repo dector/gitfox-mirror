@@ -12,7 +12,7 @@ import ru.terrakok.gitlabclient.entity.Branch
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.RepositoryTreeNodeType
 import ru.terrakok.gitlabclient.entity.app.ProjectFile
-import ru.terrakok.gitlabclient.model.interactor.project.ProjectInteractor
+import ru.terrakok.gitlabclient.model.interactor.ProjectInteractor
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
@@ -105,7 +105,7 @@ class ProjectFilesPresenter @Inject constructor(
                     projectId,
                     getRemotePath(projectFileDestination.isInRoot(), projectFileDestination.paths),
                     projectFileDestination.branchName,
-                    page
+                    page = page
                 )
                 .subscribe(
                     { data ->

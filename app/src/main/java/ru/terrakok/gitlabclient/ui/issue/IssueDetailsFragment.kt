@@ -7,14 +7,14 @@ import ru.noties.markwon.Markwon
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.issue.Issue
 import ru.terrakok.gitlabclient.entity.issue.IssueState
-import ru.terrakok.gitlabclient.extension.color
-import ru.terrakok.gitlabclient.extension.humanTime
-import ru.terrakok.gitlabclient.extension.showSnackMessage
-import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.issue.details.IssueDetailsPresenter
 import ru.terrakok.gitlabclient.presentation.issue.details.IssueDetailsView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.view.custom.bindShortUser
+import ru.terrakok.gitlabclient.util.color
+import ru.terrakok.gitlabclient.util.humanTime
+import ru.terrakok.gitlabclient.util.showSnackMessage
+import ru.terrakok.gitlabclient.util.visible
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 26.05.19.

@@ -5,7 +5,7 @@ import ru.terrakok.gitlabclient.di.MergeRequestId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
 import ru.terrakok.gitlabclient.entity.app.target.TargetAction
-import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestInteractor
+import ru.terrakok.gitlabclient.model.interactor.MergeRequestInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter

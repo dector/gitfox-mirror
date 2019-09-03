@@ -9,14 +9,14 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_issue_notes.*
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.extension.showSnackMessage
-import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.global.NoteWithFormattedBody
 import ru.terrakok.gitlabclient.presentation.issue.notes.IssueNotesPresenter
 import ru.terrakok.gitlabclient.presentation.issue.notes.IssueNotesView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.list.SimpleDividerDecorator
 import ru.terrakok.gitlabclient.ui.global.list.TargetNotesAdapter
+import ru.terrakok.gitlabclient.util.showSnackMessage
+import ru.terrakok.gitlabclient.util.visible
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 15.02.18.

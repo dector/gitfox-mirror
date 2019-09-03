@@ -21,7 +21,7 @@ import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.ShortUser
 import ru.terrakok.gitlabclient.entity.User
 import ru.terrakok.gitlabclient.entity.app.session.UserAccount
-import ru.terrakok.gitlabclient.extension.getTintDrawable
+import ru.terrakok.gitlabclient.util.getTintDrawable
 import toothpick.Toothpick
 
 class AvatarView @JvmOverloads constructor(

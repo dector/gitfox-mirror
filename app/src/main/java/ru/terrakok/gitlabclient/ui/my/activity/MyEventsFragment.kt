@@ -6,7 +6,6 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_my_activity.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
-import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 import ru.terrakok.gitlabclient.presentation.my.events.MyEventsPresenter
 import ru.terrakok.gitlabclient.presentation.my.events.MyEventsView
@@ -14,6 +13,7 @@ import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.list.TargetHeaderConfidentialAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.TargetHeaderPublicAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.isSame
+import ru.terrakok.gitlabclient.util.showSnackMessage
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 13.06.17

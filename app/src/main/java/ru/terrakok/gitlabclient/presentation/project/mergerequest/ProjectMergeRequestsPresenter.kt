@@ -7,13 +7,13 @@ import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
-import ru.terrakok.gitlabclient.extension.openInfo
-import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestInteractor
+import ru.terrakok.gitlabclient.model.interactor.MergeRequestInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.presentation.global.Paginator
+import ru.terrakok.gitlabclient.util.openInfo
 import javax.inject.Inject
 
 /**
@@ -57,7 +57,7 @@ class ProjectMergeRequestsPresenter @Inject constructor(
     private fun loadNewPage(page: Int) {
         pageDisposable?.dispose()
         pageDisposable =
-            mergeRequestInteractor.getMergeRequests(projectId, mergeRequestState, page)
+            mergeRequestInteractor.getMergeRequests(projectId, mergeRequestState, page = page)
                 .flattenAsObservable { it }
                 .concatMap { item ->
                     when (item) {

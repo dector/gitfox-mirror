@@ -3,7 +3,7 @@ package ru.terrakok.gitlabclient.presentation.about
 import com.arellomobile.mvp.InjectViewState
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.di.AppDevelopersPath
-import ru.terrakok.gitlabclient.model.interactor.app.AppInfoInteractor
+import ru.terrakok.gitlabclient.model.interactor.AppInfoInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
