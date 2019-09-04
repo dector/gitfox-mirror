@@ -1,9 +1,11 @@
 package ru.terrakok.gitlabclient.model.interactor
 
 import com.nhaarman.mockitokotlin2.mock
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
 import org.junit.Assert
+import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.verify
@@ -13,6 +15,7 @@ import org.threeten.bp.ZonedDateTime
 import ru.terrakok.gitlabclient.TestSchedulers
 import ru.terrakok.gitlabclient.entity.User
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
+import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 
 /**
  * @author Artur Badretdinov (Gaket)
@@ -57,15 +60,25 @@ class AccountInteractorTest {
     )
 
     private val api: GitlabApi = mock()
-    private val interactor = AccountInteractor(
-        testServer,
-        api,
-        mock(),
-        mock(),
-        mock(),
-        mock(),
-        TestSchedulers()
-    )
+    private val serverChanges: ServerChanges = mock()
+    lateinit var interactor: AccountInteractor
+
+    @Before
+    fun setup() {
+        `when`(serverChanges.issueChanges).thenReturn(Observable.just(0L))
+        `when`(serverChanges.mergeRequestChanges).thenReturn(Observable.just(0L))
+        `when`(serverChanges.todoChanges).thenReturn(Observable.just(0L))
+
+        interactor = AccountInteractor(
+            testServer,
+            api,
+            serverChanges,
+            mock(),
+            mock(),
+            mock(),
+            TestSchedulers()
+        )
+    }
 
     @Test
     fun get_user() {
