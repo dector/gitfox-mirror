@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.model.repository.label
+package ru.terrakok.gitlabclient.model.interactor
 
 import com.nhaarman.mockitokotlin2.anyOrNull
 import io.reactivex.Completable
@@ -13,7 +13,6 @@ import ru.terrakok.gitlabclient.TestSchedulers
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
-import ru.terrakok.gitlabclient.model.interactor.LabelInteractor
 
 /**
  * @author Vitaliy Belyaev on 26.05.2019.
@@ -24,7 +23,7 @@ class LabelInteractorTest {
     private val testLabel = TestData.getLabel()
 
     private val api = mock(GitlabApi::class.java)
-    private val repository = LabelInteractor(
+    private val interactor = LabelInteractor(
         api,
         ServerChanges(TestSchedulers()),
         PrimitiveWrapper(defaultPageSize),
@@ -42,7 +41,7 @@ class LabelInteractorTest {
                 anyInt())).willReturn(Single.just(listOf(testLabel)))
 
         // WHEN
-        val testObserver = repository.getLabelList(projectId, testPage).test()
+        val testObserver = interactor.getLabelList(projectId, testPage).test()
         testObserver.awaitTerminalEvent()
 
         // THEN
@@ -71,7 +70,7 @@ class LabelInteractorTest {
                 anyOrNull())).willReturn(Single.just(testLabel))
 
         // WHEN
-        val testObserver = repository
+        val testObserver = interactor
                 .createLabel(projectId, labelName, color, description, priority)
                 .test()
         testObserver.awaitTerminalEvent()
@@ -96,7 +95,7 @@ class LabelInteractorTest {
                 anyString())).willReturn(Completable.complete())
 
         // WHEN
-        val testObserver = repository.deleteLabel(projectId, labelName).test()
+        val testObserver = interactor.deleteLabel(projectId, labelName).test()
         testObserver.awaitTerminalEvent()
 
         // THEN
@@ -121,7 +120,7 @@ class LabelInteractorTest {
                 anyLong())).willReturn(Single.just(testLabel))
 
         // WHEN
-        val testObserver = repository.subscribeToLabel(projectId, labelId).test()
+        val testObserver = interactor.subscribeToLabel(projectId, labelId).test()
         testObserver.awaitTerminalEvent()
 
         // THEN
@@ -144,7 +143,7 @@ class LabelInteractorTest {
                 anyLong())).willReturn(Single.just(testLabel))
 
         // WHEN
-        val testObserver = repository.unsubscribeFromLabel(projectId, labelId).test()
+        val testObserver = interactor.unsubscribeFromLabel(projectId, labelId).test()
         testObserver.awaitTerminalEvent()
 
         // THEN

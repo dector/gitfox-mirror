@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.model.repository.project
+package ru.terrakok.gitlabclient.model.interactor
 
 import com.nhaarman.mockitokotlin2.anyOrNull
 import io.reactivex.Single
@@ -14,7 +14,6 @@ import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.app.ProjectFile
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
-import ru.terrakok.gitlabclient.model.interactor.ProjectInteractor
 
 /**
  * @author Vitaliy Belyaev on 03.06.2019.
@@ -25,7 +24,7 @@ class ProjectInteractorTest {
     private val testProject = TestData.getProject(123L)
 
     private val api = Mockito.mock(GitlabApi::class.java)
-    private val repository = ProjectInteractor(
+    private val interactor = ProjectInteractor(
         api,
         ServerChanges(TestSchedulers()),
         TestSchedulers(),
@@ -41,7 +40,7 @@ class ProjectInteractorTest {
                 .willReturn(Single.just(listOf(testProject)))
 
         // WHEN
-        val testObserver = repository.getProjectsList(page = testPage).test()
+        val testObserver = interactor.getProjectsList(page = testPage).test()
         testObserver.awaitTerminalEvent()
 
         // THEN
@@ -63,7 +62,7 @@ class ProjectInteractorTest {
         given(api.getProject(anyLong(), anyBoolean())).willReturn(Single.just(testProject))
 
         // WHEN
-        val testObserver = repository.getProject(testProject.id).test()
+        val testObserver = interactor.getProject(testProject.id).test()
         testObserver.awaitTerminalEvent()
 
         // THEN
@@ -84,7 +83,7 @@ class ProjectInteractorTest {
         given(api.getFile(anyLong(), anyString(), anyString())).willReturn(Single.just(testFile))
 
         // WHEN
-        val testObserver = repository.getProjectFile(
+        val testObserver = interactor.getProjectFile(
                 testProject.id, testFile.path, fileReference).test()
 
         testObserver.awaitTerminalEvent()
@@ -112,7 +111,7 @@ class ProjectInteractorTest {
                 .willReturn(Single.just(listOf(testTree)))
 
         // WHEN
-        val testObserver = repository.getProjectFiles(
+        val testObserver = interactor.getProjectFiles(
                 projectId = testProject.id,
                 path = path,
                 branchName = branchName,
@@ -138,7 +137,7 @@ class ProjectInteractorTest {
         given(api.getRepositoryBranches(anyLong())).willReturn(Single.just(listOf(testBranch)))
 
         // WHEN
-        val testObserver = repository.getProjectBranches(testProject.id).test()
+        val testObserver = interactor.getProjectBranches(testProject.id).test()
         testObserver.awaitTerminalEvent()
 
         // THEN

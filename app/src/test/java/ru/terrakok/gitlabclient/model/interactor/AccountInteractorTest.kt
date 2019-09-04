@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.model.repository.profile
+package ru.terrakok.gitlabclient.model.interactor
 
 import com.nhaarman.mockitokotlin2.mock
 import io.reactivex.Single
@@ -13,7 +13,6 @@ import org.threeten.bp.ZonedDateTime
 import ru.terrakok.gitlabclient.TestSchedulers
 import ru.terrakok.gitlabclient.entity.User
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
-import ru.terrakok.gitlabclient.model.interactor.ProfileInteractor
 
 /**
  * @author Artur Badretdinov (Gaket)
@@ -22,7 +21,7 @@ import ru.terrakok.gitlabclient.model.interactor.ProfileInteractor
  * @author Vitaliy Belyaev on 18.05.19.
  *
  */
-class ProfileInteractorTest {
+class AccountInteractorTest {
 
     private val testServer = "Test server"
     private val testError = RuntimeException("test error")
@@ -58,9 +57,13 @@ class ProfileInteractorTest {
     )
 
     private val api: GitlabApi = mock()
-    private val profileRepo = ProfileInteractor(
+    private val interactor = AccountInteractor(
         testServer,
         api,
+        mock(),
+        mock(),
+        mock(),
+        mock(),
         TestSchedulers()
     )
 
@@ -68,7 +71,7 @@ class ProfileInteractorTest {
     fun get_user() {
         `when`(api.getMyUser()).thenReturn(Single.just(testUser))
 
-        val testObserver: TestObserver<User> = profileRepo.getMyProfile().test()
+        val testObserver: TestObserver<User> = interactor.getMyProfile().test()
         testObserver.awaitTerminalEvent()
 
         verify(api).getMyUser()
@@ -83,7 +86,7 @@ class ProfileInteractorTest {
     fun get_user_error() {
         `when`(api.getMyUser()).thenReturn(Single.error(testError))
 
-        val testObserver: TestObserver<User> = profileRepo.getMyProfile().test()
+        val testObserver: TestObserver<User> = interactor.getMyProfile().test()
         testObserver.awaitTerminalEvent()
 
         verify(api).getMyUser()
@@ -95,7 +98,7 @@ class ProfileInteractorTest {
 
     @Test
     fun get_my_server_name() {
-        val result = profileRepo.getMyServerName()
+        val result = interactor.getMyServerName()
         Assert.assertEquals(testServer, result)
     }
 }

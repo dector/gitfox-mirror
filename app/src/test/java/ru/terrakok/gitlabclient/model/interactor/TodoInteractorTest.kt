@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.model.repository.todo
+package ru.terrakok.gitlabclient.model.interactor
 
 import com.nhaarman.mockitokotlin2.anyOrNull
 import io.reactivex.Completable
@@ -16,7 +16,6 @@ import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.todo.TodoState
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
-import ru.terrakok.gitlabclient.model.interactor.TodoInteractor
 
 
 /**
@@ -29,7 +28,7 @@ class TodoInteractorTest {
     private val testUser = TestData.getUser()
 
     private val api = Mockito.mock(GitlabApi::class.java)
-    private val repository = TodoInteractor(
+    private val interactor = TodoInteractor(
         api,
         ServerChanges(TestSchedulers()),
         TestSchedulers(),
@@ -46,7 +45,7 @@ class TodoInteractorTest {
                 anyOrNull(), anyInt(), anyInt())).willReturn(Single.just(listOf(testTodo)))
 
         // WHEN
-        val testObserver = repository.getTodos(currentUser = testUser, page = testPage).test()
+        val testObserver = interactor.getTodos(currentUser = testUser, page = testPage).test()
         testObserver.awaitTerminalEvent()
 
         // THEN
@@ -67,7 +66,7 @@ class TodoInteractorTest {
         given(api.markPendingTodoAsDone(anyLong())).willReturn(Single.just(doneTodo))
 
         // WHEN
-        val testObserver = repository.markPendingTodoAsDone(testTodo.id).test()
+        val testObserver = interactor.markPendingTodoAsDone(testTodo.id).test()
         testObserver.awaitTerminalEvent()
 
         // THEN
@@ -86,7 +85,7 @@ class TodoInteractorTest {
         given(api.markAllPendingTodosAsDone()).willReturn(Completable.complete())
 
         // WHEN
-        val testObserver = repository.markAllPendingTodosAsDone().test()
+        val testObserver = interactor.markAllPendingTodosAsDone().test()
         testObserver.awaitTerminalEvent()
 
         // THEN

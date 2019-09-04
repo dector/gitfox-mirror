@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.model.repository.issue
+package ru.terrakok.gitlabclient.model.interactor
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
@@ -11,16 +11,12 @@ import ru.terrakok.gitlabclient.TestData
 import ru.terrakok.gitlabclient.TestSchedulers
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.Project
-import ru.terrakok.gitlabclient.entity.ShortUser
-import ru.terrakok.gitlabclient.entity.TimeStats
 import ru.terrakok.gitlabclient.entity.app.target.*
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.issue.Issue
-import ru.terrakok.gitlabclient.entity.issue.IssueState
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
-import ru.terrakok.gitlabclient.model.interactor.IssueInteractor
 
 /**
  * @author Vitaliy Belyaev on 28.05.2019.
@@ -28,13 +24,13 @@ import ru.terrakok.gitlabclient.model.interactor.IssueInteractor
 class IssueInteractorTest {
     private val defaultPageSize = 1
     private val testPage = 2
-    private val testIssue = getTestIssue()
+    private val testIssue = TestData.getTestIssue()
     private val testNote = TestData.getNote()
     private val testProject = TestData.getProject(testIssue.projectId)
 
     private val api = mock(GitlabApi::class.java)
     private val markDownUrlResolver = mock(MarkDownUrlResolver::class.java)
-    private val repository = IssueInteractor(
+    private val interactor = IssueInteractor(
         api,
         ServerChanges(TestSchedulers()),
         TestSchedulers(),
@@ -62,7 +58,7 @@ class IssueInteractorTest {
         given(api.getProject(anyLong(), anyBoolean())).willReturn(Single.just(testProject))
 
         // WHEN
-        val testObserver = repository
+        val testObserver = interactor
                 .getMyIssues(page = testPage, pageSize = defaultPageSize)
                 .test()
 
@@ -113,7 +109,7 @@ class IssueInteractorTest {
         given(api.getProject(anyLong(), anyBoolean())).willReturn(Single.just(testProject))
 
         // WHEN
-        val testObserver = repository
+        val testObserver = interactor
                 .getIssues(projectId = testIssue.projectId, page = testPage, pageSize = defaultPageSize)
                 .test()
 
@@ -158,7 +154,7 @@ class IssueInteractorTest {
         given(markDownUrlResolver.resolve(anyString(), any())).willReturn(resolvedBody)
 
         // WHEN
-        val testObserver = repository
+        val testObserver = interactor
                 .getIssue(testIssue.projectId, testIssue.id)
                 .test()
 
@@ -195,7 +191,7 @@ class IssueInteractorTest {
         given(markDownUrlResolver.resolve(anyString(), any())).willReturn(resolvedBody)
 
         // WHEN
-        val testObserver = repository
+        val testObserver = interactor
                 .getIssue(testIssue.projectId, testIssue.id)
                 .test()
 
@@ -237,7 +233,7 @@ class IssueInteractorTest {
         given(markDownUrlResolver.resolve(anyString(), any())).willReturn(resolvedBody)
 
         // WHEN
-        val testObserver = repository.getIssueNotes(
+        val testObserver = interactor.getIssueNotes(
                 testIssue.projectId,
                 testIssue.id,
                 null,
@@ -288,7 +284,7 @@ class IssueInteractorTest {
         given(markDownUrlResolver.resolve(anyString(), any())).willReturn(resolvedBody)
 
         // WHEN
-        val testObserver = repository.getIssueNotes(
+        val testObserver = interactor.getIssueNotes(
                 testIssue.projectId,
                 testIssue.id,
                 null,
@@ -345,7 +341,7 @@ class IssueInteractorTest {
         given(markDownUrlResolver.resolve(anyString(), any())).willReturn(testNote.body)
 
         // WHEN
-        val testObserver = repository.getAllIssueNotes(
+        val testObserver = interactor.getAllIssueNotes(
                 testIssue.projectId,
                 testIssue.id,
                 null,
@@ -390,68 +386,6 @@ class IssueInteractorTest {
 
         testObserver.assertResult(listOf(testNote, testNote))
     }
-
-    @Test
-    fun `get milestone issues should success with valid api response`() {
-        // GIVEN
-        val testMilestoneId = 3232L
-
-        given(api.getMilestoneIssues(
-                anyLong(),
-                anyLong(),
-                anyInt(),
-                anyInt())).willReturn(Single.just(listOf(testIssue)))
-
-        // WHEN
-        val testObserver = repository.getMilestoneIssues(
-                testIssue.projectId,
-                testMilestoneId,
-                testPage,
-                defaultPageSize).test()
-
-        testObserver.awaitTerminalEvent()
-
-        // THEN
-        then(api)
-                .should(times(1))
-                .getMilestoneIssues(
-                        testIssue.projectId,
-                        testMilestoneId,
-                        testPage,
-                        defaultPageSize)
-
-        then(api).shouldHaveNoMoreInteractions()
-
-        testObserver.assertResult(listOf(testIssue))
-    }
-
-    private fun getTestIssue() = Issue(
-            123L,
-            3342424L,
-            IssueState.OPENED,
-            "issue description",
-            ShortUser(1L, "", "", "", "", ""),
-            null,
-            9876L,
-            emptyList(),
-            null,
-            null,
-            TestData.getTestDate(),
-            listOf("test label 1", "test label 2"),
-            13,
-            null,
-            null,
-            false,
-            3,
-            0,
-            null,
-            null,
-            2,
-            TimeStats(32, 23, null, null),
-            null,
-            false,
-            null
-    )
 
     private fun getExpectedTargetHeader(issue: Issue, project: Project): TargetHeader {
         val badges = mutableListOf<TargetBadge>()

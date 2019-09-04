@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.model.repository.event
+package ru.terrakok.gitlabclient.model.interactor
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
@@ -23,7 +23,6 @@ import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.event.EventTargetType
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
-import ru.terrakok.gitlabclient.model.interactor.EventInteractor
 
 /**
  * @author Vitaliy Belyaev on 21.05.2019.
@@ -36,7 +35,7 @@ class EventInteractorTest {
 
     private val api = mock(GitlabApi::class.java)
     private val markDownUrlResolver = mock(MarkDownUrlResolver::class.java)
-    private val repository = EventInteractor(
+    private val interactor = EventInteractor(
         api,
         TestSchedulers(),
         PrimitiveWrapper(defaultPageSize),
@@ -62,7 +61,7 @@ class EventInteractorTest {
         given(api.getProject(anyLong(), anyBoolean())).willReturn(Single.just(testProject))
 
         // WHEN
-        val testObserver = repository.getEvents(page = testPage).test()
+        val testObserver = interactor.getEvents(page = testPage).test()
         testObserver.awaitTerminalEvent()
 
         // THEN
@@ -105,7 +104,7 @@ class EventInteractorTest {
                 anyInt())).willReturn(Single.just(listOf(testEvent)))
 
         // WHEN
-        val testObserver = repository
+        val testObserver = interactor
                 .getEvents(page = testPage, beforeDay = testBeforeDay, afterDay = testAfterDay)
                 .test()
 
@@ -143,7 +142,7 @@ class EventInteractorTest {
         given(api.getProject(anyLong(), anyBoolean())).willReturn(Single.just(testProject))
 
         // WHEN
-        val testObserver = repository.getEvents(page = testPage).test()
+        val testObserver = interactor.getEvents(page = testPage).test()
         testObserver.awaitTerminalEvent()
 
         // THEN
@@ -184,7 +183,7 @@ class EventInteractorTest {
                 anyInt())).willReturn(Single.just(emptyList()))
 
         // WHEN
-        val testObserver = repository.getEvents(page = testPage).test()
+        val testObserver = interactor.getEvents(page = testPage).test()
         testObserver.awaitTerminalEvent()
 
         // THEN
@@ -223,7 +222,7 @@ class EventInteractorTest {
                 anyInt())).willReturn(Single.error(error))
 
         // WHEN
-        val testObserver = repository.getEvents(page = testPage).test()
+        val testObserver = interactor.getEvents(page = testPage).test()
         testObserver.awaitTerminalEvent()
 
         // THEN
@@ -267,7 +266,7 @@ class EventInteractorTest {
         given(api.getProject(anyLong(), anyBoolean())).willReturn(Single.just(testProject))
 
         // WHEN
-        val testObserver = repository
+        val testObserver = interactor
                 .getProjectEvents(projectId = testProject.id, page = testPage)
                 .test()
 
@@ -313,7 +312,7 @@ class EventInteractorTest {
                 anyInt())).willReturn(Single.just(emptyList()))
 
         // WHEN
-        val testObserver = repository
+        val testObserver = interactor
                 .getProjectEvents(projectId = testProject.id, page = testPage)
                 .test()
 
@@ -357,7 +356,7 @@ class EventInteractorTest {
                 anyInt())).willReturn(Single.error(error))
 
         // WHEN
-        val testObserver = repository
+        val testObserver = interactor
                 .getProjectEvents(projectId = testProject.id, page = testPage)
                 .test()
 
@@ -407,7 +406,7 @@ class EventInteractorTest {
         given(markDownUrlResolver.resolve(anyString(), any())).willReturn(resolvedBody)
 
         // WHEN
-        val testObserver = repository.getEvents(page = testPage).test()
+        val testObserver = interactor.getEvents(page = testPage).test()
         testObserver.awaitTerminalEvent()
 
         // THEN

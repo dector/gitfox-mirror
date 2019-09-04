@@ -1,6 +1,6 @@
-package ru.terrakok.gitlabclient.model.repository.session
+package ru.terrakok.gitlabclient.model.interactor
 
-import com.google.gson.Gson
+import com.nhaarman.mockitokotlin2.mock
 import org.junit.Assert
 import org.junit.Test
 import org.mockito.BDDMockito.given
@@ -9,22 +9,31 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.times
 import ru.terrakok.gitlabclient.TestData
 import ru.terrakok.gitlabclient.TestSchedulers
+import ru.terrakok.gitlabclient.entity.app.session.OAuthParams
+import ru.terrakok.gitlabclient.model.data.cache.ProjectCache
+import ru.terrakok.gitlabclient.model.data.server.UserAccountApi
 import ru.terrakok.gitlabclient.model.data.storage.Prefs
-import ru.terrakok.gitlabclient.model.interactor.SessionInteractor
 
 /**
  * @author Vitaliy Belyaev on 08.06.2019.
  */
 class SessionInteractorTest {
-    private val defaultServerPath = "https://someurl.com"
     private val testAccount = TestData.getUserAccount()
-
+    private val oauthParams = OAuthParams(
+        "https://someurl.com",
+        "appId",
+        "appKey",
+        "redirect_url"
+    )
     private val prefs = mock(Prefs::class.java)
-    private val gson = mock(Gson::class.java)
-    private val repository = SessionInteractor(
-        defaultServerPath,
+    private val api: UserAccountApi = mock()
+    private val projectCache: ProjectCache = mock()
+
+    private val interactor = SessionInteractor(
         prefs,
-        gson,
+        oauthParams,
+        api,
+        projectCache,
         TestSchedulers()
     )
 
@@ -34,7 +43,7 @@ class SessionInteractorTest {
         given(prefs.selectedAccount).willReturn(null)
 
         // WHEN
-        val result = repository.getCurrentUserAccount()
+        val result = interactor.getCurrentUserAccount()
 
         // THEN
         then(prefs).should(times(1)).selectedAccount
@@ -50,7 +59,7 @@ class SessionInteractorTest {
         given(prefs.accounts).willReturn(listOf(testAccount, testAccount.copy(userId = 43)))
 
         // WHEN
-        val result = repository.getCurrentUserAccount()
+        val result = interactor.getCurrentUserAccount()
 
         // THEN
         then(prefs).should(times(1)).selectedAccount
@@ -66,7 +75,7 @@ class SessionInteractorTest {
         given(prefs.accounts).willReturn(listOf(testAccount.copy(userId = 43)))
 
         // WHEN
-        val result = repository.setCurrentUserAccount(testAccount.id)
+        val result = interactor.setCurrentUserAccount(testAccount.id)
 
         // THEN
         then(prefs).should(times(1)).accounts
@@ -82,7 +91,7 @@ class SessionInteractorTest {
         given(prefs.accounts).willReturn(listOf(testAccount))
 
         // WHEN
-        val result = repository.setCurrentUserAccount(testAccount.id)
+        val result = interactor.setCurrentUserAccount(testAccount.id)
 
         // THEN
         then(prefs).should(times(1)).accounts
@@ -100,7 +109,7 @@ class SessionInteractorTest {
         given(prefs.accounts).willReturn(storedAccounts)
 
         // WHEN
-        val result = repository.getUserAccounts()
+        val result = interactor.getUserAccounts()
 
         // THEN
         then(prefs).should(times(1)).accounts
@@ -118,7 +127,7 @@ class SessionInteractorTest {
         given(prefs.accounts).willReturn(storedAccounts)
 
         // WHEN
-        repository.logout(testAccount.id)
+        interactor.logoutFromAccount(testAccount.id)
 
         // THEN
         then(prefs).should(times(1)).accounts
@@ -136,7 +145,7 @@ class SessionInteractorTest {
         given(prefs.selectedAccount).willReturn(testAccount.id)
 
         // WHEN
-        val result = repository.logout(testAccount.id)
+        val result = interactor.logoutFromAccount(testAccount.id)
 
         // THEN
         then(prefs).should(times(1)).accounts
@@ -159,7 +168,7 @@ class SessionInteractorTest {
         given(prefs.selectedAccount).willReturn(selectedAccount.id)
 
         // WHEN
-        val result = repository.logout(testAccount.id)
+        val result = interactor.logoutFromAccount(testAccount.id)
 
         // THEN
         then(prefs).should(times(1)).accounts
