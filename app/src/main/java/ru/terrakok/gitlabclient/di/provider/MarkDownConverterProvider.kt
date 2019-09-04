@@ -8,6 +8,7 @@ import ru.noties.markwon.il.AsyncDrawableLoader
 import ru.noties.markwon.spans.SpannableTheme
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.di.DefaultServerPath
+import ru.terrakok.gitlabclient.di.ServerPath
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.util.color
@@ -22,7 +23,7 @@ class MarkDownConverterProvider @Inject constructor(
     private val context: Context,
     private val httpClient: OkHttpClient,
     private val schedulers: SchedulersProvider,
-    @DefaultServerPath private val defaultServerPath: String
+    @ServerPath private val serverPath: String
 ) : Provider<MarkDownConverter> {
 
     private val spannableTheme
@@ -38,7 +39,7 @@ class MarkDownConverterProvider @Inject constructor(
             .resources(context.resources)
             .build()
 
-    private val urlProcessor = UrlProcessorRelativeToAbsolute(defaultServerPath)
+    private val urlProcessor = UrlProcessorRelativeToAbsolute(serverPath)
 
     private val spannableConfig
         get() = SpannableConfiguration.builder(context)

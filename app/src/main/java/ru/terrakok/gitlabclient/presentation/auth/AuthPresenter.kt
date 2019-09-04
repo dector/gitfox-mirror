@@ -53,7 +53,7 @@ class AuthPresenter @Inject constructor(
     }
 
     fun loginOnCustomServer(url: String, token: String) {
-        sessionInteractor.loginOnCustomServer(token, url)
+        sessionInteractor.loginOnCustomServer(url, token)
             .subscribe(
                 { router.newRootFlow(Screens.DrawerFlow) },
                 { errorHandler.proceed(it, { viewState.showMessage(it) }) }
