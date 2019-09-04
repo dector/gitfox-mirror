@@ -6,11 +6,11 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_project_labels.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Label
-import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 import ru.terrakok.gitlabclient.presentation.project.labels.ProjectLabelsPresenter
 import ru.terrakok.gitlabclient.presentation.project.labels.ProjectLabelsView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.util.showSnackMessage
 
 /**
  * @author Maxim Myalkin (MaxMyalkin) on 15.12.2018.

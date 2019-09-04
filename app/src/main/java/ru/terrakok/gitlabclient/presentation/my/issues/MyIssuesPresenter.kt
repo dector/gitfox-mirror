@@ -4,13 +4,14 @@ import com.arellomobile.mvp.InjectViewState
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
-import ru.terrakok.gitlabclient.extension.openInfo
-import ru.terrakok.gitlabclient.model.interactor.issue.IssueInteractor
+import ru.terrakok.gitlabclient.model.interactor.AccountInteractor
+import ru.terrakok.gitlabclient.model.interactor.IssueInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.presentation.global.Paginator
+import ru.terrakok.gitlabclient.util.openInfo
 import javax.inject.Inject
 
 /**
@@ -19,6 +20,7 @@ import javax.inject.Inject
 @InjectViewState
 class MyIssuesPresenter @Inject constructor(
     initFilter: Filter,
+    private val accountInteractor: AccountInteractor,
     private val issueInteractor: IssueInteractor,
     private val mdConverter: MarkDownConverter,
     private val errorHandler: ErrorHandler,
@@ -53,7 +55,7 @@ class MyIssuesPresenter @Inject constructor(
     private fun loadNewPage(page: Int) {
         pageDisposable?.dispose()
         pageDisposable =
-            issueInteractor.getMyIssues(filter.createdByMe, filter.onlyOpened, page)
+            accountInteractor.getMyIssues(filter.createdByMe, filter.onlyOpened, page)
                 .flattenAsObservable { it }
                 .concatMap { item ->
                     when (item) {

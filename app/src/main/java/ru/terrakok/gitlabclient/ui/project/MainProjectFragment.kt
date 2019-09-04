@@ -8,12 +8,12 @@ import kotlinx.android.synthetic.main.fragment_main_project.*
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
-import ru.terrakok.gitlabclient.extension.color
-import ru.terrakok.gitlabclient.extension.shareText
-import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.presentation.project.ProjectPresenter
 import ru.terrakok.gitlabclient.presentation.project.ProjectView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.util.color
+import ru.terrakok.gitlabclient.util.shareText
+import ru.terrakok.gitlabclient.util.showSnackMessage
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 10.02.18.

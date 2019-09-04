@@ -7,15 +7,18 @@ import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.BuildConfig
-import ru.terrakok.gitlabclient.di.*
+import ru.terrakok.gitlabclient.di.AppDevelopersPath
+import ru.terrakok.gitlabclient.di.CacheLifetime
+import ru.terrakok.gitlabclient.di.DefaultPageSize
+import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.provider.GsonProvider
 import ru.terrakok.gitlabclient.entity.app.develop.AppInfo
-import ru.terrakok.gitlabclient.model.repository.session.SessionRepository
-import ru.terrakok.gitlabclient.model.repository.tools.Base64Tools
+import ru.terrakok.gitlabclient.entity.app.session.OAuthParams
 import ru.terrakok.gitlabclient.model.system.AppSchedulers
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.model.system.message.SystemMessageNotifier
+import ru.terrakok.gitlabclient.util.Base64Tools
 import toothpick.config.Module
 
 /**
@@ -25,7 +28,6 @@ class AppModule(context: Context) : Module() {
     init {
         // Global
         bind(Context::class.java).toInstance(context)
-        bind(String::class.java).withName(DefaultServerPath::class.java).toInstance(BuildConfig.ORIGIN_GITLAB_ENDPOINT)
         bind(String::class.java).withName(AppDevelopersPath::class.java).toInstance(BuildConfig.APP_DEVELOPERS_PATH)
         bind(PrimitiveWrapper::class.java).withName(DefaultPageSize::class.java).toInstance(PrimitiveWrapper(20))
         bind(PrimitiveWrapper::class.java).withName(CacheLifetime::class.java).toInstance(PrimitiveWrapper(300_000L))
@@ -41,9 +43,6 @@ class AppModule(context: Context) : Module() {
         bind(Router::class.java).toInstance(cicerone.router)
         bind(NavigatorHolder::class.java).toInstance(cicerone.navigatorHolder)
 
-        // Session
-        bind(SessionRepository::class.java).singletonInScope()
-
         // AppInfo
         bind(AppInfo::class.java).toInstance(
             AppInfo(
@@ -53,6 +52,16 @@ class AppModule(context: Context) : Module() {
                 BuildConfig.VERSION_UID.take(8),
                 BuildConfig.APP_HOME_PAGE,
                 BuildConfig.FEEDBACK_URL
+            )
+        )
+
+        // Auth
+        bind(OAuthParams::class.java).toInstance(
+            OAuthParams(
+                BuildConfig.ORIGIN_GITLAB_ENDPOINT,
+                BuildConfig.OAUTH_APP_ID,
+                BuildConfig.OAUTH_SECRET,
+                BuildConfig.OAUTH_CALLBACK
             )
         )
     }

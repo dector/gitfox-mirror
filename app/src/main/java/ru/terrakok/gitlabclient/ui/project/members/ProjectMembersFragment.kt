@@ -6,13 +6,13 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_project_members.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Member
-import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 import ru.terrakok.gitlabclient.presentation.project.members.ProjectMembersPresenter
 import ru.terrakok.gitlabclient.presentation.project.members.ProjectMembersView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.list.MembersAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.isSame
+import ru.terrakok.gitlabclient.util.showSnackMessage
 
 /**
  * @author Valentin Logvinovitch (glvvl) on 28.02.19.

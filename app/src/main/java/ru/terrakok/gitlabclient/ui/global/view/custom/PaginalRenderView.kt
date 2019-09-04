@@ -12,13 +12,13 @@ import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
 import kotlinx.android.synthetic.main.view_paginal_render.view.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.di.DI
-import ru.terrakok.gitlabclient.extension.inflate
-import ru.terrakok.gitlabclient.extension.userMessage
-import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 import ru.terrakok.gitlabclient.ui.global.list.ProgressAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.ProgressItem
+import ru.terrakok.gitlabclient.util.inflate
+import ru.terrakok.gitlabclient.util.userMessage
+import ru.terrakok.gitlabclient.util.visible
 import toothpick.Toothpick
 import javax.inject.Inject
 

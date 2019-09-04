@@ -9,8 +9,6 @@ import kotlinx.android.synthetic.main.fragment_project_files.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Branch
 import ru.terrakok.gitlabclient.entity.app.ProjectFile
-import ru.terrakok.gitlabclient.extension.setTitleEllipsize
-import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 import ru.terrakok.gitlabclient.presentation.project.files.ProjectFileDestination
 import ru.terrakok.gitlabclient.presentation.project.files.ProjectFilesPresenter
@@ -18,6 +16,8 @@ import ru.terrakok.gitlabclient.presentation.project.files.ProjectFilesView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.list.ProjectFileAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.isSame
+import ru.terrakok.gitlabclient.util.setTitleEllipsize
+import ru.terrakok.gitlabclient.util.showSnackMessage
 import toothpick.Scope
 import toothpick.config.Module
 

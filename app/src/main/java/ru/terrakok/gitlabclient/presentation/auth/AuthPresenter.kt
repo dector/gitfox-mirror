@@ -2,7 +2,7 @@ package ru.terrakok.gitlabclient.presentation.auth
 
 import com.arellomobile.mvp.InjectViewState
 import ru.terrakok.gitlabclient.Screens
-import ru.terrakok.gitlabclient.model.interactor.session.SessionInteractor
+import ru.terrakok.gitlabclient.model.interactor.SessionInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
@@ -53,7 +53,7 @@ class AuthPresenter @Inject constructor(
     }
 
     fun loginOnCustomServer(url: String, token: String) {
-        sessionInteractor.login(url, token)
+        sessionInteractor.loginOnCustomServer(url, token)
             .subscribe(
                 { router.newRootFlow(Screens.DrawerFlow) },
                 { errorHandler.proceed(it, { viewState.showMessage(it) }) }

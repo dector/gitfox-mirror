@@ -2,7 +2,7 @@ package ru.terrakok.gitlabclient.presentation.libraries
 
 import com.arellomobile.mvp.InjectViewState
 import ru.terrakok.cicerone.Router
-import ru.terrakok.gitlabclient.model.interactor.app.AppInfoInteractor
+import ru.terrakok.gitlabclient.model.interactor.AppInfoInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import timber.log.Timber
 import javax.inject.Inject

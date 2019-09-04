@@ -9,7 +9,6 @@ import ru.terrakok.gitlabclient.di.provider.MarkDownConverterProvider
 import ru.terrakok.gitlabclient.di.provider.OkHttpClientProvider
 import ru.terrakok.gitlabclient.di.provider.OkHttpClientWithErrorHandlerProvider
 import ru.terrakok.gitlabclient.entity.app.session.AuthHolder
-import ru.terrakok.gitlabclient.entity.app.session.OAuthParams
 import ru.terrakok.gitlabclient.entity.app.session.UserAccount
 import ru.terrakok.gitlabclient.model.data.cache.ProjectCache
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
@@ -42,15 +41,6 @@ class ServerModule(userAccount: UserAccount?) : Module() {
         bind(ServerChanges::class.java).singletonInScope()
         bind(GitlabApi::class.java).toProvider(ApiProvider::class.java).providesSingletonInScope()
         bind(MarkDownConverter::class.java).toProvider(MarkDownConverterProvider::class.java).providesSingletonInScope()
-
-        // Auth
-        bind(OAuthParams::class.java).toInstance(
-            OAuthParams(
-                BuildConfig.OAUTH_APP_ID,
-                BuildConfig.OAUTH_SECRET,
-                BuildConfig.OAUTH_CALLBACK
-            )
-        )
 
         // Error handler with logout logic
         bind(ErrorHandler::class.java).singletonInScope()

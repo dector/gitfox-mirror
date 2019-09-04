@@ -5,8 +5,9 @@ import io.reactivex.disposables.Disposable
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectListMode
+import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.entity.Project
-import ru.terrakok.gitlabclient.model.interactor.project.ProjectInteractor
+import ru.terrakok.gitlabclient.model.interactor.ProjectInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
@@ -72,9 +73,24 @@ class ProjectsListPresenter @Inject constructor(
     }
 
     private fun getProjectsSingle(page: Int) = when (mode) {
-        STARRED_PROJECTS -> interactor.getStarredProjects(page)
-        MY_PROJECTS -> interactor.getMyProjects(page)
-        else -> interactor.getMainProjects(page)
+        STARRED_PROJECTS -> interactor.getProjectsList(
+            page = page,
+            starred = true,
+            orderBy = OrderBy.LAST_ACTIVITY_AT,
+            archived = false
+        )
+        MY_PROJECTS -> interactor.getProjectsList(
+            page = page,
+            owned = true,
+            orderBy = OrderBy.LAST_ACTIVITY_AT,
+            archived = false
+        )
+        else -> interactor.getProjectsList(
+            page = page,
+            membership = true,
+            orderBy = OrderBy.LAST_ACTIVITY_AT,
+            archived = false
+        )
     }
 
     fun refreshProjects() = paginator.proceed(Paginator.Action.Refresh)

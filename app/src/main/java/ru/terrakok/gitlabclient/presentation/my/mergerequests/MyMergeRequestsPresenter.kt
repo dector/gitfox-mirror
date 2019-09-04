@@ -4,19 +4,21 @@ import com.arellomobile.mvp.InjectViewState
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
-import ru.terrakok.gitlabclient.extension.openInfo
-import ru.terrakok.gitlabclient.model.interactor.mergerequest.MergeRequestInteractor
+import ru.terrakok.gitlabclient.model.interactor.AccountInteractor
+import ru.terrakok.gitlabclient.model.interactor.MergeRequestInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.presentation.global.Paginator
+import ru.terrakok.gitlabclient.util.openInfo
 import javax.inject.Inject
 
 @InjectViewState
 class MyMergeRequestsPresenter @Inject constructor(
     initFilter: Filter,
-    private val interactor: MergeRequestInteractor,
+    private val interactor: AccountInteractor,
+    private val mrInteractor: MergeRequestInteractor,
     private val mdConverter: MarkDownConverter,
     private val errorHandler: ErrorHandler,
     private val router: FlowRouter,
@@ -43,7 +45,7 @@ class MyMergeRequestsPresenter @Inject constructor(
         super.onFirstViewAttach()
 
         refreshMergeRequests()
-        interactor.mergeRequestChanges
+        mrInteractor.mergeRequestChanges
             .subscribe { paginator.proceed(Paginator.Action.Refresh) }
             .connect()
     }
