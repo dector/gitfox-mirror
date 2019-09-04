@@ -4,14 +4,31 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
 import io.reactivex.Single
 import org.junit.Test
-import org.mockito.BDDMockito.*
+import org.mockito.BDDMockito.anyBoolean
+import org.mockito.BDDMockito.anyInt
+import org.mockito.BDDMockito.anyLong
+import org.mockito.BDDMockito.anyString
+import org.mockito.BDDMockito.eq
+import org.mockito.BDDMockito.given
+import org.mockito.BDDMockito.inOrder
+import org.mockito.BDDMockito.then
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.times
 import ru.terrakok.gitlabclient.TestData
 import ru.terrakok.gitlabclient.TestSchedulers
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
+import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.entity.Project
-import ru.terrakok.gitlabclient.entity.app.target.*
+import ru.terrakok.gitlabclient.entity.Sort
+import ru.terrakok.gitlabclient.entity.app.target.AppTarget
+import ru.terrakok.gitlabclient.entity.app.target.TargetAction
+import ru.terrakok.gitlabclient.entity.app.target.TargetBadge
+import ru.terrakok.gitlabclient.entity.app.target.TargetBadgeIcon
+import ru.terrakok.gitlabclient.entity.app.target.TargetBadgeStatus
+import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
+import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderIcon
+import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderTitle
+import ru.terrakok.gitlabclient.entity.app.target.TargetInternal
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.issue.Issue
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
@@ -68,16 +85,16 @@ class IssueInteractorTest {
         then(api)
                 .should(times(1))
                 .getMyIssues(
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        testPage,
-                        defaultPageSize)
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    OrderBy.UPDATED_AT,
+                    Sort.ASC,
+                    null,
+                    testPage,
+                    defaultPageSize)
 
         then(api)
                 .should(times(1))
@@ -125,8 +142,8 @@ class IssueInteractorTest {
                         null,
                         null,
                         null,
-                        null,
-                        null,
+                        OrderBy.UPDATED_AT,
+                        Sort.ASC,
                         null,
                         testPage,
                         defaultPageSize)
