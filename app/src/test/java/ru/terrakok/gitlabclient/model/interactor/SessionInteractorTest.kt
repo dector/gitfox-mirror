@@ -40,13 +40,13 @@ class SessionInteractorTest {
     @Test
     fun `get current account should return null when there is no selected account`() {
         // GIVEN
-        given(prefs.selectedAccount).willReturn(null)
+        given(prefs.getCurrentUserAccount()).willReturn(null)
 
         // WHEN
         val result = interactor.getCurrentUserAccount()
 
         // THEN
-        then(prefs).should(times(1)).selectedAccount
+        then(prefs).should(times(1)).getCurrentUserAccount()
         then(prefs).shouldHaveNoMoreInteractions()
 
         Assert.assertEquals(null, result)
@@ -55,15 +55,13 @@ class SessionInteractorTest {
     @Test
     fun `get current account should return stored selected account`() {
         // GIVEN
-        given(prefs.selectedAccount).willReturn(testAccount.id)
-        given(prefs.accounts).willReturn(listOf(testAccount, testAccount.copy(userId = 43)))
+        given(prefs.getCurrentUserAccount()).willReturn(testAccount)
 
         // WHEN
         val result = interactor.getCurrentUserAccount()
 
         // THEN
-        then(prefs).should(times(1)).selectedAccount
-        then(prefs).should(times(1)).accounts
+        then(prefs).should(times(1)).getCurrentUserAccount()
         then(prefs).shouldHaveNoMoreInteractions()
 
         Assert.assertEquals(testAccount, result)
@@ -135,7 +133,7 @@ class SessionInteractorTest {
     }
 
     @Test
-    fun `logout should return first account from new stored accounts when ids matches`() {
+    fun `logout should return true when has other stored accounts`() {
         // GIVEN
         val storedAccounts = listOf(testAccount, testAccount.copy(userId = 43))
         val expectedAccounts = listOf(testAccount.copy(userId = 43))
@@ -154,28 +152,27 @@ class SessionInteractorTest {
         then(prefs).should(times(1)).selectedAccount = newAccount.id
         then(prefs).shouldHaveNoMoreInteractions()
 
-        Assert.assertEquals(newAccount, result)
+        Assert.assertEquals(true, result)
     }
 
     @Test
-    fun `logout should return selected account from new stored accounts when ids not matches`() {
+    fun `logout should return false when there are no other accounts`() {
         // GIVEN
-        val storedAccounts = listOf(testAccount, testAccount.copy(userId = 43))
-        val expectedAccounts = listOf(testAccount.copy(userId = 43))
-        val selectedAccount = testAccount.copy(userId = 43)
+        val storedAccounts = listOf(testAccount)
 
         given(prefs.accounts).willReturn(storedAccounts)
-        given(prefs.selectedAccount).willReturn(selectedAccount.id)
+        given(prefs.selectedAccount).willReturn(testAccount.id)
 
         // WHEN
         val result = interactor.logoutFromAccount(testAccount.id)
 
         // THEN
         then(prefs).should(times(1)).accounts
-        then(prefs).should(times(1)).accounts = expectedAccounts
+        then(prefs).should(times(1)).accounts = emptyList()
         then(prefs).should(times(1)).selectedAccount
+        then(prefs).should(times(1)).selectedAccount = null
         then(prefs).shouldHaveNoMoreInteractions()
 
-        Assert.assertEquals(selectedAccount, result)
+        Assert.assertEquals(false, result)
     }
 }
