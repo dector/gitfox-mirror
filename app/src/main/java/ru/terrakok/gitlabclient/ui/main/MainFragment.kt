@@ -15,6 +15,7 @@ import ru.terrakok.gitlabclient.entity.app.AccountMainBadges
 import ru.terrakok.gitlabclient.presentation.main.MainPresenter
 import ru.terrakok.gitlabclient.presentation.main.MainView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.util.addSystemBottomPadding
 import ru.terrakok.gitlabclient.util.color
 
 /**
@@ -35,6 +36,7 @@ class MainFragment : BaseFragment(), MainView {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        bottomBar.addSystemBottomPadding()
         AHBottomNavigationAdapter(activity, R.menu.main_bottom_menu).apply {
             setupWithBottomNavigation(bottomBar)
         }

@@ -15,6 +15,7 @@ import ru.terrakok.gitlabclient.presentation.mergerequest.notes.MergeRequestNote
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.list.SimpleDividerDecorator
 import ru.terrakok.gitlabclient.ui.global.list.TargetNotesAdapter
+import ru.terrakok.gitlabclient.util.addSystemBottomPadding
 import ru.terrakok.gitlabclient.util.showSnackMessage
 import ru.terrakok.gitlabclient.util.visible
 
@@ -60,6 +61,7 @@ class MergeRequestNotesFragment : BaseFragment(), MergeRequestNotesView {
             recyclerView.scrollToPosition(adapter.itemCount - 1)
             setFabScrollVisible(false)
         }
+        newNoteView.addSystemBottomPadding()
         newNoteView.init { presenter.onSendClicked(it) }
     }
 

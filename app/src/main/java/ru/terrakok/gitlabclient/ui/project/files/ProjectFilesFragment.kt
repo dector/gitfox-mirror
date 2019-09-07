@@ -16,6 +16,7 @@ import ru.terrakok.gitlabclient.presentation.project.files.ProjectFilesView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.list.ProjectFileAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.isSame
+import ru.terrakok.gitlabclient.util.addSystemTopPadding
 import ru.terrakok.gitlabclient.util.setTitleEllipsize
 import ru.terrakok.gitlabclient.util.showSnackMessage
 import toothpick.Scope
@@ -56,6 +57,7 @@ class ProjectFilesFragment : BaseFragment(), ProjectFilesView {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         toolbar.apply {
+            addSystemTopPadding()
             inflateMenu(R.menu.project_files_menu)
             setNavigationOnClickListener { presenter.onNavigationCloseClicked() }
             setOnMenuItemClickListener {

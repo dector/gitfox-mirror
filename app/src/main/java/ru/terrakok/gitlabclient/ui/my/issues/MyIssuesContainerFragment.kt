@@ -8,6 +8,7 @@ import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.util.addSystemTopPadding
 import toothpick.Toothpick
 import javax.inject.Inject
 
@@ -39,6 +40,7 @@ class MyIssuesContainerFragment : BaseFragment() {
         }
 
         with(toolbar) {
+            addSystemTopPadding()
             setNavigationOnClickListener { menuController.open() }
             inflateMenu(R.menu.my_issues_menu)
             setOnMenuItemClickListener { item ->

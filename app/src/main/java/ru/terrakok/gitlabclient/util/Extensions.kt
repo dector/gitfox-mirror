@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.text.SpannableStringBuilder
@@ -23,6 +24,8 @@ import androidx.annotation.LayoutRes
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 import ru.terrakok.cicerone.Navigator
@@ -226,4 +229,56 @@ fun Toolbar.setTitleEllipsize(ellipsize: TextUtils.TruncateAt) {
         }
     }
     title = ""
+}
+
+fun View.updatePadding(
+    left: Int = paddingLeft,
+    top: Int = paddingTop,
+    right: Int = paddingRight,
+    bottom: Int = paddingBottom
+) {
+    setPadding(left, top, right, bottom)
+}
+
+fun View.addSystemTopPadding() {
+    doOnApplyWindowInsets { view, insets, initialPadding ->
+        view.updatePadding(
+            top = initialPadding.top + insets.systemWindowInsetTop
+        )
+    }
+}
+
+fun View.addSystemBottomPadding() {
+    doOnApplyWindowInsets { view, insets, initialPadding ->
+        view.updatePadding(
+            bottom = initialPadding.bottom + insets.systemWindowInsetBottom
+        )
+    }
+}
+
+fun View.doOnApplyWindowInsets(block: (View, insets: WindowInsetsCompat, initialPadding: Rect) -> Unit) {
+    val initialPadding = recordInitialPaddingForView(this)
+    ViewCompat.setOnApplyWindowInsetsListener(this) { v, insets ->
+        block(v, insets, initialPadding)
+        insets
+    }
+    requestApplyInsetsWhenAttached()
+}
+
+private fun recordInitialPaddingForView(view: View) =
+    Rect(view.paddingLeft, view.paddingTop, view.paddingRight, view.paddingBottom)
+
+private fun View.requestApplyInsetsWhenAttached() {
+    if (isAttachedToWindow) {
+        ViewCompat.requestApplyInsets(this)
+    } else {
+        addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
+            override fun onViewAttachedToWindow(v: View) {
+                v.removeOnAttachStateChangeListener(this)
+                ViewCompat.requestApplyInsets(v)
+            }
+
+            override fun onViewDetachedFromWindow(v: View) = Unit
+        })
+    }
 }

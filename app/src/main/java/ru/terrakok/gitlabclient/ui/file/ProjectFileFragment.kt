@@ -10,6 +10,7 @@ import ru.terrakok.gitlabclient.presentation.file.ProjectFilePresenter
 import ru.terrakok.gitlabclient.presentation.file.ProjectFileView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.view.custom.codehighlight.CodeHighlightView
+import ru.terrakok.gitlabclient.util.addSystemTopPadding
 import ru.terrakok.gitlabclient.util.argument
 import ru.terrakok.gitlabclient.util.visible
 import toothpick.Scope
@@ -56,6 +57,7 @@ class ProjectFileFragment : BaseFragment(), ProjectFileView {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         toolbar.setNavigationOnClickListener { onBackPressed() }
+        toolbar.addSystemTopPadding()
         projectFileCodeHighlightView.setOnCodeHighlightProgressLister(
             object : CodeHighlightView.OnCodeHighlightListener {
                 override fun onCodeHighlightStarted() {

@@ -11,6 +11,7 @@ import ru.terrakok.gitlabclient.entity.app.target.TargetAction
 import ru.terrakok.gitlabclient.presentation.issue.IssuePresenter
 import ru.terrakok.gitlabclient.presentation.issue.IssueView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.util.addSystemTopPadding
 import ru.terrakok.gitlabclient.util.showSnackMessage
 
 /**
@@ -32,6 +33,7 @@ class MainIssueFragment : BaseFragment(), IssueView {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         toolbar.setNavigationOnClickListener { onBackPressed() }
+        toolbar.addSystemTopPadding()
         viewPager.adapter = adapter
     }
 

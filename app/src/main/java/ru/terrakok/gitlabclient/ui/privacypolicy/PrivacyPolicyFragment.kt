@@ -7,6 +7,7 @@ import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.di.DI
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.util.addSystemTopPadding
 import toothpick.Toothpick
 import javax.inject.Inject
 
@@ -29,6 +30,7 @@ class PrivacyPolicyFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         toolbar.setNavigationOnClickListener { onBackPressed() }
+        toolbar.addSystemTopPadding()
         okButton.setOnClickListener { onBackPressed() }
         webView.loadUrl("https://gitlab.com/terrakok/gitlab-client/raw/develop/PrivacyPolicy.txt")
     }

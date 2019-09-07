@@ -9,6 +9,7 @@ import ru.terrakok.gitlabclient.entity.app.develop.AppInfo
 import ru.terrakok.gitlabclient.presentation.about.AboutPresenter
 import ru.terrakok.gitlabclient.presentation.about.AboutView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.util.addSystemTopPadding
 import ru.terrakok.gitlabclient.util.tryOpenLink
 
 /**
@@ -30,6 +31,7 @@ class AboutFragment : BaseFragment(), AboutView {
         super.onActivityCreated(savedInstanceState)
 
         toolbar.setNavigationOnClickListener { presenter.onMenuPressed() }
+        toolbar.addSystemTopPadding()
         feedbackView.setOnClickListener { tryOpenLink(supportUrl) }
         librariesView.setOnClickListener { presenter.onShowLibrariesClicked() }
         privacyPolicyView.setOnClickListener { presenter.onPrivacyPolicyClicked() }

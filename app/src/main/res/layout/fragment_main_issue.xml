@@ -10,7 +10,7 @@
         android:id="@+id/toolbar"
         style="@style/ToolbarWithTabsStyle"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="wrap_content"
         app:navigationIcon="@drawable/ic_arrow_back_24dp"
         tools:subtitle="GitFox"
         tools:title="#56"/>

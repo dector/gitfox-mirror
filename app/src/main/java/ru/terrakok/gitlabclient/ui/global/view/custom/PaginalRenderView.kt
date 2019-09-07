@@ -16,6 +16,7 @@ import ru.terrakok.gitlabclient.model.system.ResourceManager
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 import ru.terrakok.gitlabclient.ui.global.list.ProgressAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.ProgressItem
+import ru.terrakok.gitlabclient.util.addSystemBottomPadding
 import ru.terrakok.gitlabclient.util.inflate
 import ru.terrakok.gitlabclient.util.userMessage
 import ru.terrakok.gitlabclient.util.visible
@@ -49,6 +50,7 @@ class PaginalRenderView @JvmOverloads constructor(
         recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true)
+            addSystemBottomPadding()
         }
     }
 
