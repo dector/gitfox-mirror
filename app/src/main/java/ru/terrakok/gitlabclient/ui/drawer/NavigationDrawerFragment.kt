@@ -15,6 +15,7 @@ import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuIte
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.MessageDialogFragment
 import ru.terrakok.gitlabclient.ui.global.view.custom.bindUserAccount
+import ru.terrakok.gitlabclient.util.addSystemTopPadding
 import ru.terrakok.gitlabclient.util.inflate
 import ru.terrakok.gitlabclient.util.visible
 
@@ -39,6 +40,7 @@ class NavigationDrawerFragment : BaseFragment(), NavigationDrawerView, MessageDi
         super.onActivityCreated(savedInstanceState)
 
         showAccountsList(false)
+        headerConstraintLayout.addSystemTopPadding()
         avatarView.setOnClickListener { presenter.onUserClick() }
         dropDownImageView.setOnClickListener {
             showAccountsList(accountsContainer.visibility == View.GONE)

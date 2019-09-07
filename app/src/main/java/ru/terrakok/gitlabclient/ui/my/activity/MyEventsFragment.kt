@@ -13,6 +13,7 @@ import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.list.TargetHeaderConfidentialAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.TargetHeaderPublicAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.isSame
+import ru.terrakok.gitlabclient.util.addSystemTopPadding
 import ru.terrakok.gitlabclient.util.showSnackMessage
 
 /**
@@ -31,6 +32,7 @@ class MyEventsFragment : BaseFragment(), MyEventsView {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         toolbar.setNavigationOnClickListener { presenter.onMenuClick() }
+        toolbar.addSystemTopPadding()
         paginalRenderView.init(
             { presenter.refreshEvents() },
             { presenter.loadNextEventsPage() },

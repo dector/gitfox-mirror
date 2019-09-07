@@ -13,6 +13,8 @@ import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.presentation.auth.AuthPresenter
 import ru.terrakok.gitlabclient.presentation.auth.AuthView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.util.addSystemBottomPadding
+import ru.terrakok.gitlabclient.util.addSystemTopPadding
 import ru.terrakok.gitlabclient.util.showSnackMessage
 import ru.terrakok.gitlabclient.util.visible
 
@@ -34,8 +36,10 @@ class AuthFragment : BaseFragment(), AuthView, CustomServerAuthFragment.OnClickL
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        view?.addSystemBottomPadding()
         toolbar.apply {
             setNavigationOnClickListener { presenter.onBackPressed() }
+            addSystemTopPadding()
             inflateMenu(R.menu.custom_auth_menu)
             setOnMenuItemClickListener {
                 when (it.itemId) {

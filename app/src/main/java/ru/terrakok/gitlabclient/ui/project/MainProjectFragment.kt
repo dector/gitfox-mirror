@@ -11,9 +11,7 @@ import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.presentation.project.ProjectPresenter
 import ru.terrakok.gitlabclient.presentation.project.ProjectView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
-import ru.terrakok.gitlabclient.util.color
-import ru.terrakok.gitlabclient.util.shareText
-import ru.terrakok.gitlabclient.util.showSnackMessage
+import ru.terrakok.gitlabclient.util.*
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 10.02.18.
@@ -38,6 +36,7 @@ class MainProjectFragment : BaseFragment(), ProjectView {
         super.onActivityCreated(savedInstanceState)
 
         toolbar.apply {
+            addSystemTopPadding()
             setNavigationOnClickListener { onBackPressed() }
             inflateMenu(R.menu.project_menu)
             setOnMenuItemClickListener { item ->
@@ -48,6 +47,7 @@ class MainProjectFragment : BaseFragment(), ProjectView {
                 true
             }
         }
+        bottomBar.addSystemBottomPadding()
         AHBottomNavigationAdapter(activity, R.menu.project_bottom_menu).apply {
             setupWithBottomNavigation(bottomBar)
         }
