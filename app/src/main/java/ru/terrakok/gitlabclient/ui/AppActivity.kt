@@ -66,8 +66,13 @@ class AppActivity : MvpAppCompatActivity() {
             window.apply {
                 decorView.systemUiVisibility =
                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-                            View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+                            View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    decorView.systemUiVisibility = decorView.systemUiVisibility or
                             View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
+                }
+
                 statusBarColor = ContextCompat.getColor(context, R.color.black_20)
                 navigationBarColor = ContextCompat.getColor(context, R.color.white_50)
             }

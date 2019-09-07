@@ -13,6 +13,7 @@ import ru.terrakok.gitlabclient.presentation.libraries.LibrariesPresenter
 import ru.terrakok.gitlabclient.presentation.libraries.LibrariesView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.list.AppLibraryAdapterDelegate
+import ru.terrakok.gitlabclient.util.addSystemBottomPadding
 import ru.terrakok.gitlabclient.util.addSystemTopPadding
 import ru.terrakok.gitlabclient.util.tryOpenLink
 
@@ -39,6 +40,7 @@ class LibrariesFragment : BaseFragment(), LibrariesView {
         toolbar.addSystemTopPadding()
 
         with(recyclerView) {
+            addSystemBottomPadding()
             layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true)
             adapter = this@LibrariesFragment.adapter
