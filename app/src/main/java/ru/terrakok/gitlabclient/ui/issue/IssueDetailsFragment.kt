@@ -1,5 +1,7 @@
 package ru.terrakok.gitlabclient.ui.issue
 
+import android.os.Bundle
+import android.view.View
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_issue_details.*
@@ -11,10 +13,7 @@ import ru.terrakok.gitlabclient.presentation.issue.details.IssueDetailsPresenter
 import ru.terrakok.gitlabclient.presentation.issue.details.IssueDetailsView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.view.custom.bindShortUser
-import ru.terrakok.gitlabclient.util.color
-import ru.terrakok.gitlabclient.util.humanTime
-import ru.terrakok.gitlabclient.util.showSnackMessage
-import ru.terrakok.gitlabclient.util.visible
+import ru.terrakok.gitlabclient.util.*
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 26.05.19.
@@ -29,6 +28,11 @@ class IssueDetailsFragment : BaseFragment(), IssueDetailsView {
     @ProvidePresenter
     fun providePresenter(): IssueDetailsPresenter =
         scope.getInstance(IssueDetailsPresenter::class.java)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        issueDetailsContainer.addSystemBottomPadding()
+    }
 
     override fun showDetails(issue: Issue, mdDescription: CharSequence) {
         titleTextView.text = issue.title

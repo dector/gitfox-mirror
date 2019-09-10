@@ -1,5 +1,7 @@
 package ru.terrakok.gitlabclient.ui.mergerequest
 
+import android.os.Bundle
+import android.view.View
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_mr_details.*
@@ -11,10 +13,7 @@ import ru.terrakok.gitlabclient.presentation.mergerequest.details.MergeRequestDe
 import ru.terrakok.gitlabclient.presentation.mergerequest.details.MergeRequestDetailsView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.view.custom.bindShortUser
-import ru.terrakok.gitlabclient.util.humanTime
-import ru.terrakok.gitlabclient.util.showSnackMessage
-import ru.terrakok.gitlabclient.util.tint
-import ru.terrakok.gitlabclient.util.visible
+import ru.terrakok.gitlabclient.util.*
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 31.05.19.
@@ -29,6 +28,11 @@ class MergeRequestDetailsFragment : BaseFragment(), MergeRequestDetailsView {
     @ProvidePresenter
     fun providePresenter() =
         scope.getInstance(MergeRequestDetailsPresenter::class.java)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        mrDetailsContainer.addSystemBottomPadding()
+    }
 
     override fun showDetails(mr: MergeRequest, mdDescription: CharSequence) {
         titleTextView.text = mr.title
