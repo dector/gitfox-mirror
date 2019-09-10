@@ -240,27 +240,56 @@ fun View.updatePadding(
     setPadding(left, top, right, bottom)
 }
 
-fun View.addSystemTopPadding() {
-    doOnApplyWindowInsets { view, insets, initialPadding ->
-        view.updatePadding(
+fun View.addSystemTopPadding(
+    targetView: View = this,
+    isConsumed: Boolean = false
+) {
+    doOnApplyWindowInsets { _, insets, initialPadding ->
+        targetView.updatePadding(
             top = initialPadding.top + insets.systemWindowInsetTop
         )
+        if (isConsumed) {
+            insets.replaceSystemWindowInsets(
+                Rect(
+                    insets.systemWindowInsetLeft,
+                    0,
+                    insets.systemWindowInsetRight,
+                    insets.systemWindowInsetBottom
+                )
+            )
+        } else {
+            insets
+        }
     }
 }
 
-fun View.addSystemBottomPadding() {
-    doOnApplyWindowInsets { view, insets, initialPadding ->
-        view.updatePadding(
+fun View.addSystemBottomPadding(
+    targetView: View = this,
+    isConsumed: Boolean = false
+) {
+    doOnApplyWindowInsets { _, insets, initialPadding ->
+        targetView.updatePadding(
             bottom = initialPadding.bottom + insets.systemWindowInsetBottom
         )
+        if (isConsumed) {
+            insets.replaceSystemWindowInsets(
+                Rect(
+                    insets.systemWindowInsetLeft,
+                    insets.systemWindowInsetTop,
+                    insets.systemWindowInsetRight,
+                    0
+                )
+            )
+        } else {
+            insets
+        }
     }
 }
 
-fun View.doOnApplyWindowInsets(block: (View, insets: WindowInsetsCompat, initialPadding: Rect) -> Unit) {
+fun View.doOnApplyWindowInsets(block: (View, insets: WindowInsetsCompat, initialPadding: Rect) -> WindowInsetsCompat) {
     val initialPadding = recordInitialPaddingForView(this)
     ViewCompat.setOnApplyWindowInsetsListener(this) { v, insets ->
         block(v, insets, initialPadding)
-        insets
     }
     requestApplyInsetsWhenAttached()
 }

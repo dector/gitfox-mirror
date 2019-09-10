@@ -36,7 +36,7 @@ class MainFragment : BaseFragment(), MainView {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        bottomBar.addSystemBottomPadding()
+        linearLayout.addSystemBottomPadding(bottomBar, true)
         AHBottomNavigationAdapter(activity, R.menu.main_bottom_menu).apply {
             setupWithBottomNavigation(bottomBar)
         }

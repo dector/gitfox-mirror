@@ -47,7 +47,7 @@ class MainProjectFragment : BaseFragment(), ProjectView {
                 true
             }
         }
-        bottomBar.addSystemBottomPadding()
+        linearLayout.addSystemBottomPadding(bottomBar, true)
         AHBottomNavigationAdapter(activity, R.menu.project_bottom_menu).apply {
             setupWithBottomNavigation(bottomBar)
         }

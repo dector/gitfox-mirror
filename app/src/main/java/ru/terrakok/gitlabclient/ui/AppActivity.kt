@@ -1,5 +1,6 @@
 package ru.terrakok.gitlabclient.ui
 
+import android.graphics.Rect
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -90,6 +91,14 @@ class AppActivity : MvpAppCompatActivity() {
             view.updatePadding(
                 left = initialPadding.left + insets.systemWindowInsetLeft,
                 right = initialPadding.right + insets.systemWindowInsetRight
+            )
+            insets.replaceSystemWindowInsets(
+                Rect(
+                    0,
+                    insets.systemWindowInsetTop,
+                    0,
+                    insets.systemWindowInsetBottom
+                )
             )
         }
     }
