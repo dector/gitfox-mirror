@@ -132,7 +132,7 @@ dependencies {
     //Adapter simplify
     implementation("com.hannesdorfmann:adapterdelegates4:4.0.0")
     //Image load and cache
-    val glideVersion = "4.8.0"
+    val glideVersion = "4.9.0"
     implementation("com.github.bumptech.glide:glide:$glideVersion")
     kapt("com.github.bumptech.glide:compiler:$glideVersion")
     implementation("com.github.bumptech.glide:okhttp3-integration:$glideVersion")
@@ -143,7 +143,7 @@ dependencies {
     //Bottom navigation bar
     implementation("com.aurelhubert:ahbottomnavigation:2.3.4")
     //Lottie
-    implementation("com.airbnb.android:lottie:2.5.1")
+    implementation("com.airbnb.android:lottie:3.0.7")
     //Date
     implementation("com.jakewharton.threetenabp:threetenabp:1.2.1")
     //FlexBox Layout
