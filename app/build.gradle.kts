@@ -9,13 +9,13 @@ apply(from = "${project.rootDir}/codequality/ktlint.gradle.kts")
 
 val buildUid = System.getenv("BUILD_COMMIT_SHA") ?: "local"
 android {
-    compileSdkVersion(28)
+    compileSdkVersion(29)
 
     defaultConfig {
         applicationId = "com.gitlab.terrakok.gitfox"
 
         minSdkVersion(19)
-        targetSdkVersion(28)
+        targetSdkVersion(29)
 
         versionName = "1.5.5"
         versionCode = 20
