@@ -32,7 +32,7 @@ class IssueFlowFragment : FlowFragment() {
                     bind(TargetAction::class.java)
                         .toInstance(targetAction)
                     bind(IssueInteractor::class.java)
-                        .singletonInScope()
+                        .singleton()
                 }
             }
         )

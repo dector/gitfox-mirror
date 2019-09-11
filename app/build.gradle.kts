@@ -114,7 +114,7 @@ dependencies {
     //Cicerone Navigation
     implementation("ru.terrakok.cicerone:cicerone:5.0.0")
     //DI
-    val toothpickVersion = "2.1.0"
+    val toothpickVersion = "3.0.2"
     implementation("com.github.stephanenicolas.toothpick:toothpick-runtime:$toothpickVersion")
     kapt("com.github.stephanenicolas.toothpick:toothpick-compiler:$toothpickVersion")
     //Gson
