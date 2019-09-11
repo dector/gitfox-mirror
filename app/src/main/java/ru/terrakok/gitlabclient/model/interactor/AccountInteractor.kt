@@ -109,6 +109,6 @@ class AccountInteractor @Inject constructor(
         )
 
     private fun Result<*>.getXTotalHeader(): Int {
-        return if (!isError) response().headers().get("X-Total")?.toInt() ?: 0 else 0
+        return if (!isError) response()?.headers()?.get("X-Total")?.toInt() ?: 0 else 0
     }
 }
