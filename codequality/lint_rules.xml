@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <lint>
     <issue id="InvalidPackage">
-        <ignore path="**/toothpick-runtime-2.1.0.jar" />
+        <ignore path="**/toothpick-runtime-3.0.2.jar" />
     </issue>
     <issue id="ObsoleteLintCustomCheck">
         <ignore regexp="timber.lint" />
