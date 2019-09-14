@@ -33,16 +33,18 @@ class ServerModule(userAccount: UserAccount?) : Module() {
         }
 
         // Network
-        bind(OkHttpClient::class.java).toProvider(OkHttpClientProvider::class.java).providesSingletonInScope()
+        bind(OkHttpClient::class.java).toProvider(OkHttpClientProvider::class.java)
+            .providesSingleton()
         bind(OkHttpClient::class.java).withName(WithErrorHandler::class.java)
             .toProvider(OkHttpClientWithErrorHandlerProvider::class.java)
-            .providesSingletonInScope()
-        bind(ProjectCache::class.java).singletonInScope()
-        bind(ServerChanges::class.java).singletonInScope()
-        bind(GitlabApi::class.java).toProvider(ApiProvider::class.java).providesSingletonInScope()
-        bind(MarkDownConverter::class.java).toProvider(MarkDownConverterProvider::class.java).providesSingletonInScope()
+            .providesSingleton()
+        bind(ProjectCache::class.java).singleton()
+        bind(ServerChanges::class.java).singleton()
+        bind(GitlabApi::class.java).toProvider(ApiProvider::class.java).providesSingleton()
+        bind(MarkDownConverter::class.java).toProvider(MarkDownConverterProvider::class.java)
+            .providesSingleton()
 
         // Error handler with logout logic
-        bind(ErrorHandler::class.java).singletonInScope()
+        bind(ErrorHandler::class.java).singleton()
     }
 }

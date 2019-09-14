@@ -9,13 +9,13 @@ apply(from = "${project.rootDir}/codequality/ktlint.gradle.kts")
 
 val buildUid = System.getenv("BUILD_COMMIT_SHA") ?: "local"
 android {
-    compileSdkVersion(28)
+    compileSdkVersion(29)
 
     defaultConfig {
         applicationId = "com.gitlab.terrakok.gitfox"
 
         minSdkVersion(19)
-        targetSdkVersion(28)
+        targetSdkVersion(29)
 
         versionName = "1.5.5"
         versionCode = 20
@@ -98,7 +98,7 @@ androidExtensions {
 
 dependencies {
     //Support
-    implementation("androidx.appcompat:appcompat:1.0.2")
+    implementation("androidx.appcompat:appcompat:1.1.0")
     implementation("com.google.android.material:material:1.0.0")
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.constraintlayout:constraintlayout:1.1.3")
@@ -114,13 +114,13 @@ dependencies {
     //Cicerone Navigation
     implementation("ru.terrakok.cicerone:cicerone:5.0.0")
     //DI
-    val toothpickVersion = "2.1.0"
+    val toothpickVersion = "3.0.2"
     implementation("com.github.stephanenicolas.toothpick:toothpick-runtime:$toothpickVersion")
     kapt("com.github.stephanenicolas.toothpick:toothpick-compiler:$toothpickVersion")
     //Gson
     implementation("com.google.code.gson:gson:2.8.5")
     //Retrofit
-    val retrofitVersion = "2.2.0"
+    val retrofitVersion = "2.6.1"
     implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
     implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
     implementation("com.squareup.okhttp3:logging-interceptor:3.11.0")
@@ -132,7 +132,7 @@ dependencies {
     //Adapter simplify
     implementation("com.hannesdorfmann:adapterdelegates4:4.0.0")
     //Image load and cache
-    val glideVersion = "4.8.0"
+    val glideVersion = "4.9.0"
     implementation("com.github.bumptech.glide:glide:$glideVersion")
     kapt("com.github.bumptech.glide:compiler:$glideVersion")
     implementation("com.github.bumptech.glide:okhttp3-integration:$glideVersion")
@@ -143,7 +143,7 @@ dependencies {
     //Bottom navigation bar
     implementation("com.aurelhubert:ahbottomnavigation:2.3.4")
     //Lottie
-    implementation("com.airbnb.android:lottie:2.5.1")
+    implementation("com.airbnb.android:lottie:3.0.7")
     //Date
     implementation("com.jakewharton.threetenabp:threetenabp:1.2.1")
     //FlexBox Layout

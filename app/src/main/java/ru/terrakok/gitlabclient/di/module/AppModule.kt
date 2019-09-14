@@ -32,11 +32,11 @@ class AppModule(context: Context) : Module() {
         bind(PrimitiveWrapper::class.java).withName(DefaultPageSize::class.java).toInstance(PrimitiveWrapper(20))
         bind(PrimitiveWrapper::class.java).withName(CacheLifetime::class.java).toInstance(PrimitiveWrapper(300_000L))
         bind(SchedulersProvider::class.java).toInstance(AppSchedulers())
-        bind(ResourceManager::class.java).singletonInScope()
+        bind(ResourceManager::class.java).singleton()
         bind(Base64Tools::class.java).toInstance(Base64Tools())
         bind(AssetManager::class.java).toInstance(context.assets)
         bind(SystemMessageNotifier::class.java).toInstance(SystemMessageNotifier())
-        bind(Gson::class.java).toProvider(GsonProvider::class.java).providesSingletonInScope()
+        bind(Gson::class.java).toProvider(GsonProvider::class.java).providesSingleton()
 
         // Navigation
         val cicerone = Cicerone.create()

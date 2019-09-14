@@ -32,7 +32,7 @@ class MergeRequestFlowFragment : FlowFragment() {
                     bind(TargetAction::class.java)
                         .toInstance(targetAction)
                     bind(MergeRequestInteractor::class.java)
-                        .singletonInScope()
+                        .singleton()
                 }
             }
         )
