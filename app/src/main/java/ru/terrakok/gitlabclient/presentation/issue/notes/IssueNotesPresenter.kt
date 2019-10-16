@@ -1,6 +1,7 @@
 package ru.terrakok.gitlabclient.presentation.issue.notes
 
 import com.arellomobile.mvp.InjectViewState
+import io.reactivex.disposables.Disposable
 import ru.terrakok.gitlabclient.di.IssueId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
@@ -28,10 +29,21 @@ class IssueNotesPresenter @Inject constructor(
     private val projectId = projectIdWrapper.value
     private val issueId = issueIdWrapper.value
 
+    private var allIssueNotesDisposable: Disposable? = null
+
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-
+        getAllIssueNotes()
         issueInteractor
+            .issueChanges
+            .filter { it == issueId }
+            .subscribe { getAllIssueNotes() }
+            .connect()
+    }
+
+    private fun getAllIssueNotes() {
+        allIssueNotesDisposable?.dispose()
+        allIssueNotesDisposable = issueInteractor
             .getAllIssueNotes(projectId, issueId)
             .doOnSubscribe { viewState.showEmptyProgress(true) }
             .doAfterTerminate { viewState.showEmptyProgress(false) }
@@ -51,7 +63,7 @@ class IssueNotesPresenter @Inject constructor(
                 },
                 { errorHandler.proceed(it, { viewState.showMessage(it) }) }
             )
-            .connect()
+        allIssueNotesDisposable!!.connect()
     }
 
     fun onSendClicked(body: String) =
