@@ -1,9 +1,11 @@
 package ru.terrakok.gitlabclient.presentation.issue.details
 
 import com.arellomobile.mvp.InjectViewState
+import io.reactivex.Single
 import ru.terrakok.gitlabclient.di.IssueId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
+import ru.terrakok.gitlabclient.entity.issue.Issue
 import ru.terrakok.gitlabclient.model.interactor.IssueInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
@@ -27,20 +29,30 @@ class IssueDetailsPresenter @Inject constructor(
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-
         issueInteractor
+            .issueChanges
+            .startWith(issueId)
+            .filter { it == issueId }
+            .switchMapMaybe {
+                getIssue()
+                    .toMaybe()
+                    .doOnSubscribe { viewState.showEmptyProgress(true) }
+                    .doAfterTerminate { viewState.showEmptyProgress(false) }
+                    .doOnSuccess { (issue, mdDescription) -> viewState.showDetails(issue, mdDescription) }
+                    .doOnError { errorHandler.proceed(it, { viewState.showMessage(it) }) }
+                    .onErrorComplete()
+            }
+            .subscribe()
+            .connect()
+    }
+
+    private fun getIssue(): Single<Pair<Issue, CharSequence>> {
+        return issueInteractor
             .getIssue(projectId, issueId)
             .flatMap { issue ->
                 mdConverter
                     .markdownToSpannable(issue.description)
                     .map { Pair(issue, it) }
             }
-            .doOnSubscribe { viewState.showEmptyProgress(true) }
-            .doAfterTerminate { viewState.showEmptyProgress(false) }
-            .subscribe(
-                { (issue, mdDescription) -> viewState.showDetails(issue, mdDescription) },
-                { errorHandler.proceed(it, { viewState.showMessage(it) }) }
-            )
-            .connect()
     }
 }

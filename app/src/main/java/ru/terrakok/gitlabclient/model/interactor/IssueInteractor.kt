@@ -14,6 +14,7 @@ import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.issue.Issue
 import ru.terrakok.gitlabclient.entity.issue.IssueScope
 import ru.terrakok.gitlabclient.entity.issue.IssueState
+import ru.terrakok.gitlabclient.entity.issue.IssueStateEvent
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
@@ -207,6 +208,11 @@ class IssueInteractor @Inject constructor(
 
     fun createIssueNote(projectId: Long, issueId: Long, body: String) =
         api.createIssueNote(projectId, issueId, body)
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
+
+    fun closeIssue(projectId: Long, issueId: Long) =
+        api.editIssue(projectId, issueId, IssueStateEvent.CLOSE)
             .subscribeOn(schedulers.io())
             .observeOn(schedulers.ui())
 }

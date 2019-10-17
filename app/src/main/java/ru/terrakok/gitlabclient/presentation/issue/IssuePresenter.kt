@@ -67,4 +67,15 @@ class IssuePresenter @Inject constructor(
     }
 
     fun onBackPressed() = flowRouter.exit()
+
+    fun onCloseIssueClicked() {
+        issueInteractor.closeIssue(projectId, issueId)
+            .doOnSubscribe { viewState.showBlockingProgress(true) }
+            .doAfterTerminate { viewState.showBlockingProgress(false) }
+            .subscribe(
+                { },
+                { errorHandler.proceed(it, viewState::showMessage) }
+            )
+            .connect()
+    }
 }

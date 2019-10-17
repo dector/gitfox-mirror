@@ -13,6 +13,7 @@ import ru.terrakok.gitlabclient.entity.event.EventTarget
 import ru.terrakok.gitlabclient.entity.issue.Issue
 import ru.terrakok.gitlabclient.entity.issue.IssueScope
 import ru.terrakok.gitlabclient.entity.issue.IssueState
+import ru.terrakok.gitlabclient.entity.issue.IssueStateEvent
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestScope
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
@@ -133,6 +134,14 @@ interface GitlabApi {
         @Path("project_id") projectId: Long,
         @Path("issue_id") issueId: Long
     ): Single<Issue>
+
+    @FormUrlEncoded
+    @PUT("$API_PATH/projects/{project_id}/issues/{issue_id}")
+    fun editIssue(
+        @Path("project_id") projectId: Long,
+        @Path("issue_id") issueId: Long,
+        @Field("state_event") stateEvent: IssueStateEvent
+    ): Completable
 
     @GET("$API_PATH/events")
     fun getEvents(

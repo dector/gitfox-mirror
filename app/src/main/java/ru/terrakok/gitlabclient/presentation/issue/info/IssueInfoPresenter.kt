@@ -25,15 +25,20 @@ class IssueInfoPresenter @Inject constructor(
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-
         issueInteractor
-            .getIssue(projectId, issueId)
-            .doOnSubscribe { viewState.showEmptyProgress(true) }
-            .doAfterTerminate { viewState.showEmptyProgress(false) }
-            .subscribe(
-                { viewState.showInfo(it) },
-                { errorHandler.proceed(it, { viewState.showMessage(it) }) }
-            )
+            .issueChanges
+            .startWith(issueId)
+            .filter { it == issueId }
+            .switchMapMaybe {
+                issueInteractor.getIssue(projectId, issueId)
+                    .toMaybe()
+                    .doOnSubscribe { viewState.showEmptyProgress(true) }
+                    .doAfterTerminate { viewState.showEmptyProgress(false) }
+                    .doOnSuccess { viewState.showInfo(it) }
+                    .doOnError { errorHandler.proceed(it, { viewState.showMessage(it) }) }
+                    .onErrorComplete()
+            }
+            .subscribe()
             .connect()
     }
 }

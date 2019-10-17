@@ -32,8 +32,17 @@ class MainIssueFragment : BaseFragment(), IssueView {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        toolbar.setNavigationOnClickListener { onBackPressed() }
-        toolbar.addSystemTopPadding()
+        toolbar.apply {
+            setNavigationOnClickListener { onBackPressed() }
+            addSystemTopPadding()
+            inflateMenu(R.menu.main_issue_menu)
+            setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.closeIssueAction -> presenter.onCloseIssueClicked()
+                }
+                true
+            }
+        }
         viewPager.adapter = adapter
     }
 
