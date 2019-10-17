@@ -35,24 +35,30 @@ class IssueNotesPresenter @Inject constructor(
             .issueChanges
             .startWith(issueId)
             .filter { it == issueId }
-            .switchMapSingle { getAllIssueNotes() }
-            .subscribe(
-                { notes ->
-                    val selectedNotePosition = targetAction.let { it as? TargetAction.CommentedOn }
-                        ?.noteId
-                        ?.let { noteIdToSelect -> notes.indexOfFirst { it.note.id == noteIdToSelect } }
-                    viewState.showNotes(notes, selectedNotePosition)
-                },
-                { errorHandler.proceed(it, { viewState.showMessage(it) }) }
-            )
+            .switchMapMaybe {
+                getAllIssueNotes()
+                    .toMaybe()
+                    .doOnSubscribe { viewState.showEmptyProgress(true) }
+                    .doAfterTerminate { viewState.showEmptyProgress(false) }
+                    .doOnSuccess { notes ->
+                        val selectedNotePosition =
+                            targetAction.let { it as? TargetAction.CommentedOn }
+                                ?.noteId
+                                ?.let { noteIdToSelect ->
+                                    notes.indexOfFirst { it.note.id == noteIdToSelect }
+                                }
+                        viewState.showNotes(notes, selectedNotePosition)
+                    }
+                    .doOnError { errorHandler.proceed(it, { viewState.showMessage(it) }) }
+                    .onErrorComplete()
+            }
+            .subscribe()
             .connect()
     }
 
     private fun getAllIssueNotes(): Single<MutableList<NoteWithFormattedBody>> {
         return issueInteractor
             .getAllIssueNotes(projectId, issueId)
-            .doOnSubscribe { viewState.showEmptyProgress(true) }
-            .doAfterTerminate { viewState.showEmptyProgress(false) }
             .flattenAsObservable { it }
             .concatMap { note ->
                 mdConverter.markdownToSpannable(note.body)

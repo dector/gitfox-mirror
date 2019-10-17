@@ -33,11 +33,16 @@ class IssueDetailsPresenter @Inject constructor(
             .issueChanges
             .startWith(issueId)
             .filter { it == issueId }
-            .switchMapSingle { getIssue() }
-            .subscribe(
-                { (issue, mdDescription) -> viewState.showDetails(issue, mdDescription) },
-                { errorHandler.proceed(it, { viewState.showMessage(it) }) }
-            )
+            .switchMapMaybe {
+                getIssue()
+                    .toMaybe()
+                    .doOnSubscribe { viewState.showEmptyProgress(true) }
+                    .doAfterTerminate { viewState.showEmptyProgress(false) }
+                    .doOnSuccess { (issue, mdDescription) -> viewState.showDetails(issue, mdDescription) }
+                    .doOnError { errorHandler.proceed(it, { viewState.showMessage(it) }) }
+                    .onErrorComplete()
+            }
+            .subscribe()
             .connect()
     }
 
@@ -49,7 +54,5 @@ class IssueDetailsPresenter @Inject constructor(
                     .markdownToSpannable(issue.description)
                     .map { Pair(issue, it) }
             }
-            .doOnSubscribe { viewState.showEmptyProgress(true) }
-            .doAfterTerminate { viewState.showEmptyProgress(false) }
     }
 }
