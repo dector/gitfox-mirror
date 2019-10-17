@@ -1,7 +1,7 @@
 package ru.terrakok.gitlabclient.presentation.issue.notes
 
 import com.arellomobile.mvp.InjectViewState
-import io.reactivex.disposables.Disposable
+import io.reactivex.Single
 import ru.terrakok.gitlabclient.di.IssueId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
@@ -29,21 +29,28 @@ class IssueNotesPresenter @Inject constructor(
     private val projectId = projectIdWrapper.value
     private val issueId = issueIdWrapper.value
 
-    private var allIssueNotesDisposable: Disposable? = null
-
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         getAllIssueNotes()
         issueInteractor
             .issueChanges
+            .startWith(issueId)
             .filter { it == issueId }
-            .subscribe { getAllIssueNotes() }
+            .switchMapSingle { getAllIssueNotes() }
+            .subscribe(
+                { notes ->
+                    val selectedNotePosition = targetAction.let { it as? TargetAction.CommentedOn }
+                        ?.noteId
+                        ?.let { noteIdToSelect -> notes.indexOfFirst { it.note.id == noteIdToSelect } }
+                    viewState.showNotes(notes, selectedNotePosition)
+                },
+                { errorHandler.proceed(it, { viewState.showMessage(it) }) }
+            )
             .connect()
     }
 
-    private fun getAllIssueNotes() {
-        allIssueNotesDisposable?.dispose()
-        allIssueNotesDisposable = issueInteractor
+    private fun getAllIssueNotes(): Single<MutableList<NoteWithFormattedBody>> {
+        return issueInteractor
             .getAllIssueNotes(projectId, issueId)
             .doOnSubscribe { viewState.showEmptyProgress(true) }
             .doAfterTerminate { viewState.showEmptyProgress(false) }
@@ -54,16 +61,6 @@ class IssueNotesPresenter @Inject constructor(
                     .toObservable()
             }
             .toList()
-            .subscribe(
-                { notes ->
-                    val selectedNotePosition = targetAction.let { it as? TargetAction.CommentedOn }
-                        ?.noteId
-                        ?.let { noteIdToSelect -> notes.indexOfFirst { it.note.id == noteIdToSelect } }
-                    viewState.showNotes(notes, selectedNotePosition)
-                },
-                { errorHandler.proceed(it, { viewState.showMessage(it) }) }
-            )
-        allIssueNotesDisposable!!.connect()
     }
 
     fun onSendClicked(body: String) =

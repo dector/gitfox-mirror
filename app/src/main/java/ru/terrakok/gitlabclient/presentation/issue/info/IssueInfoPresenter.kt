@@ -1,10 +1,11 @@
 package ru.terrakok.gitlabclient.presentation.issue.info
 
 import com.arellomobile.mvp.InjectViewState
-import io.reactivex.disposables.Disposable
+import io.reactivex.Single
 import ru.terrakok.gitlabclient.di.IssueId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
+import ru.terrakok.gitlabclient.entity.issue.Issue
 import ru.terrakok.gitlabclient.model.interactor.IssueInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
@@ -24,28 +25,23 @@ class IssueInfoPresenter @Inject constructor(
     private val projectId = projectIdWrapper.value
     private val issueId = issueIdWrapper.value
 
-    private var issueDisposable: Disposable? = null
-
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        getIssue()
         issueInteractor
             .issueChanges
+            .startWith(issueId)
             .filter { it == issueId }
-            .subscribe { getIssue() }
-            .connect()
-    }
-
-    private fun getIssue() {
-        issueDisposable?.dispose()
-        issueDisposable = issueInteractor
-            .getIssue(projectId, issueId)
-            .doOnSubscribe { viewState.showEmptyProgress(true) }
-            .doAfterTerminate { viewState.showEmptyProgress(false) }
+            .switchMapSingle { getIssue() }
             .subscribe(
                 { viewState.showInfo(it) },
                 { errorHandler.proceed(it, { viewState.showMessage(it) }) }
             )
-        issueDisposable!!.connect()
+            .connect()
+    }
+
+    private fun getIssue(): Single<Issue> {
+        return issueInteractor.getIssue(projectId, issueId)
+            .doOnSubscribe { viewState.showEmptyProgress(true) }
+            .doAfterTerminate { viewState.showEmptyProgress(false) }
     }
 }

@@ -1,10 +1,11 @@
 package ru.terrakok.gitlabclient.presentation.issue.details
 
 import com.arellomobile.mvp.InjectViewState
-import io.reactivex.disposables.Disposable
+import io.reactivex.Single
 import ru.terrakok.gitlabclient.di.IssueId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
+import ru.terrakok.gitlabclient.entity.issue.Issue
 import ru.terrakok.gitlabclient.model.interactor.IssueInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
@@ -26,21 +27,23 @@ class IssueDetailsPresenter @Inject constructor(
     private val projectId = projectIdWrapper.value
     private val issueId = issueIdWrapper.value
 
-    private var issueDisposable: Disposable? = null
-
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         getIssue()
         issueInteractor
             .issueChanges
+            .startWith(issueId)
             .filter { it == issueId }
-            .subscribe { getIssue() }
+            .switchMapSingle { getIssue() }
+            .subscribe(
+                { (issue, mdDescription) -> viewState.showDetails(issue, mdDescription) },
+                { errorHandler.proceed(it, { viewState.showMessage(it) }) }
+            )
             .connect()
     }
 
-    private fun getIssue() {
-        issueDisposable?.dispose()
-        issueDisposable = issueInteractor
+    private fun getIssue(): Single<Pair<Issue, CharSequence>> {
+        return issueInteractor
             .getIssue(projectId, issueId)
             .flatMap { issue ->
                 mdConverter
@@ -49,10 +52,5 @@ class IssueDetailsPresenter @Inject constructor(
             }
             .doOnSubscribe { viewState.showEmptyProgress(true) }
             .doAfterTerminate { viewState.showEmptyProgress(false) }
-            .subscribe(
-                { (issue, mdDescription) -> viewState.showDetails(issue, mdDescription) },
-                { errorHandler.proceed(it, { viewState.showMessage(it) }) }
-            )
-        issueDisposable!!.connect()
     }
 }
