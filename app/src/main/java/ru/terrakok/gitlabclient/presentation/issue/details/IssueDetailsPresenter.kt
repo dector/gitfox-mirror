@@ -29,7 +29,6 @@ class IssueDetailsPresenter @Inject constructor(
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        getIssue()
         issueInteractor
             .issueChanges
             .startWith(issueId)

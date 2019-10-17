@@ -31,7 +31,6 @@ class IssueNotesPresenter @Inject constructor(
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        getAllIssueNotes()
         issueInteractor
             .issueChanges
             .startWith(issueId)
