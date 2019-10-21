@@ -2,14 +2,22 @@ package ru.terrakok.gitlabclient.ui.mergerequest
 
 import android.os.Bundle
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
+import kotlinx.android.synthetic.main.fragment_mr_diff_data_list.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.DiffData
 import ru.terrakok.gitlabclient.presentation.mergerequest.changes.MergeRequestDiffDataListPresenter
 import ru.terrakok.gitlabclient.presentation.mergerequest.changes.MergeRequestDiffDataListView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.ui.global.list.DiffDataAdapterDelegate
+import ru.terrakok.gitlabclient.ui.global.list.SimpleDividerDecorator
+import ru.terrakok.gitlabclient.ui.global.list.isSame
+import ru.terrakok.gitlabclient.util.addSystemBottomPadding
+import ru.terrakok.gitlabclient.util.showSnackMessage
+import ru.terrakok.gitlabclient.util.visible
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 25.10.18.
@@ -19,29 +27,29 @@ class MergeRequestDiffDataListFragment : BaseFragment(), MergeRequestDiffDataLis
     override val layoutRes = R.layout.fragment_mr_diff_data_list
 
     private val adapter by lazy {
-        object : AsyncListDifferDelegationAdapter<MergeRequestChange>(
-            object : DiffUtil.ItemCallback<MergeRequestChange>() {
+        object : AsyncListDifferDelegationAdapter<DiffData>(
+            object : DiffUtil.ItemCallback<DiffData>() {
                 override fun areItemsTheSame(
-                    oldItem: MergeRequestChange,
-                    newItem: MergeRequestChange
+                    oldItem: DiffData,
+                    newItem: DiffData
                 ) = oldItem.isSame(newItem)
 
                 override fun areContentsTheSame(
-                    oldItem: MergeRequestChange,
-                    newItem: MergeRequestChange
+                    oldItem: DiffData,
+                    newItem: DiffData
                 ) = oldItem == newItem
 
                 override fun getChangePayload(
-                    oldItem: MergeRequestChange,
-                    newItem: MergeRequestChange
+                    oldItem: DiffData,
+                    newItem: DiffData
                 ) = Any()
             }
         ) {
             init {
                 items = mutableListOf()
-                delegatesManager.addDelegate(
-                    MergeRequestChangeAdapterDelegate { presenter.onMergeRequestChangeClick(it) }
-                )
+                delegatesManager.addDelegate(DiffDataAdapterDelegate {
+                    presenter.onMergeRequestDiffDataClicked(it)
+                })
             }
         }
     }

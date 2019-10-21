@@ -138,7 +138,7 @@ class PaginalRenderView @JvmOverloads constructor(
                     return itemDiff?.invoke(oldItem, newItem) ?: false
                 }
 
-                override fun getChangePayload(oldItem: Any, newItem: Any) = Any() //disable default blink animation
+                override fun getChangePayload(oldItem: Any, newItem: Any) = Any() // disable default blink animation
 
                 @SuppressLint("DiffUtilEquals")
                 override fun areContentsTheSame(oldItem: Any, newItem: Any) = oldItem == newItem

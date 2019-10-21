@@ -26,7 +26,7 @@ class CommitRepository @Inject constructor(
         commitId: String
     ) =
             api
-                    .getCommitDiffData(projectId,commitId)
+                    .getCommitDiffData(projectId, commitId)
                     .subscribeOn(schedulers.io())
                     .observeOn(schedulers.ui())
 }

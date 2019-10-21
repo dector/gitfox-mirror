@@ -9,8 +9,8 @@ import kotlinx.android.synthetic.main.item_diff_data.*
 import kotlinx.android.synthetic.main.item_diff_data.view.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.DiffData
-import ru.terrakok.gitlabclient.extension.extractFileNameFromPath
-import ru.terrakok.gitlabclient.extension.inflate
+import ru.terrakok.gitlabclient.util.extractFileNameFromPath
+import ru.terrakok.gitlabclient.util.inflate
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 26.10.18.

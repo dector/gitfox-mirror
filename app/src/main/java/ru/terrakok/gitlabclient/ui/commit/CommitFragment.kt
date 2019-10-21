@@ -1,25 +1,28 @@
 package ru.terrakok.gitlabclient.ui.commit
 
 import android.os.Bundle
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
 import kotlinx.android.synthetic.main.fragment_commit.*
-import kotlinx.android.synthetic.main.layout_base_list.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.di.CommitId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
 import ru.terrakok.gitlabclient.entity.Commit
 import ru.terrakok.gitlabclient.entity.DiffData
-import ru.terrakok.gitlabclient.extension.argument
-import ru.terrakok.gitlabclient.extension.showSnackMessage
-import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.commit.CommitPresenter
 import ru.terrakok.gitlabclient.presentation.commit.CommitView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.ui.global.list.DiffDataAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.SimpleDividerDecorator
-import ru.terrakok.gitlabclient.ui.mergerequest.DiffDataListAdapter
+import ru.terrakok.gitlabclient.ui.global.list.isSame
+import ru.terrakok.gitlabclient.util.addSystemTopPadding
+import ru.terrakok.gitlabclient.util.argument
+import ru.terrakok.gitlabclient.util.showSnackMessage
+import ru.terrakok.gitlabclient.util.visible
 import toothpick.Scope
 import toothpick.config.Module
 
@@ -56,13 +59,43 @@ class CommitFragment : BaseFragment(), CommitView {
     fun providePresenter(): CommitPresenter =
             scope.getInstance(CommitPresenter::class.java)
 
-    private val adapter by lazy { DiffDataListAdapter({ presenter.onDiffDataClicked(it) }) }
+    private val adapter by lazy {
+        object : AsyncListDifferDelegationAdapter<DiffData>(
+            object : DiffUtil.ItemCallback<DiffData>() {
+                override fun areItemsTheSame(
+                    oldItem: DiffData,
+                    newItem: DiffData
+                ) = oldItem.isSame(newItem)
+
+                override fun areContentsTheSame(
+                    oldItem: DiffData,
+                    newItem: DiffData
+                ) = oldItem == newItem
+
+                override fun getChangePayload(
+                    oldItem: DiffData,
+                    newItem: DiffData
+                ) = Any()
+            }
+        ) {
+            init {
+                items = mutableListOf()
+                delegatesManager.addDelegate(DiffDataAdapterDelegate {
+                    presenter.onDiffDataClicked(it)
+                })
+            }
+        }
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        toolbar.setNavigationOnClickListener { presenter.onBackPressed() }
+        toolbar.apply {
+            setNavigationOnClickListener { presenter.onBackPressed() }
+            addSystemTopPadding()
+        }
         with(recyclerView) {
+            addSystemTopPadding()
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context)
             addItemDecoration(SimpleDividerDecorator(context))
@@ -82,7 +115,7 @@ class CommitFragment : BaseFragment(), CommitView {
 
     override fun showDiffDataList(show: Boolean, diffDataList: List<DiffData>) {
         recyclerView.visible(show)
-        postViewAction { adapter.setData(diffDataList) }
+        postViewAction { adapter.items = diffDataList }
     }
 
     override fun showEmptyError(show: Boolean, message: String?) {
@@ -96,7 +129,7 @@ class CommitFragment : BaseFragment(), CommitView {
     override fun showEmptyProgress(show: Boolean) {
         fullscreenProgressView.visible(show)
 
-        //trick for disable and hide swipeToRefresh on fullscreen progress
+        // Trick for disable and hide swipeToRefresh on fullscreen progress
         swipeToRefresh.visible(!show)
         postViewAction { swipeToRefresh.isRefreshing = false }
     }
