@@ -52,16 +52,16 @@ class MergeRequestCommitsPresenter @Inject constructor(
     private fun loadNewPage(page: Int) {
         pageDisposable?.dispose()
         pageDisposable =
-                mrInteractor.getMergeRequestCommits(projectId, mrId, page)
-                        .subscribe(
-                            { data ->
-                                paginator.proceed(Paginator.Action.NewPage(page, data))
-                            },
-                            { e ->
-                                errorHandler.proceed(e)
-                                paginator.proceed(Paginator.Action.PageError(e))
-                            }
-                        )
+            mrInteractor.getMergeRequestCommits(projectId, mrId, page)
+                .subscribe(
+                    { data ->
+                        paginator.proceed(Paginator.Action.NewPage(page, data))
+                    },
+                    { e ->
+                        errorHandler.proceed(e)
+                        paginator.proceed(Paginator.Action.PageError(e))
+                    }
+                )
         pageDisposable?.connect()
     }
 
@@ -69,5 +69,5 @@ class MergeRequestCommitsPresenter @Inject constructor(
     fun loadNextCommitsPage() = paginator.proceed(Paginator.Action.LoadMore)
 
     fun onCommitClicked(commitId: String) =
-            flowRouter.startFlow(Screens.Commit(commitId, projectId))
+        flowRouter.startFlow(Screens.Commit(commitId, projectId))
 }
