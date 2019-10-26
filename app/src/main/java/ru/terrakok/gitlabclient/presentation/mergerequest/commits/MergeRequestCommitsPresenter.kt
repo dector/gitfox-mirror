@@ -1,6 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.mergerequest.commits
 
-import com.arellomobile.mvp.InjectViewState
+import moxy.InjectViewState
 import io.reactivex.disposables.Disposable
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.di.MergeRequestId

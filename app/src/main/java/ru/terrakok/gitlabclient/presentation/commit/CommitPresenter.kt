@@ -1,8 +1,8 @@
 package ru.terrakok.gitlabclient.presentation.commit
 
-import com.arellomobile.mvp.InjectViewState
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
+import moxy.InjectViewState
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.di.CommitId

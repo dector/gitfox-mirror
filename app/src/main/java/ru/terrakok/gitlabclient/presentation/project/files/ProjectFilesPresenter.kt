@@ -1,6 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.project.files
 
-import com.arellomobile.mvp.InjectViewState
+import moxy.InjectViewState
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction

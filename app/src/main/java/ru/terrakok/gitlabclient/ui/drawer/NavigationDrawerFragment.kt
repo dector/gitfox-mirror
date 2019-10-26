@@ -2,8 +2,8 @@ package ru.terrakok.gitlabclient.ui.drawer
 
 import android.os.Bundle
 import android.view.View
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_nav_drawer.*
 import kotlinx.android.synthetic.main.item_user_acount.view.*
 import ru.terrakok.gitlabclient.R

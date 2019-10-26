@@ -1,6 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.my.todos
 
-import com.arellomobile.mvp.InjectViewState
+import moxy.InjectViewState
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper

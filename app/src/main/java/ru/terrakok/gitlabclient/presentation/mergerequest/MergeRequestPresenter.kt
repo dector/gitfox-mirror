@@ -1,6 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.mergerequest
 
-import com.arellomobile.mvp.InjectViewState
+import moxy.InjectViewState
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import ru.terrakok.gitlabclient.R

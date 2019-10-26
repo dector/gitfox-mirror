@@ -1,6 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.auth
 
-import com.arellomobile.mvp.InjectViewState
+import moxy.InjectViewState
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.model.interactor.SessionInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter

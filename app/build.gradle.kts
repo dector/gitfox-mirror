@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.config.KotlinCompilerVersion
+
 plugins {
     id("com.android.application")
     kotlin("android")
@@ -30,9 +32,21 @@ android {
 
         defaultConfig {
             buildConfigField("String", "VERSION_UID", "\"$buildUid\"")
-            buildConfigField("String", "APP_DESCRIPTION", "\"Gitfox is an Android client for Gitlab.\"")
-            buildConfigField("String", "FEEDBACK_URL", "\"https://gitlab.com/terrakok/gitlab-client/issues\"")
-            buildConfigField("String", "APP_HOME_PAGE", "\"https://gitlab.com/terrakok/gitlab-client\"")
+            buildConfigField(
+                "String",
+                "APP_DESCRIPTION",
+                "\"Gitfox is an Android client for Gitlab.\""
+            )
+            buildConfigField(
+                "String",
+                "FEEDBACK_URL",
+                "\"https://gitlab.com/terrakok/gitlab-client/issues\""
+            )
+            buildConfigField(
+                "String",
+                "APP_HOME_PAGE",
+                "\"https://gitlab.com/terrakok/gitlab-client\""
+            )
 
             buildConfigField("String", "WEB_AUTH_USER_AGENT", "\"gitfox_user_agent\"")
             buildConfigField("String", "ORIGIN_GITLAB_ENDPOINT", "\"https://gitlab.com/\"")
@@ -90,6 +104,13 @@ android {
             }
         }
     }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
 
 androidExtensions {
@@ -103,14 +124,14 @@ dependencies {
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.constraintlayout:constraintlayout:1.1.3")
     //Kotlin
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:${extra["kotlinVersion"] as String}")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:${KotlinCompilerVersion.VERSION}")
     //Log
     implementation("com.jakewharton.timber:timber:4.7.0")
     //MVP Moxy
-    val moxyVersion = "1.7.0"
-    kapt("tech.schoolhelper:moxy-x-compiler:$moxyVersion")
-    implementation("tech.schoolhelper:moxy-x:$moxyVersion")
-    implementation("tech.schoolhelper:moxy-x-androidx:$moxyVersion")
+    val moxyVersion = "2.0.2"
+    kapt("com.github.moxy-community:moxy-compiler:$moxyVersion")
+    implementation("com.github.moxy-community:moxy:$moxyVersion")
+    implementation("com.github.moxy-community:moxy-androidx:$moxyVersion")
     //Cicerone Navigation
     implementation("ru.terrakok.cicerone:cicerone:5.0.0")
     //DI
@@ -161,7 +182,7 @@ dependencies {
 
 configurations.all {
     resolutionStrategy {
-        force("org.jetbrains.kotlin:kotlin-stdlib:${extra["kotlinVersion"] as String}")
+        force("org.jetbrains.kotlin:kotlin-stdlib:${KotlinCompilerVersion.VERSION}")
     }
 }
 

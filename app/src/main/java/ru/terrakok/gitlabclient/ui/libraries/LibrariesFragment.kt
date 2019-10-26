@@ -2,8 +2,8 @@ package ru.terrakok.gitlabclient.ui.libraries
 
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import kotlinx.android.synthetic.main.fragment_libraries.*
 import ru.terrakok.gitlabclient.R

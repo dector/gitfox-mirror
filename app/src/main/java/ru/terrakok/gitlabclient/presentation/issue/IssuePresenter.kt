@@ -1,8 +1,8 @@
 package ru.terrakok.gitlabclient.presentation.issue
 
-import com.arellomobile.mvp.InjectViewState
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
+import moxy.InjectViewState
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.di.IssueId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper

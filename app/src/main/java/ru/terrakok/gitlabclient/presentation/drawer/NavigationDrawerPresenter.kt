@@ -1,6 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.drawer
 
-import com.arellomobile.mvp.InjectViewState
+import moxy.InjectViewState
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.app.session.UserAccount
 import ru.terrakok.gitlabclient.model.interactor.SessionInteractor
