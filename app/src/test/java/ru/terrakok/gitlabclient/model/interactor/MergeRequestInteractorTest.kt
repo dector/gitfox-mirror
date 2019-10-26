@@ -17,11 +17,11 @@ import org.mockito.Mockito.times
 import ru.terrakok.gitlabclient.TestData
 import ru.terrakok.gitlabclient.TestSchedulers
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
+import ru.terrakok.gitlabclient.entity.DiffData
 import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.entity.ShortUser
 import ru.terrakok.gitlabclient.entity.Sort
 import ru.terrakok.gitlabclient.entity.app.CommitWithShortUser
-import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestChange
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
@@ -532,22 +532,22 @@ class MergeRequestInteractorTest {
     fun `get mr changes should return changes when it exists`() {
         // GIVEN
         val mrChanges = listOf(
-            MergeRequestChange(
+            DiffData(
                 "", "", "", "",
                 false, false, true, "diff"
             )
         )
 
-        val mrWithChanges = testMergeRequest.copy(changes = mrChanges)
+        val mrWithChanges = testMergeRequest.copy(diffDataList = mrChanges)
 
         given(
-            api.getMergeRequestChanges(
+            api.getMergeRequestDiffDataList(
                 anyLong(), anyLong()
             )
         ).willReturn(Single.just(mrWithChanges))
 
         // WHEN
-        val testObserver = interactor.getMergeRequestChanges(
+        val testObserver = interactor.getMergeRequestDiffDataList(
             mrWithChanges.projectId, mrWithChanges.id
         ).test()
 
@@ -556,7 +556,7 @@ class MergeRequestInteractorTest {
         // THEN
         then(api)
             .should(times(1))
-            .getMergeRequestChanges(mrWithChanges.projectId, mrWithChanges.id)
+            .getMergeRequestDiffDataList(mrWithChanges.projectId, mrWithChanges.id)
 
         then(api).shouldHaveNoMoreInteractions()
 
@@ -567,13 +567,13 @@ class MergeRequestInteractorTest {
     fun `get mr changes should return empty list when changes not exists`() {
         // GIVEN
         given(
-            api.getMergeRequestChanges(
+            api.getMergeRequestDiffDataList(
                 anyLong(), anyLong()
             )
         ).willReturn(Single.just(testMergeRequest))
 
         // WHEN
-        val testObserver = interactor.getMergeRequestChanges(
+        val testObserver = interactor.getMergeRequestDiffDataList(
             testMergeRequest.projectId, testMergeRequest.id
         ).test()
 
@@ -582,7 +582,7 @@ class MergeRequestInteractorTest {
         // THEN
         then(api)
             .should(times(1))
-            .getMergeRequestChanges(testMergeRequest.projectId, testMergeRequest.id)
+            .getMergeRequestDiffDataList(testMergeRequest.projectId, testMergeRequest.id)
 
         then(api).shouldHaveNoMoreInteractions()
 

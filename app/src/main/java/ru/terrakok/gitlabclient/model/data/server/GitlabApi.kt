@@ -81,6 +81,12 @@ interface GitlabApi {
         @Query("stats") stats: Boolean = true
     ): Single<Commit>
 
+    @GET("$API_PATH/projects/{project_id}/repository/commits/{sha}/diff")
+    fun getCommitDiffData(
+        @Path("project_id") projectId: Long,
+        @Path("sha") sha: String
+    ): Single<List<DiffData>>
+
     @GET("$API_PATH/projects/{project_id}/repository/commits/")
     fun getRepositoryCommits(
         @Path("project_id") projectId: Long,
@@ -288,7 +294,7 @@ interface GitlabApi {
     ): Single<List<ShortUser>>
 
     @GET("$API_PATH/projects/{project_id}/merge_requests/{merge_request_id}/changes")
-    fun getMergeRequestChanges(
+    fun getMergeRequestDiffDataList(
         @Path("project_id") projectId: Long,
         @Path("merge_request_id") mergeRequestId: Long
     ): Single<MergeRequest>

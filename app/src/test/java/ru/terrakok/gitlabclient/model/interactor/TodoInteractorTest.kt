@@ -17,7 +17,6 @@ import ru.terrakok.gitlabclient.entity.todo.TodoState
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 
-
 /**
  * Created by Vitaliy Belyaev on 11.06.2019.
  */

@@ -10,12 +10,23 @@ import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
 import ru.terrakok.gitlabclient.ui.about.AboutFragment
 import ru.terrakok.gitlabclient.ui.auth.AuthFlowFragment
 import ru.terrakok.gitlabclient.ui.auth.AuthFragment
+import ru.terrakok.gitlabclient.ui.commit.CommitFragment
 import ru.terrakok.gitlabclient.ui.drawer.DrawerFlowFragment
 import ru.terrakok.gitlabclient.ui.file.ProjectFileFragment
-import ru.terrakok.gitlabclient.ui.issue.*
+import ru.terrakok.gitlabclient.ui.issue.IssueDetailsFragment
+import ru.terrakok.gitlabclient.ui.issue.IssueFlowFragment
+import ru.terrakok.gitlabclient.ui.issue.IssueInfoFragment
+import ru.terrakok.gitlabclient.ui.issue.IssueNotesFragment
+import ru.terrakok.gitlabclient.ui.issue.MainIssueFragment
 import ru.terrakok.gitlabclient.ui.libraries.LibrariesFragment
 import ru.terrakok.gitlabclient.ui.main.MainFragment
-import ru.terrakok.gitlabclient.ui.mergerequest.*
+import ru.terrakok.gitlabclient.ui.mergerequest.MainMergeRequestFragment
+import ru.terrakok.gitlabclient.ui.mergerequest.MergeRequestCommitsFragment
+import ru.terrakok.gitlabclient.ui.mergerequest.MergeRequestDetailsFragment
+import ru.terrakok.gitlabclient.ui.mergerequest.MergeRequestDiffDataListFragment
+import ru.terrakok.gitlabclient.ui.mergerequest.MergeRequestFlowFragment
+import ru.terrakok.gitlabclient.ui.mergerequest.MergeRequestInfoFragment
+import ru.terrakok.gitlabclient.ui.mergerequest.MergeRequestNotesFragment
 import ru.terrakok.gitlabclient.ui.my.activity.MyEventsFragment
 import ru.terrakok.gitlabclient.ui.my.issues.MyIssuesContainerFragment
 import ru.terrakok.gitlabclient.ui.my.issues.MyIssuesFragment
@@ -223,8 +234,8 @@ object Screens {
         override fun getFragment() = MergeRequestNotesFragment()
     }
 
-    object MergeRequestChanges : SupportAppScreen() {
-        override fun getFragment() = MergeRequestChangesFragment()
+    object MergeRequestDiffDataList : SupportAppScreen() {
+        override fun getFragment() = MergeRequestDiffDataListFragment()
     }
 
     object MainIssue : SupportAppScreen() {
@@ -245,6 +256,14 @@ object Screens {
 
     object PrivacyPolicy : SupportAppScreen() {
         override fun getFragment() = PrivacyPolicyFragment()
+    }
+
+    data class Commit(
+        val commitId: String,
+        val projectId: Long
+    ) : SupportAppScreen() {
+
+        override fun getFragment() = CommitFragment.create(commitId, projectId)
     }
 
     data class ProjectFile(

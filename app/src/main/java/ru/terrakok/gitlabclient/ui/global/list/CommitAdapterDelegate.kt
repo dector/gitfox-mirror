@@ -18,13 +18,15 @@ import ru.terrakok.gitlabclient.util.inflate
 
 fun CommitWithShortUser.isSame(other: CommitWithShortUser) = commit.id == other.commit.id
 
-class CommitAdapterDelegate : AdapterDelegate<MutableList<Any>>() {
+class CommitAdapterDelegate(
+    private val clickListener: (String) -> Unit
+) : AdapterDelegate<MutableList<Any>>() {
 
     override fun isForViewType(items: MutableList<Any>, position: Int) =
-        items[position] is CommitWithShortUser
+            items[position] is CommitWithShortUser
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder =
-        ViewHolder(parent.inflate(R.layout.item_merge_request_commit))
+            ViewHolder(parent.inflate(R.layout.item_merge_request_commit))
 
     override fun onBindViewHolder(
         items: MutableList<Any>,
@@ -37,7 +39,14 @@ class CommitAdapterDelegate : AdapterDelegate<MutableList<Any>>() {
         override val containerView: View
     ) : RecyclerView.ViewHolder(containerView), LayoutContainer {
 
+        private lateinit var commitWithShortUser: CommitWithShortUser
+
+        init {
+            containerView.setOnClickListener { clickListener(commitWithShortUser.commit.id) }
+        }
+
         fun bind(commitWithShortUser: CommitWithShortUser) {
+            this.commitWithShortUser = commitWithShortUser
             commitWithShortUser.shortUser?.let { avatarImageView.bindShortUser(it) }
             titleTextView.text = commitWithShortUser.commit.title
             descriptionTextView.text = String.format(

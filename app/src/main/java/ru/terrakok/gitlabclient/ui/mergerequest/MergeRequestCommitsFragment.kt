@@ -26,7 +26,7 @@ class MergeRequestCommitsFragment : BaseFragment(), MergeRequestCommitsView {
 
     @ProvidePresenter
     fun providePresenter() =
-        scope.getInstance(MergeRequestCommitsPresenter::class.java)
+            scope.getInstance(MergeRequestCommitsPresenter::class.java)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -38,7 +38,7 @@ class MergeRequestCommitsFragment : BaseFragment(), MergeRequestCommitsView {
                     o.isSame(n)
                 } else false
             },
-            CommitAdapterDelegate()
+            CommitAdapterDelegate({ presenter.onCommitClicked(it) })
         )
     }
 

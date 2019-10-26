@@ -1,11 +1,11 @@
-package ru.terrakok.gitlabclient.entity.mergerequest
+package ru.terrakok.gitlabclient.entity
 
 import com.google.gson.annotations.SerializedName
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 26.10.18.
  */
-data class MergeRequestChange(
+data class DiffData(
     @SerializedName("old_path") val oldPath: String,
     @SerializedName("new_path") val newPath: String,
     @SerializedName("a_mode") val aMode: String,

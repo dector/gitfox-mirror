@@ -141,9 +141,9 @@
     <!--Merge Request Commits screen-->
     <string name="merge_request_commits_description" formatted="false">%s authored %s</string>
 
-    <!--Merge Request Changes screen-->
-    <string name="merge_request_changes_added_count" formatted="false">+%d</string>
-    <string name="merge_request_changes_deleted_count" formatted="false">-%d</string>
+    <!--Diff data item-->
+    <string name="item_diff_data_added_count" formatted="false">+%d</string>
+    <string name="item_diff_data_deleted_count" formatted="false">-%d</string>
 
     <!--Issue Info screen-->
     <string name="issue_title" formatted="false">#%d</string>
