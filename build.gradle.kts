@@ -10,7 +10,6 @@ buildscript {
 }
 
 allprojects {
-    extra["kotlinVersion"] = "1.3.50"
     repositories {
         google()
         jcenter()

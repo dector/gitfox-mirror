@@ -1,8 +1,8 @@
 package ru.terrakok.gitlabclient.ui.project
 
 import android.os.Bundle
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter
 import kotlinx.android.synthetic.main.fragment_main_project.*
 import ru.terrakok.cicerone.android.support.SupportAppScreen

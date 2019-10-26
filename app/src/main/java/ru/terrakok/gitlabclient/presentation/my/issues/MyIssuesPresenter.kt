@@ -1,6 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.my.issues
 
-import com.arellomobile.mvp.InjectViewState
+import moxy.InjectViewState
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader

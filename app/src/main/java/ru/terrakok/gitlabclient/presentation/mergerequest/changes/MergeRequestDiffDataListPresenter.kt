@@ -1,6 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.mergerequest.changes
 
-import com.arellomobile.mvp.InjectViewState
+import moxy.InjectViewState
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.di.MergeRequestId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper

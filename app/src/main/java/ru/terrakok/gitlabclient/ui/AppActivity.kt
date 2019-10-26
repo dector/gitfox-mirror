@@ -8,7 +8,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import com.arellomobile.mvp.MvpAppCompatActivity
+import moxy.MvpAppCompatActivity
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.layout_container.*
 import ru.terrakok.cicerone.Navigator

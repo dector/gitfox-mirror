@@ -1,6 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.project.labels
 
-import com.arellomobile.mvp.InjectViewState
+import moxy.InjectViewState
 import io.reactivex.disposables.Disposable
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId

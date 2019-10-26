@@ -1,6 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.file
 
-import com.arellomobile.mvp.InjectViewState
+import moxy.InjectViewState
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.di.FilePath
 import ru.terrakok.gitlabclient.di.FileReference

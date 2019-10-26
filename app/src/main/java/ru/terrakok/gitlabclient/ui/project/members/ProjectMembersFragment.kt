@@ -1,8 +1,8 @@
 package ru.terrakok.gitlabclient.ui.project.members
 
 import android.os.Bundle
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_project_members.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Member

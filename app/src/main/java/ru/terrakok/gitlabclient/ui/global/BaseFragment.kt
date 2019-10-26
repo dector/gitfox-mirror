@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.arellomobile.mvp.MvpAppCompatFragment
+import moxy.MvpAppCompatFragment
 import ru.terrakok.gitlabclient.di.DI
 import ru.terrakok.gitlabclient.util.objectScopeName
 import timber.log.Timber

@@ -1,6 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.main
 
-import com.arellomobile.mvp.InjectViewState
+import moxy.InjectViewState
 import ru.terrakok.gitlabclient.model.interactor.AccountInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import javax.inject.Inject

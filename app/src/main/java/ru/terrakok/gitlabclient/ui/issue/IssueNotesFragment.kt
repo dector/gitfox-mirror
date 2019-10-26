@@ -5,8 +5,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.Fade
 import androidx.transition.TransitionManager
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_issue_notes.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.presentation.global.NoteWithFormattedBody

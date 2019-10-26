@@ -2,8 +2,8 @@ package ru.terrakok.gitlabclient.ui.issue
 
 import android.os.Bundle
 import androidx.fragment.app.FragmentPagerAdapter
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_main_mr.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens

@@ -1,6 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.about
 
-import com.arellomobile.mvp.InjectViewState
+import moxy.InjectViewState
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.di.AppDevelopersPath
 import ru.terrakok.gitlabclient.model.interactor.AppInfoInteractor

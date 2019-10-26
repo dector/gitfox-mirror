@@ -3,8 +3,8 @@ package ru.terrakok.gitlabclient.ui.main
 import android.os.Bundle
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter
 import com.aurelhubert.ahbottomnavigation.notification.AHNotification
 import kotlinx.android.synthetic.main.fragment_main.*

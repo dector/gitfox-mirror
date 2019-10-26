@@ -1,6 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.issue.info
 
-import com.arellomobile.mvp.InjectViewState
+import moxy.InjectViewState
 import ru.terrakok.gitlabclient.di.IssueId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId

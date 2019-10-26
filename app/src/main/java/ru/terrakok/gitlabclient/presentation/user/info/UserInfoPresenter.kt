@@ -1,6 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.user.info
 
-import com.arellomobile.mvp.InjectViewState
+import moxy.InjectViewState
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.UserId
 import ru.terrakok.gitlabclient.model.interactor.UserInteractor
