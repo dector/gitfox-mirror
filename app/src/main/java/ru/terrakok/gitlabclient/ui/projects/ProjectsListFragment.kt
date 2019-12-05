@@ -12,6 +12,7 @@ import ru.terrakok.gitlabclient.presentation.global.Paginator
 import ru.terrakok.gitlabclient.presentation.projects.ProjectsListPresenter
 import ru.terrakok.gitlabclient.presentation.projects.ProjectsListView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.ui.global.list.PaginalAdapter
 import ru.terrakok.gitlabclient.ui.global.list.ProjectAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.isSame
 import ru.terrakok.gitlabclient.util.showSnackMessage
@@ -41,10 +42,7 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
     fun createPresenter(): ProjectsListPresenter =
         scope.getInstance(ProjectsListPresenter::class.java)
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        paginalRenderView.init(
-            { presenter.refreshProjects() },
+    private val adapter by lazy { PaginalAdapter(
             { presenter.loadNextProjectsPage() },
             { o, n ->
                 if (o is Project && n is Project) {
@@ -52,6 +50,13 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
                 } else false
             },
             ProjectAdapterDelegate { presenter.onProjectClicked(it.id) }
+    ) }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        paginalRenderView.init(
+            { presenter.refreshProjects() },
+            adapter
         )
     }
 

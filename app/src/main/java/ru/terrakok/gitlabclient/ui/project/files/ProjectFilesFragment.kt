@@ -14,6 +14,7 @@ import ru.terrakok.gitlabclient.presentation.project.files.ProjectFileDestinatio
 import ru.terrakok.gitlabclient.presentation.project.files.ProjectFilesPresenter
 import ru.terrakok.gitlabclient.presentation.project.files.ProjectFilesView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.ui.global.list.PaginalAdapter
 import ru.terrakok.gitlabclient.ui.global.list.ProjectFileAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.isSame
 import ru.terrakok.gitlabclient.util.addSystemTopPadding
@@ -45,6 +46,14 @@ class ProjectFilesFragment : BaseFragment(), ProjectFilesView {
         scope.getInstance(ProjectFilesPresenter::class.java)
 
     private lateinit var projectFileDestination: ProjectFileDestination
+    private val adapter by lazy { PaginalAdapter({ presenter.loadNextFilesPage() },
+            { o, n ->
+                if (o is ProjectFile && n is ProjectFile) {
+                    o.isSame(n)
+                } else false
+            },
+            ProjectFileAdapterDelegate { presenter.onFileClick(it) }
+    ) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         projectFileDestination = ProjectFileDestination()
@@ -73,13 +82,7 @@ class ProjectFilesFragment : BaseFragment(), ProjectFilesView {
         }
         paginalRenderView.init(
             { presenter.refreshFiles() },
-            { presenter.loadNextFilesPage() },
-            { o, n ->
-                if (o is ProjectFile && n is ProjectFile) {
-                    o.isSame(n)
-                } else false
-            },
-            ProjectFileAdapterDelegate { presenter.onFileClick(it) }
+            adapter
         )
     }
 

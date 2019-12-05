@@ -12,6 +12,7 @@ import ru.terrakok.gitlabclient.presentation.global.Paginator
 import ru.terrakok.gitlabclient.presentation.my.todos.MyTodoListView
 import ru.terrakok.gitlabclient.presentation.my.todos.MyTodosPresenter
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.ui.global.list.PaginalAdapter
 import ru.terrakok.gitlabclient.ui.global.list.TargetHeaderConfidentialAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.TargetHeaderPublicAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.isSame
@@ -43,10 +44,7 @@ class MyTodosFragment : BaseFragment(), MyTodoListView {
     fun providePresenter(): MyTodosPresenter =
         scope.getInstance(MyTodosPresenter::class.java)
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        paginalRenderView.init(
-            { presenter.refreshTodos() },
+    private val adapter by lazy { PaginalAdapter(
             { presenter.loadNextTodosPage() },
             { o, n ->
                 if (o is TargetHeader.Public && n is TargetHeader.Public) {
@@ -55,6 +53,13 @@ class MyTodosFragment : BaseFragment(), MyTodoListView {
             },
             TargetHeaderPublicAdapterDelegate { presenter.onTodoClick(it) },
             TargetHeaderConfidentialAdapterDelegate()
+    ) }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        paginalRenderView.init(
+            { presenter.refreshTodos() },
+            adapter
         )
     }
 

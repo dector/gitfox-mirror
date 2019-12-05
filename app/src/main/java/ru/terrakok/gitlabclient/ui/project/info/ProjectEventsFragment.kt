@@ -10,6 +10,7 @@ import ru.terrakok.gitlabclient.presentation.global.Paginator
 import ru.terrakok.gitlabclient.presentation.project.events.ProjectEventsPresenter
 import ru.terrakok.gitlabclient.presentation.project.events.ProjectEventsView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.ui.global.list.PaginalAdapter
 import ru.terrakok.gitlabclient.ui.global.list.TargetHeaderConfidentialAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.TargetHeaderPublicAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.isSame
@@ -28,10 +29,7 @@ class ProjectEventsFragment : BaseFragment(), ProjectEventsView {
     fun providePresenter(): ProjectEventsPresenter =
         scope.getInstance(ProjectEventsPresenter::class.java)
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        paginalRenderView.init(
-            { presenter.refreshEvents() },
+    private val adapter by lazy { PaginalAdapter(
             { presenter.loadNextEventsPage() },
             { o, n ->
                 if (o is TargetHeader.Public && n is TargetHeader.Public) {
@@ -40,6 +38,13 @@ class ProjectEventsFragment : BaseFragment(), ProjectEventsView {
             },
             TargetHeaderPublicAdapterDelegate { presenter.onItemClick(it) },
             TargetHeaderConfidentialAdapterDelegate()
+    ) }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        paginalRenderView.init(
+            { presenter.refreshEvents() },
+            adapter
         )
     }
 

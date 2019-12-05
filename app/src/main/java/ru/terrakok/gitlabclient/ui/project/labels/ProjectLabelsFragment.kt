@@ -10,6 +10,7 @@ import ru.terrakok.gitlabclient.presentation.global.Paginator
 import ru.terrakok.gitlabclient.presentation.project.labels.ProjectLabelsPresenter
 import ru.terrakok.gitlabclient.presentation.project.labels.ProjectLabelsView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.ui.global.list.PaginalAdapter
 import ru.terrakok.gitlabclient.util.showSnackMessage
 
 /**
@@ -25,10 +26,7 @@ class ProjectLabelsFragment : BaseFragment(), ProjectLabelsView {
     @ProvidePresenter
     fun providePresenter() = scope.getInstance(ProjectLabelsPresenter::class.java)
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        paginalRenderView.init(
-            { presenter.refreshProjectLabels() },
+    private val adapter by lazy { PaginalAdapter(
             { presenter.loadNextLabelsPage() },
             { o, n ->
                 if (o is Label && n is Label) {
@@ -36,6 +34,13 @@ class ProjectLabelsFragment : BaseFragment(), ProjectLabelsView {
                 } else false
             },
             ProjectLabelAdapterDelegate()
+    ) }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        paginalRenderView.init(
+            { presenter.refreshProjectLabels() },
+            adapter
         )
     }
 
