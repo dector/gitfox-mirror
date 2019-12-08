@@ -11,6 +11,7 @@ import ru.terrakok.gitlabclient.presentation.project.milestones.ProjectMilestone
 import ru.terrakok.gitlabclient.presentation.project.milestones.ProjectMilestonesView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.list.MilestonesAdapterDelegate
+import ru.terrakok.gitlabclient.ui.global.list.PaginalAdapter
 import ru.terrakok.gitlabclient.ui.global.list.isSame
 import ru.terrakok.gitlabclient.util.showSnackMessage
 
@@ -28,10 +29,7 @@ class ProjectMilestonesFragment : BaseFragment(), ProjectMilestonesView {
     fun providePresenter(): ProjectMilestonesPresenter =
         scope.getInstance(ProjectMilestonesPresenter::class.java)
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        paginalRenderView.init(
-            { presenter.refreshMilestones() },
+    private val adapter by lazy { PaginalAdapter(
             { presenter.loadNextMilestonesPage() },
             { o, n ->
                 if (o is Milestone && n is Milestone) {
@@ -39,6 +37,13 @@ class ProjectMilestonesFragment : BaseFragment(), ProjectMilestonesView {
                 } else false
             },
             MilestonesAdapterDelegate { presenter.onMilestoneClicked(it) }
+    ) }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        paginalRenderView.init(
+            { presenter.refreshMilestones() },
+            adapter
         )
     }
 

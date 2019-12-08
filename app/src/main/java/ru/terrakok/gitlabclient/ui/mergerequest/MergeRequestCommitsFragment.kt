@@ -11,6 +11,7 @@ import ru.terrakok.gitlabclient.presentation.mergerequest.commits.MergeRequestCo
 import ru.terrakok.gitlabclient.presentation.mergerequest.commits.MergeRequestCommitsView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.list.CommitAdapterDelegate
+import ru.terrakok.gitlabclient.ui.global.list.PaginalAdapter
 import ru.terrakok.gitlabclient.ui.global.list.isSame
 import ru.terrakok.gitlabclient.util.showSnackMessage
 
@@ -28,10 +29,7 @@ class MergeRequestCommitsFragment : BaseFragment(), MergeRequestCommitsView {
     fun providePresenter() =
             scope.getInstance(MergeRequestCommitsPresenter::class.java)
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        paginalRenderView.init(
-            { presenter.refreshCommits() },
+    private val adapter by lazy { PaginalAdapter(
             { presenter.loadNextCommitsPage() },
             { o, n ->
                 if (o is CommitWithShortUser && n is CommitWithShortUser) {
@@ -39,6 +37,13 @@ class MergeRequestCommitsFragment : BaseFragment(), MergeRequestCommitsView {
                 } else false
             },
             CommitAdapterDelegate({ presenter.onCommitClicked(it) })
+    ) }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        paginalRenderView.init(
+            { presenter.refreshCommits() },
+            adapter
         )
     }
 

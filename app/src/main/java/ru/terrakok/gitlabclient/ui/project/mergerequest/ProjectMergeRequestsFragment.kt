@@ -11,6 +11,7 @@ import ru.terrakok.gitlabclient.presentation.global.Paginator
 import ru.terrakok.gitlabclient.presentation.project.mergerequest.ProjectMergeRequestsPresenter
 import ru.terrakok.gitlabclient.presentation.project.mergerequest.ProjectMergeRequestsView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.ui.global.list.PaginalAdapter
 import ru.terrakok.gitlabclient.ui.global.list.TargetHeaderConfidentialAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.TargetHeaderPublicAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.isSame
@@ -40,6 +41,17 @@ class ProjectMergeRequestsFragment : BaseFragment(), ProjectMergeRequestsView {
     fun providePresenter(): ProjectMergeRequestsPresenter =
         scope.getInstance(ProjectMergeRequestsPresenter::class.java)
 
+    private val adapter by lazy { PaginalAdapter(
+            { presenter.loadNextMergeRequestsPage() },
+            { o, n ->
+                if (o is TargetHeader.Public && n is TargetHeader.Public) {
+                    o.isSame(n)
+                } else false
+            },
+            TargetHeaderPublicAdapterDelegate { presenter.onMergeRequestClick(it) },
+            TargetHeaderConfidentialAdapterDelegate()
+    ) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -52,14 +64,7 @@ class ProjectMergeRequestsFragment : BaseFragment(), ProjectMergeRequestsView {
         super.onActivityCreated(savedInstanceState)
         paginalRenderView.init(
             { presenter.refreshMergeRequests() },
-            { presenter.loadNextMergeRequestsPage() },
-            { o, n ->
-                if (o is TargetHeader.Public && n is TargetHeader.Public) {
-                    o.isSame(n)
-                } else false
-            },
-            TargetHeaderPublicAdapterDelegate { presenter.onMergeRequestClick(it) },
-            TargetHeaderConfidentialAdapterDelegate()
+            adapter
         )
     }
 

@@ -10,6 +10,7 @@ import ru.terrakok.gitlabclient.presentation.global.Paginator
 import ru.terrakok.gitlabclient.presentation.my.events.MyEventsPresenter
 import ru.terrakok.gitlabclient.presentation.my.events.MyEventsView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.ui.global.list.PaginalAdapter
 import ru.terrakok.gitlabclient.ui.global.list.TargetHeaderConfidentialAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.TargetHeaderPublicAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.isSame
@@ -29,12 +30,7 @@ class MyEventsFragment : BaseFragment(), MyEventsView {
     fun providePresenter(): MyEventsPresenter =
         scope.getInstance(MyEventsPresenter::class.java)
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        toolbar.setNavigationOnClickListener { presenter.onMenuClick() }
-        toolbar.addSystemTopPadding()
-        paginalRenderView.init(
-            { presenter.refreshEvents() },
+    private val adapter by lazy { PaginalAdapter(
             { presenter.loadNextEventsPage() },
             { o, n ->
                 if (o is TargetHeader.Public && n is TargetHeader.Public) {
@@ -43,6 +39,15 @@ class MyEventsFragment : BaseFragment(), MyEventsView {
             },
             TargetHeaderPublicAdapterDelegate { presenter.onItemClick(it) },
             TargetHeaderConfidentialAdapterDelegate()
+    ) }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        toolbar.setNavigationOnClickListener { presenter.onMenuClick() }
+        toolbar.addSystemTopPadding()
+        paginalRenderView.init(
+            { presenter.refreshEvents() },
+            adapter
         )
     }
 

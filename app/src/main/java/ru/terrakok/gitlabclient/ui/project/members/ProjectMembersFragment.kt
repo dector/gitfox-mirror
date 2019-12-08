@@ -11,6 +11,7 @@ import ru.terrakok.gitlabclient.presentation.project.members.ProjectMembersPrese
 import ru.terrakok.gitlabclient.presentation.project.members.ProjectMembersView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.list.MembersAdapterDelegate
+import ru.terrakok.gitlabclient.ui.global.list.PaginalAdapter
 import ru.terrakok.gitlabclient.ui.global.list.isSame
 import ru.terrakok.gitlabclient.util.showSnackMessage
 
@@ -28,10 +29,7 @@ class ProjectMembersFragment : BaseFragment(), ProjectMembersView {
     fun providePresenter(): ProjectMembersPresenter =
             scope.getInstance(ProjectMembersPresenter::class.java)
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        paginalRenderView.init(
-            { presenter.refreshMembers() },
+    private val adapter by lazy { PaginalAdapter(
             { presenter.loadNextMembersPage() },
             { o, n ->
                 if (o is Member && n is Member) {
@@ -39,6 +37,13 @@ class ProjectMembersFragment : BaseFragment(), ProjectMembersView {
                 } else false
             },
             MembersAdapterDelegate { presenter.onMemberClick(it) }
+    ) }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        paginalRenderView.init(
+            { presenter.refreshMembers() },
+            adapter
         )
     }
 
