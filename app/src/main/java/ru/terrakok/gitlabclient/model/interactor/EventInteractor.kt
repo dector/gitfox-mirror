@@ -11,10 +11,7 @@ import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.PushDataRefType
 import ru.terrakok.gitlabclient.entity.Sort
 import ru.terrakok.gitlabclient.entity.app.target.*
-import ru.terrakok.gitlabclient.entity.event.Event
-import ru.terrakok.gitlabclient.entity.event.EventAction
-import ru.terrakok.gitlabclient.entity.event.EventTarget
-import ru.terrakok.gitlabclient.entity.event.EventTargetType
+import ru.terrakok.gitlabclient.entity.event.*
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
@@ -48,6 +45,7 @@ class EventInteractor @Inject constructor(
             afterDay?.run { this.toLocalDate().toString() },
             sort,
             orderBy,
+            EventScope.ALL,
             page,
             pageSize
         )

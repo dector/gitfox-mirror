@@ -20,6 +20,7 @@ import ru.terrakok.gitlabclient.entity.Sort
 import ru.terrakok.gitlabclient.entity.app.target.*
 import ru.terrakok.gitlabclient.entity.event.Event
 import ru.terrakok.gitlabclient.entity.event.EventAction
+import ru.terrakok.gitlabclient.entity.event.EventScope
 import ru.terrakok.gitlabclient.entity.event.EventTargetType
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
@@ -55,6 +56,7 @@ class EventInteractorTest {
                 anyOrNull(),
                 anyOrNull(),
                 anyOrNull(),
+                any(),
                 anyInt(),
                 anyInt())).willReturn(Single.just(testEvents))
 
@@ -74,6 +76,7 @@ class EventInteractorTest {
                         null,
                         Sort.DESC,
                         OrderBy.UPDATED_AT,
+                        EventScope.ALL,
                         testPage,
                         defaultPageSize)
 
@@ -100,6 +103,7 @@ class EventInteractorTest {
                 anyOrNull(),
                 anyOrNull(),
                 anyOrNull(),
+                any(),
                 anyInt(),
                 anyInt())).willReturn(Single.just(listOf(testEvent)))
 
@@ -120,6 +124,7 @@ class EventInteractorTest {
                         "2007-12-24",
                         Sort.DESC,
                         OrderBy.UPDATED_AT,
+                        EventScope.ALL,
                         testPage,
                         defaultPageSize)
     }
@@ -136,6 +141,7 @@ class EventInteractorTest {
                 anyOrNull(),
                 anyOrNull(),
                 anyOrNull(),
+                any(),
                 anyInt(),
                 anyInt())).willReturn(Single.just(listOf(testEvent)))
 
@@ -155,6 +161,7 @@ class EventInteractorTest {
                         null,
                         Sort.DESC,
                         OrderBy.UPDATED_AT,
+                        EventScope.ALL,
                         testPage,
                         defaultPageSize)
 
@@ -179,6 +186,7 @@ class EventInteractorTest {
                 anyOrNull(),
                 anyOrNull(),
                 anyOrNull(),
+                any(),
                 anyInt(),
                 anyInt())).willReturn(Single.just(emptyList()))
 
@@ -196,6 +204,7 @@ class EventInteractorTest {
                         null,
                         Sort.DESC,
                         OrderBy.UPDATED_AT,
+                        EventScope.ALL,
                         testPage,
                         defaultPageSize)
 
@@ -218,6 +227,7 @@ class EventInteractorTest {
                 anyOrNull(),
                 anyOrNull(),
                 anyOrNull(),
+                any(),
                 anyInt(),
                 anyInt())).willReturn(Single.error(error))
 
@@ -235,6 +245,7 @@ class EventInteractorTest {
                         null,
                         Sort.DESC,
                         OrderBy.UPDATED_AT,
+                        EventScope.ALL,
                         testPage,
                         defaultPageSize)
 
@@ -399,6 +410,7 @@ class EventInteractorTest {
                 anyOrNull(),
                 anyOrNull(),
                 anyOrNull(),
+                any(),
                 anyInt(),
                 anyInt())).willReturn(Single.just(listOf(diffNoteEvent)))
 
@@ -419,6 +431,7 @@ class EventInteractorTest {
                         null,
                         Sort.DESC,
                         OrderBy.UPDATED_AT,
+                        EventScope.ALL,
                         testPage,
                         defaultPageSize)
 

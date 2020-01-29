@@ -9,6 +9,7 @@ import retrofit2.http.*
 import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.entity.event.Event
 import ru.terrakok.gitlabclient.entity.event.EventAction
+import ru.terrakok.gitlabclient.entity.event.EventScope
 import ru.terrakok.gitlabclient.entity.event.EventTarget
 import ru.terrakok.gitlabclient.entity.issue.Issue
 import ru.terrakok.gitlabclient.entity.issue.IssueScope
@@ -157,6 +158,7 @@ interface GitlabApi {
         @Query("after") afterDay: String?,
         @Query("sort") sort: Sort?,
         @Query("order_by") orderBy: OrderBy?,
+        @Query("scope") scope: EventScope?,
         @Query("page") page: Int,
         @Query("per_page") pageSize: Int
     ): Single<List<Event>>
