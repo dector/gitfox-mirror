@@ -1,13 +1,15 @@
 package ru.terrakok.gitlabclient.di.provider
 
 import android.content.Context
-import okhttp3.OkHttpClient
 import ru.noties.markwon.SpannableConfiguration
 import ru.noties.markwon.UrlProcessorRelativeToAbsolute
 import ru.noties.markwon.il.AsyncDrawableLoader
 import ru.noties.markwon.spans.SpannableTheme
+import ru.terrakok.gitlabclient.BuildConfig
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.di.ServerPath
+import ru.terrakok.gitlabclient.entity.app.session.AuthHolder
+import ru.terrakok.gitlabclient.model.data.server.client.OkHttpClientFactory
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.util.color
@@ -20,7 +22,8 @@ import javax.inject.Provider
  */
 class MarkDownConverterProvider @Inject constructor(
     private val context: Context,
-    private val httpClient: OkHttpClient,
+    private val okHttpClientFactory: OkHttpClientFactory,
+    private val tokHolder: AuthHolder,
     private val schedulers: SchedulersProvider,
     @ServerPath private val serverPath: String
 ) : Provider<MarkDownConverter> {
@@ -33,7 +36,7 @@ class MarkDownConverterProvider @Inject constructor(
 
     private val asyncDrawableLoader
         get() = AsyncDrawableLoader.builder()
-            .client(httpClient)
+            .client(okHttpClientFactory.create(tokHolder, false, BuildConfig.DEBUG))
             .executorService(Executors.newCachedThreadPool())
             .resources(context.resources)
             .build()

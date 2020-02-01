@@ -3,22 +3,19 @@ package ru.terrakok.gitlabclient.model.data.server
 import com.google.gson.Gson
 import io.reactivex.Single
 import okhttp3.FormBody
-import okhttp3.OkHttpClient
 import okhttp3.Request
+import ru.terrakok.gitlabclient.BuildConfig
 import ru.terrakok.gitlabclient.entity.TokenData
 import ru.terrakok.gitlabclient.entity.User
 import ru.terrakok.gitlabclient.entity.app.session.UserAccount
-import ru.terrakok.gitlabclient.model.data.server.Tls12SocketFactory.Companion.enableTls12
-import ru.terrakok.gitlabclient.model.system.SchedulersProvider
+import ru.terrakok.gitlabclient.model.data.server.client.OkHttpClientFactory
 import javax.inject.Inject
 
 class UserAccountApi @Inject constructor(
     private val gson: Gson,
-    private val schedulers: SchedulersProvider
+    okHttpClientFactory: OkHttpClientFactory
 ) {
-    private val okHttpClient = OkHttpClient.Builder()
-        .enableTls12()
-        .build()
+    private val okHttpClient = okHttpClientFactory.create(null, false, BuildConfig.DEBUG)
 
     fun requestUserAccount(
         endpoint: String,

@@ -1,13 +1,9 @@
 package ru.terrakok.gitlabclient.di.module
 
-import okhttp3.OkHttpClient
 import ru.terrakok.gitlabclient.BuildConfig
 import ru.terrakok.gitlabclient.di.ServerPath
-import ru.terrakok.gitlabclient.di.WithErrorHandler
 import ru.terrakok.gitlabclient.di.provider.ApiProvider
 import ru.terrakok.gitlabclient.di.provider.MarkDownConverterProvider
-import ru.terrakok.gitlabclient.di.provider.OkHttpClientProvider
-import ru.terrakok.gitlabclient.di.provider.OkHttpClientWithErrorHandlerProvider
 import ru.terrakok.gitlabclient.entity.app.session.AuthHolder
 import ru.terrakok.gitlabclient.entity.app.session.UserAccount
 import ru.terrakok.gitlabclient.model.data.cache.ProjectCache
@@ -33,11 +29,6 @@ class ServerModule(userAccount: UserAccount?) : Module() {
         }
 
         // Network
-        bind(OkHttpClient::class.java).toProvider(OkHttpClientProvider::class.java)
-            .providesSingleton()
-        bind(OkHttpClient::class.java).withName(WithErrorHandler::class.java)
-            .toProvider(OkHttpClientWithErrorHandlerProvider::class.java)
-            .providesSingleton()
         bind(ProjectCache::class.java).singleton()
         bind(ServerChanges::class.java).singleton()
         bind(GitlabApi::class.java).toProvider(ApiProvider::class.java).providesSingleton()

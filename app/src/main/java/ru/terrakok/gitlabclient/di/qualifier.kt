@@ -37,9 +37,6 @@ annotation class UserId
 annotation class CacheLifetime
 
 @Qualifier
-annotation class WithErrorHandler
-
-@Qualifier
 annotation class FilePath
 
 @Qualifier

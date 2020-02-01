@@ -14,6 +14,7 @@ import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.provider.GsonProvider
 import ru.terrakok.gitlabclient.entity.app.develop.AppInfo
 import ru.terrakok.gitlabclient.entity.app.session.OAuthParams
+import ru.terrakok.gitlabclient.model.data.server.client.OkHttpClientFactory
 import ru.terrakok.gitlabclient.model.system.AppSchedulers
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
@@ -37,6 +38,7 @@ class AppModule(context: Context) : Module() {
         bind(AssetManager::class.java).toInstance(context.assets)
         bind(SystemMessageNotifier::class.java).toInstance(SystemMessageNotifier())
         bind(Gson::class.java).toProvider(GsonProvider::class.java).providesSingleton()
+        bind(OkHttpClientFactory::class.java).singleton()
 
         // Navigation
         val cicerone = Cicerone.create()
