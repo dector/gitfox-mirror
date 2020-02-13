@@ -1,10 +1,10 @@
 package ru.terrakok.gitlabclient.ui.project
 
 import android.os.Bundle
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter
 import kotlinx.android.synthetic.main.fragment_main_project.*
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
@@ -84,7 +84,7 @@ class MainProjectFragment : BaseFragment(), ProjectView {
         if (currentFragment != null && newFragment != null && currentFragment == newFragment) return
 
         childFragmentManager.beginTransaction().apply {
-            if (newFragment == null) add(R.id.projectMainContainer, tab.fragment, tab.screenKey)
+            if (newFragment == null) add(R.id.projectMainContainer, tab.fragment!!, tab.screenKey)
 
             currentFragment?.let {
                 hide(it)

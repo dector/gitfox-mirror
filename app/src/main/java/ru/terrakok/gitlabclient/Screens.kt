@@ -13,20 +13,10 @@ import ru.terrakok.gitlabclient.ui.auth.AuthFragment
 import ru.terrakok.gitlabclient.ui.commit.CommitFragment
 import ru.terrakok.gitlabclient.ui.drawer.DrawerFlowFragment
 import ru.terrakok.gitlabclient.ui.file.ProjectFileFragment
-import ru.terrakok.gitlabclient.ui.issue.IssueDetailsFragment
-import ru.terrakok.gitlabclient.ui.issue.IssueFlowFragment
-import ru.terrakok.gitlabclient.ui.issue.IssueInfoFragment
-import ru.terrakok.gitlabclient.ui.issue.IssueNotesFragment
-import ru.terrakok.gitlabclient.ui.issue.MainIssueFragment
+import ru.terrakok.gitlabclient.ui.issue.*
 import ru.terrakok.gitlabclient.ui.libraries.LibrariesFragment
 import ru.terrakok.gitlabclient.ui.main.MainFragment
-import ru.terrakok.gitlabclient.ui.mergerequest.MainMergeRequestFragment
-import ru.terrakok.gitlabclient.ui.mergerequest.MergeRequestCommitsFragment
-import ru.terrakok.gitlabclient.ui.mergerequest.MergeRequestDetailsFragment
-import ru.terrakok.gitlabclient.ui.mergerequest.MergeRequestDiffDataListFragment
-import ru.terrakok.gitlabclient.ui.mergerequest.MergeRequestFlowFragment
-import ru.terrakok.gitlabclient.ui.mergerequest.MergeRequestInfoFragment
-import ru.terrakok.gitlabclient.ui.mergerequest.MergeRequestNotesFragment
+import ru.terrakok.gitlabclient.ui.mergerequest.*
 import ru.terrakok.gitlabclient.ui.my.activity.MyEventsFragment
 import ru.terrakok.gitlabclient.ui.my.issues.MyIssuesContainerFragment
 import ru.terrakok.gitlabclient.ui.my.issues.MyIssuesFragment
@@ -278,7 +268,7 @@ object Screens {
     data class ExternalBrowserFlow(
         val url: String
     ) : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) =
+        override fun getActivityIntent(context: Context) =
             Intent(Intent.ACTION_VIEW, Uri.parse(url))
     }
 }
