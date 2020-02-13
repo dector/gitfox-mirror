@@ -3,11 +3,11 @@ package ru.terrakok.gitlabclient.ui.main
 import android.os.Bundle
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter
 import com.aurelhubert.ahbottomnavigation.notification.AHNotification
 import kotlinx.android.synthetic.main.fragment_main.*
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
@@ -90,7 +90,7 @@ class MainFragment : BaseFragment(), MainView {
         }.commitNow()
     }
 
-    private fun createTabFragment(tab: SupportAppScreen) = tab.fragment
+    private fun createTabFragment(tab: SupportAppScreen) = tab.fragment!!
 
     override fun onBackPressed() {
         currentTabFragment?.onBackPressed()

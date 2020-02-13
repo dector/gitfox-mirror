@@ -133,7 +133,7 @@ dependencies {
     implementation("com.github.moxy-community:moxy:$moxyVersion")
     implementation("com.github.moxy-community:moxy-androidx:$moxyVersion")
     //Cicerone Navigation
-    implementation("ru.terrakok.cicerone:cicerone:5.0.0")
+    implementation("ru.terrakok.cicerone:cicerone:5.1.0")
     //DI
     val toothpickVersion = "3.0.2"
     implementation("com.github.stephanenicolas.toothpick:toothpick-runtime:$toothpickVersion")

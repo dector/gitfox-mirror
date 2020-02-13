@@ -54,9 +54,9 @@ class DrawerFlowFragment : BaseFragment() {
     }
 
     private val navigator: Navigator by lazy {
-        object : SupportAppNavigator(this.activity, childFragmentManager, R.id.mainContainer) {
+        object : SupportAppNavigator(this.activity!!, childFragmentManager, R.id.mainContainer) {
 
-            override fun applyCommands(commands: Array<out Command>?) {
+            override fun applyCommands(commands: Array<out Command>) {
                 super.applyCommands(commands)
                 updateNavDrawer()
             }
@@ -66,7 +66,7 @@ class DrawerFlowFragment : BaseFragment() {
             }
 
             override fun setupFragmentTransaction(
-                command: Command?,
+                command: Command,
                 currentFragment: Fragment?,
                 nextFragment: Fragment?,
                 fragmentTransaction: FragmentTransaction

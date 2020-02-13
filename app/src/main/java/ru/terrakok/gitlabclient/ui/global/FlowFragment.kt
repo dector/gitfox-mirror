@@ -38,13 +38,13 @@ abstract class FlowFragment : BaseFragment() {
     }
 
     private val navigator: Navigator by lazy {
-        object : SupportAppNavigator(this.activity, childFragmentManager, R.id.container) {
+        object : SupportAppNavigator(this.activity!!, childFragmentManager, R.id.container) {
             override fun activityBack() {
                 router.exit()
             }
 
             override fun setupFragmentTransaction(
-                command: Command?,
+                command: Command,
                 currentFragment: Fragment?,
                 nextFragment: Fragment?,
                 fragmentTransaction: FragmentTransaction
