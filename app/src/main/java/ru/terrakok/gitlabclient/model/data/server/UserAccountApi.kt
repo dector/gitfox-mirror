@@ -41,10 +41,10 @@ class UserAccountApi @Inject constructor(
                     val response = okHttpClient.newCall(request).execute()
                     if (response.isSuccessful) {
                         val tokenData =
-                            gson.fromJson(response.body()?.charStream(), TokenData::class.java)
+                            gson.fromJson(response.body?.charStream(), TokenData::class.java)
                         return@defer Single.just(tokenData)
                     } else {
-                        val resultCode = response.code()
+                        val resultCode = response.code
                         if (resultCode in 400..500) throw ServerError(resultCode)
                         else throw RuntimeException("Get token data error: $resultCode")
                     }
@@ -60,7 +60,7 @@ class UserAccountApi @Inject constructor(
                 try {
                     val response = okHttpClient.newCall(request).execute()
                     if (response.isSuccessful) {
-                        val user = gson.fromJson(response.body()?.charStream(), User::class.java)
+                        val user = gson.fromJson(response.body?.charStream(), User::class.java)
                         return@flatMap Single.just(
                             UserAccount(
                                 user.id,
@@ -72,7 +72,7 @@ class UserAccountApi @Inject constructor(
                             )
                         )
                     } else {
-                        val resultCode = response.code()
+                        val resultCode = response.code
                         if (resultCode in 400..500) throw ServerError(resultCode)
                         else throw RuntimeException("Get user data error: $resultCode")
                     }
@@ -93,7 +93,7 @@ class UserAccountApi @Inject constructor(
             try {
                 val response = okHttpClient.newCall(request).execute()
                 if (response.isSuccessful) {
-                    val user = gson.fromJson(response.body()?.charStream(), User::class.java)
+                    val user = gson.fromJson(response.body?.charStream(), User::class.java)
                     return@defer Single.just(
                         UserAccount(
                             user.id,
@@ -105,7 +105,7 @@ class UserAccountApi @Inject constructor(
                         )
                     )
                 } else {
-                    val code = response.code()
+                    val code = response.code
                     if (code in 400..500) throw ServerError(code)
                     else throw RuntimeException("Custom server login error: $code")
                 }
