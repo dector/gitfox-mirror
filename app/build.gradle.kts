@@ -27,7 +27,7 @@ android {
         lintOptions {
             isWarningsAsErrors = true
             isIgnoreTestSources = true
-            setLintConfig(file("${project.rootDir}/codequality/lint_rules.xml"))
+            lintConfig = file("${project.rootDir}/codequality/lint_rules.xml")
         }
 
         defaultConfig {
