@@ -1,6 +1,5 @@
 package ru.terrakok.gitlabclient.presentation.project.info
 
-import io.reactivex.Single
 import javax.inject.Inject
 import moxy.InjectViewState
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
@@ -31,13 +30,8 @@ class ProjectInfoPresenter @Inject constructor(
             .flatMap { project ->
                 projectInteractor
                     .getProjectReadme(project)
-                    .onErrorResumeNext { throwable ->
-                        when (throwable) {
-                            is ProjectInteractor.ReadmeNotFound -> Single.just("")
-                            else -> Single.error(throwable)
-                        }
-                    }
                     .flatMap { mdConverter.markdownToSpannable(it) }
+                    .onErrorReturnItem("")
                     .map { mdReadme -> Pair(project, mdReadme) }
             }
             .doOnSubscribe { viewState.showProgress(true) }

@@ -70,7 +70,7 @@ class ProjectInteractor @Inject constructor(
             .defer {
                 if (project.defaultBranch != null && project.readmeUrl != null) {
                     val readmePath = project.readmeUrl.substringAfter(
-                        "${project.webUrl}/blob/${project.defaultBranch}/"
+                        "/blob/${project.defaultBranch}/"
                     )
                     getProjectFile(project.id, readmePath, project.defaultBranch)
                 } else {
