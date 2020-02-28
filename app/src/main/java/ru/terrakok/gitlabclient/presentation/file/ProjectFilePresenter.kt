@@ -1,5 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.file
 
+import javax.inject.Inject
 import moxy.InjectViewState
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.di.FilePath
@@ -9,7 +10,6 @@ import ru.terrakok.gitlabclient.di.ProjectId
 import ru.terrakok.gitlabclient.model.interactor.ProjectInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.util.extractFileNameFromPath
-import javax.inject.Inject
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 22.11.18.

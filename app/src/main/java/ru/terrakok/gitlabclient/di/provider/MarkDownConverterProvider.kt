@@ -1,6 +1,9 @@
 package ru.terrakok.gitlabclient.di.provider
 
 import android.content.Context
+import java.util.concurrent.Executors
+import javax.inject.Inject
+import javax.inject.Provider
 import ru.noties.markwon.SpannableConfiguration
 import ru.noties.markwon.UrlProcessorRelativeToAbsolute
 import ru.noties.markwon.il.AsyncDrawableLoader
@@ -13,9 +16,6 @@ import ru.terrakok.gitlabclient.model.data.server.client.OkHttpClientFactory
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.util.color
-import java.util.concurrent.Executors
-import javax.inject.Inject
-import javax.inject.Provider
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 28.02.18.

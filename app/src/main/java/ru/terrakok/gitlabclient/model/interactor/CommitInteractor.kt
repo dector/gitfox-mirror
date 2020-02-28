@@ -1,8 +1,8 @@
 package ru.terrakok.gitlabclient.model.interactor
 
+import javax.inject.Inject
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
-import javax.inject.Inject
 
 /**
  * @author Valentin Logvinovitch (glvvl) on 18.06.19.

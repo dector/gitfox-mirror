@@ -1,14 +1,14 @@
 package ru.terrakok.gitlabclient.presentation.my.events
 
-import moxy.InjectViewState
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
+import javax.inject.Inject
+import moxy.InjectViewState
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.model.interactor.EventInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.*
 import ru.terrakok.gitlabclient.util.openInfo
-import javax.inject.Inject
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 15.06.17.

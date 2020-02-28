@@ -2,6 +2,7 @@ package ru.terrakok.gitlabclient.presentation.commit
 
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
+import javax.inject.Inject
 import moxy.InjectViewState
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.Screens
@@ -13,7 +14,6 @@ import ru.terrakok.gitlabclient.entity.DiffData
 import ru.terrakok.gitlabclient.model.interactor.CommitInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
-import javax.inject.Inject
 
 /**
  * @author Valentin Logvinovitch (glvvl) on 18.06.19.

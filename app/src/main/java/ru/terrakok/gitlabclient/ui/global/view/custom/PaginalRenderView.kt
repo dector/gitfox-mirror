@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.FrameLayout
 import androidx.recyclerview.widget.LinearLayoutManager
+import javax.inject.Inject
 import kotlinx.android.synthetic.main.view_paginal_render.view.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.di.DI
@@ -15,7 +16,6 @@ import ru.terrakok.gitlabclient.util.inflate
 import ru.terrakok.gitlabclient.util.userMessage
 import ru.terrakok.gitlabclient.util.visible
 import toothpick.Toothpick
-import javax.inject.Inject
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 2019-06-22.
@@ -47,8 +47,8 @@ class PaginalRenderView @JvmOverloads constructor(
     }
 
     fun init(
-            refreshCallback: () -> Unit,
-            adapter: PaginalAdapter
+        refreshCallback: () -> Unit,
+        adapter: PaginalAdapter
     ) {
         this.refreshCallback = refreshCallback
         this.adapter = adapter

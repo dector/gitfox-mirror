@@ -2,9 +2,9 @@ package ru.terrakok.gitlabclient.ui.project.info
 
 import android.os.Bundle
 import android.view.View
+import kotlinx.android.synthetic.main.fragment_project_info.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
-import kotlinx.android.synthetic.main.fragment_project_info.*
 import ru.noties.markwon.Markwon
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Project

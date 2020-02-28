@@ -5,6 +5,7 @@ import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import io.reactivex.disposables.Disposable
+import javax.inject.Inject
 import kotlinx.android.synthetic.main.drawer_flow_fragment.*
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.NavigatorHolder
@@ -24,7 +25,6 @@ import ru.terrakok.gitlabclient.ui.projects.ProjectsContainerFragment
 import ru.terrakok.gitlabclient.util.setLaunchScreen
 import toothpick.Scope
 import toothpick.Toothpick
-import javax.inject.Inject
 
 class DrawerFlowFragment : BaseFragment() {
     @Inject

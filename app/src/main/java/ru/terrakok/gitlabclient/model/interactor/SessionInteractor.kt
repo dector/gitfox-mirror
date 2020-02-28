@@ -1,6 +1,9 @@
 package ru.terrakok.gitlabclient.model.interactor
 
 import io.reactivex.Completable
+import java.net.URI
+import java.util.*
+import javax.inject.Inject
 import ru.terrakok.gitlabclient.di.DI
 import ru.terrakok.gitlabclient.di.module.ServerModule
 import ru.terrakok.gitlabclient.entity.app.session.OAuthParams
@@ -10,9 +13,6 @@ import ru.terrakok.gitlabclient.model.data.server.UserAccountApi
 import ru.terrakok.gitlabclient.model.data.storage.Prefs
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import toothpick.Toothpick
-import java.net.URI
-import java.util.*
-import javax.inject.Inject
 
 class SessionInteractor @Inject constructor(
     private val prefs: Prefs,

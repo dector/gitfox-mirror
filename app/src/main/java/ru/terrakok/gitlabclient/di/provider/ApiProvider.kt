@@ -1,6 +1,8 @@
 package ru.terrakok.gitlabclient.di.provider
 
 import com.google.gson.Gson
+import javax.inject.Inject
+import javax.inject.Provider
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -13,8 +15,6 @@ import ru.terrakok.gitlabclient.model.data.server.ApiWithProjectCache
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.client.OkHttpClientFactory
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
-import javax.inject.Inject
-import javax.inject.Provider
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 20.06.17.

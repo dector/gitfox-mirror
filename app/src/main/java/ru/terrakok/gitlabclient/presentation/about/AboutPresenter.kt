@@ -1,5 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.about
 
+import javax.inject.Inject
 import moxy.InjectViewState
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.di.AppDevelopersPath
@@ -8,7 +9,6 @@ import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
 import timber.log.Timber
-import javax.inject.Inject
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 20.05.17.

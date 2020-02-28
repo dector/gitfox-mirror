@@ -2,6 +2,7 @@ package ru.terrakok.gitlabclient.ui.privacypolicy
 
 import android.os.Bundle
 import android.view.View
+import javax.inject.Inject
 import kotlinx.android.synthetic.main.fragment_privacy_policy.*
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.R
@@ -10,7 +11,6 @@ import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.util.addSystemBottomPadding
 import ru.terrakok.gitlabclient.util.addSystemTopPadding
 import toothpick.Toothpick
-import javax.inject.Inject
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 26.09.18.

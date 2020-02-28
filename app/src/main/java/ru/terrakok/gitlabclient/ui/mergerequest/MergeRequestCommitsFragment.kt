@@ -1,9 +1,9 @@
 package ru.terrakok.gitlabclient.ui.mergerequest
 
 import android.os.Bundle
+import kotlinx.android.synthetic.main.fragment_mr_commits.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
-import kotlinx.android.synthetic.main.fragment_mr_commits.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.CommitWithShortUser
 import ru.terrakok.gitlabclient.presentation.global.Paginator

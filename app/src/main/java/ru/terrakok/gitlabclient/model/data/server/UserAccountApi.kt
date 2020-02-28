@@ -2,6 +2,7 @@ package ru.terrakok.gitlabclient.model.data.server
 
 import com.google.gson.Gson
 import io.reactivex.Single
+import javax.inject.Inject
 import okhttp3.FormBody
 import okhttp3.Request
 import ru.terrakok.gitlabclient.BuildConfig
@@ -9,7 +10,6 @@ import ru.terrakok.gitlabclient.entity.TokenData
 import ru.terrakok.gitlabclient.entity.User
 import ru.terrakok.gitlabclient.entity.app.session.UserAccount
 import ru.terrakok.gitlabclient.model.data.server.client.OkHttpClientFactory
-import javax.inject.Inject
 
 class UserAccountApi @Inject constructor(
     private val gson: Gson,
