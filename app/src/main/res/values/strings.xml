@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!--common-->
     <string name="app_name">GitFox</string>
     <string name="cancel">Cancel</string>
@@ -76,11 +76,11 @@
     <!--My Issues screen-->
     <string name="issues_created_by_me">Created</string>
     <string name="issues_assigned_by_me">Assigned</string>
-    <string name="time_sec" formatted="false">%d sec</string>
-    <string name="time_min" formatted="false">%d min</string>
-    <string name="time_hour" formatted="false">%d h</string>
-    <string name="time_day" formatted="false">%d d</string>
-    <string name="time_ago" formatted="false">%s ago</string>
+    <string name="time_sec" tools:ignore="PluralsCandidate">%d sec</string>
+    <string name="time_min" tools:ignore="PluralsCandidate">%d min</string>
+    <string name="time_hour" tools:ignore="PluralsCandidate">%d h</string>
+    <string name="time_day" tools:ignore="PluralsCandidate">%d d</string>
+    <string name="time_ago">%s ago</string>
 
     <!--My Events Screen-->
     <string name="event_action_closed">closed</string>
