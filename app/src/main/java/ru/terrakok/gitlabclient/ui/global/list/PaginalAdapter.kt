@@ -11,11 +11,11 @@ import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
  */
 
 class PaginalAdapter(
-        private val nextPageCallback: () -> Unit,
-        private val itemDiff: (old: Any, new: Any) -> Boolean,
-        vararg delegate: AdapterDelegate<MutableList<Any>>
+    private val nextPageCallback: () -> Unit,
+    private val itemDiff: (old: Any, new: Any) -> Boolean,
+    vararg delegate: AdapterDelegate<MutableList<Any>>
 ) : AsyncListDifferDelegationAdapter<Any>(
-        object : DiffUtil.ItemCallback<Any>(){
+        object : DiffUtil.ItemCallback<Any>() {
             override fun areItemsTheSame(oldItem: Any, newItem: Any): Boolean {
                 if (oldItem === newItem) return true
                 return itemDiff.invoke(oldItem, newItem)

@@ -3,6 +3,8 @@ package ru.terrakok.gitlabclient.model.interactor
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
+import java.util.concurrent.ConcurrentHashMap
+import javax.inject.Inject
 import ru.terrakok.gitlabclient.di.DefaultPageSize
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.Note
@@ -19,8 +21,6 @@ import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
-import java.util.concurrent.ConcurrentHashMap
-import javax.inject.Inject
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 14.06.17.

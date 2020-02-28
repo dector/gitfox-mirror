@@ -1,9 +1,9 @@
 package ru.terrakok.gitlabclient.ui.project.issues
 
 import android.os.Bundle
+import kotlinx.android.synthetic.main.fragment_project_issues.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
-import kotlinx.android.synthetic.main.fragment_project_issues.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.entity.issue.IssueState

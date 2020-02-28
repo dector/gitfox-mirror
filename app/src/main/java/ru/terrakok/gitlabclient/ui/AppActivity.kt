@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import io.reactivex.disposables.Disposable
+import javax.inject.Inject
 import kotlinx.android.synthetic.main.layout_container.*
 import moxy.MvpAppCompatActivity
 import ru.terrakok.cicerone.Navigator
@@ -25,7 +26,6 @@ import ru.terrakok.gitlabclient.ui.global.MessageDialogFragment
 import ru.terrakok.gitlabclient.util.doOnApplyWindowInsets
 import ru.terrakok.gitlabclient.util.updatePadding
 import toothpick.Toothpick
-import javax.inject.Inject
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 03.09.18.

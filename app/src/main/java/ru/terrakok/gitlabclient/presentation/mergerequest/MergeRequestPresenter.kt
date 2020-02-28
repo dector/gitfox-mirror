@@ -1,8 +1,9 @@
 package ru.terrakok.gitlabclient.presentation.mergerequest
 
-import moxy.InjectViewState
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
+import javax.inject.Inject
+import moxy.InjectViewState
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.di.MergeRequestId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
@@ -16,7 +17,6 @@ import ru.terrakok.gitlabclient.model.system.ResourceManager
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
-import javax.inject.Inject
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 27.11.18.

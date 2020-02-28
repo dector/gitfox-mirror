@@ -1,5 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.mergerequest.info
 
+import javax.inject.Inject
 import moxy.InjectViewState
 import ru.terrakok.gitlabclient.di.MergeRequestId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
@@ -8,7 +9,6 @@ import ru.terrakok.gitlabclient.model.interactor.MergeRequestInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
-import javax.inject.Inject
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 05.01.18.

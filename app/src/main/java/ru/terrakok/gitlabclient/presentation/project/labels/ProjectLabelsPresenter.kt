@@ -1,7 +1,8 @@
 package ru.terrakok.gitlabclient.presentation.project.labels
 
-import moxy.InjectViewState
 import io.reactivex.disposables.Disposable
+import javax.inject.Inject
+import moxy.InjectViewState
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
 import ru.terrakok.gitlabclient.entity.Label
@@ -10,7 +11,6 @@ import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.Paginator
-import javax.inject.Inject
 
 /**
  * @author Maxim Myalkin (MaxMyalkin) on 11.11.2018.

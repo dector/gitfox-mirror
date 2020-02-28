@@ -1,9 +1,9 @@
 package ru.terrakok.gitlabclient.ui.my.todos
 
 import android.os.Bundle
+import kotlinx.android.synthetic.main.fragment_my_todos.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
-import kotlinx.android.synthetic.main.fragment_my_todos.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.TodoListPendingState

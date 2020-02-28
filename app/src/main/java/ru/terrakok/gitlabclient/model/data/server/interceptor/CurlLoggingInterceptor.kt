@@ -18,12 +18,12 @@
 
 package ru.terrakok.gitlabclient.model.data.server.interceptor
 
+import java.io.IOException
+import java.nio.charset.Charset
 import okhttp3.Interceptor
 import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor.Logger
 import okio.Buffer
-import java.io.IOException
-import java.nio.charset.Charset
 
 /**
  * An OkHttp interceptor that logs requests as curl shell commands. They can then
@@ -56,10 +56,10 @@ class CurlLoggingInterceptor(private val logger: Logger = Logger.DEFAULT) : Inte
         if (curlOptions != null) {
             curlCmd += " " + curlOptions!!
         }
-        curlCmd += " -X " + request.method()
+        curlCmd += " -X " + request.method
 
-        val headers = request.headers()
-        for (i in 0 until headers.size()) {
+        val headers = request.headers
+        for (i in 0 until headers.size) {
             val name = headers.name(i)
             var value = headers.value(i)
 
@@ -75,16 +75,16 @@ class CurlLoggingInterceptor(private val logger: Logger = Logger.DEFAULT) : Inte
             curlCmd += " -H \"$name: $value\""
         }
 
-        request.body()?.let {
+        request.body?.let {
             val buffer = Buffer().apply { it.writeTo(this) }
             val charset = it.contentType()?.charset(UTF8) ?: UTF8
             // try to keep to a single line and use a subshell to preserve any line breaks
             curlCmd += " --data $'" + buffer.readString(charset).replace("\n", "\\n") + "'"
         }
 
-        curlCmd += (if (compressed) " --compressed " else " ") + "\"${request.url()}\""
+        curlCmd += (if (compressed) " --compressed " else " ") + "\"${request.url}\""
 
-        logger.log("╭--- cURL (" + request.url() + ")")
+        logger.log("╭--- cURL (" + request.url + ")")
         logger.log(curlCmd)
         logger.log("╰--- (copy and paste the above line to a terminal)")
 

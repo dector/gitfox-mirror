@@ -1,9 +1,9 @@
 package ru.terrakok.gitlabclient.ui.user.info
 
 import android.os.Bundle
+import kotlinx.android.synthetic.main.fragment_user_info.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
-import kotlinx.android.synthetic.main.fragment_user_info.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.User
 import ru.terrakok.gitlabclient.presentation.user.info.UserInfoPresenter

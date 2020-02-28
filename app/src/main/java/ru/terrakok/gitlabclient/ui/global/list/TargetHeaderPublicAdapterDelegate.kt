@@ -23,9 +23,9 @@ import ru.terrakok.gitlabclient.util.*
  */
 
 fun TargetHeader.Public.isSame(other: TargetHeader.Public) =
-    target == other.target
-            && targetId == other.targetId
-            && date == other.date
+    target == other.target &&
+            targetId == other.targetId &&
+            date == other.date
 
 class TargetHeaderPublicAdapterDelegate(
     private val clickListener: (TargetHeader.Public) -> Unit

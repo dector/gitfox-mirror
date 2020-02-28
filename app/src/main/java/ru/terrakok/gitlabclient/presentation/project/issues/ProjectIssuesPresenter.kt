@@ -1,8 +1,9 @@
 package ru.terrakok.gitlabclient.presentation.project.issues
 
-import moxy.InjectViewState
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
+import javax.inject.Inject
+import moxy.InjectViewState
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
@@ -14,7 +15,6 @@ import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 import ru.terrakok.gitlabclient.util.openInfo
-import javax.inject.Inject
 
 /**
  * @author Eugene Shapovalov (CraggyHaggy). Date: 27.08.18

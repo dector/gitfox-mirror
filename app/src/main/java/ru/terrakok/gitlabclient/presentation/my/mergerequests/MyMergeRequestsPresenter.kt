@@ -1,8 +1,9 @@
 package ru.terrakok.gitlabclient.presentation.my.mergerequests
 
-import moxy.InjectViewState
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
+import javax.inject.Inject
+import moxy.InjectViewState
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.model.interactor.AccountInteractor
 import ru.terrakok.gitlabclient.model.interactor.MergeRequestInteractor
@@ -12,7 +13,6 @@ import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 import ru.terrakok.gitlabclient.util.openInfo
-import javax.inject.Inject
 
 @InjectViewState
 class MyMergeRequestsPresenter @Inject constructor(

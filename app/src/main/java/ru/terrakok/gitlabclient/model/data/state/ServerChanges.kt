@@ -1,8 +1,8 @@
 package ru.terrakok.gitlabclient.model.data.state
 
 import com.jakewharton.rxrelay2.PublishRelay
-import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import javax.inject.Inject
+import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 
 class ServerChanges @Inject constructor(
     schedulers: SchedulersProvider

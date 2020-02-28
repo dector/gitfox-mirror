@@ -3,10 +3,10 @@ package ru.terrakok.gitlabclient.ui.commit
 import android.os.Bundle
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
 import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
 import kotlinx.android.synthetic.main.fragment_commit.*
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.di.CommitId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper

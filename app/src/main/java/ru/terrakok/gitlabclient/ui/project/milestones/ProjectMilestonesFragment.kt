@@ -1,9 +1,9 @@
 package ru.terrakok.gitlabclient.ui.project.milestones
 
 import android.os.Bundle
+import kotlinx.android.synthetic.main.fragment_project_milestones.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
-import kotlinx.android.synthetic.main.fragment_project_milestones.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.milestone.Milestone
 import ru.terrakok.gitlabclient.presentation.global.Paginator

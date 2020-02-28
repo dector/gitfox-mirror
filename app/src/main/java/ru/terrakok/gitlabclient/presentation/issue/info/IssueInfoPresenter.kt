@@ -1,5 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.issue.info
 
+import javax.inject.Inject
 import moxy.InjectViewState
 import ru.terrakok.gitlabclient.di.IssueId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
@@ -7,7 +8,6 @@ import ru.terrakok.gitlabclient.di.ProjectId
 import ru.terrakok.gitlabclient.model.interactor.IssueInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
-import javax.inject.Inject
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 05.01.18.

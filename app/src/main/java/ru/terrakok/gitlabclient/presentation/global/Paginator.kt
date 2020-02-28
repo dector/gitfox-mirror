@@ -2,10 +2,10 @@ package ru.terrakok.gitlabclient.presentation.global
 
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Observable
-import ru.terrakok.gitlabclient.model.system.SchedulersProvider
-import timber.log.Timber
 import java.util.concurrent.Executors
 import javax.inject.Inject
+import ru.terrakok.gitlabclient.model.system.SchedulersProvider
+import timber.log.Timber
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 2019-06-21.

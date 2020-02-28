@@ -1,16 +1,16 @@
 package ru.terrakok.gitlabclient.model.data.server.client
 
 import android.os.Build
-import okhttp3.ConnectionSpec
-import okhttp3.OkHttpClient
-import okhttp3.TlsVersion
-import timber.log.Timber
 import java.net.InetAddress
 import java.net.Socket
 import java.security.KeyStore
 import javax.net.ssl.*
+import okhttp3.ConnectionSpec
+import okhttp3.OkHttpClient
+import okhttp3.TlsVersion
+import timber.log.Timber
 
-//https://github.com/square/okhttp/issues/2372#issuecomment-244807676
+// https://github.com/square/okhttp/issues/2372#issuecomment-244807676
 class Tls12SocketFactory(private val delegate: SSLSocketFactory) : SSLSocketFactory() {
     override fun getDefaultCipherSuites(): Array<String> = delegate.defaultCipherSuites
     override fun getSupportedCipherSuites(): Array<String> = delegate.supportedCipherSuites
@@ -63,7 +63,6 @@ class Tls12SocketFactory(private val delegate: SSLSocketFactory) : SSLSocketFact
 
     override fun createSocket(): Socket =
         super.createSocket().patchForTls12()
-
 
     companion object {
         private val TLS_V12_ONLY = arrayOf("TLSv1.2")

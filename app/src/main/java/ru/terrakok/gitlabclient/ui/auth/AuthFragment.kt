@@ -5,9 +5,9 @@ import android.os.Build
 import android.os.Bundle
 import android.webkit.*
 import androidx.annotation.RequiresApi
+import kotlinx.android.synthetic.main.fragment_auth.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
-import kotlinx.android.synthetic.main.fragment_auth.*
 import ru.terrakok.gitlabclient.BuildConfig
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.presentation.auth.AuthPresenter
