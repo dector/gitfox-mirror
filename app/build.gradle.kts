@@ -9,7 +9,15 @@ plugins {
 
 apply(from = "${project.rootDir}/codequality/ktlint.gradle.kts")
 
-val buildUid = System.getenv("BUILD_COMMIT_SHA") ?: "local"
+val buildUid = System.getenv("CI_COMMIT_SHORT_SHA") ?: "local"
+val buildName = System.getenv("CI_COMMIT_TAG")?.substring(1) ?: "Dev build"
+val buildNumber = System.getenv("CI_PIPELINE_IID")?.toInt() ?: Int.MAX_VALUE
+val signKeyAlias = System.getenv("KEY_ALIAS") ?: "alias"
+val signKeyPassword = System.getenv("KEY_PASS") ?: "pass"
+val oaAppId = System.getenv("OA_APP_ID") ?: "808b7f51c6634294afd879edd75d5eaf55f1a75e7fe5bd91ca8b7140a5af639d"
+val oaAppSecret = System.getenv("OA_APP_SECRET") ?: "a9dd39c8d2e781b65814007ca0f8b555d34f79b4d30c9356c38bb7ad9909c6f3"
+val oaAppUrl = System.getenv("OA_APP_URL") ?: "app://gitlab.client/"
+
 android {
     compileSdkVersion(29)
 
@@ -19,8 +27,8 @@ android {
         minSdkVersion(19)
         targetSdkVersion(29)
 
-        versionName = "1.7.0"
-        versionCode = 22
+        versionName = buildName
+        versionCode = buildNumber
 
         buildToolsVersion = "28.0.3"
 
@@ -56,29 +64,19 @@ android {
                 "\"https://gitlab.com/terrakok/gitlab-client/graphs/develop\""
             )
 
-            //todo: put prod value for release
-            buildConfigField(
-                "String",
-                "OAUTH_APP_ID",
-                "\"808b7f51c6634294afd879edd75d5eaf55f1a75e7fe5bd91ca8b7140a5af639d\""
-            )
-            buildConfigField(
-                "String",
-                "OAUTH_SECRET",
-                "\"a9dd39c8d2e781b65814007ca0f8b555d34f79b4d30c9356c38bb7ad9909c6f3\""
-            )
-            buildConfigField("String", "OAUTH_CALLBACK", "\"app://gitlab.client/\"")
+            buildConfigField("String", "OAUTH_APP_ID", "\"$oaAppId\"")
+            buildConfigField("String", "OAUTH_SECRET", "\"$oaAppSecret\"")
+            buildConfigField("String", "OAUTH_CALLBACK", "\"$oaAppUrl\"")
 
             multiDexEnabled = true
         }
 
         signingConfigs {
             create("prod") {
-                //todo put key params for release
                 storeFile = file("../keys/play/key.jks")
-                storePassword = "pass"
-                keyAlias = "alias"
-                keyPassword = "pass"
+                storePassword = signKeyPassword
+                keyAlias = signKeyAlias
+                keyPassword = signKeyPassword
             }
         }
 
