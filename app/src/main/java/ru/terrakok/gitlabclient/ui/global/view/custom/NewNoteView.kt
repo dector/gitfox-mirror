@@ -7,7 +7,7 @@ import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
 import kotlinx.android.synthetic.main.view_new_note.view.*
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.extension.getTintDrawable
+import ru.terrakok.gitlabclient.util.getTintDrawable
 
 class NewNoteView @JvmOverloads constructor(
     context: Context,

@@ -3,6 +3,7 @@ package ru.terrakok.gitlabclient.ui.global
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import javax.inject.Inject
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
@@ -11,10 +12,9 @@ import ru.terrakok.cicerone.android.support.SupportAppScreen
 import ru.terrakok.cicerone.commands.Command
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.di.module.FlowNavigationModule
-import ru.terrakok.gitlabclient.extension.setLaunchScreen
+import ru.terrakok.gitlabclient.util.setLaunchScreen
 import toothpick.Scope
 import toothpick.Toothpick
-import javax.inject.Inject
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 03.09.18.
@@ -38,13 +38,13 @@ abstract class FlowFragment : BaseFragment() {
     }
 
     private val navigator: Navigator by lazy {
-        object : SupportAppNavigator(this.activity, childFragmentManager, R.id.container) {
+        object : SupportAppNavigator(this.activity!!, childFragmentManager, R.id.container) {
             override fun activityBack() {
                 router.exit()
             }
 
             override fun setupFragmentTransaction(
-                command: Command?,
+                command: Command,
                 currentFragment: Fragment?,
                 nextFragment: Fragment?,
                 fragmentTransaction: FragmentTransaction

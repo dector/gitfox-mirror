@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!--common-->
     <string name="app_name">GitFox</string>
     <string name="cancel">Cancel</string>
@@ -14,6 +14,7 @@
     <string name="yourself">yourself</string>
     <string name="loading">loading…</string>
     <string name="auto_logout_message">Session error. Auto logout…</string>
+    <string name="close_issue">Close issue</string>
 
     <!--Main screen-->
     <string name="gitlab_activity">Activity</string>
@@ -75,11 +76,11 @@
     <!--My Issues screen-->
     <string name="issues_created_by_me">Created</string>
     <string name="issues_assigned_by_me">Assigned</string>
-    <string name="time_sec" formatted="false">%d sec</string>
-    <string name="time_min" formatted="false">%d min</string>
-    <string name="time_hour" formatted="false">%d h</string>
-    <string name="time_day" formatted="false">%d d</string>
-    <string name="time_ago" formatted="false">%s ago</string>
+    <string name="time_sec" tools:ignore="PluralsCandidate">%d sec</string>
+    <string name="time_min" tools:ignore="PluralsCandidate">%d min</string>
+    <string name="time_hour" tools:ignore="PluralsCandidate">%d h</string>
+    <string name="time_day" tools:ignore="PluralsCandidate">%d d</string>
+    <string name="time_ago">%s ago</string>
 
     <!--My Events Screen-->
     <string name="event_action_closed">closed</string>
@@ -140,9 +141,9 @@
     <!--Merge Request Commits screen-->
     <string name="merge_request_commits_description" formatted="false">%s authored %s</string>
 
-    <!--Merge Request Changes screen-->
-    <string name="merge_request_changes_added_count" formatted="false">+%d</string>
-    <string name="merge_request_changes_deleted_count" formatted="false">-%d</string>
+    <!--Diff data item-->
+    <string name="item_diff_data_added_count" formatted="false">+%d</string>
+    <string name="item_diff_data_deleted_count" formatted="false">-%d</string>
 
     <!--Issue Info screen-->
     <string name="issue_title" formatted="false">#%d</string>

@@ -1,15 +1,16 @@
 package ru.terrakok.gitlabclient.ui.about
 
 import android.os.Bundle
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_about.*
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.develop.AppInfo
-import ru.terrakok.gitlabclient.extension.tryOpenLink
 import ru.terrakok.gitlabclient.presentation.about.AboutPresenter
 import ru.terrakok.gitlabclient.presentation.about.AboutView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.util.addSystemTopPadding
+import ru.terrakok.gitlabclient.util.tryOpenLink
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 20.05.17.
@@ -30,6 +31,7 @@ class AboutFragment : BaseFragment(), AboutView {
         super.onActivityCreated(savedInstanceState)
 
         toolbar.setNavigationOnClickListener { presenter.onMenuPressed() }
+        toolbar.addSystemTopPadding()
         feedbackView.setOnClickListener { tryOpenLink(supportUrl) }
         librariesView.setOnClickListener { presenter.onShowLibrariesClicked() }
         privacyPolicyView.setOnClickListener { presenter.onPrivacyPolicyClicked() }

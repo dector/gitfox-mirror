@@ -1,19 +1,17 @@
 package ru.terrakok.gitlabclient.ui.project
 
 import android.os.Bundle
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter
 import kotlinx.android.synthetic.main.fragment_main_project.*
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
-import ru.terrakok.gitlabclient.extension.color
-import ru.terrakok.gitlabclient.extension.shareText
-import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.presentation.project.ProjectPresenter
 import ru.terrakok.gitlabclient.presentation.project.ProjectView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.util.*
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 10.02.18.
@@ -38,6 +36,7 @@ class MainProjectFragment : BaseFragment(), ProjectView {
         super.onActivityCreated(savedInstanceState)
 
         toolbar.apply {
+            addSystemTopPadding()
             setNavigationOnClickListener { onBackPressed() }
             inflateMenu(R.menu.project_menu)
             setOnMenuItemClickListener { item ->
@@ -48,6 +47,7 @@ class MainProjectFragment : BaseFragment(), ProjectView {
                 true
             }
         }
+        linearLayout.addSystemBottomPadding(bottomBar, true)
         AHBottomNavigationAdapter(activity, R.menu.project_bottom_menu).apply {
             setupWithBottomNavigation(bottomBar)
         }
@@ -84,7 +84,7 @@ class MainProjectFragment : BaseFragment(), ProjectView {
         if (currentFragment != null && newFragment != null && currentFragment == newFragment) return
 
         childFragmentManager.beginTransaction().apply {
-            if (newFragment == null) add(R.id.projectMainContainer, tab.fragment, tab.screenKey)
+            if (newFragment == null) add(R.id.projectMainContainer, tab.fragment!!, tab.screenKey)
 
             currentFragment?.let {
                 hide(it)

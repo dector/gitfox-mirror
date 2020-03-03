@@ -2,18 +2,20 @@ package ru.terrakok.gitlabclient.ui.libraries
 
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import kotlinx.android.synthetic.main.fragment_libraries.*
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.di.DI
 import ru.terrakok.gitlabclient.entity.app.develop.AppLibrary
-import ru.terrakok.gitlabclient.extension.tryOpenLink
 import ru.terrakok.gitlabclient.presentation.libraries.LibrariesPresenter
 import ru.terrakok.gitlabclient.presentation.libraries.LibrariesView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.list.AppLibraryAdapterDelegate
+import ru.terrakok.gitlabclient.util.addSystemBottomPadding
+import ru.terrakok.gitlabclient.util.addSystemTopPadding
+import ru.terrakok.gitlabclient.util.tryOpenLink
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 24.12.17.
@@ -35,8 +37,10 @@ class LibrariesFragment : BaseFragment(), LibrariesView {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         toolbar.setNavigationOnClickListener { presenter.onBackPressed() }
+        toolbar.addSystemTopPadding()
 
         with(recyclerView) {
+            addSystemBottomPadding()
             layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true)
             adapter = this@LibrariesFragment.adapter

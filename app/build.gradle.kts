@@ -1,6 +1,7 @@
+import org.jetbrains.kotlin.config.KotlinCompilerVersion
+
 plugins {
     id("com.android.application")
-    id("io.fabric")
     kotlin("android")
     kotlin("kapt")
     id("org.jetbrains.kotlin.android.extensions")
@@ -8,32 +9,52 @@ plugins {
 
 apply(from = "${project.rootDir}/codequality/ktlint.gradle.kts")
 
-val buildUid = System.getenv("BUILD_COMMIT_SHA") ?: "local"
+val buildUid = System.getenv("CI_COMMIT_SHORT_SHA") ?: "local"
+val buildName = System.getenv("CI_COMMIT_TAG")?.substring(1) ?: "Dev build"
+val buildNumber = System.getenv("CI_PIPELINE_IID")?.toInt() ?: Int.MAX_VALUE
+val signKeyAlias = System.getenv("KEY_ALIAS") ?: "alias"
+val signKeyPassword = System.getenv("KEY_PASS") ?: "pass"
+val oaAppId = System.getenv("OA_APP_ID") ?: "808b7f51c6634294afd879edd75d5eaf55f1a75e7fe5bd91ca8b7140a5af639d"
+val oaAppSecret = System.getenv("OA_APP_SECRET") ?: "a9dd39c8d2e781b65814007ca0f8b555d34f79b4d30c9356c38bb7ad9909c6f3"
+val oaAppUrl = System.getenv("OA_APP_URL") ?: "app://gitlab.client/"
+
 android {
-    compileSdkVersion(28)
+    compileSdkVersion(29)
 
     defaultConfig {
         applicationId = "com.gitlab.terrakok.gitfox"
 
         minSdkVersion(19)
-        targetSdkVersion(28)
+        targetSdkVersion(29)
 
-        versionName = "1.5.5"
-        versionCode = 20
+        versionName = buildName
+        versionCode = buildNumber
 
         buildToolsVersion = "28.0.3"
 
         lintOptions {
             isWarningsAsErrors = true
             isIgnoreTestSources = true
-            setLintConfig(file("${project.rootDir}/codequality/lint_rules.xml"))
+            lintConfig = file("${project.rootDir}/codequality/lint_rules.xml")
         }
 
         defaultConfig {
             buildConfigField("String", "VERSION_UID", "\"$buildUid\"")
-            buildConfigField("String", "APP_DESCRIPTION", "\"Gitfox is an Android client for Gitlab.\"")
-            buildConfigField("String", "FEEDBACK_URL", "\"https://gitlab.com/terrakok/gitlab-client/issues\"")
-            buildConfigField("String", "APP_HOME_PAGE", "\"https://gitlab.com/terrakok/gitlab-client\"")
+            buildConfigField(
+                "String",
+                "APP_DESCRIPTION",
+                "\"Gitfox is an Android client for Gitlab.\""
+            )
+            buildConfigField(
+                "String",
+                "FEEDBACK_URL",
+                "\"https://gitlab.com/terrakok/gitlab-client/issues\""
+            )
+            buildConfigField(
+                "String",
+                "APP_HOME_PAGE",
+                "\"https://gitlab.com/terrakok/gitlab-client\""
+            )
 
             buildConfigField("String", "WEB_AUTH_USER_AGENT", "\"gitfox_user_agent\"")
             buildConfigField("String", "ORIGIN_GITLAB_ENDPOINT", "\"https://gitlab.com/\"")
@@ -43,29 +64,19 @@ android {
                 "\"https://gitlab.com/terrakok/gitlab-client/graphs/develop\""
             )
 
-            //todo: put prod value for release
-            buildConfigField(
-                "String",
-                "OAUTH_APP_ID",
-                "\"808b7f51c6634294afd879edd75d5eaf55f1a75e7fe5bd91ca8b7140a5af639d\""
-            )
-            buildConfigField(
-                "String",
-                "OAUTH_SECRET",
-                "\"a9dd39c8d2e781b65814007ca0f8b555d34f79b4d30c9356c38bb7ad9909c6f3\""
-            )
-            buildConfigField("String", "OAUTH_CALLBACK", "\"app://gitlab.client/\"")
+            buildConfigField("String", "OAUTH_APP_ID", "\"$oaAppId\"")
+            buildConfigField("String", "OAUTH_SECRET", "\"$oaAppSecret\"")
+            buildConfigField("String", "OAUTH_CALLBACK", "\"$oaAppUrl\"")
 
             multiDexEnabled = true
         }
 
         signingConfigs {
             create("prod") {
-                //todo put key params for release
                 storeFile = file("../keys/play/key.jks")
-                storePassword = "pass"
-                keyAlias = "alias"
-                keyPassword = "pass"
+                storePassword = signKeyPassword
+                keyAlias = signKeyAlias
+                keyPassword = signKeyPassword
             }
         }
 
@@ -91,6 +102,14 @@ android {
             }
         }
     }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+    buildToolsVersion = "29.0.2"
 }
 
 androidExtensions {
@@ -98,79 +117,76 @@ androidExtensions {
 }
 
 dependencies {
-    val moxyVersion = "1.7.0"
-    val toothpickVersion = "2.1.0"
-    val retrofitVersion = "2.2.0"
-    val markwonVersion = extra["markwonVersion"] as String
-    val glideVersion = "4.8.0"
-
     //Support
-    implementation("androidx.appcompat:appcompat:1.0.2")
-    implementation("com.google.android.material:material:1.1.0-alpha07")
+    implementation("androidx.appcompat:appcompat:1.1.0")
+    implementation("com.google.android.material:material:1.1.0")
     implementation("androidx.cardview:cardview:1.0.0")
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.0.0")
+    implementation("androidx.recyclerview:recyclerview:1.1.0")
     implementation("androidx.constraintlayout:constraintlayout:1.1.3")
     //Kotlin
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:${extra["kotlinVersion"] as String}")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.3.61")
     //Log
-    implementation("com.jakewharton.timber:timber:4.7.0")
+    implementation("com.jakewharton.timber:timber:4.7.1")
     //MVP Moxy
-    kapt("tech.schoolhelper:moxy-x-compiler:$moxyVersion")
-    implementation("tech.schoolhelper:moxy-x:$moxyVersion")
-    implementation("tech.schoolhelper:moxy-x-androidx:$moxyVersion")
+    val moxyVersion = "2.0.2"
+    kapt("com.github.moxy-community:moxy-compiler:$moxyVersion")
+    implementation("com.github.moxy-community:moxy:$moxyVersion")
+    implementation("com.github.moxy-community:moxy-androidx:$moxyVersion")
     //Cicerone Navigation
-    implementation("ru.terrakok.cicerone:cicerone:5.0.0")
+    implementation("ru.terrakok.cicerone:cicerone:5.1.0")
     //DI
+    val toothpickVersion = "3.1.0"
     implementation("com.github.stephanenicolas.toothpick:toothpick-runtime:$toothpickVersion")
     kapt("com.github.stephanenicolas.toothpick:toothpick-compiler:$toothpickVersion")
     //Gson
-    implementation("com.google.code.gson:gson:2.8.5")
+    implementation("com.google.code.gson:gson:2.8.6")
     //Retrofit
+    val retrofitVersion = "2.7.1"
     implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
     implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
-    implementation("com.squareup.okhttp3:logging-interceptor:3.11.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.4.0")
     implementation("com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion")
     //RxJava
     implementation("io.reactivex.rxjava2:rxandroid:2.1.1")
     implementation("io.reactivex.rxjava2:rxjava:2.2.6")
-    implementation("com.jakewharton.rxrelay2:rxrelay:2.1.0")
+    implementation("com.jakewharton.rxrelay2:rxrelay:2.1.1")
     //Adapter simplify
-    implementation("com.hannesdorfmann:adapterdelegates4:4.0.0")
+    implementation("com.hannesdorfmann:adapterdelegates4:4.2.0")
     //Image load and cache
+    val glideVersion = "4.11.0"
     implementation("com.github.bumptech.glide:glide:$glideVersion")
     kapt("com.github.bumptech.glide:compiler:$glideVersion")
     implementation("com.github.bumptech.glide:okhttp3-integration:$glideVersion")
     //Markdown to HTML converter
+    val markwonVersion = "2.0.0"
     implementation("ru.noties:markwon:$markwonVersion")
     implementation("ru.noties:markwon-image-loader:$markwonVersion")
     //Bottom navigation bar
     implementation("com.aurelhubert:ahbottomnavigation:2.3.4")
     //Lottie
-    implementation("com.airbnb.android:lottie:2.5.1")
+    implementation("com.airbnb.android:lottie:3.3.1")
     //Date
-    implementation("com.jakewharton.threetenabp:threetenabp:1.2.1")
+    implementation("com.jakewharton.threetenabp:threetenabp:1.2.2")
     //FlexBox Layout
     implementation("com.google.android:flexbox:1.0.0")
-    //Firebase
-    implementation("com.google.firebase:firebase-core:17.0.0")
-    //Crashlytics
-    implementation("com.crashlytics.sdk.android:crashlytics:2.10.1")
 
     //Custom GitLab markdown parsing tools
     implementation(project(":markwonx"))
 
     //JUnit
-    testImplementation("junit:junit:4.12")
+    testImplementation("junit:junit:4.13")
     //Mockito
     testImplementation("org.mockito:mockito-core:2.27.0")
     //Mockito Kotlin
-    testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0")
+    testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
     //Date with timezone
-    testImplementation("org.threeten:threetenbp:1.4.0")
+    testImplementation("org.threeten:threetenbp:1.4.1")
 }
 
 configurations.all {
     resolutionStrategy {
-        force("org.jetbrains.kotlin:kotlin-stdlib:${extra["kotlinVersion"] as String}")
+        force("org.jetbrains.kotlin:kotlin-stdlib:${KotlinCompilerVersion.VERSION}")
     }
 }
 
@@ -179,5 +195,3 @@ gradle.buildFinished {
     println("VersionCode: ${android.defaultConfig.versionCode}")
     println("BuildUid: $buildUid")
 }
-
-apply(plugin = "com.google.gms.google-services")

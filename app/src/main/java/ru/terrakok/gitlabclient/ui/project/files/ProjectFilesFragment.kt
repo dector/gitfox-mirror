@@ -3,21 +3,23 @@ package ru.terrakok.gitlabclient.ui.project.files
 import android.os.Bundle
 import android.text.TextUtils
 import android.widget.PopupMenu
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_project_files.*
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Branch
 import ru.terrakok.gitlabclient.entity.app.ProjectFile
-import ru.terrakok.gitlabclient.extension.setTitleEllipsize
-import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 import ru.terrakok.gitlabclient.presentation.project.files.ProjectFileDestination
 import ru.terrakok.gitlabclient.presentation.project.files.ProjectFilesPresenter
 import ru.terrakok.gitlabclient.presentation.project.files.ProjectFilesView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.ui.global.list.PaginalAdapter
 import ru.terrakok.gitlabclient.ui.global.list.ProjectFileAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.isSame
+import ru.terrakok.gitlabclient.util.addSystemTopPadding
+import ru.terrakok.gitlabclient.util.setTitleEllipsize
+import ru.terrakok.gitlabclient.util.showSnackMessage
 import toothpick.Scope
 import toothpick.config.Module
 
@@ -44,6 +46,14 @@ class ProjectFilesFragment : BaseFragment(), ProjectFilesView {
         scope.getInstance(ProjectFilesPresenter::class.java)
 
     private lateinit var projectFileDestination: ProjectFileDestination
+    private val adapter by lazy { PaginalAdapter({ presenter.loadNextFilesPage() },
+            { o, n ->
+                if (o is ProjectFile && n is ProjectFile) {
+                    o.isSame(n)
+                } else false
+            },
+            ProjectFileAdapterDelegate { presenter.onFileClick(it) }
+    ) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         projectFileDestination = ProjectFileDestination()
@@ -56,6 +66,7 @@ class ProjectFilesFragment : BaseFragment(), ProjectFilesView {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         toolbar.apply {
+            addSystemTopPadding()
             inflateMenu(R.menu.project_files_menu)
             setNavigationOnClickListener { presenter.onNavigationCloseClicked() }
             setOnMenuItemClickListener {
@@ -71,13 +82,7 @@ class ProjectFilesFragment : BaseFragment(), ProjectFilesView {
         }
         paginalRenderView.init(
             { presenter.refreshFiles() },
-            { presenter.loadNextFilesPage() },
-            { o, n ->
-                if (o is ProjectFile && n is ProjectFile) {
-                    o.isSame(n)
-                } else false
-            },
-            ProjectFileAdapterDelegate { presenter.onFileClick(it) }
+            adapter
         )
     }
 

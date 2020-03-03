@@ -4,6 +4,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import org.threeten.bp.LocalDate
 import ru.terrakok.gitlabclient.entity.Label
+import ru.terrakok.gitlabclient.entity.issue.IssueStateEvent
 import ru.terrakok.gitlabclient.entity.milestone.Milestone
 import ru.terrakok.gitlabclient.entity.todo.Todo
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
@@ -92,4 +93,12 @@ class ApiWithChangesRegistration(
     override fun markAllPendingTodosAsDone(): Completable =
         serverApi.markAllPendingTodosAsDone()
             .doOnComplete { serverChanges.todoChanged() }
+
+    override fun editIssue(
+        projectId: Long,
+        issueId: Long,
+        stateEvent: IssueStateEvent
+    ): Completable =
+        serverApi.editIssue(projectId, issueId, stateEvent)
+            .doOnComplete { serverChanges.issueChanged(issueId) }
 }

@@ -3,7 +3,6 @@ package ru.terrakok.gitlabclient.di.provider
 import android.content.Context
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
-import okhttp3.OkHttpClient
 import org.commonmark.ext.gfm.strikethrough.StrikethroughExtension
 import org.commonmark.ext.gfm.tables.TablesExtension
 import org.commonmark.node.Visitor
@@ -14,19 +13,22 @@ import ru.noties.markwon.UrlProcessorRelativeToAbsolute
 import ru.noties.markwon.il.AsyncDrawableLoader
 import ru.noties.markwon.spans.SpannableTheme
 import ru.noties.markwon.tasklist.TaskListExtension
+import ru.terrakok.gitlabclient.BuildConfig
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.di.DefaultServerPath
+import ru.terrakok.gitlabclient.di.ServerPath
 import ru.terrakok.gitlabclient.entity.Label
+import ru.terrakok.gitlabclient.entity.app.session.AuthHolder
 import ru.terrakok.gitlabclient.entity.milestone.Milestone
-import ru.terrakok.gitlabclient.extension.color
 import ru.terrakok.gitlabclient.markwonx.*
 import ru.terrakok.gitlabclient.markwonx.label.*
 import ru.terrakok.gitlabclient.markwonx.milestone.MilestoneDescription
 import ru.terrakok.gitlabclient.markwonx.milestone.SimpleMilestoneVisitor
-import ru.terrakok.gitlabclient.model.interactor.label.LabelInteractor
-import ru.terrakok.gitlabclient.model.interactor.milestone.MilestoneInteractor
+import ru.terrakok.gitlabclient.model.data.server.client.OkHttpClientFactory
+import ru.terrakok.gitlabclient.model.interactor.LabelInteractor
+import ru.terrakok.gitlabclient.model.interactor.MilestoneInteractor
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
+import ru.terrakok.gitlabclient.util.color
 import java.util.concurrent.Executors
 import javax.inject.Inject
 import javax.inject.Provider
@@ -36,13 +38,14 @@ import javax.inject.Provider
  */
 class MarkDownConverterProvider @Inject constructor(
     private val context: Context,
-    private val httpClient: OkHttpClient,
+    private val okHttpClientFactory: OkHttpClientFactory,
+    private val tokHolder: AuthHolder,
     private val schedulers: SchedulersProvider,
     private val labelInteractor: LabelInteractor,
     private val milestoneInteractor: MilestoneInteractor,
     private val labelSpanConfig: LabelSpanConfig,
     private val markdownClickMediator: MarkdownClickMediator,
-    @DefaultServerPath private val defaultServerPath: String
+    @ServerPath private val serverPath: String
 ) : Provider<MarkDownConverter> {
 
     private val spannableTheme by lazy {
@@ -54,13 +57,13 @@ class MarkDownConverterProvider @Inject constructor(
 
     private val asyncDrawableLoader by lazy {
         AsyncDrawableLoader.builder()
-            .client(httpClient)
+            .client(okHttpClientFactory.create(tokHolder, false, BuildConfig.DEBUG))
             .executorService(Executors.newCachedThreadPool())
             .resources(context.resources)
             .build()
     }
 
-    private val urlProcessor by lazy { UrlProcessorRelativeToAbsolute(defaultServerPath) }
+    private val urlProcessor by lazy { UrlProcessorRelativeToAbsolute(serverPath) }
 
     private val spannableConfig by lazy {
         SpannableConfiguration.builder(context)
@@ -152,4 +155,3 @@ class MarkDownConverterProvider @Inject constructor(
         )
     }
 }
-

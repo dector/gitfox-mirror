@@ -10,6 +10,8 @@ import ru.terrakok.gitlabclient.entity.app.session.UserAccount
 import ru.terrakok.gitlabclient.entity.app.target.*
 import ru.terrakok.gitlabclient.entity.event.EventAction
 import ru.terrakok.gitlabclient.entity.event.EventTargetType
+import ru.terrakok.gitlabclient.entity.issue.Issue
+import ru.terrakok.gitlabclient.entity.issue.IssueState
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestMergeStatus
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
@@ -382,4 +384,32 @@ object TestData {
                 TargetAction.Undefined
         )
     }
+
+    fun getTestIssue() = Issue(
+        123L,
+        3342424L,
+        IssueState.OPENED,
+        "issue description",
+        ShortUser(1L, "", "", "", "", ""),
+        null,
+        9876L,
+        emptyList(),
+        null,
+        null,
+        getTestDate(),
+        listOf("test label 1", "test label 2"),
+        13,
+        null,
+        null,
+        false,
+        3,
+        0,
+        null,
+        null,
+        2,
+        TimeStats(32, 23, null, null),
+        null,
+        false,
+        null
+    )
 }

@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
-import ru.terrakok.gitlabclient.extension.inflate
+import ru.terrakok.gitlabclient.util.inflate
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 28.10.18.

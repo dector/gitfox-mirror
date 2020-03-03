@@ -1,15 +1,15 @@
 package ru.terrakok.gitlabclient.presentation.drawer
 
-import com.arellomobile.mvp.InjectViewState
+import javax.inject.Inject
+import moxy.InjectViewState
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.app.session.UserAccount
-import ru.terrakok.gitlabclient.model.interactor.session.SessionInteractor
+import ru.terrakok.gitlabclient.model.interactor.SessionInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem.*
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
-import javax.inject.Inject
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 04.04.17
@@ -53,7 +53,7 @@ class NavigationDrawerPresenter @Inject constructor(
     fun onLogoutClick() {
         menuController.close()
         userAccount?.let {
-            val hasOtherAccount = sessionInteractor.logout(it.id)
+            val hasOtherAccount = sessionInteractor.logoutFromAccount(it.id)
             if (hasOtherAccount) {
                 router.newRootFlow(Screens.DrawerFlow)
             } else {

@@ -3,15 +3,15 @@ package ru.terrakok.gitlabclient.ui.global.list
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.arellomobile.mvp.MvpDelegate
 import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_user_note.*
+import moxy.MvpDelegate
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.extension.humanTime
-import ru.terrakok.gitlabclient.extension.inflate
 import ru.terrakok.gitlabclient.presentation.global.NoteWithProjectId
 import ru.terrakok.gitlabclient.ui.global.view.custom.bindShortUser
+import ru.terrakok.gitlabclient.util.humanTime
+import ru.terrakok.gitlabclient.util.inflate
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 18.06.17.

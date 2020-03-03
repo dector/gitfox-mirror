@@ -3,8 +3,8 @@ package ru.terrakok.gitlabclient.model.data.storage
 import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import ru.terrakok.gitlabclient.entity.app.session.UserAccount
 import javax.inject.Inject
+import ru.terrakok.gitlabclient.entity.app.session.UserAccount
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 28.03.17
@@ -37,6 +37,13 @@ class Prefs @Inject constructor(
         set(value) {
             authPrefs.edit().putString(KEY_USER_ACCOUNTS, gson.toJson(value)).apply()
         }
+
+    fun getCurrentUserAccount(): UserAccount? {
+        selectedAccount?.let { id ->
+            return accounts.find { it.id == id }
+        }
+        return null
+    }
     //endregion
 
     //region app

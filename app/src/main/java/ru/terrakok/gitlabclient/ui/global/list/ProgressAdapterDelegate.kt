@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.extension.inflate
+import ru.terrakok.gitlabclient.util.inflate
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 18.06.17.

@@ -28,13 +28,12 @@ android {
 }
 
 dependencies {
-    val kotlinVersion = extra["kotlinVersion"] as String
-    val markwonVersion = extra["markwonVersion"] as String
-
+    val markwonVersion = "2.0.0"
     //Markdown to HTML converter
     compileOnly("ru.noties:markwon:$markwonVersion")
     testImplementation("ru.noties:markwon:$markwonVersion")
 
+    val kotlinVersion = "1.3.61"
     //Kotlin
     compileOnly("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
     testImplementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")

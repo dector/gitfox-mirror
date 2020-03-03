@@ -10,10 +10,10 @@ import kotlinx.android.synthetic.main.item_project.view.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.Visibility
-import ru.terrakok.gitlabclient.extension.getTintDrawable
-import ru.terrakok.gitlabclient.extension.inflate
-import ru.terrakok.gitlabclient.extension.setStartDrawable
 import ru.terrakok.gitlabclient.ui.global.view.custom.bindProject
+import ru.terrakok.gitlabclient.util.getTintDrawable
+import ru.terrakok.gitlabclient.util.inflate
+import ru.terrakok.gitlabclient.util.setStartDrawable
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 18.06.17.

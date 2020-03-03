@@ -1,8 +1,9 @@
 package ru.terrakok.gitlabclient.presentation.issue
 
-import com.arellomobile.mvp.InjectViewState
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
+import javax.inject.Inject
+import moxy.InjectViewState
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.di.IssueId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
@@ -10,13 +11,12 @@ import ru.terrakok.gitlabclient.di.ProjectId
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.app.target.TargetAction
 import ru.terrakok.gitlabclient.entity.issue.Issue
-import ru.terrakok.gitlabclient.model.interactor.issue.IssueInteractor
-import ru.terrakok.gitlabclient.model.interactor.project.ProjectInteractor
+import ru.terrakok.gitlabclient.model.interactor.IssueInteractor
+import ru.terrakok.gitlabclient.model.interactor.ProjectInteractor
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
-import javax.inject.Inject
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 01.11.18.
@@ -67,4 +67,15 @@ class IssuePresenter @Inject constructor(
     }
 
     fun onBackPressed() = flowRouter.exit()
+
+    fun onCloseIssueClicked() {
+        issueInteractor.closeIssue(projectId, issueId)
+            .doOnSubscribe { viewState.showBlockingProgress(true) }
+            .doAfterTerminate { viewState.showBlockingProgress(false) }
+            .subscribe(
+                { },
+                { errorHandler.proceed(it, viewState::showMessage) }
+            )
+            .connect()
+    }
 }

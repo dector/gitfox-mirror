@@ -9,10 +9,12 @@ import retrofit2.http.*
 import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.entity.event.Event
 import ru.terrakok.gitlabclient.entity.event.EventAction
+import ru.terrakok.gitlabclient.entity.event.EventScope
 import ru.terrakok.gitlabclient.entity.event.EventTarget
 import ru.terrakok.gitlabclient.entity.issue.Issue
 import ru.terrakok.gitlabclient.entity.issue.IssueScope
 import ru.terrakok.gitlabclient.entity.issue.IssueState
+import ru.terrakok.gitlabclient.entity.issue.IssueStateEvent
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestScope
 import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
@@ -80,6 +82,12 @@ interface GitlabApi {
         @Query("stats") stats: Boolean = true
     ): Single<Commit>
 
+    @GET("$API_PATH/projects/{project_id}/repository/commits/{sha}/diff")
+    fun getCommitDiffData(
+        @Path("project_id") projectId: Long,
+        @Path("sha") sha: String
+    ): Single<List<DiffData>>
+
     @GET("$API_PATH/projects/{project_id}/repository/commits/")
     fun getRepositoryCommits(
         @Path("project_id") projectId: Long,
@@ -134,6 +142,14 @@ interface GitlabApi {
         @Path("issue_id") issueId: Long
     ): Single<Issue>
 
+    @FormUrlEncoded
+    @PUT("$API_PATH/projects/{project_id}/issues/{issue_id}")
+    fun editIssue(
+        @Path("project_id") projectId: Long,
+        @Path("issue_id") issueId: Long,
+        @Field("state_event") stateEvent: IssueStateEvent
+    ): Completable
+
     @GET("$API_PATH/events")
     fun getEvents(
         @Query("action") action: EventAction?,
@@ -142,6 +158,7 @@ interface GitlabApi {
         @Query("after") afterDay: String?,
         @Query("sort") sort: Sort?,
         @Query("order_by") orderBy: OrderBy?,
+        @Query("scope") scope: EventScope?,
         @Query("page") page: Int,
         @Query("per_page") pageSize: Int
     ): Single<List<Event>>
@@ -279,7 +296,7 @@ interface GitlabApi {
     ): Single<List<ShortUser>>
 
     @GET("$API_PATH/projects/{project_id}/merge_requests/{merge_request_id}/changes")
-    fun getMergeRequestChanges(
+    fun getMergeRequestDiffDataList(
         @Path("project_id") projectId: Long,
         @Path("merge_request_id") mergeRequestId: Long
     ): Single<MergeRequest>

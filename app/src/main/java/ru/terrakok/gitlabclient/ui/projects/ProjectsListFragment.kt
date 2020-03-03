@@ -1,20 +1,21 @@
 package ru.terrakok.gitlabclient.ui.projects
 
 import android.os.Bundle
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_projects.*
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectListMode
 import ru.terrakok.gitlabclient.entity.Project
-import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 import ru.terrakok.gitlabclient.presentation.projects.ProjectsListPresenter
 import ru.terrakok.gitlabclient.presentation.projects.ProjectsListView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.ui.global.list.PaginalAdapter
 import ru.terrakok.gitlabclient.ui.global.list.ProjectAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.isSame
+import ru.terrakok.gitlabclient.util.showSnackMessage
 import toothpick.Scope
 import toothpick.config.Module
 
@@ -41,10 +42,7 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
     fun createPresenter(): ProjectsListPresenter =
         scope.getInstance(ProjectsListPresenter::class.java)
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        paginalRenderView.init(
-            { presenter.refreshProjects() },
+    private val adapter by lazy { PaginalAdapter(
             { presenter.loadNextProjectsPage() },
             { o, n ->
                 if (o is Project && n is Project) {
@@ -52,6 +50,13 @@ class ProjectsListFragment : BaseFragment(), ProjectsListView {
                 } else false
             },
             ProjectAdapterDelegate { presenter.onProjectClicked(it.id) }
+    ) }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        paginalRenderView.init(
+            { presenter.refreshProjects() },
+            adapter
         )
     }
 

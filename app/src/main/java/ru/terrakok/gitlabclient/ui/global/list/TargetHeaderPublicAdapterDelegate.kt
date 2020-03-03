@@ -5,27 +5,27 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
-import com.arellomobile.mvp.MvpDelegate
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_target_badge.view.*
 import kotlinx.android.synthetic.main.item_target_header_public.*
 import kotlinx.android.synthetic.main.item_target_header_public.view.*
+import moxy.MvpDelegate
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.target.TargetBadge
 import ru.terrakok.gitlabclient.entity.app.target.TargetBadgeIcon
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderIcon
-import ru.terrakok.gitlabclient.extension.*
 import ru.terrakok.gitlabclient.ui.global.view.custom.bindShortUser
+import ru.terrakok.gitlabclient.util.*
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 18.06.17.
  */
 
 fun TargetHeader.Public.isSame(other: TargetHeader.Public) =
-    target == other.target
-            && targetId == other.targetId
-            && date == other.date
+    target == other.target &&
+            targetId == other.targetId &&
+            date == other.date
 
 class TargetHeaderPublicAdapterDelegate(
     private val mvpDelegate: MvpDelegate<*>,

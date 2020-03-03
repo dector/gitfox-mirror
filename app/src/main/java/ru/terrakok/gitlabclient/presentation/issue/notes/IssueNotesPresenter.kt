@@ -1,11 +1,12 @@
 package ru.terrakok.gitlabclient.presentation.issue.notes
 
-import com.arellomobile.mvp.InjectViewState
+import io.reactivex.Single
+import moxy.InjectViewState
 import ru.terrakok.gitlabclient.di.IssueId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
 import ru.terrakok.gitlabclient.entity.app.target.TargetAction
-import ru.terrakok.gitlabclient.model.interactor.issue.IssueInteractor
+import ru.terrakok.gitlabclient.model.interactor.IssueInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.NoteWithProjectId
@@ -28,31 +29,42 @@ class IssueNotesPresenter @Inject constructor(
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-
         issueInteractor
-            .getAllIssueNotes(projectId, issueId)
-            .doOnSubscribe { viewState.showEmptyProgress(true) }
-            .doAfterTerminate { viewState.showEmptyProgress(false) }
-            .subscribe(
-                { notes ->
-                    val notesWithProjectId =
-                        notes.map {
-                            NoteWithProjectId(
-                                it,
-                                projectId
-                            )
-                        }
-
-                    val selectedNotePosition =
-                        targetAction
-                            .let { it as? TargetAction.CommentedOn }
-                            ?.noteId
-                            ?.let { noteIdToSelect -> notes.indexOfFirst { note -> note.id == noteIdToSelect } }
-                    viewState.showNotes(notesWithProjectId, selectedNotePosition)
-                },
-                { errorHandler.proceed(it, { viewState.showMessage(it) }) }
-            )
+            .issueChanges
+            .startWith(issueId)
+            .filter { it == issueId }
+            .switchMapMaybe {
+                getAllIssueNotes()
+                    .toMaybe()
+                    .doOnSubscribe { viewState.showEmptyProgress(true) }
+                    .doAfterTerminate { viewState.showEmptyProgress(false) }
+                    .doOnSuccess { notes ->
+                        val selectedNotePosition =
+                            targetAction.let { it as? TargetAction.CommentedOn }
+                                ?.noteId
+                                ?.let { noteIdToSelect ->
+                                    notes.indexOfFirst { it.note.id == noteIdToSelect }
+                                }
+                        viewState.showNotes(notes, selectedNotePosition)
+                    }
+                    .doOnError { errorHandler.proceed(it, { viewState.showMessage(it) }) }
+                    .onErrorComplete()
+            }
+            .subscribe()
             .connect()
+    }
+
+    private fun getAllIssueNotes(): Single<List<NoteWithProjectId>> {
+        return issueInteractor
+            .getAllIssueNotes(projectId, issueId)
+            .map { notes ->
+                notes.map {
+                    NoteWithProjectId(
+                        it,
+                        projectId
+                    )
+                }
+            }
     }
 
     fun onSendClicked(body: String) =

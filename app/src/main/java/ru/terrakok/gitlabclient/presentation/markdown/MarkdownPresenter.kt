@@ -1,7 +1,7 @@
 package ru.terrakok.gitlabclient.presentation.markdown
 
-import com.arellomobile.mvp.InjectViewState
 import io.reactivex.disposables.Disposable
+import moxy.InjectViewState
 import ru.terrakok.gitlabclient.markwonx.GitlabMarkdownExtension
 import ru.terrakok.gitlabclient.markwonx.MarkdownClickMediator
 import ru.terrakok.gitlabclient.markwonx.label.LabelDescription

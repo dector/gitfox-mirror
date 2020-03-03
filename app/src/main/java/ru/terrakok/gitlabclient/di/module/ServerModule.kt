@@ -1,16 +1,11 @@
 package ru.terrakok.gitlabclient.di.module
 
-import okhttp3.OkHttpClient
 import ru.terrakok.gitlabclient.BuildConfig
 import ru.terrakok.gitlabclient.di.ServerPath
-import ru.terrakok.gitlabclient.di.WithErrorHandler
 import ru.terrakok.gitlabclient.di.provider.ApiProvider
 import ru.terrakok.gitlabclient.di.provider.MarkDownConverterProvider
-import ru.terrakok.gitlabclient.di.provider.OkHttpClientProvider
-import ru.terrakok.gitlabclient.di.provider.OkHttpClientWithErrorHandlerProvider
 import ru.terrakok.gitlabclient.di.provider.LabelSpanConfigProvider
 import ru.terrakok.gitlabclient.entity.app.session.AuthHolder
-import ru.terrakok.gitlabclient.entity.app.session.OAuthParams
 import ru.terrakok.gitlabclient.entity.app.session.UserAccount
 import ru.terrakok.gitlabclient.model.data.cache.ProjectCache
 import ru.terrakok.gitlabclient.model.data.cache.ProjectLabelCache
@@ -37,27 +32,15 @@ class ServerModule(userAccount: UserAccount?) : Module() {
         }
 
         // Network
-        bind(OkHttpClient::class.java).toProvider(OkHttpClientProvider::class.java).providesSingletonInScope()
-        bind(OkHttpClient::class.java).withName(WithErrorHandler::class.java)
-            .toProvider(OkHttpClientWithErrorHandlerProvider::class.java)
-            .providesSingletonInScope()
-        bind(ProjectCache::class.java).singletonInScope()
-        bind(ServerChanges::class.java).singletonInScope()
-        bind(ProjectLabelCache::class.java).singletonInScope()
-        bind(LabelSpanConfig::class.java).toProvider(LabelSpanConfigProvider::class.java).providesSingletonInScope()
-        bind(GitlabApi::class.java).toProvider(ApiProvider::class.java).providesSingletonInScope()
-        bind(MarkDownConverter::class.java).toProvider(MarkDownConverterProvider::class.java).providesSingletonInScope()
-
-        // Auth
-        bind(OAuthParams::class.java).toInstance(
-            OAuthParams(
-                BuildConfig.OAUTH_APP_ID,
-                BuildConfig.OAUTH_SECRET,
-                BuildConfig.OAUTH_CALLBACK
-            )
-        )
+        bind(ProjectCache::class.java).singleton()
+        bind(ServerChanges::class.java).singleton()
+        bind(ProjectLabelCache::class.java).singleton()
+        bind(LabelSpanConfig::class.java).toProvider(LabelSpanConfigProvider::class.java).providesSingleton()
+        bind(GitlabApi::class.java).toProvider(ApiProvider::class.java).providesSingleton()
+        bind(MarkDownConverter::class.java).toProvider(MarkDownConverterProvider::class.java)
+            .providesSingleton()
 
         // Error handler with logout logic
-        bind(ErrorHandler::class.java).singletonInScope()
+        bind(ErrorHandler::class.java).singleton()
     }
 }

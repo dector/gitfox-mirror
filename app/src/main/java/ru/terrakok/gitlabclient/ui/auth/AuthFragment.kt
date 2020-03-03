@@ -5,16 +5,18 @@ import android.os.Build
 import android.os.Bundle
 import android.webkit.*
 import androidx.annotation.RequiresApi
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_auth.*
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import ru.terrakok.gitlabclient.BuildConfig
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.extension.showSnackMessage
-import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.presentation.auth.AuthPresenter
 import ru.terrakok.gitlabclient.presentation.auth.AuthView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.util.addSystemBottomPadding
+import ru.terrakok.gitlabclient.util.addSystemTopPadding
+import ru.terrakok.gitlabclient.util.showSnackMessage
+import ru.terrakok.gitlabclient.util.visible
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 27.03.17
@@ -34,8 +36,10 @@ class AuthFragment : BaseFragment(), AuthView, CustomServerAuthFragment.OnClickL
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        view?.addSystemBottomPadding()
         toolbar.apply {
             setNavigationOnClickListener { presenter.onBackPressed() }
+            addSystemTopPadding()
             inflateMenu(R.menu.custom_auth_menu)
             setOnMenuItemClickListener {
                 when (it.itemId) {

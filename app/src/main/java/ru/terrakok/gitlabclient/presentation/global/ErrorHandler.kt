@@ -2,19 +2,19 @@ package ru.terrakok.gitlabclient.presentation.global
 
 import android.annotation.SuppressLint
 import com.jakewharton.rxrelay2.PublishRelay
+import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
-import ru.terrakok.gitlabclient.extension.userMessage
 import ru.terrakok.gitlabclient.model.data.server.ServerError
 import ru.terrakok.gitlabclient.model.data.server.TokenInvalidError
-import ru.terrakok.gitlabclient.model.interactor.session.SessionInteractor
+import ru.terrakok.gitlabclient.model.interactor.SessionInteractor
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.model.system.message.SystemMessageNotifier
+import ru.terrakok.gitlabclient.util.userMessage
 import timber.log.Timber
-import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 03.11.17.

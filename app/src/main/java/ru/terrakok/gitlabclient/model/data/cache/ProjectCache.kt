@@ -1,10 +1,10 @@
 package ru.terrakok.gitlabclient.model.data.cache
 
+import javax.inject.Inject
 import ru.terrakok.gitlabclient.di.CacheLifetime
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.Project
 import timber.log.Timber
-import javax.inject.Inject
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 14.10.18.

@@ -1,21 +1,22 @@
 package ru.terrakok.gitlabclient.ui.my.todos
 
 import android.os.Bundle
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_my_todos.*
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.TodoListPendingState
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
-import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 import ru.terrakok.gitlabclient.presentation.my.todos.MyTodoListView
 import ru.terrakok.gitlabclient.presentation.my.todos.MyTodosPresenter
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.ui.global.list.PaginalAdapter
 import ru.terrakok.gitlabclient.ui.global.list.TargetHeaderConfidentialAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.TargetHeaderPublicAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.isSame
+import ru.terrakok.gitlabclient.util.showSnackMessage
 import toothpick.Scope
 import toothpick.config.Module
 
@@ -43,10 +44,7 @@ class MyTodosFragment : BaseFragment(), MyTodoListView {
     fun providePresenter(): MyTodosPresenter =
         scope.getInstance(MyTodosPresenter::class.java)
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        paginalRenderView.init(
-            { presenter.refreshTodos() },
+    private val adapter by lazy { PaginalAdapter(
             { presenter.loadNextTodosPage() },
             { o, n ->
                 if (o is TargetHeader.Public && n is TargetHeader.Public) {
@@ -55,6 +53,13 @@ class MyTodosFragment : BaseFragment(), MyTodoListView {
             },
             TargetHeaderPublicAdapterDelegate(mvpDelegate) { presenter.onTodoClick(it) },
             TargetHeaderConfidentialAdapterDelegate()
+    ) }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        paginalRenderView.init(
+            { presenter.refreshTodos() },
+            adapter
         )
     }
 

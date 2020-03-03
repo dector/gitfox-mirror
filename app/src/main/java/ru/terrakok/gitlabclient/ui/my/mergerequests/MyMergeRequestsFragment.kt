@@ -1,19 +1,20 @@
 package ru.terrakok.gitlabclient.ui.my.mergerequests
 
 import android.os.Bundle
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_my_merge_requests.*
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
-import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 import ru.terrakok.gitlabclient.presentation.my.mergerequests.MyMergeRequestListView
 import ru.terrakok.gitlabclient.presentation.my.mergerequests.MyMergeRequestsPresenter
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.ui.global.list.PaginalAdapter
 import ru.terrakok.gitlabclient.ui.global.list.TargetHeaderConfidentialAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.TargetHeaderPublicAdapterDelegate
 import ru.terrakok.gitlabclient.ui.global.list.isSame
+import ru.terrakok.gitlabclient.util.showSnackMessage
 import toothpick.Scope
 import toothpick.config.Module
 
@@ -45,10 +46,7 @@ class MyMergeRequestsFragment : BaseFragment(), MyMergeRequestListView {
     fun providePresenter(): MyMergeRequestsPresenter =
         scope.getInstance(MyMergeRequestsPresenter::class.java)
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        paginalRenderView.init(
-            { presenter.refreshMergeRequests() },
+    private val adapter by lazy { PaginalAdapter(
             { presenter.loadNextMergeRequestsPage() },
             { o, n ->
                 if (o is TargetHeader.Public && n is TargetHeader.Public) {
@@ -57,6 +55,13 @@ class MyMergeRequestsFragment : BaseFragment(), MyMergeRequestListView {
             },
             TargetHeaderPublicAdapterDelegate(mvpDelegate) { presenter.onMergeRequestClick(it) },
             TargetHeaderConfidentialAdapterDelegate()
+    ) }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        paginalRenderView.init(
+            { presenter.refreshMergeRequests() },
+            adapter
         )
     }
 

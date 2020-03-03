@@ -2,8 +2,8 @@ package ru.terrakok.gitlabclient.ui.global.list
 
 import android.annotation.SuppressLint
 import androidx.recyclerview.widget.DiffUtil
-import com.arellomobile.mvp.MvpDelegate
 import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
+import moxy.MvpDelegate
 import ru.terrakok.gitlabclient.presentation.global.NoteWithProjectId
 
 fun NoteWithProjectId.isSame(other: NoteWithProjectId) =

@@ -3,19 +3,20 @@ package ru.terrakok.gitlabclient.ui.main
 import android.os.Bundle
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter
 import com.aurelhubert.ahbottomnavigation.notification.AHNotification
 import kotlinx.android.synthetic.main.fragment_main.*
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.app.AccountMainBadges
-import ru.terrakok.gitlabclient.extension.color
 import ru.terrakok.gitlabclient.presentation.main.MainPresenter
 import ru.terrakok.gitlabclient.presentation.main.MainView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.util.addSystemBottomPadding
+import ru.terrakok.gitlabclient.util.color
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 02.04.17
@@ -35,6 +36,7 @@ class MainFragment : BaseFragment(), MainView {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        linearLayout.addSystemBottomPadding(bottomBar, true)
         AHBottomNavigationAdapter(activity, R.menu.main_bottom_menu).apply {
             setupWithBottomNavigation(bottomBar)
         }
@@ -88,7 +90,7 @@ class MainFragment : BaseFragment(), MainView {
         }.commitNow()
     }
 
-    private fun createTabFragment(tab: SupportAppScreen) = tab.fragment
+    private fun createTabFragment(tab: SupportAppScreen) = tab.fragment!!
 
     override fun onBackPressed() {
         currentTabFragment?.onBackPressed()

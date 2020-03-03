@@ -2,6 +2,7 @@ package ru.terrakok.gitlabclient.ui.projects
 
 import android.os.Bundle
 import androidx.fragment.app.FragmentPagerAdapter
+import javax.inject.Inject
 import kotlinx.android.synthetic.main.fragment_my_issues_container.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
@@ -9,8 +10,8 @@ import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
 import ru.terrakok.gitlabclient.presentation.projects.ProjectsListPresenter
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.util.addSystemTopPadding
 import toothpick.Toothpick
-import javax.inject.Inject
 
 class ProjectsContainerFragment : BaseFragment() {
     @Inject
@@ -31,6 +32,7 @@ class ProjectsContainerFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
 
         toolbar.setNavigationOnClickListener { menuController.open() }
+        toolbar.addSystemTopPadding()
         viewPager.adapter = adapter
     }
 

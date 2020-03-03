@@ -10,9 +10,6 @@ import javax.inject.Qualifier
 annotation class DefaultPageSize
 
 @Qualifier
-annotation class DefaultServerPath
-
-@Qualifier
 annotation class ServerPath
 
 @Qualifier
@@ -40,10 +37,10 @@ annotation class UserId
 annotation class CacheLifetime
 
 @Qualifier
-annotation class WithErrorHandler
-
-@Qualifier
 annotation class FilePath
 
 @Qualifier
 annotation class FileReference
+
+@Qualifier
+annotation class CommitId

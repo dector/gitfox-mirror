@@ -1,26 +1,21 @@
 package ru.terrakok.gitlabclient.ui.global.view.custom
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.FrameLayout
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
-import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
+import javax.inject.Inject
 import kotlinx.android.synthetic.main.view_paginal_render.view.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.di.DI
-import ru.terrakok.gitlabclient.extension.inflate
-import ru.terrakok.gitlabclient.extension.userMessage
-import ru.terrakok.gitlabclient.extension.visible
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import ru.terrakok.gitlabclient.presentation.global.Paginator
-import ru.terrakok.gitlabclient.ui.global.list.ProgressAdapterDelegate
-import ru.terrakok.gitlabclient.ui.global.list.ProgressItem
+import ru.terrakok.gitlabclient.ui.global.list.PaginalAdapter
+import ru.terrakok.gitlabclient.util.addSystemBottomPadding
+import ru.terrakok.gitlabclient.util.inflate
+import ru.terrakok.gitlabclient.util.userMessage
+import ru.terrakok.gitlabclient.util.visible
 import toothpick.Toothpick
-import javax.inject.Inject
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 2019-06-22.
@@ -35,8 +30,6 @@ class PaginalRenderView @JvmOverloads constructor(
     lateinit var resourceManager: ResourceManager
 
     private var refreshCallback: (() -> Unit)? = null
-    private var nextPageCallback: (() -> Unit)? = null
-    private var itemDiff: ((old: Any, new: Any) -> Boolean)? = null
 
     private var adapter: PaginalAdapter? = null
 
@@ -49,22 +42,18 @@ class PaginalRenderView @JvmOverloads constructor(
         recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true)
+            addSystemBottomPadding()
         }
     }
 
     fun init(
         refreshCallback: () -> Unit,
-        nextPageCallback: () -> Unit,
-        itemDiff: (old: Any, new: Any) -> Boolean,
-        vararg delegate: AdapterDelegate<MutableList<Any>>
+        adapter: PaginalAdapter
     ) {
         this.refreshCallback = refreshCallback
-        this.nextPageCallback = nextPageCallback
-        this.itemDiff = itemDiff
-        adapter = PaginalAdapter(*delegate)
+        this.adapter = adapter
         recyclerView.adapter = adapter
     }
-
     fun render(state: Paginator.State) {
         post {
             when (state) {
@@ -125,45 +114,6 @@ class PaginalRenderView @JvmOverloads constructor(
                     swipeToRefresh.visible(true)
                 }
             }
-        }
-    }
-
-    private inner class PaginalAdapter(vararg delegate: AdapterDelegate<MutableList<Any>>) :
-        AsyncListDifferDelegationAdapter<Any>(
-            object : DiffUtil.ItemCallback<Any>() {
-                override fun areItemsTheSame(oldItem: Any, newItem: Any): Boolean {
-                    if (oldItem === newItem) return true
-                    return itemDiff?.invoke(oldItem, newItem) ?: false
-                }
-
-                override fun getChangePayload(oldItem: Any, newItem: Any) = Any() //disable default blink animation
-
-                @SuppressLint("DiffUtilEquals")
-                override fun areContentsTheSame(oldItem: Any, newItem: Any) = oldItem == newItem
-            }
-        ) {
-        var fullData = false
-
-        init {
-            items = mutableListOf()
-            delegatesManager.addDelegate(ProgressAdapterDelegate())
-            delegate.forEach { delegatesManager.addDelegate(it) }
-        }
-
-        fun update(data: List<Any>, isPageProgress: Boolean) {
-            items = mutableListOf<Any>().apply {
-                addAll(data)
-                if (isPageProgress) add(ProgressItem)
-            }
-        }
-
-        override fun onBindViewHolder(
-            holder: RecyclerView.ViewHolder,
-            position: Int,
-            payloads: MutableList<Any?>
-        ) {
-            super.onBindViewHolder(holder, position, payloads)
-            if (!fullData && position >= items.size - 10) nextPageCallback?.invoke()
         }
     }
 }

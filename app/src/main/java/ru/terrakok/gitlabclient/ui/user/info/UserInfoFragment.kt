@@ -1,19 +1,16 @@
 package ru.terrakok.gitlabclient.ui.user.info
 
 import android.os.Bundle
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_user_info.*
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.User
-import ru.terrakok.gitlabclient.extension.shareText
-import ru.terrakok.gitlabclient.extension.showSnackMessage
-import ru.terrakok.gitlabclient.extension.showTextOrHide
-import ru.terrakok.gitlabclient.extension.tryOpenLink
 import ru.terrakok.gitlabclient.presentation.user.info.UserInfoPresenter
 import ru.terrakok.gitlabclient.presentation.user.info.UserInfoView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.view.custom.bindUser
+import ru.terrakok.gitlabclient.util.*
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 25.11.17.
@@ -33,6 +30,7 @@ class UserInfoFragment : BaseFragment(), UserInfoView {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         toolbar.setNavigationOnClickListener { presenter.onBackPressed() }
+        toolbar.addSystemTopPadding()
 
         toolbar.inflateMenu(R.menu.share_menu)
         toolbar.setOnMenuItemClickListener { item ->

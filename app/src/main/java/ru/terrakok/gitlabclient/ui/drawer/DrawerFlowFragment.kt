@@ -5,6 +5,7 @@ import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import io.reactivex.disposables.Disposable
+import javax.inject.Inject
 import kotlinx.android.synthetic.main.drawer_flow_fragment.*
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.NavigatorHolder
@@ -15,16 +16,15 @@ import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.di.module.FlowNavigationModule
 import ru.terrakok.gitlabclient.di.module.GlobalMenuModule
-import ru.terrakok.gitlabclient.extension.setLaunchScreen
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
 import ru.terrakok.gitlabclient.ui.about.AboutFragment
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.main.MainFragment
 import ru.terrakok.gitlabclient.ui.projects.ProjectsContainerFragment
+import ru.terrakok.gitlabclient.util.setLaunchScreen
 import toothpick.Scope
 import toothpick.Toothpick
-import javax.inject.Inject
 
 class DrawerFlowFragment : BaseFragment() {
     @Inject
@@ -54,9 +54,9 @@ class DrawerFlowFragment : BaseFragment() {
     }
 
     private val navigator: Navigator by lazy {
-        object : SupportAppNavigator(this.activity, childFragmentManager, R.id.mainContainer) {
+        object : SupportAppNavigator(this.activity!!, childFragmentManager, R.id.mainContainer) {
 
-            override fun applyCommands(commands: Array<out Command>?) {
+            override fun applyCommands(commands: Array<out Command>) {
                 super.applyCommands(commands)
                 updateNavDrawer()
             }
@@ -66,7 +66,7 @@ class DrawerFlowFragment : BaseFragment() {
             }
 
             override fun setupFragmentTransaction(
-                command: Command?,
+                command: Command,
                 currentFragment: Fragment?,
                 nextFragment: Fragment?,
                 fragmentTransaction: FragmentTransaction

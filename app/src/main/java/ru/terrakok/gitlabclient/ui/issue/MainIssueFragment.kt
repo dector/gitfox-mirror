@@ -2,16 +2,17 @@ package ru.terrakok.gitlabclient.ui.issue
 
 import android.os.Bundle
 import androidx.fragment.app.FragmentPagerAdapter
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_main_mr.*
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.app.target.TargetAction
-import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.presentation.issue.IssuePresenter
 import ru.terrakok.gitlabclient.presentation.issue.IssueView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.util.addSystemTopPadding
+import ru.terrakok.gitlabclient.util.showSnackMessage
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 14.02.18.
@@ -31,7 +32,17 @@ class MainIssueFragment : BaseFragment(), IssueView {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        toolbar.setNavigationOnClickListener { onBackPressed() }
+        toolbar.apply {
+            setNavigationOnClickListener { onBackPressed() }
+            addSystemTopPadding()
+            inflateMenu(R.menu.main_issue_menu)
+            setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.closeIssueAction -> presenter.onCloseIssueClicked()
+                }
+                true
+            }
+        }
         viewPager.adapter = adapter
     }
 

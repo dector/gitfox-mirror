@@ -10,8 +10,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import kotlinx.android.synthetic.main.view_time_stats.view.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.TimeStats
-import ru.terrakok.gitlabclient.extension.color
-import ru.terrakok.gitlabclient.extension.visible
+import ru.terrakok.gitlabclient.util.color
+import ru.terrakok.gitlabclient.util.visible
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 26.05.19.

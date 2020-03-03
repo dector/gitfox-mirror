@@ -10,6 +10,7 @@ import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
 import ru.terrakok.gitlabclient.ui.about.AboutFragment
 import ru.terrakok.gitlabclient.ui.auth.AuthFlowFragment
 import ru.terrakok.gitlabclient.ui.auth.AuthFragment
+import ru.terrakok.gitlabclient.ui.commit.CommitFragment
 import ru.terrakok.gitlabclient.ui.drawer.DrawerFlowFragment
 import ru.terrakok.gitlabclient.ui.file.ProjectFileFragment
 import ru.terrakok.gitlabclient.ui.issue.*
@@ -223,8 +224,8 @@ object Screens {
         override fun getFragment() = MergeRequestNotesFragment()
     }
 
-    object MergeRequestChanges : SupportAppScreen() {
-        override fun getFragment() = MergeRequestChangesFragment()
+    object MergeRequestDiffDataList : SupportAppScreen() {
+        override fun getFragment() = MergeRequestDiffDataListFragment()
     }
 
     object MainIssue : SupportAppScreen() {
@@ -247,6 +248,14 @@ object Screens {
         override fun getFragment() = PrivacyPolicyFragment()
     }
 
+    data class Commit(
+        val commitId: String,
+        val projectId: Long
+    ) : SupportAppScreen() {
+
+        override fun getFragment() = CommitFragment.create(commitId, projectId)
+    }
+
     data class ProjectFile(
         val projectId: Long,
         val filePath: String,
@@ -259,7 +268,7 @@ object Screens {
     data class ExternalBrowserFlow(
         val url: String
     ) : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) =
+        override fun getActivityIntent(context: Context) =
             Intent(Intent.ACTION_VIEW, Uri.parse(url))
     }
 }

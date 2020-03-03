@@ -1,17 +1,17 @@
 package ru.terrakok.gitlabclient.presentation.project.events
 
-import com.arellomobile.mvp.InjectViewState
 import io.reactivex.disposables.Disposable
+import javax.inject.Inject
+import moxy.InjectViewState
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
-import ru.terrakok.gitlabclient.extension.openInfo
-import ru.terrakok.gitlabclient.model.interactor.event.EventInteractor
+import ru.terrakok.gitlabclient.model.interactor.EventInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.Paginator
-import javax.inject.Inject
+import ru.terrakok.gitlabclient.util.openInfo
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 15.06.17.
@@ -48,7 +48,7 @@ class ProjectEventsPresenter @Inject constructor(
     private fun loadNewPage(page: Int) {
         pageDisposable?.dispose()
         pageDisposable =
-            eventInteractor.getProjectEvents(projectId, page)
+            eventInteractor.getProjectEvents(projectId, page = page)
                 .subscribe(
                     { data ->
                         paginator.proceed(Paginator.Action.NewPage(page, data))

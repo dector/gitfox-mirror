@@ -12,7 +12,9 @@
     <color name="subhead_text">#DE000000</color>
     <color name="subtitle_text">#55000000</color>
 
+    <color name="black_20">#32000000</color>
     <color name="white">#ffffff</color>
+    <color name="white_50">#80ffffff</color>
     <color name="divider">#ffe0e6ea</color>
 
     <color name="silver">#6A8398</color>

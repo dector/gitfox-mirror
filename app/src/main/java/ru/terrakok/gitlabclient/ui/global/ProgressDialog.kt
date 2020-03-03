@@ -18,5 +18,5 @@ class ProgressDialog : DialogFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
-        LayoutInflater.from(context).inflate(R.layout.fragment_progress, null)
+        LayoutInflater.from(context).inflate(R.layout.fragment_progress, container)
 }

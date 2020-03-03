@@ -2,16 +2,17 @@ package ru.terrakok.gitlabclient.ui.mergerequest
 
 import android.os.Bundle
 import androidx.fragment.app.FragmentPagerAdapter
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_main_mr.*
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.app.target.TargetAction
-import ru.terrakok.gitlabclient.extension.showSnackMessage
 import ru.terrakok.gitlabclient.presentation.mergerequest.MergeRequestPresenter
 import ru.terrakok.gitlabclient.presentation.mergerequest.MergeRequestView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
+import ru.terrakok.gitlabclient.util.addSystemTopPadding
+import ru.terrakok.gitlabclient.util.showSnackMessage
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 14.02.18.
@@ -32,6 +33,7 @@ class MainMergeRequestFragment : BaseFragment(), MergeRequestView {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         toolbar.setNavigationOnClickListener { presenter.onBackPressed() }
+        toolbar.addSystemTopPadding()
         viewPager.adapter = adapter
     }
 
@@ -67,7 +69,7 @@ class MainMergeRequestFragment : BaseFragment(), MergeRequestView {
             TAB_INFO -> Screens.MergeRequestInfo.fragment
             TAB_COMMITS -> Screens.MergeRequestCommits.fragment
             TAB_NOTES -> Screens.MergeRequestNotes.fragment
-            else -> Screens.MergeRequestChanges.fragment
+            else -> Screens.MergeRequestDiffDataList.fragment
         }
 
         override fun getCount() = 5
@@ -77,7 +79,7 @@ class MainMergeRequestFragment : BaseFragment(), MergeRequestView {
             TAB_INFO -> getString(R.string.merge_request_info_tab)
             TAB_COMMITS -> getString(R.string.merge_request_commits_tab)
             TAB_NOTES -> getString(R.string.merge_request_discussion_tab)
-            TAB_CHANGES -> getString(R.string.merge_request_changes_tab)
+            TAB_DIFF_DATA -> getString(R.string.merge_request_changes_tab)
             else -> null
         }
     }
@@ -87,6 +89,6 @@ class MainMergeRequestFragment : BaseFragment(), MergeRequestView {
         private const val TAB_INFO = 1
         private const val TAB_COMMITS = 2
         private const val TAB_NOTES = 3
-        private const val TAB_CHANGES = 4
+        private const val TAB_DIFF_DATA = 4
     }
 }

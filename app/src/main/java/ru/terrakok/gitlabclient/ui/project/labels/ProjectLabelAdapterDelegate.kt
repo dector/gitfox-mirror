@@ -13,8 +13,8 @@ import kotlinx.android.synthetic.main.item_label.view.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.Color
 import ru.terrakok.gitlabclient.entity.Label
-import ru.terrakok.gitlabclient.extension.inflate
-import ru.terrakok.gitlabclient.extension.setBackgroundTintByColor
+import ru.terrakok.gitlabclient.util.inflate
+import ru.terrakok.gitlabclient.util.setBackgroundTintByColor
 
 /**
  * @author Maxim Myalkin (MaxMyalkin) on 15.12.2018.

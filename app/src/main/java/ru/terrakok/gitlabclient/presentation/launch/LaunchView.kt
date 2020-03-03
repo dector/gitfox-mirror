@@ -1,8 +1,8 @@
 package ru.terrakok.gitlabclient.presentation.launch
 
-import com.arellomobile.mvp.MvpView
-import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
-import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
+import moxy.MvpView
+import moxy.viewstate.strategy.OneExecutionStateStrategy
+import moxy.viewstate.strategy.StateStrategyType
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 26.03.17.

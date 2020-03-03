@@ -8,8 +8,8 @@ import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_app_library.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.entity.app.develop.AppLibrary
-import ru.terrakok.gitlabclient.extension.getHumanName
-import ru.terrakok.gitlabclient.extension.inflate
+import ru.terrakok.gitlabclient.util.getHumanName
+import ru.terrakok.gitlabclient.util.inflate
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 18.06.17.
