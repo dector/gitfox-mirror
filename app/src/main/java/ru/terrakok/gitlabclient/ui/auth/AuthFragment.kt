@@ -31,7 +31,7 @@ class AuthFragment : BaseFragment(), AuthView, CustomServerAuthFragment.OnClickL
 
     @ProvidePresenter
     fun providePresenter(): AuthPresenter =
-        scope.getInstance(AuthPresenter::class.java)
+            scope.getInstance(AuthPresenter::class.java)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -53,11 +53,6 @@ class AuthFragment : BaseFragment(), AuthView, CustomServerAuthFragment.OnClickL
             CookieManager.getInstance().removeAllCookies(null)
         } else {
             CookieManager.getInstance().removeAllCookie()
-        }
-
-        with(webView.settings) {
-            javaScriptEnabled = true
-            userAgentString = BuildConfig.WEB_AUTH_USER_AGENT
         }
 
         webView.webViewClient = object : WebViewClient() {
@@ -93,6 +88,16 @@ class AuthFragment : BaseFragment(), AuthView, CustomServerAuthFragment.OnClickL
         }
 
         emptyView.setRefreshListener { presenter.refresh() }
+
+        if (savedInstanceState == null) {
+            with(webView.settings) {
+                javaScriptEnabled = true
+                userAgentString = BuildConfig.WEB_AUTH_USER_AGENT
+            }
+            presenter.coldStart()
+        } else {
+            webView.restoreState(savedInstanceState)
+        }
     }
 
     private fun showEmptyView(show: Boolean) {
@@ -125,6 +130,11 @@ class AuthFragment : BaseFragment(), AuthView, CustomServerAuthFragment.OnClickL
 
     override fun showMessage(message: String) {
         showSnackMessage(message)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        webView.saveState(outState)
     }
 
     override fun onBackPressed() {

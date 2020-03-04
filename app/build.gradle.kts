@@ -1,10 +1,8 @@
-import org.jetbrains.kotlin.config.KotlinCompilerVersion
-
 plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("kapt")
-    id("org.jetbrains.kotlin.android.extensions")
+    kotlin("android.extensions")
 }
 
 apply(from = "${project.rootDir}/codequality/ktlint.gradle.kts")
@@ -125,7 +123,7 @@ dependencies {
     implementation("androidx.recyclerview:recyclerview:1.1.0")
     implementation("androidx.constraintlayout:constraintlayout:1.1.3")
     //Kotlin
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.3.61")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib")
     //Log
     implementation("com.jakewharton.timber:timber:4.7.1")
     //MVP Moxy
@@ -179,12 +177,6 @@ dependencies {
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
     //Date with timezone
     testImplementation("org.threeten:threetenbp:1.4.1")
-}
-
-configurations.all {
-    resolutionStrategy {
-        force("org.jetbrains.kotlin:kotlin-stdlib:${KotlinCompilerVersion.VERSION}")
-    }
 }
 
 gradle.buildFinished {
