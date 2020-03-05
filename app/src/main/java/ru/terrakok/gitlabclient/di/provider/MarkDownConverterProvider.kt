@@ -44,7 +44,6 @@ class MarkDownConverterProvider @Inject constructor(
     private val labelInteractor: LabelInteractor,
     private val milestoneInteractor: MilestoneInteractor,
     private val labelSpanConfig: LabelSpanConfig,
-    private val markdownClickMediator: MarkdownClickMediator,
     @ServerPath private val serverPath: String
 ) : Provider<MarkDownConverter> {
 
@@ -104,7 +103,8 @@ class MarkDownConverterProvider @Inject constructor(
     private fun getCustomVisitor(
         labels: List<Label>,
         milestones: List<Milestone>,
-        spannableBuilder: SpannableBuilder
+        spannableBuilder: SpannableBuilder,
+        markdownClickHandler: MarkdownClickHandler
     ): Visitor {
         val labelDescriptions = labels.map {
             LabelDescription(
@@ -126,8 +126,15 @@ class MarkDownConverterProvider @Inject constructor(
                 spannableConfig,
                 spannableBuilder,
                 mapOf(
-                    GitlabMarkdownExtension.LABEL to SimpleLabelVisitor(labelDescriptions, labelSpanConfig, markdownClickMediator),
-                    GitlabMarkdownExtension.MILESTONE to SimpleMilestoneVisitor(milestoneDescriptions, markdownClickMediator)
+                    GitlabMarkdownExtension.LABEL to SimpleLabelVisitor(
+                        labels = labelDescriptions,
+                        config = labelSpanConfig,
+                        clickHandler = markdownClickHandler
+                    ),
+                    GitlabMarkdownExtension.MILESTONE to SimpleMilestoneVisitor(
+                        milestones = milestoneDescriptions,
+                        clickHandler = markdownClickHandler
+                    )
                 )
             )
         )
@@ -137,17 +144,29 @@ class MarkDownConverterProvider @Inject constructor(
         return MarkDownConverter(
             parser,
             markdownDecorator,
-            { projectId, builder ->
+            { projectId, builder, markdownClickHandler ->
                 Single.defer {
                     if (projectId != null) {
                         val allLabels = labelInteractor.getAllProjectLabels(projectId)
                         val allMilestones = milestoneInteractor.getAllProjectMilestones(projectId)
                         Single
                             .zip(allLabels, allMilestones, BiFunction { labels, milestones ->
-                                getCustomVisitor(labels, milestones, builder)
+                                getCustomVisitor(
+                                    labels = labels,
+                                    milestones = milestones,
+                                    spannableBuilder = builder,
+                                    markdownClickHandler = markdownClickHandler
+                                )
                             })
                     } else {
-                        Single.fromCallable { getCustomVisitor(emptyList(), emptyList(), builder) }
+                        Single.fromCallable {
+                            getCustomVisitor(
+                                labels = emptyList(),
+                                milestones = emptyList(),
+                                spannableBuilder = builder,
+                                markdownClickHandler = markdownClickHandler
+                            )
+                        }
                     }
                 }
             },

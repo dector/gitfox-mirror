@@ -2,12 +2,12 @@ package ru.terrakok.gitlabclient.markwonx.milestone
 
 import ru.noties.markwon.SpannableBuilder
 import ru.terrakok.gitlabclient.markwonx.GitlabMarkdownExtension
-import ru.terrakok.gitlabclient.markwonx.MarkdownClickMediator
+import ru.terrakok.gitlabclient.markwonx.MarkdownClickHandler
 import ru.terrakok.gitlabclient.markwonx.label.SimpleNodeVisitor
 
 class SimpleMilestoneVisitor(
     private val milestones: List<MilestoneDescription>,
-    private val clicksMediator: MarkdownClickMediator
+    private val clickHandler: MarkdownClickHandler
 ) : SimpleNodeVisitor {
 
     override fun visit(args: String, builder: SpannableBuilder) {
@@ -32,7 +32,7 @@ class SimpleMilestoneVisitor(
             builder.append(milestone.name)
 
             val span = MilestoneSpan(milestone) {
-                clicksMediator.markdownClicked(GitlabMarkdownExtension.MILESTONE, milestone)
+                clickHandler(GitlabMarkdownExtension.MILESTONE, milestone)
             }
 
             builder.setSpan(span, length)
