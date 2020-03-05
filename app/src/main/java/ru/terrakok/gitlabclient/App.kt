@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.os.Build
 import androidx.multidex.MultiDex
 import com.jakewharton.threetenabp.AndroidThreeTen
+import com.tspoon.traceur.Traceur
 import ru.noties.markwon.SpannableConfiguration
 import ru.noties.markwon.spans.SpannableTheme
 import ru.terrakok.gitlabclient.di.DI
@@ -35,6 +36,7 @@ class App : Application() {
         initAppScope()
         initMarkwon()
         initThreetenABP()
+        maybeInitTraceur()
     }
 
     private fun initLogger() {
@@ -68,5 +70,9 @@ class App : Application() {
 
     private fun initThreetenABP() {
         AndroidThreeTen.init(this)
+    }
+
+    private fun maybeInitTraceur() {
+        Traceur.enableLogging()
     }
 }

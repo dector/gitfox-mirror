@@ -177,6 +177,9 @@ dependencies {
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
     //Date with timezone
     testImplementation("org.threeten:threetenbp:1.4.1")
+
+    //Adds more info to rxjava stacktraces
+    debugImplementation("com.github.ilyagulya:Traceur:Upgrade221-SNAPSHOT")
 }
 
 gradle.buildFinished {
