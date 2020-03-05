@@ -3,7 +3,6 @@ package ru.terrakok.gitlabclient.model.interactor
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import javax.inject.Inject
 import org.threeten.bp.LocalDate
 import ru.terrakok.gitlabclient.di.DefaultPageSize
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
@@ -15,6 +14,7 @@ import ru.terrakok.gitlabclient.model.data.cache.ProjectMilestoneCache
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
+import javax.inject.Inject
 
 class MilestoneInteractor @Inject constructor(
     private val api: GitlabApi,
@@ -58,8 +58,7 @@ class MilestoneInteractor @Inject constructor(
             .range(1, Integer.MAX_VALUE)
             .concatMapSingle { page -> api.getMilestones(projectId, null, page, defaultPageSize) }
             .takeWhile { milestones -> milestones.isNotEmpty() }
-            .reduce { allMilestones, currentMilestones -> allMilestones + currentMilestones }
-            .toSingle()
+            .reduce(emptyList<Milestone>()) { allMilestones, currentMilestones -> allMilestones + currentMilestones }
             .subscribeOn(schedulers.io())
             .observeOn(schedulers.ui())
 

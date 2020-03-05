@@ -1,6 +1,5 @@
 package ru.terrakok.gitlabclient.model.interactor
 
-import javax.inject.Inject
 import io.reactivex.Observable
 import io.reactivex.Single
 import ru.terrakok.gitlabclient.di.DefaultPageSize
@@ -10,6 +9,7 @@ import ru.terrakok.gitlabclient.model.data.cache.ProjectLabelCache
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
+import javax.inject.Inject
 
 /**
  * @author Maxim Myalkin (MaxMyalkin) on 30.10.2018.
@@ -53,8 +53,7 @@ class LabelInteractor @Inject constructor(
     ): Single<List<Label>> = Observable.range(1, Integer.MAX_VALUE)
         .concatMapSingle { page -> api.getProjectLabels(projectId, page, defaultPageSize) }
         .takeWhile { labels -> labels.isNotEmpty() }
-        .reduce { allLabels, currentLabels -> allLabels + currentLabels }
-        .toSingle()
+        .reduce(emptyList<Label>()) { allLabels, currentLabels -> allLabels + currentLabels }
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
 
