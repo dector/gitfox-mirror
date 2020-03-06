@@ -27,7 +27,7 @@ lint:
   only:
     - merge_requests
     #tag
-    - /v.*$/
+    - /^v.*$/
 
 ktlint:
   stage: code_quality
@@ -42,7 +42,7 @@ ktlint:
   only:
     - merge_requests
     #tag
-    - /v.*$/
+    - /^v.*$/
 
 unitTests:
   stage: test
@@ -57,7 +57,7 @@ unitTests:
   only:
     - merge_requests
     #tag
-    - /v.*$/
+    - /^v.*$/
 
 build:
   stage: build
@@ -94,4 +94,6 @@ buildRelease:
       - app/build/outputs/apk/release
   only:
     #tag
-    - /v.*$/
+    - /^v.*$/
+  except:
+    - branches
