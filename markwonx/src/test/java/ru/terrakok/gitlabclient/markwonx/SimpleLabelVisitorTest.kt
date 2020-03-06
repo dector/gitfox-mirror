@@ -10,8 +10,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
-import ru.noties.markwon.SpannableBuilder
-import ru.noties.markwon.SpannableConfiguration
 import ru.terrakok.gitlabclient.markwonx.LabelsTestUtils.ID
 import ru.terrakok.gitlabclient.markwonx.LabelsTestUtils.INEXISTENT
 import ru.terrakok.gitlabclient.markwonx.LabelsTestUtils.MULTIPLE
@@ -19,6 +17,10 @@ import ru.terrakok.gitlabclient.markwonx.LabelsTestUtils.SINGLE
 import ru.terrakok.gitlabclient.markwonx.LabelsTestUtils.SINGLE_CYRILLIC
 import ru.terrakok.gitlabclient.markwonx.LabelsTestUtils.makeLabel
 import ru.terrakok.gitlabclient.markwonx.label.*
+import ru.terrakok.gitlabclient.markwonx.simple.SimpleExtensionProcessor
+import ru.terrakok.gitlabclient.markwonx.label.SimpleLabelVisitor
+import ru.terrakok.gitlabclient.markwonx.simple.SimpleMarkdownDecorator
+import ru.terrakok.gitlabclient.markwonx.simple.SimpleVisitor
 
 @RunWith(RobolectricTestRunner::class)
 class SimpleLabelVisitorTest {
@@ -33,7 +35,8 @@ class SimpleLabelVisitorTest {
             this.create()
             get()
         }
-        decorator = SimpleMarkdownDecorator()
+        decorator =
+            SimpleMarkdownDecorator()
         parser = with(Parser.Builder()) {
             customDelimiterProcessor(
                 GitlabExtensionsDelimiterProcessor(
@@ -51,7 +54,10 @@ class SimpleLabelVisitorTest {
             SpannableConfiguration.create(context),
             spannableBuilder,
             mapOf(
-                GitlabMarkdownExtension.LABEL to SimpleLabelVisitor(LabelsTestUtils.EXISTENT_LABELS.map { it.label }, LabelSpanConfig(0), { _, _ -> })
+                GitlabMarkdownExtension.LABEL to SimpleLabelVisitor(
+                    LabelsTestUtils.EXISTENT_LABELS.map { it.label },
+                    LabelSpanConfig(0),
+                    { _, _ -> })
             )
         )
     }

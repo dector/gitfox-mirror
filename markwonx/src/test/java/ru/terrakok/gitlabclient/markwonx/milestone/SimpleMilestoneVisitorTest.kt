@@ -14,9 +14,9 @@ import ru.noties.markwon.SpannableBuilder
 import ru.noties.markwon.SpannableConfiguration
 import ru.terrakok.gitlabclient.markwonx.GitlabExtensionsDelimiterProcessor
 import ru.terrakok.gitlabclient.markwonx.GitlabMarkdownExtension
-import ru.terrakok.gitlabclient.markwonx.label.SimpleExtensionProcessor
-import ru.terrakok.gitlabclient.markwonx.label.SimpleMarkdownDecorator
-import ru.terrakok.gitlabclient.markwonx.label.SimpleVisitor
+import ru.terrakok.gitlabclient.markwonx.simple.SimpleExtensionProcessor
+import ru.terrakok.gitlabclient.markwonx.simple.SimpleMarkdownDecorator
+import ru.terrakok.gitlabclient.markwonx.simple.SimpleVisitor
 import ru.terrakok.gitlabclient.markwonx.milestone.MilestoneTestUtils.ID
 import ru.terrakok.gitlabclient.markwonx.milestone.MilestoneTestUtils.INEXISTENT
 import ru.terrakok.gitlabclient.markwonx.milestone.MilestoneTestUtils.MULTIPLE
@@ -37,7 +37,8 @@ class SimpleMilestoneVisitorTest {
             this.create()
             get()
         }
-        decorator = SimpleMarkdownDecorator()
+        decorator =
+            SimpleMarkdownDecorator()
         parser = with(Parser.Builder()) {
             customDelimiterProcessor(
                 GitlabExtensionsDelimiterProcessor(
@@ -55,7 +56,9 @@ class SimpleMilestoneVisitorTest {
             SpannableConfiguration.create(context),
             spannableBuilder,
             mapOf(
-                GitlabMarkdownExtension.MILESTONE to SimpleMilestoneVisitor(MilestoneTestUtils.EXISTENT_MILESTONES.map { it.milestone }, { _, _ -> })
+                GitlabMarkdownExtension.MILESTONE to SimpleMilestoneVisitor(
+                    MilestoneTestUtils.EXISTENT_MILESTONES.map { it.milestone },
+                    { _, _ -> })
             )
         )
     }

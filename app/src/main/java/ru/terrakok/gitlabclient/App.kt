@@ -2,12 +2,9 @@ package ru.terrakok.gitlabclient
 
 import android.app.Application
 import android.content.Context
-import android.graphics.Color
 import android.os.Build
 import androidx.multidex.MultiDex
 import com.jakewharton.threetenabp.AndroidThreeTen
-import ru.noties.markwon.SpannableConfiguration
-import ru.noties.markwon.spans.SpannableTheme
 import ru.terrakok.gitlabclient.di.DI
 import ru.terrakok.gitlabclient.di.module.AppModule
 import timber.log.Timber
@@ -33,7 +30,6 @@ class App : Application() {
         initLogger()
         initToothpick()
         initAppScope()
-        initMarkwon()
         initThreetenABP()
     }
 
@@ -54,16 +50,6 @@ class App : Application() {
     private fun initAppScope() {
         Toothpick.openScope(DI.APP_SCOPE)
             .installModules(AppModule(this))
-    }
-
-    private fun initMarkwon() {
-        val theme = SpannableTheme.builderWithDefaults(this)
-            .codeTextColor(Color.parseColor("#C0341D"))
-            .codeBackgroundColor(Color.parseColor("#FCEDEA"))
-            .build()
-        SpannableConfiguration.builder(this)
-            .theme(theme)
-            .build()
     }
 
     private fun initThreetenABP() {

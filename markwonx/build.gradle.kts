@@ -28,10 +28,10 @@ android {
 }
 
 dependencies {
-    val markwonVersion = "2.0.0"
+    val markwonVersion = "4.2.2"
     //Markdown to HTML converter
-    compileOnly("ru.noties:markwon:$markwonVersion")
-    testImplementation("ru.noties:markwon:$markwonVersion")
+    compileOnly("io.noties.markwon:core:$markwonVersion")
+    testImplementation("io.noties.markwon:core:$markwonVersion")
 
     val kotlinVersion = "1.3.61"
     //Kotlin

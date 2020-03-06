@@ -1,16 +1,17 @@
 package ru.terrakok.gitlabclient.markwonx.milestone
 
-import ru.noties.markwon.SpannableBuilder
+import io.noties.markwon.MarkwonVisitor
 import ru.terrakok.gitlabclient.markwonx.GitlabMarkdownExtension
 import ru.terrakok.gitlabclient.markwonx.MarkdownClickHandler
-import ru.terrakok.gitlabclient.markwonx.label.SimpleNodeVisitor
+import ru.terrakok.gitlabclient.markwonx.simple.SimpleNodeVisitor
 
 class SimpleMilestoneVisitor(
     private val milestones: List<MilestoneDescription>,
     private val clickHandler: MarkdownClickHandler
 ) : SimpleNodeVisitor {
 
-    override fun visit(args: String, builder: SpannableBuilder) {
+    override fun visit(visitor: MarkwonVisitor, args: String) {
+        val builder = visitor.builder()
         val milestoneType = args.substringBefore(GitlabMarkdownExtension.OPTS_DELIMITER).let {
             MilestoneType.byString(
                 it
@@ -28,14 +29,14 @@ class SimpleMilestoneVisitor(
         }
 
         if (milestone != null) {
-            val length = builder.length
+            val start = builder.length
             builder.append(milestone.name)
 
             val span = MilestoneSpan(milestone) {
                 clickHandler(GitlabMarkdownExtension.MILESTONE, milestone)
             }
 
-            builder.setSpan(span, length)
+            visitor.setSpans(start, span)
         } else {
             val content = when (milestoneType) {
                 MilestoneType.MULTIPLE -> "%\"$arg\""

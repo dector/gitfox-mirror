@@ -1,12 +1,13 @@
 package ru.terrakok.gitlabclient.ui.global.markdown
 
 import android.content.Context
+import android.text.Spanned
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
+import io.noties.markwon.Markwon
 import moxy.MvpDelegate
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
-import ru.noties.markwon.Markwon
 import ru.terrakok.gitlabclient.di.DI
 import ru.terrakok.gitlabclient.markwonx.GitlabMarkdownExtension
 import ru.terrakok.gitlabclient.markwonx.MarkdownClickListener
@@ -32,6 +33,10 @@ class MarkdownTextView @JvmOverloads constructor(
         }
     }
 
+    private val markwon by lazy {
+        Markwon.create(context)
+    }
+
     @InjectPresenter
     internal lateinit var presenter: MarkdownPresenter
 
@@ -43,8 +48,7 @@ class MarkdownTextView @JvmOverloads constructor(
         .getInstance(MarkdownPresenter::class.java)
 
     override fun markdownClicked(extension: GitlabMarkdownExtension, value: Any) {
-        val eventConsumed = markdownClickListeners
-            .any { it.onMarkdownClick(extension, value) }
+        val eventConsumed = markdownClickListeners.any { it.onMarkdownClick(extension, value) }
         if (!eventConsumed) {
             presenter.markdownClicked(extension, value)
         }
@@ -66,8 +70,8 @@ class MarkdownTextView @JvmOverloads constructor(
         }
     }
 
-    override fun setMarkdownText(text: CharSequence) {
-        Markwon.setText(this, text)
+    override fun setMarkdownText(text: Spanned) {
+        markwon.setParsedMarkdown(this, text)
     }
 
     override fun onDetachedFromWindow() {

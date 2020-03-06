@@ -157,9 +157,12 @@ dependencies {
     kapt("com.github.bumptech.glide:compiler:$glideVersion")
     implementation("com.github.bumptech.glide:okhttp3-integration:$glideVersion")
     //Markdown to HTML converter
-    val markwonVersion = "2.0.0"
-    implementation("ru.noties:markwon:$markwonVersion")
-    implementation("ru.noties:markwon-image-loader:$markwonVersion")
+    val markwonVersion = "4.2.2"
+    implementation("io.noties.markwon:core:$markwonVersion")
+    implementation("io.noties.markwon:ext-strikethrough:$markwonVersion")
+    implementation("io.noties.markwon:ext-tables:$markwonVersion")
+    implementation("io.noties.markwon:ext-tasklist:$markwonVersion")
+    implementation("io.noties.markwon:image-glide:$markwonVersion")
     //Bottom navigation bar
     implementation("com.aurelhubert:ahbottomnavigation:2.3.4")
     //Lottie

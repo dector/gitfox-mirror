@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.markwonx.label
+package ru.terrakok.gitlabclient.markwonx.simple
 
 import ru.terrakok.gitlabclient.markwonx.GitlabExtensionsDelimiterProcessor
 import ru.terrakok.gitlabclient.markwonx.GitlabMarkdownExtension

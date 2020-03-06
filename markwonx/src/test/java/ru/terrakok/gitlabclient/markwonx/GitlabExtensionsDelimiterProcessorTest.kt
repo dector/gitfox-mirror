@@ -4,9 +4,9 @@ import org.commonmark.parser.Parser
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import ru.terrakok.gitlabclient.markwonx.label.SimpleExtensionProcessor
-import ru.terrakok.gitlabclient.markwonx.label.SimpleMarkdownDecorator
-import ru.terrakok.gitlabclient.markwonx.label.SimpleNode
+import ru.terrakok.gitlabclient.markwonx.simple.SimpleExtensionProcessor
+import ru.terrakok.gitlabclient.markwonx.simple.SimpleMarkdownDecorator
+import ru.terrakok.gitlabclient.markwonx.simple.SimpleNode
 import ru.terrakok.gitlabclient.markwonx.milestone.MilestoneTestUtils
 
 class GitlabExtensionsDelimiterProcessorTest {
@@ -16,8 +16,10 @@ class GitlabExtensionsDelimiterProcessorTest {
 
     @Before
     fun setUp() {
-        decorator = SimpleMarkdownDecorator()
-        val processor = SimpleExtensionProcessor()
+        decorator =
+            SimpleMarkdownDecorator()
+        val processor =
+            SimpleExtensionProcessor()
         parser = with(Parser.Builder()) {
             customDelimiterProcessor(
                 GitlabExtensionsDelimiterProcessor(
@@ -34,14 +36,20 @@ class GitlabExtensionsDelimiterProcessorTest {
     @Test
     fun `should replace decorated label extension with label node`() {
         val parsed = parser.parse(decorator.decorate(LabelsTestUtils.makeLabel(LabelsTestUtils.SINGLE)))
-        val expected = SimpleNode(GitlabMarkdownExtension.LABEL, LabelsTestUtils.createArgsForTest(LabelsTestUtils.SINGLE))
+        val expected = SimpleNode(
+            GitlabMarkdownExtension.LABEL,
+            LabelsTestUtils.createArgsForTest(LabelsTestUtils.SINGLE)
+        )
         Assert.assertEquals(parsed.firstChild.firstChild, expected)
     }
 
     @Test
     fun `should replace decorated milestone extension with milestone node`() {
         val parsed = parser.parse(decorator.decorate(MilestoneTestUtils.makeMilestone(MilestoneTestUtils.SINGLE)))
-        val expected = SimpleNode(GitlabMarkdownExtension.MILESTONE, MilestoneTestUtils.createArgsForTest(MilestoneTestUtils.SINGLE))
+        val expected = SimpleNode(
+            GitlabMarkdownExtension.MILESTONE,
+            MilestoneTestUtils.createArgsForTest(MilestoneTestUtils.SINGLE)
+        )
         Assert.assertEquals(expected, parsed.firstChild.firstChild)
     }
 

@@ -8,7 +8,7 @@ import ru.terrakok.gitlabclient.markwonx.LabelsTestUtils.SINGLE
 import ru.terrakok.gitlabclient.markwonx.LabelsTestUtils.SINGLE_CYRILLIC
 import ru.terrakok.gitlabclient.markwonx.LabelsTestUtils.decorateForTest
 import ru.terrakok.gitlabclient.markwonx.LabelsTestUtils.makeLabel
-import ru.terrakok.gitlabclient.markwonx.label.SimpleMarkdownDecorator
+import ru.terrakok.gitlabclient.markwonx.simple.SimpleMarkdownDecorator
 
 class SimpleLabelDecoratorTest {
 
@@ -16,7 +16,8 @@ class SimpleLabelDecoratorTest {
 
     @Before
     fun setUp() {
-        decorator = SimpleMarkdownDecorator()
+        decorator =
+            SimpleMarkdownDecorator()
     }
 
     fun assertDecorated(label: TestLabel) {

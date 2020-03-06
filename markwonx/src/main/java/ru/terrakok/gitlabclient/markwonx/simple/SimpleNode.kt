@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.markwonx.label
+package ru.terrakok.gitlabclient.markwonx.simple
 
 import org.commonmark.node.CustomNode
 import org.commonmark.node.Delimited

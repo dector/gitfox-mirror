@@ -2,7 +2,7 @@ package ru.terrakok.gitlabclient.markwonx.milestone
 
 import org.junit.Before
 import org.junit.Test
-import ru.terrakok.gitlabclient.markwonx.label.SimpleMarkdownDecorator
+import ru.terrakok.gitlabclient.markwonx.simple.SimpleMarkdownDecorator
 import ru.terrakok.gitlabclient.markwonx.milestone.MilestoneTestUtils.ID
 import ru.terrakok.gitlabclient.markwonx.milestone.MilestoneTestUtils.MULTIPLE
 import ru.terrakok.gitlabclient.markwonx.milestone.MilestoneTestUtils.SINGLE
@@ -16,7 +16,8 @@ class SimpleMilestoneDecoratorTest {
 
     @Before
     fun setUp() {
-        decorator = SimpleMarkdownDecorator()
+        decorator =
+            SimpleMarkdownDecorator()
     }
 
     fun assertDecorated(milestone: TestMilestone) {
