@@ -2,19 +2,14 @@ package ru.terrakok.gitlabclient.model.interactor
 
 import io.reactivex.Observable
 import io.reactivex.functions.Function3
-import javax.inject.Inject
 import retrofit2.adapter.rxjava2.Result
 import ru.terrakok.gitlabclient.di.ServerPath
-import ru.terrakok.gitlabclient.entity.OrderBy
+import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.entity.app.AccountMainBadges
-import ru.terrakok.gitlabclient.entity.issue.IssueScope
-import ru.terrakok.gitlabclient.entity.issue.IssueState
-import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestScope
-import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
-import ru.terrakok.gitlabclient.entity.todo.TodoState
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
+import javax.inject.Inject
 
 class AccountInteractor @Inject constructor(
     @ServerPath private val serverPath: String,

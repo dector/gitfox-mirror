@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.entity.milestone
+package ru.terrakok.gitlabclient.entity
 
 import com.google.gson.annotations.SerializedName
 import org.threeten.bp.LocalDate
@@ -17,3 +17,12 @@ data class Milestone(
     @SerializedName("updated_at") val updatedAt: ZonedDateTime?,
     @SerializedName("web_url") val webUrl: String?
 )
+
+enum class MilestoneState(private val jsonName: String) {
+    @SerializedName("active")
+    ACTIVE("active"),
+    @SerializedName("closed")
+    CLOSED("closed");
+
+    override fun toString() = jsonName
+}

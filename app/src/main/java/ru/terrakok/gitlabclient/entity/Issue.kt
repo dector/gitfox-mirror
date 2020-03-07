@@ -1,11 +1,8 @@
-package ru.terrakok.gitlabclient.entity.issue
+package ru.terrakok.gitlabclient.entity
 
 import com.google.gson.annotations.SerializedName
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZonedDateTime
-import ru.terrakok.gitlabclient.entity.ShortUser
-import ru.terrakok.gitlabclient.entity.TimeStats
-import ru.terrakok.gitlabclient.entity.milestone.Milestone
 
 data class Issue(
     @SerializedName("id") val id: Long,
@@ -39,3 +36,32 @@ data class Issue(
     @SerializedName("discussion_locked") val discussionLocked: Boolean,
     @SerializedName("assignee") val assignee: ShortUser?
 )
+
+enum class IssueScope(private val jsonName: String) {
+    @SerializedName("all")
+    ALL("all"),
+    @SerializedName("created-by-me")
+    CREATED_BY_ME("created-by-me"),
+    @SerializedName("assigned-to-me")
+    ASSIGNED_BY_ME("assigned-to-me");
+
+    override fun toString() = jsonName
+}
+
+enum class IssueState(private val jsonName: String) {
+    @SerializedName("opened")
+    OPENED("opened"),
+    @SerializedName("closed")
+    CLOSED("closed");
+
+    override fun toString() = jsonName
+}
+
+enum class IssueStateEvent(private val jsonName: String) {
+    @SerializedName("reopen")
+    REOPEN("reopen"),
+    @SerializedName("close")
+    CLOSE("close");
+
+    override fun toString() = jsonName
+}

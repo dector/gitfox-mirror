@@ -7,8 +7,8 @@ import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import ru.noties.markwon.Markwon
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.issue.Issue
-import ru.terrakok.gitlabclient.entity.issue.IssueState
+import ru.terrakok.gitlabclient.entity.Issue
+import ru.terrakok.gitlabclient.entity.IssueState
 import ru.terrakok.gitlabclient.presentation.issue.details.IssueDetailsPresenter
 import ru.terrakok.gitlabclient.presentation.issue.details.IssueDetailsView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment

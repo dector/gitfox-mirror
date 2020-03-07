@@ -3,22 +3,22 @@ package ru.terrakok.gitlabclient.util
 import android.content.Context
 import android.content.res.Resources
 import androidx.annotation.DrawableRes
-import java.io.IOException
 import org.threeten.bp.Duration
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import retrofit2.HttpException
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.entity.EventAction
+import ru.terrakok.gitlabclient.entity.MergeRequestMergeStatus
+import ru.terrakok.gitlabclient.entity.MilestoneState
+import ru.terrakok.gitlabclient.entity.TodoAction
 import ru.terrakok.gitlabclient.entity.app.develop.LicenseType
 import ru.terrakok.gitlabclient.entity.app.target.TargetBadgeStatus
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderIcon
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderTitle
-import ru.terrakok.gitlabclient.entity.event.EventAction
-import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestMergeStatus
-import ru.terrakok.gitlabclient.entity.milestone.MilestoneState
-import ru.terrakok.gitlabclient.entity.todo.TodoAction
 import ru.terrakok.gitlabclient.model.system.ResourceManager
+import java.io.IOException
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 14.02.18.

@@ -14,14 +14,8 @@ import org.threeten.bp.ZonedDateTime
 import ru.terrakok.gitlabclient.TestData
 import ru.terrakok.gitlabclient.TestSchedulers
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
-import ru.terrakok.gitlabclient.entity.OrderBy
-import ru.terrakok.gitlabclient.entity.ShortUser
-import ru.terrakok.gitlabclient.entity.Sort
+import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.entity.app.target.*
-import ru.terrakok.gitlabclient.entity.event.Event
-import ru.terrakok.gitlabclient.entity.event.EventAction
-import ru.terrakok.gitlabclient.entity.event.EventScope
-import ru.terrakok.gitlabclient.entity.event.EventTargetType
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 
@@ -451,18 +445,18 @@ class EventInteractorTest {
     }
 
     private fun getTestEvent() = Event(
-            123L,
-            EventAction.CREATED,
-            321L,
-            4331L,
-            EventTargetType.ISSUE,
-            666L,
-            "title of issue",
-            TestData.getTestDate(),
-            ShortUser(1L, "", "", "", "", ""),
-            "author",
-            null,
-            TestData.getNote()
+        123L,
+        EventAction.CREATED,
+        321L,
+        4331L,
+        EventTargetType.ISSUE,
+        666L,
+        "title of issue",
+        TestData.getTestDate(),
+        ShortUser(1L, "", "", "", "", ""),
+        "author",
+        null,
+        TestData.getNote()
     )
 
     private fun getExpectedTargetHeaderForIssue(event: Event): TargetHeader {

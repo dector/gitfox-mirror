@@ -16,3 +16,8 @@ data class Label(
     @SerializedName("subscribed") val subscribed: Boolean,
     @SerializedName("priority") val priority: Int?
 )
+
+data class Color(
+    val name: String,
+    val value: Int
+)

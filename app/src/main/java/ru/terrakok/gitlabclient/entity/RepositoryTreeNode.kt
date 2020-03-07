@@ -12,3 +12,12 @@ data class RepositoryTreeNode(
     @SerializedName("path") val path: String,
     @SerializedName("mode") val mode: String
 )
+
+enum class RepositoryTreeNodeType(private val jsonName: String) {
+    @SerializedName("tree")
+    TREE("tree"),
+    @SerializedName("blob")
+    BLOB("blob");
+
+    override fun toString() = jsonName
+}

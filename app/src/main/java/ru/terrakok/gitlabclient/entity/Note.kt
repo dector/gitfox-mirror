@@ -2,7 +2,6 @@ package ru.terrakok.gitlabclient.entity
 
 import com.google.gson.annotations.SerializedName
 import org.threeten.bp.ZonedDateTime
-import ru.terrakok.gitlabclient.entity.event.EventTargetType
 
 data class Note(
     @SerializedName("id") val id: Long,

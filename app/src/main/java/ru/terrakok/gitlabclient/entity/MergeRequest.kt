@@ -1,11 +1,7 @@
-package ru.terrakok.gitlabclient.entity.mergerequest
+package ru.terrakok.gitlabclient.entity
 
 import com.google.gson.annotations.SerializedName
 import org.threeten.bp.ZonedDateTime
-import ru.terrakok.gitlabclient.entity.DiffData
-import ru.terrakok.gitlabclient.entity.ShortUser
-import ru.terrakok.gitlabclient.entity.TimeStats
-import ru.terrakok.gitlabclient.entity.milestone.Milestone
 
 data class MergeRequest(
     @SerializedName("id") val id: Long,
@@ -48,3 +44,43 @@ data class MergeRequest(
     @SerializedName("time_stats") val timeStats: TimeStats,
     @SerializedName("discussion_locked") val discussionLocked: Boolean
 )
+
+enum class MergeRequestMergeStatus(val jsonName: String) {
+    @SerializedName("can_be_merged")
+    CAN_BE_MERGED("can_be_merged"),
+    @SerializedName("cannot_be_merged")
+    CANNOT_BE_MERGED("cannot_be_merged"),
+    @SerializedName("unchecked")
+    UNCHECKED("unchecked");
+
+    override fun toString() = jsonName
+}
+
+enum class MergeRequestScope(val jsonName: String) {
+    @SerializedName("created-by-me")
+    CREATED_BY_ME("created-by-me"),
+    @SerializedName("assigned-to-me")
+    ASSIGNED_TO_ME("assigned-to-me"),
+    @SerializedName("all")
+    ALL("all");
+
+    override fun toString() = jsonName
+}
+
+enum class MergeRequestState(val jsonName: String) {
+    @SerializedName("opened")
+    OPENED("opened"),
+    @SerializedName("closed")
+    CLOSED("closed"),
+    @SerializedName("merged")
+    MERGED("merged");
+
+    override fun toString() = jsonName
+}
+
+enum class MergeRequestViewType(val jsonName: String) {
+    @SerializedName("simple")
+    SIMPLE("simple");
+
+    override fun toString() = jsonName
+}

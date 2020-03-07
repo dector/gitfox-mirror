@@ -2,16 +2,16 @@ package ru.terrakok.gitlabclient.di.provider
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import javax.inject.Inject
-import javax.inject.Provider
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZonedDateTime
 import ru.terrakok.gitlabclient.entity.Color
-import ru.terrakok.gitlabclient.entity.todo.Todo
+import ru.terrakok.gitlabclient.entity.Todo
 import ru.terrakok.gitlabclient.model.data.server.deserializer.ColorDeserializer
 import ru.terrakok.gitlabclient.model.data.server.deserializer.LocalDateDeserializer
 import ru.terrakok.gitlabclient.model.data.server.deserializer.TodoDeserializer
 import ru.terrakok.gitlabclient.model.data.server.deserializer.ZonedDateTimeDeserializer
+import javax.inject.Inject
+import javax.inject.Provider
 
 /**
  * @author Eugene Shapovalov (CraggyHaggy). Date: 14.09.17

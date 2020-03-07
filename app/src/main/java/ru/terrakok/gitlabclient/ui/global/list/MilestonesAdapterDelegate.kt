@@ -7,7 +7,7 @@ import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_milestone.*
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.milestone.Milestone
+import ru.terrakok.gitlabclient.entity.Milestone
 import ru.terrakok.gitlabclient.util.*
 
 /**

@@ -4,17 +4,12 @@ import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonParseException
-import java.lang.reflect.Type
 import org.threeten.bp.ZonedDateTime
-import ru.terrakok.gitlabclient.entity.Project
-import ru.terrakok.gitlabclient.entity.ShortUser
-import ru.terrakok.gitlabclient.entity.target.Target
-import ru.terrakok.gitlabclient.entity.target.TargetType
-import ru.terrakok.gitlabclient.entity.target.issue.Issue
-import ru.terrakok.gitlabclient.entity.target.mergerequest.MergeRequest
-import ru.terrakok.gitlabclient.entity.todo.Todo
-import ru.terrakok.gitlabclient.entity.todo.TodoAction
-import ru.terrakok.gitlabclient.entity.todo.TodoState
+import ru.terrakok.gitlabclient.entity.*
+import ru.terrakok.gitlabclient.entity.Target
+import ru.terrakok.gitlabclient.entity.Target.Issue
+import ru.terrakok.gitlabclient.entity.Target.MergeRequest
+import java.lang.reflect.Type
 
 /**
  * @author Eugene Shapovalov (CraggyHaggy). Date: 13.09.17
@@ -50,7 +45,10 @@ class TodoDeserializer : JsonDeserializer<Todo> {
             ),
             jsonObject.get("target_url").asString,
             jsonObject.get("body").asString,
-            context.deserialize<TodoState>(jsonObject.get("state"), TodoState::class.java),
+            context.deserialize<TodoState>(
+                jsonObject.get("state"),
+                TodoState::class.java
+            ),
             context.deserialize<ZonedDateTime>(
                 jsonObject.get("created_at"),
                 ZonedDateTime::class.java

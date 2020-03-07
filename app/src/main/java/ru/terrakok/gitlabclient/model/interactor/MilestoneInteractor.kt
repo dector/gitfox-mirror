@@ -2,17 +2,17 @@ package ru.terrakok.gitlabclient.model.interactor
 
 import io.reactivex.Completable
 import io.reactivex.Single
-import javax.inject.Inject
 import org.threeten.bp.LocalDate
 import ru.terrakok.gitlabclient.di.DefaultPageSize
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
-import ru.terrakok.gitlabclient.entity.issue.Issue
-import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
-import ru.terrakok.gitlabclient.entity.milestone.Milestone
-import ru.terrakok.gitlabclient.entity.milestone.MilestoneState
+import ru.terrakok.gitlabclient.entity.Issue
+import ru.terrakok.gitlabclient.entity.MergeRequest
+import ru.terrakok.gitlabclient.entity.Milestone
+import ru.terrakok.gitlabclient.entity.MilestoneState
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
+import javax.inject.Inject
 
 class MilestoneInteractor @Inject constructor(
     private val api: GitlabApi,

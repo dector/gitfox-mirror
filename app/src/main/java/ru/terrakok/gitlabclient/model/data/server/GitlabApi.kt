@@ -7,24 +7,6 @@ import org.threeten.bp.ZonedDateTime
 import retrofit2.adapter.rxjava2.Result
 import retrofit2.http.*
 import ru.terrakok.gitlabclient.entity.*
-import ru.terrakok.gitlabclient.entity.event.Event
-import ru.terrakok.gitlabclient.entity.event.EventAction
-import ru.terrakok.gitlabclient.entity.event.EventScope
-import ru.terrakok.gitlabclient.entity.event.EventTarget
-import ru.terrakok.gitlabclient.entity.issue.Issue
-import ru.terrakok.gitlabclient.entity.issue.IssueScope
-import ru.terrakok.gitlabclient.entity.issue.IssueState
-import ru.terrakok.gitlabclient.entity.issue.IssueStateEvent
-import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
-import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestScope
-import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
-import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestViewType
-import ru.terrakok.gitlabclient.entity.milestone.Milestone
-import ru.terrakok.gitlabclient.entity.milestone.MilestoneState
-import ru.terrakok.gitlabclient.entity.target.TargetType
-import ru.terrakok.gitlabclient.entity.todo.Todo
-import ru.terrakok.gitlabclient.entity.todo.TodoAction
-import ru.terrakok.gitlabclient.entity.todo.TodoState
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 28.03.17

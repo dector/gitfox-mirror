@@ -3,10 +3,10 @@ package ru.terrakok.gitlabclient.model.data.server
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.threeten.bp.LocalDate
+import ru.terrakok.gitlabclient.entity.IssueStateEvent
 import ru.terrakok.gitlabclient.entity.Label
-import ru.terrakok.gitlabclient.entity.issue.IssueStateEvent
-import ru.terrakok.gitlabclient.entity.milestone.Milestone
-import ru.terrakok.gitlabclient.entity.todo.Todo
+import ru.terrakok.gitlabclient.entity.Milestone
+import ru.terrakok.gitlabclient.entity.Todo
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 
 /**

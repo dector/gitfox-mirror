@@ -1,7 +1,7 @@
 package ru.terrakok.gitlabclient.entity.app.target
 
-import ru.terrakok.gitlabclient.entity.event.EventAction
-import ru.terrakok.gitlabclient.entity.todo.TodoAction
+import ru.terrakok.gitlabclient.entity.EventAction
+import ru.terrakok.gitlabclient.entity.TodoAction
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 24.12.17.

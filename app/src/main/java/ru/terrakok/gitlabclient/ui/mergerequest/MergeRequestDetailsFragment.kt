@@ -7,8 +7,8 @@ import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import ru.noties.markwon.Markwon
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
-import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
+import ru.terrakok.gitlabclient.entity.MergeRequest
+import ru.terrakok.gitlabclient.entity.MergeRequestState
 import ru.terrakok.gitlabclient.presentation.mergerequest.details.MergeRequestDetailsPresenter
 import ru.terrakok.gitlabclient.presentation.mergerequest.details.MergeRequestDetailsView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment

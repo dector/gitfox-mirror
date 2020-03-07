@@ -14,3 +14,23 @@ data class PushData(
     @SerializedName("ref") val ref: String?,
     @SerializedName("commit_title") val commitTitle: String?
 )
+
+enum class PushDataAction(private val jsonName: String) {
+    @SerializedName("pushed")
+    PUSHED("pushed"),
+    @SerializedName("removed")
+    REMOVED("removed"),
+    @SerializedName("created")
+    CREATED("created");
+
+    override fun toString() = jsonName
+}
+
+enum class PushDataRefType(private val jsonName: String) {
+    @SerializedName("branch")
+    BRANCH("branch"),
+    @SerializedName("tag")
+    TAG("tag");
+
+    override fun toString() = jsonName
+}

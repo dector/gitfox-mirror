@@ -1,10 +1,24 @@
-package ru.terrakok.gitlabclient.entity.todo
+package ru.terrakok.gitlabclient.entity
 
 import com.google.gson.annotations.SerializedName
+import org.threeten.bp.ZonedDateTime
 
 /**
  * @author Eugene Shapovalov (CraggyHaggy). Date: 11.09.17
  */
+data class Todo(
+    val id: Long,
+    val project: Project,
+    val author: ShortUser,
+    val actionName: TodoAction,
+    val targetType: TargetType,
+    val target: Target,
+    val targetUrl: String,
+    val body: String,
+    val state: TodoState,
+    val createdAt: ZonedDateTime
+)
+
 enum class TodoAction(private val jsonName: String) {
     @SerializedName("assigned")
     ASSIGNED("assigned"),
@@ -20,6 +34,15 @@ enum class TodoAction(private val jsonName: String) {
     DIRECTLY_ADDRESSED("directly_addressed"),
     @SerializedName("unmergeable")
     UNMERGEABLE("unmergeable");
+
+    override fun toString() = jsonName
+}
+
+enum class TodoState(private val jsonName: String) {
+    @SerializedName("pending")
+    PENDING("pending"),
+    @SerializedName("done")
+    DONE("done");
 
     override fun toString() = jsonName
 }

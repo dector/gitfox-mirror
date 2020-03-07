@@ -8,19 +8,6 @@ import org.threeten.bp.ZonedDateTime
 import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.entity.app.session.UserAccount
 import ru.terrakok.gitlabclient.entity.app.target.*
-import ru.terrakok.gitlabclient.entity.event.EventAction
-import ru.terrakok.gitlabclient.entity.event.EventTargetType
-import ru.terrakok.gitlabclient.entity.issue.Issue
-import ru.terrakok.gitlabclient.entity.issue.IssueState
-import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
-import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestMergeStatus
-import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
-import ru.terrakok.gitlabclient.entity.milestone.Milestone
-import ru.terrakok.gitlabclient.entity.milestone.MilestoneState
-import ru.terrakok.gitlabclient.entity.target.TargetState
-import ru.terrakok.gitlabclient.entity.target.TargetType
-import ru.terrakok.gitlabclient.entity.todo.Todo
-import ru.terrakok.gitlabclient.entity.todo.TodoAction
 import ru.terrakok.gitlabclient.model.data.server.deserializer.TodoDeserializer
 import ru.terrakok.gitlabclient.model.data.server.deserializer.ZonedDateTimeDeserializer
 
@@ -176,41 +163,41 @@ object TestData {
     )
 
     fun getMergeRequest() = MergeRequest(
-            321123L,
-            5555L,
-            getTestDate(),
-            null,
-            "target branch",
-            "source branch",
-            9999L,
-            "MR title",
-            MergeRequestState.OPENED,
-            2,
-            1,
-            ShortUser(11L, "state", "name", "url", "avatar", "username"),
-            null,
-            8888,
-            7777,
-            "description",
-            false,
-            null,
-            true,
-            MergeRequestMergeStatus.CAN_BE_MERGED,
-            "sha",
-            null,
-            3,
-            true,
-            false,
-            null,
-            listOf("label 1", "label 2"),
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            TimeStats(43, 34, null, null),
-            false
+        321123L,
+        5555L,
+        getTestDate(),
+        null,
+        "target branch",
+        "source branch",
+        9999L,
+        "MR title",
+        MergeRequestState.OPENED,
+        2,
+        1,
+        ShortUser(11L, "state", "name", "url", "avatar", "username"),
+        null,
+        8888,
+        7777,
+        "description",
+        false,
+        null,
+        true,
+        MergeRequestMergeStatus.CAN_BE_MERGED,
+        "sha",
+        null,
+        3,
+        true,
+        false,
+        null,
+        listOf("label 1", "label 2"),
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        TimeStats(43, 34, null, null),
+        false
     )
 
     fun getExpectedTargetHeader(mr: MergeRequest, project: Project): TargetHeader {
@@ -280,17 +267,17 @@ object TestData {
             canPush = false)
 
     fun getMilestone() = Milestone(
-            123L,
-            321L,
-            333L,
-            "milestone description",
-            MilestoneState.ACTIVE,
-            null,
-            null,
-            null,
-            "milestone title",
-            null,
-            "url of milestone"
+        123L,
+        321L,
+        333L,
+        "milestone description",
+        MilestoneState.ACTIVE,
+        null,
+        null,
+        null,
+        "milestone title",
+        null,
+        "url of milestone"
     )
 
     fun getLabel(id: Long = 555L, subscribed: Boolean = false) = Label(
