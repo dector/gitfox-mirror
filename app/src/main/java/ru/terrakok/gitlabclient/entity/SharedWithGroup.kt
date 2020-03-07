@@ -1,9 +1,11 @@
 package ru.terrakok.gitlabclient.entity
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class SharedWithGroup(
-    @SerializedName("group_id") val groupId: Long,
-    @SerializedName("group_name") val groupName: String?,
-    @SerializedName("group_access_level") val groupAccessLevel: Long
+    @SerialName("group_id") val groupId: Long,
+    @SerialName("group_name") val groupName: String? = null,
+    @SerialName("group_access_level") val groupAccessLevel: Long
 )

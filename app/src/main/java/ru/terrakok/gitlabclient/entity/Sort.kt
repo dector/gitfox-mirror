@@ -1,14 +1,16 @@
 package ru.terrakok.gitlabclient.entity
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 30.03.17
  */
+@Serializable
 enum class Sort(private val jsonName: String) {
-    @SerializedName("asc")
+    @SerialName("asc")
     ASC("asc"),
-    @SerializedName("desc")
+    @SerialName("desc")
     DESC("desc");
 
     override fun toString() = jsonName

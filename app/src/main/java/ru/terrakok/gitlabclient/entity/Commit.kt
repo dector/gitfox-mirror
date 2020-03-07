@@ -1,22 +1,27 @@
+@file:UseSerializers(ZonedDateTimeDeserializer::class)
 package ru.terrakok.gitlabclient.entity
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.UseSerializers
 import org.threeten.bp.ZonedDateTime
+import ru.terrakok.gitlabclient.model.data.server.deserializer.ZonedDateTimeDeserializer
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 20.10.18.
  */
+@Serializable
 data class Commit(
-    @SerializedName("id") val id: String,
-    @SerializedName("short_id") val shortId: String,
-    @SerializedName("title") val title: String,
-    @SerializedName("author_name") val authorName: String,
-    @SerializedName("author_email") val authorEmail: String?,
-    @SerializedName("authored_date") val authoredDate: ZonedDateTime,
-    @SerializedName("commiter_name") val commiterName: String?,
-    @SerializedName("commiter_email") val commiterEmail: String?,
-    @SerializedName("commited_date") val commitedDate: ZonedDateTime?,
-    @SerializedName("created_at") val createdAt: ZonedDateTime,
-    @SerializedName("message") val message: String,
-    @SerializedName("parent_ids") val parentIds: List<String>
+    @SerialName("id") val id: String,
+    @SerialName("short_id") val shortId: String,
+    @SerialName("title") val title: String,
+    @SerialName("author_name") val authorName: String,
+    @SerialName("author_email") val authorEmail: String? = null,
+    @SerialName("authored_date") val authoredDate: ZonedDateTime,
+    @SerialName("commiter_name") val commiterName: String? = null,
+    @SerialName("commiter_email") val commiterEmail: String? = null,
+    @SerialName("commited_date") val commitedDate: ZonedDateTime? = null,
+    @SerialName("created_at") val createdAt: ZonedDateTime,
+    @SerialName("message") val message: String,
+    @SerialName("parent_ids") val parentIds: List<String>
 )

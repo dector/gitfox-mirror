@@ -1,11 +1,16 @@
+@file:UseSerializers(ZonedDateTimeDeserializer::class)
 package ru.terrakok.gitlabclient.entity
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.UseSerializers
 import org.threeten.bp.ZonedDateTime
+import ru.terrakok.gitlabclient.model.data.server.deserializer.ZonedDateTimeDeserializer
 
+@Serializable
 data class Owner(
-    @SerializedName("id") val id: Long,
-    @SerializedName("name") val name: String,
-    @SerializedName("username") val username: String,
-    @SerializedName("created_at") val createdAt: ZonedDateTime?
+    @SerialName("id") val id: Long,
+    @SerialName("name") val name: String,
+    @SerialName("username") val username: String,
+    @SerialName("created_at") val createdAt: ZonedDateTime? = null
 )

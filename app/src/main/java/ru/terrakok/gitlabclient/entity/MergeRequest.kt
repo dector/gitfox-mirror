@@ -1,85 +1,96 @@
+@file:UseSerializers(ZonedDateTimeDeserializer::class)
 package ru.terrakok.gitlabclient.entity
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.UseSerializers
 import org.threeten.bp.ZonedDateTime
+import ru.terrakok.gitlabclient.model.data.server.deserializer.ZonedDateTimeDeserializer
 
+@Serializable
 data class MergeRequest(
-    @SerializedName("id") val id: Long,
-    @SerializedName("iid") val iid: Long,
-    @SerializedName("created_at") val createdAt: ZonedDateTime,
-    @SerializedName("updated_at") val updatedAt: ZonedDateTime?,
-    @SerializedName("target_branch") val targetBranch: String,
-    @SerializedName("source_branch") val sourceBranch: String,
-    @SerializedName("project_id") val projectId: Long,
-    @SerializedName("title") val title: String?,
-    @SerializedName("state") val state: MergeRequestState,
-    @SerializedName("upvotes") val upvotes: Int,
-    @SerializedName("downvotes") val downvotes: Int,
-    @SerializedName("author") val author: ShortUser,
-    @SerializedName("assignee") val assignee: ShortUser?,
-    @SerializedName("source_project_id") val sourceProjectId: Int,
-    @SerializedName("target_project_id") val targetProjectId: Int,
-    @SerializedName("description") val description: String,
-    @SerializedName("work_in_progress") val workInProgress: Boolean,
-    @SerializedName("milestone") val milestone: Milestone?,
-    @SerializedName("merge_when_pipeline_succeeds") val mergeWhenPipelineSucceeds: Boolean,
-    @SerializedName("merge_status") val mergeStatus: MergeRequestMergeStatus,
-    @SerializedName("sha") val sha: String,
-    @SerializedName("merge_commit_sha") val mergeCommitSha: String?,
-    @SerializedName("user_notes_count") val userNotesCount: Int,
-    @SerializedName("should_remove_source_branch") val shouldRemoveSourceBranch: Boolean,
-    @SerializedName("force_remove_source_branch") val forceRemoveSourceBranch: Boolean,
-    @SerializedName("web_url") val webUrl: String?,
-    @SerializedName("labels") val labels: List<String>,
+    @SerialName("id") val id: Long,
+    @SerialName("iid") val iid: Long,
+    @SerialName("created_at") val createdAt: ZonedDateTime,
+    @SerialName("updated_at") val updatedAt: ZonedDateTime? = null,
+    @SerialName("target_branch") val targetBranch: String,
+    @SerialName("source_branch") val sourceBranch: String,
+    @SerialName("project_id") val projectId: Long,
+    @SerialName("title") val title: String? = null,
+    @SerialName("state") val state: MergeRequestState,
+    @SerialName("upvotes") val upvotes: Int,
+    @SerialName("downvotes") val downvotes: Int,
+    @SerialName("author") val author: ShortUser,
+    @SerialName("assignee") val assignee: ShortUser? = null,
+    @SerialName("source_project_id") val sourceProjectId: Int? = null,
+    @SerialName("target_project_id") val targetProjectId: Int? = null,
+    @SerialName("description") val description: String,
+    @SerialName("work_in_progress") val workInProgress: Boolean,
+    @SerialName("milestone") val milestone: Milestone? = null,
+    @SerialName("merge_when_pipeline_succeeds") val mergeWhenPipelineSucceeds: Boolean,
+    @SerialName("merge_status") val mergeStatus: MergeRequestMergeStatus,
+    @SerialName("sha") val sha: String,
+    @SerialName("merge_commit_sha") val mergeCommitSha: String? = null,
+    @SerialName("user_notes_count") val userNotesCount: Int,
+    @SerialName("should_remove_source_branch") val shouldRemoveSourceBranch: Boolean? = null,
+    @SerialName("force_remove_source_branch") val forceRemoveSourceBranch: Boolean? = null,
+    @SerialName("web_url") val webUrl: String? = null,
+    @SerialName("labels") val labels: List<String>,
     // The closed_by attribute was introduced in GitLab 10.6.
     // This value will only be present for merge requests which were closed/merged after GitLab 10.6
     // and when the user account that closed/merged the issue still exists.
-    @SerializedName("closed_by") val closedBy: ShortUser?,
-    @SerializedName("closed_at") val closedAt: ZonedDateTime?,
-    @SerializedName("merged_by") val mergedBy: ShortUser?,
-    @SerializedName("merged_at") val mergedAt: ZonedDateTime?,
-    @SerializedName("changes") val diffDataList: List<DiffData>?,
+    @SerialName("closed_by") val closedBy: ShortUser? = null,
+    @SerialName("closed_at") val closedAt: ZonedDateTime? = null,
+    @SerialName("merged_by") val mergedBy: ShortUser? = null,
+    @SerialName("merged_at") val mergedAt: ZonedDateTime? = null,
+    @SerialName("changes") val diffDataList: List<DiffData>? = null,
     // It sometimes can be null.
-    @SerializedName("assignees") val assignees: List<ShortUser>?,
-    @SerializedName("time_stats") val timeStats: TimeStats,
-    @SerializedName("discussion_locked") val discussionLocked: Boolean
+    @SerialName("assignees") val assignees: List<ShortUser>? = null,
+    @SerialName("time_stats") val timeStats: TimeStats,
+    @SerialName("discussion_locked") val discussionLocked: Boolean? = null
 )
 
+@Serializable
 enum class MergeRequestMergeStatus(val jsonName: String) {
-    @SerializedName("can_be_merged")
+    @SerialName("can_be_merged")
     CAN_BE_MERGED("can_be_merged"),
-    @SerializedName("cannot_be_merged")
+    @SerialName("cannot_be_merged")
     CANNOT_BE_MERGED("cannot_be_merged"),
-    @SerializedName("unchecked")
-    UNCHECKED("unchecked");
+    @SerialName("unchecked")
+    UNCHECKED("unchecked"),
+    @SerialName("checking")
+    CHECKING("checking");
 
     override fun toString() = jsonName
 }
 
+@Serializable
 enum class MergeRequestScope(val jsonName: String) {
-    @SerializedName("created-by-me")
+    @SerialName("created-by-me")
     CREATED_BY_ME("created-by-me"),
-    @SerializedName("assigned-to-me")
+    @SerialName("assigned-to-me")
     ASSIGNED_TO_ME("assigned-to-me"),
-    @SerializedName("all")
+    @SerialName("all")
     ALL("all");
 
     override fun toString() = jsonName
 }
 
+@Serializable
 enum class MergeRequestState(val jsonName: String) {
-    @SerializedName("opened")
+    @SerialName("opened")
     OPENED("opened"),
-    @SerializedName("closed")
+    @SerialName("closed")
     CLOSED("closed"),
-    @SerializedName("merged")
+    @SerialName("merged")
     MERGED("merged");
 
     override fun toString() = jsonName
 }
 
+@Serializable
 enum class MergeRequestViewType(val jsonName: String) {
-    @SerializedName("simple")
+    @SerialName("simple")
     SIMPLE("simple");
 
     override fun toString() = jsonName

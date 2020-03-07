@@ -2,7 +2,8 @@ package ru.terrakok.gitlabclient.di.module
 
 import android.content.Context
 import android.content.res.AssetManager
-import com.google.gson.Gson
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonConfiguration
 import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
@@ -11,7 +12,6 @@ import ru.terrakok.gitlabclient.di.AppDevelopersPath
 import ru.terrakok.gitlabclient.di.CacheLifetime
 import ru.terrakok.gitlabclient.di.DefaultPageSize
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
-import ru.terrakok.gitlabclient.di.provider.GsonProvider
 import ru.terrakok.gitlabclient.entity.app.develop.AppInfo
 import ru.terrakok.gitlabclient.entity.app.session.OAuthParams
 import ru.terrakok.gitlabclient.model.data.server.client.OkHttpClientFactory
@@ -37,7 +37,11 @@ class AppModule(context: Context) : Module() {
         bind(Base64Tools::class.java).toInstance(Base64Tools())
         bind(AssetManager::class.java).toInstance(context.assets)
         bind(SystemMessageNotifier::class.java).toInstance(SystemMessageNotifier())
-        bind(Gson::class.java).toProvider(GsonProvider::class.java).providesSingleton()
+        bind(Json::class.java).toInstance(Json(JsonConfiguration.Stable.copy(
+            ignoreUnknownKeys = true,
+            isLenient = true,
+            encodeDefaults = false
+        )))
         bind(OkHttpClientFactory::class.java).singleton()
 
         // Navigation

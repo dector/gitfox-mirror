@@ -10,6 +10,7 @@ enum class AppTarget(private val str: String) {
     BRANCH("branch"),
     TAG("tag"),
     PROJECT("project"),
+    NOTE("note"),
     SNIPPET("snippet"),
     MILESTONE("milestone"),
     COMMIT("commit");

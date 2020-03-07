@@ -1,22 +1,15 @@
 package ru.terrakok.gitlabclient.model.data.server.deserializer
 
-import com.google.gson.JsonDeserializationContext
-import com.google.gson.JsonDeserializer
-import com.google.gson.JsonElement
-import java.lang.reflect.Type
+import kotlinx.serialization.Decoder
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.Serializer
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 
-/**
- * Created by Eugene Shapovalov (@CraggyHaggy) on 16.05.19.
- */
-class LocalDateDeserializer : JsonDeserializer<LocalDate> {
-
+@Serializer(forClass = LocalDate::class)
+object LocalDateDeserializer: KSerializer<LocalDate> {
     private val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
-    override fun deserialize(
-        json: JsonElement,
-        type: Type,
-        jsonDeserializationContext: JsonDeserializationContext
-    ): LocalDate = LocalDate.parse(json.asJsonPrimitive.asString, dateTimeFormatter)
+    override fun deserialize(decoder: Decoder): LocalDate =
+        LocalDate.parse(decoder.decodeString(), dateTimeFormatter)
 }

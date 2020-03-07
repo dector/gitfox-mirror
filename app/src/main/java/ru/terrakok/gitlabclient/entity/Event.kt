@@ -1,106 +1,119 @@
+@file:UseSerializers(ZonedDateTimeDeserializer::class)
 package ru.terrakok.gitlabclient.entity
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.UseSerializers
 import org.threeten.bp.ZonedDateTime
+import ru.terrakok.gitlabclient.model.data.server.deserializer.ZonedDateTimeDeserializer
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 22.07.17.
  */
+@Serializable
 data class Event(
-    @SerializedName("project_id") val projectId: Long,
-    @SerializedName("action_name") val actionName: EventAction,
-    @SerializedName("target_id") val targetId: Long?,
-    @SerializedName("target_iid") val targetIid: Long?,
-    @SerializedName("target_type") val targetType: EventTargetType?,
-    @SerializedName("author_id") val authorId: Long,
-    @SerializedName("target_title") val targetTitle: String?,
-    @SerializedName("created_at") val createdAt: ZonedDateTime,
-    @SerializedName("author") val author: ShortUser,
-    @SerializedName("author_username") val authorUsername: String,
-    @SerializedName("push_data") val pushData: PushData?,
-    @SerializedName("note") val note: Note?
+    @SerialName("project_id") val projectId: Long,
+    @SerialName("action_name") val actionName: EventAction,
+    @SerialName("target_id") val targetId: Long? = null,
+    @SerialName("target_iid") val targetIid: Long? = null,
+    @SerialName("target_type") val targetType: EventTargetType? = null,
+    @SerialName("author_id") val authorId: Long,
+    @SerialName("target_title") val targetTitle: String? = null,
+    @SerialName("created_at") val createdAt: ZonedDateTime,
+    @SerialName("author") val author: ShortUser,
+    @SerialName("author_username") val authorUsername: String,
+    @SerialName("push_data") val pushData: PushData? = null,
+    @SerialName("note") val note: Note? = null
 )
 
+@Serializable
 enum class EventAction(private val jsonName: String) {
-    @SerializedName("closed")
+    @SerialName("closed")
     CLOSED("closed"),
-    @SerializedName("commented on")
+    @SerialName("commented on")
     COMMENTED_ON("commented on"),
-    @SerializedName("created")
+    @SerialName("created")
     CREATED("created"),
-    @SerializedName("imported")
+    @SerialName("imported")
     IMPORTED("imported"),
-    @SerializedName("pushed to")
+    @SerialName("pushed to")
     PUSHED_TO("pushed to"),
-    @SerializedName("pushed new")
+    @SerialName("pushed new")
     PUSHED_NEW("pushed new"),
-    @SerializedName("deleted")
+    @SerialName("deleted")
     DELETED("deleted"),
-    @SerializedName("accepted")
+    @SerialName("accepted")
     ACCEPTED("accepted"),
-    @SerializedName("joined")
+    @SerialName("joined")
     JOINED("joined"),
-    @SerializedName("updated")
+    @SerialName("updated")
     UPDATED("updated"),
-    @SerializedName("reopened")
+    @SerialName("reopened")
     REOPENED("reopened"),
-    @SerializedName("pushed")
+    @SerialName("pushed")
     PUSHED("pushed"),
-    @SerializedName("commented")
+    @SerialName("commented")
     COMMENTED("commented"),
-    @SerializedName("merged")
+    @SerialName("merged")
     MERGED("merged"),
-    @SerializedName("left")
+    @SerialName("left")
     LEFT("left"),
-    @SerializedName("destroyed")
+    @SerialName("destroyed")
     DESTROYED("destroyed"),
-    @SerializedName("expired")
+    @SerialName("expired")
     EXPIRED("expired"),
-    @SerializedName("opened")
+    @SerialName("opened")
     OPENED("opened");
 
     override fun toString() = jsonName
 }
 
+@Serializable
 enum class EventScope(private val jsonName: String) {
-    @SerializedName("all")
+    @SerialName("all")
     ALL("all");
 
     override fun toString() = jsonName
 }
 
+@Serializable
 enum class EventTarget(private val jsonName: String) {
-    @SerializedName("issue")
+    @SerialName("issue")
     ISSUE("issue"),
-    @SerializedName("milestone")
+    @SerialName("milestone")
     MILESTONE("milestone"),
-    @SerializedName("merge_request")
+    @SerialName("merge_request")
     MERGE_REQUEST("merge_request"),
-    @SerializedName("note")
+    @SerialName("note")
     NOTE("note"),
-    @SerializedName("project")
+    @SerialName("project")
     PROJECT("project"),
-    @SerializedName("snippet")
+    @SerialName("snippet")
     SNIPPET("snippet"),
-    @SerializedName("user")
+    @SerialName("user")
     USER("user");
 
     override fun toString() = jsonName
 }
 
+@Serializable
 enum class EventTargetType(private val jsonName: String) {
-    @SerializedName("Issue")
+    @SerialName("Issue")
     ISSUE("Issue"),
-    @SerializedName("Note")
+    @SerialName("Note")
     NOTE("Note"),
-    @SerializedName("DiffNote")
+    @SerialName("DiffNote")
     DIFF_NOTE("DiffNote"),
-    @SerializedName("Milestone")
+    @SerialName("Milestone")
     MILESTONE("Milestone"),
-    @SerializedName("MergeRequest")
+    @SerialName("MergeRequest")
     MERGE_REQUEST("MergeRequest"),
-    @SerializedName("Snippet")
-    SNIPPET("Snippet");
+    @SerialName("Snippet")
+    SNIPPET("Snippet"),
+    @SerialName("Commit")
+    COMMIT("Commit"),
+    @SerialName("DiscussionNote")
+    DISCUSSION_NOTE("DiscussionNote");
 
     override fun toString() = jsonName
 }

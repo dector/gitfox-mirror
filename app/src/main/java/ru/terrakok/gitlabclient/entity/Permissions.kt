@@ -1,8 +1,10 @@
 package ru.terrakok.gitlabclient.entity
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Permissions(
-    @SerializedName("project_access") val projectAccess: ProjectAccess?,
-    @SerializedName("group_access") val groupAccess: GroupAccess?
+    @SerialName("project_access") val projectAccess: ProjectAccess? = null,
+    @SerialName("group_access") val groupAccess: GroupAccess? = null
 )

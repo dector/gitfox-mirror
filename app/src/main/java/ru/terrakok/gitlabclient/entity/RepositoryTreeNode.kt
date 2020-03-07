@@ -1,22 +1,25 @@
 package ru.terrakok.gitlabclient.entity
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
  * @author Eugene Shapovalov (CraggyHaggy). Date: 06.02.18
  */
+@Serializable
 data class RepositoryTreeNode(
-    @SerializedName("id") val id: String,
-    @SerializedName("name") val name: String,
-    @SerializedName("type") val type: RepositoryTreeNodeType,
-    @SerializedName("path") val path: String,
-    @SerializedName("mode") val mode: String
+    @SerialName("id") val id: String,
+    @SerialName("name") val name: String,
+    @SerialName("type") val type: RepositoryTreeNodeType,
+    @SerialName("path") val path: String,
+    @SerialName("mode") val mode: String
 )
 
+@Serializable
 enum class RepositoryTreeNodeType(private val jsonName: String) {
-    @SerializedName("tree")
+    @SerialName("tree")
     TREE("tree"),
-    @SerializedName("blob")
+    @SerialName("blob")
     BLOB("blob");
 
     override fun toString() = jsonName

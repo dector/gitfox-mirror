@@ -1,22 +1,24 @@
 package ru.terrakok.gitlabclient.entity
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 30.03.17
  */
+@Serializable
 enum class OrderBy(private val jsonName: String) {
-    @SerializedName("id")
+    @SerialName("id")
     ID("id"),
-    @SerializedName("name")
+    @SerialName("name")
     NAME("name"),
-    @SerializedName("path")
+    @SerialName("path")
     PATH("path"),
-    @SerializedName("created_at")
+    @SerialName("created_at")
     CREATED_AT("created_at"),
-    @SerializedName("updated_at")
+    @SerialName("updated_at")
     UPDATED_AT("updated_at"),
-    @SerializedName("last_activity_at")
+    @SerialName("last_activity_at")
     LAST_ACTIVITY_AT("last_activity_at");
 
     override fun toString() = jsonName

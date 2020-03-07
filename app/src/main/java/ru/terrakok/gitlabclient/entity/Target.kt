@@ -1,155 +1,127 @@
+@file:UseSerializers(
+    ZonedDateTimeDeserializer::class,
+    LocalDateDeserializer::class
+)
 package ru.terrakok.gitlabclient.entity
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.UseSerializers
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZonedDateTime
+import ru.terrakok.gitlabclient.model.data.server.deserializer.LocalDateDeserializer
+import ru.terrakok.gitlabclient.model.data.server.deserializer.ZonedDateTimeDeserializer
 
-/**
- * @author Eugene Shapovalov (CraggyHaggy). Date: 13.09.17
- */
-abstract class Target {
-    @SerializedName("id")
-    private val _id: Long? = null
-    @SerializedName("iid")
-    private val _iid: Long? = null
-    @SerializedName("project_id")
-    private val _projectId: Long? = null
-    @SerializedName("title")
-    private val _title: String? = null
-    @SerializedName("state")
-    private val _state: TargetState? = null
-    @SerializedName("updated_at")
-    val updatedAt: ZonedDateTime? = null
-    @SerializedName("created_at")
-    val createdAt: ZonedDateTime? = null
-    @SerializedName("labels")
-    private val _labels: List<String>? = null
-    @SerializedName("milestone")
-    val milestone: Milestone? = null
-    @SerializedName("assignees")
-    private val _assignees: List<ShortUser>? = null
-    @SerializedName("author")
-    val _author: ShortUser? = null
-    @SerializedName("assignee")
-    val assignee: ShortUser? = null
-    @SerializedName("user_notes_count")
-    private val _userNotesCount: Int? = null
-    @SerializedName("upvotes")
-    private val _upVotes: Int? = null
-    @SerializedName("downvotes")
-    private val _downVotes: Int? = null
-    @SerializedName("web_url")
-    val webUrl: String? = null
-    @SerializedName("subscribed")
-    private val _subscribed: Boolean? = null
-    @SerializedName("time_stats")
-    val timeStats: TimeStats? = null
+sealed class Target {
+    abstract val id: Long
+    abstract val iid: Long
+    abstract val projectId: Long
+    abstract val title: String
+    abstract val state: TargetState
+    abstract val updatedAt: ZonedDateTime?
+    abstract val createdAt: ZonedDateTime?
+    abstract val labels: List<String>
+    abstract val milestone: Milestone?
+    abstract val assignees: List<ShortUser>?
+    abstract val author: ShortUser
+    abstract val assignee: ShortUser?
+    abstract val userNotesCount: Int?
+    abstract val upVotes: Int?
+    abstract val downVotes: Int?
+    abstract val webUrl: String?
+    abstract val subscribed: Boolean?
+    abstract val timeStats: TimeStats?
 
-    val id get() = _id!!
-    val iid get() = _iid!!
-    val projectId get() = _projectId!!
-    val title get() = _title!!
-    val state get() = _state!!
-    val labels get() = _labels!!
-    val userNotesCount get() = _userNotesCount!!
-    val upVotes get() = _upVotes!!
-    val downVotes get() = _downVotes!!
-    val subscribed get() = _subscribed!!
-    val author get() = _author!!
+    @Serializable
+    data class Issue(
+        @SerialName("id") override val id: Long,
+        @SerialName("iid") override val iid: Long,
+        @SerialName("project_id") override val projectId: Long,
+        @SerialName("title") override val title: String,
+        @SerialName("state") override val state: TargetState,
+        @SerialName("updated_at") override val updatedAt: ZonedDateTime? = null,
+        @SerialName("created_at") override val createdAt: ZonedDateTime? = null,
+        @SerialName("labels") override val labels: List<String>,
+        @SerialName("milestone") override val milestone: Milestone? = null,
+        @SerialName("assignees") override val assignees: List<ShortUser>? = null,
+        @SerialName("author") override val author: ShortUser,
+        @SerialName("assignee") override val assignee: ShortUser? = null,
+        @SerialName("user_notes_count") override val userNotesCount: Int? = null,
+        @SerialName("upvotes") override val upVotes: Int? = null,
+        @SerialName("downvotes") override val downVotes: Int? = null,
+        @SerialName("web_url") override val webUrl: String? = null,
+        @SerialName("subscribed") override val subscribed: Boolean? = null,
+        @SerialName("time_stats") override val timeStats: TimeStats? = null,
+        @SerialName("due_date") val dueDate: LocalDate? = null,
+        @SerialName("confidential") val confidential: Boolean,
+        @SerialName("weight") val weight: Long? = null,
+        @SerialName("_links") val links: Links? = null
+    ) : Target()
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is Target) return false
-
-        if (id != other.id) return false
-        if (iid != other.iid) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = id.hashCode()
-        result = 31 * result + iid.hashCode()
-        return result
-    }
-
-    class Issue : Target() {
-        @SerializedName("due_date")
-        val dueDate: LocalDate? = null
-        @SerializedName("confidential")
-        private val _confidential: Boolean? = null
-        @SerializedName("weight")
-        val weight: Long? = null
-        @SerializedName("_links")
-        val links: Links? = null
-
-        val confidential get() = _confidential!!
-    }
-
-    class MergeRequest : Target() {
-        @SerializedName("source_project_id")
-        private val _sourceProjectId: Long? = null
-        @SerializedName("target_project_id")
-        private val _targetProjectId: Long? = null
-        @SerializedName("target_branch")
-        private val _targetBranch: String? = null
-        @SerializedName("source_branch")
-        private val _sourceBranch: String? = null
-        @SerializedName("work_in_progress")
-        val _workInProgress: Boolean? = null
-        @SerializedName("merge_when_pipeline_succeeds")
-        private val _mergeWhenPipelineSucceeds: Boolean? = null
-        @SerializedName("merge_status")
-        private val _mergeStatus: MergeRequestMergeStatus? = null
-        @SerializedName("sha")
-        private val _sha: String? = null
-        @SerializedName("merge_commit_sha")
-        val mergeCommitSha: String? = null
-        @SerializedName("approvals_before_merge")
-        val approvalsBeforeMerge: Int? = null
-        @SerializedName("force_remove_source_branch")
-        val forceRemoveSourceBranch: Boolean? = null
-        @SerializedName("squash")
-        private val _squash: Boolean? = null
-
-        val sourceProjectId get() = _sourceProjectId!!
-        val targetProjectId get() = _targetProjectId!!
-        val targeBranch get() = _targetBranch!!
-        val sourceBranch get() = _sourceBranch!!
-        val workInProgress get() = _workInProgress!!
-        val mergeWhenPipelineSucceeds get() = _mergeWhenPipelineSucceeds!!
-        val mergeStatus get() = _mergeStatus!!
-        val sha get() = _sha!!
-        val squash get() = _squash!!
-    }
+    @Serializable
+    data class MergeRequest(
+        @SerialName("id") override val id: Long,
+        @SerialName("iid") override val iid: Long,
+        @SerialName("project_id") override val projectId: Long,
+        @SerialName("title") override val title: String,
+        @SerialName("state") override val state: TargetState,
+        @SerialName("updated_at") override val updatedAt: ZonedDateTime? = null,
+        @SerialName("created_at") override val createdAt: ZonedDateTime? = null,
+        @SerialName("labels") override val labels: List<String>,
+        @SerialName("milestone") override val milestone: Milestone? = null,
+        @SerialName("assignees") override val assignees: List<ShortUser>? = null,
+        @SerialName("author") override val author: ShortUser,
+        @SerialName("assignee") override val assignee: ShortUser? = null,
+        @SerialName("user_notes_count") override val userNotesCount: Int? = null,
+        @SerialName("upvotes") override val upVotes: Int? = null,
+        @SerialName("downvotes") override val downVotes: Int? = null,
+        @SerialName("web_url") override val webUrl: String? = null,
+        @SerialName("subscribed") override val subscribed: Boolean? = null,
+        @SerialName("time_stats") override val timeStats: TimeStats? = null,
+        @SerialName("source_project_id") val sourceProjectId: Long,
+        @SerialName("target_project_id") val targetProjectId: Long,
+        @SerialName("target_branch") val targetBranch: String,
+        @SerialName("source_branch") val sourceBranch: String,
+        @SerialName("work_in_progress") val workInProgress: Boolean,
+        @SerialName("merge_when_pipeline_succeeds") val mergeWhenPipelineSucceeds: Boolean,
+        @SerialName("merge_status") val mergeStatus: MergeRequestMergeStatus,
+        @SerialName("sha") val sha: String? = null,
+        @SerialName("merge_commit_sha") val mergeCommitSha: String? = null,
+        @SerialName("approvals_before_merge") val approvalsBeforeMerge: Int? = null,
+        @SerialName("force_remove_source_branch") val forceRemoveSourceBranch: Boolean? = null,
+        @SerialName("squash") val squash: Boolean? = null
+    ) : Target()
 }
 
+@Serializable
 enum class TargetScope(private val jsonName: String) {
-    @SerializedName("created-by-me")
+    @SerialName("created-by-me")
     CREATED_BY_ME("created-by-me"),
-    @SerializedName("assigned-to-me")
+    @SerialName("assigned-to-me")
     ASSIGNED_TO_ME("assigned-to-me"),
-    @SerializedName("all")
+    @SerialName("all")
     ALL("all");
 
     override fun toString() = jsonName
 }
 
+@Serializable
 enum class TargetState(private val jsonName: String) {
-    @SerializedName("opened")
+    @SerialName("opened")
     OPENED("opened"),
-    @SerializedName("closed")
+    @SerialName("closed")
     CLOSED("closed"),
-    @SerializedName("merged")
+    @SerialName("merged")
     MERGED("merged");
 
     override fun toString() = jsonName
 }
 
+@Serializable
 enum class TargetType(private val jsonName: String) {
-    @SerializedName("Issue")
+    @SerialName("Issue")
     ISSUE("Issue"),
-    @SerializedName("MergeRequest")
+    @SerialName("MergeRequest")
     MERGE_REQUEST("MergeRequest");
 
     override fun toString() = jsonName

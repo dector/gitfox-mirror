@@ -1,8 +1,10 @@
 package ru.terrakok.gitlabclient.entity
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class GroupAccess(
-    @SerializedName("access_level") val accessLevel: Long,
-    @SerializedName("notification_level") val notificationLevel: Long
+    @SerialName("access_level") val accessLevel: Long,
+    @SerialName("notification_level") val notificationLevel: Long
 )

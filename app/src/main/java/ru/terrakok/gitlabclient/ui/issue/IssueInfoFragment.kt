@@ -68,7 +68,7 @@ class IssueInfoFragment : BaseFragment(), IssueInfoView {
             showDueDate(dueDate)
             showTimeStats(timeStats)
             showWeight(weight)
-            showLockIssue(discussionLocked)
+            showLockIssue(discussionLocked ?: false)
             showConfidentiality(confidential)
             showLabels(labels)
         }

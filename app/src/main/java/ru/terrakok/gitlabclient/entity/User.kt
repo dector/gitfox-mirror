@@ -1,33 +1,38 @@
+@file:UseSerializers(ZonedDateTimeDeserializer::class)
 package ru.terrakok.gitlabclient.entity
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.UseSerializers
 import org.threeten.bp.ZonedDateTime
+import ru.terrakok.gitlabclient.model.data.server.deserializer.ZonedDateTimeDeserializer
 
+@Serializable
 data class User(
-    @SerializedName("id") val id: Long,
-    @SerializedName("username") val username: String,
-    @SerializedName("email") val email: String?,
-    @SerializedName("name") val name: String,
-    @SerializedName("state") val state: String?,
-    @SerializedName("avatar_url") val avatarUrl: String?,
-    @SerializedName("web_url") val webUrl: String?,
-    @SerializedName("created_at") val createdAt: ZonedDateTime,
-    @SerializedName("is_admin") val isAdmin: Boolean,
-    @SerializedName("bio") val bio: String?,
-    @SerializedName("location") val location: String?,
-    @SerializedName("skype") val skype: String?,
-    @SerializedName("linkedin") val linkedin: String?,
-    @SerializedName("twitter") val twitter: String?,
-    @SerializedName("website_url") val websiteUrl: String?,
-    @SerializedName("organization") val organization: String?,
-    @SerializedName("last_sign_in_at") val lastSignInAt: ZonedDateTime,
-    @SerializedName("confirmed_at") val confirmedAt: ZonedDateTime,
-    @SerializedName("color_scheme_id") val colorSchemeId: Long,
-    @SerializedName("projects_limit") val projectsLimit: Long,
-    @SerializedName("current_sign_in_at") val currentSignInAt: ZonedDateTime,
-    @SerializedName("identities") val identities: List<Identity>?,
-    @SerializedName("can_create_group") val canCreateGroup: Boolean,
-    @SerializedName("can_create_project") val canCreateProject: Boolean,
-    @SerializedName("two_factor_enabled") val twoFactorEnabled: Boolean,
-    @SerializedName("external") val external: Boolean
+    @SerialName("id") val id: Long,
+    @SerialName("username") val username: String,
+    @SerialName("email") val email: String? = null,
+    @SerialName("name") val name: String,
+    @SerialName("state") val state: String? = null,
+    @SerialName("avatar_url") val avatarUrl: String? = null,
+    @SerialName("web_url") val webUrl: String? = null,
+    @SerialName("created_at") val createdAt: ZonedDateTime,
+    @SerialName("is_admin") val isAdmin: Boolean = false,
+    @SerialName("bio") val bio: String? = null,
+    @SerialName("location") val location: String? = null,
+    @SerialName("skype") val skype: String? = null,
+    @SerialName("linkedin") val linkedin: String? = null,
+    @SerialName("twitter") val twitter: String? = null,
+    @SerialName("website_url") val websiteUrl: String? = null,
+    @SerialName("organization") val organization: String? = null,
+    @SerialName("last_sign_in_at") val lastSignInAt: ZonedDateTime? = null,
+    @SerialName("confirmed_at") val confirmedAt: ZonedDateTime? = null,
+    @SerialName("color_scheme_id") val colorSchemeId: Long? = null,
+    @SerialName("projects_limit") val projectsLimit: Long? = null,
+    @SerialName("current_sign_in_at") val currentSignInAt: ZonedDateTime? = null,
+    @SerialName("identities") val identities: List<Identity>? = null,
+    @SerialName("can_create_group") val canCreateGroup: Boolean? = null,
+    @SerialName("can_create_project") val canCreateProject: Boolean? = null,
+    @SerialName("two_factor_enabled") val twoFactorEnabled: Boolean? = null,
+    @SerialName("external") val external: Boolean? = null
 )

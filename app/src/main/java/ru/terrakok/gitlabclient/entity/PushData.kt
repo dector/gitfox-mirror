@@ -1,35 +1,39 @@
 package ru.terrakok.gitlabclient.entity
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 19.11.17.
  */
+@Serializable
 data class PushData(
-    @SerializedName("commit_count") val commitCount: Int,
-    @SerializedName("action") val action: PushDataAction,
-    @SerializedName("ref_type") val refType: PushDataRefType,
-    @SerializedName("commit_from") val commitFrom: String?,
-    @SerializedName("commit_to") val commitTo: String?,
-    @SerializedName("ref") val ref: String?,
-    @SerializedName("commit_title") val commitTitle: String?
+    @SerialName("commit_count") val commitCount: Int,
+    @SerialName("action") val action: PushDataAction,
+    @SerialName("ref_type") val refType: PushDataRefType,
+    @SerialName("commit_from") val commitFrom: String? = null,
+    @SerialName("commit_to") val commitTo: String? = null,
+    @SerialName("ref") val ref: String? = null,
+    @SerialName("commit_title") val commitTitle: String? = null
 )
 
+@Serializable
 enum class PushDataAction(private val jsonName: String) {
-    @SerializedName("pushed")
+    @SerialName("pushed")
     PUSHED("pushed"),
-    @SerializedName("removed")
+    @SerialName("removed")
     REMOVED("removed"),
-    @SerializedName("created")
+    @SerialName("created")
     CREATED("created");
 
     override fun toString() = jsonName
 }
 
+@Serializable
 enum class PushDataRefType(private val jsonName: String) {
-    @SerializedName("branch")
+    @SerialName("branch")
     BRANCH("branch"),
-    @SerializedName("tag")
+    @SerialName("tag")
     TAG("tag");
 
     override fun toString() = jsonName

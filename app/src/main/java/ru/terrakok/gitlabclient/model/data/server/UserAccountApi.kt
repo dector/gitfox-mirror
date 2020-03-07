@@ -1,8 +1,7 @@
 package ru.terrakok.gitlabclient.model.data.server
 
-import com.google.gson.Gson
 import io.reactivex.Single
-import javax.inject.Inject
+import kotlinx.serialization.json.Json
 import okhttp3.FormBody
 import okhttp3.Request
 import ru.terrakok.gitlabclient.BuildConfig
@@ -10,9 +9,10 @@ import ru.terrakok.gitlabclient.entity.TokenData
 import ru.terrakok.gitlabclient.entity.User
 import ru.terrakok.gitlabclient.entity.app.session.UserAccount
 import ru.terrakok.gitlabclient.model.data.server.client.OkHttpClientFactory
+import javax.inject.Inject
 
 class UserAccountApi @Inject constructor(
-    private val gson: Gson,
+    private val json: Json,
     okHttpClientFactory: OkHttpClientFactory
 ) {
     private val okHttpClient = okHttpClientFactory.create(null, false, BuildConfig.DEBUG)
@@ -40,8 +40,7 @@ class UserAccountApi @Inject constructor(
                 try {
                     val response = okHttpClient.newCall(request).execute()
                     if (response.isSuccessful) {
-                        val tokenData =
-                            gson.fromJson(response.body?.charStream(), TokenData::class.java)
+                        val tokenData = json.parse(TokenData.serializer(), response.body!!.string())
                         return@defer Single.just(tokenData)
                     } else {
                         val resultCode = response.code
@@ -60,7 +59,7 @@ class UserAccountApi @Inject constructor(
                 try {
                     val response = okHttpClient.newCall(request).execute()
                     if (response.isSuccessful) {
-                        val user = gson.fromJson(response.body?.charStream(), User::class.java)
+                        val user = json.parse(User.serializer(), response.body!!.string())
                         return@flatMap Single.just(
                             UserAccount(
                                 user.id,
@@ -93,7 +92,7 @@ class UserAccountApi @Inject constructor(
             try {
                 val response = okHttpClient.newCall(request).execute()
                 if (response.isSuccessful) {
-                    val user = gson.fromJson(response.body?.charStream(), User::class.java)
+                    val user = json.parse(User.serializer(), response.body!!.string())
                     return@defer Single.just(
                         UserAccount(
                             user.id,

@@ -1,26 +1,29 @@
 package ru.terrakok.gitlabclient.model.data.storage
 
 import android.content.res.AssetManager
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import io.reactivex.Single
+import kotlinx.serialization.builtins.list
+import kotlinx.serialization.json.Json
+import ru.terrakok.gitlabclient.entity.app.develop.AppLibrary
 import java.io.InputStreamReader
 import javax.inject.Inject
-import ru.terrakok.gitlabclient.entity.app.develop.AppLibrary
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 03.12.17.
  */
 class RawAppData @Inject constructor(
     private val assets: AssetManager,
-    private val gson: Gson
+    private val json: Json
 ) {
 
-    fun getAppLibraries(): Single<List<AppLibrary>> = fromAsset("app/app_libraries.json")
-
-    private inline fun <reified T> fromAsset(pathToAsset: String) = Single.defer {
-        assets.open(pathToAsset).use { stream ->
-            Single.just<T>(gson.fromJson(InputStreamReader(stream), object : TypeToken<T>() {}.type))
+    fun getAppLibraries(): Single<List<AppLibrary>> = Single.defer {
+        assets.open("app/app_libraries.json").use { stream ->
+            Single.just<List<AppLibrary>>(
+                json.parse(
+                    AppLibrary.serializer().list,
+                    InputStreamReader(stream).readText()
+                )
+            )
         }
     }
 }

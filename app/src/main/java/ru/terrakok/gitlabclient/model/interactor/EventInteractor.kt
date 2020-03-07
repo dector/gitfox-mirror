@@ -193,6 +193,16 @@ class EventInteractor @Inject constructor(
                 "${AppTarget.SNIPPET} ${event.targetIid!!}",
                 event.targetId!!
             )
+            EventTargetType.COMMIT -> TargetData(
+                AppTarget.COMMIT,
+                "${AppTarget.COMMIT} ${event.targetIid!!}",
+                event.targetId!!
+            )
+            EventTargetType.DISCUSSION_NOTE -> TargetData(
+                AppTarget.PROJECT,
+                "${AppTarget.NOTE} ${event.targetIid!!}",
+                event.projectId
+            )
             EventTargetType.DIFF_NOTE,
             EventTargetType.NOTE -> {
                 if (event.note != null) {
@@ -200,24 +210,24 @@ class EventInteractor @Inject constructor(
                         EventTargetType.ISSUE -> TargetData(
                             AppTarget.ISSUE,
                             "${AppTarget.ISSUE} #${event.note.noteableIid}",
-                            event.note.noteableId
+                            event.note.noteableId ?: event.note.id
                         )
                         EventTargetType.MERGE_REQUEST -> TargetData(
                             AppTarget.MERGE_REQUEST,
                             "${AppTarget.MERGE_REQUEST} !${event.note.noteableIid}",
-                            event.note.noteableId
+                            event.note.noteableId ?: event.note.id
                         )
                         EventTargetType.MILESTONE -> TargetData(
                             AppTarget.MILESTONE,
                             "${AppTarget.MILESTONE} ${event.note.noteableIid}",
-                            event.note.noteableId
+                            event.note.noteableId ?: event.note.id
                         )
                         EventTargetType.SNIPPET -> TargetData(
                             AppTarget.SNIPPET,
                             "${AppTarget.SNIPPET} ${event.note.noteableIid}",
-                            event.note.noteableId
+                            event.note.noteableId ?: event.note.id
                         )
-                        null -> TargetData(
+                        EventTargetType.COMMIT, null -> TargetData(
                             AppTarget.COMMIT,
                             "${AppTarget.COMMIT} ${event.note.id}",
                             event.note.id

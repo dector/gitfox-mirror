@@ -1,16 +1,18 @@
 package ru.terrakok.gitlabclient.entity
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 30.03.17
  */
+@Serializable
 enum class Visibility(private val jsonName: String) {
-    @SerializedName("public")
+    @SerialName("public")
     PUBLIC("public"),
-    @SerializedName("internal")
+    @SerialName("internal")
     INTERNAL("internal"),
-    @SerializedName("private")
+    @SerialName("private")
     PRIVATE("private");
 
     override fun toString() = jsonName

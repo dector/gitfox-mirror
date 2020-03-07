@@ -1,17 +1,17 @@
 package ru.terrakok.gitlabclient.model.data.storage
 
 import android.content.Context
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import javax.inject.Inject
+import kotlinx.serialization.builtins.list
+import kotlinx.serialization.json.Json
 import ru.terrakok.gitlabclient.entity.app.session.UserAccount
+import javax.inject.Inject
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 28.03.17
  */
 class Prefs @Inject constructor(
     private val context: Context,
-    private val gson: Gson
+    private val json: Json
 ) {
 
     private fun getSharedPreferences(prefsName: String) =
@@ -29,13 +29,16 @@ class Prefs @Inject constructor(
             authPrefs.edit().putString(KEY_CURRENT_ACCOUNT, value).apply()
         }
 
-    private val accountsTypeToken = object : TypeToken<List<UserAccount>>() {}.type
     var accounts: List<UserAccount>
-        get() {
-            return gson.fromJson(authPrefs.getString(KEY_USER_ACCOUNTS, "[]"), accountsTypeToken)
-        }
+        get() = json.parse(
+            UserAccount.serializer().list,
+            authPrefs.getString(KEY_USER_ACCOUNTS, "[]")!!
+        )
         set(value) {
-            authPrefs.edit().putString(KEY_USER_ACCOUNTS, gson.toJson(value)).apply()
+            authPrefs.edit().putString(
+                KEY_USER_ACCOUNTS,
+                json.stringify(UserAccount.serializer().list, value)
+            ).apply()
         }
 
     fun getCurrentUserAccount(): UserAccount? {

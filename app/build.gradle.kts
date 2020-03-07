@@ -3,6 +3,7 @@ plugins {
     kotlin("android")
     kotlin("kapt")
     kotlin("android.extensions")
+    id("kotlinx-serialization")
 }
 
 apply(from = "${project.rootDir}/codequality/ktlint.gradle.kts")
@@ -137,12 +138,12 @@ dependencies {
     val toothpickVersion = "3.1.0"
     implementation("com.github.stephanenicolas.toothpick:toothpick-runtime:$toothpickVersion")
     kapt("com.github.stephanenicolas.toothpick:toothpick-compiler:$toothpickVersion")
-    //Gson
-    implementation("com.google.code.gson:gson:2.8.6")
+    //JSON
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0")
     //Retrofit
     val retrofitVersion = "2.7.1"
     implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
-    implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
+    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.4.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.4.0")
     implementation("com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion")
     //RxJava

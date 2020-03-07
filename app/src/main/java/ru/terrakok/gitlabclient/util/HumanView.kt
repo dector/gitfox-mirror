@@ -198,4 +198,5 @@ fun MergeRequestMergeStatus.getHumanName(resources: Resources) = when (this) {
     MergeRequestMergeStatus.CANNOT_BE_MERGED -> resources.getString(R.string.merge_request_status_cannot_be_merged)
     MergeRequestMergeStatus.CAN_BE_MERGED -> resources.getString(R.string.merge_request_status_can_be_merged)
     MergeRequestMergeStatus.UNCHECKED -> resources.getString(R.string.merge_request_status_unchecked)
+    MergeRequestMergeStatus.CHECKING -> resources.getString(R.string.merge_request_status_checking)
 }

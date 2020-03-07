@@ -1,11 +1,10 @@
 package ru.terrakok.gitlabclient.di.provider
 
-import com.google.gson.Gson
-import javax.inject.Inject
-import javax.inject.Provider
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
 import ru.terrakok.gitlabclient.BuildConfig
 import ru.terrakok.gitlabclient.di.ServerPath
 import ru.terrakok.gitlabclient.entity.app.session.AuthHolder
@@ -15,6 +14,8 @@ import ru.terrakok.gitlabclient.model.data.server.ApiWithProjectCache
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.client.OkHttpClientFactory
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
+import javax.inject.Inject
+import javax.inject.Provider
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 20.06.17.
@@ -22,11 +23,12 @@ import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 class ApiProvider @Inject constructor(
     private val okHttpClientFactory: OkHttpClientFactory,
     private val authHolder: AuthHolder,
-    private val gson: Gson,
+    private val json: Json,
     private val projectCache: ProjectCache,
     private val serverChanges: ServerChanges,
     @ServerPath private val serverPath: String
 ) : Provider<GitlabApi> {
+    private val contentType = "application/json".toMediaType()
 
     override fun get() =
         ApiWithChangesRegistration(
@@ -39,7 +41,7 @@ class ApiProvider @Inject constructor(
 
     private fun getOriginalApi() =
         Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create(gson))
+            .addConverterFactory(json.asConverterFactory(contentType))
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .client(okHttpClientFactory.create(authHolder, true, BuildConfig.DEBUG))
             .baseUrl(serverPath)

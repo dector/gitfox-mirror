@@ -1,14 +1,16 @@
 package ru.terrakok.gitlabclient.entity
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 26.03.17.
  */
+@Serializable
 data class TokenData(
-    @SerializedName("access_token") val token: String,
-    @SerializedName("token_type") val type: String,
-    @SerializedName("scope") val scope: String,
-    @SerializedName("created_at") val createdAt: Long,
-    @SerializedName("refresh_token") val refreshToken: String
+    @SerialName("access_token") val token: String,
+    @SerialName("token_type") val type: String,
+    @SerialName("scope") val scope: String,
+    @SerialName("created_at") val createdAt: Long,
+    @SerialName("refresh_token") val refreshToken: String
 )

@@ -63,7 +63,7 @@ class MergeRequestInfoFragment : BaseFragment(), MergeRequestInfoView {
             showMilestone(milestone)
             showMergeStatus(state, mergeStatus)
             showTimeStats(timeStats)
-            showLockMergeRequest(discussionLocked)
+            showLockMergeRequest(discussionLocked ?: false)
             showLabels(labels)
         }
     }

@@ -1,12 +1,14 @@
 package ru.terrakok.gitlabclient.entity
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class ShortUser(
-    @SerializedName("id") val id: Long,
-    @SerializedName("state") val state: String?,
-    @SerializedName("name") val name: String,
-    @SerializedName("web_url") val webUrl: String?,
-    @SerializedName("avatar_url") val avatarUrl: String?,
-    @SerializedName("username") val username: String
+    @SerialName("id") val id: Long,
+    @SerialName("state") val state: String? = null,
+    @SerialName("name") val name: String,
+    @SerialName("web_url") val webUrl: String? = null,
+    @SerialName("avatar_url") val avatarUrl: String? = null,
+    @SerialName("username") val username: String
 )

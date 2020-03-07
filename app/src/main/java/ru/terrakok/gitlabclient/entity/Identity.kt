@@ -1,8 +1,10 @@
 package ru.terrakok.gitlabclient.entity
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Identity(
-    @SerializedName("provider") val provider: String,
-    @SerializedName("extern_uid") val externUid: String
+    @SerialName("provider") val provider: String,
+    @SerialName("extern_uid") val externUid: String
 )

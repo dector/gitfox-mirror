@@ -1,20 +1,25 @@
+@file:UseSerializers(ColorDeserializer::class)
 package ru.terrakok.gitlabclient.entity
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.UseSerializers
+import ru.terrakok.gitlabclient.model.data.server.deserializer.ColorDeserializer
 
 /**
  * @author Maxim Myalkin (MaxMyalkin) on 29.10.2018.
  */
+@Serializable
 data class Label(
-    @SerializedName("id") val id: Long,
-    @SerializedName("name") val name: String,
-    @SerializedName("color") val color: Color,
-    @SerializedName("description") val description: String?,
-    @SerializedName("open_issues_count") val openIssuesCount: Int,
-    @SerializedName("closed_issues_count") val closedIssuesCount: Int,
-    @SerializedName("open_merge_requests_count") val openMergeRequestsCount: Int,
-    @SerializedName("subscribed") val subscribed: Boolean,
-    @SerializedName("priority") val priority: Int?
+    @SerialName("id") val id: Long,
+    @SerialName("name") val name: String,
+    @SerialName("color") val color: Color,
+    @SerialName("description") val description: String? = null,
+    @SerialName("open_issues_count") val openIssuesCount: Int = 0,
+    @SerialName("closed_issues_count") val closedIssuesCount: Int = 0,
+    @SerialName("open_merge_requests_count") val openMergeRequestsCount: Int = 0,
+    @SerialName("subscribed") val subscribed: Boolean,
+    @SerialName("priority") val priority: Int? = null
 )
 
 data class Color(

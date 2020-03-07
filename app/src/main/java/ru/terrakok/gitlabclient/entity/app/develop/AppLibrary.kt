@@ -1,10 +1,14 @@
 package ru.terrakok.gitlabclient.entity.app.develop
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 03.12.17.
  */
+@Serializable
 data class AppLibrary(
-    val name: String,
-    val url: String,
-    val license: LicenseType
+    @SerialName("name") val name: String,
+    @SerialName("url") val url: String,
+    @SerialName("license") val license: LicenseType
 )

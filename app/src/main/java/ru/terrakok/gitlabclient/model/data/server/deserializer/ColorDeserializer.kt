@@ -1,24 +1,16 @@
 package ru.terrakok.gitlabclient.model.data.server.deserializer
 
-import com.google.gson.JsonDeserializationContext
-import com.google.gson.JsonDeserializer
-import com.google.gson.JsonElement
-import java.lang.reflect.Type
+import kotlinx.serialization.Decoder
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.Serializer
 import ru.terrakok.gitlabclient.entity.Color
 
-/**
- * Created by Eugene Shapovalov (@CraggyHaggy) on 04.01.19.
- */
-class ColorDeserializer : JsonDeserializer<Color> {
-
-    override fun deserialize(
-        json: JsonElement,
-        typeOfT: Type,
-        context: JsonDeserializationContext
-    ): Color {
+@Serializer(forClass = Color::class)
+object ColorDeserializer: KSerializer<Color> {
+    override fun deserialize(decoder: Decoder): Color {
         // The color of the label given in 6-digit hex notation with leading ‘#’ sign (e.g. #FFAABB)
         // or one of the CSS color names. So according to CSS color names it can be named differently on Android.
-        val colorString = json.asJsonPrimitive.asString
+        val colorString = decoder.decodeString()
         val colorInt = try {
             android.graphics.Color.parseColor(colorString)
         } catch (e: IllegalArgumentException) {

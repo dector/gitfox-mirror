@@ -1,15 +1,24 @@
 package ru.terrakok.gitlabclient
 
-import com.google.gson.GsonBuilder
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonConfiguration
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.Month
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
 import ru.terrakok.gitlabclient.entity.*
+import ru.terrakok.gitlabclient.entity.EventAction
+import ru.terrakok.gitlabclient.entity.EventTargetType
+import ru.terrakok.gitlabclient.entity.IssueState
+import ru.terrakok.gitlabclient.entity.MergeRequestMergeStatus
+import ru.terrakok.gitlabclient.entity.MergeRequestState
+import ru.terrakok.gitlabclient.entity.MilestoneState
+import ru.terrakok.gitlabclient.entity.TargetState
+import ru.terrakok.gitlabclient.entity.TargetType
+import ru.terrakok.gitlabclient.entity.TodoAction
 import ru.terrakok.gitlabclient.entity.app.session.UserAccount
 import ru.terrakok.gitlabclient.entity.app.target.*
 import ru.terrakok.gitlabclient.model.data.server.deserializer.TodoDeserializer
-import ru.terrakok.gitlabclient.model.data.server.deserializer.ZonedDateTimeDeserializer
 
 /**
  * @author Vitaliy Belyaev on 01.06.2019.
@@ -137,7 +146,7 @@ object TestData {
             path = "test path",
             pathWithNamespace = "terrakok/gitlab-client",
             issuesEnabled = false,
-            openIssuesCount = 0L,
+            openIssuesCount = 0,
             mergeRequestsEnabled = false,
             jobsEnabled = false,
             wikiEnabled = false,
@@ -301,10 +310,12 @@ object TestData {
             true
     )
 
-    fun getTodo() = GsonBuilder()
-            .registerTypeAdapter(ZonedDateTime::class.java, ZonedDateTimeDeserializer())
-            .registerTypeAdapter(Todo::class.java, TodoDeserializer())
-            .create().fromJson(todoJson, Todo::class.java)
+    fun getTodo(): Todo = Json(
+        JsonConfiguration.Stable.copy(
+        ignoreUnknownKeys = true,
+        isLenient = true,
+        encodeDefaults = false
+    )).parse(TodoDeserializer, todoJson)
 
     fun getUser() = User(
             4321L, "username", "email@mail.com", "Name", null,

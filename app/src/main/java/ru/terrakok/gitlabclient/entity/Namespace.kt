@@ -1,11 +1,13 @@
 package ru.terrakok.gitlabclient.entity
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Namespace(
-    @SerializedName("id") val id: Long,
-    @SerializedName("name") val name: String?,
-    @SerializedName("path") val path: String?,
-    @SerializedName("kind") val kind: String?,
-    @SerializedName("full_path") val fullPath: String?
+    @SerialName("id") val id: Long,
+    @SerialName("name") val name: String? = null,
+    @SerialName("path") val path: String? = null,
+    @SerialName("kind") val kind: String? = null,
+    @SerialName("full_path") val fullPath: String? = null
 )

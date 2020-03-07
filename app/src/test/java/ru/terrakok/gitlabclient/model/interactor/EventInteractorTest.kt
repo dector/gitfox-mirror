@@ -491,8 +491,8 @@ class EventInteractorTest {
                 resolvedBody,
                 event.createdAt,
                 AppTarget.ISSUE,
-                event.note!!.noteableId,
-                TargetInternal(event.projectId, event.note!!.noteableIid),
+                event.note!!.noteableId!!,
+                TargetInternal(event.projectId, event.note!!.noteableIid!!),
                 listOf(TargetBadge.Text(testProject.name, AppTarget.PROJECT, testProject.id),
                         TargetBadge.Text(event.author.username, AppTarget.USER, event.author.id)),
                 TargetAction.Undefined

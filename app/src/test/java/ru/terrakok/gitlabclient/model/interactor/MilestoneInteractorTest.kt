@@ -48,7 +48,7 @@ class MilestoneInteractorTest {
 
         // WHEN
         val testObserver = interactor
-            .getMilestones(projectId = testMilestone.projectId, page = testPage).test()
+            .getMilestones(projectId = testMilestone.projectId!!, page = testPage).test()
 
         testObserver.awaitTerminalEvent()
 
@@ -56,7 +56,7 @@ class MilestoneInteractorTest {
         then(api)
             .should(times(1))
             .getMilestones(
-                testMilestone.projectId,
+                testMilestone.projectId!!,
                 null,
                 testPage,
                 defaultPageSize
@@ -79,14 +79,14 @@ class MilestoneInteractorTest {
 
         // WHEN
         val testObserver = interactor
-            .getMilestone(testMilestone.projectId, testMilestone.id).test()
+            .getMilestone(testMilestone.projectId!!, testMilestone.id).test()
 
         testObserver.awaitTerminalEvent()
 
         // THEN
         then(api)
             .should(times(1))
-            .getMilestone(testMilestone.projectId, testMilestone.id)
+            .getMilestone(testMilestone.projectId!!, testMilestone.id)
 
         then(api).shouldHaveNoMoreInteractions()
 
@@ -109,7 +109,7 @@ class MilestoneInteractorTest {
         // WHEN
         val testObserver = interactor
             .createMilestone(
-                testMilestone.projectId,
+                testMilestone.projectId!!,
                 testMilestone.title!!,
                 null,
                 null,
@@ -122,7 +122,7 @@ class MilestoneInteractorTest {
         then(api)
             .should(times(1))
             .createMilestone(
-                testMilestone.projectId,
+                testMilestone.projectId!!,
                 testMilestone.title!!,
                 null,
                 null,
@@ -151,7 +151,7 @@ class MilestoneInteractorTest {
         // WHEN
         val testObserver = interactor
             .updateMilestone(
-                testMilestone.projectId,
+                testMilestone.projectId!!,
                 testMilestone.id,
                 null,
                 null,
@@ -165,7 +165,7 @@ class MilestoneInteractorTest {
         then(api)
             .should(times(1))
             .updateMilestone(
-                testMilestone.projectId,
+                testMilestone.projectId!!,
                 testMilestone.id,
                 null,
                 null,
@@ -190,14 +190,14 @@ class MilestoneInteractorTest {
 
         // WHEN
         val testObserver = interactor
-            .deleteMilestone(testMilestone.projectId, testMilestone.id).test()
+            .deleteMilestone(testMilestone.projectId!!, testMilestone.id).test()
 
         testObserver.awaitTerminalEvent()
 
         // THEN
         then(api)
             .should(times(1))
-            .deleteMilestone(testMilestone.projectId, testMilestone.id)
+            .deleteMilestone(testMilestone.projectId!!, testMilestone.id)
 
         then(api).shouldHaveNoMoreInteractions()
 

@@ -201,6 +201,7 @@
     <string name="merge_request_status_can_be_merged">Can be merged</string>
     <string name="merge_request_status_cannot_be_merged">Cannot be merged</string>
     <string name="merge_request_status_unchecked">Unchecked</string>
+    <string name="merge_request_status_checking">Checking</string>
 
     <!--Members screen-->
     <string name="members_guest">Guest</string>
