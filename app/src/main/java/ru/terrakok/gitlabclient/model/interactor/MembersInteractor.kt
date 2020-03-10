@@ -2,13 +2,15 @@ package ru.terrakok.gitlabclient.model.interactor
 
 import io.reactivex.Completable
 import io.reactivex.Single
-import javax.inject.Inject
+import kotlinx.coroutines.rx2.rxCompletable
+import kotlinx.coroutines.rx2.rxSingle
 import ru.terrakok.gitlabclient.di.DefaultPageSize
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.Member
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
+import javax.inject.Inject
 
 /**
  * @author Valentin Logvinovitch (glvvl) on 27.02.19.
@@ -29,8 +31,7 @@ class MembersInteractor @Inject constructor(
         page: Int,
         pageSize: Int = defaultPageSize
     ): Single<List<Member>> =
-        api
-            .getMembers(projectId, page, pageSize)
+        rxSingle { api.getMembers(projectId, page, pageSize) }
             .subscribeOn(schedulers.io())
             .observeOn(schedulers.ui())
 
@@ -38,8 +39,7 @@ class MembersInteractor @Inject constructor(
         projectId: Long,
         memberId: Long
     ): Single<Member> =
-        api
-            .getMember(projectId, memberId)
+        rxSingle { api.getMember(projectId, memberId) }
             .subscribeOn(schedulers.io())
             .observeOn(schedulers.ui())
 
@@ -49,8 +49,7 @@ class MembersInteractor @Inject constructor(
         accessLevel: Long,
         expiresDate: String? = null
     ): Completable =
-        api
-            .addMember(projectId, userId, accessLevel, expiresDate)
+        rxCompletable { api.addMember(projectId, userId, accessLevel, expiresDate) }
             .subscribeOn(schedulers.io())
             .observeOn(schedulers.ui())
 
@@ -60,8 +59,7 @@ class MembersInteractor @Inject constructor(
         accessLevel: Long,
         expiresDate: String? = null
     ): Completable =
-        api
-            .editMember(projectId, userId, accessLevel, expiresDate)
+        rxCompletable { api.editMember(projectId, userId, accessLevel, expiresDate) }
             .subscribeOn(schedulers.io())
             .observeOn(schedulers.ui())
 
@@ -69,8 +67,7 @@ class MembersInteractor @Inject constructor(
         projectId: Long,
         userId: Long
     ): Completable =
-        api
-            .deleteMember(projectId, userId)
+        rxCompletable { api.deleteMember(projectId, userId) }
             .subscribeOn(schedulers.io())
             .observeOn(schedulers.ui())
 }

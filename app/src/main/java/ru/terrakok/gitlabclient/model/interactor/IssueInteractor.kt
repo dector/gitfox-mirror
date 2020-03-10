@@ -3,6 +3,8 @@ package ru.terrakok.gitlabclient.model.interactor
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
+import kotlinx.coroutines.rx2.rxCompletable
+import kotlinx.coroutines.rx2.rxSingle
 import ru.terrakok.gitlabclient.di.DefaultPageSize
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.*
@@ -40,8 +42,20 @@ class IssueInteractor @Inject constructor(
         search: String? = null,
         page: Int,
         pageSize: Int = defaultPageSize
-    ) = api
-        .getMyIssues(scope, state, labels, milestone, iids, orderBy, sort, search, page, pageSize)
+    ) = rxSingle {
+        api.getMyIssues(
+            scope,
+            state,
+            labels,
+            milestone,
+            iids,
+            orderBy,
+            sort,
+            search,
+            page,
+            pageSize
+        )
+    }
         .flatMap { issues ->
             Single.zip(
                 Single.just(issues),
@@ -66,8 +80,21 @@ class IssueInteractor @Inject constructor(
         search: String? = null,
         page: Int,
         pageSize: Int = defaultPageSize
-    ) = api
-        .getIssues(projectId, scope, state, labels, milestone, iids, orderBy, sort, search, page, pageSize)
+    ) = rxSingle {
+        api.getIssues(
+            projectId,
+            scope,
+            state,
+            labels,
+            milestone,
+            iids,
+            orderBy,
+            sort,
+            search,
+            page,
+            pageSize
+        )
+    }
         .flatMap { issues ->
             Single.zip(
                 Single.just(issues),
@@ -83,7 +110,7 @@ class IssueInteractor @Inject constructor(
     private fun getDistinctProjects(events: List<Issue>): Single<Map<Long, Project>> {
         return Observable.fromIterable(events)
             .distinct { it.projectId }
-            .flatMapSingle { issue -> api.getProject(issue.projectId) }
+            .flatMapSingle { issue -> rxSingle { api.getProject(issue.projectId) } }
             .toMap { it.id }
     }
 
@@ -102,7 +129,12 @@ class IssueInteractor @Inject constructor(
         badges.add(TargetBadge.Icon(TargetBadgeIcon.COMMENTS, issue.userNotesCount))
         badges.add(TargetBadge.Icon(TargetBadgeIcon.UP_VOTES, issue.upvotes))
         badges.add(TargetBadge.Icon(TargetBadgeIcon.DOWN_VOTES, issue.downvotes))
-        badges.add(TargetBadge.Icon(TargetBadgeIcon.RELATED_MERGE_REQUESTS, issue.relatedMergeRequestCount))
+        badges.add(
+            TargetBadge.Icon(
+                TargetBadgeIcon.RELATED_MERGE_REQUESTS,
+                issue.relatedMergeRequestCount
+            )
+        )
         issue.labels.forEach { label -> badges.add(TargetBadge.Text(label)) }
 
         return TargetHeader.Public(
@@ -133,8 +165,8 @@ class IssueInteractor @Inject constructor(
             issueRequests.getOrPut(key) {
                 Single
                     .zip(
-                        api.getProject(projectId),
-                        api.getIssue(projectId, issueId),
+                        rxSingle { api.getProject(projectId) },
+                        rxSingle { api.getIssue(projectId, issueId) },
                         BiFunction<Project, Issue, Issue> { project, issue ->
                             val resolved = markDownUrlResolver.resolve(issue.description, project)
                             if (resolved != issue.description) issue.copy(description = resolved)
@@ -158,8 +190,8 @@ class IssueInteractor @Inject constructor(
         pageSize: Int = defaultPageSize
     ) = Single
         .zip(
-            api.getProject(projectId),
-            api.getIssueNotes(projectId, issueId, sort, orderBy, page, pageSize),
+            rxSingle { api.getProject(projectId) },
+            rxSingle { api.getIssueNotes(projectId, issueId, sort, orderBy, page, pageSize) },
             BiFunction<Project, List<Note>, List<Note>> { project, notes ->
                 notes.map { resolveMarkDownUrl(it, project) }
             }
@@ -174,7 +206,7 @@ class IssueInteractor @Inject constructor(
         orderBy: OrderBy? = OrderBy.UPDATED_AT
     ) = Single
         .zip(
-            api.getProject(projectId),
+            rxSingle { api.getProject(projectId) },
             getAllIssueNotePages(projectId, issueId, sort, orderBy),
             BiFunction<Project, List<Note>, List<Note>> { project, notes ->
                 notes.map { resolveMarkDownUrl(it, project) }
@@ -183,10 +215,24 @@ class IssueInteractor @Inject constructor(
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
 
-    private fun getAllIssueNotePages(projectId: Long, issueId: Long, sort: Sort?, orderBy: OrderBy?) =
+    private fun getAllIssueNotePages(
+        projectId: Long,
+        issueId: Long,
+        sort: Sort?,
+        orderBy: OrderBy?
+    ) =
         Observable.range(1, Int.MAX_VALUE)
             .concatMap { page ->
-                api.getIssueNotes(projectId, issueId, sort, orderBy, page, GitlabApi.MAX_PAGE_SIZE)
+                rxSingle {
+                    api.getIssueNotes(
+                        projectId,
+                        issueId,
+                        sort,
+                        orderBy,
+                        page,
+                        GitlabApi.MAX_PAGE_SIZE
+                    )
+                }
                     .toObservable()
             }
             .takeWhile { notes -> notes.isNotEmpty() }
@@ -199,12 +245,12 @@ class IssueInteractor @Inject constructor(
     }
 
     fun createIssueNote(projectId: Long, issueId: Long, body: String) =
-        api.createIssueNote(projectId, issueId, body)
+        rxSingle { api.createIssueNote(projectId, issueId, body) }
             .subscribeOn(schedulers.io())
             .observeOn(schedulers.ui())
 
     fun closeIssue(projectId: Long, issueId: Long) =
-        api.editIssue(projectId, issueId, IssueStateEvent.CLOSE)
+        rxCompletable { api.editIssue(projectId, issueId, IssueStateEvent.CLOSE) }
             .subscribeOn(schedulers.io())
             .observeOn(schedulers.ui())
 }

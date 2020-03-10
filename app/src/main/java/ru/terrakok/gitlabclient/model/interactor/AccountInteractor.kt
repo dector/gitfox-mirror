@@ -2,7 +2,8 @@ package ru.terrakok.gitlabclient.model.interactor
 
 import io.reactivex.Observable
 import io.reactivex.functions.Function3
-import retrofit2.adapter.rxjava2.Result
+import kotlinx.coroutines.rx2.rxSingle
+import retrofit2.Response
 import ru.terrakok.gitlabclient.di.ServerPath
 import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.entity.app.AccountMainBadges
@@ -26,7 +27,7 @@ class AccountInteractor @Inject constructor(
             .map { Unit }
             .startWith(Unit)
             .switchMapSingle {
-                api.getMyAssignedIssueHeaders()
+                rxSingle { api.getMyAssignedIssueHeaders() }
                     .map { it.getXTotalHeader() }
                     .subscribeOn(schedulers.io())
                     .observeOn(schedulers.ui())
@@ -37,7 +38,7 @@ class AccountInteractor @Inject constructor(
             .map { Unit }
             .startWith(Unit)
             .switchMapSingle {
-                api.getMyAssignedMergeRequestHeaders()
+                rxSingle { api.getMyAssignedMergeRequestHeaders() }
                     .map { it.getXTotalHeader() }
                     .subscribeOn(schedulers.io())
                     .observeOn(schedulers.ui())
@@ -48,7 +49,7 @@ class AccountInteractor @Inject constructor(
             .map { Unit }
             .startWith(Unit)
             .switchMapSingle {
-                api.getMyAssignedTodoHeaders()
+                rxSingle { api.getMyAssignedTodoHeaders() }
                     .map { it.getXTotalHeader() }
                     .subscribeOn(schedulers.io())
                     .observeOn(schedulers.ui())
@@ -60,10 +61,10 @@ class AccountInteractor @Inject constructor(
             Function3 { i, mr, t -> AccountMainBadges(i, mr, t) }
         )
 
-    fun getMyProfile() = api
-        .getMyUser()
-        .subscribeOn(schedulers.io())
-        .observeOn(schedulers.ui())
+    fun getMyProfile() =
+        rxSingle { api.getMyUser() }
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
 
     fun getMyServerName() = serverPath
 
@@ -103,7 +104,7 @@ class AccountInteractor @Inject constructor(
             page = page
         )
 
-    private fun Result<*>.getXTotalHeader(): Int {
-        return if (!isError) response()?.headers()?.get("X-Total")?.toInt() ?: 0 else 0
+    private fun Response<*>.getXTotalHeader(): Int {
+        return if (isSuccessful) headers().get("X-Total")?.toInt() ?: 0 else 0
     }
 }

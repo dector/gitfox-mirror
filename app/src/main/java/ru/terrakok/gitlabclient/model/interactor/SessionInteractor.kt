@@ -1,9 +1,7 @@
 package ru.terrakok.gitlabclient.model.interactor
 
 import io.reactivex.Completable
-import java.net.URI
-import java.util.*
-import javax.inject.Inject
+import kotlinx.coroutines.rx2.rxSingle
 import ru.terrakok.gitlabclient.di.DI
 import ru.terrakok.gitlabclient.di.module.ServerModule
 import ru.terrakok.gitlabclient.entity.app.session.OAuthParams
@@ -13,6 +11,9 @@ import ru.terrakok.gitlabclient.model.data.server.UserAccountApi
 import ru.terrakok.gitlabclient.model.data.storage.Prefs
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import toothpick.Toothpick
+import java.net.URI
+import java.util.*
+import javax.inject.Inject
 
 class SessionInteractor @Inject constructor(
     private val prefs: Prefs,
@@ -76,14 +77,15 @@ class SessionInteractor @Inject constructor(
     fun login(oauthRedirect: String): Completable =
         Completable.defer {
             if (oauthRedirect.contains(hash)) {
-                userAccountApi
-                    .requestUserAccount(
+                rxSingle {
+                    userAccountApi.requestUserAccount(
                         oauthParams.endpoint,
                         oauthParams.appId,
                         oauthParams.appKey,
                         getQueryParameterFromUri(oauthRedirect, PARAMETER_CODE),
                         oauthParams.redirectUrl
                     )
+                }
                     .subscribeOn(schedulers.io())
                     .observeOn(schedulers.ui())
                     .doOnSuccess { openNewAccount(it) }
@@ -97,8 +99,7 @@ class SessionInteractor @Inject constructor(
         serverPath: String,
         token: String
     ): Completable =
-        userAccountApi
-            .requestUserAccount(serverPath, token)
+        rxSingle { userAccountApi.requestUserAccount(serverPath, token) }
             .subscribeOn(schedulers.io())
             .observeOn(schedulers.ui())
             .doOnSuccess { openNewAccount(it) }

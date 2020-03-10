@@ -1,7 +1,5 @@
 package ru.terrakok.gitlabclient.model.data.server
 
-import io.reactivex.Completable
-import io.reactivex.Single
 import org.threeten.bp.LocalDate
 import ru.terrakok.gitlabclient.entity.IssueStateEvent
 import ru.terrakok.gitlabclient.entity.Label
@@ -17,88 +15,95 @@ class ApiWithChangesRegistration(
     private val serverChanges: ServerChanges
 ) : GitlabApi by serverApi {
 
-    override fun createMilestone(
+    override suspend fun createMilestone(
         projectId: Long,
         title: String,
         description: String?,
         dueDate: LocalDate?,
         startDate: LocalDate?
-    ): Single<Milestone> =
+    ): Milestone =
         serverApi.createMilestone(projectId, title, description, dueDate, startDate)
-            .doOnSuccess { serverChanges.milestoneChanged(it.id) }
+            .also { serverChanges.milestoneChanged(it.id) }
 
-    override fun updateMilestone(
+    override suspend fun updateMilestone(
         projectId: Long,
         mileStoneId: Long,
         title: String?,
         description: String?,
         dueDate: LocalDate?,
         startDate: LocalDate?
-    ): Single<Milestone> =
+    ): Milestone =
         serverApi.updateMilestone(projectId, mileStoneId, title, description, dueDate, startDate)
-            .doOnSuccess { serverChanges.milestoneChanged(mileStoneId) }
+            .also { serverChanges.milestoneChanged(mileStoneId) }
 
-    override fun deleteMilestone(projectId: Long, mileStoneId: Long): Completable =
+    override suspend fun deleteMilestone(projectId: Long, mileStoneId: Long) {
         serverApi.deleteMilestone(projectId, mileStoneId)
-            .doOnComplete { serverChanges.milestoneChanged(mileStoneId) }
+        serverChanges.milestoneChanged(mileStoneId)
+    }
 
-    override fun createLabel(
+    override suspend fun createLabel(
         projectId: Long,
         name: String,
         color: String,
         description: String?,
         priority: Int?
-    ): Single<Label> =
+    ): Label =
         serverApi.createLabel(projectId, name, color, description, priority)
-            .doOnSuccess { serverChanges.labelChanged(it.id) }
+            .also { serverChanges.labelChanged(it.id) }
 
-    override fun deleteLabel(projectId: Long, name: String): Completable =
+    override suspend fun deleteLabel(projectId: Long, name: String) {
         serverApi.deleteLabel(projectId, name)
-            .doOnComplete { serverChanges.labelChanged() }
+        serverChanges.labelChanged()
+    }
 
-    override fun subscribeToLabel(projectId: Long, labelId: Long): Single<Label> =
+    override suspend fun subscribeToLabel(projectId: Long, labelId: Long): Label =
         serverApi.subscribeToLabel(projectId, labelId)
-            .doOnSuccess { serverChanges.labelChanged(labelId) }
+            .also { serverChanges.labelChanged(labelId) }
 
-    override fun unsubscribeFromLabel(projectId: Long, labelId: Long): Single<Label> =
+    override suspend fun unsubscribeFromLabel(projectId: Long, labelId: Long): Label =
         serverApi.unsubscribeFromLabel(projectId, labelId)
-            .doOnSuccess { serverChanges.labelChanged(labelId) }
+            .also { serverChanges.labelChanged(labelId) }
 
-    override fun addMember(
+    override suspend fun addMember(
         projectId: Long,
         userId: Long,
         accessLevel: Long,
         expiresDate: String?
-    ): Completable =
+    ) {
         serverApi.addMember(projectId, userId, accessLevel, expiresDate)
-            .doOnComplete { serverChanges.memberChanged(userId) }
+        serverChanges.memberChanged(userId)
+    }
 
-    override fun editMember(
+    override suspend fun editMember(
         projectId: Long,
         userId: Long,
         accessLevel: Long,
         expiresDate: String?
-    ): Completable =
+    ) {
         serverApi.editMember(projectId, userId, accessLevel, expiresDate)
-            .doOnComplete { serverChanges.memberChanged(userId) }
+        serverChanges.memberChanged(userId)
+    }
 
-    override fun deleteMember(projectId: Long, userId: Long): Completable =
+    override suspend fun deleteMember(projectId: Long, userId: Long) {
         serverApi.deleteMember(projectId, userId)
-            .doOnComplete { serverChanges.memberChanged(userId) }
+        serverChanges.memberChanged(userId)
+    }
 
-    override fun markPendingTodoAsDone(id: Long): Single<Todo> =
+    override suspend fun markPendingTodoAsDone(id: Long): Todo =
         serverApi.markPendingTodoAsDone(id)
-            .doOnSuccess { serverChanges.todoChanged(id) }
+            .also { serverChanges.todoChanged(id) }
 
-    override fun markAllPendingTodosAsDone(): Completable =
+    override suspend fun markAllPendingTodosAsDone() {
         serverApi.markAllPendingTodosAsDone()
-            .doOnComplete { serverChanges.todoChanged() }
+        serverChanges.todoChanged()
+    }
 
-    override fun editIssue(
+    override suspend fun editIssue(
         projectId: Long,
         issueId: Long,
         stateEvent: IssueStateEvent
-    ): Completable =
+    ) {
         serverApi.editIssue(projectId, issueId, stateEvent)
-            .doOnComplete { serverChanges.issueChanged(issueId) }
+        serverChanges.issueChanged(issueId)
+    }
 }

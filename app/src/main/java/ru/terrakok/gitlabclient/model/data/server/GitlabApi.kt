@@ -1,10 +1,8 @@
 package ru.terrakok.gitlabclient.model.data.server
 
-import io.reactivex.Completable
-import io.reactivex.Single
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZonedDateTime
-import retrofit2.adapter.rxjava2.Result
+import retrofit2.Response
 import retrofit2.http.*
 import ru.terrakok.gitlabclient.entity.*
 
@@ -20,7 +18,7 @@ interface GitlabApi {
     }
 
     @GET("$API_PATH/projects")
-    fun getProjects(
+    suspend fun getProjects(
         @Query("archived") archived: Boolean?,
         @Query("visibility") visibility: Visibility?,
         @Query("order_by") orderBy: OrderBy?,
@@ -32,46 +30,46 @@ interface GitlabApi {
         @Query("starred") starred: Boolean?,
         @Query("page") page: Int,
         @Query("per_page") pageSize: Int
-    ): Single<List<Project>>
+    ): List<Project>
 
     @GET("$API_PATH/projects/{id}")
-    fun getProject(
+    suspend fun getProject(
         @Path("id") id: Long,
         @Query("statistics") statistics: Boolean = true
-    ): Single<Project>
+    ): Project
 
     @GET("$API_PATH/projects/{id}/repository/files/{file_path}")
-    fun getFile(
+    suspend fun getFile(
         @Path("id") id: Long,
         @Path("file_path") filePath: String,
         @Query("ref") ref: String
-    ): Single<File>
+    ): File
 
     @GET("$API_PATH/projects/{id}/repository/tree")
-    fun getRepositoryTree(
+    suspend fun getRepositoryTree(
         @Path("id") id: Long,
         @Query("path") path: String?,
         @Query("ref") branchName: String?,
         @Query("recursive") recursive: Boolean? = false,
         @Query("page") page: Int,
         @Query("per_page") pageSize: Int
-    ): Single<List<RepositoryTreeNode>>
+    ): List<RepositoryTreeNode>
 
     @GET("$API_PATH/projects/{project_id}/repository/commits/{sha}")
-    fun getRepositoryCommit(
+    suspend fun getRepositoryCommit(
         @Path("project_id") projectId: Long,
         @Path("sha") sha: String,
         @Query("stats") stats: Boolean = true
-    ): Single<Commit>
+    ): Commit
 
     @GET("$API_PATH/projects/{project_id}/repository/commits/{sha}/diff")
-    fun getCommitDiffData(
+    suspend fun getCommitDiffData(
         @Path("project_id") projectId: Long,
         @Path("sha") sha: String
-    ): Single<List<DiffData>>
+    ): List<DiffData>
 
     @GET("$API_PATH/projects/{project_id}/repository/commits/")
-    fun getRepositoryCommits(
+    suspend fun getRepositoryCommits(
         @Path("project_id") projectId: Long,
         @Query("ref_name") branchName: String?,
         @Query("since") since: String?,
@@ -79,18 +77,18 @@ interface GitlabApi {
         @Query("path") path: String?,
         @Query("all") all: Boolean?,
         @Query("with_stats") withStats: Boolean?
-    ): Single<List<Commit>>
+    ): List<Commit>
 
     @GET("$API_PATH/projects/{project_id}/repository/branches/")
-    fun getRepositoryBranches(
+    suspend fun getRepositoryBranches(
         @Path("project_id") projectId: Long
-    ): Single<List<Branch>>
+    ): List<Branch>
 
     @GET("$API_PATH/user")
-    fun getMyUser(): Single<User>
+    suspend fun getMyUser(): User
 
     @GET("$API_PATH/issues")
-    fun getMyIssues(
+    suspend fun getMyIssues(
         @Query("scope") scope: IssueScope?,
         @Query("state") state: IssueState?,
         @Query("labels") labels: String?,
@@ -101,10 +99,10 @@ interface GitlabApi {
         @Query("search") search: String?,
         @Query("page") page: Int,
         @Query("per_page") pageSize: Int
-    ): Single<List<Issue>>
+    ): List<Issue>
 
     @GET("$API_PATH/projects/{project_id}/issues")
-    fun getIssues(
+    suspend fun getIssues(
         @Path("project_id") projectId: Long,
         @Query("scope") scope: IssueScope?,
         @Query("state") state: IssueState?,
@@ -116,24 +114,24 @@ interface GitlabApi {
         @Query("search") search: String?,
         @Query("page") page: Int,
         @Query("per_page") pageSize: Int
-    ): Single<List<Issue>>
+    ): List<Issue>
 
     @GET("$API_PATH/projects/{project_id}/issues/{issue_id}")
-    fun getIssue(
+    suspend fun getIssue(
         @Path("project_id") projectId: Long,
         @Path("issue_id") issueId: Long
-    ): Single<Issue>
+    ): Issue
 
     @FormUrlEncoded
     @PUT("$API_PATH/projects/{project_id}/issues/{issue_id}")
-    fun editIssue(
+    suspend fun editIssue(
         @Path("project_id") projectId: Long,
         @Path("issue_id") issueId: Long,
         @Field("state_event") stateEvent: IssueStateEvent
-    ): Completable
+    )
 
     @GET("$API_PATH/events")
-    fun getEvents(
+    suspend fun getEvents(
         @Query("action") action: EventAction?,
         @Query("target_type") targetType: EventTarget?,
         @Query("before") beforeDay: String?,
@@ -143,10 +141,10 @@ interface GitlabApi {
         @Query("scope") scope: EventScope?,
         @Query("page") page: Int,
         @Query("per_page") pageSize: Int
-    ): Single<List<Event>>
+    ): List<Event>
 
     @GET("$API_PATH/projects/{project_id}/events")
-    fun getProjectEvents(
+    suspend fun getProjectEvents(
         @Path("project_id") projectId: Long,
         @Query("action") action: EventAction?,
         @Query("target_type") targetType: EventTarget?,
@@ -156,10 +154,10 @@ interface GitlabApi {
         @Query("order_by") orderBy: OrderBy?,
         @Query("page") page: Int,
         @Query("per_page") pageSize: Int
-    ): Single<List<Event>>
+    ): List<Event>
 
     @GET("$API_PATH/merge_requests")
-    fun getMyMergeRequests(
+    suspend fun getMyMergeRequests(
         @Query("state") state: MergeRequestState?,
         @Query("milestone") milestone: String?,
         @Query("view") viewType: MergeRequestViewType?,
@@ -174,10 +172,10 @@ interface GitlabApi {
         @Query("sort") sort: Sort?,
         @Query("page") page: Int,
         @Query("per_page") pageSize: Int
-    ): Single<List<MergeRequest>>
+    ): List<MergeRequest>
 
     @GET("$API_PATH/projects/{project_id}/merge_requests")
-    fun getMergeRequests(
+    suspend fun getMergeRequests(
         @Path("project_id") projectId: Long,
         @Query("state") state: MergeRequestState?,
         @Query("milestone") milestone: String?,
@@ -193,21 +191,21 @@ interface GitlabApi {
         @Query("sort") sort: Sort?,
         @Query("page") page: Int,
         @Query("per_page") pageSize: Int
-    ): Single<List<MergeRequest>>
+    ): List<MergeRequest>
 
     @GET("$API_PATH/projects/{project_id}/merge_requests/{merge_request_id}")
-    fun getMergeRequest(
+    suspend fun getMergeRequest(
         @Path("project_id") projectId: Long,
         @Path("merge_request_id") mergeRequestId: Long
-    ): Single<MergeRequest>
+    ): MergeRequest
 
     @GET("$API_PATH/users/{user_id}")
-    fun getUser(
+    suspend fun getUser(
         @Path("user_id") userId: Long
-    ): Single<User>
+    ): User
 
     @GET("$API_PATH/todos")
-    fun getTodos(
+    suspend fun getTodos(
         @Query("action") action: TodoAction?,
         @Query("author_id") authorId: Long?,
         @Query("project_id") projectId: Long?,
@@ -215,219 +213,219 @@ interface GitlabApi {
         @Query("type") targetType: TargetType?,
         @Query("page") page: Int,
         @Query("per_page") pageSize: Int
-    ): Single<List<Todo>>
+    ): List<Todo>
 
     @POST("$API_PATH/todos/{id}/mark_as_done")
-    fun markPendingTodoAsDone(
+    suspend fun markPendingTodoAsDone(
         @Path("id") id: Long
-    ): Single<Todo>
+    ): Todo
 
     @POST("$API_PATH/todos/mark_as_done")
-    fun markAllPendingTodosAsDone(): Completable
+    suspend fun markAllPendingTodosAsDone()
 
     @GET("$API_PATH/projects/{project_id}/issues/{issue_id}/notes")
-    fun getIssueNotes(
+    suspend fun getIssueNotes(
         @Path("project_id") projectId: Long,
         @Path("issue_id") issueId: Long,
         @Query("sort") sort: Sort?,
         @Query("order_by") orderBy: OrderBy?,
         @Query("page") page: Int,
         @Query("per_page") pageSize: Int
-    ): Single<List<Note>>
+    ): List<Note>
 
     @GET("$API_PATH/projects/{project_id}/merge_requests/{merge_request_id}/notes")
-    fun getMergeRequestNotes(
+    suspend fun getMergeRequestNotes(
         @Path("project_id") projectId: Long,
         @Path("merge_request_id") mergeRequestId: Long,
         @Query("sort") sort: Sort?,
         @Query("order_by") orderBy: OrderBy?,
         @Query("page") page: Int,
         @Query("per_page") pageSize: Int
-    ): Single<List<Note>>
+    ): List<Note>
 
     @FormUrlEncoded
     @POST("$API_PATH/projects/{project_id}/issues/{issue_id}/notes")
-    fun createIssueNote(
+    suspend fun createIssueNote(
         @Path("project_id") projectId: Long,
         @Path("issue_id") issueId: Long,
         @Field("body") body: String
-    ): Single<Note>
+    ): Note
 
     @FormUrlEncoded
     @POST("$API_PATH/projects/{project_id}/merge_requests/{merge_request_id}/notes")
-    fun createMergeRequestNote(
+    suspend fun createMergeRequestNote(
         @Path("project_id") projectId: Long,
         @Path("merge_request_id") mergeRequestId: Long,
         @Field("body") body: String
-    ): Single<Note>
+    ): Note
 
     @GET("$API_PATH/projects/{project_id}/merge_requests/{merge_request_id}/commits")
-    fun getMergeRequestCommits(
+    suspend fun getMergeRequestCommits(
         @Path("project_id") projectId: Long,
         @Path("merge_request_id") mergeRequestId: Long,
         @Query("page") page: Int,
         @Query("per_page") pageSize: Int
-    ): Single<List<Commit>>
+    ): List<Commit>
 
     @GET("$API_PATH/projects/{project_id}/merge_requests/{merge_request_id}/participants")
-    fun getMergeRequestParticipants(
+    suspend fun getMergeRequestParticipants(
         @Path("project_id") projectId: Long,
         @Path("merge_request_id") mergeRequestId: Long,
         @Query("page") page: Int,
         @Query("per_page") pageSize: Int
-    ): Single<List<ShortUser>>
+    ): List<ShortUser>
 
     @GET("$API_PATH/projects/{project_id}/merge_requests/{merge_request_id}/changes")
-    fun getMergeRequestDiffDataList(
+    suspend fun getMergeRequestDiffDataList(
         @Path("project_id") projectId: Long,
         @Path("merge_request_id") mergeRequestId: Long
-    ): Single<MergeRequest>
+    ): MergeRequest
 
     @GET("$API_PATH/projects/{project_id}/milestones")
-    fun getMilestones(
+    suspend fun getMilestones(
         @Path("project_id") projectId: Long,
         @Query("state") state: MilestoneState?,
         @Query("page") page: Int,
         @Query("per_page") pageSize: Int
-    ): Single<List<Milestone>>
+    ): List<Milestone>
 
     @GET("$API_PATH/projects/{project_id}/milestones/{milestone_id}")
-    fun getMilestone(
+    suspend fun getMilestone(
         @Path("project_id") projectId: Long,
         @Path("milestone_id") mileStoneId: Long
-    ): Single<Milestone>
+    ): Milestone
 
     @FormUrlEncoded
     @POST("$API_PATH/projects/{project_id}/milestones")
-    fun createMilestone(
+    suspend fun createMilestone(
         @Path("project_id") projectId: Long,
         @Field("title") title: String,
         @Field("description") description: String?,
         @Field("due_date") dueDate: LocalDate?,
         @Field("start_date") startDate: LocalDate?
-    ): Single<Milestone>
+    ): Milestone
 
     @FormUrlEncoded
     @PUT("$API_PATH/projects/{project_id}/milestones/{milestone_id}")
-    fun updateMilestone(
+    suspend fun updateMilestone(
         @Path("project_id") projectId: Long,
         @Path("milestone_id") mileStoneId: Long,
         @Field("title") title: String?,
         @Field("description") description: String?,
         @Field("due_date") dueDate: LocalDate?,
         @Field("start_date") startDate: LocalDate?
-    ): Single<Milestone>
+    ): Milestone
 
     @DELETE("$API_PATH/projects/{project_id}/milestones/{milestone_id}")
-    fun deleteMilestone(
+    suspend fun deleteMilestone(
         @Path("project_id") projectId: Long,
         @Path("milestone_id") mileStoneId: Long
-    ): Completable
+    )
 
     @GET("$API_PATH/projects/{project_id}/milestones/{milestone_id}/issues")
-    fun getMilestoneIssues(
+    suspend fun getMilestoneIssues(
         @Path("project_id") projectId: Long,
         @Path("milestone_id") mileStoneId: Long,
         @Query("page") page: Int,
         @Query("per_page") pageSize: Int
-    ): Single<List<Issue>>
+    ): List<Issue>
 
     @GET("$API_PATH/projects/{project_id}/milestones/{milestone_id}/merge_requests")
-    fun getMilestoneMergeRequests(
+    suspend fun getMilestoneMergeRequests(
         @Path("project_id") projectId: Long,
         @Path("milestone_id") mileStoneId: Long,
         @Query("page") page: Int,
         @Query("per_page") pageSize: Int
-    ): Single<List<MergeRequest>>
+    ): List<MergeRequest>
 
     @GET("$API_PATH/projects/{project_id}/labels")
-    fun getProjectLabels(
+    suspend fun getProjectLabels(
         @Path("project_id") projectId: Long,
         @Query("page") page: Int,
         @Query("per_page") pageSize: Int
-    ): Single<List<Label>>
+    ): List<Label>
 
     @FormUrlEncoded
     @POST("$API_PATH/projects/{project_id}/labels")
-    fun createLabel(
+    suspend fun createLabel(
         @Path("project_id") projectId: Long,
         @Field("name") name: String,
         @Field("color") color: String,
         @Field("description") description: String?,
         @Field("priority") priority: Int?
-    ): Single<Label>
+    ): Label
 
     @FormUrlEncoded
     @DELETE("$API_PATH/projects/{project_id}/labels")
-    fun deleteLabel(
+    suspend fun deleteLabel(
         @Path("project_id") projectId: Long,
         @Field("name") name: String
-    ): Completable
+    )
 
     @POST("$API_PATH/projects/{project_id}/labels/{label_id}/subscribe")
-    fun subscribeToLabel(
+    suspend fun subscribeToLabel(
         @Path("project_id") projectId: Long,
         @Path("label_id") labelId: Long
-    ): Single<Label>
+    ): Label
 
     @POST("$API_PATH/projects/{project_id}/labels/{label_id}/unsubscribe")
-    fun unsubscribeFromLabel(
+    suspend fun unsubscribeFromLabel(
         @Path("project_id") projectId: Long,
         @Path("label_id") labelId: Long
-    ): Single<Label>
+    ): Label
 
     @HEAD("$API_PATH/merge_requests")
-    fun getMyAssignedMergeRequestHeaders(
+    suspend fun getMyAssignedMergeRequestHeaders(
         @Query("scope") scope: MergeRequestScope = MergeRequestScope.ASSIGNED_TO_ME,
         @Query("state") state: MergeRequestState = MergeRequestState.OPENED,
         @Query("per_page") pageSize: Int = 1
-    ): Single<Result<Void>>
+    ): Response<Void>
 
     @HEAD("$API_PATH/issues")
-    fun getMyAssignedIssueHeaders(
+    suspend fun getMyAssignedIssueHeaders(
         @Query("scope") scope: IssueScope = IssueScope.ASSIGNED_BY_ME,
         @Query("state") state: IssueState = IssueState.OPENED,
         @Query("per_page") pageSize: Int = 1
-    ): Single<Result<Void>>
+    ): Response<Void>
 
     @HEAD("$API_PATH/todos")
-    fun getMyAssignedTodoHeaders(
+    suspend fun getMyAssignedTodoHeaders(
         @Query("state") state: TodoState = TodoState.PENDING,
         @Query("per_page") pageSize: Int = 1
-    ): Single<Result<Void>>
+    ): Response<Void>
 
     @GET("$API_PATH/projects/{project_id}/members")
-    fun getMembers(
+    suspend fun getMembers(
         @Path("project_id") projectId: Long,
         @Query("page") page: Int,
         @Query("per_page") pageSize: Int
-    ): Single<List<Member>>
+    ): List<Member>
 
     @GET("$API_PATH/projects/{project_id}/members/{member_id}")
-    fun getMember(
+    suspend fun getMember(
         @Path("project_id") projectId: Long,
         @Path("member_id") memberId: Long
-    ): Single<Member>
+    ): Member
 
     @POST("$API_PATH/projects/{project_id}/members")
-    fun addMember(
+    suspend fun addMember(
         @Path("project_id") projectId: Long,
         @Field("user_id") userId: Long,
         @Field("access_level") accessLevel: Long,
         @Field("expires_at") expiresDate: String?
-    ): Completable
+    )
 
     @PUT("$API_PATH/projects/{project_id}/members/{user_id}")
-    fun editMember(
+    suspend fun editMember(
         @Path("project_id") projectId: Long,
         @Path("user_id") userId: Long,
         @Field("access_level") accessLevel: Long,
         @Field("expires_at") expiresDate: String?
-    ): Completable
+    )
 
     @DELETE("$API_PATH/projects/{project_id}/members/{user_id}")
-    fun deleteMember(
+    suspend fun deleteMember(
         @Path("project_id") projectId: Long,
         @Path("user_id") userId: Long
-    ): Completable
+    )
 }

@@ -2,6 +2,8 @@ package ru.terrakok.gitlabclient.model.interactor
 
 import io.reactivex.Completable
 import io.reactivex.Single
+import kotlinx.coroutines.rx2.rxCompletable
+import kotlinx.coroutines.rx2.rxSingle
 import org.threeten.bp.LocalDate
 import ru.terrakok.gitlabclient.di.DefaultPageSize
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
@@ -29,18 +31,18 @@ class MilestoneInteractor @Inject constructor(
         state: MilestoneState? = null,
         page: Int,
         pageSize: Int = defaultPageSize
-    ): Single<List<Milestone>> = api
-        .getMilestones(projectId, state, page, pageSize)
-        .subscribeOn(schedulers.io())
-        .observeOn(schedulers.ui())
+    ): Single<List<Milestone>> =
+        rxSingle { api.getMilestones(projectId, state, page, pageSize) }
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
 
     fun getMilestone(
         projectId: Long,
         milestoneId: Long
-    ): Single<Milestone> = api
-        .getMilestone(projectId, milestoneId)
-        .subscribeOn(schedulers.io())
-        .observeOn(schedulers.ui())
+    ): Single<Milestone> =
+        rxSingle { api.getMilestone(projectId, milestoneId) }
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
 
     fun createMilestone(
         projectId: Long,
@@ -48,10 +50,10 @@ class MilestoneInteractor @Inject constructor(
         description: String? = null,
         dueDate: LocalDate? = null,
         startDate: LocalDate? = null
-    ): Single<Milestone> = api
-        .createMilestone(projectId, title, description, dueDate, startDate)
-        .subscribeOn(schedulers.io())
-        .observeOn(schedulers.ui())
+    ): Single<Milestone> =
+        rxSingle { api.createMilestone(projectId, title, description, dueDate, startDate) }
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
 
     fun updateMilestone(
         projectId: Long,
@@ -60,36 +62,45 @@ class MilestoneInteractor @Inject constructor(
         description: String? = null,
         dueDate: LocalDate? = null,
         startDate: LocalDate? = null
-    ): Single<Milestone> = api
-        .updateMilestone(projectId, milestoneId, title, description, dueDate, startDate)
-        .subscribeOn(schedulers.io())
-        .observeOn(schedulers.ui())
+    ): Single<Milestone> =
+        rxSingle {
+            api.updateMilestone(
+                projectId,
+                milestoneId,
+                title,
+                description,
+                dueDate,
+                startDate
+            )
+        }
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
 
     fun deleteMilestone(
         projectId: Long,
         milestoneId: Long
-    ): Completable = api
-        .deleteMilestone(projectId, milestoneId)
-        .subscribeOn(schedulers.io())
-        .observeOn(schedulers.ui())
+    ): Completable =
+        rxCompletable { api.deleteMilestone(projectId, milestoneId) }
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
 
     fun getMilestoneIssues(
         projectId: Long,
         milestoneId: Long,
         page: Int,
         pageSize: Int = defaultPageSize
-    ): Single<List<Issue>> = api
-        .getMilestoneIssues(projectId, milestoneId, page, pageSize)
-        .subscribeOn(schedulers.io())
-        .observeOn(schedulers.ui())
+    ): Single<List<Issue>> =
+        rxSingle { api.getMilestoneIssues(projectId, milestoneId, page, pageSize) }
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
 
     fun getMilestoneMergeRequests(
         projectId: Long,
         milestoneId: Long,
         page: Int,
         pageSize: Int = defaultPageSize
-    ): Single<List<MergeRequest>> = api
-        .getMilestoneMergeRequests(projectId, milestoneId, page, pageSize)
-        .subscribeOn(schedulers.io())
-        .observeOn(schedulers.ui())
+    ): Single<List<MergeRequest>> =
+        rxSingle { api.getMilestoneMergeRequests(projectId, milestoneId, page, pageSize) }
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
 }

@@ -1,5 +1,6 @@
 package ru.terrakok.gitlabclient.model.interactor
 
+import kotlinx.coroutines.rx2.rxSingle
 import ru.terrakok.gitlabclient.di.DefaultPageSize
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.*
@@ -31,11 +32,13 @@ class TodoInteractor @Inject constructor(
         targetType: TargetType? = null,
         page: Int,
         pageSize: Int = defaultPageSize
-    ) = api
-        .getTodos(action, authorId, projectId, state, targetType, page, pageSize)
-        .map { todos -> todos.map { getTargetHeader(it, currentUser) } }
-        .subscribeOn(schedulers.io())
-        .observeOn(schedulers.ui())
+    ) =
+        rxSingle {
+            api.getTodos(action, authorId, projectId, state, targetType, page, pageSize)
+                .map { getTargetHeader(it, currentUser) }
+        }
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
 
     private fun getTargetHeader(todo: Todo, currentUser: User): TargetHeader {
         val target = todo.target
@@ -89,7 +92,13 @@ class TodoInteractor @Inject constructor(
         )
     }
 
-    fun markPendingTodoAsDone(id: Long) = api.markPendingTodoAsDone(id)
+    fun markPendingTodoAsDone(id: Long) =
+        rxSingle { api.markPendingTodoAsDone(id) }
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
 
-    fun markAllPendingTodosAsDone() = api.markAllPendingTodosAsDone()
+    fun markAllPendingTodosAsDone() =
+        rxSingle { api.markAllPendingTodosAsDone() }
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
 }

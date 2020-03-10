@@ -3,6 +3,7 @@ package ru.terrakok.gitlabclient.model.interactor
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
+import kotlinx.coroutines.rx2.rxSingle
 import org.threeten.bp.ZonedDateTime
 import ru.terrakok.gitlabclient.di.DefaultPageSize
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
@@ -33,30 +34,32 @@ class EventInteractor @Inject constructor(
         orderBy: OrderBy = OrderBy.UPDATED_AT,
         page: Int,
         pageSize: Int = defaultPageSize
-    ): Single<List<TargetHeader>> = api
-        .getEvents(
-            action,
-            targetType,
-            beforeDay?.run { this.toLocalDate().toString() },
-            afterDay?.run { this.toLocalDate().toString() },
-            sort,
-            orderBy,
-            EventScope.ALL,
-            page,
-            pageSize
-        )
-        .map { filterBrokenEvents(it) }
-        .flatMap { events ->
-            Single.zip(
-                Single.just(events),
-                getDistinctProjects(events),
-                BiFunction<List<Event>, Map<Long, Project>, List<TargetHeader>> { sourceEvents, projects ->
-                    sourceEvents.map { getTargetHeader(it, projects[it.projectId]) }
-                }
+    ): Single<List<TargetHeader>> =
+        rxSingle {
+            api.getEvents(
+                action,
+                targetType,
+                beforeDay?.run { this.toLocalDate().toString() },
+                afterDay?.run { this.toLocalDate().toString() },
+                sort,
+                orderBy,
+                EventScope.ALL,
+                page,
+                pageSize
             )
         }
-        .subscribeOn(schedulers.io())
-        .observeOn(schedulers.ui())
+            .map { filterBrokenEvents(it) }
+            .flatMap { events ->
+                Single.zip(
+                    Single.just(events),
+                    getDistinctProjects(events),
+                    BiFunction<List<Event>, Map<Long, Project>, List<TargetHeader>> { sourceEvents, projects ->
+                        sourceEvents.map { getTargetHeader(it, projects[it.projectId]) }
+                    }
+                )
+            }
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
 
     fun getProjectEvents(
         projectId: Long,
@@ -68,32 +71,35 @@ class EventInteractor @Inject constructor(
         orderBy: OrderBy = OrderBy.UPDATED_AT,
         page: Int,
         pageSize: Int = defaultPageSize
-    ): Single<List<TargetHeader>> = api
-        .getProjectEvents(
-            projectId,
-            action,
-            targetType,
-            beforeDay?.run { this.toLocalDate().toString() },
-            afterDay?.run { this.toLocalDate().toString() },
-            sort,
-            orderBy,
-            page,
-            pageSize
-        )
-        .map { filterBrokenEvents(it) }
-        .flatMap { events ->
-            Single.zip(
-                Single.just(events),
-                getDistinctProjects(events),
-                BiFunction<List<Event>, Map<Long, Project>, List<TargetHeader>> { sourceEvents, projects ->
-                    sourceEvents.map { getTargetHeader(it, projects[it.projectId]) }
-                }
+    ): Single<List<TargetHeader>> =
+        rxSingle {
+            api.getProjectEvents(
+                projectId,
+                action,
+                targetType,
+                beforeDay?.run { this.toLocalDate().toString() },
+                afterDay?.run { this.toLocalDate().toString() },
+                sort,
+                orderBy,
+                page,
+                pageSize
             )
         }
-        .subscribeOn(schedulers.io())
-        .observeOn(schedulers.ui())
+            .map { filterBrokenEvents(it) }
+            .flatMap { events ->
+                Single.zip(
+                    Single.just(events),
+                    getDistinctProjects(events),
+                    BiFunction<List<Event>, Map<Long, Project>, List<TargetHeader>> { sourceEvents, projects ->
+                        sourceEvents.map { getTargetHeader(it, projects[it.projectId]) }
+                    }
+                )
+            }
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
 
-    private fun filterBrokenEvents(events: List<Event>): List<Event> = events.filter { !isNoteBroken(it) }
+    private fun filterBrokenEvents(events: List<Event>): List<Event> =
+        events.filter { !isNoteBroken(it) }
 
     /**
      * Sometimes GitLab returns event with targetType = DIFF_NOTE || targetType = _NOTE, but _note = null.
@@ -101,14 +107,14 @@ class EventInteractor @Inject constructor(
      */
     private fun isNoteBroken(event: Event) =
         event.targetType != null &&
-            (event.targetType == EventTargetType.DIFF_NOTE || event.targetType == EventTargetType.NOTE) &&
-            event.note == null
+                (event.targetType == EventTargetType.DIFF_NOTE || event.targetType == EventTargetType.NOTE) &&
+                event.note == null
 
     private fun getDistinctProjects(events: List<Event>): Single<Map<Long, Project>> {
         return Observable.fromIterable(events)
             .filter { it.projectId != 0L }
             .distinct { it.projectId }
-            .flatMapSingle { event -> api.getProject(event.projectId) }
+            .flatMapSingle { event -> rxSingle { api.getProject(event.projectId) } }
             .toMap { it.id }
     }
 

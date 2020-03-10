@@ -1,7 +1,7 @@
 package ru.terrakok.gitlabclient.model.interactor
 
 import io.reactivex.Single
-import javax.inject.Inject
+import kotlinx.coroutines.rx2.rxSingle
 import ru.terrakok.gitlabclient.di.DefaultPageSize
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.*
@@ -10,6 +10,7 @@ import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.util.Base64Tools
+import javax.inject.Inject
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 24.04.17.
@@ -37,8 +38,8 @@ class ProjectInteractor @Inject constructor(
         starred: Boolean? = null,
         page: Int,
         pageSize: Int = defaultPageSize
-    ) = api
-        .getProjects(
+    ) = rxSingle {
+        api.getProjects(
             archived,
             visibility,
             orderBy,
@@ -51,13 +52,14 @@ class ProjectInteractor @Inject constructor(
             page,
             pageSize
         )
+    }
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
 
-    fun getProject(id: Long) = api
-        .getProject(id)
-        .subscribeOn(schedulers.io())
-        .observeOn(schedulers.ui())
+    fun getProject(id: Long) =
+        rxSingle { api.getProject(id) }
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
 
     fun getProjectRawFile(projectId: Long, path: String, fileReference: String): Single<String> =
         getProjectFile(projectId, path, fileReference)
@@ -85,8 +87,7 @@ class ProjectInteractor @Inject constructor(
         projectId: Long,
         path: String,
         fileReference: String
-    ) = api
-        .getFile(projectId, path, fileReference)
+    ) = rxSingle { api.getFile(projectId, path, fileReference) }
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
 
@@ -98,8 +99,7 @@ class ProjectInteractor @Inject constructor(
         page: Int,
         pageSize: Int = defaultPageSize
     ): Single<List<ProjectFile>> =
-        api
-            .getRepositoryTree(projectId, path, branchName, recursive, page, pageSize)
+        rxSingle { api.getRepositoryTree(projectId, path, branchName, recursive, page, pageSize) }
             .map { trees ->
                 trees.map { tree ->
                     ProjectFile(
@@ -115,8 +115,7 @@ class ProjectInteractor @Inject constructor(
     fun getProjectBranches(
         projectId: Long
     ): Single<List<Branch>> =
-        api
-            .getRepositoryBranches(projectId)
+        rxSingle { api.getRepositoryBranches(projectId) }
             .subscribeOn(schedulers.io())
             .observeOn(schedulers.ui())
 

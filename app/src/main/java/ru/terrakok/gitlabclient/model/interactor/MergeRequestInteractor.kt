@@ -3,6 +3,7 @@ package ru.terrakok.gitlabclient.model.interactor
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
+import kotlinx.coroutines.rx2.rxSingle
 import org.threeten.bp.ZonedDateTime
 import ru.terrakok.gitlabclient.di.DefaultPageSize
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
@@ -45,11 +46,12 @@ class MergeRequestInteractor @Inject constructor(
         sort: Sort? = null,
         page: Int,
         pageSize: Int = defaultPageSize
-    ) = api
-        .getMyMergeRequests(
+    ) = rxSingle {
+        api.getMyMergeRequests(
             state, milestone, viewType, labels, createdBefore, createdAfter, scope,
             authorId, assigneeId, meReactionEmoji, orderBy, sort, page, pageSize
         )
+    }
         .flatMap { mrs ->
             Single.zip(
                 Single.just(mrs),
@@ -78,11 +80,12 @@ class MergeRequestInteractor @Inject constructor(
         sort: Sort? = null,
         page: Int,
         pageSize: Int = defaultPageSize
-    ) = api
-        .getMergeRequests(
+    ) = rxSingle {
+        api.getMergeRequests(
             projectId, state, milestone, viewType, labels, createdBefore, createdAfter,
             scope, authorId, assigneeId, meReactionEmoji, orderBy, sort, page, pageSize
         )
+    }
         .flatMap { mrs ->
             Single.zip(
                 Single.just(mrs),
@@ -98,7 +101,7 @@ class MergeRequestInteractor @Inject constructor(
     private fun getDistinctProjects(mrs: List<MergeRequest>): Single<Map<Long, Project>> {
         return Observable.fromIterable(mrs)
             .distinct { it.projectId }
-            .flatMapSingle { mr -> api.getProject(mr.projectId) }
+            .flatMapSingle { mr -> rxSingle { api.getProject(mr.projectId) } }
             .toMap { it.id }
     }
 
@@ -148,8 +151,8 @@ class MergeRequestInteractor @Inject constructor(
             mrRequests.getOrPut(key) {
                 Single
                     .zip(
-                        api.getProject(projectId),
-                        api.getMergeRequest(projectId, mergeRequestId),
+                        rxSingle { api.getProject(projectId) },
+                        rxSingle { api.getMergeRequest(projectId, mergeRequestId) },
                         BiFunction<Project, MergeRequest, MergeRequest> { project, mr ->
                             val resolved = markDownUrlResolver.resolve(mr.description, project)
                             if (resolved != mr.description) mr.copy(description = resolved)
@@ -173,8 +176,17 @@ class MergeRequestInteractor @Inject constructor(
         pageSize: Int = defaultPageSize
     ) = Single
         .zip(
-            api.getProject(projectId),
-            api.getMergeRequestNotes(projectId, mergeRequestId, sort, orderBy, page, pageSize),
+            rxSingle { api.getProject(projectId) },
+            rxSingle {
+                api.getMergeRequestNotes(
+                    projectId,
+                    mergeRequestId,
+                    sort,
+                    orderBy,
+                    page,
+                    pageSize
+                )
+            },
             BiFunction<Project, List<Note>, List<Note>> { project, notes ->
                 notes.map { resolveMarkDownUrl(it, project) }
             }
@@ -189,7 +201,7 @@ class MergeRequestInteractor @Inject constructor(
         orderBy: OrderBy = OrderBy.UPDATED_AT
     ) = Single
         .zip(
-            api.getProject(projectId),
+            rxSingle { api.getProject(projectId) },
             getAllMergeRequestNotePages(projectId, mergeRequestId, sort, orderBy),
             BiFunction<Project, List<Note>, List<Note>> { project, notes ->
                 notes.map { resolveMarkDownUrl(it, project) }
@@ -198,10 +210,24 @@ class MergeRequestInteractor @Inject constructor(
         .subscribeOn(schedulers.io())
         .observeOn(schedulers.ui())
 
-    private fun getAllMergeRequestNotePages(projectId: Long, mergeRequestId: Long, sort: Sort?, orderBy: OrderBy?) =
+    private fun getAllMergeRequestNotePages(
+        projectId: Long,
+        mergeRequestId: Long,
+        sort: Sort?,
+        orderBy: OrderBy?
+    ) =
         Observable.range(1, Int.MAX_VALUE)
             .concatMap { page ->
-                api.getMergeRequestNotes(projectId, mergeRequestId, sort, orderBy, page, GitlabApi.MAX_PAGE_SIZE)
+                rxSingle {
+                    api.getMergeRequestNotes(
+                        projectId,
+                        mergeRequestId,
+                        sort,
+                        orderBy,
+                        page,
+                        GitlabApi.MAX_PAGE_SIZE
+                    )
+                }
                     .toObservable()
             }
             .takeWhile { notes -> notes.isNotEmpty() }
@@ -214,7 +240,7 @@ class MergeRequestInteractor @Inject constructor(
     }
 
     fun createMergeRequestNote(projectId: Long, issueId: Long, body: String) =
-        api.createMergeRequestNote(projectId, issueId, body)
+        rxSingle { api.createMergeRequestNote(projectId, issueId, body) }
             .subscribeOn(schedulers.io())
             .observeOn(schedulers.ui())
 
@@ -226,7 +252,7 @@ class MergeRequestInteractor @Inject constructor(
     ) = Single
         .zip(
             getAllMergeRequestParticipants(projectId, mergeRequestId),
-            api.getMergeRequestCommits(projectId, mergeRequestId, page, pageSize),
+            rxSingle { api.getMergeRequestCommits(projectId, mergeRequestId, page, pageSize) },
             BiFunction<List<ShortUser>, List<Commit>, List<CommitWithShortUser>> { participants, commits ->
                 commits.map { commit ->
                     CommitWithShortUser(
@@ -242,7 +268,14 @@ class MergeRequestInteractor @Inject constructor(
     private fun getAllMergeRequestParticipants(projectId: Long, mergeRequestId: Long) =
         Observable.range(1, Int.MAX_VALUE)
             .concatMap { page ->
-                api.getMergeRequestParticipants(projectId, mergeRequestId, page, GitlabApi.MAX_PAGE_SIZE)
+                rxSingle {
+                    api.getMergeRequestParticipants(
+                        projectId,
+                        mergeRequestId,
+                        page,
+                        GitlabApi.MAX_PAGE_SIZE
+                    )
+                }
                     .toObservable()
             }
             .takeWhile { participants -> participants.isNotEmpty() }
@@ -250,7 +283,7 @@ class MergeRequestInteractor @Inject constructor(
             .toList()
 
     fun getMergeRequestDiffDataList(projectId: Long, mergeRequestId: Long) =
-        api.getMergeRequestDiffDataList(projectId, mergeRequestId)
+        rxSingle { api.getMergeRequestDiffDataList(projectId, mergeRequestId) }
             .map { it.diffDataList ?: arrayListOf() }
             .subscribeOn(schedulers.io())
             .observeOn(schedulers.ui())

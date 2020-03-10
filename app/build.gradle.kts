@@ -141,15 +141,19 @@ dependencies {
     //JSON
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0")
     //Retrofit
-    val retrofitVersion = "2.7.1"
+    val retrofitVersion = "2.7.2"
     implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
     implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.4.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.4.0")
-    implementation("com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion")
     //RxJava
     implementation("io.reactivex.rxjava2:rxandroid:2.1.1")
     implementation("io.reactivex.rxjava2:rxjava:2.2.6")
     implementation("com.jakewharton.rxrelay2:rxrelay:2.1.1")
+    //Coroutines
+    val coroutinesVersion = "1.3.4"
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-rx2:$coroutinesVersion")
     //Adapter simplify
     implementation("com.hannesdorfmann:adapterdelegates4:4.2.0")
     //Image load and cache

@@ -1,11 +1,13 @@
 package ru.terrakok.gitlabclient.model.interactor
 
-import javax.inject.Inject
+import kotlinx.coroutines.rx2.rxCompletable
+import kotlinx.coroutines.rx2.rxSingle
 import ru.terrakok.gitlabclient.di.DefaultPageSize
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
+import javax.inject.Inject
 
 /**
  * @author Maxim Myalkin (MaxMyalkin) on 30.10.2018.
@@ -24,10 +26,10 @@ class LabelInteractor @Inject constructor(
     fun getLabelList(
         projectId: Long,
         page: Int
-    ) = api
-        .getProjectLabels(projectId, page, defaultPageSize)
-        .subscribeOn(schedulers.io())
-        .observeOn(schedulers.ui())
+    ) =
+        rxSingle { api.getProjectLabels(projectId, page, defaultPageSize) }
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
 
     fun createLabel(
         projectId: Long,
@@ -35,32 +37,32 @@ class LabelInteractor @Inject constructor(
         color: String,
         description: String?,
         priority: Int?
-    ) = api
-        .createLabel(projectId, name, color, description, priority)
-        .subscribeOn(schedulers.io())
-        .observeOn(schedulers.ui())
+    ) =
+        rxSingle { api.createLabel(projectId, name, color, description, priority) }
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
 
     fun deleteLabel(
         projectId: Long,
         name: String
-    ) = api
-        .deleteLabel(projectId, name)
-        .subscribeOn(schedulers.io())
-        .observeOn(schedulers.ui())
+    ) =
+        rxCompletable { api.deleteLabel(projectId, name) }
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
 
     fun subscribeToLabel(
         projectId: Long,
         labelId: Long
-    ) = api
-        .subscribeToLabel(projectId, labelId)
-        .subscribeOn(schedulers.io())
-        .observeOn(schedulers.ui())
+    ) =
+        rxSingle { api.subscribeToLabel(projectId, labelId) }
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
 
     fun unsubscribeFromLabel(
         projectId: Long,
         labelId: Long
-    ) = api
-        .unsubscribeFromLabel(projectId, labelId)
-        .subscribeOn(schedulers.io())
-        .observeOn(schedulers.ui())
+    ) =
+        rxSingle { api.unsubscribeFromLabel(projectId, labelId) }
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.ui())
 }
