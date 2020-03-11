@@ -2,6 +2,7 @@ package ru.terrakok.gitlabclient.model.interactor
 
 import io.reactivex.Completable
 import io.reactivex.Single
+import kotlinx.coroutines.rx2.asObservable
 import kotlinx.coroutines.rx2.rxCompletable
 import kotlinx.coroutines.rx2.rxSingle
 import org.threeten.bp.LocalDate
@@ -24,7 +25,7 @@ class MilestoneInteractor @Inject constructor(
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
 
-    val milestoneChanges = serverChanges.milestoneChanges
+    val milestoneChanges = serverChanges.milestoneChanges.asObservable().observeOn(schedulers.ui())
 
     fun getMilestones(
         projectId: Long,

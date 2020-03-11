@@ -1,5 +1,6 @@
 package ru.terrakok.gitlabclient.model.interactor
 
+import kotlinx.coroutines.rx2.asObservable
 import kotlinx.coroutines.rx2.rxCompletable
 import kotlinx.coroutines.rx2.rxSingle
 import ru.terrakok.gitlabclient.di.DefaultPageSize
@@ -21,7 +22,7 @@ class LabelInteractor @Inject constructor(
 
     private val defaultPageSize: Int = defaultPageSizeWrapper.value
 
-    val labelChanges = serverChanges.labelChanges
+    val labelChanges = serverChanges.labelChanges.asObservable().observeOn(schedulers.ui())
 
     fun getLabelList(
         projectId: Long,

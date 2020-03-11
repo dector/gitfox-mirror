@@ -2,6 +2,7 @@ package ru.terrakok.gitlabclient.model.interactor
 
 import io.reactivex.Observable
 import io.reactivex.functions.Function3
+import kotlinx.coroutines.rx2.asObservable
 import kotlinx.coroutines.rx2.rxSingle
 import retrofit2.Response
 import ru.terrakok.gitlabclient.di.ServerPath
@@ -24,6 +25,7 @@ class AccountInteractor @Inject constructor(
 
     private val issueCount =
         serverChanges.issueChanges
+            .asObservable()
             .map { Unit }
             .startWith(Unit)
             .switchMapSingle {
@@ -35,6 +37,7 @@ class AccountInteractor @Inject constructor(
 
     private val mrCount =
         serverChanges.mergeRequestChanges
+            .asObservable()
             .map { Unit }
             .startWith(Unit)
             .switchMapSingle {
@@ -46,6 +49,7 @@ class AccountInteractor @Inject constructor(
 
     private val todoCount =
         serverChanges.todoChanges
+            .asObservable()
             .map { Unit }
             .startWith(Unit)
             .switchMapSingle {
@@ -56,7 +60,7 @@ class AccountInteractor @Inject constructor(
             }
 
     fun getAccountMainBadges(): Observable<AccountMainBadges> =
-        Observable.zip(
+        Observable.combineLatest(
             issueCount, mrCount, todoCount,
             Function3 { i, mr, t -> AccountMainBadges(i, mr, t) }
         )

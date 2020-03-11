@@ -3,6 +3,7 @@ package ru.terrakok.gitlabclient.model.interactor
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
+import kotlinx.coroutines.rx2.asObservable
 import kotlinx.coroutines.rx2.rxCompletable
 import kotlinx.coroutines.rx2.rxSingle
 import ru.terrakok.gitlabclient.di.DefaultPageSize
@@ -29,7 +30,7 @@ class IssueInteractor @Inject constructor(
     private val defaultPageSize = defaultPageSizeWrapper.value
     private val issueRequests = ConcurrentHashMap<Pair<Long, Long>, Single<Issue>>()
 
-    val issueChanges = serverChanges.issueChanges
+    val issueChanges = serverChanges.issueChanges.asObservable().observeOn(schedulers.ui())
 
     fun getMyIssues(
         scope: IssueScope? = null,

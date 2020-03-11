@@ -3,6 +3,7 @@ package ru.terrakok.gitlabclient.model.interactor
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
+import kotlinx.coroutines.rx2.asObservable
 import kotlinx.coroutines.rx2.rxSingle
 import org.threeten.bp.ZonedDateTime
 import ru.terrakok.gitlabclient.di.DefaultPageSize
@@ -29,7 +30,8 @@ class MergeRequestInteractor @Inject constructor(
     private val defaultPageSize = defaultPageSizeWrapper.value
     private val mrRequests = ConcurrentHashMap<Pair<Long, Long>, Single<MergeRequest>>()
 
-    val mergeRequestChanges = serverChanges.mergeRequestChanges
+    val mergeRequestChanges =
+        serverChanges.mergeRequestChanges.asObservable().observeOn(schedulers.ui())
 
     fun getMyMergeRequests(
         state: MergeRequestState? = null,

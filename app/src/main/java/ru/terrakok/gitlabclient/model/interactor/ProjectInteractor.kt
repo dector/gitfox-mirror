@@ -1,6 +1,7 @@
 package ru.terrakok.gitlabclient.model.interactor
 
 import io.reactivex.Single
+import kotlinx.coroutines.rx2.asObservable
 import kotlinx.coroutines.rx2.rxSingle
 import ru.terrakok.gitlabclient.di.DefaultPageSize
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
@@ -24,7 +25,7 @@ class ProjectInteractor @Inject constructor(
     private val defaultPageSize = defaultPageSizeWrapper.value
     private val base64Tools = Base64Tools()
 
-    val projectChanges = serverChanges.projectChanges
+    val projectChanges = serverChanges.projectChanges.asObservable().observeOn(schedulers.ui())
 
     fun getProjectsList(
         archived: Boolean? = null,

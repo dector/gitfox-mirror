@@ -2,6 +2,7 @@ package ru.terrakok.gitlabclient.model.interactor
 
 import io.reactivex.Completable
 import io.reactivex.Single
+import kotlinx.coroutines.rx2.asObservable
 import kotlinx.coroutines.rx2.rxCompletable
 import kotlinx.coroutines.rx2.rxSingle
 import ru.terrakok.gitlabclient.di.DefaultPageSize
@@ -24,7 +25,7 @@ class MembersInteractor @Inject constructor(
 
     private val defaultPageSize = defaultPageSizeWrapper.value
 
-    val memberChanges = serverChanges.memberChanges
+    val memberChanges = serverChanges.memberChanges.asObservable().observeOn(schedulers.ui())
 
     fun getMembers(
         projectId: Long,

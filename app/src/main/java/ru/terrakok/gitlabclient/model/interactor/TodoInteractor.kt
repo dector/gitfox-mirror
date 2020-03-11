@@ -1,5 +1,6 @@
 package ru.terrakok.gitlabclient.model.interactor
 
+import kotlinx.coroutines.rx2.asObservable
 import kotlinx.coroutines.rx2.rxSingle
 import ru.terrakok.gitlabclient.di.DefaultPageSize
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
@@ -21,7 +22,7 @@ class TodoInteractor @Inject constructor(
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
 
-    val todoChanges = serverChanges.todoChanges
+    val todoChanges = serverChanges.todoChanges.asObservable().observeOn(schedulers.ui())
 
     fun getTodos(
         currentUser: User,

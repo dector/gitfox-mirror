@@ -184,6 +184,11 @@ dependencies {
     testImplementation("org.threeten:threetenbp:1.4.1")
 }
 
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().all {
+    kotlinOptions.freeCompilerArgs += "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
+    kotlinOptions.freeCompilerArgs += "-Xopt-in=kotlinx.coroutines.FlowPreview"
+}
+
 gradle.buildFinished {
     println("VersionName: ${android.defaultConfig.versionName}")
     println("VersionCode: ${android.defaultConfig.versionCode}")
