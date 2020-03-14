@@ -5,6 +5,7 @@ import android.text.Spanned
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
 import io.noties.markwon.Markwon
+import io.noties.markwon.image.glide.GlideImagesPlugin
 import moxy.MvpDelegate
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
@@ -34,7 +35,10 @@ class MarkdownTextView @JvmOverloads constructor(
     }
 
     private val markwon by lazy {
-        Markwon.create(context)
+        Markwon
+            .builder(context)
+            .usePlugin(GlideImagesPlugin.create(context))
+            .build()
     }
 
     @InjectPresenter

@@ -8,11 +8,11 @@ import io.noties.markwon.core.MarkwonTheme
 import io.noties.markwon.ext.strikethrough.StrikethroughPlugin
 import io.noties.markwon.ext.tables.TablePlugin
 import io.noties.markwon.ext.tasklist.TaskListPlugin
+import io.noties.markwon.html.HtmlPlugin
 import io.noties.markwon.image.glide.GlideImagesPlugin
 import io.noties.markwon.urlprocessor.UrlProcessorRelativeToAbsolute
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
-import org.commonmark.node.Image
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.di.ServerPath
 import ru.terrakok.gitlabclient.entity.Label
@@ -89,8 +89,6 @@ class MarkDownConverterProvider @Inject constructor(
         return Markwon.builder(context).apply {
             usePlugins(
                 listOf(
-                    Image
-                    GlideImagesPlugin.create(context),
                     object : AbstractMarkwonPlugin() {
                         override fun configureTheme(builder: MarkwonTheme.Builder) {
                             builder
@@ -103,6 +101,8 @@ class MarkDownConverterProvider @Inject constructor(
                         }
 
                     },
+                    GlideImagesPlugin.create(context),
+                    HtmlPlugin.create(),
                     StrikethroughPlugin.create(),
                     TablePlugin.create(context),
                     TaskListPlugin.create(context),
@@ -120,7 +120,10 @@ class MarkDownConverterProvider @Inject constructor(
         )
     }
 
-    private fun createMarkwon(projectId: Long?, markdownClickHandler: MarkdownClickHandler): Single<Markwon> {
+    private fun createMarkwon(
+        projectId: Long?,
+        markdownClickHandler: MarkdownClickHandler
+    ): Single<Markwon> {
         return Single
             .defer {
                 if (projectId != null) {

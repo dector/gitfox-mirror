@@ -162,6 +162,7 @@ dependencies {
     implementation("io.noties.markwon:ext-strikethrough:$markwonVersion")
     implementation("io.noties.markwon:ext-tables:$markwonVersion")
     implementation("io.noties.markwon:ext-tasklist:$markwonVersion")
+    implementation("io.noties.markwon:html:$markwonVersion")
     implementation("io.noties.markwon:image-glide:$markwonVersion")
     //Bottom navigation bar
     implementation("com.aurelhubert:ahbottomnavigation:2.3.4")
