@@ -1,7 +1,7 @@
-package ru.terrakok.gitlabclient.markwonx
+package ru.terrakok.gitlabclient.markwonx.label
 
-import ru.terrakok.gitlabclient.markwonx.label.LabelDescription
-import ru.terrakok.gitlabclient.markwonx.label.LabelType
+import ru.terrakok.gitlabclient.markwonx.GitlabExtensionsDelimiterProcessor
+import ru.terrakok.gitlabclient.markwonx.GitlabMarkdownExtension
 
 object LabelsTestUtils {
     val INEXISTENT = TestLabel(LabelType.SINGLE, LabelDescription(0, "inexistent", "#000000"))

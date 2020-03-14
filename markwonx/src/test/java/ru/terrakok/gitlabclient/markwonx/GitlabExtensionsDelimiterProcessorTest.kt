@@ -4,6 +4,7 @@ import org.commonmark.parser.Parser
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
+import ru.terrakok.gitlabclient.markwonx.label.LabelsTestUtils
 import ru.terrakok.gitlabclient.markwonx.simple.SimpleExtensionProcessor
 import ru.terrakok.gitlabclient.markwonx.simple.SimpleMarkdownDecorator
 import ru.terrakok.gitlabclient.markwonx.simple.SimpleNode

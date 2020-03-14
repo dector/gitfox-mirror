@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.markwonx
+package ru.terrakok.gitlabclient.markwonx.label
 
 import android.app.Activity
 import android.content.Context
@@ -9,16 +9,13 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
-import ru.terrakok.gitlabclient.markwonx.LabelsTestUtils.ID
-import ru.terrakok.gitlabclient.markwonx.LabelsTestUtils.INEXISTENT
-import ru.terrakok.gitlabclient.markwonx.LabelsTestUtils.MULTIPLE
-import ru.terrakok.gitlabclient.markwonx.LabelsTestUtils.SINGLE
-import ru.terrakok.gitlabclient.markwonx.LabelsTestUtils.SINGLE_CYRILLIC
-import ru.terrakok.gitlabclient.markwonx.LabelsTestUtils.makeLabel
-import ru.terrakok.gitlabclient.markwonx.label.LabelDescription
-import ru.terrakok.gitlabclient.markwonx.label.LabelSpan
-import ru.terrakok.gitlabclient.markwonx.label.LabelSpanConfig
-import ru.terrakok.gitlabclient.markwonx.label.SimpleLabelVisitor
+import ru.terrakok.gitlabclient.markwonx.GitlabMarkdownExtension
+import ru.terrakok.gitlabclient.markwonx.label.LabelsTestUtils.ID
+import ru.terrakok.gitlabclient.markwonx.label.LabelsTestUtils.INEXISTENT
+import ru.terrakok.gitlabclient.markwonx.label.LabelsTestUtils.MULTIPLE
+import ru.terrakok.gitlabclient.markwonx.label.LabelsTestUtils.SINGLE
+import ru.terrakok.gitlabclient.markwonx.label.LabelsTestUtils.SINGLE_CYRILLIC
+import ru.terrakok.gitlabclient.markwonx.label.LabelsTestUtils.makeLabel
 import ru.terrakok.gitlabclient.markwonx.simple.SimplePlugin
 
 @RunWith(RobolectricTestRunner::class)

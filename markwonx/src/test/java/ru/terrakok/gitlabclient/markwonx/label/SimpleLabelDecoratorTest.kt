@@ -1,13 +1,13 @@
-package ru.terrakok.gitlabclient.markwonx
+package ru.terrakok.gitlabclient.markwonx.label
 
 import org.junit.Before
 import org.junit.Test
-import ru.terrakok.gitlabclient.markwonx.LabelsTestUtils.ID
-import ru.terrakok.gitlabclient.markwonx.LabelsTestUtils.MULTIPLE
-import ru.terrakok.gitlabclient.markwonx.LabelsTestUtils.SINGLE
-import ru.terrakok.gitlabclient.markwonx.LabelsTestUtils.SINGLE_CYRILLIC
-import ru.terrakok.gitlabclient.markwonx.LabelsTestUtils.decorateForTest
-import ru.terrakok.gitlabclient.markwonx.LabelsTestUtils.makeLabel
+import ru.terrakok.gitlabclient.markwonx.label.LabelsTestUtils.ID
+import ru.terrakok.gitlabclient.markwonx.label.LabelsTestUtils.MULTIPLE
+import ru.terrakok.gitlabclient.markwonx.label.LabelsTestUtils.SINGLE
+import ru.terrakok.gitlabclient.markwonx.label.LabelsTestUtils.SINGLE_CYRILLIC
+import ru.terrakok.gitlabclient.markwonx.label.LabelsTestUtils.decorateForTest
+import ru.terrakok.gitlabclient.markwonx.label.LabelsTestUtils.makeLabel
 import ru.terrakok.gitlabclient.markwonx.simple.SimpleMarkdownDecorator
 
 class SimpleLabelDecoratorTest {
