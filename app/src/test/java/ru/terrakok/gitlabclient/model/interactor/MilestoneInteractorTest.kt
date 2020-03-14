@@ -13,6 +13,8 @@ import org.mockito.Mockito.times
 import ru.terrakok.gitlabclient.TestData
 import ru.terrakok.gitlabclient.TestSchedulers
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
+import ru.terrakok.gitlabclient.model.data.cache.ProjectLabelCache
+import ru.terrakok.gitlabclient.model.data.cache.ProjectMilestoneCache
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 
@@ -31,7 +33,8 @@ class MilestoneInteractorTest {
         api,
         ServerChanges(TestSchedulers()),
         TestSchedulers(),
-        PrimitiveWrapper(defaultPageSize)
+        PrimitiveWrapper(defaultPageSize),
+        ProjectMilestoneCache(PrimitiveWrapper(1000))
     )
 
     @Test
