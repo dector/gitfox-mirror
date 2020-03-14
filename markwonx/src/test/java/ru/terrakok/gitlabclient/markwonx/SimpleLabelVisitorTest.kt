@@ -3,8 +3,7 @@ package ru.terrakok.gitlabclient.markwonx
 import android.app.Activity
 import android.content.Context
 import android.text.Spanned
-import org.commonmark.node.Visitor
-import org.commonmark.parser.Parser
+import io.noties.markwon.Markwon
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -16,17 +15,16 @@ import ru.terrakok.gitlabclient.markwonx.LabelsTestUtils.MULTIPLE
 import ru.terrakok.gitlabclient.markwonx.LabelsTestUtils.SINGLE
 import ru.terrakok.gitlabclient.markwonx.LabelsTestUtils.SINGLE_CYRILLIC
 import ru.terrakok.gitlabclient.markwonx.LabelsTestUtils.makeLabel
-import ru.terrakok.gitlabclient.markwonx.label.*
-import ru.terrakok.gitlabclient.markwonx.simple.SimpleExtensionProcessor
+import ru.terrakok.gitlabclient.markwonx.label.LabelDescription
+import ru.terrakok.gitlabclient.markwonx.label.LabelSpan
+import ru.terrakok.gitlabclient.markwonx.label.LabelSpanConfig
 import ru.terrakok.gitlabclient.markwonx.label.SimpleLabelVisitor
-import ru.terrakok.gitlabclient.markwonx.simple.SimpleMarkdownDecorator
-import ru.terrakok.gitlabclient.markwonx.simple.SimpleVisitor
+import ru.terrakok.gitlabclient.markwonx.simple.SimplePlugin
 
 @RunWith(RobolectricTestRunner::class)
 class SimpleLabelVisitorTest {
 
-    private lateinit var decorator: SimpleMarkdownDecorator
-    private lateinit var parser: Parser
+    private lateinit var markwon: Markwon
     private lateinit var context: Context
 
     @Before
@@ -35,45 +33,25 @@ class SimpleLabelVisitorTest {
             this.create()
             get()
         }
-        decorator =
-            SimpleMarkdownDecorator()
-        parser = with(Parser.Builder()) {
-            customDelimiterProcessor(
-                GitlabExtensionsDelimiterProcessor(
-                    mapOf(
-                        GitlabMarkdownExtension.LABEL to SimpleExtensionProcessor()
+        markwon =
+            Markwon
+                .builder(context)
+                .usePlugin(
+                    SimplePlugin(
+                        mapOf(
+                            GitlabMarkdownExtension.LABEL to SimpleLabelVisitor(
+                                LabelsTestUtils.EXISTENT_LABELS.map { it.label },
+                                LabelSpanConfig(0),
+                                { _, _ -> })
+                        )
                     )
                 )
-            )
-            build()
-        }
-    }
-
-    fun createVisitor(spannableBuilder: SpannableBuilder): Visitor {
-        return SimpleVisitor(
-            SpannableConfiguration.create(context),
-            spannableBuilder,
-            mapOf(
-                GitlabMarkdownExtension.LABEL to SimpleLabelVisitor(
-                    LabelsTestUtils.EXISTENT_LABELS.map { it.label },
-                    LabelSpanConfig(0),
-                    { _, _ -> })
-            )
-        )
-    }
-
-    fun convertToSpannable(source: String): Spanned {
-        val decorated = decorator.decorate(source)
-        val node = parser.parse(decorated)
-        val builder = SpannableBuilder()
-        val visitor = createVisitor(builder)
-        node.accept(visitor)
-        return builder.text() as Spanned
+                .build()
     }
 
     fun assertSpanned(label: TestLabel) {
         val content = makeLabel(label)
-        val spanned = convertToSpannable(content)
+        val spanned = markwon.toMarkdown(content)
         assertSpanned(0, content.lastIndex, spanned, label.label)
     }
 
@@ -85,7 +63,7 @@ class SimpleLabelVisitorTest {
     @Test
     fun `should not create span for inexistent label`() {
         val content = makeLabel(INEXISTENT)
-        val spanned = convertToSpannable(content)
+        val spanned = markwon.toMarkdown(content)
         val spans = spanned.getSpans(0, content.lastIndex, LabelSpan::class.java)
         assert(spans.none { span -> span.label == INEXISTENT.label })
     }
@@ -114,7 +92,7 @@ class SimpleLabelVisitorTest {
     fun `should create span for all types of labels in single string`() {
         val all = LabelsTestUtils.EXISTENT_LABELS
         val allStr = all.joinToString(" ") { label -> makeLabel(label) }
-        val spannable = convertToSpannable(allStr)
+        val spannable = markwon.toMarkdown(allStr)
         all.forEach { label ->
             val content = label.label.name
             val start = spannable.indexOf(content)
