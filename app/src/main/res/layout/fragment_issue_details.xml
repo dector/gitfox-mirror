@@ -77,9 +77,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:linksClickable="true"
-                android:padding="16dp"
+                android:layout_margin="16dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/divider" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
