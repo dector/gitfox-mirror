@@ -1,7 +1,8 @@
 package ru.terrakok.gitlabclient.presentation.issue.notes
 
-import io.reactivex.Single
-import javax.inject.Inject
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.launch
 import moxy.InjectViewState
 import ru.terrakok.gitlabclient.di.IssueId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
@@ -12,6 +13,7 @@ import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.presentation.global.NoteWithFormattedBody
+import javax.inject.Inject
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 12.02.18.
@@ -31,63 +33,43 @@ class IssueNotesPresenter @Inject constructor(
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        issueInteractor
-            .issueChanges
-            .startWith(issueId)
-            .filter { it == issueId }
-            .switchMapMaybe {
-                getAllIssueNotes()
-                    .toMaybe()
-                    .doOnSubscribe { viewState.showEmptyProgress(true) }
-                    .doAfterTerminate { viewState.showEmptyProgress(false) }
-                    .doOnSuccess { notes ->
-                        val selectedNotePosition =
-                            targetAction.let { it as? TargetAction.CommentedOn }
-                                ?.noteId
-                                ?.let { noteIdToSelect ->
-                                    notes.indexOfFirst { it.note.id == noteIdToSelect }
-                                }
-                        viewState.showNotes(notes, selectedNotePosition)
-                    }
-                    .doOnError { errorHandler.proceed(it, { viewState.showMessage(it) }) }
-                    .onErrorComplete()
-            }
-            .subscribe()
-            .connect()
+        launch {
+            loadAndScrollToPosition()
+            issueInteractor.issueChanges
+                .filter { it == issueId }
+                .collect { loadAndScrollToPosition() }
+        }
     }
 
-    private fun getAllIssueNotes(): Single<MutableList<NoteWithFormattedBody>> {
-        return issueInteractor
-            .getAllIssueNotes(projectId, issueId)
-            .flattenAsObservable { it }
-            .concatMap { note ->
-                mdConverter.markdownToSpannable(note.body)
-                    .map { NoteWithFormattedBody(note, it) }
-                    .toObservable()
-            }
-            .toList()
+    private suspend fun loadAndScrollToPosition() {
+        viewState.showEmptyProgress(true)
+        try {
+            val notes = getAllIssueNotes()
+            val selectedNotePosition =
+                notes.indexOfFirst { it.note.id == (targetAction as? TargetAction.CommentedOn)?.noteId }
+            viewState.showNotes(notes, selectedNotePosition)
+        } catch (e: Exception) {
+            errorHandler.proceed(e) { viewState.showMessage(it) }
+        }
+        viewState.showEmptyProgress(false)
     }
 
-    fun onSendClicked(body: String) =
-        issueInteractor.createIssueNote(projectId, issueId, body)
-            .flatMap {
-                issueInteractor.getAllIssueNotes(projectId, issueId)
-                    .flattenAsObservable { it }
-                    .concatMap { note ->
-                        mdConverter.markdownToSpannable(note.body)
-                            .map { NoteWithFormattedBody(note, it) }
-                            .toObservable()
-                    }
-                    .toList()
+    fun onSendClicked(body: String) {
+        launch {
+            viewState.showBlockingProgress(true)
+            try {
+                issueInteractor.createIssueNote(projectId, issueId, body)
+                val allNotes = getAllIssueNotes()
+                viewState.showNotes(allNotes, allNotes.size - 1)
+                viewState.clearInput()
+            } catch (e: Exception) {
+                errorHandler.proceed(e) { viewState.showMessage(it) }
             }
-            .doOnSubscribe { viewState.showBlockingProgress(true) }
-            .doAfterTerminate { viewState.showBlockingProgress(false) }
-            .subscribe(
-                {
-                    viewState.showNotes(it, it.size - 1)
-                    viewState.clearInput()
-                },
-                { errorHandler.proceed(it, { viewState.showMessage(it) }) }
-            )
-            .connect()
+            viewState.showBlockingProgress(false)
+        }
+    }
+
+    private suspend fun getAllIssueNotes(): List<NoteWithFormattedBody> =
+        issueInteractor.getAllIssueNotes(projectId, issueId)
+            .map { note -> NoteWithFormattedBody(note, mdConverter.toSpannable(note.body)) }
 }

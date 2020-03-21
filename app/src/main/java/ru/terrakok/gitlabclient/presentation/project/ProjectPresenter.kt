@@ -1,6 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.project
 
-import javax.inject.Inject
+import kotlinx.coroutines.launch
 import moxy.InjectViewState
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
@@ -9,6 +9,7 @@ import ru.terrakok.gitlabclient.model.interactor.ProjectInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
+import javax.inject.Inject
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 01.11.18.
@@ -26,15 +27,16 @@ class ProjectPresenter @Inject constructor(
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
-        projectInteractor
-            .getProject(projectId)
-            .doOnSubscribe { viewState.showBlockingProgress(true) }
-            .doAfterTerminate { viewState.showBlockingProgress(false) }
-            .subscribe(
-                { viewState.setTitle(it.name, it.webUrl) },
-                { errorHandler.proceed(it, { viewState.showMessage(it) }) }
-            )
-            .connect()
+        launch {
+            viewState.showBlockingProgress(true)
+            try {
+                val project = projectInteractor.getProject(projectId)
+                viewState.setTitle(project.name, project.webUrl)
+            } catch (e: Exception) {
+                errorHandler.proceed(e) { viewState.showMessage(it) }
+            }
+            viewState.showBlockingProgress(false)
+        }
     }
 
     fun onBackPressed() = flowRouter.exit()

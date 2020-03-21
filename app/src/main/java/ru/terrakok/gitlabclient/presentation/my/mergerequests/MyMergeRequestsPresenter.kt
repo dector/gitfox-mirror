@@ -1,8 +1,9 @@
 package ru.terrakok.gitlabclient.presentation.my.mergerequests
 
-import io.reactivex.Observable
-import io.reactivex.disposables.Disposable
-import javax.inject.Inject
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import moxy.InjectViewState
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.model.interactor.AccountInteractor
@@ -13,6 +14,7 @@ import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 import ru.terrakok.gitlabclient.util.openInfo
+import javax.inject.Inject
 
 @InjectViewState
 class MyMergeRequestsPresenter @Inject constructor(
@@ -27,7 +29,7 @@ class MyMergeRequestsPresenter @Inject constructor(
     data class Filter(val createdByMe: Boolean, val onlyOpened: Boolean)
 
     private var filter = initFilter
-    private var pageDisposable: Disposable? = null
+    private var pageJob: Job? = null
 
     init {
         paginator.render = { viewState.renderPaginatorState(it) }
@@ -46,36 +48,29 @@ class MyMergeRequestsPresenter @Inject constructor(
 
         refreshMergeRequests()
         mrInteractor.mergeRequestChanges
-            .subscribe { paginator.proceed(Paginator.Action.Refresh) }
-            .connect()
+            .onEach { paginator.proceed(Paginator.Action.Refresh) }
+            .launchIn(this)
     }
 
     private fun loadNewPage(page: Int) {
-        pageDisposable?.dispose()
-        pageDisposable =
-            interactor.getMyMergeRequests(filter.createdByMe, filter.onlyOpened, page)
-                .flattenAsObservable { it }
-                .concatMap { item ->
-                    when (item) {
-                        is TargetHeader.Public -> {
-                            mdConverter.markdownToSpannable(item.body.toString())
-                                .map { md -> item.copy(body = md) }
-                                .toObservable()
+        pageJob?.cancel()
+        pageJob = launch {
+            try {
+                val data =
+                    interactor.getMyMergeRequests(filter.createdByMe, filter.onlyOpened, page)
+                        .map { item ->
+                            when (item) {
+                                is TargetHeader.Public ->
+                                    item.copy(body = mdConverter.toSpannable(item.body.toString()))
+                                is TargetHeader.Confidential -> item
+                            }
                         }
-                        is TargetHeader.Confidential -> Observable.just(item)
-                    }
-                }
-                .toList()
-                .subscribe(
-                    { data ->
-                        paginator.proceed(Paginator.Action.NewPage(page, data))
-                    },
-                    { e ->
-                        errorHandler.proceed(e)
-                        paginator.proceed(Paginator.Action.PageError(e))
-                    }
-                )
-        pageDisposable?.connect()
+                paginator.proceed(Paginator.Action.NewPage(page, data))
+            } catch (e: Exception) {
+                errorHandler.proceed(e)
+                paginator.proceed(Paginator.Action.PageError(e))
+            }
+        }
     }
 
     fun applyNewFilter(filter: Filter) {

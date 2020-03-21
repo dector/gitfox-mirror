@@ -1,6 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.about
 
-import javax.inject.Inject
+import kotlinx.coroutines.launch
 import moxy.InjectViewState
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.di.AppDevelopersPath
@@ -9,6 +9,7 @@ import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
 import timber.log.Timber
+import javax.inject.Inject
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 20.05.17.
@@ -24,13 +25,13 @@ class AboutPresenter @Inject constructor(
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
-        appInfoInteractor
-            .getAppInfo()
-            .subscribe(
-                { viewState.showAppInfo(it) },
-                { Timber.e(it) }
-            )
-            .connect()
+        launch {
+            try {
+                viewState.showAppInfo(appInfoInteractor.getAppInfo())
+            } catch (e: Exception) {
+                Timber.e(e)
+            }
+        }
     }
 
     fun onShowLibrariesClicked() = router.startFlow(Screens.Libraries)

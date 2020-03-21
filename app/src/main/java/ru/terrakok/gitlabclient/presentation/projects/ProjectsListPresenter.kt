@@ -1,7 +1,9 @@
 package ru.terrakok.gitlabclient.presentation.projects
 
-import io.reactivex.disposables.Disposable
-import javax.inject.Inject
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import moxy.InjectViewState
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
@@ -13,6 +15,7 @@ import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.Paginator
+import javax.inject.Inject
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 30.03.17
@@ -34,7 +37,7 @@ class ProjectsListPresenter @Inject constructor(
     }
 
     private val mode = modeWrapper.value
-    private var pageDisposable: Disposable? = null
+    private var pageJob: Job? = null
 
     init {
         paginator.render = { viewState.renderPaginatorState(it) }
@@ -52,27 +55,24 @@ class ProjectsListPresenter @Inject constructor(
         super.onFirstViewAttach()
         refreshProjects()
         interactor.projectChanges
-            .subscribe { paginator.proceed(Paginator.Action.Refresh) }
-            .connect()
+            .onEach { paginator.proceed(Paginator.Action.Refresh) }
+            .launchIn(this)
     }
 
     private fun loadNewPage(page: Int) {
-        pageDisposable?.dispose()
-        pageDisposable =
-            getProjectsSingle(page)
-                .subscribe(
-                    { data ->
-                        paginator.proceed(Paginator.Action.NewPage(page, data))
-                    },
-                    { e ->
-                        errorHandler.proceed(e)
-                        paginator.proceed(Paginator.Action.PageError(e))
-                    }
-                )
-        pageDisposable?.connect()
+        pageJob?.cancel()
+        pageJob = launch {
+            try {
+                val data = getProjectsSingle(page)
+                paginator.proceed(Paginator.Action.NewPage(page, data))
+            } catch (e: Exception) {
+                errorHandler.proceed(e)
+                paginator.proceed(Paginator.Action.PageError(e))
+            }
+        }
     }
 
-    private fun getProjectsSingle(page: Int) = when (mode) {
+    private suspend fun getProjectsSingle(page: Int) = when (mode) {
         STARRED_PROJECTS -> interactor.getProjectsList(
             page = page,
             starred = true,

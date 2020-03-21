@@ -1,5 +1,7 @@
 package ru.terrakok.gitlabclient.presentation.issue.details
 
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import moxy.InjectViewState
 import ru.terrakok.gitlabclient.di.IssueId
@@ -28,20 +30,23 @@ class IssueDetailsPresenter @Inject constructor(
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        loadIssue()
+        launch {
+            loadIssue()
+            issueInteractor.issueChanges
+                .filter { it == issueId }
+                .collect { loadIssue() }
+        }
     }
 
-    private fun loadIssue() {
-        launch {
-            viewState.showEmptyProgress(true)
-            try {
-                val issue = issueInteractor.getIssue(projectId, issueId)
-                val spnbl = mdConverter.toSpannable(issue.description)
-                viewState.showDetails(issue, spnbl)
-            } catch (e: Exception) {
-                errorHandler.proceed(e) { viewState.showMessage(it) }
-            }
-            viewState.showEmptyProgress(false)
+    private suspend fun loadIssue() {
+        viewState.showEmptyProgress(true)
+        try {
+            val issue = issueInteractor.getIssue(projectId, issueId)
+            val spnbl = mdConverter.toSpannable(issue.description)
+            viewState.showDetails(issue, spnbl)
+        } catch (e: Exception) {
+            errorHandler.proceed(e) { viewState.showMessage(it) }
         }
+        viewState.showEmptyProgress(false)
     }
 }

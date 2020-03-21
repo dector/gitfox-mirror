@@ -1,16 +1,13 @@
 package ru.terrakok.gitlabclient.presentation.project.files
 
-import io.reactivex.Single
-import io.reactivex.disposables.Disposable
-import io.reactivex.functions.BiFunction
-import javax.inject.Inject
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import moxy.InjectViewState
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
 import ru.terrakok.gitlabclient.entity.Branch
-import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.RepositoryTreeNodeType
 import ru.terrakok.gitlabclient.entity.app.ProjectFile
 import ru.terrakok.gitlabclient.model.interactor.ProjectInteractor
@@ -19,6 +16,7 @@ import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.Paginator
+import javax.inject.Inject
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 02.11.18.
@@ -37,7 +35,7 @@ class ProjectFilesPresenter @Inject constructor(
     private val projectId = projectIdWrapper.value
     private val projectBranches = arrayListOf<Branch>()
 
-    private var pageDisposable: Disposable? = null
+    private var pageJob: Job? = null
 
     init {
         paginator.render = { viewState.renderPaginatorState(it) }
@@ -98,69 +96,59 @@ class ProjectFilesPresenter @Inject constructor(
     }
 
     private fun loadNewPage(page: Int) {
-        pageDisposable?.dispose()
-        pageDisposable =
-            projectInteractor
-                .getProjectFiles(
+        pageJob?.cancel()
+        pageJob = launch {
+            try {
+                val data = projectInteractor.getProjectFiles(
                     projectId,
                     getRemotePath(projectFileDestination.isInRoot(), projectFileDestination.paths),
                     projectFileDestination.branchName,
                     page = page
                 )
-                .subscribe(
-                    { data ->
-                        paginator.proceed(Paginator.Action.NewPage(page, data))
-                    },
-                    { e ->
-                        errorHandler.proceed(e)
-                        paginator.proceed(Paginator.Action.PageError(e))
-                    }
-                )
-        pageDisposable?.connect()
+                paginator.proceed(Paginator.Action.NewPage(page, data))
+            } catch (e: Exception) {
+                errorHandler.proceed(e)
+                paginator.proceed(Paginator.Action.PageError(e))
+            }
+        }
     }
 
     private fun loadBranches() {
-        projectInteractor.getProjectBranches(projectId)
-            .doOnSubscribe { viewState.showBlockingProgress(true) }
-            .doAfterTerminate { viewState.showBlockingProgress(false) }
-            .subscribe(
-                {
-                    viewState.showBranchSelection(true)
+        launch {
+            viewState.showBlockingProgress(true)
+            try {
+                val branches = projectInteractor.getProjectBranches(projectId)
+                viewState.showBranchSelection(true)
 
-                    projectBranches.addAll(it)
-                    projectFileDestination.moveToRoot()
-                },
-                { handleLoadingProjectDetailsError(it) }
-            )
-            .connect()
+                projectBranches.addAll(branches)
+                projectFileDestination.moveToRoot()
+            } catch (e: Exception) {
+                handleLoadingProjectDetailsError(e)
+            }
+            viewState.showBlockingProgress(false)
+        }
     }
 
     private fun loadProjectWithBranches() {
-        Single
-            .zip(
-                projectInteractor.getProject(projectId),
-                projectInteractor.getProjectBranches(projectId),
-                BiFunction<Project, List<Branch>, Pair<Project, List<Branch>>> { project, branches ->
-                    Pair(project, branches)
-                }
-            )
-            .doOnSubscribe { viewState.showBlockingProgress(true) }
-            .doAfterTerminate { viewState.showBlockingProgress(false) }
-            .subscribe(
-                { (project, branches) ->
-                    if (project.defaultBranch != null) {
-                        viewState.showBranchSelection(true)
+        launch {
+            viewState.showBlockingProgress(true)
+            try {
+                val project = projectInteractor.getProject(projectId)
+                if (project.defaultBranch != null) {
+                    viewState.showBranchSelection(true)
 
-                        projectBranches.addAll(branches)
-                        projectFileDestination.init(project.path, project.defaultBranch)
-                        projectFileDestination.moveToRoot()
-                    } else {
-                        handleLoadingProjectDetailsError(NoBranchesError())
-                    }
-                },
-                { handleLoadingProjectDetailsError(it) }
-            )
-            .connect()
+                    val branches = projectInteractor.getProjectBranches(projectId)
+                    projectBranches.addAll(branches)
+                    projectFileDestination.init(project.path, project.defaultBranch)
+                    projectFileDestination.moveToRoot()
+                } else {
+                    handleLoadingProjectDetailsError(NoBranchesError())
+                }
+            } catch (e: Exception) {
+
+            }
+            viewState.showBlockingProgress(false)
+        }
     }
 
     private fun handleLoadingProjectDetailsError(error: Throwable) {
@@ -202,7 +190,11 @@ class ProjectFilesPresenter @Inject constructor(
             router.startFlow(
                 Screens.ProjectFile(
                     projectId,
-                    getFilePath(projectFileDestination.isInRoot(), projectFileDestination.paths, item.name),
+                    getFilePath(
+                        projectFileDestination.isInRoot(),
+                        projectFileDestination.paths,
+                        item.name
+                    ),
                     projectFileDestination.branchName
                 )
             )
@@ -217,7 +209,8 @@ class ProjectFilesPresenter @Inject constructor(
             if (inRoot) {
                 defaultPath
             } else {
-                "$defaultPath$UI_SEPARATOR${paths.subList(1, paths.size).joinToString(separator = UI_SEPARATOR)}"
+                "$defaultPath$UI_SEPARATOR${paths.subList(1, paths.size)
+                    .joinToString(separator = UI_SEPARATOR)}"
             }
 
         private fun getRemotePath(inRoot: Boolean, paths: List<String>) =
@@ -231,7 +224,8 @@ class ProjectFilesPresenter @Inject constructor(
             if (inRoot) {
                 fileName
             } else {
-                "${paths.subList(1, paths.size).joinToString(separator = REMOTE_SEPARATOR)}$REMOTE_SEPARATOR$fileName"
+                "${paths.subList(1, paths.size)
+                    .joinToString(separator = REMOTE_SEPARATOR)}$REMOTE_SEPARATOR$fileName"
             }
     }
 }
