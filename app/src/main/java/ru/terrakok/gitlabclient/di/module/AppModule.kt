@@ -15,9 +15,7 @@ import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.app.develop.AppInfo
 import ru.terrakok.gitlabclient.entity.app.session.OAuthParams
 import ru.terrakok.gitlabclient.model.data.server.client.OkHttpClientFactory
-import ru.terrakok.gitlabclient.model.system.AppSchedulers
 import ru.terrakok.gitlabclient.model.system.ResourceManager
-import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.model.system.message.SystemMessageNotifier
 import ru.terrakok.gitlabclient.util.Base64Tools
 import toothpick.config.Module
@@ -32,7 +30,6 @@ class AppModule(context: Context) : Module() {
         bind(String::class.java).withName(AppDevelopersPath::class.java).toInstance(BuildConfig.APP_DEVELOPERS_PATH)
         bind(PrimitiveWrapper::class.java).withName(DefaultPageSize::class.java).toInstance(PrimitiveWrapper(20))
         bind(PrimitiveWrapper::class.java).withName(CacheLifetime::class.java).toInstance(PrimitiveWrapper(300_000L))
-        bind(SchedulersProvider::class.java).toInstance(AppSchedulers())
         bind(ResourceManager::class.java).singleton()
         bind(Base64Tools::class.java).toInstance(Base64Tools())
         bind(AssetManager::class.java).toInstance(context.assets)

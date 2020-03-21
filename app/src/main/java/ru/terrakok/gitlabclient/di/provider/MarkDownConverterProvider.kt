@@ -10,7 +10,6 @@ import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.di.ServerPath
 import ru.terrakok.gitlabclient.entity.app.session.AuthHolder
 import ru.terrakok.gitlabclient.model.data.server.client.OkHttpClientFactory
-import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.util.color
 import java.util.concurrent.Executors
@@ -24,7 +23,6 @@ class MarkDownConverterProvider @Inject constructor(
     private val context: Context,
     private val okHttpClientFactory: OkHttpClientFactory,
     private val tokHolder: AuthHolder,
-    private val schedulers: SchedulersProvider,
     @ServerPath private val serverPath: String
 ) : Provider<MarkDownConverter> {
 

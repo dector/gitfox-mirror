@@ -9,7 +9,6 @@ import ru.terrakok.gitlabclient.entity.app.session.UserAccount
 import ru.terrakok.gitlabclient.model.data.cache.ProjectCache
 import ru.terrakok.gitlabclient.model.data.server.UserAccountApi
 import ru.terrakok.gitlabclient.model.data.storage.Prefs
-import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import toothpick.Toothpick
 import java.net.URI
 import java.util.*
@@ -19,8 +18,7 @@ class SessionInteractor @Inject constructor(
     private val prefs: Prefs,
     private val oauthParams: OAuthParams,
     private val userAccountApi: UserAccountApi,
-    private val projectCache: ProjectCache,
-    private val schedulers: SchedulersProvider
+    private val projectCache: ProjectCache
 ) {
     private val hash = UUID.randomUUID().toString()
 
