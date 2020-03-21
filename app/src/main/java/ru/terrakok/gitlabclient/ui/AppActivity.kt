@@ -8,9 +8,12 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import io.reactivex.disposables.Disposable
-import javax.inject.Inject
 import kotlinx.android.synthetic.main.layout_container.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import moxy.MvpAppCompatActivity
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.NavigatorHolder
@@ -26,12 +29,13 @@ import ru.terrakok.gitlabclient.ui.global.MessageDialogFragment
 import ru.terrakok.gitlabclient.util.doOnApplyWindowInsets
 import ru.terrakok.gitlabclient.util.updatePadding
 import toothpick.Toothpick
+import javax.inject.Inject
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 03.09.18.
  */
 
-class AppActivity : MvpAppCompatActivity() {
+class AppActivity : MvpAppCompatActivity(), CoroutineScope by CoroutineScope(Dispatchers.Main) {
 
     @Inject
     lateinit var appLauncher: AppLauncher
@@ -42,7 +46,7 @@ class AppActivity : MvpAppCompatActivity() {
     @Inject
     lateinit var systemMessageNotifier: SystemMessageNotifier
 
-    private var notifierDisposable: Disposable? = null
+    private var notifierJob: Job? = null
 
     private val currentFragment: BaseFragment?
         get() = supportFragmentManager.findFragmentById(R.id.container) as? BaseFragment
@@ -130,16 +134,17 @@ class AppActivity : MvpAppCompatActivity() {
     }
 
     private fun subscribeOnSystemMessages() {
-        notifierDisposable = systemMessageNotifier.notifier
-            .subscribe { msg ->
+        notifierJob = systemMessageNotifier.notifier
+            .onEach { msg ->
                 when (msg.type) {
                     SystemMessageType.ALERT -> showAlertMessage(msg.text)
                     SystemMessageType.TOAST -> showToastMessage(msg.text)
                 }
             }
+            .launchIn(this)
     }
 
     private fun unsubscribeOnSystemMessages() {
-        notifierDisposable?.dispose()
+        notifierJob?.cancel()
     }
 }
