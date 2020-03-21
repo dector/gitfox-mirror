@@ -1,6 +1,7 @@
 package ru.terrakok.gitlabclient.presentation.mergerequest.commits
 
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.launch
 import moxy.InjectViewState
 import ru.terrakok.gitlabclient.Screens
@@ -34,14 +35,16 @@ class MergeRequestCommitsPresenter @Inject constructor(
 
     init {
         paginator.render = { viewState.renderPaginatorState(it) }
-        paginator.sideEffects.subscribe { effect ->
-            when (effect) {
-                is Paginator.SideEffect.LoadPage -> loadNewPage(effect.currentPage)
-                is Paginator.SideEffect.ErrorEvent -> {
-                    errorHandler.proceed(effect.error) { viewState.showMessage(it) }
+        launch {
+            paginator.sideEffects.consumeEach { effect ->
+                when (effect) {
+                    is Paginator.SideEffect.LoadPage -> loadNewPage(effect.currentPage)
+                    is Paginator.SideEffect.ErrorEvent -> {
+                        errorHandler.proceed(effect.error) { viewState.showMessage(it) }
+                    }
                 }
             }
-        }.connect()
+        }
     }
 
     override fun onFirstViewAttach() {

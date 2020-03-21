@@ -1,6 +1,7 @@
 package ru.terrakok.gitlabclient.presentation.project.labels
 
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -32,8 +33,8 @@ class ProjectLabelsPresenter @Inject constructor(
 
     init {
         paginator.render = { viewState.renderPaginatorState(it) }
-        paginator.sideEffects
-            .subscribe { effect ->
+        launch {
+            paginator.sideEffects.consumeEach { effect ->
                 when (effect) {
                     is Paginator.SideEffect.LoadPage -> loadNewPage(effect.currentPage)
                     is Paginator.SideEffect.ErrorEvent -> {
@@ -41,7 +42,7 @@ class ProjectLabelsPresenter @Inject constructor(
                     }
                 }
             }
-            .connect()
+        }
     }
 
     override fun onFirstViewAttach() {

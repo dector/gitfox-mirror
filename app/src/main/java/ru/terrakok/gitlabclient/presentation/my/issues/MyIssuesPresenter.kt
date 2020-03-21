@@ -1,6 +1,7 @@
 package ru.terrakok.gitlabclient.presentation.my.issues
 
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -36,14 +37,16 @@ class MyIssuesPresenter @Inject constructor(
 
     init {
         paginator.render = { viewState.renderPaginatorState(it) }
-        paginator.sideEffects.subscribe { effect ->
-            when (effect) {
-                is Paginator.SideEffect.LoadPage -> loadNewPage(effect.currentPage)
-                is Paginator.SideEffect.ErrorEvent -> {
-                    errorHandler.proceed(effect.error) { viewState.showMessage(it) }
+        launch {
+            paginator.sideEffects.consumeEach { effect ->
+                when (effect) {
+                    is Paginator.SideEffect.LoadPage -> loadNewPage(effect.currentPage)
+                    is Paginator.SideEffect.ErrorEvent -> {
+                        errorHandler.proceed(effect.error) { viewState.showMessage(it) }
+                    }
                 }
             }
-        }.connect()
+        }
     }
 
     override fun onFirstViewAttach() {
