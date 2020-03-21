@@ -1,10 +1,8 @@
 package ru.terrakok.gitlabclient.model.interactor
 
-import io.reactivex.Single
-import kotlinx.coroutines.rx2.rxSingle
 import ru.terrakok.gitlabclient.entity.app.develop.AppInfo
+import ru.terrakok.gitlabclient.entity.app.develop.AppLibrary
 import ru.terrakok.gitlabclient.model.data.storage.RawAppData
-import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import javax.inject.Inject
 
 /**
@@ -12,15 +10,14 @@ import javax.inject.Inject
  */
 class AppInfoInteractor @Inject constructor(
     private val rawAppData: RawAppData,
-    private val appInfo: AppInfo,
-    private val schedulers: SchedulersProvider
+    private val appInfo: AppInfo
 ) {
 
-    fun getAppInfo() = Single.just(appInfo)
+    fun getAppInfo(): AppInfo = appInfo
 
-    fun getAppLibraries() =
-        rxSingle { rawAppData.getAppLibraries() }
-            .onErrorReturn { emptyList() }
-            .subscribeOn(schedulers.io())
-            .observeOn(schedulers.ui())
+    suspend fun getAppLibraries(): List<AppLibrary> = try {
+        rawAppData.getAppLibraries()
+    } catch (e: Exception) {
+        emptyList()
+    }
 }

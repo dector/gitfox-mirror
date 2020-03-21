@@ -2,7 +2,8 @@ package ru.terrakok.gitlabclient.presentation.my.todos
 
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
-import javax.inject.Inject
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import moxy.InjectViewState
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.TodoListPendingState
@@ -15,6 +16,7 @@ import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 import ru.terrakok.gitlabclient.util.openInfo
+import javax.inject.Inject
 
 /**
  * @author Eugene Shapovalov (CraggyHaggy). Date: 27.09.17
@@ -49,9 +51,11 @@ class MyTodosPresenter @Inject constructor(
         super.onFirstViewAttach()
 
         refreshTodos()
-        todoInteractor.todoChanges
-            .subscribe { paginator.proceed(Paginator.Action.Refresh) }
-            .connect()
+        launch {
+            todoInteractor.todoChanges.collect {
+                paginator.proceed(Paginator.Action.Refresh)
+            }
+        }
     }
 
     private fun loadNewPage(page: Int) {
@@ -79,7 +83,6 @@ class MyTodosPresenter @Inject constructor(
                         paginator.proceed(Paginator.Action.PageError(e))
                     }
                 )
-        pageDisposable?.connect()
     }
 
     fun onTodoClick(item: TargetHeader.Public) = item.openInfo(router)

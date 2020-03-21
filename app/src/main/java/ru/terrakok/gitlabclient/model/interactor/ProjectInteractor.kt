@@ -1,15 +1,12 @@
 package ru.terrakok.gitlabclient.model.interactor
 
-import io.reactivex.Single
-import kotlinx.coroutines.rx2.asObservable
-import kotlinx.coroutines.rx2.rxSingle
+import kotlinx.coroutines.flow.Flow
 import ru.terrakok.gitlabclient.di.DefaultPageSize
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.entity.app.ProjectFile
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
-import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.util.Base64Tools
 import javax.inject.Inject
 
@@ -19,15 +16,14 @@ import javax.inject.Inject
 class ProjectInteractor @Inject constructor(
     private val api: GitlabApi,
     serverChanges: ServerChanges,
-    private val schedulers: SchedulersProvider,
     @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
     private val base64Tools = Base64Tools()
 
-    val projectChanges = serverChanges.projectChanges.asObservable().observeOn(schedulers.ui())
+    val projectChanges: Flow<Long> = serverChanges.projectChanges
 
-    fun getProjectsList(
+    suspend fun getProjectsList(
         archived: Boolean? = null,
         visibility: Visibility? = null,
         orderBy: OrderBy? = null,
@@ -39,86 +35,52 @@ class ProjectInteractor @Inject constructor(
         starred: Boolean? = null,
         page: Int,
         pageSize: Int = defaultPageSize
-    ) = rxSingle {
+    ): List<Project> =
         api.getProjects(
-            archived,
-            visibility,
-            orderBy,
-            sort,
-            search,
-            simple,
-            owned,
-            membership,
-            starred,
-            page,
-            pageSize
+            archived, visibility, orderBy, sort, search, simple,
+            owned, membership, starred, page, pageSize
         )
+
+    suspend fun getProject(id: Long): Project = api.getProject(id)
+
+    suspend fun getProjectRawFile(projectId: Long, path: String, fileReference: String): String {
+        val file = getProjectFile(projectId, path, fileReference)
+        return base64Tools.decode(file.content)
     }
-        .subscribeOn(schedulers.io())
-        .observeOn(schedulers.ui())
 
-    fun getProject(id: Long) =
-        rxSingle { api.getProject(id) }
-            .subscribeOn(schedulers.io())
-            .observeOn(schedulers.ui())
+    suspend fun getProjectReadme(project: Project): String {
+        if (project.defaultBranch != null && project.readmeUrl != null) {
+            val readmePath = project.readmeUrl.substringAfter(
+                "/blob/${project.defaultBranch}/"
+            )
+            val file = getProjectFile(project.id, readmePath, project.defaultBranch)
+            return base64Tools.decode(file.content)
+        } else {
+            throw ReadmeNotFound()
+        }
+    }
 
-    fun getProjectRawFile(projectId: Long, path: String, fileReference: String): Single<String> =
-        getProjectFile(projectId, path, fileReference)
-            .observeOn(schedulers.computation())
-            .map { file -> base64Tools.decode(file.content) }
-            .observeOn(schedulers.ui())
-
-    fun getProjectReadme(project: Project) =
-        Single
-            .defer {
-                if (project.defaultBranch != null && project.readmeUrl != null) {
-                    val readmePath = project.readmeUrl.substringAfter(
-                        "/blob/${project.defaultBranch}/"
-                    )
-                    getProjectFile(project.id, readmePath, project.defaultBranch)
-                } else {
-                    Single.error(ReadmeNotFound())
-                }
-            }
-            .observeOn(schedulers.computation())
-            .map { file -> base64Tools.decode(file.content) }
-            .observeOn(schedulers.ui())
-
-    fun getProjectFile(
+    suspend fun getProjectFile(
         projectId: Long,
         path: String,
         fileReference: String
-    ) = rxSingle { api.getFile(projectId, path, fileReference) }
-        .subscribeOn(schedulers.io())
-        .observeOn(schedulers.ui())
+    ): File = api.getFile(projectId, path, fileReference)
 
-    fun getProjectFiles(
+    suspend fun getProjectFiles(
         projectId: Long,
         path: String,
         branchName: String,
         recursive: Boolean? = null,
         page: Int,
         pageSize: Int = defaultPageSize
-    ): Single<List<ProjectFile>> =
-        rxSingle { api.getRepositoryTree(projectId, path, branchName, recursive, page, pageSize) }
-            .map { trees ->
-                trees.map { tree ->
-                    ProjectFile(
-                        tree.id,
-                        tree.name,
-                        tree.type
-                    )
-                }
-            }
-            .subscribeOn(schedulers.io())
-            .observeOn(schedulers.ui())
+    ): List<ProjectFile> =
+        api.getRepositoryTree(projectId, path, branchName, recursive, page, pageSize)
+            .map { tree -> ProjectFile(tree.id, tree.name, tree.type) }
 
-    fun getProjectBranches(
+
+    suspend fun getProjectBranches(
         projectId: Long
-    ): Single<List<Branch>> =
-        rxSingle { api.getRepositoryBranches(projectId) }
-            .subscribeOn(schedulers.io())
-            .observeOn(schedulers.ui())
+    ): List<Branch> = api.getRepositoryBranches(projectId)
 
     class ReadmeNotFound : Exception()
 }

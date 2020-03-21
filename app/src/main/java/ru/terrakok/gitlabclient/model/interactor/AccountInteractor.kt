@@ -1,16 +1,16 @@
 package ru.terrakok.gitlabclient.model.interactor
 
-import io.reactivex.Observable
-import io.reactivex.functions.Function3
-import kotlinx.coroutines.rx2.asObservable
-import kotlinx.coroutines.rx2.rxSingle
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import retrofit2.Response
 import ru.terrakok.gitlabclient.di.ServerPath
 import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.entity.app.AccountMainBadges
+import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
-import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import javax.inject.Inject
 
 class AccountInteractor @Inject constructor(
@@ -19,76 +19,54 @@ class AccountInteractor @Inject constructor(
     serverChanges: ServerChanges,
     private val todoInteractor: TodoInteractor,
     private val mrInteractor: MergeRequestInteractor,
-    private val issueInteractor: IssueInteractor,
-    private val schedulers: SchedulersProvider
+    private val issueInteractor: IssueInteractor
 ) {
 
-    private val issueCount =
+    private val issueCount: Flow<Int> =
         serverChanges.issueChanges
-            .asObservable()
-            .map { Unit }
-            .startWith(Unit)
-            .switchMapSingle {
-                rxSingle { api.getMyAssignedIssueHeaders() }
-                    .map { it.getXTotalHeader() }
-                    .subscribeOn(schedulers.io())
-                    .observeOn(schedulers.ui())
-            }
+            .map { api.getMyAssignedIssueHeaders().getXTotalHeader() }
 
-    private val mrCount =
+    private val mrCount: Flow<Int> =
         serverChanges.mergeRequestChanges
-            .asObservable()
-            .map { Unit }
-            .startWith(Unit)
-            .switchMapSingle {
-                rxSingle { api.getMyAssignedMergeRequestHeaders() }
-                    .map { it.getXTotalHeader() }
-                    .subscribeOn(schedulers.io())
-                    .observeOn(schedulers.ui())
-            }
+            .map { api.getMyAssignedMergeRequestHeaders().getXTotalHeader() }
 
-    private val todoCount =
+    private val todoCount: Flow<Int> =
         serverChanges.todoChanges
-            .asObservable()
-            .map { Unit }
-            .startWith(Unit)
-            .switchMapSingle {
-                rxSingle { api.getMyAssignedTodoHeaders() }
-                    .map { it.getXTotalHeader() }
-                    .subscribeOn(schedulers.io())
-                    .observeOn(schedulers.ui())
+            .map { api.getMyAssignedTodoHeaders().getXTotalHeader() }
+
+    fun getAccountMainBadges(): Flow<AccountMainBadges> =
+        combine(issueCount, mrCount, todoCount) { i, mr, t -> AccountMainBadges(i, mr, t) }
+            .onStart {
+                emit(
+                    AccountMainBadges(
+                        api.getMyAssignedIssueHeaders().getXTotalHeader(),
+                        api.getMyAssignedMergeRequestHeaders().getXTotalHeader(),
+                        api.getMyAssignedTodoHeaders().getXTotalHeader()
+                    )
+                )
             }
 
-    fun getAccountMainBadges(): Observable<AccountMainBadges> =
-        Observable.combineLatest(
-            issueCount, mrCount, todoCount,
-            Function3 { i, mr, t -> AccountMainBadges(i, mr, t) }
-        )
+    suspend fun getMyProfile(): User = api.getMyUser()
 
-    fun getMyProfile() =
-        rxSingle { api.getMyUser() }
-            .subscribeOn(schedulers.io())
-            .observeOn(schedulers.ui())
+    fun getMyServerName(): String = serverPath
 
-    fun getMyServerName() = serverPath
-
-    fun getMyTodos(
+    suspend fun getMyTodos(
         isPending: Boolean,
         page: Int
-    ) = getMyProfile()
-        .flatMap { currentUser ->
-            todoInteractor.getTodos(
-                currentUser = currentUser,
-                state = if (isPending) TodoState.PENDING else TodoState.DONE,
-                page = page
-            )
-        }
+    ): List<TargetHeader> {
+        val me = getMyProfile()
+        return todoInteractor.getTodos(
+            currentUser = me,
+            state = if (isPending) TodoState.PENDING else TodoState.DONE,
+            page = page
+        )
+    }
 
-    fun getMyMergeRequests(
+    suspend fun getMyMergeRequests(
         createdByMe: Boolean,
         onlyOpened: Boolean,
         page: Int
-    ) =
+    ): List<TargetHeader> =
         mrInteractor.getMyMergeRequests(
             scope = if (createdByMe) MergeRequestScope.CREATED_BY_ME else MergeRequestScope.ASSIGNED_TO_ME,
             state = if (onlyOpened) MergeRequestState.OPENED else null,
@@ -96,11 +74,11 @@ class AccountInteractor @Inject constructor(
             page = page
         )
 
-    fun getMyIssues(
+    suspend fun getMyIssues(
         createdByMe: Boolean,
         onlyOpened: Boolean,
         page: Int
-    ) =
+    ): List<TargetHeader> =
         issueInteractor.getMyIssues(
             scope = if (createdByMe) IssueScope.CREATED_BY_ME else IssueScope.ASSIGNED_BY_ME,
             state = if (onlyOpened) IssueState.OPENED else null,
@@ -108,7 +86,6 @@ class AccountInteractor @Inject constructor(
             page = page
         )
 
-    private fun Response<*>.getXTotalHeader(): Int {
-        return if (isSuccessful) headers().get("X-Total")?.toInt() ?: 0 else 0
-    }
+    private fun Response<*>.getXTotalHeader(): Int =
+        if (isSuccessful) headers().get("X-Total")?.toInt() ?: 0 else 0
 }

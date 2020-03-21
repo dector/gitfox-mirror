@@ -1,14 +1,12 @@
 package ru.terrakok.gitlabclient.model.interactor
 
-import kotlinx.coroutines.rx2.asObservable
-import kotlinx.coroutines.rx2.rxSingle
+import kotlinx.coroutines.flow.Flow
 import ru.terrakok.gitlabclient.di.DefaultPageSize
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.entity.app.target.*
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
-import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import javax.inject.Inject
 
 /**
@@ -17,14 +15,13 @@ import javax.inject.Inject
 class TodoInteractor @Inject constructor(
     private val api: GitlabApi,
     serverChanges: ServerChanges,
-    private val schedulers: SchedulersProvider,
     @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
 
-    val todoChanges = serverChanges.todoChanges.asObservable().observeOn(schedulers.ui())
+    val todoChanges: Flow<Long> = serverChanges.todoChanges
 
-    fun getTodos(
+    suspend fun getTodos(
         currentUser: User,
         action: TodoAction? = null,
         authorId: Long? = null,
@@ -33,13 +30,16 @@ class TodoInteractor @Inject constructor(
         targetType: TargetType? = null,
         page: Int,
         pageSize: Int = defaultPageSize
-    ) =
-        rxSingle {
-            api.getTodos(action, authorId, projectId, state, targetType, page, pageSize)
-                .map { getTargetHeader(it, currentUser) }
-        }
-            .subscribeOn(schedulers.io())
-            .observeOn(schedulers.ui())
+    ): List<TargetHeader> =
+        api.getTodos(action, authorId, projectId, state, targetType, page, pageSize)
+            .map { getTargetHeader(it, currentUser) }
+
+    suspend fun markPendingTodoAsDone(id: Long): Todo =
+        api.markPendingTodoAsDone(id)
+
+    suspend fun markAllPendingTodosAsDone() {
+        api.markAllPendingTodosAsDone()
+    }
 
     private fun getTargetHeader(todo: Todo, currentUser: User): TargetHeader {
         val target = todo.target
@@ -92,14 +92,4 @@ class TodoInteractor @Inject constructor(
             TargetAction.Undefined
         )
     }
-
-    fun markPendingTodoAsDone(id: Long) =
-        rxSingle { api.markPendingTodoAsDone(id) }
-            .subscribeOn(schedulers.io())
-            .observeOn(schedulers.ui())
-
-    fun markAllPendingTodosAsDone() =
-        rxSingle { api.markAllPendingTodosAsDone() }
-            .subscribeOn(schedulers.io())
-            .observeOn(schedulers.ui())
 }

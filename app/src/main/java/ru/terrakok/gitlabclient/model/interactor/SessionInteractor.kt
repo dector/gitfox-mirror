@@ -1,7 +1,7 @@
 package ru.terrakok.gitlabclient.model.interactor
 
-import io.reactivex.Completable
-import kotlinx.coroutines.rx2.rxSingle
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import ru.terrakok.gitlabclient.di.DI
 import ru.terrakok.gitlabclient.di.module.ServerModule
 import ru.terrakok.gitlabclient.entity.app.session.OAuthParams
@@ -74,44 +74,35 @@ class SessionInteractor @Inject constructor(
         }
     }
 
-    fun login(oauthRedirect: String): Completable =
-        Completable.defer {
-            if (oauthRedirect.contains(hash)) {
-                rxSingle {
-                    userAccountApi.requestUserAccount(
-                        oauthParams.endpoint,
-                        oauthParams.appId,
-                        oauthParams.appKey,
-                        getQueryParameterFromUri(oauthRedirect, PARAMETER_CODE),
-                        oauthParams.redirectUrl
-                    )
-                }
-                    .subscribeOn(schedulers.io())
-                    .observeOn(schedulers.ui())
-                    .doOnSuccess { openNewAccount(it) }
-                    .ignoreElement()
-            } else {
-                Completable.error(RuntimeException("Not valid oauth hash!"))
-            }
+    suspend fun login(oauthRedirect: String) {
+        if (oauthRedirect.contains(hash)) {
+            val account = userAccountApi.requestUserAccount(
+                oauthParams.endpoint,
+                oauthParams.appId,
+                oauthParams.appKey,
+                getQueryParameterFromUri(oauthRedirect, PARAMETER_CODE),
+                oauthParams.redirectUrl
+            )
+            openNewAccount(account)
+        } else {
+            throw  RuntimeException("Not valid oauth hash!")
         }
+    }
 
-    fun loginOnCustomServer(
-        serverPath: String,
-        token: String
-    ): Completable =
-        rxSingle { userAccountApi.requestUserAccount(serverPath, token) }
-            .subscribeOn(schedulers.io())
-            .observeOn(schedulers.ui())
-            .doOnSuccess { openNewAccount(it) }
-            .ignoreElement()
+    suspend fun loginOnCustomServer(serverPath: String, token: String) {
+        val account = userAccountApi.requestUserAccount(serverPath, token)
+        openNewAccount(account)
+    }
 
-    private fun openNewAccount(userAccount: UserAccount) {
-        val newAccounts = prefs.accounts.toMutableList()
-        newAccounts.removeAll { it.id == userAccount.id }
-        newAccounts.add(userAccount)
-        prefs.selectedAccount = userAccount.id
-        prefs.accounts = newAccounts
-        initNewSession(userAccount)
+    private suspend fun openNewAccount(userAccount: UserAccount) {
+        withContext(Dispatchers.Main) {
+            val newAccounts = prefs.accounts.toMutableList()
+            newAccounts.removeAll { it.id == userAccount.id }
+            newAccounts.add(userAccount)
+            prefs.selectedAccount = userAccount.id
+            prefs.accounts = newAccounts
+            initNewSession(userAccount)
+        }
     }
 
     private fun initNewSession(newAccount: UserAccount?) {

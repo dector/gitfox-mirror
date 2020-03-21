@@ -1,16 +1,11 @@
 package ru.terrakok.gitlabclient.model.interactor
 
-import io.reactivex.Completable
-import io.reactivex.Single
-import kotlinx.coroutines.rx2.asObservable
-import kotlinx.coroutines.rx2.rxCompletable
-import kotlinx.coroutines.rx2.rxSingle
+import kotlinx.coroutines.flow.Flow
 import ru.terrakok.gitlabclient.di.DefaultPageSize
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.Member
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
-import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import javax.inject.Inject
 
 /**
@@ -19,56 +14,45 @@ import javax.inject.Inject
 class MembersInteractor @Inject constructor(
     private val api: GitlabApi,
     serverChanges: ServerChanges,
-    private val schedulers: SchedulersProvider,
     @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>
 ) {
-
     private val defaultPageSize = defaultPageSizeWrapper.value
 
-    val memberChanges = serverChanges.memberChanges.asObservable().observeOn(schedulers.ui())
+    val memberChanges: Flow<Long> = serverChanges.memberChanges
 
-    fun getMembers(
+    suspend fun getMembers(
         projectId: Long,
         page: Int,
         pageSize: Int = defaultPageSize
-    ): Single<List<Member>> =
-        rxSingle { api.getMembers(projectId, page, pageSize) }
-            .subscribeOn(schedulers.io())
-            .observeOn(schedulers.ui())
+    ): List<Member> = api.getMembers(projectId, page, pageSize)
 
-    fun getMember(
+    suspend fun getMember(
         projectId: Long,
         memberId: Long
-    ): Single<Member> =
-        rxSingle { api.getMember(projectId, memberId) }
-            .subscribeOn(schedulers.io())
-            .observeOn(schedulers.ui())
+    ): Member = api.getMember(projectId, memberId)
 
-    fun addMember(
+    suspend fun addMember(
         projectId: Long,
         userId: Long,
         accessLevel: Long,
         expiresDate: String? = null
-    ): Completable =
-        rxCompletable { api.addMember(projectId, userId, accessLevel, expiresDate) }
-            .subscribeOn(schedulers.io())
-            .observeOn(schedulers.ui())
+    ) {
+        api.addMember(projectId, userId, accessLevel, expiresDate)
+    }
 
-    fun editMember(
+    suspend fun editMember(
         projectId: Long,
         userId: Long,
         accessLevel: Long,
         expiresDate: String? = null
-    ): Completable =
-        rxCompletable { api.editMember(projectId, userId, accessLevel, expiresDate) }
-            .subscribeOn(schedulers.io())
-            .observeOn(schedulers.ui())
+    ) {
+        api.editMember(projectId, userId, accessLevel, expiresDate)
+    }
 
-    fun deleteMember(
+    suspend fun deleteMember(
         projectId: Long,
         userId: Long
-    ): Completable =
-        rxCompletable { api.deleteMember(projectId, userId) }
-            .subscribeOn(schedulers.io())
-            .observeOn(schedulers.ui())
+    ) {
+        api.deleteMember(projectId, userId)
+    }
 }

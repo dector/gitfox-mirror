@@ -1,6 +1,9 @@
 package ru.terrakok.gitlabclient.presentation.global
 
 import io.reactivex.Single
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.rx2.rxSingle
+import kotlinx.coroutines.withContext
 import ru.noties.markwon.Markwon
 import ru.noties.markwon.SpannableConfiguration
 import ru.terrakok.gitlabclient.model.system.SchedulersProvider
@@ -14,8 +17,11 @@ class MarkDownConverter(
 ) {
 
     fun markdownToSpannable(raw: String): Single<CharSequence> =
-        Single
-            .fromCallable { Markwon.markdown(config, raw) }
-            .subscribeOn(schedulers.computation())
+        rxSingle { toSpannable(raw) }
             .observeOn(schedulers.ui())
+
+    suspend fun toSpannable(raw: String): CharSequence =
+        withContext(Dispatchers.Default) {
+            Markwon.markdown(config, raw)
+        }
 }
