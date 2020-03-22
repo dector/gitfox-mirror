@@ -1,5 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.about
 
+import com.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
 import moxy.InjectViewState
 import ru.terrakok.gitlabclient.Screens
@@ -8,7 +9,7 @@ import ru.terrakok.gitlabclient.model.interactor.AppInfoInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
-import timber.log.Timber
+import ru.terrakok.gitlabclient.util.e
 import javax.inject.Inject
 
 /**
@@ -29,7 +30,7 @@ class AboutPresenter @Inject constructor(
             try {
                 viewState.showAppInfo(appInfoInteractor.getAppInfo())
             } catch (e: Exception) {
-                Timber.e(e)
+                Napier.e(e)
             }
         }
     }

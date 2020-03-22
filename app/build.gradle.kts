@@ -126,7 +126,7 @@ dependencies {
     //Kotlin
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
     //Log
-    implementation("com.jakewharton.timber:timber:4.7.1")
+    implementation("com.github.aakira:napier-android:1.2.0")
     //MVP Moxy
     val moxyVersion = "2.0.2"
     kapt("com.github.moxy-community:moxy-compiler:$moxyVersion")

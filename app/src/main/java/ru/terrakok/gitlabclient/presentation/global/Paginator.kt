@@ -1,9 +1,9 @@
 package ru.terrakok.gitlabclient.presentation.global
 
+import com.github.aakira.napier.Napier
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -129,13 +129,13 @@ object Paginator {
         val sideEffects = Channel<SideEffect>()
 
         fun proceed(action: Action) {
-            Timber.d("Action: $action")
+            Napier.d("Action: $action")
             val newState = reducer<T>(action, state) { sideEffect ->
                 GlobalScope.launch { sideEffects.send(sideEffect) }
             }
             if (newState != state) {
                 state = newState
-                Timber.d("New state: $state")
+                Napier.d("New state: $state")
                 render(state)
             }
         }

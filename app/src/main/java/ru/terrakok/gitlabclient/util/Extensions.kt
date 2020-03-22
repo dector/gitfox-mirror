@@ -27,6 +27,7 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import com.github.aakira.napier.Napier
 import com.google.android.material.snackbar.Snackbar
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.android.support.SupportAppScreen
@@ -37,7 +38,6 @@ import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.entity.app.target.AppTarget
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
-import timber.log.Timber
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 03.03.17
@@ -111,7 +111,7 @@ fun Fragment.tryOpenLink(link: String?, basePath: String? = "https://google.com/
                 )
             )
         } catch (e: Exception) {
-            Timber.e("tryOpenLink error: $e")
+            Napier.e("tryOpenLink error: $e")
             startActivity(
                 Intent(
                     Intent.ACTION_VIEW,
@@ -179,7 +179,7 @@ fun TargetHeader.Public.openInfo(router: FlowRouter) {
         }
         else -> {
             internal?.let { targetInternal ->
-                Timber.i("Temporary open project flow")
+                Napier.i("Temporary open project flow")
                 // TODO: target click navigation (Handle new events).
                 router.startFlow(Screens.ProjectFlow(targetInternal.projectId))
             }
@@ -310,4 +310,8 @@ private fun View.requestApplyInsetsWhenAttached() {
             override fun onViewDetachedFromWindow(v: View) = Unit
         })
     }
+}
+
+fun Napier.e(e: Throwable) {
+    Napier.e("Error", e)
 }

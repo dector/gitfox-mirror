@@ -1,11 +1,11 @@
 package ru.terrakok.gitlabclient.presentation.libraries
 
+import com.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
 import moxy.InjectViewState
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.model.interactor.AppInfoInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
-import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -23,7 +23,7 @@ class LibrariesPresenter @Inject constructor(
             try {
                 viewState.showLibraries(appInfoInteractor.getAppLibraries())
             } catch (e: Exception) {
-                Timber.e("getAppLibraries error: $e")
+                Napier.e("getAppLibraries error: $e")
             }
         }
     }

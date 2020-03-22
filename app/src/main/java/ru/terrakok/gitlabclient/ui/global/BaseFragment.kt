@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.github.aakira.napier.Napier
 import moxy.MvpAppCompatFragment
 import ru.terrakok.gitlabclient.di.DI
 import ru.terrakok.gitlabclient.util.objectScopeName
-import timber.log.Timber
 import toothpick.Scope
 import toothpick.Toothpick
 
@@ -39,10 +39,10 @@ abstract class BaseFragment : MvpAppCompatFragment() {
         fragmentScopeName = savedInstanceState?.getString(STATE_SCOPE_NAME) ?: objectScopeName()
 
         if (Toothpick.isScopeOpen(fragmentScopeName)) {
-            Timber.d("Get exist UI scope: $fragmentScopeName")
+            Napier.d("Get exist UI scope: $fragmentScopeName")
             scope = Toothpick.openScope(fragmentScopeName)
         } else {
-            Timber.d("Init new UI scope: $fragmentScopeName -> $parentScopeName")
+            Napier.d("Init new UI scope: $fragmentScopeName -> $parentScopeName")
             scope = Toothpick.openScopes(parentScopeName, fragmentScopeName)
             installModules(scope)
         }
@@ -79,7 +79,7 @@ abstract class BaseFragment : MvpAppCompatFragment() {
         super.onDestroy()
         if (needCloseScope()) {
             // Destroy this fragment with scope
-            Timber.d("Destroy UI scope: $fragmentScopeName")
+            Napier.d("Destroy UI scope: $fragmentScopeName")
             Toothpick.closeScope(scope.name)
         }
     }

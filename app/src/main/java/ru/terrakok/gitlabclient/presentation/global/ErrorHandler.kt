@@ -1,6 +1,7 @@
 package ru.terrakok.gitlabclient.presentation.global
 
 import android.annotation.SuppressLint
+import com.github.aakira.napier.Napier
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -14,8 +15,8 @@ import ru.terrakok.gitlabclient.model.data.server.TokenInvalidError
 import ru.terrakok.gitlabclient.model.interactor.SessionInteractor
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import ru.terrakok.gitlabclient.model.system.message.SystemMessageNotifier
+import ru.terrakok.gitlabclient.util.e
 import ru.terrakok.gitlabclient.util.userMessage
-import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -35,7 +36,7 @@ class ErrorHandler @Inject constructor(
     }
 
     fun proceed(error: Throwable, messageListener: (String) -> Unit = {}) {
-        Timber.e(error)
+        Napier.e(error)
         when (error) {
             is ServerError -> when (error.errorCode) {
                 401 -> launch { authErrorChannel.send(true) }

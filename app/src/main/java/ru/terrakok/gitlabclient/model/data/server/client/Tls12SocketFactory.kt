@@ -1,14 +1,14 @@
 package ru.terrakok.gitlabclient.model.data.server.client
 
 import android.os.Build
+import com.github.aakira.napier.Napier
+import okhttp3.ConnectionSpec
+import okhttp3.OkHttpClient
+import okhttp3.TlsVersion
 import java.net.InetAddress
 import java.net.Socket
 import java.security.KeyStore
 import javax.net.ssl.*
-import okhttp3.ConnectionSpec
-import okhttp3.OkHttpClient
-import okhttp3.TlsVersion
-import timber.log.Timber
 
 // https://github.com/square/okhttp/issues/2372#issuecomment-244807676
 class Tls12SocketFactory(private val delegate: SSLSocketFactory) : SSLSocketFactory() {
@@ -98,7 +98,7 @@ class Tls12SocketFactory(private val delegate: SSLSocketFactory) : SSLSocketFact
                     sslSocketFactory(tlsSocketFactory, trustManager)
                     connectionSpecs(connectionSpecs)
                 } catch (e: Exception) {
-                    Timber.e(e, "Error while setting TLS 1.2 compatibility")
+                    Napier.e("Error while setting TLS 1.2 compatibility", e)
                 }
             }
         }
