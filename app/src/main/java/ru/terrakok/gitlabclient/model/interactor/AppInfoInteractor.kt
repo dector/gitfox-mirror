@@ -1,25 +1,23 @@
 package ru.terrakok.gitlabclient.model.interactor
 
-import io.reactivex.Single
-import javax.inject.Inject
 import ru.terrakok.gitlabclient.entity.app.develop.AppInfo
+import ru.terrakok.gitlabclient.entity.app.develop.AppLibrary
 import ru.terrakok.gitlabclient.model.data.storage.RawAppData
-import ru.terrakok.gitlabclient.model.system.SchedulersProvider
+import javax.inject.Inject
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 03.12.17.
  */
 class AppInfoInteractor @Inject constructor(
     private val rawAppData: RawAppData,
-    private val appInfo: AppInfo,
-    private val schedulers: SchedulersProvider
+    private val appInfo: AppInfo
 ) {
 
-    fun getAppInfo() = Single.just(appInfo)
+    fun getAppInfo(): AppInfo = appInfo
 
-    fun getAppLibraries() = rawAppData
-        .getAppLibraries()
-        .onErrorReturn { emptyList() }
-        .subscribeOn(schedulers.io())
-        .observeOn(schedulers.ui())
+    suspend fun getAppLibraries(): List<AppLibrary> = try {
+        rawAppData.getAppLibraries()
+    } catch (e: Exception) {
+        emptyList()
+    }
 }

@@ -1,9 +1,7 @@
 package ru.terrakok.gitlabclient.model.interactor
 
-import io.reactivex.Completable
-import java.net.URI
-import java.util.*
-import javax.inject.Inject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import ru.terrakok.gitlabclient.di.DI
 import ru.terrakok.gitlabclient.di.module.ServerModule
 import ru.terrakok.gitlabclient.entity.app.session.OAuthParams
@@ -11,15 +9,16 @@ import ru.terrakok.gitlabclient.entity.app.session.UserAccount
 import ru.terrakok.gitlabclient.model.data.cache.ProjectCache
 import ru.terrakok.gitlabclient.model.data.server.UserAccountApi
 import ru.terrakok.gitlabclient.model.data.storage.Prefs
-import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import toothpick.Toothpick
+import java.net.URI
+import java.util.*
+import javax.inject.Inject
 
 class SessionInteractor @Inject constructor(
     private val prefs: Prefs,
     private val oauthParams: OAuthParams,
     private val userAccountApi: UserAccountApi,
-    private val projectCache: ProjectCache,
-    private val schedulers: SchedulersProvider
+    private val projectCache: ProjectCache
 ) {
     private val hash = UUID.randomUUID().toString()
 
@@ -73,44 +72,35 @@ class SessionInteractor @Inject constructor(
         }
     }
 
-    fun login(oauthRedirect: String): Completable =
-        Completable.defer {
-            if (oauthRedirect.contains(hash)) {
-                userAccountApi
-                    .requestUserAccount(
-                        oauthParams.endpoint,
-                        oauthParams.appId,
-                        oauthParams.appKey,
-                        getQueryParameterFromUri(oauthRedirect, PARAMETER_CODE),
-                        oauthParams.redirectUrl
-                    )
-                    .subscribeOn(schedulers.io())
-                    .observeOn(schedulers.ui())
-                    .doOnSuccess { openNewAccount(it) }
-                    .ignoreElement()
-            } else {
-                Completable.error(RuntimeException("Not valid oauth hash!"))
-            }
+    suspend fun login(oauthRedirect: String) {
+        if (oauthRedirect.contains(hash)) {
+            val account = userAccountApi.requestUserAccount(
+                oauthParams.endpoint,
+                oauthParams.appId,
+                oauthParams.appKey,
+                getQueryParameterFromUri(oauthRedirect, PARAMETER_CODE),
+                oauthParams.redirectUrl
+            )
+            openNewAccount(account)
+        } else {
+            throw  RuntimeException("Not valid oauth hash!")
         }
+    }
 
-    fun loginOnCustomServer(
-        serverPath: String,
-        token: String
-    ): Completable =
-        userAccountApi
-            .requestUserAccount(serverPath, token)
-            .subscribeOn(schedulers.io())
-            .observeOn(schedulers.ui())
-            .doOnSuccess { openNewAccount(it) }
-            .ignoreElement()
+    suspend fun loginOnCustomServer(serverPath: String, token: String) {
+        val account = userAccountApi.requestUserAccount(serverPath, token)
+        openNewAccount(account)
+    }
 
-    private fun openNewAccount(userAccount: UserAccount) {
-        val newAccounts = prefs.accounts.toMutableList()
-        newAccounts.removeAll { it.id == userAccount.id }
-        newAccounts.add(userAccount)
-        prefs.selectedAccount = userAccount.id
-        prefs.accounts = newAccounts
-        initNewSession(userAccount)
+    private suspend fun openNewAccount(userAccount: UserAccount) {
+        withContext(Dispatchers.Main) {
+            val newAccounts = prefs.accounts.toMutableList()
+            newAccounts.removeAll { it.id == userAccount.id }
+            newAccounts.add(userAccount)
+            prefs.selectedAccount = userAccount.id
+            prefs.accounts = newAccounts
+            initNewSession(userAccount)
+        }
     }
 
     private fun initNewSession(newAccount: UserAccount?) {

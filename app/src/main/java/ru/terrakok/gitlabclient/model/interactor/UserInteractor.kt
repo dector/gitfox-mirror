@@ -1,19 +1,15 @@
 package ru.terrakok.gitlabclient.model.interactor
 
-import javax.inject.Inject
+import ru.terrakok.gitlabclient.entity.User
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
-import ru.terrakok.gitlabclient.model.system.SchedulersProvider
+import javax.inject.Inject
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 25.11.17.
  */
 class UserInteractor @Inject constructor(
-    private val api: GitlabApi,
-    private val schedulers: SchedulersProvider
+    private val api: GitlabApi
 ) {
 
-    fun getUser(id: Long) = api
-        .getUser(id)
-        .subscribeOn(schedulers.io())
-        .observeOn(schedulers.ui())
+    suspend fun getUser(id: Long): User = api.getUser(id)
 }

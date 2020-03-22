@@ -1,6 +1,5 @@
 package ru.terrakok.gitlabclient.model.data.server
 
-import io.reactivex.Single
 import ru.terrakok.gitlabclient.entity.OrderBy
 import ru.terrakok.gitlabclient.entity.Project
 import ru.terrakok.gitlabclient.entity.Sort
@@ -15,7 +14,7 @@ class ApiWithProjectCache(
     private val projectCache: ProjectCache
 ) : GitlabApi by serverApi {
 
-    override fun getProjects(
+    override suspend fun getProjects(
         archived: Boolean?,
         visibility: Visibility?,
         orderBy: OrderBy?,
@@ -27,7 +26,7 @@ class ApiWithProjectCache(
         starred: Boolean?,
         page: Int,
         pageSize: Int
-    ): Single<List<Project>> =
+    ): List<Project> =
         serverApi
             .getProjects(
                 archived,
@@ -42,20 +41,12 @@ class ApiWithProjectCache(
                 page,
                 pageSize
             )
-            .doOnSuccess { projectCache.put(it) }
+            .also { projectCache.put(it) }
 
-    override fun getProject(
+    override suspend fun getProject(
         id: Long,
         statistics: Boolean
-    ): Single<Project> =
-        Single
-            .defer {
-                val cachedProject = projectCache.get(id)
-                if (cachedProject == null) {
-                    serverApi.getProject(id, statistics)
-                        .doOnSuccess { projectCache.put(listOf(it)) }
-                } else {
-                    Single.just(cachedProject)
-                }
-            }
+    ): Project =
+        projectCache.get(id) ?: serverApi.getProject(id, statistics)
+            .also { projectCache.put(listOf(it)) }
 }

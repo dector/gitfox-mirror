@@ -1,7 +1,10 @@
 package ru.terrakok.gitlabclient.presentation.project.mergerequest
 
-import io.reactivex.Observable
-import io.reactivex.disposables.Disposable
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import moxy.InjectViewState
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
@@ -31,18 +34,20 @@ class ProjectMergeRequestsPresenter @Inject constructor(
 ) : BasePresenter<ProjectMergeRequestsView>() {
 
     private val projectId = projectIdWrapper.value
-    private var pageDisposable: Disposable? = null
+    private var pageJob: Job? = null
 
     init {
         paginator.render = { viewState.renderPaginatorState(it) }
-        paginator.sideEffects.subscribe { effect ->
-            when (effect) {
-                is Paginator.SideEffect.LoadPage -> loadNewPage(effect.currentPage)
-                is Paginator.SideEffect.ErrorEvent -> {
-                    errorHandler.proceed(effect.error) { viewState.showMessage(it) }
+        launch {
+            paginator.sideEffects.consumeEach { effect ->
+                when (effect) {
+                    is Paginator.SideEffect.LoadPage -> loadNewPage(effect.currentPage)
+                    is Paginator.SideEffect.ErrorEvent -> {
+                        errorHandler.proceed(effect.error) { viewState.showMessage(it) }
+                    }
                 }
             }
-        }.connect()
+        }
     }
 
     override fun onFirstViewAttach() {
@@ -50,36 +55,32 @@ class ProjectMergeRequestsPresenter @Inject constructor(
 
         refreshMergeRequests()
         mergeRequestInteractor.mergeRequestChanges
-            .subscribe { paginator.proceed(Paginator.Action.Refresh) }
-            .connect()
+            .onEach { paginator.proceed(Paginator.Action.Refresh) }
+            .launchIn(this)
     }
 
     private fun loadNewPage(page: Int) {
-        pageDisposable?.dispose()
-        pageDisposable =
-            mergeRequestInteractor.getMergeRequests(projectId, mergeRequestState, page = page)
-                .flattenAsObservable { it }
-                .concatMap { item ->
-                    when (item) {
-                        is TargetHeader.Public -> {
-                            mdConverter.markdownToSpannable(item.body.toString())
-                                .map { md -> item.copy(body = md) }
-                                .toObservable()
+        pageJob?.cancel()
+        pageJob = launch {
+            try {
+                val data = mergeRequestInteractor.getMergeRequests(
+                        projectId,
+                        mergeRequestState,
+                        page = page
+                    )
+                    .map { item ->
+                        when (item) {
+                            is TargetHeader.Public ->
+                                item.copy(body = mdConverter.toSpannable(item.body.toString()))
+                            is TargetHeader.Confidential -> item
                         }
-                        is TargetHeader.Confidential -> Observable.just(item)
                     }
-                }
-                .toList()
-                .subscribe(
-                    { data ->
-                        paginator.proceed(Paginator.Action.NewPage(page, data))
-                    },
-                    { e ->
-                        errorHandler.proceed(e)
-                        paginator.proceed(Paginator.Action.PageError(e))
-                    }
-                )
-        pageDisposable?.connect()
+                paginator.proceed(Paginator.Action.NewPage(page, data))
+            } catch (e: Exception) {
+                errorHandler.proceed(e)
+                paginator.proceed(Paginator.Action.PageError(e))
+            }
+        }
     }
 
     fun onMergeRequestClick(item: TargetHeader.Public) = item.openInfo(router)

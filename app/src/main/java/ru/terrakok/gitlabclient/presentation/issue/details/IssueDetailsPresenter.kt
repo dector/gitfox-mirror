@@ -1,11 +1,12 @@
 package ru.terrakok.gitlabclient.presentation.issue.details
 
-import io.reactivex.Single
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.launch
 import moxy.InjectViewState
 import ru.terrakok.gitlabclient.di.IssueId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
-import ru.terrakok.gitlabclient.entity.Issue
 import ru.terrakok.gitlabclient.model.interactor.IssueInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
@@ -29,30 +30,23 @@ class IssueDetailsPresenter @Inject constructor(
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        issueInteractor
-            .issueChanges
-            .startWith(issueId)
-            .filter { it == issueId }
-            .switchMapMaybe {
-                getIssue()
-                    .toMaybe()
-                    .doOnSubscribe { viewState.showEmptyProgress(true) }
-                    .doAfterTerminate { viewState.showEmptyProgress(false) }
-                    .doOnSuccess { (issue, mdDescription) -> viewState.showDetails(issue, mdDescription) }
-                    .doOnError { errorHandler.proceed(it, { viewState.showMessage(it) }) }
-                    .onErrorComplete()
-            }
-            .subscribe()
-            .connect()
+        launch {
+            loadIssue()
+            issueInteractor.issueChanges
+                .filter { it == issueId }
+                .collect { loadIssue() }
+        }
     }
 
-    private fun getIssue(): Single<Pair<Issue, CharSequence>> {
-        return issueInteractor
-            .getIssue(projectId, issueId)
-            .flatMap { issue ->
-                mdConverter
-                    .markdownToSpannable(issue.description)
-                    .map { Pair(issue, it) }
-            }
+    private suspend fun loadIssue() {
+        viewState.showEmptyProgress(true)
+        try {
+            val issue = issueInteractor.getIssue(projectId, issueId)
+            val spnbl = mdConverter.toSpannable(issue.description)
+            viewState.showDetails(issue, spnbl)
+        } catch (e: Exception) {
+            errorHandler.proceed(e) { viewState.showMessage(it) }
+        }
+        viewState.showEmptyProgress(false)
     }
 }

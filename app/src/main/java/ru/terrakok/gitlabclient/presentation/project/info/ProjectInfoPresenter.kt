@@ -1,6 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.project.info
 
-import javax.inject.Inject
+import kotlinx.coroutines.launch
 import moxy.InjectViewState
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
@@ -8,6 +8,7 @@ import ru.terrakok.gitlabclient.model.interactor.ProjectInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
+import javax.inject.Inject
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 27.04.17.
@@ -25,21 +26,20 @@ class ProjectInfoPresenter @Inject constructor(
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
-        projectInteractor
-            .getProject(projectId)
-            .flatMap { project ->
-                projectInteractor
-                    .getProjectReadme(project)
-                    .flatMap { mdConverter.markdownToSpannable(it) }
-                    .onErrorReturnItem("")
-                    .map { mdReadme -> Pair(project, mdReadme) }
+        launch {
+            viewState.showProgress(true)
+            try {
+                val project = projectInteractor.getProject(projectId)
+                val readme = try {
+                    mdConverter.toSpannable(projectInteractor.getProjectReadme(project))
+                } catch (e: Exception) {
+                    ""
+                }
+                viewState.showProject(project, readme)
+            } catch (e: Exception) {
+                errorHandler.proceed(e) { viewState.showMessage(it) }
             }
-            .doOnSubscribe { viewState.showProgress(true) }
-            .doAfterTerminate { viewState.showProgress(false) }
-            .subscribe(
-                { (project, mdReadme) -> viewState.showProject(project, mdReadme) },
-                { errorHandler.proceed(it, { viewState.showMessage(it) }) }
-            )
-            .connect()
+            viewState.showProgress(false)
+        }
     }
 }

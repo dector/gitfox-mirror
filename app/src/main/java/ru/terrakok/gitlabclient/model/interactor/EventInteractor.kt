@@ -1,8 +1,5 @@
 package ru.terrakok.gitlabclient.model.interactor
 
-import io.reactivex.Observable
-import io.reactivex.Single
-import io.reactivex.functions.BiFunction
 import org.threeten.bp.ZonedDateTime
 import ru.terrakok.gitlabclient.di.DefaultPageSize
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
@@ -10,7 +7,6 @@ import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.entity.app.target.*
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
-import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import javax.inject.Inject
 
 /**
@@ -18,13 +14,12 @@ import javax.inject.Inject
  */
 class EventInteractor @Inject constructor(
     private val api: GitlabApi,
-    private val schedulers: SchedulersProvider,
     @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>,
     private val markDownUrlResolver: MarkDownUrlResolver
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
 
-    fun getEvents(
+    suspend fun getEvents(
         action: EventAction? = null,
         targetType: EventTarget? = null,
         beforeDay: ZonedDateTime? = null,
@@ -33,8 +28,8 @@ class EventInteractor @Inject constructor(
         orderBy: OrderBy = OrderBy.UPDATED_AT,
         page: Int,
         pageSize: Int = defaultPageSize
-    ): Single<List<TargetHeader>> = api
-        .getEvents(
+    ): List<TargetHeader> {
+        val sourceEvents = api.getEvents(
             action,
             targetType,
             beforeDay?.run { this.toLocalDate().toString() },
@@ -44,21 +39,12 @@ class EventInteractor @Inject constructor(
             EventScope.ALL,
             page,
             pageSize
-        )
-        .map { filterBrokenEvents(it) }
-        .flatMap { events ->
-            Single.zip(
-                Single.just(events),
-                getDistinctProjects(events),
-                BiFunction<List<Event>, Map<Long, Project>, List<TargetHeader>> { sourceEvents, projects ->
-                    sourceEvents.map { getTargetHeader(it, projects[it.projectId]) }
-                }
-            )
-        }
-        .subscribeOn(schedulers.io())
-        .observeOn(schedulers.ui())
+        ).apply { filterBrokenEvents(this) }
+        val projects = getDistinctProjects(sourceEvents)
+        return sourceEvents.map { getTargetHeader(it, projects[it.projectId]) }
+    }
 
-    fun getProjectEvents(
+    suspend fun getProjectEvents(
         projectId: Long,
         action: EventAction? = null,
         targetType: EventTarget? = null,
@@ -68,8 +54,9 @@ class EventInteractor @Inject constructor(
         orderBy: OrderBy = OrderBy.UPDATED_AT,
         page: Int,
         pageSize: Int = defaultPageSize
-    ): Single<List<TargetHeader>> = api
-        .getProjectEvents(
+    ): List<TargetHeader> {
+
+        val sourceEvents = api.getProjectEvents(
             projectId,
             action,
             targetType,
@@ -79,21 +66,13 @@ class EventInteractor @Inject constructor(
             orderBy,
             page,
             pageSize
-        )
-        .map { filterBrokenEvents(it) }
-        .flatMap { events ->
-            Single.zip(
-                Single.just(events),
-                getDistinctProjects(events),
-                BiFunction<List<Event>, Map<Long, Project>, List<TargetHeader>> { sourceEvents, projects ->
-                    sourceEvents.map { getTargetHeader(it, projects[it.projectId]) }
-                }
-            )
-        }
-        .subscribeOn(schedulers.io())
-        .observeOn(schedulers.ui())
+        ).apply { filterBrokenEvents(this) }
+        val projects = getDistinctProjects(sourceEvents)
+        return sourceEvents.map { getTargetHeader(it, projects[it.projectId]) }
+    }
 
-    private fun filterBrokenEvents(events: List<Event>): List<Event> = events.filter { !isNoteBroken(it) }
+    private fun filterBrokenEvents(events: List<Event>): List<Event> =
+        events.filter { !isNoteBroken(it) }
 
     /**
      * Sometimes GitLab returns event with targetType = DIFF_NOTE || targetType = _NOTE, but _note = null.
@@ -101,16 +80,14 @@ class EventInteractor @Inject constructor(
      */
     private fun isNoteBroken(event: Event) =
         event.targetType != null &&
-            (event.targetType == EventTargetType.DIFF_NOTE || event.targetType == EventTargetType.NOTE) &&
-            event.note == null
+                (event.targetType == EventTargetType.DIFF_NOTE || event.targetType == EventTargetType.NOTE) &&
+                event.note == null
 
-    private fun getDistinctProjects(events: List<Event>): Single<Map<Long, Project>> {
-        return Observable.fromIterable(events)
-            .filter { it.projectId != 0L }
-            .distinct { it.projectId }
-            .flatMapSingle { event -> api.getProject(event.projectId) }
-            .toMap { it.id }
-    }
+    private suspend fun getDistinctProjects(events: List<Event>): Map<Long, Project> =
+        events.filter { it.projectId != 0L }
+            .distinctBy { it.projectId }
+            .associate { it.projectId to api.getProject(it.projectId) }
+
 
     private fun getTargetHeader(event: Event, project: Project?): TargetHeader {
         // There are two event types: public and confidential.

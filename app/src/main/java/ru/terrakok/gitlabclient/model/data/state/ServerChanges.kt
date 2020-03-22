@@ -1,59 +1,62 @@
 package ru.terrakok.gitlabclient.model.data.state
 
-import com.jakewharton.rxrelay2.PublishRelay
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.channels.sendBlocking
+import kotlinx.coroutines.flow.asFlow
 import javax.inject.Inject
-import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 
-class ServerChanges @Inject constructor(
-    schedulers: SchedulersProvider
-) {
-    private val issueRelay = PublishRelay.create<Long>()
-    private val mergeRequestRelay = PublishRelay.create<Long>()
-    private val projectRelay = PublishRelay.create<Long>()
-    private val labelRelay = PublishRelay.create<Long>()
-    private val milestoneRelay = PublishRelay.create<Long>()
-    private val todoRelay = PublishRelay.create<Long>()
-    private val userRelay = PublishRelay.create<Long>()
-    private val memberRelay = PublishRelay.create<Long>()
+@OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
+class ServerChanges @Inject constructor() {
 
-    val issueChanges = issueRelay.hide().observeOn(schedulers.ui())
-    val mergeRequestChanges = mergeRequestRelay.hide().observeOn(schedulers.ui())
-    val projectChanges = projectRelay.hide().observeOn(schedulers.ui())
-    val labelChanges = labelRelay.hide().observeOn(schedulers.ui())
-    val milestoneChanges = milestoneRelay.hide().observeOn(schedulers.ui())
-    val todoChanges = todoRelay.hide().observeOn(schedulers.ui())
-    val userChanges = userRelay.hide().observeOn(schedulers.ui())
-    val memberChanges = memberRelay.hide().observeOn(schedulers.ui())
+    private val issueChannel = BroadcastChannel<Long>(1)
+    private val mergeRequestChannel = BroadcastChannel<Long>(1)
+    private val projectChannel = BroadcastChannel<Long>(1)
+    private val labelChannel = BroadcastChannel<Long>(1)
+    private val milestoneChannel = BroadcastChannel<Long>(1)
+    private val todoChannel = BroadcastChannel<Long>(1)
+    private val userChannel = BroadcastChannel<Long>(1)
+    private val memberChannel = BroadcastChannel<Long>(1)
+
+    val issueChanges = issueChannel.asFlow()
+    val mergeRequestChanges = mergeRequestChannel.asFlow()
+    val projectChanges = projectChannel.asFlow()
+    val labelChanges = labelChannel.asFlow()
+    val milestoneChanges = milestoneChannel.asFlow()
+    val todoChanges = todoChannel.asFlow()
+    val userChanges = userChannel.asFlow()
+    val memberChanges = memberChannel.asFlow()
 
     fun issueChanged(id: Long = -1) {
-        issueRelay.accept(id)
+        issueChannel.sendBlocking(id)
     }
 
     fun mergeRequestChanged(id: Long = -1) {
-        mergeRequestRelay.accept(id)
+        mergeRequestChannel.sendBlocking(id)
     }
 
     fun projectChanged(id: Long = -1) {
-        projectRelay.accept(id)
+        projectChannel.sendBlocking(id)
     }
 
     fun labelChanged(id: Long = -1) {
-        labelRelay.accept(id)
+        labelChannel.sendBlocking(id)
     }
 
     fun milestoneChanged(id: Long = -1) {
-        milestoneRelay.accept(id)
+        milestoneChannel.sendBlocking(id)
     }
 
     fun todoChanged(id: Long = -1) {
-        todoRelay.accept(id)
+        todoChannel.sendBlocking(id)
     }
 
     fun userChanged(id: Long = -1) {
-        userRelay.accept(id)
+        userChannel.sendBlocking(id)
     }
 
     fun memberChanged(id: Long = -1) {
-        memberRelay.accept(id)
+        memberChannel.sendBlocking(id)
     }
 }

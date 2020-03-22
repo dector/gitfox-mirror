@@ -1,6 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.user.info
 
-import javax.inject.Inject
+import kotlinx.coroutines.launch
 import moxy.InjectViewState
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.UserId
@@ -8,6 +8,7 @@ import ru.terrakok.gitlabclient.model.interactor.UserInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
+import javax.inject.Inject
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 25.11.17.
@@ -24,15 +25,16 @@ class UserInfoPresenter @Inject constructor(
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
-        userInteractor
-            .getUser(userId)
-            .doOnSubscribe { viewState.showProgress(true) }
-            .doAfterTerminate { viewState.showProgress(false) }
-            .subscribe(
-                { viewState.showUser(it) },
-                { errorHandler.proceed(it, { viewState.showMessage(it) }) }
-            )
-            .connect()
+        launch {
+            viewState.showProgress(true)
+            try {
+                val user = userInteractor.getUser(userId)
+                viewState.showUser(user)
+            } catch (e: Exception) {
+                errorHandler.proceed(e) { viewState.showMessage(it) }
+            }
+            viewState.showProgress(false)
+        }
     }
 
     fun onBackPressed() = router.exit()

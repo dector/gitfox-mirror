@@ -1,26 +1,20 @@
 package ru.terrakok.gitlabclient.model.interactor
 
-import javax.inject.Inject
+import ru.terrakok.gitlabclient.entity.Commit
+import ru.terrakok.gitlabclient.entity.DiffData
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
-import ru.terrakok.gitlabclient.model.system.SchedulersProvider
+import javax.inject.Inject
 
 /**
  * @author Valentin Logvinovitch (glvvl) on 18.06.19.
  */
 class CommitInteractor @Inject constructor(
-    private val api: GitlabApi,
-    private val schedulers: SchedulersProvider
+    private val api: GitlabApi
 ) {
 
-    fun getCommit(projectId: Long, commitId: String) =
-        api
-            .getRepositoryCommit(projectId, commitId)
-            .subscribeOn(schedulers.io())
-            .observeOn(schedulers.ui())
+    suspend fun getCommit(projectId: Long, commitId: String): Commit =
+        api.getRepositoryCommit(projectId, commitId)
 
-    fun getCommitDiffData(projectId: Long, commitId: String) =
-        api
-            .getCommitDiffData(projectId, commitId)
-            .subscribeOn(schedulers.io())
-            .observeOn(schedulers.ui())
+    suspend fun getCommitDiffData(projectId: Long, commitId: String): List<DiffData> =
+        api.getCommitDiffData(projectId, commitId)
 }

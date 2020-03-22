@@ -1,6 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.mergerequest.details
 
-import javax.inject.Inject
+import kotlinx.coroutines.launch
 import moxy.InjectViewState
 import ru.terrakok.gitlabclient.di.MergeRequestId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
@@ -9,6 +9,7 @@ import ru.terrakok.gitlabclient.model.interactor.MergeRequestInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
+import javax.inject.Inject
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 31.05.19.
@@ -28,19 +29,16 @@ class MergeRequestDetailsPresenter @Inject constructor(
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
-        mrInteractor
-            .getMergeRequest(projectId, mrId)
-            .flatMap { mr ->
-                mdConverter
-                    .markdownToSpannable(mr.description)
-                    .map { Pair(mr, it) }
+        launch {
+            viewState.showEmptyProgress(true)
+            try {
+                val mr = mrInteractor.getMergeRequest(projectId, mrId)
+                val spnbl = mdConverter.toSpannable(mr.description)
+                viewState.showDetails(mr, spnbl)
+            } catch (e: Exception) {
+                errorHandler.proceed(e) { viewState.showMessage(it) }
             }
-            .doOnSubscribe { viewState.showEmptyProgress(true) }
-            .doAfterTerminate { viewState.showEmptyProgress(false) }
-            .subscribe(
-                { (mr, mdDescription) -> viewState.showDetails(mr, mdDescription) },
-                { errorHandler.proceed(it, { viewState.showMessage(it) }) }
-            )
-            .connect()
+            viewState.showEmptyProgress(false)
+        }
     }
 }

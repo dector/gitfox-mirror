@@ -1,9 +1,11 @@
 package ru.terrakok.gitlabclient.presentation.global
 
 import android.annotation.SuppressLint
-import com.jakewharton.rxrelay2.PublishRelay
-import java.util.concurrent.TimeUnit
-import javax.inject.Inject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.launch
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
@@ -11,10 +13,10 @@ import ru.terrakok.gitlabclient.model.data.server.ServerError
 import ru.terrakok.gitlabclient.model.data.server.TokenInvalidError
 import ru.terrakok.gitlabclient.model.interactor.SessionInteractor
 import ru.terrakok.gitlabclient.model.system.ResourceManager
-import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.model.system.message.SystemMessageNotifier
 import ru.terrakok.gitlabclient.util.userMessage
 import timber.log.Timber
+import javax.inject.Inject
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 03.11.17.
@@ -23,11 +25,10 @@ class ErrorHandler @Inject constructor(
     private val router: Router,
     private val sessionInteractor: SessionInteractor,
     private val systemMessageNotifier: SystemMessageNotifier,
-    private val resourceManager: ResourceManager,
-    private val schedulers: SchedulersProvider
-) {
+    private val resourceManager: ResourceManager
+) : CoroutineScope by CoroutineScope(Dispatchers.Main) {
 
-    private val authErrorRelay = PublishRelay.create<Boolean>()
+    private val authErrorChannel = Channel<Boolean>()
 
     init {
         subscribeOnAuthErrors()
@@ -37,20 +38,26 @@ class ErrorHandler @Inject constructor(
         Timber.e(error)
         when (error) {
             is ServerError -> when (error.errorCode) {
-                401 -> authErrorRelay.accept(true)
+                401 -> launch { authErrorChannel.send(true) }
                 else -> messageListener(error.userMessage(resourceManager))
             }
-            is TokenInvalidError -> authErrorRelay.accept(true)
+            is TokenInvalidError -> launch { authErrorChannel.send(true) }
             else -> messageListener(error.userMessage(resourceManager))
         }
     }
 
     @SuppressLint("CheckResult")
     private fun subscribeOnAuthErrors() {
-        authErrorRelay
-            .throttleFirst(50, TimeUnit.MILLISECONDS)
-            .observeOn(schedulers.ui())
-            .subscribe { logout() }
+        launch {
+            var lastErrorTime = 0L
+            authErrorChannel.consumeEach {
+                val current = System.currentTimeMillis()
+                if (current - lastErrorTime > 50) {
+                    logout()
+                }
+                lastErrorTime = current
+            }
+        }
     }
 
     private fun logout() {

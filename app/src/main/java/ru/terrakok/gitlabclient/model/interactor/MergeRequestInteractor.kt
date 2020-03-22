@@ -1,8 +1,8 @@
 package ru.terrakok.gitlabclient.model.interactor
 
-import io.reactivex.Observable
-import io.reactivex.Single
-import io.reactivex.functions.BiFunction
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.Flow
 import org.threeten.bp.ZonedDateTime
 import ru.terrakok.gitlabclient.di.DefaultPageSize
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
@@ -14,23 +14,19 @@ import ru.terrakok.gitlabclient.entity.app.target.*
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
-import ru.terrakok.gitlabclient.model.system.SchedulersProvider
-import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 
 class MergeRequestInteractor @Inject constructor(
     private val api: GitlabApi,
     serverChanges: ServerChanges,
-    private val schedulers: SchedulersProvider,
     @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>,
     private val markDownUrlResolver: MarkDownUrlResolver
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
-    private val mrRequests = ConcurrentHashMap<Pair<Long, Long>, Single<MergeRequest>>()
 
-    val mergeRequestChanges = serverChanges.mergeRequestChanges
+    val mergeRequestChanges: Flow<Long> = serverChanges.mergeRequestChanges
 
-    fun getMyMergeRequests(
+    suspend fun getMyMergeRequests(
         state: MergeRequestState? = null,
         milestone: String? = null,
         viewType: MergeRequestViewType? = null,
@@ -45,24 +41,16 @@ class MergeRequestInteractor @Inject constructor(
         sort: Sort? = null,
         page: Int,
         pageSize: Int = defaultPageSize
-    ) = api
-        .getMyMergeRequests(
+    ): List<TargetHeader> {
+        val mrs = api.getMyMergeRequests(
             state, milestone, viewType, labels, createdBefore, createdAfter, scope,
             authorId, assigneeId, meReactionEmoji, orderBy, sort, page, pageSize
         )
-        .flatMap { mrs ->
-            Single.zip(
-                Single.just(mrs),
-                getDistinctProjects(mrs),
-                BiFunction<List<MergeRequest>, Map<Long, Project>, List<TargetHeader>> { sourceMrs, projects ->
-                    sourceMrs.map { getTargetHeader(it, projects[it.projectId]!!) }
-                }
-            )
-        }
-        .subscribeOn(schedulers.io())
-        .observeOn(schedulers.ui())
+        val projects = getDistinctProjects(mrs)
+        return mrs.map { getTargetHeader(it, projects[it.projectId]!!) }
+    }
 
-    fun getMergeRequests(
+    suspend fun getMergeRequests(
         projectId: Long,
         state: MergeRequestState? = null,
         milestone: String? = null,
@@ -78,29 +66,19 @@ class MergeRequestInteractor @Inject constructor(
         sort: Sort? = null,
         page: Int,
         pageSize: Int = defaultPageSize
-    ) = api
-        .getMergeRequests(
+    ): List<TargetHeader> {
+        val mrs = api.getMergeRequests(
             projectId, state, milestone, viewType, labels, createdBefore, createdAfter,
             scope, authorId, assigneeId, meReactionEmoji, orderBy, sort, page, pageSize
         )
-        .flatMap { mrs ->
-            Single.zip(
-                Single.just(mrs),
-                getDistinctProjects(mrs),
-                BiFunction<List<MergeRequest>, Map<Long, Project>, List<TargetHeader>> { sourceMrs, projects ->
-                    sourceMrs.map { getTargetHeader(it, projects[it.projectId]!!) }
-                }
-            )
-        }
-        .subscribeOn(schedulers.io())
-        .observeOn(schedulers.ui())
-
-    private fun getDistinctProjects(mrs: List<MergeRequest>): Single<Map<Long, Project>> {
-        return Observable.fromIterable(mrs)
-            .distinct { it.projectId }
-            .flatMapSingle { mr -> api.getProject(mr.projectId) }
-            .toMap { it.id }
+        val projects = getDistinctProjects(mrs)
+        return mrs.map { getTargetHeader(it, projects[it.projectId]!!) }
     }
+
+    private suspend fun getDistinctProjects(mrs: List<MergeRequest>): Map<Long, Project> =
+        mrs.distinctBy { it.projectId }.associate { mr ->
+            mr.projectId to api.getProject(mr.projectId)
+        }
 
     private fun getTargetHeader(mr: MergeRequest, project: Project): TargetHeader {
         val badges = mutableListOf<TargetBadge>()
@@ -139,119 +117,92 @@ class MergeRequestInteractor @Inject constructor(
         )
     }
 
-    fun getMergeRequest(
+    suspend fun getMergeRequest(
         projectId: Long,
         mergeRequestId: Long
-    ) = Single
-        .defer {
-            val key = Pair(projectId, mergeRequestId)
-            mrRequests.getOrPut(key) {
-                Single
-                    .zip(
-                        api.getProject(projectId),
-                        api.getMergeRequest(projectId, mergeRequestId),
-                        BiFunction<Project, MergeRequest, MergeRequest> { project, mr ->
-                            val resolved = markDownUrlResolver.resolve(mr.description, project)
-                            if (resolved != mr.description) mr.copy(description = resolved)
-                            else mr
-                        }
-                    )
-                    .toObservable()
-                    .share()
-                    .firstOrError()
-            }
-        }
-        .subscribeOn(schedulers.io())
-        .observeOn(schedulers.ui())
+    ): MergeRequest = coroutineScope {
+        val projectAsync = async { api.getProject(projectId) }
+        val mr = api.getMergeRequest(projectId, mergeRequestId)
 
-    fun getMergeRequestNotes(
+        val resolved = markDownUrlResolver.resolve(mr.description, projectAsync.await())
+        if (resolved != mr.description) mr.copy(description = resolved)
+        else mr
+    }
+
+    suspend fun getMergeRequestNotes(
         projectId: Long,
         mergeRequestId: Long,
         sort: Sort? = Sort.ASC,
         orderBy: OrderBy? = OrderBy.UPDATED_AT,
         page: Int,
         pageSize: Int = defaultPageSize
-    ) = Single
-        .zip(
-            api.getProject(projectId),
-            api.getMergeRequestNotes(projectId, mergeRequestId, sort, orderBy, page, pageSize),
-            BiFunction<Project, List<Note>, List<Note>> { project, notes ->
-                notes.map { resolveMarkDownUrl(it, project) }
-            }
-        )
-        .subscribeOn(schedulers.io())
-        .observeOn(schedulers.ui())
+    ): List<Note> = coroutineScope {
+        val projectAsync = async { api.getProject(projectId) }
+        val notes =
+            api.getMergeRequestNotes(projectId, mergeRequestId, sort, orderBy, page, pageSize)
+        notes.map { resolveMarkDownUrl(it, projectAsync.await()) }
+    }
 
-    fun getAllMergeRequestNotes(
+    @OptIn(ExperimentalStdlibApi::class)
+    suspend fun getAllMergeRequestNotes(
         projectId: Long,
         mergeRequestId: Long,
         sort: Sort? = Sort.ASC,
         orderBy: OrderBy = OrderBy.UPDATED_AT
-    ) = Single
-        .zip(
-            api.getProject(projectId),
-            getAllMergeRequestNotePages(projectId, mergeRequestId, sort, orderBy),
-            BiFunction<Project, List<Note>, List<Note>> { project, notes ->
-                notes.map { resolveMarkDownUrl(it, project) }
-            }
-        )
-        .subscribeOn(schedulers.io())
-        .observeOn(schedulers.ui())
-
-    private fun getAllMergeRequestNotePages(projectId: Long, mergeRequestId: Long, sort: Sort?, orderBy: OrderBy?) =
-        Observable.range(1, Int.MAX_VALUE)
-            .concatMap { page ->
-                api.getMergeRequestNotes(projectId, mergeRequestId, sort, orderBy, page, GitlabApi.MAX_PAGE_SIZE)
-                    .toObservable()
-            }
-            .takeWhile { notes -> notes.isNotEmpty() }
-            .flatMapIterable { it }
-            .toList()
+    ): List<Note> = coroutineScope {
+        val projectAsync = async { api.getProject(projectId) }
+        val notes = buildList {
+            var i = 1
+            do {
+                val page = api.getMergeRequestNotes(
+                    projectId, mergeRequestId, sort,
+                    orderBy, i, GitlabApi.MAX_PAGE_SIZE
+                )
+                addAll(page)
+                i++
+            } while (page.isNotEmpty())
+        }
+        notes.map { resolveMarkDownUrl(it, projectAsync.await()) }
+    }
 
     private fun resolveMarkDownUrl(it: Note, project: Project): Note {
         val resolved = markDownUrlResolver.resolve(it.body, project)
         return if (resolved != it.body) it.copy(body = resolved) else it
     }
 
-    fun createMergeRequestNote(projectId: Long, issueId: Long, body: String) =
+    suspend fun createMergeRequestNote(projectId: Long, issueId: Long, body: String): Note =
         api.createMergeRequestNote(projectId, issueId, body)
-            .subscribeOn(schedulers.io())
-            .observeOn(schedulers.ui())
 
-    fun getMergeRequestCommits(
+    @OptIn(ExperimentalStdlibApi::class)
+    suspend fun getMergeRequestCommits(
         projectId: Long,
         mergeRequestId: Long,
         page: Int,
         pageSize: Int = defaultPageSize
-    ) = Single
-        .zip(
-            getAllMergeRequestParticipants(projectId, mergeRequestId),
-            api.getMergeRequestCommits(projectId, mergeRequestId, page, pageSize),
-            BiFunction<List<ShortUser>, List<Commit>, List<CommitWithShortUser>> { participants, commits ->
-                commits.map { commit ->
-                    CommitWithShortUser(
-                        commit,
-                        participants.find { it.name == commit.authorName || it.username == commit.authorName }
-                    )
-                }
-            }
-        )
-        .subscribeOn(schedulers.io())
-        .observeOn(schedulers.ui())
+    ): List<CommitWithShortUser> = coroutineScope {
+        val commitsAsync = async {
+            api.getMergeRequestCommits(projectId, mergeRequestId, page, pageSize)
+        }
+        val participants: List<ShortUser> = buildList {
+            var i = 1
+            do {
+                val p = api.getMergeRequestParticipants(
+                    projectId, mergeRequestId, page, GitlabApi.MAX_PAGE_SIZE
+                )
+                addAll(p)
+                i++
+            } while (p.isNotEmpty())
+        }
+        commitsAsync.await().map { commit ->
+            CommitWithShortUser(
+                commit,
+                participants.find { it.name == commit.authorName || it.username == commit.authorName }
+            )
+        }
+    }
 
-    private fun getAllMergeRequestParticipants(projectId: Long, mergeRequestId: Long) =
-        Observable.range(1, Int.MAX_VALUE)
-            .concatMap { page ->
-                api.getMergeRequestParticipants(projectId, mergeRequestId, page, GitlabApi.MAX_PAGE_SIZE)
-                    .toObservable()
-            }
-            .takeWhile { participants -> participants.isNotEmpty() }
-            .flatMapIterable { it }
-            .toList()
-
-    fun getMergeRequestDiffDataList(projectId: Long, mergeRequestId: Long) =
-        api.getMergeRequestDiffDataList(projectId, mergeRequestId)
-            .map { it.diffDataList ?: arrayListOf() }
-            .subscribeOn(schedulers.io())
-            .observeOn(schedulers.ui())
+    suspend fun getMergeRequestDiffDataList(projectId: Long, mergeRequestId: Long): List<DiffData> {
+        val mr = api.getMergeRequestDiffDataList(projectId, mergeRequestId)
+        return mr.diffDataList ?: arrayListOf()
+    }
 }

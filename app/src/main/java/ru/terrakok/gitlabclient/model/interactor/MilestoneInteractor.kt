@@ -1,7 +1,6 @@
 package ru.terrakok.gitlabclient.model.interactor
 
-import io.reactivex.Completable
-import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
 import org.threeten.bp.LocalDate
 import ru.terrakok.gitlabclient.di.DefaultPageSize
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
@@ -11,85 +10,70 @@ import ru.terrakok.gitlabclient.entity.Milestone
 import ru.terrakok.gitlabclient.entity.MilestoneState
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
-import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import javax.inject.Inject
 
 class MilestoneInteractor @Inject constructor(
     private val api: GitlabApi,
     serverChanges: ServerChanges,
-    private val schedulers: SchedulersProvider,
     @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>
 ) {
     private val defaultPageSize = defaultPageSizeWrapper.value
 
-    val milestoneChanges = serverChanges.milestoneChanges
+    val milestoneChanges: Flow<Long> = serverChanges.milestoneChanges
 
-    fun getMilestones(
+    suspend fun getMilestones(
         projectId: Long,
         state: MilestoneState? = null,
         page: Int,
         pageSize: Int = defaultPageSize
-    ): Single<List<Milestone>> = api
-        .getMilestones(projectId, state, page, pageSize)
-        .subscribeOn(schedulers.io())
-        .observeOn(schedulers.ui())
+    ): List<Milestone> = api.getMilestones(projectId, state, page, pageSize)
 
-    fun getMilestone(
+    suspend fun getMilestone(
         projectId: Long,
         milestoneId: Long
-    ): Single<Milestone> = api
-        .getMilestone(projectId, milestoneId)
-        .subscribeOn(schedulers.io())
-        .observeOn(schedulers.ui())
+    ): Milestone = api.getMilestone(projectId, milestoneId)
 
-    fun createMilestone(
+    suspend fun createMilestone(
         projectId: Long,
         title: String,
         description: String? = null,
         dueDate: LocalDate? = null,
         startDate: LocalDate? = null
-    ): Single<Milestone> = api
-        .createMilestone(projectId, title, description, dueDate, startDate)
-        .subscribeOn(schedulers.io())
-        .observeOn(schedulers.ui())
+    ): Milestone = api.createMilestone(projectId, title, description, dueDate, startDate)
 
-    fun updateMilestone(
+    suspend fun updateMilestone(
         projectId: Long,
         milestoneId: Long,
         title: String? = null,
         description: String? = null,
         dueDate: LocalDate? = null,
         startDate: LocalDate? = null
-    ): Single<Milestone> = api
-        .updateMilestone(projectId, milestoneId, title, description, dueDate, startDate)
-        .subscribeOn(schedulers.io())
-        .observeOn(schedulers.ui())
+    ): Milestone =
+        api.updateMilestone(
+            projectId, milestoneId, title,
+            description, dueDate, startDate
+        )
 
-    fun deleteMilestone(
+    suspend fun deleteMilestone(
         projectId: Long,
         milestoneId: Long
-    ): Completable = api
-        .deleteMilestone(projectId, milestoneId)
-        .subscribeOn(schedulers.io())
-        .observeOn(schedulers.ui())
+    ) {
+        api.deleteMilestone(projectId, milestoneId)
+    }
 
-    fun getMilestoneIssues(
+    suspend fun getMilestoneIssues(
         projectId: Long,
         milestoneId: Long,
         page: Int,
         pageSize: Int = defaultPageSize
-    ): Single<List<Issue>> = api
-        .getMilestoneIssues(projectId, milestoneId, page, pageSize)
-        .subscribeOn(schedulers.io())
-        .observeOn(schedulers.ui())
+    ): List<Issue> =
+        api.getMilestoneIssues(projectId, milestoneId, page, pageSize)
 
-    fun getMilestoneMergeRequests(
+    suspend fun getMilestoneMergeRequests(
         projectId: Long,
         milestoneId: Long,
         page: Int,
         pageSize: Int = defaultPageSize
-    ): Single<List<MergeRequest>> = api
-        .getMilestoneMergeRequests(projectId, milestoneId, page, pageSize)
-        .subscribeOn(schedulers.io())
-        .observeOn(schedulers.ui())
+    ): List<MergeRequest> =
+        api.getMilestoneMergeRequests(projectId, milestoneId, page, pageSize)
 }

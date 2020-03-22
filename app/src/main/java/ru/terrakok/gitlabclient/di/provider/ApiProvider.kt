@@ -4,7 +4,6 @@ import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFact
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import ru.terrakok.gitlabclient.BuildConfig
 import ru.terrakok.gitlabclient.di.ServerPath
 import ru.terrakok.gitlabclient.entity.app.session.AuthHolder
@@ -42,7 +41,6 @@ class ApiProvider @Inject constructor(
     private fun getOriginalApi() =
         Retrofit.Builder()
             .addConverterFactory(json.asConverterFactory(contentType))
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .client(okHttpClientFactory.create(authHolder, true, BuildConfig.DEBUG))
             .baseUrl(serverPath)
             .build()
