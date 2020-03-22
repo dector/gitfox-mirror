@@ -34,9 +34,6 @@ annotation class TodoListPendingState
 annotation class UserId
 
 @Qualifier
-annotation class CacheLifetime
-
-@Qualifier
 annotation class FilePath
 
 @Qualifier

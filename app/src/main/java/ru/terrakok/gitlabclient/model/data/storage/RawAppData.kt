@@ -6,13 +6,12 @@ import kotlinx.serialization.builtins.list
 import kotlinx.serialization.json.Json
 import ru.terrakok.gitlabclient.entity.app.develop.AppLibrary
 import java.io.InputStreamReader
-import javax.inject.Inject
 import kotlin.coroutines.resume
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 03.12.17.
  */
-class RawAppData @Inject constructor(
+class RawAppData(
     private val assets: AssetManager,
     private val json: Json
 ) {

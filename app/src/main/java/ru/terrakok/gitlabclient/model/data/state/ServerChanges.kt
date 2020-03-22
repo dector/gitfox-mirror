@@ -5,10 +5,9 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.sendBlocking
 import kotlinx.coroutines.flow.asFlow
-import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
-class ServerChanges @Inject constructor() {
+class ServerChanges {
 
     private val issueChannel = BroadcastChannel<Long>(1)
     private val mergeRequestChannel = BroadcastChannel<Long>(1)

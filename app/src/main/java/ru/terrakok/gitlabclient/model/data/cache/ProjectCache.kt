@@ -1,19 +1,13 @@
 package ru.terrakok.gitlabclient.model.data.cache
 
 import com.github.aakira.napier.Napier
-import ru.terrakok.gitlabclient.di.CacheLifetime
-import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.Project
 import java.util.concurrent.ConcurrentHashMap
-import javax.inject.Inject
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 14.10.18.
  */
-class ProjectCache @Inject constructor(
-    @CacheLifetime lifetimeWrapper: PrimitiveWrapper<Long>
-) {
-    private val lifetime = lifetimeWrapper.value
+class ProjectCache(private val lifetime: Long) {
 
     private data class ProjectCacheItem(val time: Long, val data: Project)
 

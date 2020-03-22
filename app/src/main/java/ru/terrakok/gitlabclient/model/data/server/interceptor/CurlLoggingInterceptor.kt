@@ -18,12 +18,12 @@
 
 package ru.terrakok.gitlabclient.model.data.server.interceptor
 
-import java.io.IOException
-import java.nio.charset.Charset
 import okhttp3.Interceptor
 import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor.Logger
 import okio.Buffer
+import java.io.IOException
+import java.nio.charset.Charset
 
 /**
  * An OkHttp interceptor that logs requests as curl shell commands. They can then

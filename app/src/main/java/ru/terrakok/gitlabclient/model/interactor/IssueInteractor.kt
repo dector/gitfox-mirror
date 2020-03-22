@@ -3,25 +3,21 @@ package ru.terrakok.gitlabclient.model.interactor
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
-import ru.terrakok.gitlabclient.di.DefaultPageSize
-import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.entity.app.target.*
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
-import javax.inject.Inject
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 14.06.17.
  */
-class IssueInteractor @Inject constructor(
+class IssueInteractor(
     private val api: GitlabApi,
     serverChanges: ServerChanges,
-    @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>,
+    private val defaultPageSize: Int,
     private val markDownUrlResolver: MarkDownUrlResolver
 ) {
-    private val defaultPageSize = defaultPageSizeWrapper.value
 
     val issueChanges: Flow<Long> = serverChanges.issueChanges
 

@@ -1,17 +1,14 @@
 package ru.terrakok.gitlabclient.model.interactor
 
-import com.github.aakira.napier.Napier
-import ru.terrakok.gitlabclient.di.DI
-import ru.terrakok.gitlabclient.di.module.ServerModule
+import ru.terrakok.gitlabclient.model.data.state.SessionSwitcher
 import ru.terrakok.gitlabclient.model.data.storage.Prefs
-import toothpick.Toothpick
-import javax.inject.Inject
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 26.09.18.
  */
-class LaunchInteractor @Inject constructor(
-    private val prefs: Prefs
+class LaunchInteractor(
+    private val prefs: Prefs,
+    private val sessionSwitcher: SessionSwitcher
 ) {
 
     val isFirstLaunch: Boolean
@@ -29,12 +26,8 @@ class LaunchInteractor @Inject constructor(
         get() = prefs.selectedAccount != null
 
     fun signInToLastSession() {
-        if (!Toothpick.isScopeOpen(DI.SERVER_SCOPE)) {
-            Napier.d("Init new scope: ${DI.SERVER_SCOPE} -> ${DI.APP_SCOPE}")
-            val account = prefs.getCurrentUserAccount()
-            Toothpick
-                .openScopes(DI.APP_SCOPE, DI.SERVER_SCOPE)
-                .installModules(ServerModule(account))
+        if (!sessionSwitcher.hasSession()) {
+            sessionSwitcher.initSession(prefs.getCurrentUserAccount())
         }
     }
 }

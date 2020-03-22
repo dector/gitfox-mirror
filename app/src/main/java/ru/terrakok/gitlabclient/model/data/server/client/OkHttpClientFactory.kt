@@ -1,8 +1,6 @@
 package ru.terrakok.gitlabclient.model.data.server.client
 
 import android.content.Context
-import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -11,8 +9,9 @@ import ru.terrakok.gitlabclient.model.data.server.client.Tls12SocketFactory.Comp
 import ru.terrakok.gitlabclient.model.data.server.interceptor.AuthHeaderInterceptor
 import ru.terrakok.gitlabclient.model.data.server.interceptor.CurlLoggingInterceptor
 import ru.terrakok.gitlabclient.model.data.server.interceptor.ErrorResponseInterceptor
+import java.util.concurrent.TimeUnit
 
-class OkHttpClientFactory @Inject constructor(
+class OkHttpClientFactory(
     private val context: Context
 ) {
 

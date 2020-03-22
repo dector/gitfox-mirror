@@ -9,12 +9,19 @@ import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.BuildConfig
 import ru.terrakok.gitlabclient.di.AppDevelopersPath
-import ru.terrakok.gitlabclient.di.CacheLifetime
 import ru.terrakok.gitlabclient.di.DefaultPageSize
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
+import ru.terrakok.gitlabclient.di.provider.LaunchInteractorProvider
+import ru.terrakok.gitlabclient.di.provider.PrefsProvider
+import ru.terrakok.gitlabclient.di.provider.UserAccountApiProvider
 import ru.terrakok.gitlabclient.entity.app.develop.AppInfo
 import ru.terrakok.gitlabclient.entity.app.session.OAuthParams
+import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
+import ru.terrakok.gitlabclient.model.data.server.UserAccountApi
 import ru.terrakok.gitlabclient.model.data.server.client.OkHttpClientFactory
+import ru.terrakok.gitlabclient.model.data.state.SessionSwitcher
+import ru.terrakok.gitlabclient.model.data.storage.Prefs
+import ru.terrakok.gitlabclient.model.interactor.LaunchInteractor
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import ru.terrakok.gitlabclient.model.system.message.SystemMessageNotifier
 import ru.terrakok.gitlabclient.util.Base64Tools
@@ -29,7 +36,6 @@ class AppModule(context: Context) : Module() {
         bind(Context::class.java).toInstance(context)
         bind(String::class.java).withName(AppDevelopersPath::class.java).toInstance(BuildConfig.APP_DEVELOPERS_PATH)
         bind(PrimitiveWrapper::class.java).withName(DefaultPageSize::class.java).toInstance(PrimitiveWrapper(20))
-        bind(PrimitiveWrapper::class.java).withName(CacheLifetime::class.java).toInstance(PrimitiveWrapper(300_000L))
         bind(ResourceManager::class.java).singleton()
         bind(Base64Tools::class.java).toInstance(Base64Tools())
         bind(AssetManager::class.java).toInstance(context.assets)
@@ -39,7 +45,11 @@ class AppModule(context: Context) : Module() {
             isLenient = true,
             encodeDefaults = false
         )))
-        bind(OkHttpClientFactory::class.java).singleton()
+        bind(MarkDownUrlResolver::class.java).toInstance(MarkDownUrlResolver())
+        bind(OkHttpClientFactory::class.java).toInstance(OkHttpClientFactory(context))
+        bind(Prefs::class.java).toProvider(PrefsProvider::class.java)
+        bind(UserAccountApi::class.java).toProvider(UserAccountApiProvider::class.java)
+        bind(SessionSwitcher::class.java).toInstance(SessionSwitcher())
 
         // Navigation
         val cicerone = Cicerone.create()
@@ -67,5 +77,7 @@ class AppModule(context: Context) : Module() {
                 BuildConfig.OAUTH_CALLBACK
             )
         )
+
+        bind(LaunchInteractor::class.java).toProvider(LaunchInteractorProvider::class.java)
     }
 }

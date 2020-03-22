@@ -1,23 +1,18 @@
 package ru.terrakok.gitlabclient.model.interactor
 
 import kotlinx.coroutines.flow.Flow
-import ru.terrakok.gitlabclient.di.DefaultPageSize
-import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.Member
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
-import javax.inject.Inject
 
 /**
  * @author Valentin Logvinovitch (glvvl) on 27.02.19.
  */
-class MembersInteractor @Inject constructor(
+class MembersInteractor(
     private val api: GitlabApi,
     serverChanges: ServerChanges,
-    @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>
+    private val defaultPageSize: Int
 ) {
-    private val defaultPageSize = defaultPageSizeWrapper.value
-
     val memberChanges: Flow<Long> = serverChanges.memberChanges
 
     suspend fun getMembers(

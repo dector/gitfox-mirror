@@ -9,11 +9,10 @@ import ru.terrakok.gitlabclient.entity.User
 import ru.terrakok.gitlabclient.entity.app.session.UserAccount
 import ru.terrakok.gitlabclient.model.data.server.client.OkHttpClientFactory
 import java.io.IOException
-import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
-class UserAccountApi @Inject constructor(
+class UserAccountApi(
     private val json: Json,
     okHttpClientFactory: OkHttpClientFactory
 ) {

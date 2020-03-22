@@ -2,23 +2,21 @@ package ru.terrakok.gitlabclient.model.interactor
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import ru.terrakok.gitlabclient.di.DI
-import ru.terrakok.gitlabclient.di.module.ServerModule
 import ru.terrakok.gitlabclient.entity.app.session.OAuthParams
 import ru.terrakok.gitlabclient.entity.app.session.UserAccount
 import ru.terrakok.gitlabclient.model.data.cache.ProjectCache
 import ru.terrakok.gitlabclient.model.data.server.UserAccountApi
+import ru.terrakok.gitlabclient.model.data.state.SessionSwitcher
 import ru.terrakok.gitlabclient.model.data.storage.Prefs
-import toothpick.Toothpick
 import java.net.URI
 import java.util.*
-import javax.inject.Inject
 
-class SessionInteractor @Inject constructor(
+class SessionInteractor(
     private val prefs: Prefs,
     private val oauthParams: OAuthParams,
     private val userAccountApi: UserAccountApi,
-    private val projectCache: ProjectCache
+    private val projectCache: ProjectCache,
+    private val sessionSwitcher: SessionSwitcher
 ) {
     private val hash = UUID.randomUUID().toString()
 
@@ -33,7 +31,7 @@ class SessionInteractor @Inject constructor(
         val account = prefs.accounts.find { it.id == accountId }
         prefs.selectedAccount = account?.id
         projectCache.clear()
-        initNewSession(account)
+        sessionSwitcher.initSession(account)
         return account
     }
 
@@ -53,7 +51,7 @@ class SessionInteractor @Inject constructor(
     fun logoutFromAccount(accountId: String): Boolean {
         projectCache.clear()
         val newAccount = logout(accountId)
-        initNewSession(newAccount)
+        sessionSwitcher.initSession(newAccount)
         return newAccount != null
     }
 
@@ -99,15 +97,8 @@ class SessionInteractor @Inject constructor(
             newAccounts.add(userAccount)
             prefs.selectedAccount = userAccount.id
             prefs.accounts = newAccounts
-            initNewSession(userAccount)
+            sessionSwitcher.initSession(userAccount)
         }
-    }
-
-    private fun initNewSession(newAccount: UserAccount?) {
-        Toothpick.closeScope(DI.SERVER_SCOPE)
-        Toothpick
-            .openScopes(DI.APP_SCOPE, DI.SERVER_SCOPE)
-            .installModules(ServerModule(newAccount))
     }
 
     private fun getQueryParameterFromUri(url: String, queryName: String): String {

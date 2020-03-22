@@ -2,22 +2,18 @@ package ru.terrakok.gitlabclient.model.interactor
 
 import kotlinx.coroutines.flow.Flow
 import org.threeten.bp.LocalDate
-import ru.terrakok.gitlabclient.di.DefaultPageSize
-import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.Issue
 import ru.terrakok.gitlabclient.entity.MergeRequest
 import ru.terrakok.gitlabclient.entity.Milestone
 import ru.terrakok.gitlabclient.entity.MilestoneState
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
-import javax.inject.Inject
 
-class MilestoneInteractor @Inject constructor(
+class MilestoneInteractor(
     private val api: GitlabApi,
     serverChanges: ServerChanges,
-    @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>
+    private val defaultPageSize: Int
 ) {
-    private val defaultPageSize = defaultPageSizeWrapper.value
 
     val milestoneChanges: Flow<Long> = serverChanges.milestoneChanges
 

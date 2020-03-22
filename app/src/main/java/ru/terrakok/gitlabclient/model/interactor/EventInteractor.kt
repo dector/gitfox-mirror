@@ -1,23 +1,19 @@
 package ru.terrakok.gitlabclient.model.interactor
 
 import org.threeten.bp.ZonedDateTime
-import ru.terrakok.gitlabclient.di.DefaultPageSize
-import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.entity.app.target.*
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
-import javax.inject.Inject
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 22.07.17.
  */
-class EventInteractor @Inject constructor(
+class EventInteractor(
     private val api: GitlabApi,
-    @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>,
+    private val defaultPageSize: Int,
     private val markDownUrlResolver: MarkDownUrlResolver
 ) {
-    private val defaultPageSize = defaultPageSizeWrapper.value
 
     suspend fun getEvents(
         action: EventAction? = null,

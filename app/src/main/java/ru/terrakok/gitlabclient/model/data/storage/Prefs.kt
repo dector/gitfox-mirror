@@ -4,12 +4,11 @@ import android.content.Context
 import kotlinx.serialization.builtins.list
 import kotlinx.serialization.json.Json
 import ru.terrakok.gitlabclient.entity.app.session.UserAccount
-import javax.inject.Inject
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 28.03.17
  */
-class Prefs @Inject constructor(
+class Prefs(
     private val context: Context,
     private val json: Json
 ) {

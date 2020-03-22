@@ -4,8 +4,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import org.threeten.bp.ZonedDateTime
-import ru.terrakok.gitlabclient.di.DefaultPageSize
-import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.entity.EventAction
 import ru.terrakok.gitlabclient.entity.MergeRequestState
@@ -14,15 +12,13 @@ import ru.terrakok.gitlabclient.entity.app.target.*
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
-import javax.inject.Inject
 
-class MergeRequestInteractor @Inject constructor(
+class MergeRequestInteractor(
     private val api: GitlabApi,
     serverChanges: ServerChanges,
-    @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>,
+    private val defaultPageSize: Int,
     private val markDownUrlResolver: MarkDownUrlResolver
 ) {
-    private val defaultPageSize = defaultPageSizeWrapper.value
 
     val mergeRequestChanges: Flow<Long> = serverChanges.mergeRequestChanges
 

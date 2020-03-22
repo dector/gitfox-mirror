@@ -1,12 +1,11 @@
 package ru.terrakok.gitlabclient.model.data.server
 
-import javax.inject.Inject
 import ru.terrakok.gitlabclient.entity.Project
 
 /**
  * @author Eugene Shapovalov (CraggyHaggy) on 09.04.18.
  */
-class MarkDownUrlResolver @Inject constructor() {
+class MarkDownUrlResolver {
 
     private val regex = Regex("!\\[[^]]+]\\(/uploads/[^)]+\\)")
 

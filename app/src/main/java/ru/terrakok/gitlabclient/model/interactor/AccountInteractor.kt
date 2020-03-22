@@ -5,16 +5,14 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import retrofit2.Response
-import ru.terrakok.gitlabclient.di.ServerPath
 import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.entity.app.AccountMainBadges
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
-import javax.inject.Inject
 
-class AccountInteractor @Inject constructor(
-    @ServerPath private val serverPath: String,
+class AccountInteractor(
+    private val serverPath: String,
     private val api: GitlabApi,
     serverChanges: ServerChanges,
     private val todoInteractor: TodoInteractor,

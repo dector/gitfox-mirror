@@ -1,24 +1,20 @@
 package ru.terrakok.gitlabclient.model.interactor
 
 import kotlinx.coroutines.flow.Flow
-import ru.terrakok.gitlabclient.di.DefaultPageSize
-import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.entity.app.ProjectFile
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 import ru.terrakok.gitlabclient.util.Base64Tools
-import javax.inject.Inject
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 24.04.17.
  */
-class ProjectInteractor @Inject constructor(
+class ProjectInteractor(
     private val api: GitlabApi,
     serverChanges: ServerChanges,
-    @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>
+    private val defaultPageSize: Int
 ) {
-    private val defaultPageSize = defaultPageSizeWrapper.value
     private val base64Tools = Base64Tools()
 
     val projectChanges: Flow<Long> = serverChanges.projectChanges

@@ -1,23 +1,18 @@
 package ru.terrakok.gitlabclient.model.interactor
 
 import kotlinx.coroutines.flow.Flow
-import ru.terrakok.gitlabclient.di.DefaultPageSize
-import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.entity.Label
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
-import javax.inject.Inject
 
 /**
  * @author Maxim Myalkin (MaxMyalkin) on 30.10.2018.
  */
-class LabelInteractor @Inject constructor(
+class LabelInteractor(
     private val api: GitlabApi,
     serverChanges: ServerChanges,
-    @DefaultPageSize defaultPageSizeWrapper: PrimitiveWrapper<Int>
+    private val defaultPageSize: Int
 ) {
-
-    private val defaultPageSize: Int = defaultPageSizeWrapper.value
 
     val labelChanges: Flow<Long> = serverChanges.labelChanges
 
