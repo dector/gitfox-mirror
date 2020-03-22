@@ -109,6 +109,17 @@ android {
         jvmTarget = "1.8"
     }
     buildToolsVersion = "29.0.2"
+
+    packagingOptions {
+        exclude("META-INF/ktor-client-core.kotlin_module")
+        exclude("META-INF/ktor-io.kotlin_module")
+        exclude("META-INF/ktor-http.kotlin_module")
+        exclude("META-INF/ktor-http-cio.kotlin_module")
+        exclude("META-INF/ktor-utils.kotlin_module")
+        exclude("META-INF/ktor-client-serialization.kotlin_module")
+        exclude("META-INF/ktor-client-json.kotlin_module")
+        exclude("META-INF/kotlinx-serialization-runtime.kotlin_module")
+    }
 }
 
 androidExtensions {
@@ -140,16 +151,17 @@ dependencies {
     kapt("com.github.stephanenicolas.toothpick:toothpick-compiler:$toothpickVersion")
     //JSON
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0")
-    //Retrofit
-    val retrofitVersion = "2.7.2"
-    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
-    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.4.0")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.4.0")
+    //Network
+    val ktorVersion = "1.3.2"
+    implementation("io.ktor:ktor-client-core:$ktorVersion")
+    implementation("io.ktor:ktor-client-cio:$ktorVersion")
+    implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
+    implementation("io.ktor:ktor-client-serialization:$ktorVersion")
+    implementation("io.ktor:ktor-client-serialization-jvm:$ktorVersion")
     //Coroutines
     val coroutinesVersion = "1.3.4"
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-rx2:$coroutinesVersion")
     //Adapter simplify
     implementation("com.hannesdorfmann:adapterdelegates4:4.2.0")
     //Image load and cache

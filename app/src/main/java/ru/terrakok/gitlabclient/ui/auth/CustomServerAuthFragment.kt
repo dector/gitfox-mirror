@@ -9,7 +9,6 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.fragment_custom_server_auth.*
-import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import ru.terrakok.gitlabclient.BuildConfig
 import ru.terrakok.gitlabclient.R
 
@@ -59,7 +58,7 @@ class CustomServerAuthFragment : BottomSheetDialogFragment() {
             return
         }
 
-        if (url.toHttpUrlOrNull() != null) {
+        if (url != null) { //todo validate url
             listener.customLogin.invoke(url, token)
             dismiss()
         } else {

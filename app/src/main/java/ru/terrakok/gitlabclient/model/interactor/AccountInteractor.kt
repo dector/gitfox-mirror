@@ -4,7 +4,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
-import retrofit2.Response
 import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.entity.app.AccountMainBadges
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
@@ -22,24 +21,24 @@ class AccountInteractor(
 
     private val issueCount: Flow<Int> =
         serverChanges.issueChanges
-            .map { api.getMyAssignedIssueHeaders().getXTotalHeader() }
+            .map { api.getMyAssignedIssueCount() }
 
     private val mrCount: Flow<Int> =
         serverChanges.mergeRequestChanges
-            .map { api.getMyAssignedMergeRequestHeaders().getXTotalHeader() }
+            .map { api.getMyAssignedMergeRequestCount() }
 
     private val todoCount: Flow<Int> =
         serverChanges.todoChanges
-            .map { api.getMyAssignedTodoHeaders().getXTotalHeader() }
+            .map { api.getMyAssignedTodoCount() }
 
     fun getAccountMainBadges(): Flow<AccountMainBadges> =
         combine(issueCount, mrCount, todoCount) { i, mr, t -> AccountMainBadges(i, mr, t) }
             .onStart {
                 emit(
                     AccountMainBadges(
-                        api.getMyAssignedIssueHeaders().getXTotalHeader(),
-                        api.getMyAssignedMergeRequestHeaders().getXTotalHeader(),
-                        api.getMyAssignedTodoHeaders().getXTotalHeader()
+                        api.getMyAssignedIssueCount(),
+                        api.getMyAssignedMergeRequestCount(),
+                        api.getMyAssignedTodoCount()
                     )
                 )
             }
@@ -83,7 +82,4 @@ class AccountInteractor(
             orderBy = OrderBy.UPDATED_AT,
             page = page
         )
-
-    private fun Response<*>.getXTotalHeader(): Int =
-        if (isSuccessful) headers().get("X-Total")?.toInt() ?: 0 else 0
 }

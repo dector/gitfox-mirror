@@ -18,7 +18,7 @@ import ru.terrakok.gitlabclient.entity.app.develop.AppInfo
 import ru.terrakok.gitlabclient.entity.app.session.OAuthParams
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.model.data.server.UserAccountApi
-import ru.terrakok.gitlabclient.model.data.server.client.OkHttpClientFactory
+import ru.terrakok.gitlabclient.model.data.server.client.HttpClientFactory
 import ru.terrakok.gitlabclient.model.data.state.SessionSwitcher
 import ru.terrakok.gitlabclient.model.data.storage.Prefs
 import ru.terrakok.gitlabclient.model.interactor.LaunchInteractor
@@ -40,13 +40,14 @@ class AppModule(context: Context) : Module() {
         bind(Base64Tools::class.java).toInstance(Base64Tools())
         bind(AssetManager::class.java).toInstance(context.assets)
         bind(SystemMessageNotifier::class.java).toInstance(SystemMessageNotifier())
-        bind(Json::class.java).toInstance(Json(JsonConfiguration.Stable.copy(
+        val json = Json(JsonConfiguration.Stable.copy(
             ignoreUnknownKeys = true,
             isLenient = true,
             encodeDefaults = false
-        )))
+        ))
+        bind(Json::class.java).toInstance(json)
         bind(MarkDownUrlResolver::class.java).toInstance(MarkDownUrlResolver())
-        bind(OkHttpClientFactory::class.java).toInstance(OkHttpClientFactory(context))
+        bind(HttpClientFactory::class.java).toInstance(HttpClientFactory(context, json))
         bind(Prefs::class.java).toProvider(PrefsProvider::class.java)
         bind(UserAccountApi::class.java).toProvider(UserAccountApiProvider::class.java)
         bind(SessionSwitcher::class.java).toInstance(SessionSwitcher())

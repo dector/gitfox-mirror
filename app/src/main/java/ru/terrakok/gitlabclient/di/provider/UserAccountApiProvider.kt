@@ -1,14 +1,12 @@
 package ru.terrakok.gitlabclient.di.provider
 
-import kotlinx.serialization.json.Json
 import ru.terrakok.gitlabclient.model.data.server.UserAccountApi
-import ru.terrakok.gitlabclient.model.data.server.client.OkHttpClientFactory
+import ru.terrakok.gitlabclient.model.data.server.client.HttpClientFactory
 import javax.inject.Inject
 import javax.inject.Provider
 
 class UserAccountApiProvider @Inject constructor(
-        private val json: Json,
-        private val okHttpClientFactory: OkHttpClientFactory
+        private val httpClientFactory: HttpClientFactory
 ) : Provider<UserAccountApi> {
-    override fun get() = UserAccountApi(json, okHttpClientFactory)
+    override fun get() = UserAccountApi(httpClientFactory)
 }

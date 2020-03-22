@@ -2,8 +2,8 @@ package ru.terrakok.gitlabclient.model.data.server.interceptor
 
 import okhttp3.Interceptor
 import okhttp3.Response
+import ru.terrakok.gitlabclient.entity.TokenInvalidError
 import ru.terrakok.gitlabclient.entity.app.session.AuthHolder
-import ru.terrakok.gitlabclient.model.data.server.TokenInvalidError
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 23.04.17.

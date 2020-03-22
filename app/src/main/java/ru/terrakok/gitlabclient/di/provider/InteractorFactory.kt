@@ -10,6 +10,7 @@ import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.model.data.server.UserAccountApi
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
+import ru.terrakok.gitlabclient.model.data.state.SessionSwitcher
 import ru.terrakok.gitlabclient.model.data.storage.Prefs
 import ru.terrakok.gitlabclient.model.data.storage.RawAppData
 import ru.terrakok.gitlabclient.model.interactor.*
@@ -71,9 +72,10 @@ class LabelInteractorProvider @Inject constructor(
 }
 
 class LaunchInteractorProvider @Inject constructor(
-        private val prefs: Prefs
+        private val prefs: Prefs,
+        private val sessionSwitcher: SessionSwitcher
 ) : Provider<LaunchInteractor> {
-    override fun get() = LaunchInteractor(prefs)
+    override fun get() = LaunchInteractor(prefs, sessionSwitcher)
 }
 
 class MembersInteractorProvider @Inject constructor(
@@ -118,9 +120,10 @@ class SessionInteractorProvider @Inject constructor(
         private val prefs: Prefs,
         private val oauthParams: OAuthParams,
         private val userAccountApi: UserAccountApi,
-        private val projectCache: ProjectCache
+        private val projectCache: ProjectCache,
+        private val sessionSwitcher: SessionSwitcher
 ) : Provider<SessionInteractor> {
-    override fun get() = SessionInteractor(prefs, oauthParams, userAccountApi, projectCache)
+    override fun get() = SessionInteractor(prefs, oauthParams, userAccountApi, projectCache, sessionSwitcher)
 }
 
 class TodoInteractorProvider @Inject constructor(

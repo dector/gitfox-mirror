@@ -7,12 +7,8 @@ import org.threeten.bp.Duration
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
-import retrofit2.HttpException
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.EventAction
-import ru.terrakok.gitlabclient.entity.MergeRequestMergeStatus
-import ru.terrakok.gitlabclient.entity.MilestoneState
-import ru.terrakok.gitlabclient.entity.TodoAction
+import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.entity.app.develop.LicenseType
 import ru.terrakok.gitlabclient.entity.app.target.TargetBadgeStatus
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderIcon
@@ -25,7 +21,7 @@ import java.io.IOException
  */
 
 fun Throwable.userMessage(resourceManager: ResourceManager) = when (this) {
-    is HttpException -> when (this.code()) {
+    is ServerError -> when (errorCode) {
         304 -> resourceManager.getString(R.string.not_modified_error)
         400 -> resourceManager.getString(R.string.bad_request_error)
         401 -> resourceManager.getString(R.string.unauthorized_error)
