@@ -9,12 +9,8 @@ import kotlinx.android.synthetic.main.fragment_issue_info.*
 import kotlinx.android.synthetic.main.item_target_badge.view.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
-import org.threeten.bp.LocalDate
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.Issue
-import ru.terrakok.gitlabclient.entity.Milestone
-import ru.terrakok.gitlabclient.entity.ShortUser
-import ru.terrakok.gitlabclient.entity.TimeStats
+import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.presentation.issue.info.IssueInfoPresenter
 import ru.terrakok.gitlabclient.presentation.issue.info.IssueInfoView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
@@ -92,12 +88,8 @@ class IssueInfoFragment : BaseFragment(), IssueInfoView {
         milestoneValue.alpha = if (milestone != null) ALPHA_VALUE else ALPHA_NONE
     }
 
-    private fun showDueDate(dueDate: LocalDate?) {
-        dueDateValue.text = if (dueDate != null) {
-            dueDate.humanDate()
-        } else {
-            getString(R.string.issue_merge_request_none)
-        }
+    private fun showDueDate(dueDate: Date?) {
+        dueDateValue.text = dueDate?.humanDate() ?: getString(R.string.issue_merge_request_none)
         dueDateValue.alpha = if (dueDate != null) ALPHA_VALUE else ALPHA_NONE
     }
 

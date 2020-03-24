@@ -1,10 +1,6 @@
 package ru.terrakok.gitlabclient.model.data.server
 
-import org.threeten.bp.LocalDate
-import ru.terrakok.gitlabclient.entity.IssueStateEvent
-import ru.terrakok.gitlabclient.entity.Label
-import ru.terrakok.gitlabclient.entity.Milestone
-import ru.terrakok.gitlabclient.entity.Todo
+import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 
 /**
@@ -19,8 +15,8 @@ class ApiWithChangesRegistration(
         projectId: Long,
         title: String,
         description: String?,
-        dueDate: LocalDate?,
-        startDate: LocalDate?
+        dueDate: Date?,
+        startDate: Date?
     ): Milestone =
         serverApi.createMilestone(projectId, title, description, dueDate, startDate)
             .also { serverChanges.milestoneChanged(it.id) }
@@ -30,8 +26,8 @@ class ApiWithChangesRegistration(
         mileStoneId: Long,
         title: String?,
         description: String?,
-        dueDate: LocalDate?,
-        startDate: LocalDate?
+        dueDate: Date?,
+        startDate: Date?
     ): Milestone =
         serverApi.updateMilestone(projectId, mileStoneId, title, description, dueDate, startDate)
             .also { serverChanges.milestoneChanged(mileStoneId) }

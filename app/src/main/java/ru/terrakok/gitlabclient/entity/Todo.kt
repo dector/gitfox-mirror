@@ -1,12 +1,11 @@
-@file:UseSerializers(ZonedDateTimeDeserializer::class)
+@file:UseSerializers(TimeDeserializer::class)
 package ru.terrakok.gitlabclient.entity
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
-import org.threeten.bp.ZonedDateTime
+import ru.terrakok.gitlabclient.model.data.server.deserializer.TimeDeserializer
 import ru.terrakok.gitlabclient.model.data.server.deserializer.TodoDeserializer
-import ru.terrakok.gitlabclient.model.data.server.deserializer.ZonedDateTimeDeserializer
 
 /**
  * @author Eugene Shapovalov (CraggyHaggy). Date: 11.09.17
@@ -22,7 +21,7 @@ data class Todo(
     val targetUrl: String,
     val body: String,
     val state: TodoState,
-    val createdAt: ZonedDateTime
+    val createdAt: Time
 )
 
 @Serializable

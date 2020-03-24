@@ -1,16 +1,14 @@
 @file:UseSerializers(
-    ZonedDateTimeDeserializer::class,
-    LocalDateDeserializer::class
+    TimeDeserializer::class,
+    DateDeserializer::class
 )
 package ru.terrakok.gitlabclient.entity
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
-import org.threeten.bp.LocalDate
-import org.threeten.bp.ZonedDateTime
-import ru.terrakok.gitlabclient.model.data.server.deserializer.LocalDateDeserializer
-import ru.terrakok.gitlabclient.model.data.server.deserializer.ZonedDateTimeDeserializer
+import ru.terrakok.gitlabclient.model.data.server.deserializer.DateDeserializer
+import ru.terrakok.gitlabclient.model.data.server.deserializer.TimeDeserializer
 
 sealed class Target {
     abstract val id: Long
@@ -18,8 +16,8 @@ sealed class Target {
     abstract val projectId: Long
     abstract val title: String
     abstract val state: TargetState
-    abstract val updatedAt: ZonedDateTime?
-    abstract val createdAt: ZonedDateTime?
+    abstract val updatedAt: Time?
+    abstract val createdAt: Time?
     abstract val labels: List<String>
     abstract val milestone: Milestone?
     abstract val assignees: List<ShortUser>?
@@ -39,8 +37,8 @@ sealed class Target {
         @SerialName("project_id") override val projectId: Long,
         @SerialName("title") override val title: String,
         @SerialName("state") override val state: TargetState,
-        @SerialName("updated_at") override val updatedAt: ZonedDateTime? = null,
-        @SerialName("created_at") override val createdAt: ZonedDateTime? = null,
+        @SerialName("updated_at") override val updatedAt: Time? = null,
+        @SerialName("created_at") override val createdAt: Time? = null,
         @SerialName("labels") override val labels: List<String>,
         @SerialName("milestone") override val milestone: Milestone? = null,
         @SerialName("assignees") override val assignees: List<ShortUser>? = null,
@@ -52,7 +50,7 @@ sealed class Target {
         @SerialName("web_url") override val webUrl: String? = null,
         @SerialName("subscribed") override val subscribed: Boolean? = null,
         @SerialName("time_stats") override val timeStats: TimeStats? = null,
-        @SerialName("due_date") val dueDate: LocalDate? = null,
+        @SerialName("due_date") val dueDate: Date? = null,
         @SerialName("confidential") val confidential: Boolean,
         @SerialName("weight") val weight: Long? = null,
         @SerialName("_links") val links: Links? = null
@@ -65,8 +63,8 @@ sealed class Target {
         @SerialName("project_id") override val projectId: Long,
         @SerialName("title") override val title: String,
         @SerialName("state") override val state: TargetState,
-        @SerialName("updated_at") override val updatedAt: ZonedDateTime? = null,
-        @SerialName("created_at") override val createdAt: ZonedDateTime? = null,
+        @SerialName("updated_at") override val updatedAt: Time? = null,
+        @SerialName("created_at") override val createdAt: Time? = null,
         @SerialName("labels") override val labels: List<String>,
         @SerialName("milestone") override val milestone: Milestone? = null,
         @SerialName("assignees") override val assignees: List<ShortUser>? = null,

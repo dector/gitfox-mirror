@@ -2,7 +2,6 @@ package ru.terrakok.gitlabclient.model.data.server.deserializer
 
 import kotlinx.serialization.*
 import kotlinx.serialization.builtins.serializer
-import org.threeten.bp.ZonedDateTime
 import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.entity.Target
 import ru.terrakok.gitlabclient.entity.TargetType
@@ -19,7 +18,7 @@ object TodoDeserializer : KSerializer<Todo> {
         element("target_url", String.serializer().descriptor)
         element("body", String.serializer().descriptor)
         element("state", TodoState.serializer().descriptor)
-        element("created_at", ZonedDateTimeDeserializer.descriptor)
+        element("created_at", TimeDeserializer.descriptor)
     }
 
     override fun serialize(encoder: Encoder, value: Todo) {
@@ -36,7 +35,7 @@ object TodoDeserializer : KSerializer<Todo> {
         compositeOutput.encodeStringElement(descriptor, 6, value.targetUrl)
         compositeOutput.encodeStringElement(descriptor, 7, value.body)
         compositeOutput.encodeSerializableElement(descriptor, 8, TodoState.serializer(), value.state)
-        compositeOutput.encodeSerializableElement(descriptor, 9, ZonedDateTimeDeserializer, value.createdAt)
+        compositeOutput.encodeSerializableElement(descriptor, 9, TimeDeserializer, value.createdAt)
         compositeOutput.endStructure(descriptor)
     }
 
@@ -51,7 +50,7 @@ object TodoDeserializer : KSerializer<Todo> {
         var targetUrl: String? = null
         var body: String? = null
         var state: TodoState? = null
-        var createdAt: ZonedDateTime? = null
+        var createdAt: Time? = null
 
         val dec: CompositeDecoder = decoder.beginStructure(descriptor)
         loop@ while (true) {
@@ -70,7 +69,7 @@ object TodoDeserializer : KSerializer<Todo> {
                 6 -> targetUrl = dec.decodeStringElement(descriptor, i)
                 7 -> body = dec.decodeStringElement(descriptor, i)
                 8 -> state = dec.decodeSerializableElement(descriptor, i, TodoState.serializer())
-                9 -> createdAt = dec.decodeSerializableElement(descriptor, i, ZonedDateTimeDeserializer)
+                9 -> createdAt = dec.decodeSerializableElement(descriptor, i, TimeDeserializer)
                 else -> throw SerializationException("Unknown index $i")
             }
         }

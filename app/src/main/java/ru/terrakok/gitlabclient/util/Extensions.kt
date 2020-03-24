@@ -29,12 +29,17 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.github.aakira.napier.Napier
 import com.google.android.material.snackbar.Snackbar
+import org.threeten.bp.LocalDate
+import org.threeten.bp.ZonedDateTime
+import org.threeten.bp.format.DateTimeFormatter
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 import ru.terrakok.cicerone.commands.BackTo
 import ru.terrakok.cicerone.commands.Replace
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
+import ru.terrakok.gitlabclient.entity.Date
+import ru.terrakok.gitlabclient.entity.Time
 import ru.terrakok.gitlabclient.entity.app.target.AppTarget
 import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
@@ -315,3 +320,7 @@ private fun View.requestApplyInsetsWhenAttached() {
 fun Napier.e(e: Throwable) {
     Napier.e("Error", e)
 }
+
+fun Time.toZDT() = ZonedDateTime.parse(isoString)
+private val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+fun Date.toLocalDate() = LocalDate.parse(isoString, dateTimeFormatter)

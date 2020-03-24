@@ -5,8 +5,6 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.takeFrom
 import okhttp3.FormBody
-import org.threeten.bp.LocalDate
-import org.threeten.bp.ZonedDateTime
 import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi.Companion.API_PATH
 
@@ -204,8 +202,8 @@ class GitlabApiImpl(
     override suspend fun getEvents(
         action: EventAction?,
         targetType: EventTarget?,
-        beforeDay: String?,
-        afterDay: String?,
+        beforeDay: Date?,
+        afterDay: Date?,
         sort: Sort?,
         orderBy: OrderBy?,
         scope: EventScope?,
@@ -230,8 +228,8 @@ class GitlabApiImpl(
         projectId: Long,
         action: EventAction?,
         targetType: EventTarget?,
-        beforeDay: String?,
-        afterDay: String?,
+        beforeDay: Date?,
+        afterDay: Date?,
         sort: Sort?,
         orderBy: OrderBy?,
         page: Int,
@@ -255,8 +253,8 @@ class GitlabApiImpl(
         milestone: String?,
         viewType: MergeRequestViewType?,
         labels: String?,
-        createdBefore: ZonedDateTime?,
-        createdAfter: ZonedDateTime?,
+        createdBefore: Time?,
+        createdAfter: Time?,
         scope: MergeRequestScope?,
         authorId: Int?,
         assigneeId: Int?,
@@ -291,8 +289,8 @@ class GitlabApiImpl(
         milestone: String?,
         viewType: MergeRequestViewType?,
         labels: String?,
-        createdBefore: ZonedDateTime?,
-        createdAfter: ZonedDateTime?,
+        createdBefore: Time?,
+        createdAfter: Time?,
         scope: MergeRequestScope?,
         authorId: Int?,
         assigneeId: Int?,
@@ -467,8 +465,8 @@ class GitlabApiImpl(
         projectId: Long,
         title: String,
         description: String?,
-        dueDate: LocalDate?,
-        startDate: LocalDate?
+        dueDate: Date?,
+        startDate: Date?
     ): Milestone = httpClient.post("$apiUrl/projects/$projectId/milestones") {
         body = FormBody.Builder().apply {
             add("title", title)
@@ -483,8 +481,8 @@ class GitlabApiImpl(
         mileStoneId: Long,
         title: String?,
         description: String?,
-        dueDate: LocalDate?,
-        startDate: LocalDate?
+        dueDate: Date?,
+        startDate: Date?
     ): Milestone = httpClient.put("$apiUrl/projects/$projectId/milestones/$mileStoneId") {
         body = FormBody.Builder().apply {
             title?.let { add("title", it) }

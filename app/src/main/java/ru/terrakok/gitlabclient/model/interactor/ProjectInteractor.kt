@@ -77,6 +77,4 @@ class ProjectInteractor(
     suspend fun getProjectBranches(
         projectId: Long
     ): List<Branch> = api.getRepositoryBranches(projectId)
-
-    class ReadmeNotFound : Exception()
 }

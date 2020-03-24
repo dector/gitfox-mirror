@@ -1,11 +1,10 @@
-@file:UseSerializers(ZonedDateTimeDeserializer::class)
+@file:UseSerializers(TimeDeserializer::class)
 package ru.terrakok.gitlabclient.entity
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
-import org.threeten.bp.ZonedDateTime
-import ru.terrakok.gitlabclient.model.data.server.deserializer.ZonedDateTimeDeserializer
+import ru.terrakok.gitlabclient.model.data.server.deserializer.TimeDeserializer
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 22.07.17.
@@ -19,7 +18,7 @@ data class Event(
     @SerialName("target_type") val targetType: EventTargetType? = null,
     @SerialName("author_id") val authorId: Long,
     @SerialName("target_title") val targetTitle: String? = null,
-    @SerialName("created_at") val createdAt: ZonedDateTime,
+    @SerialName("created_at") val createdAt: Time,
     @SerialName("author") val author: ShortUser,
     @SerialName("author_username") val authorUsername: String,
     @SerialName("push_data") val pushData: PushData? = null,

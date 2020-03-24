@@ -1,11 +1,10 @@
-@file:UseSerializers(ZonedDateTimeDeserializer::class)
+@file:UseSerializers(TimeDeserializer::class)
 package ru.terrakok.gitlabclient.entity
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
-import org.threeten.bp.ZonedDateTime
-import ru.terrakok.gitlabclient.model.data.server.deserializer.ZonedDateTimeDeserializer
+import ru.terrakok.gitlabclient.model.data.server.deserializer.TimeDeserializer
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 20.10.18.
@@ -17,11 +16,11 @@ data class Commit(
     @SerialName("title") val title: String,
     @SerialName("author_name") val authorName: String,
     @SerialName("author_email") val authorEmail: String? = null,
-    @SerialName("authored_date") val authoredDate: ZonedDateTime,
+    @SerialName("authored_date") val authoredDate: Time,
     @SerialName("commiter_name") val commiterName: String? = null,
     @SerialName("commiter_email") val commiterEmail: String? = null,
-    @SerialName("commited_date") val commitedDate: ZonedDateTime? = null,
-    @SerialName("created_at") val createdAt: ZonedDateTime,
+    @SerialName("commited_date") val commitedDate: Time? = null,
+    @SerialName("created_at") val createdAt: Time,
     @SerialName("message") val message: String,
     @SerialName("parent_ids") val parentIds: List<String>
 )

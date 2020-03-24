@@ -1,18 +1,17 @@
-@file:UseSerializers(ZonedDateTimeDeserializer::class)
+@file:UseSerializers(TimeDeserializer::class)
 package ru.terrakok.gitlabclient.entity
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
-import org.threeten.bp.ZonedDateTime
-import ru.terrakok.gitlabclient.model.data.server.deserializer.ZonedDateTimeDeserializer
+import ru.terrakok.gitlabclient.model.data.server.deserializer.TimeDeserializer
 
 @Serializable
 data class MergeRequest(
     @SerialName("id") val id: Long,
     @SerialName("iid") val iid: Long,
-    @SerialName("created_at") val createdAt: ZonedDateTime,
-    @SerialName("updated_at") val updatedAt: ZonedDateTime? = null,
+    @SerialName("created_at") val createdAt: Time,
+    @SerialName("updated_at") val updatedAt: Time? = null,
     @SerialName("target_branch") val targetBranch: String,
     @SerialName("source_branch") val sourceBranch: String,
     @SerialName("project_id") val projectId: Long,
@@ -40,9 +39,9 @@ data class MergeRequest(
     // This value will only be present for merge requests which were closed/merged after GitLab 10.6
     // and when the user account that closed/merged the issue still exists.
     @SerialName("closed_by") val closedBy: ShortUser? = null,
-    @SerialName("closed_at") val closedAt: ZonedDateTime? = null,
+    @SerialName("closed_at") val closedAt: Time? = null,
     @SerialName("merged_by") val mergedBy: ShortUser? = null,
-    @SerialName("merged_at") val mergedAt: ZonedDateTime? = null,
+    @SerialName("merged_at") val mergedAt: Time? = null,
     @SerialName("changes") val diffDataList: List<DiffData>? = null,
     // It sometimes can be null.
     @SerialName("assignees") val assignees: List<ShortUser>? = null,

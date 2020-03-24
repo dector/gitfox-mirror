@@ -1,11 +1,10 @@
-@file:UseSerializers(ZonedDateTimeDeserializer::class)
+@file:UseSerializers(TimeDeserializer::class)
 package ru.terrakok.gitlabclient.entity
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
-import org.threeten.bp.ZonedDateTime
-import ru.terrakok.gitlabclient.model.data.server.deserializer.ZonedDateTimeDeserializer
+import ru.terrakok.gitlabclient.model.data.server.deserializer.TimeDeserializer
 
 @Serializable
 data class Project(
@@ -29,8 +28,8 @@ data class Project(
     @SerialName("wiki_enabled") val wikiEnabled: Boolean? = null,
     @SerialName("snippets_enabled") val snippetsEnabled: Boolean? = null,
     @SerialName("container_registry_enabled") val containerRegistryEnabled: Boolean? = false,
-    @SerialName("created_at") val createdAt: ZonedDateTime? = null,
-    @SerialName("last_activity_at") val lastActivityAt: ZonedDateTime? = null,
+    @SerialName("created_at") val createdAt: Time? = null,
+    @SerialName("last_activity_at") val lastActivityAt: Time? = null,
     @SerialName("creator_id") val creatorId: Long? = null,
     @SerialName("namespace") val namespace: Namespace? = null,
     @SerialName("permissions") val permissions: Permissions? = null,
@@ -46,4 +45,32 @@ data class Project(
     @SerialName("only_allow_merge_if_all_discussions_are_resolved") val onlyAllowMergeIfAllDiscussionsAreResolved: Boolean? = null,
     @SerialName("request_access_enabled") val requestAccessEnabled: Boolean? = null,
     @SerialName("readme_url") val readmeUrl: String? = null
+)
+
+@Serializable
+data class SharedWithGroup(
+    @SerialName("group_id") val groupId: Long,
+    @SerialName("group_name") val groupName: String? = null,
+    @SerialName("group_access_level") val groupAccessLevel: Long
+)
+
+@Serializable
+data class Permissions(
+    @SerialName("project_access") val projectAccess: Access? = null,
+    @SerialName("group_access") val groupAccess: Access? = null
+)
+
+@Serializable
+data class Access(
+    @SerialName("access_level") val accessLevel: Long,
+    @SerialName("notification_level") val notificationLevel: Long
+)
+
+@Serializable
+data class Namespace(
+    @SerialName("id") val id: Long,
+    @SerialName("name") val name: String? = null,
+    @SerialName("path") val path: String? = null,
+    @SerialName("kind") val kind: String? = null,
+    @SerialName("full_path") val fullPath: String? = null
 )

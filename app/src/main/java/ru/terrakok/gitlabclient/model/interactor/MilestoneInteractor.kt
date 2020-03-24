@@ -1,11 +1,7 @@
 package ru.terrakok.gitlabclient.model.interactor
 
 import kotlinx.coroutines.flow.Flow
-import org.threeten.bp.LocalDate
-import ru.terrakok.gitlabclient.entity.Issue
-import ru.terrakok.gitlabclient.entity.MergeRequest
-import ru.terrakok.gitlabclient.entity.Milestone
-import ru.terrakok.gitlabclient.entity.MilestoneState
+import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 
@@ -33,8 +29,8 @@ class MilestoneInteractor(
         projectId: Long,
         title: String,
         description: String? = null,
-        dueDate: LocalDate? = null,
-        startDate: LocalDate? = null
+        dueDate: Date? = null,
+        startDate: Date? = null
     ): Milestone = api.createMilestone(projectId, title, description, dueDate, startDate)
 
     suspend fun updateMilestone(
@@ -42,8 +38,8 @@ class MilestoneInteractor(
         milestoneId: Long,
         title: String? = null,
         description: String? = null,
-        dueDate: LocalDate? = null,
-        startDate: LocalDate? = null
+        dueDate: Date? = null,
+        startDate: Date? = null
     ): Milestone =
         api.updateMilestone(
             projectId, milestoneId, title,

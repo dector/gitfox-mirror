@@ -37,6 +37,7 @@ fun Throwable.userMessage(resourceManager: ResourceManager) = when (this) {
     else -> resourceManager.getString(R.string.unknown_error)
 }
 
+fun Time.humanTime(resources: Resources): String = this.toZDT().humanTime(resources)
 private val DATE_FORMAT = DateTimeFormatter.ofPattern("dd MMM yyyy")
 fun ZonedDateTime.humanTime(resources: Resources): String {
     val delta = Duration.between(this, ZonedDateTime.now())
@@ -55,6 +56,7 @@ fun ZonedDateTime.humanTime(resources: Resources): String {
     return resources.getString(R.string.time_ago, timeStr)
 }
 
+fun Date.humanDate(): String = toLocalDate().humanDate()
 fun LocalDate.humanDate(): String = format(DATE_FORMAT)
 
 fun EventAction.getHumanName(resources: Resources) = when (this) {

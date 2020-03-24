@@ -3,7 +3,6 @@ package ru.terrakok.gitlabclient.model.interactor
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
-import org.threeten.bp.ZonedDateTime
 import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.entity.EventAction
 import ru.terrakok.gitlabclient.entity.MergeRequestState
@@ -27,8 +26,8 @@ class MergeRequestInteractor(
         milestone: String? = null,
         viewType: MergeRequestViewType? = null,
         labels: String? = null,
-        createdBefore: ZonedDateTime? = null,
-        createdAfter: ZonedDateTime? = null,
+        createdBefore: Time? = null,
+        createdAfter: Time? = null,
         scope: MergeRequestScope? = null,
         authorId: Int? = null,
         assigneeId: Int? = null,
@@ -52,8 +51,8 @@ class MergeRequestInteractor(
         milestone: String? = null,
         viewType: MergeRequestViewType? = null,
         labels: String? = null,
-        createdBefore: ZonedDateTime? = null,
-        createdAfter: ZonedDateTime? = null,
+        createdBefore: Time? = null,
+        createdAfter: Time? = null,
         scope: MergeRequestScope? = null,
         authorId: Int? = null,
         assigneeId: Int? = null,

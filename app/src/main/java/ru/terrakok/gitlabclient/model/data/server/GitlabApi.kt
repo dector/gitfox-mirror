@@ -1,7 +1,5 @@
 package ru.terrakok.gitlabclient.model.data.server
 
-import org.threeten.bp.LocalDate
-import org.threeten.bp.ZonedDateTime
 import ru.terrakok.gitlabclient.entity.*
 
 interface GitlabApi {
@@ -114,8 +112,8 @@ interface GitlabApi {
     suspend fun getEvents(
         action: EventAction?,
         targetType: EventTarget?,
-        beforeDay: String?,
-        afterDay: String?,
+        beforeDay: Date?,
+        afterDay: Date?,
         sort: Sort?,
         orderBy: OrderBy?,
         scope: EventScope?,
@@ -127,8 +125,8 @@ interface GitlabApi {
         projectId: Long,
         action: EventAction?,
         targetType: EventTarget?,
-        beforeDay: String?,
-        afterDay: String?,
+        beforeDay: Date?,
+        afterDay: Date?,
         sort: Sort?,
         orderBy: OrderBy?,
         page: Int,
@@ -140,8 +138,8 @@ interface GitlabApi {
         milestone: String?,
         viewType: MergeRequestViewType?,
         labels: String?,
-        createdBefore: ZonedDateTime?,
-        createdAfter: ZonedDateTime?,
+        createdBefore: Time?,
+        createdAfter: Time?,
         scope: MergeRequestScope?,
         authorId: Int?,
         assigneeId: Int?,
@@ -158,8 +156,8 @@ interface GitlabApi {
         milestone: String?,
         viewType: MergeRequestViewType?,
         labels: String?,
-        createdBefore: ZonedDateTime?,
-        createdAfter: ZonedDateTime?,
+        createdBefore: Time?,
+        createdAfter: Time?,
         scope: MergeRequestScope?,
         authorId: Int?,
         assigneeId: Int?,
@@ -260,8 +258,8 @@ interface GitlabApi {
         projectId: Long,
         title: String,
         description: String?,
-        dueDate: LocalDate?,
-        startDate: LocalDate?
+        dueDate: Date?,
+        startDate: Date?
     ): Milestone
 
     suspend fun updateMilestone(
@@ -269,8 +267,8 @@ interface GitlabApi {
         mileStoneId: Long,
         title: String?,
         description: String?,
-        dueDate: LocalDate?,
-        startDate: LocalDate?
+        dueDate: Date?,
+        startDate: Date?
     ): Milestone
 
     suspend fun deleteMilestone(

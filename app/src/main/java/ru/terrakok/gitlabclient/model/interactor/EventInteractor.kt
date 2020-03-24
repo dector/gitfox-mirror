@@ -1,6 +1,5 @@
 package ru.terrakok.gitlabclient.model.interactor
 
-import org.threeten.bp.ZonedDateTime
 import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.entity.app.target.*
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
@@ -18,8 +17,8 @@ class EventInteractor(
     suspend fun getEvents(
         action: EventAction? = null,
         targetType: EventTarget? = null,
-        beforeDay: ZonedDateTime? = null,
-        afterDay: ZonedDateTime? = null,
+        beforeDay: Date? = null,
+        afterDay: Date? = null,
         sort: Sort? = Sort.DESC,
         orderBy: OrderBy = OrderBy.UPDATED_AT,
         page: Int,
@@ -28,8 +27,8 @@ class EventInteractor(
         val sourceEvents = api.getEvents(
             action,
             targetType,
-            beforeDay?.run { this.toLocalDate().toString() },
-            afterDay?.run { this.toLocalDate().toString() },
+            beforeDay,
+            afterDay,
             sort,
             orderBy,
             EventScope.ALL,
@@ -44,8 +43,8 @@ class EventInteractor(
         projectId: Long,
         action: EventAction? = null,
         targetType: EventTarget? = null,
-        beforeDay: ZonedDateTime? = null,
-        afterDay: ZonedDateTime? = null,
+        beforeDay: Date? = null,
+        afterDay: Date? = null,
         sort: Sort? = Sort.DESC,
         orderBy: OrderBy = OrderBy.UPDATED_AT,
         page: Int,
@@ -56,8 +55,8 @@ class EventInteractor(
             projectId,
             action,
             targetType,
-            beforeDay?.run { this.toLocalDate().toString() },
-            afterDay?.run { this.toLocalDate().toString() },
+            beforeDay,
+            afterDay,
             sort,
             orderBy,
             page,
