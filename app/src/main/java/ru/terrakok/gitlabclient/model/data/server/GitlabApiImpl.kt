@@ -2,9 +2,10 @@ package ru.terrakok.gitlabclient.model.data.server
 
 import io.ktor.client.HttpClient
 import io.ktor.client.request.*
+import io.ktor.client.request.forms.FormDataContent
 import io.ktor.client.statement.HttpResponse
+import io.ktor.http.Parameters
 import io.ktor.http.takeFrom
-import okhttp3.FormBody
 import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi.Companion.API_PATH
 
@@ -193,9 +194,9 @@ class GitlabApiImpl(
         stateEvent: IssueStateEvent
     ) {
         httpClient.put<Unit>("$apiUrl/projects/$projectId/issues/$issueId") {
-            body = FormBody.Builder()
-                .add("state_event", stateEvent.toString())
-                .build()
+            body = FormDataContent(Parameters.build {
+                append("state_event", stateEvent.toString())
+            })
         }
     }
 
@@ -396,9 +397,9 @@ class GitlabApiImpl(
         issueId: Long,
         body: String
     ): Note = httpClient.post("$apiUrl/projects/$projectId/issues/$issueId/notes") {
-        this.body = FormBody.Builder()
-            .add("body", body)
-            .build()
+        this.body = FormDataContent(Parameters.build {
+            append("body", body)
+        })
     }
 
     override suspend fun createMergeRequestNote(
@@ -406,9 +407,9 @@ class GitlabApiImpl(
         mergeRequestId: Long,
         body: String
     ): Note = httpClient.post("$apiUrl/projects/$projectId/merge_requests/$mergeRequestId/notes") {
-        this.body = FormBody.Builder()
-            .add("body", body)
-            .build()
+        this.body = FormDataContent(Parameters.build {
+            append("body", body)
+        })
     }
 
     override suspend fun getMergeRequestCommits(
@@ -468,12 +469,12 @@ class GitlabApiImpl(
         dueDate: Date?,
         startDate: Date?
     ): Milestone = httpClient.post("$apiUrl/projects/$projectId/milestones") {
-        body = FormBody.Builder().apply {
-            add("title", title)
-            description?.let { add("description", it) }
-            dueDate?.let { add("due_date", it.toString()) }
-            startDate?.let { add("start_date", it.toString()) }
-        }.build()
+        body = FormDataContent(Parameters.build {
+            append("title", title)
+            description?.let { append("description", it) }
+            dueDate?.let { append("due_date", it.toString()) }
+            startDate?.let { append("start_date", it.toString()) }
+        })
     }
 
     override suspend fun updateMilestone(
@@ -484,12 +485,12 @@ class GitlabApiImpl(
         dueDate: Date?,
         startDate: Date?
     ): Milestone = httpClient.put("$apiUrl/projects/$projectId/milestones/$mileStoneId") {
-        body = FormBody.Builder().apply {
-            title?.let { add("title", it) }
-            description?.let { add("description", it) }
-            dueDate?.let { add("due_date", it.toString()) }
-            startDate?.let { add("start_date", it.toString()) }
-        }.build()
+        body = FormDataContent(Parameters.build {
+            title?.let { append("title", it) }
+            description?.let { append("description", it) }
+            dueDate?.let { append("due_date", it.toString()) }
+            startDate?.let { append("start_date", it.toString()) }
+        })
     }
 
     override suspend fun deleteMilestone(
@@ -544,12 +545,12 @@ class GitlabApiImpl(
         description: String?,
         priority: Int?
     ): Label = httpClient.post("$apiUrl/projects/$projectId/labels") {
-        body = FormBody.Builder().apply {
-            add("name", name)
-            add("color", color)
-            description?.let { add("expires_at", it) }
-            priority?.let { add("expires_at", it.toString()) }
-        }.build()
+        body = FormDataContent(Parameters.build {
+            append("name", name)
+            append("color", color)
+            description?.let { append("expires_at", it) }
+            priority?.let { append("expires_at", it.toString()) }
+        })
     }
 
     override suspend fun deleteLabel(
@@ -557,9 +558,9 @@ class GitlabApiImpl(
         name: String
     ) {
         httpClient.delete<Unit>("$apiUrl/projects/$projectId/labels") {
-            body = FormBody.Builder()
-                .add("name", name)
-                .build()
+            body = FormDataContent(Parameters.build {
+                append("name", name)
+            })
         }
     }
 
@@ -643,11 +644,11 @@ class GitlabApiImpl(
         expiresDate: String?
     ) {
         httpClient.post<Unit>("$apiUrl/projects/$projectId/members") {
-            body = FormBody.Builder().apply {
-                add("user_id", userId.toString())
-                add("access_level", accessLevel.toString())
-                expiresDate?.let { add("expires_at", it) }
-            }.build()
+            body = FormDataContent(Parameters.build {
+                append("user_id", userId.toString())
+                append("access_level", accessLevel.toString())
+                expiresDate?.let { append("expires_at", it) }
+            })
         }
     }
 
@@ -658,10 +659,10 @@ class GitlabApiImpl(
         expiresDate: String?
     ) {
         httpClient.put<Unit>("$apiUrl/projects/$projectId/members/$userId") {
-            body = FormBody.Builder().apply {
-                add("access_level", accessLevel.toString())
-                expiresDate?.let { add("expires_at", expiresDate) }
-            }.build()
+            body = FormDataContent(Parameters.build {
+                append("access_level", accessLevel.toString())
+                expiresDate?.let { append("expires_at", expiresDate) }
+            })
         }
     }
 
