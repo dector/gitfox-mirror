@@ -3,6 +3,7 @@ package ru.terrakok.gitlabclient.util
 import android.content.Context
 import android.content.res.Resources
 import androidx.annotation.DrawableRes
+import io.ktor.client.features.ResponseException
 import org.threeten.bp.Duration
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZonedDateTime
@@ -21,7 +22,7 @@ import java.io.IOException
  */
 
 fun Throwable.userMessage(resourceManager: ResourceManager) = when (this) {
-    is ServerError -> when (errorCode) {
+    is ResponseException -> when (response.status.value) {
         304 -> resourceManager.getString(R.string.not_modified_error)
         400 -> resourceManager.getString(R.string.bad_request_error)
         401 -> resourceManager.getString(R.string.unauthorized_error)

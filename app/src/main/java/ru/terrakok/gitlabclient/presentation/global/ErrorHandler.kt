@@ -2,6 +2,7 @@ package ru.terrakok.gitlabclient.presentation.global
 
 import android.annotation.SuppressLint
 import com.github.aakira.napier.Napier
+import io.ktor.client.features.ResponseException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -10,7 +11,6 @@ import kotlinx.coroutines.launch
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
-import ru.terrakok.gitlabclient.entity.ServerError
 import ru.terrakok.gitlabclient.entity.TokenInvalidError
 import ru.terrakok.gitlabclient.model.interactor.SessionInteractor
 import ru.terrakok.gitlabclient.model.system.ResourceManager
@@ -38,7 +38,7 @@ class ErrorHandler @Inject constructor(
     fun proceed(error: Throwable, messageListener: (String) -> Unit = {}) {
         Napier.e(error)
         when (error) {
-            is ServerError -> when (error.errorCode) {
+            is ResponseException -> when (error.response.status.value) {
                 401 -> launch { authErrorChannel.send(true) }
                 else -> messageListener(error.userMessage(resourceManager))
             }

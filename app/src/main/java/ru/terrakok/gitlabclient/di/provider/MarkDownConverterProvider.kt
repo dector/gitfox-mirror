@@ -5,7 +5,6 @@ import ru.noties.markwon.SpannableConfiguration
 import ru.noties.markwon.UrlProcessorRelativeToAbsolute
 import ru.noties.markwon.il.AsyncDrawableLoader
 import ru.noties.markwon.spans.SpannableTheme
-import ru.terrakok.gitlabclient.BuildConfig
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.di.ServerPath
 import ru.terrakok.gitlabclient.entity.app.session.AuthHolder
@@ -34,7 +33,7 @@ class MarkDownConverterProvider @Inject constructor(
 
     private val asyncDrawableLoader
         get() = AsyncDrawableLoader.builder()
-            .client(httpClientFactory.createOkHttp(tokHolder, BuildConfig.DEBUG))
+//            .client(httpClientFactory.createOkHttp(tokHolder, BuildConfig.DEBUG)) todo create custom NetworkSchemeHandler
             .executorService(Executors.newCachedThreadPool())
             .resources(context.resources)
             .build()
