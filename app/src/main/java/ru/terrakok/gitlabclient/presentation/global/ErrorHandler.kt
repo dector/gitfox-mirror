@@ -11,7 +11,6 @@ import kotlinx.coroutines.launch
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
-import ru.terrakok.gitlabclient.entity.TokenInvalidError
 import ru.terrakok.gitlabclient.model.interactor.SessionInteractor
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import ru.terrakok.gitlabclient.model.system.message.SystemMessageNotifier
@@ -42,7 +41,6 @@ class ErrorHandler @Inject constructor(
                 401 -> launch { authErrorChannel.send(true) }
                 else -> messageListener(error.userMessage(resourceManager))
             }
-            is TokenInvalidError -> launch { authErrorChannel.send(true) }
             else -> messageListener(error.userMessage(resourceManager))
         }
     }
