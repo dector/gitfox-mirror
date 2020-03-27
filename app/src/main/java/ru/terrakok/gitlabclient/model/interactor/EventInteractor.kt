@@ -3,15 +3,14 @@ package ru.terrakok.gitlabclient.model.interactor
 import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.entity.app.target.*
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
-import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
+import ru.terrakok.gitlabclient.util.resolveMarkdownUrl
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 22.07.17.
  */
 class EventInteractor(
     private val api: GitlabApi,
-    private val defaultPageSize: Int,
-    private val markDownUrlResolver: MarkDownUrlResolver
+    private val defaultPageSize: Int
 ) {
 
     suspend fun getEvents(
@@ -276,7 +275,7 @@ class EventInteractor(
         EventTargetType.NOTE,
         EventTargetType.DIFF_NOTE -> {
             if (event.note != null && project != null) {
-                markDownUrlResolver.resolve(event.note.body, project)
+                event.note.body.resolveMarkdownUrl(project)
             } else {
                 null
             }

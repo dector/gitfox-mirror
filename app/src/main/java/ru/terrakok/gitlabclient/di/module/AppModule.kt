@@ -16,7 +16,6 @@ import ru.terrakok.gitlabclient.di.provider.PrefsProvider
 import ru.terrakok.gitlabclient.di.provider.UserAccountApiProvider
 import ru.terrakok.gitlabclient.entity.app.develop.AppInfo
 import ru.terrakok.gitlabclient.entity.app.session.OAuthParams
-import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.model.data.server.UserAccountApi
 import ru.terrakok.gitlabclient.model.data.server.client.HttpClientFactory
 import ru.terrakok.gitlabclient.model.data.state.SessionSwitcher
@@ -46,7 +45,6 @@ class AppModule(context: Context) : Module() {
             encodeDefaults = false
         ))
         bind(Json::class.java).toInstance(json)
-        bind(MarkDownUrlResolver::class.java).toInstance(MarkDownUrlResolver())
         bind(HttpClientFactory::class.java).toInstance(HttpClientFactory(context, json))
         bind(Prefs::class.java).toProvider(PrefsProvider::class.java)
         bind(UserAccountApi::class.java).toProvider(UserAccountApiProvider::class.java)

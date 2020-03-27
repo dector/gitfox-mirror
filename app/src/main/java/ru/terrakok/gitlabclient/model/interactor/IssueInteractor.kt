@@ -6,8 +6,8 @@ import kotlinx.coroutines.flow.Flow
 import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.entity.app.target.*
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
-import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
+import ru.terrakok.gitlabclient.util.resolveMarkdownUrl
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 14.06.17.
@@ -15,8 +15,7 @@ import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 class IssueInteractor(
     private val api: GitlabApi,
     serverChanges: ServerChanges,
-    private val defaultPageSize: Int,
-    private val markDownUrlResolver: MarkDownUrlResolver
+    private val defaultPageSize: Int
 ) {
 
     val issueChanges: Flow<Long> = serverChanges.issueChanges
@@ -118,7 +117,7 @@ class IssueInteractor(
         val projectAsync = async { api.getProject(projectId) }
         val issue = api.getIssue(projectId, issueId)
 
-        val resolved = markDownUrlResolver.resolve(issue.description, projectAsync.await())
+        val resolved = issue.description.resolveMarkdownUrl(projectAsync.await())
         if (resolved != issue.description) issue.copy(description = resolved)
         else issue
     }
@@ -159,7 +158,7 @@ class IssueInteractor(
     }
 
     private fun resolveMarkDownUrl(it: Note, project: Project): Note {
-        val resolved = markDownUrlResolver.resolve(it.body, project)
+        val resolved = it.body.resolveMarkdownUrl(project)
         return if (resolved != it.body) it.copy(body = resolved) else it
     }
 

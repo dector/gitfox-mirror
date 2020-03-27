@@ -9,14 +9,13 @@ import ru.terrakok.gitlabclient.entity.MergeRequestState
 import ru.terrakok.gitlabclient.entity.app.CommitWithShortUser
 import ru.terrakok.gitlabclient.entity.app.target.*
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
-import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
+import ru.terrakok.gitlabclient.util.resolveMarkdownUrl
 
 class MergeRequestInteractor(
     private val api: GitlabApi,
     serverChanges: ServerChanges,
-    private val defaultPageSize: Int,
-    private val markDownUrlResolver: MarkDownUrlResolver
+    private val defaultPageSize: Int
 ) {
 
     val mergeRequestChanges: Flow<Long> = serverChanges.mergeRequestChanges
@@ -119,7 +118,7 @@ class MergeRequestInteractor(
         val projectAsync = async { api.getProject(projectId) }
         val mr = api.getMergeRequest(projectId, mergeRequestId)
 
-        val resolved = markDownUrlResolver.resolve(mr.description, projectAsync.await())
+        val resolved = mr.description.resolveMarkdownUrl(projectAsync.await())
         if (resolved != mr.description) mr.copy(description = resolved)
         else mr
     }
@@ -161,7 +160,7 @@ class MergeRequestInteractor(
     }
 
     private fun resolveMarkDownUrl(it: Note, project: Project): Note {
-        val resolved = markDownUrlResolver.resolve(it.body, project)
+        val resolved = it.body.resolveMarkdownUrl(project)
         return if (resolved != it.body) it.copy(body = resolved) else it
     }
 
