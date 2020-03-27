@@ -151,6 +151,8 @@ dependencies {
     kapt("com.github.stephanenicolas.toothpick:toothpick-compiler:$toothpickVersion")
     //JSON
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0")
+    //Preferences
+    implementation("com.russhwolf:multiplatform-settings:0.5.1")
     //Network
     val ktorVersion = "1.3.2"
     implementation("io.ktor:ktor-client-core:$ktorVersion")
