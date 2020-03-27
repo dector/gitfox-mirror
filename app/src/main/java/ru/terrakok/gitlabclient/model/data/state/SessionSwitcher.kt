@@ -7,7 +7,7 @@ import ru.terrakok.gitlabclient.entity.app.session.UserAccount
 import toothpick.Toothpick
 
 class SessionSwitcher {
-    fun hasSession(): Boolean = Toothpick.isScopeOpen(DI.SERVER_SCOPE)
+    val hasSession: Boolean get() = Toothpick.isScopeOpen(DI.SERVER_SCOPE)
 
     fun initSession(newAccount: UserAccount?) {
         Toothpick.closeScope(DI.SERVER_SCOPE)

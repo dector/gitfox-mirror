@@ -26,7 +26,7 @@ class LaunchInteractor(
         get() = prefs.selectedAccount != null
 
     fun signInToLastSession() {
-        if (!sessionSwitcher.hasSession()) {
+        if (!sessionSwitcher.hasSession) {
             sessionSwitcher.initSession(prefs.getCurrentUserAccount())
         }
     }
