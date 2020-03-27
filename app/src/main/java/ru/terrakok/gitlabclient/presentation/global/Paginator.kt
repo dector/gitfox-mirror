@@ -1,7 +1,8 @@
 package ru.terrakok.gitlabclient.presentation.global
 
 import com.github.aakira.napier.Napier
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -118,7 +119,7 @@ object Paginator {
             }
         }
 
-    class Store<T> @Inject constructor() {
+    class Store<T> @Inject constructor() : CoroutineScope by CoroutineScope(Dispatchers.Default) {
         private var state: State = Paginator.State.Empty
         var render: (State) -> Unit = {}
             set(value) {
@@ -131,7 +132,7 @@ object Paginator {
         fun proceed(action: Action) {
             Napier.d("Action: $action")
             val newState = reducer<T>(action, state) { sideEffect ->
-                GlobalScope.launch { sideEffects.send(sideEffect) }
+                launch { sideEffects.send(sideEffect) }
             }
             if (newState != state) {
                 state = newState
