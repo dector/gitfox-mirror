@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.model.data.state
+package ru.terrakok.gitlabclient.system
 
 import com.github.aakira.napier.Napier
 import gitfox.entity.app.session.UserAccount

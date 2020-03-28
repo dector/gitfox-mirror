@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.model.system.message
+package ru.terrakok.gitlabclient.system.message
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 03.09.18.

@@ -2,6 +2,7 @@ package ru.terrakok.gitlabclient.di.module
 
 import android.content.Context
 import android.content.res.AssetManager
+import gitfox.client.HttpClientFactory
 import gitfox.entity.app.develop.AppInfo
 import gitfox.entity.app.session.OAuthParams
 import gitfox.model.data.server.UserAccountApi
@@ -23,10 +24,9 @@ import ru.terrakok.gitlabclient.di.provider.AppInfoInteractorProvider
 import ru.terrakok.gitlabclient.di.provider.LaunchInteractorProvider
 import ru.terrakok.gitlabclient.di.provider.PrefsProvider
 import ru.terrakok.gitlabclient.di.provider.UserAccountApiProvider
-import ru.terrakok.gitlabclient.model.data.server.client.HttpClientFactory
-import ru.terrakok.gitlabclient.model.data.state.SessionSwitcherImpl
-import ru.terrakok.gitlabclient.model.system.ResourceManager
-import ru.terrakok.gitlabclient.model.system.message.SystemMessageNotifier
+import ru.terrakok.gitlabclient.system.ResourceManager
+import ru.terrakok.gitlabclient.system.SessionSwitcherImpl
+import ru.terrakok.gitlabclient.system.message.SystemMessageNotifier
 import toothpick.config.Module
 
 /**

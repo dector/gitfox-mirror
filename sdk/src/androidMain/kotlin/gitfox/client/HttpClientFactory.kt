@@ -1,7 +1,8 @@
-package ru.terrakok.gitlabclient.model.data.server.client
+package gitfox.client
 
 import android.content.Context
 import com.github.aakira.napier.Napier
+import gitfox.client.Tls12SocketFactory.Companion.enableTls12
 import gitfox.entity.app.session.AuthHolder
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
@@ -16,7 +17,6 @@ import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.http.auth.HttpAuthHeader
 import kotlinx.serialization.json.Json
 import okhttp3.Cache
-import ru.terrakok.gitlabclient.model.data.server.client.Tls12SocketFactory.Companion.enableTls12
 import java.util.concurrent.TimeUnit
 
 class HttpClientFactory(

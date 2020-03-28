@@ -33,9 +33,10 @@ kotlin {
                 //Log
                 implementation("com.github.aakira:napier-android:1.2.0")
                 //Network
-                api("io.ktor:ktor-client-serialization-jvm:$ktorVersion")
-                api("io.ktor:ktor-client-auth-jvm:$ktorVersion")
-                api("io.ktor:ktor-client-logging-jvm:$ktorVersion")
+                implementation("io.ktor:ktor-client-serialization-jvm:$ktorVersion")
+                implementation("io.ktor:ktor-client-auth-jvm:$ktorVersion")
+                implementation("io.ktor:ktor-client-logging-jvm:$ktorVersion")
+                implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
                 //Coroutines
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
                 //Preferences

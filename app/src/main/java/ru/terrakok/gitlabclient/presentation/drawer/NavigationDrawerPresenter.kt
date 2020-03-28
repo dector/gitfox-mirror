@@ -4,11 +4,11 @@ import gitfox.entity.app.session.UserAccount
 import gitfox.model.interactor.SessionInteractor
 import moxy.InjectViewState
 import ru.terrakok.gitlabclient.Screens
-import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem.*
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
+import ru.terrakok.gitlabclient.system.flow.FlowRouter
 import javax.inject.Inject
 
 /**

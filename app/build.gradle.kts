@@ -167,9 +167,6 @@ dependencies {
     implementation("com.google.android:flexbox:1.0.0")
     //Log
     implementation("com.github.aakira:napier-android:1.2.0")
-    //Network
-    val ktorVersion = "1.3.2"
-    implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
 
     //JUnit
     testImplementation("junit:junit:4.13")

@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.model.system.message
+package ru.terrakok.gitlabclient.system.message
 
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.sendBlocking

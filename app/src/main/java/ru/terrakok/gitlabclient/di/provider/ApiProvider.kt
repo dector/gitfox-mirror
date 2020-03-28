@@ -1,5 +1,6 @@
 package ru.terrakok.gitlabclient.di.provider
 
+import gitfox.client.HttpClientFactory
 import gitfox.entity.app.session.AuthHolder
 import gitfox.model.data.cache.ProjectCache
 import gitfox.model.data.server.ApiWithChangesRegistration
@@ -9,7 +10,6 @@ import gitfox.model.data.server.GitlabApiImpl
 import gitfox.model.data.state.ServerChanges
 import ru.terrakok.gitlabclient.BuildConfig
 import ru.terrakok.gitlabclient.di.ServerPath
-import ru.terrakok.gitlabclient.model.data.server.client.HttpClientFactory
 import javax.inject.Inject
 import javax.inject.Provider
 

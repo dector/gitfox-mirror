@@ -21,9 +21,9 @@ import ru.terrakok.cicerone.android.support.SupportAppNavigator
 import ru.terrakok.cicerone.commands.Command
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.di.DI
-import ru.terrakok.gitlabclient.model.system.message.SystemMessageNotifier
-import ru.terrakok.gitlabclient.model.system.message.SystemMessageType
 import ru.terrakok.gitlabclient.presentation.AppLauncher
+import ru.terrakok.gitlabclient.system.message.SystemMessageNotifier
+import ru.terrakok.gitlabclient.system.message.SystemMessageType
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.ui.global.MessageDialogFragment
 import ru.terrakok.gitlabclient.util.doOnApplyWindowInsets

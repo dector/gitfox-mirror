@@ -42,7 +42,7 @@ import ru.terrakok.cicerone.commands.BackTo
 import ru.terrakok.cicerone.commands.Replace
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
-import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
+import ru.terrakok.gitlabclient.system.flow.FlowRouter
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 03.03.17

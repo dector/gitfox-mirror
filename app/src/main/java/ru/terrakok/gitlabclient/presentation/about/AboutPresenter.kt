@@ -6,9 +6,9 @@ import kotlinx.coroutines.launch
 import moxy.InjectViewState
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.di.AppDevelopersPath
-import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
+import ru.terrakok.gitlabclient.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.util.e
 import javax.inject.Inject
 

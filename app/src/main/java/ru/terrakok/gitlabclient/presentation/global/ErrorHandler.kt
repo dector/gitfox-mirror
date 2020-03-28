@@ -12,8 +12,8 @@ import kotlinx.coroutines.launch
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
-import ru.terrakok.gitlabclient.model.system.ResourceManager
-import ru.terrakok.gitlabclient.model.system.message.SystemMessageNotifier
+import ru.terrakok.gitlabclient.system.ResourceManager
+import ru.terrakok.gitlabclient.system.message.SystemMessageNotifier
 import ru.terrakok.gitlabclient.util.e
 import ru.terrakok.gitlabclient.util.userMessage
 import javax.inject.Inject

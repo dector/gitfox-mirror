@@ -6,8 +6,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.launch
 import moxy.InjectViewState
-import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.*
+import ru.terrakok.gitlabclient.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.util.openInfo
 import javax.inject.Inject
 

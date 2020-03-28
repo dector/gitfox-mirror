@@ -14,7 +14,7 @@ import org.threeten.bp.LocalDate
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.model.system.ResourceManager
+import ru.terrakok.gitlabclient.system.ResourceManager
 import java.io.IOException
 
 /**

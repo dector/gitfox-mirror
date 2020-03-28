@@ -1,6 +1,7 @@
 package ru.terrakok.gitlabclient.di.provider
 
 import android.content.Context
+import gitfox.client.HttpClientFactory
 import gitfox.entity.app.session.AuthHolder
 import ru.noties.markwon.SpannableConfiguration
 import ru.noties.markwon.UrlProcessorRelativeToAbsolute
@@ -8,7 +9,6 @@ import ru.noties.markwon.il.AsyncDrawableLoader
 import ru.noties.markwon.spans.SpannableTheme
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.di.ServerPath
-import ru.terrakok.gitlabclient.model.data.server.client.HttpClientFactory
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.util.color
 import java.util.concurrent.Executors

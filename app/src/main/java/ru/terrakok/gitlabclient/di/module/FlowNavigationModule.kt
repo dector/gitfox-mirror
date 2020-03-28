@@ -3,7 +3,7 @@ package ru.terrakok.gitlabclient.di.module
 import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
-import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
+import ru.terrakok.gitlabclient.system.flow.FlowRouter
 import toothpick.config.Module
 
 /**

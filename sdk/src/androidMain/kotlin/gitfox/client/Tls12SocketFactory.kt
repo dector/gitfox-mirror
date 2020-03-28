@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.model.data.server.client
+package gitfox.client
 
 import android.os.Build
 import com.github.aakira.napier.Napier

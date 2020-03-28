@@ -1,4 +1,4 @@
-package ru.terrakok.gitlabclient.model.system
+package ru.terrakok.gitlabclient.system
 
 import android.content.Context
 import javax.inject.Inject
