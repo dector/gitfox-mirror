@@ -1,7 +1,6 @@
 package gitfox.model.data.server.deserializer
 
 import gitfox.entity.*
-import gitfox.entity.TargetType
 import kotlinx.serialization.*
 import kotlinx.serialization.builtins.serializer
 

@@ -21,7 +21,6 @@ kotlin {
                 implementation("com.russhwolf:multiplatform-settings:0.5.1")
                 //Network
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
-                implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
                 //Coroutines
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$coroutinesVersion")
             }
@@ -33,6 +32,7 @@ kotlin {
                 //Log
                 implementation("com.github.aakira:napier-android:1.2.0")
                 //Network
+                api("io.ktor:ktor-client-core-jvm:$ktorVersion")
                 implementation("io.ktor:ktor-client-serialization-jvm:$ktorVersion")
                 implementation("io.ktor:ktor-client-auth-jvm:$ktorVersion")
                 implementation("io.ktor:ktor-client-logging-jvm:$ktorVersion")
@@ -41,6 +41,8 @@ kotlin {
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
                 //Preferences
                 api("com.russhwolf:multiplatform-settings:0.5.1")
+                //JSON
+                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0")
             }
         }
         all {
