@@ -1,10 +1,10 @@
 package ru.terrakok.gitlabclient.presentation.main
 
+import gitfox.model.interactor.AccountInteractor
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import moxy.InjectViewState
-import ru.terrakok.gitlabclient.model.interactor.AccountInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import javax.inject.Inject
 

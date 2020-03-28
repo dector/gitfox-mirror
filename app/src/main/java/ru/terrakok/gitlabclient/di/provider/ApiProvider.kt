@@ -1,15 +1,15 @@
 package ru.terrakok.gitlabclient.di.provider
 
+import gitfox.entity.app.session.AuthHolder
+import gitfox.model.data.cache.ProjectCache
+import gitfox.model.data.server.ApiWithChangesRegistration
+import gitfox.model.data.server.ApiWithProjectCache
+import gitfox.model.data.server.GitlabApi
+import gitfox.model.data.server.GitlabApiImpl
+import gitfox.model.data.state.ServerChanges
 import ru.terrakok.gitlabclient.BuildConfig
 import ru.terrakok.gitlabclient.di.ServerPath
-import ru.terrakok.gitlabclient.entity.app.session.AuthHolder
-import ru.terrakok.gitlabclient.model.data.cache.ProjectCache
-import ru.terrakok.gitlabclient.model.data.server.ApiWithChangesRegistration
-import ru.terrakok.gitlabclient.model.data.server.ApiWithProjectCache
-import ru.terrakok.gitlabclient.model.data.server.GitlabApi
-import ru.terrakok.gitlabclient.model.data.server.GitlabApiImpl
 import ru.terrakok.gitlabclient.model.data.server.client.HttpClientFactory
-import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -17,11 +17,11 @@ import javax.inject.Provider
  * @author Konstantin Tskhovrebov (aka terrakok) on 20.06.17.
  */
 class ApiProvider @Inject constructor(
-        private val httpClientFactory: HttpClientFactory,
-        private val authHolder: AuthHolder,
-        private val projectCache: ProjectCache,
-        private val serverChanges: ServerChanges,
-        @ServerPath private val serverPath: String
+    private val httpClientFactory: HttpClientFactory,
+    private val authHolder: AuthHolder,
+    private val projectCache: ProjectCache,
+    private val serverChanges: ServerChanges,
+    @ServerPath private val serverPath: String
 ) : Provider<GitlabApi> {
 
     override fun get() =

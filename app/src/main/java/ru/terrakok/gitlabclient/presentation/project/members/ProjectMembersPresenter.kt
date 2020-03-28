@@ -1,5 +1,7 @@
 package ru.terrakok.gitlabclient.presentation.project.members
 
+import gitfox.entity.Member
+import gitfox.model.interactor.MembersInteractor
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.flow.launchIn
@@ -9,8 +11,6 @@ import moxy.InjectViewState
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
-import ru.terrakok.gitlabclient.entity.Member
-import ru.terrakok.gitlabclient.model.interactor.MembersInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler

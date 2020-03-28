@@ -1,14 +1,14 @@
 package ru.terrakok.gitlabclient.di.module
 
+import gitfox.entity.app.session.AuthHolder
+import gitfox.entity.app.session.UserAccount
+import gitfox.model.data.cache.ProjectCache
+import gitfox.model.data.server.GitlabApi
+import gitfox.model.data.state.ServerChanges
+import gitfox.model.interactor.*
 import ru.terrakok.gitlabclient.BuildConfig
 import ru.terrakok.gitlabclient.di.ServerPath
 import ru.terrakok.gitlabclient.di.provider.*
-import ru.terrakok.gitlabclient.entity.app.session.AuthHolder
-import ru.terrakok.gitlabclient.entity.app.session.UserAccount
-import ru.terrakok.gitlabclient.model.data.cache.ProjectCache
-import ru.terrakok.gitlabclient.model.data.server.GitlabApi
-import ru.terrakok.gitlabclient.model.data.state.ServerChanges
-import ru.terrakok.gitlabclient.model.interactor.*
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import toothpick.config.Module

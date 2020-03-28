@@ -1,6 +1,7 @@
 package ru.terrakok.gitlabclient.model.interactor
 
 import com.nhaarman.mockitokotlin2.mock
+import gitfox.entity.User
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
@@ -13,7 +14,6 @@ import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
 import ru.terrakok.gitlabclient.TestSchedulers
-import ru.terrakok.gitlabclient.entity.User
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 

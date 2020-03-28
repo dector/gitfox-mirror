@@ -11,16 +11,16 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
+import gitfox.entity.Member
+import gitfox.entity.Project
+import gitfox.entity.ShortUser
+import gitfox.entity.User
+import gitfox.entity.app.session.UserAccount
 import kotlinx.android.synthetic.main.view_avatar.view.*
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.di.DI
-import ru.terrakok.gitlabclient.entity.Member
-import ru.terrakok.gitlabclient.entity.Project
-import ru.terrakok.gitlabclient.entity.ShortUser
-import ru.terrakok.gitlabclient.entity.User
-import ru.terrakok.gitlabclient.entity.app.session.UserAccount
 import ru.terrakok.gitlabclient.util.getTintDrawable
 import toothpick.Toothpick
 

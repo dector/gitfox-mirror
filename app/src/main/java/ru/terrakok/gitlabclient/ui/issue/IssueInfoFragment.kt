@@ -5,12 +5,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
+import gitfox.entity.*
 import kotlinx.android.synthetic.main.fragment_issue_info.*
 import kotlinx.android.synthetic.main.item_target_badge.view.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.*
 import ru.terrakok.gitlabclient.presentation.issue.info.IssueInfoPresenter
 import ru.terrakok.gitlabclient.presentation.issue.info.IssueInfoView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment

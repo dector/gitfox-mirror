@@ -1,23 +1,23 @@
 package ru.terrakok.gitlabclient
 
+import gitfox.entity.*
+import gitfox.entity.EventAction
+import gitfox.entity.EventTargetType
+import gitfox.entity.IssueState
+import gitfox.entity.MergeRequestMergeStatus
+import gitfox.entity.MergeRequestState
+import gitfox.entity.MilestoneState
+import gitfox.entity.TargetState
+import gitfox.entity.TargetType
+import gitfox.entity.TodoAction
+import gitfox.entity.app.session.UserAccount
+import gitfox.entity.app.target.*
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.Month
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
-import ru.terrakok.gitlabclient.entity.*
-import ru.terrakok.gitlabclient.entity.EventAction
-import ru.terrakok.gitlabclient.entity.EventTargetType
-import ru.terrakok.gitlabclient.entity.IssueState
-import ru.terrakok.gitlabclient.entity.MergeRequestMergeStatus
-import ru.terrakok.gitlabclient.entity.MergeRequestState
-import ru.terrakok.gitlabclient.entity.MilestoneState
-import ru.terrakok.gitlabclient.entity.TargetState
-import ru.terrakok.gitlabclient.entity.TargetType
-import ru.terrakok.gitlabclient.entity.TodoAction
-import ru.terrakok.gitlabclient.entity.app.session.UserAccount
-import ru.terrakok.gitlabclient.entity.app.target.*
 import ru.terrakok.gitlabclient.model.data.server.deserializer.TodoDeserializer
 
 /**

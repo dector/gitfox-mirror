@@ -1,5 +1,8 @@
 package ru.terrakok.gitlabclient.presentation.my.todos
 
+import gitfox.entity.app.target.TargetHeader
+import gitfox.model.interactor.AccountInteractor
+import gitfox.model.interactor.TodoInteractor
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.flow.launchIn
@@ -8,9 +11,6 @@ import kotlinx.coroutines.launch
 import moxy.InjectViewState
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.TodoListPendingState
-import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
-import ru.terrakok.gitlabclient.model.interactor.AccountInteractor
-import ru.terrakok.gitlabclient.model.interactor.TodoInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler

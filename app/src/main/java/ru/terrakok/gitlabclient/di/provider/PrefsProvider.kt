@@ -2,8 +2,8 @@ package ru.terrakok.gitlabclient.di.provider
 
 import android.content.Context
 import com.russhwolf.settings.AndroidSettings
+import gitfox.model.data.storage.Prefs
 import kotlinx.serialization.json.Json
-import ru.terrakok.gitlabclient.model.data.storage.Prefs
 import javax.inject.Inject
 import javax.inject.Provider
 

@@ -1,10 +1,10 @@
 package ru.terrakok.gitlabclient.presentation.mergerequest.info
 
+import gitfox.entity.MergeRequest
 import moxy.MvpView
 import moxy.viewstate.strategy.AddToEndSingleStrategy
 import moxy.viewstate.strategy.OneExecutionStateStrategy
 import moxy.viewstate.strategy.StateStrategyType
-import ru.terrakok.gitlabclient.entity.MergeRequest
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 27.04.17.

@@ -3,17 +3,17 @@ package ru.terrakok.gitlabclient.util
 import android.content.Context
 import android.content.res.Resources
 import androidx.annotation.DrawableRes
+import gitfox.entity.*
+import gitfox.entity.app.develop.LicenseType
+import gitfox.entity.app.target.TargetBadgeStatus
+import gitfox.entity.app.target.TargetHeaderIcon
+import gitfox.entity.app.target.TargetHeaderTitle
 import io.ktor.client.features.ResponseException
 import org.threeten.bp.Duration
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.*
-import ru.terrakok.gitlabclient.entity.app.develop.LicenseType
-import ru.terrakok.gitlabclient.entity.app.target.TargetBadgeStatus
-import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderIcon
-import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderTitle
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import java.io.IOException
 

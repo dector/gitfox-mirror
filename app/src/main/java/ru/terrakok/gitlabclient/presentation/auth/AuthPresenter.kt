@@ -1,9 +1,9 @@
 package ru.terrakok.gitlabclient.presentation.auth
 
+import gitfox.model.interactor.SessionInteractor
 import kotlinx.coroutines.launch
 import moxy.InjectViewState
 import ru.terrakok.gitlabclient.Screens
-import ru.terrakok.gitlabclient.model.interactor.SessionInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler

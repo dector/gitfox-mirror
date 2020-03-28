@@ -1,5 +1,7 @@
 package ru.terrakok.gitlabclient.presentation.project.milestones
 
+import gitfox.entity.Milestone
+import gitfox.model.interactor.MilestoneInteractor
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.flow.launchIn
@@ -9,8 +11,6 @@ import moxy.InjectViewState
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
-import ru.terrakok.gitlabclient.entity.Milestone
-import ru.terrakok.gitlabclient.model.interactor.MilestoneInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler

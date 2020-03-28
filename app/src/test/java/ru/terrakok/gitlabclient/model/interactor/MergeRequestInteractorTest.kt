@@ -2,13 +2,14 @@ package ru.terrakok.gitlabclient.model.interactor
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
+import gitfox.entity.DiffData
+import gitfox.entity.OrderBy
+import gitfox.entity.ShortUser
+import gitfox.entity.Sort
+import gitfox.entity.app.CommitWithShortUser
 import io.reactivex.Single
 import org.junit.Test
-import org.mockito.ArgumentMatchers.anyBoolean
-import org.mockito.ArgumentMatchers.anyInt
-import org.mockito.ArgumentMatchers.anyLong
-import org.mockito.ArgumentMatchers.anyString
-import org.mockito.ArgumentMatchers.eq
+import org.mockito.ArgumentMatchers.*
 import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.then
 import org.mockito.Mockito
@@ -17,11 +18,6 @@ import org.mockito.Mockito.times
 import ru.terrakok.gitlabclient.TestData
 import ru.terrakok.gitlabclient.TestSchedulers
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
-import ru.terrakok.gitlabclient.entity.DiffData
-import ru.terrakok.gitlabclient.entity.OrderBy
-import ru.terrakok.gitlabclient.entity.ShortUser
-import ru.terrakok.gitlabclient.entity.Sort
-import ru.terrakok.gitlabclient.entity.app.CommitWithShortUser
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges

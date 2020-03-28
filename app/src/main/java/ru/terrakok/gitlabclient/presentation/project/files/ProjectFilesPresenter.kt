@@ -1,5 +1,9 @@
 package ru.terrakok.gitlabclient.presentation.project.files
 
+import gitfox.entity.Branch
+import gitfox.entity.RepositoryTreeNodeType
+import gitfox.entity.app.ProjectFile
+import gitfox.model.interactor.ProjectInteractor
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.launch
@@ -8,10 +12,6 @@ import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
-import ru.terrakok.gitlabclient.entity.Branch
-import ru.terrakok.gitlabclient.entity.RepositoryTreeNodeType
-import ru.terrakok.gitlabclient.entity.app.ProjectFile
-import ru.terrakok.gitlabclient.model.interactor.ProjectInteractor
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
@@ -142,7 +142,7 @@ class ProjectFilesPresenter @Inject constructor(
 
                     val branches = projectInteractor.getProjectBranches(projectId)
                     projectBranches.addAll(branches)
-                    projectFileDestination.init(project.path, project.defaultBranch)
+                    projectFileDestination.init(project.path, project.defaultBranch!!)
                     projectFileDestination.moveToRoot()
                 } else {
                     handleLoadingProjectDetailsError(NoBranchesError())

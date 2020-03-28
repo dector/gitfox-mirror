@@ -1,5 +1,8 @@
 package ru.terrakok.gitlabclient.presentation.issue
 
+import gitfox.entity.app.target.TargetAction
+import gitfox.model.interactor.IssueInteractor
+import gitfox.model.interactor.ProjectInteractor
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import moxy.InjectViewState
@@ -7,9 +10,6 @@ import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.di.IssueId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
-import ru.terrakok.gitlabclient.entity.app.target.TargetAction
-import ru.terrakok.gitlabclient.model.interactor.IssueInteractor
-import ru.terrakok.gitlabclient.model.interactor.ProjectInteractor
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter

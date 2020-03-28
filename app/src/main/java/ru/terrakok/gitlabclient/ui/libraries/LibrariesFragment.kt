@@ -3,12 +3,12 @@ package ru.terrakok.gitlabclient.ui.libraries
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
+import gitfox.entity.app.develop.AppLibrary
 import kotlinx.android.synthetic.main.fragment_libraries.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.di.DI
-import ru.terrakok.gitlabclient.entity.app.develop.AppLibrary
 import ru.terrakok.gitlabclient.presentation.libraries.LibrariesPresenter
 import ru.terrakok.gitlabclient.presentation.libraries.LibrariesView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment

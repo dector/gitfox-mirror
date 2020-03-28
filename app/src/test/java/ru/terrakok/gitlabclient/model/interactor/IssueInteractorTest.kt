@@ -2,6 +2,8 @@ package ru.terrakok.gitlabclient.model.interactor
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
+import gitfox.entity.*
+import gitfox.entity.app.target.*
 import io.reactivex.Single
 import org.junit.Test
 import org.mockito.BDDMockito.anyBoolean
@@ -17,8 +19,6 @@ import org.mockito.Mockito.times
 import ru.terrakok.gitlabclient.TestData
 import ru.terrakok.gitlabclient.TestSchedulers
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
-import ru.terrakok.gitlabclient.entity.*
-import ru.terrakok.gitlabclient.entity.app.target.*
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.server.MarkDownUrlResolver
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges

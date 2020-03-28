@@ -1,5 +1,8 @@
 package ru.terrakok.gitlabclient.presentation.projects
 
+import gitfox.entity.OrderBy
+import gitfox.entity.Project
+import gitfox.model.interactor.ProjectInteractor
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.flow.launchIn
@@ -9,9 +12,6 @@ import moxy.InjectViewState
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectListMode
-import ru.terrakok.gitlabclient.entity.OrderBy
-import ru.terrakok.gitlabclient.entity.Project
-import ru.terrakok.gitlabclient.model.interactor.ProjectInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler

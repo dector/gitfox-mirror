@@ -3,7 +3,6 @@ plugins {
     kotlin("android")
     kotlin("kapt")
     kotlin("android.extensions")
-    id("kotlinx-serialization")
 }
 
 apply(from = "${project.rootDir}/codequality/ktlint.gradle.kts")
@@ -84,6 +83,7 @@ android {
                 initWith(getByName("debug"))
                 isMinifyEnabled = true
                 versionNameSuffix = " debugPG"
+                matchingFallbacks = listOf("debug")
 
                 proguardFiles(
                     getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -127,6 +127,7 @@ androidExtensions {
 }
 
 dependencies {
+    implementation(project(":sdk"))
     //Support
     implementation("androidx.appcompat:appcompat:1.1.0")
     implementation("com.google.android.material:material:1.1.0")
@@ -134,10 +135,6 @@ dependencies {
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.0.0")
     implementation("androidx.recyclerview:recyclerview:1.1.0")
     implementation("androidx.constraintlayout:constraintlayout:1.1.3")
-    //Kotlin
-    implementation("org.jetbrains.kotlin:kotlin-stdlib")
-    //Log
-    implementation("com.github.aakira:napier-android:1.2.0")
     //MVP Moxy
     val moxyVersion = "2.0.2"
     kapt("com.github.moxy-community:moxy-compiler:$moxyVersion")
@@ -149,21 +146,6 @@ dependencies {
     val toothpickVersion = "3.1.0"
     implementation("com.github.stephanenicolas.toothpick:toothpick-runtime:$toothpickVersion")
     kapt("com.github.stephanenicolas.toothpick:toothpick-compiler:$toothpickVersion")
-    //JSON
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0")
-    //Preferences
-    implementation("com.russhwolf:multiplatform-settings:0.5.1")
-    //Network
-    val ktorVersion = "1.3.2"
-    implementation("io.ktor:ktor-client-core:$ktorVersion")
-    implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
-    implementation("io.ktor:ktor-client-serialization-jvm:$ktorVersion")
-    implementation("io.ktor:ktor-client-auth-jvm:$ktorVersion")
-    implementation("io.ktor:ktor-client-logging-jvm:$ktorVersion")
-    //Coroutines
-    val coroutinesVersion = "1.3.4"
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
     //Adapter simplify
     implementation("com.hannesdorfmann:adapterdelegates4:4.2.0")
     //Image load and cache
@@ -183,6 +165,11 @@ dependencies {
     implementation("com.jakewharton.threetenabp:threetenabp:1.2.2")
     //FlexBox Layout
     implementation("com.google.android:flexbox:1.0.0")
+    //Log
+    implementation("com.github.aakira:napier-android:1.2.0")
+    //Network
+    val ktorVersion = "1.3.2"
+    implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
 
     //JUnit
     testImplementation("junit:junit:4.13")
@@ -192,11 +179,6 @@ dependencies {
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
     //Date with timezone
     testImplementation("org.threeten:threetenbp:1.4.1")
-}
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().all {
-    kotlinOptions.freeCompilerArgs += "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
-    kotlinOptions.freeCompilerArgs += "-Xopt-in=kotlinx.coroutines.FlowPreview"
 }
 
 gradle.buildFinished {

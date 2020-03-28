@@ -1,10 +1,10 @@
 package ru.terrakok.gitlabclient.presentation.user.info
 
+import gitfox.model.interactor.UserInteractor
 import kotlinx.coroutines.launch
 import moxy.InjectViewState
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.UserId
-import ru.terrakok.gitlabclient.model.interactor.UserInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler

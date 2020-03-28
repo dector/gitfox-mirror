@@ -3,10 +3,10 @@ package ru.terrakok.gitlabclient
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import gitfox.entity.IssueState
+import gitfox.entity.MergeRequestState
+import gitfox.entity.app.target.TargetAction
 import ru.terrakok.cicerone.android.support.SupportAppScreen
-import ru.terrakok.gitlabclient.entity.IssueState
-import ru.terrakok.gitlabclient.entity.MergeRequestState
-import ru.terrakok.gitlabclient.entity.app.target.TargetAction
 import ru.terrakok.gitlabclient.ui.about.AboutFragment
 import ru.terrakok.gitlabclient.ui.auth.AuthFlowFragment
 import ru.terrakok.gitlabclient.ui.auth.AuthFragment

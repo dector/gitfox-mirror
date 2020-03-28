@@ -1,9 +1,9 @@
 package ru.terrakok.gitlabclient.presentation.libraries
 
+import gitfox.entity.app.develop.AppLibrary
 import moxy.MvpView
 import moxy.viewstate.strategy.AddToEndSingleStrategy
 import moxy.viewstate.strategy.StateStrategyType
-import ru.terrakok.gitlabclient.entity.app.develop.AppLibrary
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 23.12.17.

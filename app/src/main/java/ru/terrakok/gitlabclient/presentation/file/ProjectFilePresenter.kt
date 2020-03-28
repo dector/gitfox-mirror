@@ -1,5 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.file
 
+import gitfox.model.interactor.ProjectInteractor
 import kotlinx.coroutines.launch
 import moxy.InjectViewState
 import ru.terrakok.cicerone.Router
@@ -7,7 +8,6 @@ import ru.terrakok.gitlabclient.di.FilePath
 import ru.terrakok.gitlabclient.di.FileReference
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
-import ru.terrakok.gitlabclient.model.interactor.ProjectInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.util.extractFileNameFromPath
 import javax.inject.Inject

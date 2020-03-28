@@ -1,6 +1,7 @@
 package ru.terrakok.gitlabclient.model.interactor
 
 import com.nhaarman.mockitokotlin2.mock
+import gitfox.entity.app.session.OAuthParams
 import org.junit.Assert
 import org.junit.Test
 import org.mockito.BDDMockito.given
@@ -9,7 +10,6 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.times
 import ru.terrakok.gitlabclient.TestData
 import ru.terrakok.gitlabclient.TestSchedulers
-import ru.terrakok.gitlabclient.entity.app.session.OAuthParams
 import ru.terrakok.gitlabclient.model.data.cache.ProjectCache
 import ru.terrakok.gitlabclient.model.data.server.UserAccountApi
 import ru.terrakok.gitlabclient.model.data.storage.Prefs

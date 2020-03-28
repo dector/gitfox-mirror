@@ -1,5 +1,7 @@
 package ru.terrakok.gitlabclient.presentation.project.labels
 
+import gitfox.entity.Label
+import gitfox.model.interactor.LabelInteractor
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.flow.launchIn
@@ -8,8 +10,6 @@ import kotlinx.coroutines.launch
 import moxy.InjectViewState
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
-import ru.terrakok.gitlabclient.entity.Label
-import ru.terrakok.gitlabclient.model.interactor.LabelInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler

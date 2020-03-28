@@ -5,16 +5,16 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
+import gitfox.entity.app.target.TargetBadge
+import gitfox.entity.app.target.TargetBadgeIcon
+import gitfox.entity.app.target.TargetHeader
+import gitfox.entity.app.target.TargetHeaderIcon
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_target_badge.view.*
 import kotlinx.android.synthetic.main.item_target_header_public.*
 import kotlinx.android.synthetic.main.item_target_header_public.view.*
 import ru.noties.markwon.Markwon
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.app.target.TargetBadge
-import ru.terrakok.gitlabclient.entity.app.target.TargetBadgeIcon
-import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
-import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderIcon
 import ru.terrakok.gitlabclient.ui.global.view.custom.bindShortUser
 import ru.terrakok.gitlabclient.util.*
 

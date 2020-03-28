@@ -2,6 +2,14 @@ package ru.terrakok.gitlabclient.di.module
 
 import android.content.Context
 import android.content.res.AssetManager
+import gitfox.entity.app.develop.AppInfo
+import gitfox.entity.app.session.OAuthParams
+import gitfox.model.data.server.UserAccountApi
+import gitfox.model.data.state.SessionSwitcher
+import gitfox.model.data.storage.Prefs
+import gitfox.model.interactor.AppInfoInteractor
+import gitfox.model.interactor.LaunchInteractor
+import gitfox.util.Base64Tools
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 import ru.terrakok.cicerone.Cicerone
@@ -15,17 +23,10 @@ import ru.terrakok.gitlabclient.di.provider.AppInfoInteractorProvider
 import ru.terrakok.gitlabclient.di.provider.LaunchInteractorProvider
 import ru.terrakok.gitlabclient.di.provider.PrefsProvider
 import ru.terrakok.gitlabclient.di.provider.UserAccountApiProvider
-import ru.terrakok.gitlabclient.entity.app.develop.AppInfo
-import ru.terrakok.gitlabclient.entity.app.session.OAuthParams
-import ru.terrakok.gitlabclient.model.data.server.UserAccountApi
 import ru.terrakok.gitlabclient.model.data.server.client.HttpClientFactory
-import ru.terrakok.gitlabclient.model.data.state.SessionSwitcher
-import ru.terrakok.gitlabclient.model.data.storage.Prefs
-import ru.terrakok.gitlabclient.model.interactor.AppInfoInteractor
-import ru.terrakok.gitlabclient.model.interactor.LaunchInteractor
+import ru.terrakok.gitlabclient.model.data.state.SessionSwitcherImpl
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import ru.terrakok.gitlabclient.model.system.message.SystemMessageNotifier
-import ru.terrakok.gitlabclient.util.Base64Tools
 import toothpick.config.Module
 
 /**
@@ -50,7 +51,7 @@ class AppModule(context: Context) : Module() {
         bind(HttpClientFactory::class.java).toInstance(HttpClientFactory(context, json))
         bind(Prefs::class.java).toProvider(PrefsProvider::class.java)
         bind(UserAccountApi::class.java).toProvider(UserAccountApiProvider::class.java)
-        bind(SessionSwitcher::class.java).toInstance(SessionSwitcher())
+        bind(SessionSwitcher::class.java).toInstance(SessionSwitcherImpl())
 
         // Navigation
         val cicerone = Cicerone.create()

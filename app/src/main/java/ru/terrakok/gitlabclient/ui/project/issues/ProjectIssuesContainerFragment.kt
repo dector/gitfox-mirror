@@ -2,10 +2,10 @@ package ru.terrakok.gitlabclient.ui.project.issues
 
 import android.os.Bundle
 import androidx.fragment.app.FragmentPagerAdapter
+import gitfox.entity.IssueState
 import kotlinx.android.synthetic.main.fragment_my_issues_container.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
-import ru.terrakok.gitlabclient.entity.IssueState
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 
 /**

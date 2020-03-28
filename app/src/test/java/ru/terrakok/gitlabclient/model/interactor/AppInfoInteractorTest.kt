@@ -1,12 +1,12 @@
 package ru.terrakok.gitlabclient.model.interactor
 
+import gitfox.entity.app.develop.AppInfo
+import gitfox.entity.app.develop.AppLibrary
+import gitfox.entity.app.develop.LicenseType
 import io.reactivex.Single
 import org.junit.Test
 import org.mockito.Mockito.*
 import ru.terrakok.gitlabclient.TestSchedulers
-import ru.terrakok.gitlabclient.entity.app.develop.AppInfo
-import ru.terrakok.gitlabclient.entity.app.develop.AppLibrary
-import ru.terrakok.gitlabclient.entity.app.develop.LicenseType
 import ru.terrakok.gitlabclient.model.data.storage.RawAppData
 
 /**

@@ -1,15 +1,15 @@
 package ru.terrakok.gitlabclient.presentation.drawer
 
-import javax.inject.Inject
+import gitfox.entity.app.session.UserAccount
+import gitfox.model.interactor.SessionInteractor
 import moxy.InjectViewState
 import ru.terrakok.gitlabclient.Screens
-import ru.terrakok.gitlabclient.entity.app.session.UserAccount
-import ru.terrakok.gitlabclient.model.interactor.SessionInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem.*
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
+import javax.inject.Inject
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 04.04.17

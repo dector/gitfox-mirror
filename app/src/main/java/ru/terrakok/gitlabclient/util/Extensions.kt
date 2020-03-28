@@ -29,6 +29,10 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.github.aakira.napier.Napier
 import com.google.android.material.snackbar.Snackbar
+import gitfox.entity.Date
+import gitfox.entity.Time
+import gitfox.entity.app.target.AppTarget
+import gitfox.entity.app.target.TargetHeader
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
@@ -38,10 +42,6 @@ import ru.terrakok.cicerone.commands.BackTo
 import ru.terrakok.cicerone.commands.Replace
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
-import ru.terrakok.gitlabclient.entity.Date
-import ru.terrakok.gitlabclient.entity.Time
-import ru.terrakok.gitlabclient.entity.app.target.AppTarget
-import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 
 /**

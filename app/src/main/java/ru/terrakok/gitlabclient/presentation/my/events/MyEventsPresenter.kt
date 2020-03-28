@@ -1,11 +1,11 @@
 package ru.terrakok.gitlabclient.presentation.my.events
 
+import gitfox.entity.app.target.TargetHeader
+import gitfox.model.interactor.EventInteractor
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.launch
 import moxy.InjectViewState
-import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
-import ru.terrakok.gitlabclient.model.interactor.EventInteractor
 import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.*
 import ru.terrakok.gitlabclient.util.openInfo

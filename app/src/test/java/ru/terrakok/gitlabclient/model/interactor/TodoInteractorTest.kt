@@ -1,6 +1,7 @@
 package ru.terrakok.gitlabclient.model.interactor
 
 import com.nhaarman.mockitokotlin2.anyOrNull
+import gitfox.entity.TodoState
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.junit.Test
@@ -13,7 +14,6 @@ import org.mockito.Mockito.times
 import ru.terrakok.gitlabclient.TestData
 import ru.terrakok.gitlabclient.TestSchedulers
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
-import ru.terrakok.gitlabclient.entity.TodoState
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 

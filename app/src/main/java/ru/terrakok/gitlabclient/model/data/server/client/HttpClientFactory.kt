@@ -2,6 +2,7 @@ package ru.terrakok.gitlabclient.model.data.server.client
 
 import android.content.Context
 import com.github.aakira.napier.Napier
+import gitfox.entity.app.session.AuthHolder
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.features.auth.Auth
@@ -13,10 +14,8 @@ import io.ktor.client.features.logging.Logger
 import io.ktor.client.features.logging.Logging
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.http.auth.HttpAuthHeader
-import io.ktor.util.KtorExperimentalAPI
 import kotlinx.serialization.json.Json
 import okhttp3.Cache
-import ru.terrakok.gitlabclient.entity.app.session.AuthHolder
 import ru.terrakok.gitlabclient.model.data.server.client.Tls12SocketFactory.Companion.enableTls12
 import java.util.concurrent.TimeUnit
 
@@ -25,7 +24,6 @@ class HttpClientFactory(
     private val json: Json
 ) {
 
-    @OptIn(KtorExperimentalAPI::class)
     fun create(
         authData: AuthHolder?,
         enableLogging: Boolean

@@ -2,6 +2,7 @@ package ru.terrakok.gitlabclient.presentation.global
 
 import android.annotation.SuppressLint
 import com.github.aakira.napier.Napier
+import gitfox.model.interactor.SessionInteractor
 import io.ktor.client.features.ResponseException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -11,7 +12,6 @@ import kotlinx.coroutines.launch
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
-import ru.terrakok.gitlabclient.model.interactor.SessionInteractor
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import ru.terrakok.gitlabclient.model.system.message.SystemMessageNotifier
 import ru.terrakok.gitlabclient.util.e

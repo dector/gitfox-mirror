@@ -1,5 +1,7 @@
 package ru.terrakok.gitlabclient.presentation.commit
 
+import gitfox.entity.DiffData
+import gitfox.model.interactor.CommitInteractor
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import moxy.InjectViewState
@@ -8,8 +10,6 @@ import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.di.CommitId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
-import ru.terrakok.gitlabclient.entity.DiffData
-import ru.terrakok.gitlabclient.model.interactor.CommitInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import javax.inject.Inject

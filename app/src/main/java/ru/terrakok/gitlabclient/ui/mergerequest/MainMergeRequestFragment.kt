@@ -2,12 +2,12 @@ package ru.terrakok.gitlabclient.ui.mergerequest
 
 import android.os.Bundle
 import androidx.fragment.app.FragmentPagerAdapter
+import gitfox.entity.app.target.TargetAction
 import kotlinx.android.synthetic.main.fragment_main_mr.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
-import ru.terrakok.gitlabclient.entity.app.target.TargetAction
 import ru.terrakok.gitlabclient.presentation.mergerequest.MergeRequestPresenter
 import ru.terrakok.gitlabclient.presentation.mergerequest.MergeRequestView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
