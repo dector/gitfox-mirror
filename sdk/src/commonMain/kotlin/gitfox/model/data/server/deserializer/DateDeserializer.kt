@@ -7,7 +7,7 @@ import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializer
 
 @Serializer(forClass = Date::class)
-object DateDeserializer : KSerializer<Date> {
+internal object DateDeserializer : KSerializer<Date> {
 
     override fun serialize(encoder: Encoder, value: Date) {
         encoder.encodeString(value.isoString)

@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 14.06.17.
  */
-class IssueInteractor(
+class IssueInteractor internal constructor(
     private val api: GitlabApi,
     serverChanges: ServerChanges,
     private val defaultPageSize: Int

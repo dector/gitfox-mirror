@@ -12,7 +12,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 
-class MergeRequestInteractor(
+class MergeRequestInteractor internal constructor(
     private val api: GitlabApi,
     serverChanges: ServerChanges,
     private val defaultPageSize: Int

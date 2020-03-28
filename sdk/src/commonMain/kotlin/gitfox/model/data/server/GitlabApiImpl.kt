@@ -12,7 +12,7 @@ import io.ktor.http.takeFrom
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 28.03.17
  */
-class GitlabApiImpl(
+internal class GitlabApiImpl(
     endpoint: String,
     private val httpClient: HttpClient
 ) : GitlabApi {

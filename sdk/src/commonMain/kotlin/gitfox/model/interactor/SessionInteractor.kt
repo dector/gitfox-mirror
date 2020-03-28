@@ -11,7 +11,7 @@ import gitfox.util.randomUUID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class SessionInteractor(
+class SessionInteractor internal constructor(
     private val prefs: Prefs,
     private val oauthParams: OAuthParams,
     private val userAccountApi: UserAccountApi,
@@ -21,7 +21,7 @@ class SessionInteractor(
     private val hash = randomUUID()
 
     val oauthUrl = "${oauthParams.endpoint}oauth/authorize?client_id=${oauthParams.appId}" +
-            "&redirect_uri=${oauthParams.redirectUrl}&response_type=code&state=$hash"
+        "&redirect_uri=${oauthParams.redirectUrl}&response_type=code&state=$hash"
 
     fun checkOAuthRedirect(url: String) = url.indexOf(oauthParams.redirectUrl) == 0
 

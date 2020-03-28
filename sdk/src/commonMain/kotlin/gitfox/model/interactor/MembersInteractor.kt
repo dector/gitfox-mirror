@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 /**
  * @author Valentin Logvinovitch (glvvl) on 27.02.19.
  */
-class MembersInteractor(
+class MembersInteractor internal constructor(
     private val api: GitlabApi,
     serverChanges: ServerChanges,
     private val defaultPageSize: Int

@@ -7,7 +7,7 @@ import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializer
 
 @Serializer(forClass = Time::class)
-object TimeDeserializer : KSerializer<Time> {
+internal object TimeDeserializer : KSerializer<Time> {
 
     override fun serialize(encoder: Encoder, value: Time) {
         encoder.encodeString(value.isoString)

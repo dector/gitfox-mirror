@@ -19,7 +19,7 @@ import kotlinx.serialization.json.Json
 import okhttp3.Cache
 import java.util.concurrent.TimeUnit
 
-class HttpClientFactory(
+internal class HttpClientFactory(
     private val context: Context,
     private val json: Json
 ) {

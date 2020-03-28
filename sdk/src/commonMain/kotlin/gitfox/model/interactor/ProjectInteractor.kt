@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 24.04.17.
  */
-class ProjectInteractor(
+class ProjectInteractor internal constructor(
     private val api: GitlabApi,
     serverChanges: ServerChanges,
     private val defaultPageSize: Int

@@ -6,7 +6,7 @@ import gitfox.model.data.server.GitlabApi
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 25.11.17.
  */
-class UserInteractor(
+class UserInteractor internal constructor(
     private val api: GitlabApi
 ) {
 

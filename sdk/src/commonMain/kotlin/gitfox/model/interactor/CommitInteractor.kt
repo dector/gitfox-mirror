@@ -7,7 +7,7 @@ import gitfox.model.data.server.GitlabApi
 /**
  * @author Valentin Logvinovitch (glvvl) on 18.06.19.
  */
-class CommitInteractor(
+class CommitInteractor internal constructor(
     private val api: GitlabApi
 ) {
 

@@ -6,7 +6,7 @@ import gitfox.model.data.state.ServerChanges
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 14.10.18.
  */
-class ApiWithChangesRegistration(
+internal class ApiWithChangesRegistration(
     private val serverApi: GitlabApi,
     private val serverChanges: ServerChanges
 ) : GitlabApi by serverApi {

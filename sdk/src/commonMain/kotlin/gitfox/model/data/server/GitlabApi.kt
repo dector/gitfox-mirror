@@ -2,10 +2,11 @@ package gitfox.model.data.server
 
 import gitfox.entity.*
 
-interface GitlabApi {
+internal interface GitlabApi {
 
     companion object {
         const val API_PATH = "api/v4"
+
         // See GitLab documentation: https://docs.gitlab.com/ee/api/#pagination.
         const val MAX_PAGE_SIZE = 100
     }

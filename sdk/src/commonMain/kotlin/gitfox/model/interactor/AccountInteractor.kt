@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 
-class AccountInteractor(
+class AccountInteractor internal constructor(
     private val serverPath: String,
     private val api: GitlabApi,
     serverChanges: ServerChanges,

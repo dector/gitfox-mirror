@@ -8,7 +8,7 @@ import kotlin.jvm.Synchronized
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 14.10.18.
  */
-class ProjectCache(private val lifetime: Long) {
+internal class ProjectCache(private val lifetime: Long) {
 
     private data class ProjectCacheItem(val time: Long, val data: Project)
 

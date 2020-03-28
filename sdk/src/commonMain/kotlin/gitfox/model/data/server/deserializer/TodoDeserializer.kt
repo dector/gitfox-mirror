@@ -1,10 +1,11 @@
 package gitfox.model.data.server.deserializer
 
 import gitfox.entity.*
+import gitfox.entity.Target
 import kotlinx.serialization.*
 import kotlinx.serialization.builtins.serializer
 
-object TodoDeserializer : KSerializer<Todo> {
+internal object TodoDeserializer : KSerializer<Todo> {
 
     override val descriptor = SerialDescriptor("Todo") {
         element("id", Long.serializer().descriptor)

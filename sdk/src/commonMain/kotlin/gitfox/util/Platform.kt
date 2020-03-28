@@ -1,5 +1,5 @@
 package gitfox.util
 
-expect fun currentTimeMillis(): Long
-expect fun randomUUID(): String
-expect fun getQueryParameterFromUri(url: String, queryName: String): String
+internal expect fun currentTimeMillis(): Long
+internal expect fun randomUUID(): String
+internal expect fun getQueryParameterFromUri(url: String, queryName: String): String

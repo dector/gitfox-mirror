@@ -1,158 +1,90 @@
 package ru.terrakok.gitlabclient.di.provider
 
-import android.content.Context
-import gitfox.entity.app.develop.AppInfo
-import gitfox.entity.app.develop.AppLibrary
-import gitfox.entity.app.session.OAuthParams
-import gitfox.model.data.cache.ProjectCache
-import gitfox.model.data.server.GitlabApi
-import gitfox.model.data.server.UserAccountApi
-import gitfox.model.data.state.ServerChanges
-import gitfox.model.data.state.SessionSwitcher
-import gitfox.model.data.storage.Prefs
+import gitfox.SDK
 import gitfox.model.interactor.*
-import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.serialization.builtins.list
-import kotlinx.serialization.json.Json
-import ru.terrakok.gitlabclient.di.DefaultPageSize
-import ru.terrakok.gitlabclient.di.PrimitiveWrapper
-import ru.terrakok.gitlabclient.di.ServerPath
-import java.io.InputStreamReader
 import javax.inject.Inject
 import javax.inject.Provider
-import kotlin.coroutines.resume
 
 class AccountInteractorProvider @Inject constructor(
-    @ServerPath private val serverPath: String,
-    private val api: GitlabApi,
-    private val serverChanges: ServerChanges,
-    private val todoInteractor: TodoInteractor,
-    private val mrInteractor: MergeRequestInteractor,
-    private val issueInteractor: IssueInteractor
+    private val sdk: SDK
 ) : Provider<AccountInteractor> {
-    override fun get() = AccountInteractor(serverPath, api, serverChanges, todoInteractor, mrInteractor, issueInteractor)
+    override fun get() = sdk.getAccountInteractor()
 }
 
 class AppInfoInteractorProvider @Inject constructor(
-    private val context: Context,
-    private val json: Json,
-    private val appInfo: AppInfo
+    private val sdk: SDK
 ) : Provider<AppInfoInteractor> {
-
-    private suspend fun getAppLibraries(): List<AppLibrary> = suspendCancellableCoroutine { continuation ->
-        context.assets.open("app/app_libraries.json").use { stream ->
-            val list = json.parse(
-                AppLibrary.serializer().list,
-                InputStreamReader(stream).readText()
-            )
-            continuation.resume(list)
-        }
-    }
-
-    override fun get() = AppInfoInteractor(
-        { getAppLibraries() },
-        appInfo
-    )
+    override fun get() = sdk.getAppInfoInteractor()
 }
 
 class CommitInteractorProvider @Inject constructor(
-    private val api: GitlabApi
+    private val sdk: SDK
 ) : Provider<CommitInteractor> {
-    override fun get() = CommitInteractor(api)
+    override fun get() = sdk.getCommitInteractor()
 }
 
 class EventInteractorProvider @Inject constructor(
-    private val api: GitlabApi,
-    @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>
+    private val sdk: SDK
 ) : Provider<EventInteractor> {
-    private val defaultPageSize = defaultPageSizeWrapper.value
-    override fun get() = EventInteractor(api, defaultPageSize)
+    override fun get() = sdk.getEventInteractor()
 }
 
 class IssueInteractorProvider @Inject constructor(
-    private val api: GitlabApi,
-    private val serverChanges: ServerChanges,
-    @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>
+    private val sdk: SDK
 ) : Provider<IssueInteractor> {
-    private val defaultPageSize = defaultPageSizeWrapper.value
-    override fun get() = IssueInteractor(api, serverChanges, defaultPageSize)
+    override fun get() = sdk.getIssueInteractor()
 }
 
 class LabelInteractorProvider @Inject constructor(
-    @ServerPath private val serverPath: String,
-    private val api: GitlabApi,
-    private val serverChanges: ServerChanges,
-    @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>
+    private val sdk: SDK
 ) : Provider<LabelInteractor> {
-    private val defaultPageSize = defaultPageSizeWrapper.value
-    override fun get() = LabelInteractor(api, serverChanges, defaultPageSize)
+    override fun get() = sdk.getLabelInteractor()
 }
 
 class LaunchInteractorProvider @Inject constructor(
-    private val prefs: Prefs,
-    private val sessionSwitcher: SessionSwitcher
+    private val sdk: SDK
 ) : Provider<LaunchInteractor> {
-    override fun get() = LaunchInteractor(prefs, sessionSwitcher)
+    override fun get() = sdk.getLaunchInteractor()
 }
 
 class MembersInteractorProvider @Inject constructor(
-    @ServerPath private val serverPath: String,
-    private val api: GitlabApi,
-    private val serverChanges: ServerChanges,
-    @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>
+    private val sdk: SDK
 ) : Provider<MembersInteractor> {
-    private val defaultPageSize = defaultPageSizeWrapper.value
-    override fun get() = MembersInteractor(api, serverChanges, defaultPageSize)
+    override fun get() = sdk.getMembersInteractor()
 }
 
 class MergeRequestInteractorProvider @Inject constructor(
-    private val api: GitlabApi,
-    private val serverChanges: ServerChanges,
-    @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>
+    private val sdk: SDK
 ) : Provider<MergeRequestInteractor> {
-    private val defaultPageSize = defaultPageSizeWrapper.value
-    override fun get() = MergeRequestInteractor(api, serverChanges, defaultPageSize)
+    override fun get() = sdk.getMergeRequestInteractor()
 }
 
 class MilestoneInteractorProvider @Inject constructor(
-    private val api: GitlabApi,
-    private val serverChanges: ServerChanges,
-    @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>
+    private val sdk: SDK
 ) : Provider<MilestoneInteractor> {
-    private val defaultPageSize = defaultPageSizeWrapper.value
-    override fun get() = MilestoneInteractor(api, serverChanges, defaultPageSize)
+    override fun get() = sdk.getMilestoneInteractor()
 }
 
 class ProjectInteractorProvider @Inject constructor(
-    private val api: GitlabApi,
-    private val serverChanges: ServerChanges,
-    @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>
+    private val sdk: SDK
 ) : Provider<ProjectInteractor> {
-    private val defaultPageSize = defaultPageSizeWrapper.value
-    override fun get() = ProjectInteractor(api, serverChanges, defaultPageSize)
+    override fun get() = sdk.getProjectInteractor()
 }
 
 class SessionInteractorProvider @Inject constructor(
-    private val prefs: Prefs,
-    private val oauthParams: OAuthParams,
-    private val userAccountApi: UserAccountApi,
-    private val projectCache: ProjectCache,
-    private val sessionSwitcher: SessionSwitcher
+    private val sdk: SDK
 ) : Provider<SessionInteractor> {
-    override fun get() = SessionInteractor(prefs, oauthParams, userAccountApi, projectCache, sessionSwitcher)
+    override fun get() = sdk.getSessionInteractor()
 }
 
 class TodoInteractorProvider @Inject constructor(
-    private val api: GitlabApi,
-    private val serverChanges: ServerChanges,
-    @DefaultPageSize private val defaultPageSizeWrapper: PrimitiveWrapper<Int>
+    private val sdk: SDK
 ) : Provider<TodoInteractor> {
-    private val defaultPageSize = defaultPageSizeWrapper.value
-    override fun get() = TodoInteractor(api, serverChanges, defaultPageSize)
+    override fun get() = sdk.getTodoInteractor()
 }
 
 class UserInteractorProvider @Inject constructor(
-    private val api: GitlabApi
+    private val sdk: SDK
 ) : Provider<UserInteractor> {
-    override fun get() = UserInteractor(api)
+    override fun get() = sdk.getUserInteractor()
 }

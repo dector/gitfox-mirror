@@ -3,10 +3,10 @@ package gitfox.util
 import java.net.URI
 import java.util.*
 
-actual fun currentTimeMillis(): Long = System.currentTimeMillis()
-actual fun randomUUID(): String = UUID.randomUUID().toString()
+internal actual fun currentTimeMillis(): Long = System.currentTimeMillis()
+internal actual fun randomUUID(): String = UUID.randomUUID().toString()
 
-actual fun getQueryParameterFromUri(url: String, queryName: String): String {
+internal actual fun getQueryParameterFromUri(url: String, queryName: String): String {
     val uri = URI(url)
     val query = uri.query
     val parameters = query.split("&")

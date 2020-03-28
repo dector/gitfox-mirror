@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 /**
  * @author Eugene Shapovalov (CraggyHaggy). Date: 20.09.17
  */
-class TodoInteractor(
+class TodoInteractor internal constructor(
     private val api: GitlabApi,
     serverChanges: ServerChanges,
     private val defaultPageSize: Int

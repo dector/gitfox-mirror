@@ -11,7 +11,7 @@ import java.security.KeyStore
 import javax.net.ssl.*
 
 // https://github.com/square/okhttp/issues/2372#issuecomment-244807676
-class Tls12SocketFactory(private val delegate: SSLSocketFactory) : SSLSocketFactory() {
+internal class Tls12SocketFactory(private val delegate: SSLSocketFactory) : SSLSocketFactory() {
     override fun getDefaultCipherSuites(): Array<String> = delegate.defaultCipherSuites
     override fun getSupportedCipherSuites(): Array<String> = delegate.supportedCipherSuites
 

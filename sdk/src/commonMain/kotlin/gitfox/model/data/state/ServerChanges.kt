@@ -6,7 +6,7 @@ import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.launch
 
-class ServerChanges : CoroutineScope by CoroutineScope(Dispatchers.Default) {
+internal class ServerChanges : CoroutineScope by CoroutineScope(Dispatchers.Default) {
 
     private val issueChannel = BroadcastChannel<Long>(1)
     private val mergeRequestChannel = BroadcastChannel<Long>(1)

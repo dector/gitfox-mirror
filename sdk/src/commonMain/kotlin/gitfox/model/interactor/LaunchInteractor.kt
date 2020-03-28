@@ -7,7 +7,7 @@ import gitfox.util.currentTimeMillis
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 26.09.18.
  */
-class LaunchInteractor(
+class LaunchInteractor internal constructor(
     private val prefs: Prefs,
     private val sessionSwitcher: SessionSwitcher
 ) {

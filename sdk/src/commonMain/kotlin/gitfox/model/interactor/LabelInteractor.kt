@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 /**
  * @author Maxim Myalkin (MaxMyalkin) on 30.10.2018.
  */
-class LabelInteractor(
+class LabelInteractor internal constructor(
     private val api: GitlabApi,
     serverChanges: ServerChanges,
     private val defaultPageSize: Int

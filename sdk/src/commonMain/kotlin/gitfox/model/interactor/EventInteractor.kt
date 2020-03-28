@@ -8,7 +8,7 @@ import gitfox.util.resolveMarkdownUrl
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 22.07.17.
  */
-class EventInteractor(
+class EventInteractor internal constructor(
     private val api: GitlabApi,
     private val defaultPageSize: Int
 ) {

@@ -10,7 +10,7 @@ import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.http.Parameters
 
-class UserAccountApi(
+internal class UserAccountApi(
     private val httpClient: HttpClient
 ) {
 

@@ -8,7 +8,7 @@ import kotlinx.serialization.json.Json
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 28.03.17
  */
-class Prefs(
+internal class Prefs(
     private val settings: Settings,
     private val json: Json
 ) {

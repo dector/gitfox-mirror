@@ -23,6 +23,5 @@ data class Label(
 )
 
 data class Color(
-    val name: String,
-    val value: Int
+    val name: String
 )

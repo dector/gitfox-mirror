@@ -7,12 +7,6 @@ import javax.inject.Qualifier
  */
 
 @Qualifier
-annotation class DefaultPageSize
-
-@Qualifier
-annotation class ServerPath
-
-@Qualifier
 annotation class AppDevelopersPath
 
 @Qualifier

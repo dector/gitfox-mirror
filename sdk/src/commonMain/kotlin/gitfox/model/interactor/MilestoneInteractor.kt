@@ -5,7 +5,7 @@ import gitfox.model.data.server.GitlabApi
 import gitfox.model.data.state.ServerChanges
 import kotlinx.coroutines.flow.Flow
 
-class MilestoneInteractor(
+class MilestoneInteractor internal constructor(
     private val api: GitlabApi,
     serverChanges: ServerChanges,
     private val defaultPageSize: Int

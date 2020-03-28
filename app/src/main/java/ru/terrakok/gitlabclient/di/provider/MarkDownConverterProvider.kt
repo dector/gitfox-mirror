@@ -1,28 +1,22 @@
 package ru.terrakok.gitlabclient.di.provider
 
 import android.content.Context
-import gitfox.client.HttpClientFactory
-import gitfox.entity.app.session.AuthHolder
 import ru.noties.markwon.SpannableConfiguration
 import ru.noties.markwon.UrlProcessorRelativeToAbsolute
 import ru.noties.markwon.il.AsyncDrawableLoader
 import ru.noties.markwon.spans.SpannableTheme
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.di.ServerPath
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.util.color
 import java.util.concurrent.Executors
-import javax.inject.Inject
 import javax.inject.Provider
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 28.02.18.
  */
-class MarkDownConverterProvider @Inject constructor(
+class MarkDownConverterProvider(
     private val context: Context,
-    private val httpClientFactory: HttpClientFactory,
-    private val tokHolder: AuthHolder,
-    @ServerPath private val serverPath: String
+    private val serverPath: () -> String
 ) : Provider<MarkDownConverter> {
 
     private val spannableTheme
@@ -38,7 +32,7 @@ class MarkDownConverterProvider @Inject constructor(
             .resources(context.resources)
             .build()
 
-    private val urlProcessor = UrlProcessorRelativeToAbsolute(serverPath)
+    private val urlProcessor = UrlProcessorRelativeToAbsolute(serverPath())
 
     private val spannableConfig
         get() = SpannableConfiguration.builder(context)

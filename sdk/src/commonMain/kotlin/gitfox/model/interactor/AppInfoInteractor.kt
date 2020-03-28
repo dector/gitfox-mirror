@@ -6,7 +6,7 @@ import gitfox.entity.app.develop.AppLibrary
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 03.12.17.
  */
-class AppInfoInteractor(
+class AppInfoInteractor internal constructor(
     private val getLibraries: suspend () -> List<AppLibrary>,
     private val appInfo: AppInfo
 ) {
