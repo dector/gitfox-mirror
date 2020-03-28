@@ -16,7 +16,7 @@ class GitlabApiImpl(
     endpoint: String,
     private val httpClient: HttpClient
 ) : GitlabApi {
-    private val apiUrl = "$endpoint/$API_PATH"
+    private val apiUrl = "$endpoint$API_PATH"
 
     override suspend fun getProjects(
         archived: Boolean?,

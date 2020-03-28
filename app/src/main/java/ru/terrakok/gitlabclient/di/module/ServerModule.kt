@@ -40,7 +40,6 @@ class ServerModule(userAccount: UserAccount?) : Module() {
 
         //Interactors
         bind(AccountInteractor::class.java).toProvider(AccountInteractorProvider::class.java)
-        bind(AppInfoInteractor::class.java).toProvider(AppInfoInteractorProvider::class.java)
         bind(CommitInteractor::class.java).toProvider(CommitInteractorProvider::class.java)
         bind(EventInteractor::class.java).toProvider(EventInteractorProvider::class.java)
         bind(IssueInteractor::class.java).toProvider(IssueInteractorProvider::class.java)

@@ -6,7 +6,6 @@ import ru.terrakok.gitlabclient.di.MergeRequestId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
 import ru.terrakok.gitlabclient.entity.app.target.TargetAction
-import ru.terrakok.gitlabclient.model.interactor.MergeRequestInteractor
 import ru.terrakok.gitlabclient.ui.global.FlowFragment
 import ru.terrakok.gitlabclient.util.argument
 import toothpick.Scope
@@ -31,8 +30,6 @@ class MergeRequestFlowFragment : FlowFragment() {
                         .toInstance(PrimitiveWrapper(mrId))
                     bind(TargetAction::class.java)
                         .toInstance(targetAction)
-                    bind(MergeRequestInteractor::class.java)
-                        .singleton()
                 }
             }
         )

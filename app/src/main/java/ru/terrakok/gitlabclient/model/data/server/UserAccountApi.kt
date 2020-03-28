@@ -50,7 +50,7 @@ class UserAccountApi(
         token: String,
         isOAuth: Boolean = false
     ): UserAccount {
-        val user = httpClient.get<User>("${serverPath}api/v4/user") {
+        val user = httpClient.get<User>("${serverPath}${GitlabApi.API_PATH}/user") {
             if (isOAuth) header("Authorization", "Bearer $token")
             else header("PRIVATE-TOKEN", token)
         }

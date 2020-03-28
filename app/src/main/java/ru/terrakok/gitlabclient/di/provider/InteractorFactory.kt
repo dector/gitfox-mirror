@@ -1,9 +1,14 @@
 package ru.terrakok.gitlabclient.di.provider
 
+import android.content.Context
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.serialization.builtins.list
+import kotlinx.serialization.json.Json
 import ru.terrakok.gitlabclient.di.DefaultPageSize
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ServerPath
 import ru.terrakok.gitlabclient.entity.app.develop.AppInfo
+import ru.terrakok.gitlabclient.entity.app.develop.AppLibrary
 import ru.terrakok.gitlabclient.entity.app.session.OAuthParams
 import ru.terrakok.gitlabclient.model.data.cache.ProjectCache
 import ru.terrakok.gitlabclient.model.data.server.GitlabApi
@@ -11,10 +16,11 @@ import ru.terrakok.gitlabclient.model.data.server.UserAccountApi
 import ru.terrakok.gitlabclient.model.data.state.ServerChanges
 import ru.terrakok.gitlabclient.model.data.state.SessionSwitcher
 import ru.terrakok.gitlabclient.model.data.storage.Prefs
-import ru.terrakok.gitlabclient.model.data.storage.RawAppData
 import ru.terrakok.gitlabclient.model.interactor.*
+import java.io.InputStreamReader
 import javax.inject.Inject
 import javax.inject.Provider
+import kotlin.coroutines.resume
 
 class AccountInteractorProvider @Inject constructor(
     @ServerPath private val serverPath: String,
@@ -28,14 +34,28 @@ class AccountInteractorProvider @Inject constructor(
 }
 
 class AppInfoInteractorProvider @Inject constructor(
-    private val rawAppData: RawAppData,
+    private val context: Context,
+    private val json: Json,
     private val appInfo: AppInfo
 ) : Provider<AppInfoInteractor> {
-    override fun get() = AppInfoInteractor(rawAppData, appInfo)
+
+    private suspend fun getAppLibraries(): List<AppLibrary> = suspendCancellableCoroutine { continuation ->
+        context.assets.open("app/app_libraries.json").use { stream ->
+            val list = json.parse(
+                AppLibrary.serializer().list,
+                InputStreamReader(stream).readText()
+            )
+            continuation.resume(list)
+        }
+    }
+
+    override fun get() = AppInfoInteractor(
+        { getAppLibraries() },
+        appInfo
+    )
 }
 
 class CommitInteractorProvider @Inject constructor(
-    @ServerPath private val serverPath: String,
     private val api: GitlabApi
 ) : Provider<CommitInteractor> {
     override fun get() = CommitInteractor(api)

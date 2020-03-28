@@ -11,6 +11,7 @@ import ru.terrakok.gitlabclient.BuildConfig
 import ru.terrakok.gitlabclient.di.AppDevelopersPath
 import ru.terrakok.gitlabclient.di.DefaultPageSize
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
+import ru.terrakok.gitlabclient.di.provider.AppInfoInteractorProvider
 import ru.terrakok.gitlabclient.di.provider.LaunchInteractorProvider
 import ru.terrakok.gitlabclient.di.provider.PrefsProvider
 import ru.terrakok.gitlabclient.di.provider.UserAccountApiProvider
@@ -20,6 +21,7 @@ import ru.terrakok.gitlabclient.model.data.server.UserAccountApi
 import ru.terrakok.gitlabclient.model.data.server.client.HttpClientFactory
 import ru.terrakok.gitlabclient.model.data.state.SessionSwitcher
 import ru.terrakok.gitlabclient.model.data.storage.Prefs
+import ru.terrakok.gitlabclient.model.interactor.AppInfoInteractor
 import ru.terrakok.gitlabclient.model.interactor.LaunchInteractor
 import ru.terrakok.gitlabclient.model.system.ResourceManager
 import ru.terrakok.gitlabclient.model.system.message.SystemMessageNotifier
@@ -78,5 +80,6 @@ class AppModule(context: Context) : Module() {
         )
 
         bind(LaunchInteractor::class.java).toProvider(LaunchInteractorProvider::class.java)
+        bind(AppInfoInteractor::class.java).toProvider(AppInfoInteractorProvider::class.java)
     }
 }
