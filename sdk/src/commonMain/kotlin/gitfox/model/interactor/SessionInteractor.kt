@@ -7,7 +7,7 @@ import gitfox.model.data.cache.ProjectCache
 import gitfox.model.data.server.UserAccountApi
 import gitfox.model.data.state.SessionSwitcher
 import gitfox.model.data.storage.Prefs
-import gitfox.util.getQueryParameterFromUri
+import io.ktor.http.Url
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -100,6 +100,9 @@ class SessionInteractor internal constructor(
             sessionSwitcher.initSession(userAccount)
         }
     }
+
+    private fun getQueryParameterFromUri(url: String, queryName: String) =
+        Url(url).parameters[queryName] ?: ""
 
     companion object {
         private const val PARAMETER_CODE = "code"
