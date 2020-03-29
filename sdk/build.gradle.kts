@@ -6,6 +6,10 @@ plugins {
 
 kotlin {
     android()
+    js {
+        browser {
+        }
+    }
     sourceSets {
         val ktorVersion = "1.3.2"
         val coroutinesVersion = "1.3.4"
@@ -45,6 +49,26 @@ kotlin {
                 implementation("com.russhwolf:multiplatform-settings:0.5.1")
                 //JSON
                 api("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0")
+            }
+        }
+        val jsMain by getting {
+            dependencies {
+                //Kotlin
+                implementation("org.jetbrains.kotlin:kotlin-stdlib-js")
+                //Log
+                implementation("com.github.aakira:napier-js:1.2.0")
+                //Network
+                implementation("io.ktor:ktor-client-core-js:$ktorVersion")
+                implementation("io.ktor:ktor-client-js:$ktorVersion")
+                implementation("io.ktor:ktor-client-serialization-js:$ktorVersion")
+                implementation("io.ktor:ktor-client-auth-js:$ktorVersion")
+                implementation("io.ktor:ktor-client-logging-js:$ktorVersion")
+                //Coroutines
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$coroutinesVersion")
+                //Preferences
+                implementation("com.russhwolf:multiplatform-settings:0.5.1")
+                //JSON
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0")
             }
         }
         all {
