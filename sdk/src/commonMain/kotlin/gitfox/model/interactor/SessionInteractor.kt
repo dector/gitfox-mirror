@@ -1,5 +1,6 @@
 package gitfox.model.interactor
 
+import com.benasher44.uuid.uuid4
 import gitfox.entity.app.session.OAuthParams
 import gitfox.entity.app.session.UserAccount
 import gitfox.model.data.cache.ProjectCache
@@ -7,7 +8,6 @@ import gitfox.model.data.server.UserAccountApi
 import gitfox.model.data.state.SessionSwitcher
 import gitfox.model.data.storage.Prefs
 import gitfox.util.getQueryParameterFromUri
-import gitfox.util.randomUUID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -18,7 +18,7 @@ class SessionInteractor internal constructor(
     private val projectCache: ProjectCache,
     private val sessionSwitcher: SessionSwitcher
 ) {
-    private val hash = randomUUID()
+    private val hash = uuid4().toString()
 
     val oauthUrl = "${oauthParams.endpoint}oauth/authorize?client_id=${oauthParams.appId}" +
         "&redirect_uri=${oauthParams.redirectUrl}&response_type=code&state=$hash"

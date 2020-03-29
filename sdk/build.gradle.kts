@@ -23,6 +23,8 @@ kotlin {
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
                 //Coroutines
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$coroutinesVersion")
+                //UUID
+                implementation("com.benasher44:uuid:0.1.0")
             }
         }
         val androidMain by getting {
