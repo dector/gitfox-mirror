@@ -42,7 +42,7 @@ kotlin {
                 //Coroutines
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
                 //Preferences
-                api("com.russhwolf:multiplatform-settings:0.5.1")
+                implementation("com.russhwolf:multiplatform-settings:0.5.1")
                 //JSON
                 api("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0")
             }
