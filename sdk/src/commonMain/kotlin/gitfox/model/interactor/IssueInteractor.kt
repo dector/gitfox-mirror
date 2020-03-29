@@ -135,7 +135,6 @@ class IssueInteractor internal constructor(
         notes.map { resolveMarkDownUrl(it, projectAsync.await()) }
     }
 
-    @OptIn(ExperimentalStdlibApi::class)
     suspend fun getAllIssueNotes(
         projectId: Long,
         issueId: Long,

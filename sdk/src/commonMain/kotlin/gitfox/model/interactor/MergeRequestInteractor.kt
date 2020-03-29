@@ -137,7 +137,6 @@ class MergeRequestInteractor internal constructor(
         notes.map { resolveMarkDownUrl(it, projectAsync.await()) }
     }
 
-    @OptIn(ExperimentalStdlibApi::class)
     suspend fun getAllMergeRequestNotes(
         projectId: Long,
         mergeRequestId: Long,
@@ -167,7 +166,6 @@ class MergeRequestInteractor internal constructor(
     suspend fun createMergeRequestNote(projectId: Long, issueId: Long, body: String): Note =
         api.createMergeRequestNote(projectId, issueId, body)
 
-    @OptIn(ExperimentalStdlibApi::class)
     suspend fun getMergeRequestCommits(
         projectId: Long,
         mergeRequestId: Long,
