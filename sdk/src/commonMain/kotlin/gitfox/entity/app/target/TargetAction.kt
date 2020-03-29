@@ -1,11 +1,9 @@
 package gitfox.entity.app.target
 
-import java.io.Serializable
-
 /**
  * @author Maxim Myalkin (MaxMyalkin) on 19.05.2019.
  */
-sealed class TargetAction : Serializable {
+sealed class TargetAction {
 
     data class CommentedOn(val noteId: Long) : TargetAction()
 

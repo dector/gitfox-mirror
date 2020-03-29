@@ -15,7 +15,7 @@ class IssueFlowFragment : FlowFragment() {
 
     private val issueId by argument(ARG_ISSUE_ID, 0L)
     private val projectId by argument(ARG_PROJECT_ID, 0L)
-    private val targetAction by argument<TargetAction>(ARG_TARGET_ACTION)
+    private val noteId by argument<Long?>(ARG_NOTE_ID)
 
     override fun installModules(scope: Scope) {
         super.installModules(scope)
@@ -29,7 +29,10 @@ class IssueFlowFragment : FlowFragment() {
                         .withName(IssueId::class.java)
                         .toInstance(PrimitiveWrapper(issueId))
                     bind(TargetAction::class.java)
-                        .toInstance(targetAction)
+                        .toInstance(
+                            noteId?.let { TargetAction.CommentedOn(it) }
+                                ?: TargetAction.Undefined
+                        )
                 }
             }
         )
@@ -40,14 +43,16 @@ class IssueFlowFragment : FlowFragment() {
     companion object {
         private const val ARG_PROJECT_ID = "arg_project_id"
         private const val ARG_ISSUE_ID = "arg_issue_id"
-        private const val ARG_TARGET_ACTION = "arg_target_action"
+        private const val ARG_NOTE_ID = "arg_note_id"
 
         fun create(projectId: Long, issueId: Long, targetAction: TargetAction) =
             IssueFlowFragment().apply {
                 arguments = Bundle().apply {
                     putLong(ARG_PROJECT_ID, projectId)
                     putLong(ARG_ISSUE_ID, issueId)
-                    putSerializable(ARG_TARGET_ACTION, targetAction)
+                    (targetAction as? TargetAction.CommentedOn)?.let {
+                        putLong(ARG_NOTE_ID, it.noteId)
+                    }
                 }
             }
     }
