@@ -69,6 +69,8 @@ kotlin {
                 implementation("com.russhwolf:multiplatform-settings:0.5.1")
                 //JSON
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0")
+                implementation(npm("text-encoding", "*"))
+                implementation(npm("abort-controller", "*"))
             }
         }
         all {
