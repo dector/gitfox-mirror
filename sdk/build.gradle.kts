@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
+
 plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
@@ -8,8 +10,23 @@ kotlin {
     android()
     js {
         browser {
+            //workaround https://youtrack.jetbrains.com/issue/KT-36484
             dceTask {
                 keep("ktor-ktor-io.\$\$importsForInline\$\$.ktor-ktor-io.io.ktor.utils.io")
+            }
+            // execute jsBrowserRun to launch dev server
+            runTask {
+                devServer = KotlinWebpackConfig.DevServer(
+                    true,
+                    false,
+                    true,
+                    true,
+                    false,
+                    8080,
+                    null,
+                    listOf("${projectDir}/src/jsMain/resources")
+                )
+                outputFileName = "main.js"
             }
         }
     }
@@ -73,6 +90,7 @@ kotlin {
                 implementation("com.russhwolf:multiplatform-settings:0.5.1")
                 //JSON
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-js:$serializationVersion")
+                //required NPM dependencies
                 implementation(npm("text-encoding", "*"))
                 implementation(npm("abort-controller", "*"))
             }
