@@ -12,5 +12,5 @@ data class UserAccount(
     @SerialName("userName") val userName: String,
     @SerialName("isOAuth") val isOAuth: Boolean
 ) {
-    val id: String = "$userId : $serverPath"
+    val id: String get() = "$userId : $serverPath"
 }

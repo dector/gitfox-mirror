@@ -2,27 +2,28 @@ package gitfox
 
 import gitfox.entity.app.develop.AppInfo
 import gitfox.entity.app.session.OAuthParams
+import gitfox.entity.app.session.UserAccount
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.serialization.builtins.list
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonConfiguration
 
 fun main() {
-    println("Hello terrakok!")
     val sdk = SDK(
         "https://gitlab.com/",
         oAuthParams = OAuthParams("", "", "", ""),
-        appInfo = AppInfo("jsVersion", 42, "js test", "local", "", ""),
+        appInfo = AppInfo("", 42, "", "", "", ""),
         getLibraries = { emptyList() },
         isDebug = true
     )
-    println(sdk.getAppInfoInteractor().getAppInfo().versionName)
 
     GlobalScope.launch {
         sdk.getSessionInteractor().loginOnCustomServer(
             "https://gitlab.com/",
-            "test-token" //todo add real token
+            ""
         )
-        val events = sdk.getEventInteractor().getEvents(page = 0)
-        println("!!!!!!!!!!!!!EVENTS!!!!!!!!!!!!!")
-        println(events)
+        println("Hello, " + sdk.getAccountInteractor().getMyProfile().name + "!")
+        println("It's your todos: " + sdk.getAccountInteractor().getMyTodos(false, 0))
     }
 }

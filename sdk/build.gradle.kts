@@ -8,11 +8,15 @@ kotlin {
     android()
     js {
         browser {
+            dceTask {
+                keep("ktor-ktor-io.\$\$importsForInline\$\$.ktor-ktor-io.io.ktor.utils.io")
+            }
         }
     }
     sourceSets {
         val ktorVersion = "1.3.2"
         val coroutinesVersion = "1.3.4"
+        val serializationVersion = "0.20.0"
         commonMain {
             dependencies {
                 //Kotlin
@@ -20,7 +24,7 @@ kotlin {
                 //Log
                 implementation("com.github.aakira:napier:1.2.0")
                 //JSON
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:0.20.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:$serializationVersion")
                 //Preferences
                 implementation("com.russhwolf:multiplatform-settings:0.5.1")
                 //Network
@@ -48,7 +52,7 @@ kotlin {
                 //Preferences
                 implementation("com.russhwolf:multiplatform-settings:0.5.1")
                 //JSON
-                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0")
+                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serializationVersion")
             }
         }
         val jsMain by getting {
@@ -68,7 +72,7 @@ kotlin {
                 //Preferences
                 implementation("com.russhwolf:multiplatform-settings:0.5.1")
                 //JSON
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-js:$serializationVersion")
                 implementation(npm("text-encoding", "*"))
                 implementation(npm("abort-controller", "*"))
             }
