@@ -8,6 +8,16 @@ plugins {
 
 kotlin {
     android()
+
+    //ios simulator
+    iosX64("ios") {
+        binaries {
+            framework {
+                baseName = "GitFoxSDK"
+            }
+        }
+    }
+
     js {
         browser {
             //workaround https://youtrack.jetbrains.com/issue/KT-36484
@@ -30,20 +40,23 @@ kotlin {
             }
         }
     }
+
     sourceSets {
         val ktorVersion = "1.3.2"
         val coroutinesVersion = "1.3.4"
         val serializationVersion = "0.20.0"
+        val napierVersion = "1.2.0"
+        val settingsVersion = "0.5.1"
         commonMain {
             dependencies {
                 //Kotlin
                 implementation("org.jetbrains.kotlin:kotlin-stdlib-common")
                 //Log
-                implementation("com.github.aakira:napier:1.2.0")
+                implementation("com.github.aakira:napier:$napierVersion")
                 //JSON
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:$serializationVersion")
                 //Preferences
-                implementation("com.russhwolf:multiplatform-settings:0.5.1")
+                implementation("com.russhwolf:multiplatform-settings:$settingsVersion")
                 //Network
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
                 //Coroutines
@@ -57,7 +70,7 @@ kotlin {
                 //Kotlin
                 implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
                 //Log
-                implementation("com.github.aakira:napier-android:1.2.0")
+                implementation("com.github.aakira:napier-android:$napierVersion")
                 //Network
                 api("io.ktor:ktor-client-core-jvm:$ktorVersion")
                 implementation("io.ktor:ktor-client-serialization-jvm:$ktorVersion")
@@ -66,10 +79,24 @@ kotlin {
                 implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
                 //Coroutines
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
-                //Preferences
-                implementation("com.russhwolf:multiplatform-settings:0.5.1")
                 //JSON
                 api("org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serializationVersion")
+            }
+        }
+        val iosMain by getting {
+            dependencies {
+                //Log
+                implementation("com.github.aakira:napier-ios:$napierVersion")
+                //Network
+                api("io.ktor:ktor-client-core-native:$ktorVersion")
+                implementation("io.ktor:ktor-client-serialization-native:$ktorVersion")
+                implementation("io.ktor:ktor-client-auth-native:$ktorVersion")
+                implementation("io.ktor:ktor-client-logging-native:$ktorVersion")
+                implementation("io.ktor:ktor-client-ios:$ktorVersion")
+                //Coroutines
+                api("org.jetbrains.kotlinx:kotlinx-coroutines-core-native:$coroutinesVersion")
+                //JSON
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:$serializationVersion")
             }
         }
         val jsMain by getting {
@@ -77,7 +104,7 @@ kotlin {
                 //Kotlin
                 implementation("org.jetbrains.kotlin:kotlin-stdlib-js")
                 //Log
-                implementation("com.github.aakira:napier-js:1.2.0")
+                implementation("com.github.aakira:napier-js:$napierVersion")
                 //Network
                 implementation("io.ktor:ktor-client-core-js:$ktorVersion")
                 implementation("io.ktor:ktor-client-js:$ktorVersion")
@@ -86,8 +113,6 @@ kotlin {
                 implementation("io.ktor:ktor-client-logging-js:$ktorVersion")
                 //Coroutines
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$coroutinesVersion")
-                //Preferences
-                implementation("com.russhwolf:multiplatform-settings:0.5.1")
                 //JSON
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-js:$serializationVersion")
                 //required NPM dependencies
