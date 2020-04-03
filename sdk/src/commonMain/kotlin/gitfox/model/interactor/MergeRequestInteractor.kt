@@ -179,7 +179,7 @@ class MergeRequestInteractor internal constructor(
             var i = 1
             do {
                 val p = api.getMergeRequestParticipants(
-                    projectId, mergeRequestId, page, GitlabApi.MAX_PAGE_SIZE
+                    projectId, mergeRequestId, i, GitlabApi.MAX_PAGE_SIZE
                 )
                 addAll(p)
                 i++
