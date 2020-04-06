@@ -3,6 +3,7 @@ plugins {
     kotlin("android")
     kotlin("kapt")
     kotlin("android.extensions")
+    id("kotlinx-serialization")
 }
 
 apply(from = "${project.rootDir}/codequality/ktlint.gradle.kts")
@@ -167,6 +168,8 @@ dependencies {
     implementation("com.google.android:flexbox:1.0.0")
     //Log
     implementation("com.github.aakira:napier-android:1.2.0")
+    //JSON
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0")
 
     //JUnit
     testImplementation("junit:junit:4.13")

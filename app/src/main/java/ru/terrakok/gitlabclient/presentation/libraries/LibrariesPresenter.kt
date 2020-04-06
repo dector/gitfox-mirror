@@ -1,11 +1,11 @@
 package ru.terrakok.gitlabclient.presentation.libraries
 
 import com.github.aakira.napier.Napier
-import gitfox.model.interactor.AppInfoInteractor
 import kotlinx.coroutines.launch
 import moxy.InjectViewState
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
+import ru.terrakok.gitlabclient.system.AppInfoInteractor
 import javax.inject.Inject
 
 /**

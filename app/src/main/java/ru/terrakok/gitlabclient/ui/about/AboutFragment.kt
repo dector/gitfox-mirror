@@ -1,13 +1,13 @@
 package ru.terrakok.gitlabclient.ui.about
 
 import android.os.Bundle
-import gitfox.entity.app.develop.AppInfo
 import kotlinx.android.synthetic.main.fragment_about.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.presentation.about.AboutPresenter
 import ru.terrakok.gitlabclient.presentation.about.AboutView
+import ru.terrakok.gitlabclient.system.AppInfo
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 import ru.terrakok.gitlabclient.util.addSystemTopPadding
 import ru.terrakok.gitlabclient.util.tryOpenLink

@@ -11,12 +11,6 @@ class AccountInteractorProvider @Inject constructor(
     override fun get() = sdk.getAccountInteractor()
 }
 
-class AppInfoInteractorProvider @Inject constructor(
-    private val sdk: SDK
-) : Provider<AppInfoInteractor> {
-    override fun get() = sdk.getAppInfoInteractor()
-}
-
 class CommitInteractorProvider @Inject constructor(
     private val sdk: SDK
 ) : Provider<CommitInteractor> {

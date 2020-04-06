@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.res.Resources
 import androidx.annotation.DrawableRes
 import gitfox.entity.*
-import gitfox.entity.app.develop.LicenseType
 import gitfox.entity.app.target.TargetBadgeStatus
 import gitfox.entity.app.target.TargetHeaderIcon
 import gitfox.entity.app.target.TargetHeaderTitle
@@ -14,6 +13,7 @@ import org.threeten.bp.LocalDate
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import ru.terrakok.gitlabclient.R
+import ru.terrakok.gitlabclient.system.LicenseType
 import ru.terrakok.gitlabclient.system.ResourceManager
 import java.io.IOException
 

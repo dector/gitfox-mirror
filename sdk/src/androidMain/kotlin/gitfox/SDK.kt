@@ -3,8 +3,6 @@ package gitfox
 import android.content.Context
 import com.russhwolf.settings.AndroidSettings
 import gitfox.client.HttpClientFactory
-import gitfox.entity.app.develop.AppInfo
-import gitfox.entity.app.develop.AppLibrary
 import gitfox.entity.app.session.AuthHolder
 import gitfox.entity.app.session.OAuthParams
 import gitfox.entity.app.session.UserAccount
@@ -23,8 +21,6 @@ class SDK(
     private val defaultPageSize: Int = 20,
     private val cacheLifetime: Long = 300_000L,
     private val oAuthParams: OAuthParams,
-    private val getLibraries: suspend () -> List<AppLibrary>,
-    private val appInfo: AppInfo,
     private val isDebug: Boolean
 ) {
     private val json = Json(JsonConfiguration.Stable.copy(
@@ -80,7 +76,6 @@ class SDK(
     }
 
     fun getCurrentServerPath() = serverPath
-    fun getAppInfoInteractor() = AppInfoInteractor(getLibraries, appInfo)
     fun getLaunchInteractor() = LaunchInteractor(prefs, sessionSwitcher)
     fun getCommitInteractor() = CommitInteractor(api)
     fun getEventInteractor() = EventInteractor(api, defaultPageSize)
