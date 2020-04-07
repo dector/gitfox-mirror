@@ -85,7 +85,7 @@ kotlin {
                 //Coroutines
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
                 //JSON
-                api("org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serializationVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serializationVersion")
             }
         }
         val iosMain by getting {
@@ -93,13 +93,13 @@ kotlin {
                 //Log
                 implementation("com.github.aakira:napier-ios:$napierVersion")
                 //Network
-                api("io.ktor:ktor-client-core-native:$ktorVersion")
+                implementation("io.ktor:ktor-client-core-native:$ktorVersion")
                 implementation("io.ktor:ktor-client-serialization-native:$ktorVersion")
                 implementation("io.ktor:ktor-client-auth-native:$ktorVersion")
                 implementation("io.ktor:ktor-client-logging-native:$ktorVersion")
                 implementation("io.ktor:ktor-client-ios:$ktorVersion")
                 //Coroutines
-                api("org.jetbrains.kotlinx:kotlinx-coroutines-core-native:$coroutinesVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-native:$coroutinesVersion")
                 //JSON
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:$serializationVersion")
             }
