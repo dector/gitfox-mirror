@@ -2,6 +2,7 @@ package ru.terrakok.gitlabclient.di.module
 
 import android.content.Context
 import gitfox.SDK
+import gitfox.create
 import gitfox.entity.app.session.OAuthParams
 import gitfox.model.interactor.*
 import ru.terrakok.cicerone.Cicerone
@@ -38,7 +39,7 @@ class AppModule(context: Context) : Module() {
         bind(ErrorHandler::class.java).singleton()
 
 
-        val sdk = SDK(
+        val sdk = SDK.create(
             context,
             BuildConfig.ORIGIN_GITLAB_ENDPOINT,
             oAuthParams = OAuthParams(

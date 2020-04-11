@@ -11,6 +11,8 @@ internal interface GitlabApi {
         const val MAX_PAGE_SIZE = 100
     }
 
+    val endpoint: String
+
     suspend fun getProjects(
         archived: Boolean?,
         visibility: Visibility?,

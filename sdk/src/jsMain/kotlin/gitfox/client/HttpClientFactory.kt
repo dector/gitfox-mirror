@@ -2,6 +2,7 @@ package gitfox.client
 
 import com.github.aakira.napier.Napier
 import gitfox.entity.app.session.AuthHolder
+import gitfox.util.HttpClientFactory
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.js.Js
 import io.ktor.client.features.auth.Auth
@@ -15,11 +16,9 @@ import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.http.auth.HttpAuthHeader
 import kotlinx.serialization.json.Json
 
-class HttpClientFactory(
-    private val json: Json
-) {
-
-    fun create(
+internal class HttpClientFactory : HttpClientFactory {
+    override fun create(
+        json: Json,
         authData: AuthHolder?,
         enableLogging: Boolean
     ): HttpClient = HttpClient(Js) {

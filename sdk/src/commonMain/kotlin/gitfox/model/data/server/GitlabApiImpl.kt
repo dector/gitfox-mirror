@@ -13,7 +13,7 @@ import io.ktor.http.takeFrom
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 28.03.17
  */
 internal class GitlabApiImpl(
-    endpoint: String,
+    override val endpoint: String,
     private val httpClient: HttpClient
 ) : GitlabApi {
     private val apiUrl = "$endpoint$API_PATH"

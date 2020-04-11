@@ -6,7 +6,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 fun main() {
-    val sdk = SDK(
+    val sdk = SDK.create(
         "https://gitlab.com/",
         oAuthParams = OAuthParams("", "", "", ""),
         isDebug = true

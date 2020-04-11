@@ -4,6 +4,7 @@ import android.content.Context
 import com.github.aakira.napier.Napier
 import gitfox.client.Tls12SocketFactory.Companion.enableTls12
 import gitfox.entity.app.session.AuthHolder
+import gitfox.util.HttpClientFactory
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.features.auth.Auth
@@ -20,11 +21,11 @@ import okhttp3.Cache
 import java.util.concurrent.TimeUnit
 
 internal class HttpClientFactory(
-    private val context: Context,
-    private val json: Json
-) {
+    private val context: Context
+) : HttpClientFactory {
 
-    fun create(
+    override fun create(
+        json: Json,
         authData: AuthHolder?,
         enableLogging: Boolean
     ): HttpClient = HttpClient(OkHttp) {

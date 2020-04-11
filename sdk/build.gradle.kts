@@ -130,6 +130,7 @@ kotlin {
                 useExperimentalAnnotation("kotlin.ExperimentalStdlibApi")
                 useExperimentalAnnotation("kotlinx.coroutines.ExperimentalCoroutinesApi")
                 useExperimentalAnnotation("kotlinx.coroutines.FlowPreview")
+                useExperimentalAnnotation("kotlinx.coroutines.InternalCoroutinesApi")
             }
         }
     }

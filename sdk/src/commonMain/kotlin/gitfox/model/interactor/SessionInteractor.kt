@@ -3,19 +3,15 @@ package gitfox.model.interactor
 import com.benasher44.uuid.uuid4
 import gitfox.entity.app.session.OAuthParams
 import gitfox.entity.app.session.UserAccount
-import gitfox.model.data.cache.ProjectCache
 import gitfox.model.data.server.UserAccountApi
 import gitfox.model.data.state.SessionSwitcher
 import gitfox.model.data.storage.Prefs
 import io.ktor.http.Url
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 class SessionInteractor internal constructor(
     private val prefs: Prefs,
     private val oauthParams: OAuthParams,
     private val userAccountApi: UserAccountApi,
-    private val projectCache: ProjectCache,
     private val sessionSwitcher: SessionSwitcher
 ) {
     private val hash = uuid4().toString()
@@ -30,7 +26,6 @@ class SessionInteractor internal constructor(
     fun setCurrentUserAccount(accountId: String): UserAccount? {
         val account = prefs.accounts.find { it.id == accountId }
         prefs.selectedAccount = account?.id
-        projectCache.clear()
         sessionSwitcher.initSession(account)
         return account
     }
@@ -49,7 +44,6 @@ class SessionInteractor internal constructor(
 
     // Return hasOtherAccount
     fun logoutFromAccount(accountId: String): Boolean {
-        projectCache.clear()
         val newAccount = logout(accountId)
         sessionSwitcher.initSession(newAccount)
         return newAccount != null
@@ -90,15 +84,13 @@ class SessionInteractor internal constructor(
         openNewAccount(account)
     }
 
-    private suspend fun openNewAccount(userAccount: UserAccount) {
-        withContext(Dispatchers.Main) {
-            val newAccounts = prefs.accounts.toMutableList()
-            newAccounts.removeAll { it.id == userAccount.id }
-            newAccounts.add(userAccount)
-            prefs.selectedAccount = userAccount.id
-            prefs.accounts = newAccounts
-            sessionSwitcher.initSession(userAccount)
-        }
+    private fun openNewAccount(userAccount: UserAccount) {
+        val newAccounts = prefs.accounts.toMutableList()
+        newAccounts.removeAll { it.id == userAccount.id }
+        newAccounts.add(userAccount)
+        prefs.selectedAccount = userAccount.id
+        prefs.accounts = newAccounts
+        sessionSwitcher.initSession(userAccount)
     }
 
     private fun getQueryParameterFromUri(url: String, queryName: String) =
