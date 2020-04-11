@@ -84,7 +84,7 @@ android {
                 initWith(getByName("debug"))
                 isMinifyEnabled = true
                 versionNameSuffix = " debugPG"
-                matchingFallbacks = listOf("debug")
+                matchingFallbacks = mutableListOf("debug")
 
                 proguardFiles(
                     getDefaultProguardFile("proguard-android-optimize.txt"),
