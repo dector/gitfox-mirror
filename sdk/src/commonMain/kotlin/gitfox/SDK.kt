@@ -13,7 +13,6 @@ import gitfox.model.interactor.*
 import gitfox.util.HttpClientFactory
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
-import kotlin.native.concurrent.ThreadLocal
 
 open class SDK internal constructor(
     private val defaultServerPath: String,
@@ -40,7 +39,6 @@ open class SDK internal constructor(
         val api: GitlabApi
     )
 
-    @ThreadLocal
     private var currentSession = createNewSession(null)
 
     private val sessionSwitcher = object : SessionSwitcher {
