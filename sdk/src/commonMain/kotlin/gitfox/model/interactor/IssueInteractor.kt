@@ -117,7 +117,7 @@ class IssueInteractor internal constructor(
         val projectAsync = async { api.getProject(projectId) }
         val issue = api.getIssue(projectId, issueId)
 
-        val resolved = issue.description.resolveMarkdownUrl(projectAsync.await())
+        val resolved = issue.description?.resolveMarkdownUrl(projectAsync.await())
         if (resolved != issue.description) issue.copy(description = resolved)
         else issue
     }

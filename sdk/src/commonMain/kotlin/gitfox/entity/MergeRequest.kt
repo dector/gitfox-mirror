@@ -23,7 +23,7 @@ data class MergeRequest(
     @SerialName("assignee") val assignee: ShortUser? = null,
     @SerialName("source_project_id") val sourceProjectId: Int? = null,
     @SerialName("target_project_id") val targetProjectId: Int? = null,
-    @SerialName("description") val description: String,
+    @SerialName("description") val description: String? = null,
     @SerialName("work_in_progress") val workInProgress: Boolean,
     @SerialName("milestone") val milestone: Milestone? = null,
     @SerialName("merge_when_pipeline_succeeds") val mergeWhenPipelineSucceeds: Boolean,

@@ -15,7 +15,7 @@ data class Issue(
     @SerialName("id") val id: Long,
     @SerialName("iid") val iid: Long,
     @SerialName("state") val state: IssueState,
-    @SerialName("description") val description: String,
+    @SerialName("description") val description: String? = null,
     @SerialName("author") val author: ShortUser,
     @SerialName("milestone") val milestone: Milestone? = null,
     @SerialName("project_id") val projectId: Long,

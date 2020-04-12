@@ -12,8 +12,8 @@ class MarkDownConverter(
     private val config: SpannableConfiguration
 ) {
 
-    suspend fun toSpannable(raw: String): CharSequence =
+    suspend fun toSpannable(raw: String?): CharSequence =
         withContext(Dispatchers.Default) {
-            Markwon.markdown(config, raw)
+            raw?.let { Markwon.markdown(config, raw) } ?: ""
         }
 }

@@ -118,7 +118,7 @@ class MergeRequestInteractor internal constructor(
         val projectAsync = async { api.getProject(projectId) }
         val mr = api.getMergeRequest(projectId, mergeRequestId)
 
-        val resolved = mr.description.resolveMarkdownUrl(projectAsync.await())
+        val resolved = mr.description?.resolveMarkdownUrl(projectAsync.await())
         if (resolved != mr.description) mr.copy(description = resolved)
         else mr
     }
