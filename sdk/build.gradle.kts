@@ -8,6 +8,10 @@ plugins {
     id("kotlinx-atomicfu")
 }
 
+atomicfu {
+    dependenciesVersion = null
+}
+
 kotlin {
     android()
 
@@ -69,6 +73,8 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$coroutinesVersion")
                 //UUID
                 implementation("com.benasher44:uuid:0.1.0")
+                //AtomicFU
+                implementation("org.jetbrains.kotlinx:atomicfu-common:0.14.3")
             }
         }
         val androidMain by getting {

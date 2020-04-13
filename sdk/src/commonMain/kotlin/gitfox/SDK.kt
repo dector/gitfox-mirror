@@ -24,6 +24,8 @@ open class SDK internal constructor(
     private val settings: Settings
 ) {
 
+    private val atom = atomic(true)
+
     private val json = Json(JsonConfiguration.Stable.copy(
         ignoreUnknownKeys = true,
         isLenient = true,
