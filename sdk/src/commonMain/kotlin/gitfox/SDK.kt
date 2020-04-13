@@ -11,6 +11,7 @@ import gitfox.model.data.state.SessionSwitcher
 import gitfox.model.data.storage.Prefs
 import gitfox.model.interactor.*
 import gitfox.util.HttpClientFactory
+import kotlinx.atomicfu.atomic
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 

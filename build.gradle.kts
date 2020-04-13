@@ -9,7 +9,7 @@ buildscript {
         val kotlinVersion = "1.3.70"
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
         classpath("org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion")
-        classpath("org.jetbrains.kotlinx:atomicfu-gradle-plugin:0.14.3")
+        classpath("org.jetbrains.kotlinx:atomicfu-gradle-plugin:0.14.2")
     }
 }
 

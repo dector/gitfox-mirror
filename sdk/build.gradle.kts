@@ -74,7 +74,7 @@ kotlin {
                 //UUID
                 implementation("com.benasher44:uuid:0.1.0")
                 //AtomicFU
-                implementation("org.jetbrains.kotlinx:atomicfu-common:0.14.3")
+                implementation("org.jetbrains.kotlinx:atomicfu-common:0.14.2")
             }
         }
         val androidMain by getting {
