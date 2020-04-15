@@ -7,21 +7,14 @@ import gitfox.client.HttpClientFactory
 import gitfox.entity.app.session.OAuthParams
 
 fun SDK.Companion.create(
-    defaultServerPath: String,
-    defaultPageSize: Int = SDK.defaultPageSize,
-    cacheLifetime: Long = SDK.cacheLifetime,
     oAuthParams: OAuthParams,
     isDebug: Boolean
-): SDK = JsSDK(defaultServerPath, defaultPageSize, cacheLifetime, oAuthParams, isDebug)
+): SDK = JsSDK(oAuthParams, isDebug)
 
 private class JsSDK(
-    defaultServerPath: String,
-    defaultPageSize: Int,
-    cacheLifetime: Long,
     oAuthParams: OAuthParams,
     isDebug: Boolean
 ) : SDK(
-    defaultServerPath,
     defaultPageSize,
     cacheLifetime,
     oAuthParams,

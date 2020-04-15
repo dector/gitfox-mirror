@@ -24,13 +24,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let contentView = ContentView()
         
         let sdk = IosSDK.init(
-         defaultServerPath: "https://gitlab.com/",
-         defaultPageSize: 20,
-         cacheLifetime: 300000,
-         oAuthParams: OAuthParams.init(endpoint: "", appId: "", appKey: "", redirectUrl: ""),
+         oAuthParams: OAuthParams.init(
+            endpoint: "https://gitlab.com/",
+            appId: "appId",
+            appKey: "appKey",
+            redirectUrl: "redirectUrl"
+         ),
          isDebug: true
         )
-        sdk.getSessionInteractor().loginOnCustomServer(serverPath: "https://gitlab.com/", token: "todo put real private token!") { result, err in
+        sdk.getSessionInteractor().loginOnCustomServer(
+          serverPath: "https://gitlab.com/",
+          token: "put real private token!"
+        ) { result, err in
             if err == nil {
                 sdk.getProjectInteractor().getProject(id: 2977308) { result, err in
                     if let project = result {

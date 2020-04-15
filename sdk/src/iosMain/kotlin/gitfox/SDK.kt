@@ -3,15 +3,14 @@ package gitfox
 import com.github.aakira.napier.DebugAntilog
 import com.github.aakira.napier.Napier
 import com.russhwolf.settings.AppleSettings
+import gitfox.SDK.Companion.cacheLifetime
+import gitfox.SDK.Companion.defaultPageSize
 import gitfox.adapter.*
 import gitfox.client.HttpClientFactory
 import gitfox.entity.app.session.OAuthParams
 import platform.Foundation.NSUserDefaults
 
 class IosSDK(
-    defaultServerPath: String,
-    private val defaultPageSize: Int = SDK.defaultPageSize,
-    cacheLifetime: Long = SDK.cacheLifetime,
     oAuthParams: OAuthParams,
     isDebug: Boolean
 ) {
@@ -21,7 +20,6 @@ class IosSDK(
     }
 
     private val sdk = SDK(
-        defaultServerPath,
         defaultPageSize,
         cacheLifetime,
         oAuthParams,

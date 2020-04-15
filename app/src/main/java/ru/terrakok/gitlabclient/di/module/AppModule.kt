@@ -41,7 +41,6 @@ class AppModule(context: Context) : Module() {
 
         val sdk = SDK.create(
             context,
-            BuildConfig.ORIGIN_GITLAB_ENDPOINT,
             oAuthParams = OAuthParams(
                 BuildConfig.ORIGIN_GITLAB_ENDPOINT,
                 BuildConfig.OAUTH_APP_ID,

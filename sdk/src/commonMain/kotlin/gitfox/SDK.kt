@@ -15,7 +15,6 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 
 open class SDK internal constructor(
-    private val defaultServerPath: String,
     private val defaultPageSize: Int = SDK.defaultPageSize,
     private val cacheLifetime: Long = SDK.cacheLifetime,
     private val oAuthParams: OAuthParams,
@@ -82,7 +81,7 @@ open class SDK internal constructor(
         ApiWithChangesRegistration(
             ApiWithProjectCache(
                 GitlabApiImpl(
-                    account?.serverPath ?: defaultServerPath,
+                    account?.serverPath ?: oAuthParams.endpoint,
                     httpClientFactory.create(
                         json,
                         AuthHolder(account?.token, account?.isOAuth ?: true),

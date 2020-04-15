@@ -7,8 +7,7 @@ import kotlinx.coroutines.launch
 
 fun main() {
     val sdk = SDK.create(
-        "https://gitlab.com/",
-        oAuthParams = OAuthParams("", "", "", ""),
+        oAuthParams = OAuthParams("https://gitlab.com/", "", "", ""),
         isDebug = true
     )
 

@@ -7,13 +7,9 @@ import gitfox.entity.app.session.OAuthParams
 
 fun SDK.Companion.create(
     context: Context,
-    defaultServerPath: String,
-    defaultPageSize: Int = SDK.defaultPageSize,
-    cacheLifetime: Long = SDK.cacheLifetime,
     oAuthParams: OAuthParams,
     isDebug: Boolean
 ) = SDK(
-    defaultServerPath,
     defaultPageSize,
     cacheLifetime,
     oAuthParams,
