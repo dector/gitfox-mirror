@@ -3,12 +3,12 @@ package ru.terrakok.gitlabclient.ui.project.files
 import android.os.Bundle
 import android.text.TextUtils
 import android.widget.PopupMenu
+import gitfox.entity.Branch
+import gitfox.entity.app.ProjectFile
 import kotlinx.android.synthetic.main.fragment_project_files.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.Branch
-import ru.terrakok.gitlabclient.entity.app.ProjectFile
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 import ru.terrakok.gitlabclient.presentation.project.files.ProjectFileDestination
 import ru.terrakok.gitlabclient.presentation.project.files.ProjectFilesPresenter

@@ -27,7 +27,7 @@ class ProjectFileFragment : BaseFragment(), ProjectFileView {
 
     override val layoutRes = R.layout.fragment_project_file
 
-    override val parentScopeName = DI.SERVER_SCOPE
+    override val parentScopeName = DI.APP_SCOPE
 
     @InjectPresenter
     lateinit var presenter: ProjectFilePresenter

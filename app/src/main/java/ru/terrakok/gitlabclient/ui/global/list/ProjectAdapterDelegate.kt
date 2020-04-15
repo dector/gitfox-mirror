@@ -4,12 +4,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
+import gitfox.entity.Project
+import gitfox.entity.Visibility
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_project.*
 import kotlinx.android.synthetic.main.item_project.view.*
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.Project
-import ru.terrakok.gitlabclient.entity.Visibility
 import ru.terrakok.gitlabclient.ui.global.view.custom.bindProject
 import ru.terrakok.gitlabclient.util.getTintDrawable
 import ru.terrakok.gitlabclient.util.inflate

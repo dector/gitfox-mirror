@@ -3,29 +3,26 @@ package ru.terrakok.gitlabclient.util
 import android.content.Context
 import android.content.res.Resources
 import androidx.annotation.DrawableRes
-import java.io.IOException
+import gitfox.entity.*
+import gitfox.entity.app.target.TargetBadgeStatus
+import gitfox.entity.app.target.TargetHeaderIcon
+import gitfox.entity.app.target.TargetHeaderTitle
+import io.ktor.client.features.ResponseException
 import org.threeten.bp.Duration
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
-import retrofit2.HttpException
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.app.develop.LicenseType
-import ru.terrakok.gitlabclient.entity.app.target.TargetBadgeStatus
-import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderIcon
-import ru.terrakok.gitlabclient.entity.app.target.TargetHeaderTitle
-import ru.terrakok.gitlabclient.entity.event.EventAction
-import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestMergeStatus
-import ru.terrakok.gitlabclient.entity.milestone.MilestoneState
-import ru.terrakok.gitlabclient.entity.todo.TodoAction
-import ru.terrakok.gitlabclient.model.system.ResourceManager
+import ru.terrakok.gitlabclient.system.LicenseType
+import ru.terrakok.gitlabclient.system.ResourceManager
+import java.io.IOException
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 14.02.18.
  */
 
 fun Throwable.userMessage(resourceManager: ResourceManager) = when (this) {
-    is HttpException -> when (this.code()) {
+    is ResponseException -> when (response.status.value) {
         304 -> resourceManager.getString(R.string.not_modified_error)
         400 -> resourceManager.getString(R.string.bad_request_error)
         401 -> resourceManager.getString(R.string.unauthorized_error)
@@ -41,6 +38,7 @@ fun Throwable.userMessage(resourceManager: ResourceManager) = when (this) {
     else -> resourceManager.getString(R.string.unknown_error)
 }
 
+fun Time.humanTime(resources: Resources): String = this.toZDT().humanTime(resources)
 private val DATE_FORMAT = DateTimeFormatter.ofPattern("dd MMM yyyy")
 fun ZonedDateTime.humanTime(resources: Resources): String {
     val delta = Duration.between(this, ZonedDateTime.now())
@@ -59,6 +57,7 @@ fun ZonedDateTime.humanTime(resources: Resources): String {
     return resources.getString(R.string.time_ago, timeStr)
 }
 
+fun Date.humanDate(): String = toLocalDate().humanDate()
 fun LocalDate.humanDate(): String = format(DATE_FORMAT)
 
 fun EventAction.getHumanName(resources: Resources) = when (this) {
@@ -198,4 +197,5 @@ fun MergeRequestMergeStatus.getHumanName(resources: Resources) = when (this) {
     MergeRequestMergeStatus.CANNOT_BE_MERGED -> resources.getString(R.string.merge_request_status_cannot_be_merged)
     MergeRequestMergeStatus.CAN_BE_MERGED -> resources.getString(R.string.merge_request_status_can_be_merged)
     MergeRequestMergeStatus.UNCHECKED -> resources.getString(R.string.merge_request_status_unchecked)
+    MergeRequestMergeStatus.CHECKING -> resources.getString(R.string.merge_request_status_checking)
 }

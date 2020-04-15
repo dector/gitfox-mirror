@@ -7,12 +7,6 @@ import javax.inject.Qualifier
  */
 
 @Qualifier
-annotation class DefaultPageSize
-
-@Qualifier
-annotation class ServerPath
-
-@Qualifier
 annotation class AppDevelopersPath
 
 @Qualifier
@@ -32,9 +26,6 @@ annotation class TodoListPendingState
 
 @Qualifier
 annotation class UserId
-
-@Qualifier
-annotation class CacheLifetime
 
 @Qualifier
 annotation class FilePath

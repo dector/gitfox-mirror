@@ -4,11 +4,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
+import gitfox.entity.RepositoryTreeNodeType
+import gitfox.entity.app.ProjectFile
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_project_file.*
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.RepositoryTreeNodeType
-import ru.terrakok.gitlabclient.entity.app.ProjectFile
 import ru.terrakok.gitlabclient.util.inflate
 
 /**

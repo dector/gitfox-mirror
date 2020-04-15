@@ -1,10 +1,10 @@
 package ru.terrakok.gitlabclient.presentation.mergerequest
 
+import gitfox.entity.app.target.TargetAction
 import moxy.MvpView
 import moxy.viewstate.strategy.AddToEndSingleStrategy
 import moxy.viewstate.strategy.OneExecutionStateStrategy
 import moxy.viewstate.strategy.StateStrategyType
-import ru.terrakok.gitlabclient.entity.app.target.TargetAction
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 27.10.18.

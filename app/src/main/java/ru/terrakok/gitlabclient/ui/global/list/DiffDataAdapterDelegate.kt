@@ -4,11 +4,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
+import gitfox.entity.DiffData
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_diff_data.*
 import kotlinx.android.synthetic.main.item_diff_data.view.*
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.DiffData
 import ru.terrakok.gitlabclient.util.extractFileNameFromPath
 import ru.terrakok.gitlabclient.util.inflate
 

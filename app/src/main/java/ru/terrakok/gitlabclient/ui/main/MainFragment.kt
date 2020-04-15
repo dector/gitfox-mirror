@@ -5,13 +5,13 @@ import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter
 import com.aurelhubert.ahbottomnavigation.notification.AHNotification
+import gitfox.entity.app.AccountMainBadges
 import kotlinx.android.synthetic.main.fragment_main.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
-import ru.terrakok.gitlabclient.entity.app.AccountMainBadges
 import ru.terrakok.gitlabclient.presentation.main.MainPresenter
 import ru.terrakok.gitlabclient.presentation.main.MainView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment

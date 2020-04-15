@@ -1,25 +1,22 @@
 package ru.terrakok.gitlabclient.di.module
 
 import android.content.Context
-import android.content.res.AssetManager
-import com.google.gson.Gson
+import gitfox.SDK
+import gitfox.create
+import gitfox.entity.app.session.OAuthParams
+import gitfox.model.interactor.*
 import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.BuildConfig
 import ru.terrakok.gitlabclient.di.AppDevelopersPath
-import ru.terrakok.gitlabclient.di.CacheLifetime
-import ru.terrakok.gitlabclient.di.DefaultPageSize
-import ru.terrakok.gitlabclient.di.PrimitiveWrapper
-import ru.terrakok.gitlabclient.di.provider.GsonProvider
-import ru.terrakok.gitlabclient.entity.app.develop.AppInfo
-import ru.terrakok.gitlabclient.entity.app.session.OAuthParams
-import ru.terrakok.gitlabclient.model.data.server.client.OkHttpClientFactory
-import ru.terrakok.gitlabclient.model.system.AppSchedulers
-import ru.terrakok.gitlabclient.model.system.ResourceManager
-import ru.terrakok.gitlabclient.model.system.SchedulersProvider
-import ru.terrakok.gitlabclient.model.system.message.SystemMessageNotifier
-import ru.terrakok.gitlabclient.util.Base64Tools
+import ru.terrakok.gitlabclient.di.provider.*
+import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
+import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
+import ru.terrakok.gitlabclient.system.AppInfo
+import ru.terrakok.gitlabclient.system.AppInfoInteractor
+import ru.terrakok.gitlabclient.system.ResourceManager
+import ru.terrakok.gitlabclient.system.message.SystemMessageNotifier
 import toothpick.config.Module
 
 /**
@@ -30,23 +27,30 @@ class AppModule(context: Context) : Module() {
         // Global
         bind(Context::class.java).toInstance(context)
         bind(String::class.java).withName(AppDevelopersPath::class.java).toInstance(BuildConfig.APP_DEVELOPERS_PATH)
-        bind(PrimitiveWrapper::class.java).withName(DefaultPageSize::class.java).toInstance(PrimitiveWrapper(20))
-        bind(PrimitiveWrapper::class.java).withName(CacheLifetime::class.java).toInstance(PrimitiveWrapper(300_000L))
-        bind(SchedulersProvider::class.java).toInstance(AppSchedulers())
         bind(ResourceManager::class.java).singleton()
-        bind(Base64Tools::class.java).toInstance(Base64Tools())
-        bind(AssetManager::class.java).toInstance(context.assets)
         bind(SystemMessageNotifier::class.java).toInstance(SystemMessageNotifier())
-        bind(Gson::class.java).toProvider(GsonProvider::class.java).providesSingleton()
-        bind(OkHttpClientFactory::class.java).singleton()
 
         // Navigation
         val cicerone = Cicerone.create()
         bind(Router::class.java).toInstance(cicerone.router)
         bind(NavigatorHolder::class.java).toInstance(cicerone.navigatorHolder)
 
-        // AppInfo
-        bind(AppInfo::class.java).toInstance(
+        // Error handler with logout logic
+        bind(ErrorHandler::class.java).singleton()
+
+
+        val sdk = SDK.create(
+            context,
+            oAuthParams = OAuthParams(
+                BuildConfig.ORIGIN_GITLAB_ENDPOINT,
+                BuildConfig.OAUTH_APP_ID,
+                BuildConfig.OAUTH_SECRET,
+                BuildConfig.OAUTH_CALLBACK
+            ),
+            isDebug = BuildConfig.DEBUG
+        )
+        bind(AppInfoInteractor::class.java).toInstance(AppInfoInteractor(
+            context,
             AppInfo(
                 BuildConfig.VERSION_NAME,
                 BuildConfig.VERSION_CODE,
@@ -55,16 +59,23 @@ class AppModule(context: Context) : Module() {
                 BuildConfig.APP_HOME_PAGE,
                 BuildConfig.FEEDBACK_URL
             )
-        )
+        ))
 
-        // Auth
-        bind(OAuthParams::class.java).toInstance(
-            OAuthParams(
-                BuildConfig.ORIGIN_GITLAB_ENDPOINT,
-                BuildConfig.OAUTH_APP_ID,
-                BuildConfig.OAUTH_SECRET,
-                BuildConfig.OAUTH_CALLBACK
-            )
-        )
+        bind(AccountInteractor::class.java).toProviderInstance(AccountInteractorProvider(sdk))
+        bind(CommitInteractor::class.java).toProviderInstance(CommitInteractorProvider(sdk))
+        bind(EventInteractor::class.java).toProviderInstance(EventInteractorProvider(sdk))
+        bind(IssueInteractor::class.java).toProviderInstance(IssueInteractorProvider(sdk))
+        bind(LabelInteractor::class.java).toProviderInstance(LabelInteractorProvider(sdk))
+        bind(LaunchInteractor::class.java).toProviderInstance(LaunchInteractorProvider(sdk))
+        bind(MembersInteractor::class.java).toProviderInstance(MembersInteractorProvider(sdk))
+        bind(MergeRequestInteractor::class.java).toProviderInstance(MergeRequestInteractorProvider(sdk))
+        bind(MilestoneInteractor::class.java).toProviderInstance(MilestoneInteractorProvider(sdk))
+        bind(ProjectInteractor::class.java).toProviderInstance(ProjectInteractorProvider(sdk))
+        bind(SessionInteractor::class.java).toProviderInstance(SessionInteractorProvider(sdk))
+        bind(TodoInteractor::class.java).toProviderInstance(TodoInteractorProvider(sdk))
+        bind(UserInteractor::class.java).toProviderInstance(UserInteractorProvider(sdk))
+
+
+        bind(MarkDownConverter::class.java).toProviderInstance(MarkDownConverterProvider(context, { sdk.getCurrentServerPath() }))
     }
 }

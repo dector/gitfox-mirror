@@ -11,13 +11,12 @@ cache:
 
 stages:
   - code_quality
-  - test
   - build
 
 lint:
   stage: code_quality
   script:
-    - ./gradlew lintDebug
+    - ./gradlew :app:lintDebug
   artifacts:
     when: on_failure
     name: "lint_${CI_COMMIT_REF_NAME}"
@@ -44,32 +43,17 @@ ktlint:
     #tag
     - /^v.*$/
 
-unitTests:
-  stage: test
-  script:
-    - ./gradlew testDebugUnitTest
-  artifacts:
-    when: on_failure
-    name: "unitTests_${CI_COMMIT_REF_NAME}"
-    expire_in: 1 days
-    paths:
-      - app/build/reports/tests/
-  only:
-    - merge_requests
-    #tag
-    - /^v.*$/
-
 build:
   stage: build
   script:
-    - ./gradlew assembleDebug
+    - ./gradlew :app:assembleDebug
   only:
     - merge_requests
 
 buildDebugPG:
   stage: build
   script:
-    - ./gradlew assembleDebugPG
+    - ./gradlew :app:assembleDebugPG
   artifacts:
     when: on_success
     name: "buildDebugPG_${CI_COMMIT_REF_NAME}"
@@ -85,7 +69,7 @@ buildRelease:
   script:
     - mkdir -p ./keys/play
     - base64 -d $KEY_FILE > ./keys/play/key.jks
-    - ./gradlew assembleRelease
+    - ./gradlew :app:assembleRelease
   artifacts:
     when: on_success
     name: "buildRelease_${CI_COMMIT_TAG}"

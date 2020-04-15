@@ -1,9 +1,12 @@
 package ru.terrakok.gitlabclient.presentation.main
 
-import javax.inject.Inject
+import gitfox.model.interactor.AccountInteractor
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import moxy.InjectViewState
-import ru.terrakok.gitlabclient.model.interactor.AccountInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
+import javax.inject.Inject
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 20.05.19.
@@ -15,14 +18,9 @@ class MainPresenter @Inject constructor(
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-
         accountInteractor.getAccountMainBadges()
-            .subscribe(
-                { viewState.setAssignedNotifications(it) },
-                {
-                    // TODO: user activity badges (Maybe we can retry this request, until it finishes correctly?).
-                }
-            )
-            .connect()
+            .onEach { viewState.setAssignedNotifications(it) }
+            .catch { /*do nothing*/ }
+            .launchIn(this)
     }
 }

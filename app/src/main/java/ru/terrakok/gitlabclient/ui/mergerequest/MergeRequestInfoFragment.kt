@@ -5,17 +5,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
+import gitfox.entity.*
 import kotlinx.android.synthetic.main.fragment_mr_info.*
 import kotlinx.android.synthetic.main.item_target_badge.view.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.ShortUser
-import ru.terrakok.gitlabclient.entity.TimeStats
-import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
-import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestMergeStatus
-import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
-import ru.terrakok.gitlabclient.entity.milestone.Milestone
 import ru.terrakok.gitlabclient.presentation.mergerequest.info.MergeRequestInfoPresenter
 import ru.terrakok.gitlabclient.presentation.mergerequest.info.MergeRequestInfoView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
@@ -68,7 +63,7 @@ class MergeRequestInfoFragment : BaseFragment(), MergeRequestInfoView {
             showMilestone(milestone)
             showMergeStatus(state, mergeStatus)
             showTimeStats(timeStats)
-            showLockMergeRequest(discussionLocked)
+            showLockMergeRequest(discussionLocked ?: false)
             showLabels(labels)
         }
     }

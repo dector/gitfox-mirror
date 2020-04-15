@@ -5,12 +5,13 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Build
 import androidx.multidex.MultiDex
+import com.github.aakira.napier.DebugAntilog
+import com.github.aakira.napier.Napier
 import com.jakewharton.threetenabp.AndroidThreeTen
 import ru.noties.markwon.SpannableConfiguration
 import ru.noties.markwon.spans.SpannableTheme
 import ru.terrakok.gitlabclient.di.DI
 import ru.terrakok.gitlabclient.di.module.AppModule
-import timber.log.Timber
 import toothpick.Toothpick
 import toothpick.configuration.Configuration
 
@@ -39,7 +40,7 @@ class App : Application() {
 
     private fun initLogger() {
         if (BuildConfig.DEBUG) {
-            Timber.plant(Timber.DebugTree())
+            Napier.base(DebugAntilog())
         }
     }
 

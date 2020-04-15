@@ -1,16 +1,17 @@
 package ru.terrakok.gitlabclient.presentation.mergerequest.changes
 
-import javax.inject.Inject
+import gitfox.entity.DiffData
+import gitfox.model.interactor.MergeRequestInteractor
+import kotlinx.coroutines.launch
 import moxy.InjectViewState
 import ru.terrakok.gitlabclient.Screens
 import ru.terrakok.gitlabclient.di.MergeRequestId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
-import ru.terrakok.gitlabclient.entity.DiffData
-import ru.terrakok.gitlabclient.model.interactor.MergeRequestInteractor
-import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
+import ru.terrakok.gitlabclient.system.flow.FlowRouter
+import javax.inject.Inject
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 12.02.18.
@@ -33,91 +34,83 @@ class MergeRequestDiffDataListPresenter @Inject constructor(
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
-        mrInteractor
-            .getMergeRequestDiffDataList(projectId, mrId)
-            .doOnSubscribe { viewState.showEmptyProgress(true) }
-            .doAfterTerminate { viewState.showEmptyProgress(false) }
-            .subscribe(
-                {
-                    if (it.isNotEmpty()) {
-                        diffDataList.addAll(it)
-                        viewState.showDiffDataList(true, it)
-                    } else {
-                        viewState.showDiffDataList(false, it)
-                        viewState.showEmptyView(true)
-                    }
-                },
-                {
-                    isEmptyError = true
-                    errorHandler.proceed(it, { viewState.showEmptyError(true, it) })
+        launch {
+            viewState.showEmptyProgress(true)
+            try {
+                val diffList = mrInteractor.getMergeRequestDiffDataList(projectId, mrId)
+                if (diffList.isNotEmpty()) {
+                    diffDataList.addAll(diffList)
+                    viewState.showDiffDataList(true, diffList)
+                } else {
+                    viewState.showDiffDataList(false, diffList)
+                    viewState.showEmptyView(true)
                 }
-            )
-            .connect()
+            } catch (e: Exception) {
+                isEmptyError = true
+                errorHandler.proceed(e) { viewState.showEmptyError(true, it) }
+            }
+            viewState.showEmptyProgress(false)
+        }
     }
 
     fun refreshDiffDataList() {
-        mrInteractor
-            .getMergeRequestDiffDataList(projectId, mrId)
-            .doOnSubscribe {
-                if (isEmptyError) {
-                    viewState.showEmptyError(false, null)
-                    isEmptyError = false
-                }
-                if (diffDataList.isEmpty()) {
-                    viewState.showEmptyView(false)
-                }
+        launch {
+            if (isEmptyError) {
+                viewState.showEmptyError(false, null)
+                isEmptyError = false
+            }
+            if (diffDataList.isEmpty()) {
+                viewState.showEmptyView(false)
+            }
+            if (diffDataList.isNotEmpty()) {
+                viewState.showRefreshProgress(true)
+            } else {
+                viewState.showEmptyProgress(true)
+            }
+            try {
+                val diffList = mrInteractor.getMergeRequestDiffDataList(projectId, mrId)
                 if (diffDataList.isNotEmpty()) {
-                    viewState.showRefreshProgress(true)
+                    viewState.showRefreshProgress(false)
                 } else {
-                    viewState.showEmptyProgress(true)
+                    viewState.showEmptyProgress(false)
+                }
+                diffDataList.clear()
+                if (diffList.isNotEmpty()) {
+                    diffDataList.addAll(diffList)
+                    viewState.showDiffDataList(true, diffList)
+                } else {
+                    viewState.showDiffDataList(false, diffList)
+                    viewState.showEmptyView(true)
+                }
+            } catch (e: Exception) {
+
+                if (diffDataList.isNotEmpty()) {
+                    viewState.showRefreshProgress(false)
+                } else {
+                    viewState.showEmptyProgress(false)
+                }
+                errorHandler.proceed(e) {
+                    if (diffDataList.isNotEmpty()) {
+                        viewState.showMessage(it)
+                    } else {
+                        isEmptyError = true
+                        viewState.showEmptyError(true, it)
+                    }
                 }
             }
-            .subscribe(
-                {
-                    if (diffDataList.isNotEmpty()) {
-                        viewState.showRefreshProgress(false)
-                    } else {
-                        viewState.showEmptyProgress(false)
-                    }
-                    diffDataList.clear()
-                    if (it.isNotEmpty()) {
-                        diffDataList.addAll(it)
-                        viewState.showDiffDataList(true, it)
-                    } else {
-                        viewState.showDiffDataList(false, it)
-                        viewState.showEmptyView(true)
-                    }
-                },
-                {
-                    if (diffDataList.isNotEmpty()) {
-                        viewState.showRefreshProgress(false)
-                    } else {
-                        viewState.showEmptyProgress(false)
-                    }
-                    errorHandler.proceed(
-                        it,
-                        {
-                            if (diffDataList.isNotEmpty()) {
-                                viewState.showMessage(it)
-                            } else {
-                                isEmptyError = true
-                                viewState.showEmptyError(true, it)
-                            }
-                        }
-                    )
-                }
-            )
-            .connect()
+        }
     }
 
     fun onMergeRequestDiffDataClicked(item: DiffData) {
-        mrInteractor.getMergeRequest(projectId, mrId)
-            .doOnSubscribe { viewState.showFullscreenProgress(true) }
-            .doAfterTerminate { viewState.showFullscreenProgress(false) }
-            .subscribe(
-                { flowRouter.startFlow(Screens.ProjectFile(projectId, item.newPath, it.sha)) },
-                { errorHandler.proceed(it, { viewState.showMessage(it) }) }
-            )
-            .connect()
+        launch {
+            viewState.showFullscreenProgress(true)
+            try {
+                val mr = mrInteractor.getMergeRequest(projectId, mrId)
+                flowRouter.startFlow(Screens.ProjectFile(projectId, item.newPath, mr.sha))
+            } catch (e: Exception) {
+                errorHandler.proceed(e) { viewState.showMessage(it) }
+            }
+            viewState.showFullscreenProgress(false)
+        }
     }
 }
