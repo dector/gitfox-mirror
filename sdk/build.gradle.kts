@@ -43,6 +43,7 @@ kotlin {
                 )
                 outputFileName = "main.js"
             }
+            useCommonJs()
         }
     }
 

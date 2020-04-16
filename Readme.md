@@ -105,3 +105,18 @@ sdk.getSessionInteractor().loginOnCustomServer(
     }
 }
 ```
+
+#### Private token authorization for JavaScript:
+```javascript
+const SDK = new sdk.gitfox.JsSDK(
+  new sdk.gitfox.entity.app.session.OAuthParams(
+    "https://gitlab.com/", "", "", ""
+  ),
+  true
+);
+SDK.getSessionInteractor().loginOnCustomServer(
+	"https://gitlab.com/", "put real private token!"
+).then( () => {
+  SDK.getProjectInteractor().getProject(2977308).then( (project, err) => alert(project) );
+});
+```
