@@ -1,7 +1,11 @@
 package gitfox.adapter
 
 import com.github.aakira.napier.Napier
+import io.ktor.utils.io.core.Closeable
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import platform.darwin.*
 import kotlin.coroutines.CoroutineContext
 
@@ -60,7 +64,23 @@ internal object MainLoopDispatcher : CoroutineDispatcher(), Delay {
 
 }
 
-internal fun <T> CoroutineScope.fire(
+class CFlow<T>(private val origin: Flow<T>) : Flow<T> by origin {
+    fun watch(block: (T) -> Unit): Closeable {
+        val job = Job()
+
+        onEach {
+            block(it)
+        }.launchIn(CoroutineScope(MainLoopDispatcher + job))
+
+        return object : Closeable {
+            override fun close() {
+                job.cancel()
+            }
+        }
+    }
+}
+
+internal fun <T> CoroutineScope.wrap(
     callback: (result: T?, error: Exception?) -> Unit,
     block: suspend () -> T
 ) {
@@ -72,3 +92,5 @@ internal fun <T> CoroutineScope.fire(
         }
     }
 }
+
+internal fun <T> Flow<T>.wrap(): CFlow<T> = CFlow(this)

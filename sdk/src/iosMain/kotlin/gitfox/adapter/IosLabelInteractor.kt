@@ -13,7 +13,7 @@ class IosLabelInteractor internal constructor(
         page: Int,
         callback: (result: List<Label>?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.getLabelList(projectId, page) }
+        wrap(callback) { interactor.getLabelList(projectId, page) }
     }
 
     fun createLabel(
@@ -24,7 +24,7 @@ class IosLabelInteractor internal constructor(
         priority: Int?,
         callback: (result: Label?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.createLabel(projectId, name, color, description, priority) }
+        wrap(callback) { interactor.createLabel(projectId, name, color, description, priority) }
     }
 
     fun deleteLabel(
@@ -32,7 +32,7 @@ class IosLabelInteractor internal constructor(
         name: String,
         callback: (result: Unit?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.deleteLabel(projectId, name) }
+        wrap(callback) { interactor.deleteLabel(projectId, name) }
     }
 
     fun subscribeToLabel(
@@ -40,7 +40,7 @@ class IosLabelInteractor internal constructor(
         labelId: Long,
         callback: (result: Label?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.subscribeToLabel(projectId, labelId) }
+        wrap(callback) { interactor.subscribeToLabel(projectId, labelId) }
     }
 
     fun unsubscribeFromLabel(
@@ -48,6 +48,6 @@ class IosLabelInteractor internal constructor(
         labelId: Long,
         callback: (result: Label?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.unsubscribeFromLabel(projectId, labelId) }
+        wrap(callback) { interactor.unsubscribeFromLabel(projectId, labelId) }
     }
 }

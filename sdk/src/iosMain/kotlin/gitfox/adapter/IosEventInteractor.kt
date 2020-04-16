@@ -21,7 +21,7 @@ class IosEventInteractor internal constructor(
         pageSize: Int = defaultPageSize,
         callback: (result: List<TargetHeader>?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.getEvents(action, targetType, beforeDay, afterDay, sort, orderBy, page, pageSize) }
+        wrap(callback) { interactor.getEvents(action, targetType, beforeDay, afterDay, sort, orderBy, page, pageSize) }
     }
 
     fun getProjectEvents(
@@ -36,7 +36,7 @@ class IosEventInteractor internal constructor(
         pageSize: Int = defaultPageSize,
         callback: (result: List<TargetHeader>?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.getProjectEvents(projectId, action, targetType, beforeDay, afterDay, sort, orderBy, page, pageSize) }
+        wrap(callback) { interactor.getProjectEvents(projectId, action, targetType, beforeDay, afterDay, sort, orderBy, page, pageSize) }
     }
 
 }

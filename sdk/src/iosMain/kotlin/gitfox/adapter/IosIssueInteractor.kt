@@ -26,7 +26,7 @@ class IosIssueInteractor internal constructor(
         pageSize: Int = defaultPageSize,
         callback: (result: List<TargetHeader>?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.getMyIssues(scope, state, labels, milestone, iids, orderBy, sort, search, page, pageSize) }
+        wrap(callback) { interactor.getMyIssues(scope, state, labels, milestone, iids, orderBy, sort, search, page, pageSize) }
     }
 
     fun getIssues(
@@ -43,6 +43,6 @@ class IosIssueInteractor internal constructor(
         pageSize: Int = defaultPageSize,
         callback: (result: List<TargetHeader>?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.getIssues(projectId, scope, state, labels, milestone, iids, orderBy, sort, search, page, pageSize) }
+        wrap(callback) { interactor.getIssues(projectId, scope, state, labels, milestone, iids, orderBy, sort, search, page, pageSize) }
     }
 }

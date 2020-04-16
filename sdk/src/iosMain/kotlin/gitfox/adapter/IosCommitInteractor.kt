@@ -14,7 +14,7 @@ class IosCommitInteractor internal constructor(
         commitId: String,
         callback: (result: Commit?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.getCommit(projectId, commitId) }
+        wrap(callback) { interactor.getCommit(projectId, commitId) }
     }
 
     fun getCommitDiffData(
@@ -22,6 +22,6 @@ class IosCommitInteractor internal constructor(
         commitId: String,
         callback: (result: List<DiffData>?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.getCommitDiffData(projectId, commitId) }
+        wrap(callback) { interactor.getCommitDiffData(projectId, commitId) }
     }
 }

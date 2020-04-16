@@ -9,7 +9,7 @@ class IosMembersInteractor internal constructor(
     private val defaultPageSize: Int
 ) : CoroutineScope by CoroutineScope(MainLoopDispatcher) {
 
-//    val memberChanges: Flow<Long>
+    val memberChanges = interactor.memberChanges.wrap()
 
     fun getMembers(
         projectId: Long,
@@ -17,7 +17,7 @@ class IosMembersInteractor internal constructor(
         pageSize: Int = defaultPageSize,
         callback: (result: List<Member>?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.getMembers(projectId, page, pageSize) }
+        wrap(callback) { interactor.getMembers(projectId, page, pageSize) }
     }
 
     fun getMember(
@@ -25,7 +25,7 @@ class IosMembersInteractor internal constructor(
         memberId: Long,
         callback: (result: Member?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.getMember(projectId, memberId) }
+        wrap(callback) { interactor.getMember(projectId, memberId) }
     }
 
     fun addMember(
@@ -35,7 +35,7 @@ class IosMembersInteractor internal constructor(
         expiresDate: String? = null,
         callback: (result: Unit?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.addMember(projectId, userId, accessLevel, expiresDate) }
+        wrap(callback) { interactor.addMember(projectId, userId, accessLevel, expiresDate) }
     }
 
     fun editMember(
@@ -45,7 +45,7 @@ class IosMembersInteractor internal constructor(
         expiresDate: String? = null,
         callback: (result: Unit?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.editMember(projectId, userId, accessLevel, expiresDate) }
+        wrap(callback) { interactor.editMember(projectId, userId, accessLevel, expiresDate) }
     }
 
     fun deleteMember(
@@ -53,6 +53,6 @@ class IosMembersInteractor internal constructor(
         userId: Long,
         callback: (result: Unit?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.deleteMember(projectId, userId) }
+        wrap(callback) { interactor.deleteMember(projectId, userId) }
     }
 }

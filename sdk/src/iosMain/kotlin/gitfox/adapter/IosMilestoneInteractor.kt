@@ -8,7 +8,7 @@ class IosMilestoneInteractor internal constructor(
     private val interactor: MilestoneInteractor,
     private val defaultPageSize: Int
 ) : CoroutineScope by CoroutineScope(MainLoopDispatcher) {
-//    val milestoneChanges: Flow<Long>
+    val milestoneChanges = interactor.milestoneChanges.wrap()
 
     fun getMilestones(
         projectId: Long,
@@ -17,7 +17,7 @@ class IosMilestoneInteractor internal constructor(
         pageSize: Int = defaultPageSize,
         callback: (result: List<Milestone>?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.getMilestones(projectId, state, page, pageSize) }
+        wrap(callback) { interactor.getMilestones(projectId, state, page, pageSize) }
     }
 
     fun getMilestone(
@@ -25,7 +25,7 @@ class IosMilestoneInteractor internal constructor(
         milestoneId: Long,
         callback: (result: Milestone?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.getMilestone(projectId, milestoneId) }
+        wrap(callback) { interactor.getMilestone(projectId, milestoneId) }
     }
 
     fun createMilestone(
@@ -36,7 +36,7 @@ class IosMilestoneInteractor internal constructor(
         startDate: Date? = null,
         callback: (result: Milestone?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.createMilestone(projectId, title, description, dueDate, startDate) }
+        wrap(callback) { interactor.createMilestone(projectId, title, description, dueDate, startDate) }
     }
 
     fun updateMilestone(
@@ -48,7 +48,7 @@ class IosMilestoneInteractor internal constructor(
         startDate: Date? = null,
         callback: (result: Milestone?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.updateMilestone(projectId, milestoneId, title, description, dueDate, startDate) }
+        wrap(callback) { interactor.updateMilestone(projectId, milestoneId, title, description, dueDate, startDate) }
     }
 
     fun deleteMilestone(
@@ -56,7 +56,7 @@ class IosMilestoneInteractor internal constructor(
         milestoneId: Long,
         callback: (result: Unit?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.deleteMilestone(projectId, milestoneId) }
+        wrap(callback) { interactor.deleteMilestone(projectId, milestoneId) }
     }
 
     fun getMilestoneIssues(
@@ -66,7 +66,7 @@ class IosMilestoneInteractor internal constructor(
         pageSize: Int = defaultPageSize,
         callback: (result: List<Issue>?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.getMilestoneIssues(projectId, milestoneId, page, pageSize) }
+        wrap(callback) { interactor.getMilestoneIssues(projectId, milestoneId, page, pageSize) }
     }
 
     fun getMilestoneMergeRequests(
@@ -76,6 +76,6 @@ class IosMilestoneInteractor internal constructor(
         pageSize: Int = defaultPageSize,
         callback: (result: List<MergeRequest>?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.getMilestoneMergeRequests(projectId, milestoneId, page, pageSize) }
+        wrap(callback) { interactor.getMilestoneMergeRequests(projectId, milestoneId, page, pageSize) }
     }
 }

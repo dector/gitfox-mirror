@@ -9,10 +9,10 @@ class IosAccountInteractor internal constructor(
     private val interactor: AccountInteractor
 ) : CoroutineScope by CoroutineScope(MainLoopDispatcher) {
 
-//    fun getAccountMainBadges(): Flow<AccountMainBadges>
+    fun getAccountMainBadges() = interactor.getAccountMainBadges().wrap()
 
     fun getMyProfile(callback: (result: User?, error: Exception?) -> Unit) {
-        fire(callback) { interactor.getMyProfile() }
+        wrap(callback) { interactor.getMyProfile() }
     }
 
     fun getMyServerName(): String = interactor.getMyServerName()
@@ -22,7 +22,7 @@ class IosAccountInteractor internal constructor(
         page: Int,
         callback: (result: List<TargetHeader>?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.getMyTodos(isPending, page) }
+        wrap(callback) { interactor.getMyTodos(isPending, page) }
     }
 
     fun getMyMergeRequests(
@@ -31,7 +31,7 @@ class IosAccountInteractor internal constructor(
         page: Int,
         callback: (result: List<TargetHeader>?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.getMyMergeRequests(createdByMe, onlyOpened, page) }
+        wrap(callback) { interactor.getMyMergeRequests(createdByMe, onlyOpened, page) }
     }
 
     fun getMyIssues(
@@ -40,6 +40,6 @@ class IosAccountInteractor internal constructor(
         page: Int,
         callback: (result: List<TargetHeader>?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.getMyIssues(createdByMe, onlyOpened, page) }
+        wrap(callback) { interactor.getMyIssues(createdByMe, onlyOpened, page) }
     }
 }

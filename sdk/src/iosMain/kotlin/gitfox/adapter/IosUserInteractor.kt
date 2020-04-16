@@ -9,6 +9,6 @@ class IosUserInteractor internal constructor(
 ) : CoroutineScope by CoroutineScope(MainLoopDispatcher) {
 
     fun getUser(id: Long, callback: (result: User?, error: Exception?) -> Unit) {
-        fire(callback) { interactor.getUser(id) }
+        wrap(callback) { interactor.getUser(id) }
     }
 }

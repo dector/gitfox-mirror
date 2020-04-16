@@ -10,7 +10,7 @@ class IosMergeRequestInteractor internal constructor(
     private val interactor: MergeRequestInteractor,
     private val defaultPageSize: Int
 ) : CoroutineScope by CoroutineScope(MainLoopDispatcher) {
-//    val mergeRequestChanges: Flow<Long>
+    val mergeRequestChanges = interactor.mergeRequestChanges.wrap()
 
     fun getMyMergeRequests(
         state: MergeRequestState? = null,
@@ -29,7 +29,7 @@ class IosMergeRequestInteractor internal constructor(
         pageSize: Int = defaultPageSize,
         callback: (result: List<TargetHeader>?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.getMyMergeRequests(state, milestone, viewType, labels, createdBefore, createdAfter, scope, authorId, assigneeId, meReactionEmoji, orderBy, sort, page, pageSize) }
+        wrap(callback) { interactor.getMyMergeRequests(state, milestone, viewType, labels, createdBefore, createdAfter, scope, authorId, assigneeId, meReactionEmoji, orderBy, sort, page, pageSize) }
     }
 
     fun getMergeRequests(
@@ -50,7 +50,7 @@ class IosMergeRequestInteractor internal constructor(
         pageSize: Int = defaultPageSize,
         callback: (result: List<TargetHeader>?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.getMergeRequests(projectId, state, milestone, viewType, labels, createdBefore, createdAfter, scope, authorId, assigneeId, meReactionEmoji, orderBy, sort, page, pageSize) }
+        wrap(callback) { interactor.getMergeRequests(projectId, state, milestone, viewType, labels, createdBefore, createdAfter, scope, authorId, assigneeId, meReactionEmoji, orderBy, sort, page, pageSize) }
     }
 
     fun getMergeRequest(
@@ -58,7 +58,7 @@ class IosMergeRequestInteractor internal constructor(
         mergeRequestId: Long,
         callback: (result: MergeRequest?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.getMergeRequest(projectId, mergeRequestId) }
+        wrap(callback) { interactor.getMergeRequest(projectId, mergeRequestId) }
     }
 
     fun getMergeRequestNotes(
@@ -70,7 +70,7 @@ class IosMergeRequestInteractor internal constructor(
         pageSize: Int = defaultPageSize,
         callback: (result: List<Note>?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.getMergeRequestNotes(projectId, mergeRequestId, sort, orderBy, page, pageSize) }
+        wrap(callback) { interactor.getMergeRequestNotes(projectId, mergeRequestId, sort, orderBy, page, pageSize) }
     }
 
     fun getAllMergeRequestNotes(
@@ -80,7 +80,7 @@ class IosMergeRequestInteractor internal constructor(
         orderBy: OrderBy = OrderBy.UPDATED_AT,
         callback: (result: List<Note>?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.getAllMergeRequestNotes(projectId, mergeRequestId, sort, orderBy) }
+        wrap(callback) { interactor.getAllMergeRequestNotes(projectId, mergeRequestId, sort, orderBy) }
     }
 
     fun createMergeRequestNote(
@@ -89,7 +89,7 @@ class IosMergeRequestInteractor internal constructor(
         body: String,
         callback: (result: Note?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.createMergeRequestNote(projectId, issueId, body) }
+        wrap(callback) { interactor.createMergeRequestNote(projectId, issueId, body) }
     }
 
     fun getMergeRequestCommits(
@@ -99,7 +99,7 @@ class IosMergeRequestInteractor internal constructor(
         pageSize: Int = defaultPageSize,
         callback: (result: List<CommitWithShortUser>?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.getMergeRequestCommits(projectId, mergeRequestId, page, pageSize) }
+        wrap(callback) { interactor.getMergeRequestCommits(projectId, mergeRequestId, page, pageSize) }
     }
 
     fun getMergeRequestDiffDataList(
@@ -107,6 +107,6 @@ class IosMergeRequestInteractor internal constructor(
         mergeRequestId: Long,
         callback: (result: List<DiffData>?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.getMergeRequestDiffDataList(projectId, mergeRequestId) }
+        wrap(callback) { interactor.getMergeRequestDiffDataList(projectId, mergeRequestId) }
     }
 }

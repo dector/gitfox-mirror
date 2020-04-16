@@ -16,7 +16,7 @@ class IosSessionInteractor internal constructor(
     fun logoutFromAccount(accountId: String) = interactor.logoutFromAccount(accountId)
 
     fun login(oauthRedirect: String, callback: (result: Unit?, error: Exception?) -> Unit) {
-        fire(callback) { interactor.login(oauthRedirect) }
+        wrap(callback) { interactor.login(oauthRedirect) }
     }
 
     fun loginOnCustomServer(
@@ -24,6 +24,6 @@ class IosSessionInteractor internal constructor(
         token: String,
         callback: (result: Unit?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.loginOnCustomServer(serverPath, token) }
+        wrap(callback) { interactor.loginOnCustomServer(serverPath, token) }
     }
 }

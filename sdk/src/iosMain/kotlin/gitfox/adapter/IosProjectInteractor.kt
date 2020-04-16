@@ -9,7 +9,7 @@ class IosProjectInteractor internal constructor(
     private val interactor: ProjectInteractor,
     private val defaultPageSize: Int
 ) : CoroutineScope by CoroutineScope(MainLoopDispatcher) {
-    //    val projectChanges: Flow<Long>
+    val projectChanges = interactor.projectChanges.wrap()
 
     fun getProjectsList(
         archived: Boolean? = null,
@@ -25,14 +25,14 @@ class IosProjectInteractor internal constructor(
         pageSize: Int = defaultPageSize,
         callback: (result: List<Project>?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.getProjectsList(archived, visibility, orderBy, sort, search, simple, owned, membership, starred, page, pageSize) }
+        wrap(callback) { interactor.getProjectsList(archived, visibility, orderBy, sort, search, simple, owned, membership, starred, page, pageSize) }
     }
 
     fun getProject(
         id: Long,
         callback: (result: Project?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.getProject(id) }
+        wrap(callback) { interactor.getProject(id) }
     }
 
     fun getProjectRawFile(
@@ -41,14 +41,14 @@ class IosProjectInteractor internal constructor(
         fileReference: String,
         callback: (result: String?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.getProjectRawFile(projectId, path, fileReference) }
+        wrap(callback) { interactor.getProjectRawFile(projectId, path, fileReference) }
     }
 
     fun getProjectReadme(
         project: Project,
         callback: (result: String?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.getProjectReadme(project) }
+        wrap(callback) { interactor.getProjectReadme(project) }
     }
 
     fun getProjectFile(
@@ -57,7 +57,7 @@ class IosProjectInteractor internal constructor(
         fileReference: String,
         callback: (result: File?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.getProjectFile(projectId, path, fileReference) }
+        wrap(callback) { interactor.getProjectFile(projectId, path, fileReference) }
     }
 
     fun getProjectFiles(
@@ -69,13 +69,13 @@ class IosProjectInteractor internal constructor(
         pageSize: Int = defaultPageSize,
         callback: (result: List<ProjectFile>?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.getProjectFiles(projectId, path, branchName, recursive, page, pageSize) }
+        wrap(callback) { interactor.getProjectFiles(projectId, path, branchName, recursive, page, pageSize) }
     }
 
     fun getProjectBranches(
         projectId: Long,
         callback: (result: List<Branch>?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.getProjectBranches(projectId) }
+        wrap(callback) { interactor.getProjectBranches(projectId) }
     }
 }

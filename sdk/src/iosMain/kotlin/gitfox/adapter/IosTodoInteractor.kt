@@ -9,7 +9,7 @@ class IosTodoInteractor internal constructor(
     private val interactor: TodoInteractor,
     private val defaultPageSize: Int
 ) : CoroutineScope by CoroutineScope(MainLoopDispatcher) {
-    //    val todoChanges: Flow<Long>
+    val todoChanges = interactor.todoChanges.wrap()
 
     fun getTodos(
         currentUser: User,
@@ -22,19 +22,19 @@ class IosTodoInteractor internal constructor(
         pageSize: Int = defaultPageSize,
         callback: (result: List<TargetHeader>?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.getTodos(currentUser, action, authorId, projectId, state, targetType, page, pageSize) }
+        wrap(callback) { interactor.getTodos(currentUser, action, authorId, projectId, state, targetType, page, pageSize) }
     }
 
     fun markPendingTodoAsDone(
         id: Long,
         callback: (result: Todo?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.markPendingTodoAsDone(id) }
+        wrap(callback) { interactor.markPendingTodoAsDone(id) }
     }
 
     fun markAllPendingTodosAsDone(
         callback: (result: Unit?, error: Exception?) -> Unit
     ) {
-        fire(callback) { interactor.markAllPendingTodosAsDone() }
+        wrap(callback) { interactor.markAllPendingTodosAsDone() }
     }
 }
