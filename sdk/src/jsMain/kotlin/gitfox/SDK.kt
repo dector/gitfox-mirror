@@ -1,49 +1,41 @@
 package gitfox
 
-import com.github.aakira.napier.Antilog
 import com.github.aakira.napier.Napier
 import com.russhwolf.settings.JsSettings
+import gitfox.adapter.*
 import gitfox.client.HttpClientFactory
 import gitfox.entity.app.session.OAuthParams
+import gitfox.util.JsAntilog
 
-fun SDK.Companion.create(
+class JsSDK(
     oAuthParams: OAuthParams,
     isDebug: Boolean
-): SDK = JsSDK(oAuthParams, isDebug)
-
-private class JsSDK(
-    oAuthParams: OAuthParams,
-    isDebug: Boolean
-) : SDK(
-    defaultPageSize,
-    cacheLifetime,
-    oAuthParams,
-    isDebug,
-    HttpClientFactory(),
-    JsSettings()
 ) {
 
     init {
-        if (isDebug) Napier.base(
-            object : Antilog() {
-                override fun performLog(priority: Napier.Level, tag: String?, throwable: Throwable?, message: String?) {
-                    val logTag = "GitFox"
-
-                    val fullMessage = if (message != null) {
-                        if (throwable != null) "$message\n${throwable.message}"
-                        else message
-                    } else throwable?.message ?: return
-
-                    when (priority) {
-                        Napier.Level.VERBOSE -> console.log("VERBOSE $logTag : $fullMessage")
-                        Napier.Level.DEBUG -> console.log("DEBUG $logTag : $fullMessage")
-                        Napier.Level.INFO -> console.info("INFO $logTag : $fullMessage")
-                        Napier.Level.WARNING -> console.warn("WARNING $logTag : $fullMessage")
-                        Napier.Level.ERROR -> console.error("ERROR $logTag : $fullMessage")
-                        Napier.Level.ASSERT -> console.error("ASSERT $logTag : $fullMessage")
-                    }
-                }
-            }
-        )
+        if (isDebug) Napier.base(JsAntilog())
     }
+
+    private val sdk = SDK(
+        SDK.defaultPageSize,
+        SDK.cacheLifetime,
+        oAuthParams,
+        isDebug,
+        HttpClientFactory(),
+        JsSettings()
+    )
+
+    fun getLaunchInteractor() = sdk.getLaunchInteractor()
+    fun getCommitInteractor() = JsCommitInteractor(sdk.getCommitInteractor())
+    fun getEventInteractor() = JsEventInteractor(sdk.getEventInteractor(), SDK.defaultPageSize)
+    fun getIssueInteractor() = JsIssueInteractor(sdk.getIssueInteractor(), SDK.defaultPageSize)
+    fun getLabelInteractor() = JsLabelInteractor(sdk.getLabelInteractor())
+    fun getMembersInteractor() = JsMembersInteractor(sdk.getMembersInteractor(), SDK.defaultPageSize)
+    fun getMergeRequestInteractor() = JsMergeRequestInteractor(sdk.getMergeRequestInteractor(), SDK.defaultPageSize)
+    fun getMilestoneInteractor() = JsMilestoneInteractor(sdk.getMilestoneInteractor(), SDK.defaultPageSize)
+    fun getProjectInteractor() = JsProjectInteractor(sdk.getProjectInteractor(), SDK.defaultPageSize)
+    fun getTodoInteractor() = JsTodoInteractor(sdk.getTodoInteractor(), SDK.defaultPageSize)
+    fun getUserInteractor() = JsUserInteractor(sdk.getUserInteractor())
+    fun getSessionInteractor() = JsSessionInteractor(sdk.getSessionInteractor())
+    fun getAccountInteractor() = JsAccountInteractor(sdk.getAccountInteractor())
 }

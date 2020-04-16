@@ -1,14 +1,23 @@
 package gitfox
 
 import com.github.aakira.napier.Napier
+import com.russhwolf.settings.JsSettings
+import gitfox.client.HttpClientFactory
 import gitfox.entity.app.session.OAuthParams
+import gitfox.util.JsAntilog
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
+//this is simple sample for real javascript project you need to use JsSDK
 fun main() {
-    val sdk = SDK.create(
-        oAuthParams = OAuthParams("https://gitlab.com/", "", "", ""),
-        isDebug = true
+    Napier.base(JsAntilog())
+    val sdk = SDK(
+        SDK.defaultPageSize,
+        SDK.cacheLifetime,
+        OAuthParams("https://gitlab.com/", "", "", ""),
+        true,
+        HttpClientFactory(),
+        JsSettings()
     )
 
     GlobalScope.launch {
