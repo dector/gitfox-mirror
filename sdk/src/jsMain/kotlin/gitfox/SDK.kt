@@ -25,6 +25,7 @@ class JsSDK(
         JsSettings()
     )
 
+    fun getCurrentServerPath() = sdk.getCurrentServerPath()
     fun getLaunchInteractor() = sdk.getLaunchInteractor()
     fun getCommitInteractor() = JsCommitInteractor(sdk.getCommitInteractor())
     fun getEventInteractor() = JsEventInteractor(sdk.getEventInteractor(), SDK.defaultPageSize)
