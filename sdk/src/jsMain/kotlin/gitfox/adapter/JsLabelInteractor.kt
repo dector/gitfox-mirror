@@ -9,6 +9,7 @@ class JsLabelInteractor internal constructor(
     private val interactor: LabelInteractor
 ) : CoroutineScope by CoroutineScope(Dispatchers.Main) {
 
+    @JsName("getLabelList")
     fun getLabelList(
         projectId: Long,
         page: Int
@@ -16,6 +17,7 @@ class JsLabelInteractor internal constructor(
         interactor.getLabelList(projectId, page)
     }
 
+    @JsName("createLabel")
     fun createLabel(
         projectId: Long,
         name: String,
@@ -26,6 +28,7 @@ class JsLabelInteractor internal constructor(
         interactor.createLabel(projectId, name, color, description, priority)
     }
 
+    @JsName("deleteLabel")
     fun deleteLabel(
         projectId: Long,
         name: String
@@ -33,6 +36,7 @@ class JsLabelInteractor internal constructor(
         interactor.deleteLabel(projectId, name)
     }
 
+    @JsName("subscribeToLabel")
     fun subscribeToLabel(
         projectId: Long,
         labelId: Long
@@ -40,6 +44,7 @@ class JsLabelInteractor internal constructor(
         interactor.subscribeToLabel(projectId, labelId)
     }
 
+    @JsName("unsubscribeFromLabel")
     fun unsubscribeFromLabel(
         projectId: Long,
         labelId: Long

@@ -14,6 +14,7 @@ class JsIssueInteractor internal constructor(
     private val defaultPageSize: Int
 ) : CoroutineScope by CoroutineScope(Dispatchers.Main) {
 
+    @JsName("getMyIssues")
     fun getMyIssues(
         scope: IssueScope? = null,
         state: IssueState? = null,
@@ -29,6 +30,7 @@ class JsIssueInteractor internal constructor(
         interactor.getMyIssues(scope, state, labels, milestone, iids, orderBy, sort, search, page, pageSize)
     }
 
+    @JsName("getIssues")
     fun getIssues(
         projectId: Long,
         scope: IssueScope? = null,

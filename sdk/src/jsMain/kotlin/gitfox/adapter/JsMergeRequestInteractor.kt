@@ -10,8 +10,11 @@ class JsMergeRequestInteractor internal constructor(
     private val interactor: MergeRequestInteractor,
     private val defaultPageSize: Int
 ) : CoroutineScope by CoroutineScope(Dispatchers.Main) {
+
+    @JsName("mergeRequestChanges")
     val mergeRequestChanges = interactor.mergeRequestChanges.wrap()
 
+    @JsName("getMyMergeRequests")
     fun getMyMergeRequests(
         state: MergeRequestState? = null,
         milestone: String? = null,
@@ -31,6 +34,7 @@ class JsMergeRequestInteractor internal constructor(
         interactor.getMyMergeRequests(state, milestone, viewType, labels, createdBefore, createdAfter, scope, authorId, assigneeId, meReactionEmoji, orderBy, sort, page, pageSize)
     }
 
+    @JsName("getMergeRequests")
     fun getMergeRequests(
         projectId: Long,
         state: MergeRequestState? = null,
@@ -51,6 +55,7 @@ class JsMergeRequestInteractor internal constructor(
         interactor.getMergeRequests(projectId, state, milestone, viewType, labels, createdBefore, createdAfter, scope, authorId, assigneeId, meReactionEmoji, orderBy, sort, page, pageSize)
     }
 
+    @JsName("getMergeRequest")
     fun getMergeRequest(
         projectId: Long,
         mergeRequestId: Long
@@ -58,6 +63,7 @@ class JsMergeRequestInteractor internal constructor(
         interactor.getMergeRequest(projectId, mergeRequestId)
     }
 
+    @JsName("getMergeRequestNotes")
     fun getMergeRequestNotes(
         projectId: Long,
         mergeRequestId: Long,
@@ -69,6 +75,7 @@ class JsMergeRequestInteractor internal constructor(
         interactor.getMergeRequestNotes(projectId, mergeRequestId, sort, orderBy, page, pageSize)
     }
 
+    @JsName("getAllMergeRequestNotes")
     fun getAllMergeRequestNotes(
         projectId: Long,
         mergeRequestId: Long,
@@ -78,6 +85,7 @@ class JsMergeRequestInteractor internal constructor(
         interactor.getAllMergeRequestNotes(projectId, mergeRequestId, sort, orderBy)
     }
 
+    @JsName("createMergeRequestNote")
     fun createMergeRequestNote(
         projectId: Long,
         issueId: Long,
@@ -86,6 +94,7 @@ class JsMergeRequestInteractor internal constructor(
         interactor.createMergeRequestNote(projectId, issueId, body)
     }
 
+    @JsName("getMergeRequestCommits")
     fun getMergeRequestCommits(
         projectId: Long,
         mergeRequestId: Long,
@@ -95,6 +104,7 @@ class JsMergeRequestInteractor internal constructor(
         interactor.getMergeRequestCommits(projectId, mergeRequestId, page, pageSize)
     }
 
+    @JsName("getMergeRequestDiffDataList")
     fun getMergeRequestDiffDataList(
         projectId: Long,
         mergeRequestId: Long

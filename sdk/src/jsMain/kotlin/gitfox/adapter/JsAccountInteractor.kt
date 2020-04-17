@@ -9,12 +9,16 @@ class JsAccountInteractor internal constructor(
     private val interactor: AccountInteractor
 ) : CoroutineScope by CoroutineScope(Dispatchers.Main) {
 
+    @JsName("getAccountMainBadges")
     fun getAccountMainBadges() = interactor.getAccountMainBadges().wrap()
 
+    @JsName("getMyProfile")
     fun getMyProfile() = promise { interactor.getMyProfile() }
 
+    @JsName("getMyServerName")
     fun getMyServerName(): String = interactor.getMyServerName()
 
+    @JsName("getMyTodos")
     fun getMyTodos(
         isPending: Boolean,
         page: Int
@@ -22,6 +26,7 @@ class JsAccountInteractor internal constructor(
         interactor.getMyTodos(isPending, page)
     }
 
+    @JsName("getMyMergeRequests")
     fun getMyMergeRequests(
         createdByMe: Boolean,
         onlyOpened: Boolean,
@@ -30,6 +35,7 @@ class JsAccountInteractor internal constructor(
         interactor.getMyMergeRequests(createdByMe, onlyOpened, page)
     }
 
+    @JsName("getMyIssues")
     fun getMyIssues(
         createdByMe: Boolean,
         onlyOpened: Boolean,

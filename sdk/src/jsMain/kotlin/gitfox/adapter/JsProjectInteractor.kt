@@ -13,8 +13,11 @@ class JsProjectInteractor internal constructor(
     private val interactor: ProjectInteractor,
     private val defaultPageSize: Int
 ) : CoroutineScope by CoroutineScope(Dispatchers.Main) {
+
+    @JsName("projectChanges")
     val projectChanges = interactor.projectChanges.wrap()
 
+    @JsName("getProjectsList")
     fun getProjectsList(
         archived: Boolean? = null,
         visibility: Visibility? = null,
@@ -31,12 +34,14 @@ class JsProjectInteractor internal constructor(
         interactor.getProjectsList(archived, visibility, orderBy, sort, search, simple, owned, membership, starred, page, pageSize)
     }
 
+    @JsName("getProject")
     fun getProject(
         id: Long
     ) = promise {
         interactor.getProject(id)
     }
 
+    @JsName("getProjectRawFile")
     fun getProjectRawFile(
         projectId: Long,
         path: String,
@@ -45,12 +50,14 @@ class JsProjectInteractor internal constructor(
         interactor.getProjectRawFile(projectId, path, fileReference)
     }
 
+    @JsName("getProjectReadme")
     fun getProjectReadme(
         project: Project
     ) = promise {
         interactor.getProjectReadme(project)
     }
 
+    @JsName("getProjectFile")
     fun getProjectFile(
         projectId: Long,
         path: String,
@@ -59,6 +66,7 @@ class JsProjectInteractor internal constructor(
         interactor.getProjectFile(projectId, path, fileReference)
     }
 
+    @JsName("getProjectFiles")
     fun getProjectFiles(
         projectId: Long,
         path: String,
@@ -70,6 +78,7 @@ class JsProjectInteractor internal constructor(
         interactor.getProjectFiles(projectId, path, branchName, recursive, page, pageSize)
     }
 
+    @JsName("getProjectBranches")
     fun getProjectBranches(
         projectId: Long
     ) = promise {

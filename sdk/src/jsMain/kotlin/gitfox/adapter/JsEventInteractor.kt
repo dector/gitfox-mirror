@@ -11,6 +11,7 @@ class JsEventInteractor internal constructor(
     private val defaultPageSize: Int
 ) : CoroutineScope by CoroutineScope(Dispatchers.Main) {
 
+    @JsName("getEvents")
     fun getEvents(
         action: EventAction? = null,
         targetType: EventTarget? = null,
@@ -24,6 +25,7 @@ class JsEventInteractor internal constructor(
         interactor.getEvents(action, targetType, beforeDay, afterDay, sort, orderBy, page, pageSize)
     }
 
+    @JsName("getProjectEvents")
     fun getProjectEvents(
         projectId: Long,
         action: EventAction? = null,

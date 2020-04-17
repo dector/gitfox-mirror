@@ -13,8 +13,11 @@ class JsTodoInteractor internal constructor(
     private val interactor: TodoInteractor,
     private val defaultPageSize: Int
 ) : CoroutineScope by CoroutineScope(Dispatchers.Main) {
+
+    @JsName("todoChanges")
     val todoChanges = interactor.todoChanges.wrap()
 
+    @JsName("getTodos")
     fun getTodos(
         currentUser: User,
         action: TodoAction? = null,
@@ -28,12 +31,14 @@ class JsTodoInteractor internal constructor(
         interactor.getTodos(currentUser, action, authorId, projectId, state, targetType, page, pageSize)
     }
 
+    @JsName("markPendingTodoAsDone")
     fun markPendingTodoAsDone(
         id: Long
     ) = promise {
         interactor.markPendingTodoAsDone(id)
     }
 
+    @JsName("markAllPendingTodosAsDone")
     fun markAllPendingTodosAsDone() = promise {
         interactor.markAllPendingTodosAsDone()
     }
