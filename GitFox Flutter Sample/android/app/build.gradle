@@ -60,7 +60,7 @@ flutter {
 }
 
 dependencies {
-    debugImplementation project(':sdk-debug')
+    implementation project(':sdk-debug')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'
