@@ -1,4 +1,7 @@
-include ':app', ':sdk-debug'
+include ':app'
+include ':sdk'
+project(":sdk").projectDir = file("../../sdk")
+enableFeaturePreview("GRADLE_METADATA")
 
 def flutterProjectRoot = rootProject.projectDir.parentFile.toPath()
 

@@ -1,8 +1,7 @@
 package com.example.gitfox
 
 import android.os.Bundle
-import android.os.PersistableBundle
-import androidx.annotation.NonNull;
+import androidx.annotation.NonNull
 import gitfox.SDK
 import gitfox.create
 import gitfox.entity.app.session.OAuthParams
