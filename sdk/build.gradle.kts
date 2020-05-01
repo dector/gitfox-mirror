@@ -65,6 +65,9 @@ kotlin {
                 implementation("com.russhwolf:multiplatform-settings:$settingsVersion")
                 //Network
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
+                implementation("io.ktor:ktor-client-serialization:$ktorVersion")
+                implementation("io.ktor:ktor-client-auth:$ktorVersion")
+                implementation("io.ktor:ktor-client-logging:$ktorVersion")
                 //Coroutines
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$coroutinesVersion")
                 //UUID
