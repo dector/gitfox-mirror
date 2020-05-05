@@ -15,6 +15,7 @@ internal class Prefs(
     private val KEY_CURRENT_ACCOUNT = "ad_current_account"
     private val KEY_USER_ACCOUNTS = "ad_accounts"
     private val KEY_FIRST_LAUNCH_TIME = "launch_ts"
+    private val KEY_OAUTH_HASH = "oauth_hash"
 
     var selectedAccount: String?
         get() = settings.getStringOrNull(KEY_CURRENT_ACCOUNT)
@@ -49,5 +50,11 @@ internal class Prefs(
         get() = settings.getLong(KEY_FIRST_LAUNCH_TIME, 0).takeIf { it > 0 }
         set(value) {
             settings.putLong(KEY_FIRST_LAUNCH_TIME, value ?: 0)
+        }
+
+    var oauthHash: String
+        get() = settings.getString(KEY_OAUTH_HASH)
+        set(value) {
+            settings.putString(KEY_OAUTH_HASH, value)
         }
 }
