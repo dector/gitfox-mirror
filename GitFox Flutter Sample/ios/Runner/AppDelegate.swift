@@ -1,5 +1,6 @@
 import UIKit
 import Flutter
+import GitFoxSDK
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
