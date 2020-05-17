@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gitfox/projects_screen.dart';
+import 'package:gitfox/ui/kit/error.dart';
 import 'package:webview_flutter/platform_interface.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -56,6 +57,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
   Widget _buildWebView() {
     return WebView(
+      javascriptMode: JavascriptMode.unrestricted,
       onWebViewCreated: (WebViewController webViewController) {
         _webViewController = webViewController;
         _retrieveOAuthUrl();
@@ -86,11 +88,10 @@ class _AuthScreenState extends State<AuthScreen> {
             _login(url).then((bool isLogin) {
               if (isLogin) {
                 _openProjectsListScreen();
-              } else {
-                setState(() {
-                  _isLoading = false;
-                });
               }
+              setState(() {
+                _isLoading = false;
+              });
             });
             return NavigationDecision.prevent;
           } else {
@@ -108,26 +109,10 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   Widget _buildError() {
-    return Center(
-      child: FlatButton(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4),
-          side: BorderSide(color: Colors.green),
-        ),
-        onPressed: () {
-          _retrieveOAuthUrl();
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            "Повторить",
-            style: TextStyle(
-              fontSize: 20,
-              color: Colors.green,
-            ),
-          ),
-        ),
-      ),
+    return ErrorStateWidget(
+      onPressed: () {
+        _retrieveOAuthUrl();
+      },
     );
   }
 
