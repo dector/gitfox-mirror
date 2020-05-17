@@ -11,18 +11,14 @@ import WebKit
 class AuthViewController: UIViewController, WKNavigationDelegate {
     @IBOutlet private var webView: WKWebView!
 
-    private lazy var sessionInteractor = GitFox.shared.getSessionInteractor()
+    var onAuthorized: (() -> Void)?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         webView.navigationDelegate = self
 
-        let urlRequest = URLRequest(url: URL(string: sessionInteractor.oauthUrl)!)
+        let urlRequest = URLRequest(url: GitFox.shared.oauthUrl)
         webView.load(urlRequest)
-    }
-
-    private func dismiss() {
-        dismiss(animated: true, completion: nil)
     }
 
     // MARK: - WKNavigationDelegate
@@ -34,19 +30,20 @@ class AuthViewController: UIViewController, WKNavigationDelegate {
     ) {
         guard
             let url = navigationAction.request.url,
-            sessionInteractor.checkOAuthRedirect(url: url.absoluteString)
+            GitFox.shared.checkOAuthRedirect(url: url)
         else {
             decisionHandler(.allow)
             return
         }
 
         decisionHandler(.cancel)
-        sessionInteractor.login(oauthRedirect: url.absoluteString) { [weak self] unit, exception in
-            guard let self = self else { return }
-            if let exception = exception {
-                fatalError(exception.debugDescription)
+        GitFox.shared.login(oauthRedirect: url) { result in
+            switch result {
+                case .failure(let error):
+                    print(error.localizedDescription)
+                case .success:
+                    self.onAuthorized?()
             }
-            self.dismiss()
         }
     }
 }

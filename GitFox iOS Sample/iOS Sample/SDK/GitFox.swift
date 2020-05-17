@@ -8,7 +8,13 @@
 import GitFoxSDK
 
 class GitFox {
-    static let shared = IosSDK(
+    enum SDKError: Error {
+        case error(KotlinException)
+    }
+
+    static let shared = GitFox()
+
+    private let sdk = IosSDK(
         oAuthParams: .init(
             endpoint: "https://gitlab.com/",
             appId: "808b7f51c6634294afd879edd75d5eaf55f1a75e7fe5bd91ca8b7140a5af639d",
@@ -17,4 +23,61 @@ class GitFox {
         ),
         isDebug: true
     )
+
+    var oauthUrl: URL {
+        URL(string: sdk.getSessionInteractor().oauthUrl)!
+    }
+
+    var hasAccount: Bool {
+        sdk.getLaunchInteractor().hasAccount
+    }
+
+    func checkOAuthRedirect(url: URL) -> Bool {
+        sdk.getSessionInteractor().checkOAuthRedirect(url: url.absoluteString)
+    }
+
+    func signInToLastSession() {
+        sdk.getLaunchInteractor().signInToLastSession()
+    }
+
+    func login(
+        oauthRedirect: URL,
+        completion: @escaping (Result<Void, SDKError>) -> Void
+    ) {
+        sdk.getSessionInteractor().login(
+            oauthRedirect: oauthRedirect.absoluteString
+        ) { _, error in
+            if let error = error {
+                completion(.failure(.error(error)))
+            } else {
+                completion(.success(()))
+            }
+        }
+    }
+
+    func getProjectsList(
+        page: Int,
+        pageSize: Int,
+        completion: @escaping (Result<[Project], SDKError>) -> Void
+    ) {
+        sdk.getProjectInteractor().getProjectsList(
+            archived: false,
+            visibility: nil,
+            orderBy: .name,
+            sort: .asc,
+            search: nil,
+            simple: nil,
+            owned: nil,
+            membership: true,
+            starred: nil,
+            page: 0,
+            pageSize: 10
+        ) { projects, error in
+            if let error = error {
+                completion(.failure(.error(error)))
+            } else {
+                completion(.success(projects?.compactMap { $0 } ?? []))
+            }
+        }
+    }
 }

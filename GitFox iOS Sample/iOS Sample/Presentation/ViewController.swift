@@ -6,47 +6,40 @@
 //
 
 import UIKit
-import GitFoxSDK
 
 class ViewController: UIViewController {
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-//        let sdk = IosSDK.init(
-//            oAuthParams: OAuthParams.init(
-//                endpoint: "https://gitlab.com/",
-//                appId: "appId",
-//                appKey: "appKey",
-//                redirectUrl: "redirectUrl"
-//            ),
-//            isDebug: true
-//        )
-//        sdk.getSessionInteractor().loginOnCustomServer(
-//            serverPath: "https://gitlab.com/",
-//            token: "hGy4YVEBssU6sH_4hz3f"
-//        ) { result, err in
-//            if err == nil {
-//                sdk.getProjectInteractor().getProject(id: 2977308) { result, err in
-//                    if let project = result {
-//                        print(project)
-//                    } else {
-//                        print("error: " + err!.message!)
-//                    }
-//                }
-//            } else {
-//                print("error: " + err!.message!)
-//            }
-//        }
-    }
-
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        presentAuthViewController()
+
+        if GitFox.shared.hasAccount {
+            GitFox.shared.signInToLastSession()
+            loadProjects()
+        } else {
+            presentAuthViewController()
+        }
     }
 
     private func presentAuthViewController() {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let viewController = storyboard.instantiateViewController(identifier: "AuthViewController")
+        let viewController = storyboard.instantiateViewController(
+            identifier: "AuthViewController"
+        ) as! AuthViewController
+        viewController.onAuthorized = { [weak self] in
+            guard let self = self else { return }
+            self.loadProjects()
+            self.presentedViewController?.dismiss(animated: true, completion: nil)
+        }
         present(viewController, animated: true, completion: nil)
+    }
+
+    private func loadProjects() {
+        GitFox.shared.getProjectsList(page: 0, pageSize: 10) { result in
+            switch result {
+                case .success(let projects):
+                    projects.forEach { print($0.name) }
+                case .failure(let error):
+                    print(error.localizedDescription)
+            }
+        }
     }
 }
