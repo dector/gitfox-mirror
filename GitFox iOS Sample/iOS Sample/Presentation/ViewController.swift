@@ -6,8 +6,21 @@
 //
 
 import UIKit
+import GitFoxSDK
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UITableViewDataSource {
+    @IBOutlet private var tableView: UITableView!
+
+    private var projects: [Project] = [] {
+        didSet { tableView.reloadData() }
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        tableView.dataSource = self
+        tableView.tableFooterView = .init()
+    }
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
@@ -33,13 +46,42 @@ class ViewController: UIViewController {
     }
 
     private func loadProjects() {
-        GitFox.shared.getProjectsList(page: 0, pageSize: 10) { result in
+        GitFox.shared.getProjectsList(page: 0, pageSize: 10) { [weak self] result in
+            guard let self = self else { return }
             switch result {
                 case .success(let projects):
-                    projects.forEach { print($0.name) }
+                    self.projects = projects
                 case .failure(let error):
                     print(error.localizedDescription)
             }
         }
+    }
+
+    // MARK: - UITableViewDataSource
+
+    func numberOfSections(in tableView: UITableView) -> Int {
+        1
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        projects.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(
+            withIdentifier: "ProjectTableViewCell",
+            for: indexPath
+        ) as! ProjectTableViewCell
+        cell.setup(name: projects[indexPath.row].name)
+        return cell
+    }
+}
+
+class ProjectTableViewCell: UITableViewCell {
+    @IBOutlet private var nameLabel: UILabel!
+    @IBOutlet private var repositoryImageView: UIImageView!
+
+    func setup(name: String) {
+        nameLabel.text = name
     }
 }
