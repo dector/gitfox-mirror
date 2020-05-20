@@ -13,7 +13,7 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
-  static const platform = const MethodChannel('gitfox/oauth-url');
+  static const platform = const MethodChannel('gitfox/platform');
 
   WebViewController _webViewController;
 
@@ -125,7 +125,7 @@ class _AuthScreenState extends State<AuthScreen> {
     try {
       oAuthUrl = await platform.invokeMethod('getOAuthUrl');
       _webViewController.loadUrl(oAuthUrl);
-    } on PlatformException catch (_) {
+    } on PlatformException catch (e) {
       setState(() {
         _isError = true;
       });

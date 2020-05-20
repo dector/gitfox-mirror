@@ -15,7 +15,7 @@ class ProjectsListScreen extends StatefulWidget {
 }
 
 class _ProjectsListScreenState extends State<ProjectsListScreen> {
-  static const platform = const MethodChannel('gitfox/oauth-url');
+  static const platform = const MethodChannel('gitfox/platform');
 
   bool _isError = false;
   bool _isLoading = false;
@@ -109,6 +109,8 @@ class _ProjectsListScreenState extends State<ProjectsListScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Text(
         name,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
         style: TextStyle(fontSize: 16),
       ),
     );

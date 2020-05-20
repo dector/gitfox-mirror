@@ -21,7 +21,7 @@ import kotlinx.coroutines.*
 
 class MainActivity : FlutterActivity(), CoroutineScope by CoroutineScope(Dispatchers.Main) {
 
-    private val CHANNEL = "gitfox/oauth-url"
+    private val CHANNEL = "gitfox/platform"
 
     private var sdk: SDK? = null
 
