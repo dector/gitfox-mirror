@@ -3,9 +3,10 @@ package gitfox
 import com.github.aakira.napier.Napier
 import com.russhwolf.settings.JsSettings
 import gitfox.adapter.*
-import gitfox.client.HttpClientFactory
 import gitfox.entity.app.session.OAuthParams
+import gitfox.util.HttpClientFactory
 import gitfox.util.JsAntilog
+import gitfox.util.createHttpEngine
 
 class JsSDK(
     oAuthParams: OAuthParams,
@@ -21,7 +22,7 @@ class JsSDK(
         SDK.cacheLifetime,
         oAuthParams,
         isDebug,
-        HttpClientFactory(),
+        HttpClientFactory { cacheSize, timeout -> createHttpEngine(cacheSize, timeout) },
         JsSettings()
     )
 

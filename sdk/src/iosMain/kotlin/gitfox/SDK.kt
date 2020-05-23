@@ -6,8 +6,9 @@ import com.russhwolf.settings.AppleSettings
 import gitfox.SDK.Companion.cacheLifetime
 import gitfox.SDK.Companion.defaultPageSize
 import gitfox.adapter.*
-import gitfox.client.HttpClientFactory
 import gitfox.entity.app.session.OAuthParams
+import gitfox.util.HttpClientFactory
+import gitfox.util.createHttpEngine
 import platform.Foundation.NSUserDefaults
 
 class IosSDK(
@@ -24,7 +25,7 @@ class IosSDK(
         cacheLifetime,
         oAuthParams,
         isDebug,
-        HttpClientFactory(),
+        HttpClientFactory { cacheSize, timeout -> createHttpEngine(cacheSize, timeout) },
         AppleSettings(NSUserDefaults.standardUserDefaults())
     )
 

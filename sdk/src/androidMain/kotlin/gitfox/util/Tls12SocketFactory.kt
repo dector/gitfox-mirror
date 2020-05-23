@@ -1,4 +1,4 @@
-package gitfox.client
+package gitfox.util
 
 import android.os.Build
 import com.github.aakira.napier.Napier

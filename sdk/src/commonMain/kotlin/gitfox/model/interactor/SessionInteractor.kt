@@ -14,10 +14,13 @@ class SessionInteractor internal constructor(
     private val userAccountApi: UserAccountApi,
     private val sessionSwitcher: SessionSwitcher
 ) {
-    private val hash = uuid4().toString()
-
-    val oauthUrl = "${oauthParams.endpoint}oauth/authorize?client_id=${oauthParams.appId}" +
-        "&redirect_uri=${oauthParams.redirectUrl}&response_type=code&state=$hash"
+    val oauthUrl: String
+        get() {
+            val hash = uuid4().toString()
+            prefs.oauthHash = hash
+            return "${oauthParams.endpoint}oauth/authorize?client_id=${oauthParams.appId}" +
+                "&redirect_uri=${oauthParams.redirectUrl}&response_type=code&state=$hash"
+        }
 
     fun checkOAuthRedirect(url: String) = url.indexOf(oauthParams.redirectUrl) == 0
 
@@ -65,7 +68,7 @@ class SessionInteractor internal constructor(
     }
 
     suspend fun login(oauthRedirect: String) {
-        if (oauthRedirect.contains(hash)) {
+        if (oauthRedirect.contains(prefs.oauthHash)) {
             val account = userAccountApi.requestUserAccount(
                 oauthParams.endpoint,
                 oauthParams.appId,
@@ -73,6 +76,7 @@ class SessionInteractor internal constructor(
                 getQueryParameterFromUri(oauthRedirect, PARAMETER_CODE),
                 oauthParams.redirectUrl
             )
+            prefs.oauthHash = ""
             openNewAccount(account)
         } else {
             throw  RuntimeException("Not valid oauth hash!")
