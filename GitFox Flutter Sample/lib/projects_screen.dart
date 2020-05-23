@@ -105,13 +105,15 @@ class _ProjectsListScreenState extends State<ProjectsListScreen> {
   }
 
   Widget _buildProjectName(String name) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Text(
-        name,
-        maxLines: 2,
-        overflow: TextOverflow.ellipsis,
-        style: TextStyle(fontSize: 16),
+    return Flexible(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Text(
+          name,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(fontSize: 16),
+        ),
       ),
     );
   }
@@ -136,7 +138,6 @@ class _ProjectsListScreenState extends State<ProjectsListScreen> {
       _isError = false;
       _isLoading = true;
     });
-    // TODO change return type to List<Project>
     String projectsJson;
     try {
       projectsJson = await platform.invokeMethod('retrieveProjectsList');
@@ -151,7 +152,7 @@ class _ProjectsListScreenState extends State<ProjectsListScreen> {
         _isLoading = false;
         _projects = projects;
       });
-    } on PlatformException catch (_) {
+    } catch (e) {
       setState(() {
         _isError = true;
         _isLoading = false;

@@ -5,7 +5,9 @@ import androidx.annotation.NonNull
 import com.google.gson.Gson
 import gitfox.SDK
 import gitfox.create
+import gitfox.entity.OrderBy
 import gitfox.entity.Project
+import gitfox.entity.Sort
 import gitfox.entity.app.session.OAuthParams
 import gitfox.model.interactor.AccountInteractor
 import gitfox.model.interactor.LaunchInteractor
@@ -131,7 +133,18 @@ class MainActivity : FlutterActivity(), CoroutineScope by CoroutineScope(Dispatc
     private fun retrieveProjectsList(result: MethodChannel.Result) {
         launch {
             try {
-                val projects = sdk?.getProjectInteractor()?.getProjectsList(page = 0)
+                val projects = sdk?.getProjectInteractor()?.getProjectsList(
+                        archived = false,
+                        visibility = null,
+                        orderBy = OrderBy.NAME,
+                        sort = Sort.ASC,
+                        search = null,
+                        simple = null,
+                        owned = null,
+                        membership = true,
+                        starred = null,
+                        page = 0,
+                        pageSize = 20)
                 val projectsJson = gson.toJson(projects)
                 result.success(projectsJson)
             } catch (e: Exception) {

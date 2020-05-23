@@ -125,7 +125,7 @@ class _AuthScreenState extends State<AuthScreen> {
     try {
       oAuthUrl = await platform.invokeMethod('getOAuthUrl');
       _webViewController.loadUrl(oAuthUrl);
-    } on PlatformException catch (e) {
+    } catch (_) {
       setState(() {
         _isError = true;
       });
@@ -140,7 +140,7 @@ class _AuthScreenState extends State<AuthScreen> {
           await platform.invokeMethod('checkOAuthRedirect', <String, dynamic>{
         'url': url,
       });
-    } on PlatformException catch (_) {
+    } catch (e) {
       setState(() {
         _isError = true;
       });
@@ -155,7 +155,7 @@ class _AuthScreenState extends State<AuthScreen> {
       isLogin = await platform.invokeMethod('login', <String, dynamic>{
         'url': url,
       });
-    } on PlatformException catch (_) {
+    } catch (_) {
       setState(() {
         _isError = true;
       });
@@ -178,7 +178,7 @@ class _AuthScreenState extends State<AuthScreen> {
   Future<void> _signInToLastSession() async {
     try {
       await platform.invokeMethod('signInToLastSession');
-    } on PlatformException catch (_) {
+    } catch (_) {
       // do nothing
     }
   }
