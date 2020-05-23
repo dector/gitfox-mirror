@@ -23,8 +23,11 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   void initState() {
     super.initState();
+    print("1111 current url = ${_webViewController?.currentUrl()}");
     _hasAccount().then((bool hasAccount) {
+      print("1111 _hasAccount = $hasAccount");
       if (hasAccount) {
+        print("1111 _openProjectsListScreen 1");
         _signInToLastSession().then(
           (_) => _openProjectsListScreen(),
         );
@@ -60,6 +63,7 @@ class _AuthScreenState extends State<AuthScreen> {
       javascriptMode: JavascriptMode.unrestricted,
       onWebViewCreated: (WebViewController webViewController) {
         _webViewController = webViewController;
+        print("1111 onWebViewCreated = ${_webViewController.hashCode}");
         _retrieveOAuthUrl();
       },
       onPageStarted: (_) {
@@ -75,10 +79,12 @@ class _AuthScreenState extends State<AuthScreen> {
       onWebResourceError: (WebResourceError error) {
         setState(() {
           _isLoading = false;
+          print("1111 _isError 2 = ${error.description}");
           _isError = true;
         });
       },
       navigationDelegate: (NavigationRequest action) {
+
         String url = action.url;
         return _checkOAuthRedirect(url).then((bool isRedirected) {
           if (isRedirected) {
@@ -87,6 +93,7 @@ class _AuthScreenState extends State<AuthScreen> {
             });
             _login(url).then((bool isLogin) {
               if (isLogin) {
+                print("1111 _openProjectsListScreen 2");
                 _openProjectsListScreen();
               }
               setState(() {
@@ -124,9 +131,12 @@ class _AuthScreenState extends State<AuthScreen> {
     String oAuthUrl;
     try {
       oAuthUrl = await platform.invokeMethod('getOAuthUrl');
+      print("1111 oAuthUrl = $oAuthUrl");
+      //_webViewController.clearCache();
       _webViewController.loadUrl(oAuthUrl);
     } catch (_) {
       setState(() {
+        print("1111 _isError 3");
         _isError = true;
       });
     }
@@ -134,6 +144,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
   /// Check OAuth redirect URL via platform SDK
   Future<bool> _checkOAuthRedirect(String url) async {
+    print("1111 check redirect = $url");
     bool isRedirected;
     try {
       isRedirected =
@@ -142,6 +153,7 @@ class _AuthScreenState extends State<AuthScreen> {
       });
     } catch (e) {
       setState(() {
+        print("1111 _isError 4");
         _isError = true;
       });
     }
@@ -157,6 +169,7 @@ class _AuthScreenState extends State<AuthScreen> {
       });
     } catch (_) {
       setState(() {
+        print("1111 _isError 1");
         _isError = true;
       });
     }
@@ -185,6 +198,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
   /// Navigate to the [ProjectsListScreen].
   void _openProjectsListScreen() {
+    print("1111 _openProjectsListScreen");
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(

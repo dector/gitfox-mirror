@@ -57,7 +57,7 @@ class MainActivity : FlutterActivity(), CoroutineScope by CoroutineScope(Dispatc
     }
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
-        GeneratedPluginRegistrant.registerWith(flutterEngine);
+        GeneratedPluginRegistrant.registerWith(flutterEngine)
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
             when (call.method) {
                 "getOAuthUrl" -> {
@@ -76,6 +76,8 @@ class MainActivity : FlutterActivity(), CoroutineScope by CoroutineScope(Dispatc
                     retrieveProjectsList(result)
                 "hasAccount" ->
                     hasAccount(result)
+                "logout" ->
+                    logout(result)
                 else -> {
                     result.notImplemented()
                 }
@@ -153,5 +155,10 @@ class MainActivity : FlutterActivity(), CoroutineScope by CoroutineScope(Dispatc
                         e.localizedMessage)
             }
         }
+    }
+
+    private fun logout(result: MethodChannel.Result) {
+        val logoutResult = sessionInteractor?.logout()
+        result.success(logoutResult)
     }
 }

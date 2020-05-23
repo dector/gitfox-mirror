@@ -44,6 +44,8 @@ import GitFoxSDK
             self.retrieveProjectsList(result: result)
         case "hasAccount":
             self.hasAccount(result: result)
+        case "logout":
+            self.logout(result: result)
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -147,5 +149,10 @@ import GitFoxSDK
             return nil
         }
         return String(data: data, encoding: String.Encoding.utf8)
+    }
+    
+    func logout(result: FlutterResult) {
+        let logoutResult = sessionInteractor?.logout()
+        result(logoutResult)
     }
 }

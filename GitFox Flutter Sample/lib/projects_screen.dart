@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:gitfox/auth_screen.dart';
 import 'package:gitfox/entity/project.dart';
 import 'package:gitfox/ui/kit/error.dart';
 
@@ -39,7 +40,7 @@ class _ProjectsListScreenState extends State<ProjectsListScreen> {
             icon: Icon(Icons.exit_to_app),
             iconSize: 26,
             onPressed: () {
-              /// todo logout
+              _logout();
             },
             splashColor: Colors.orange,
           ),
@@ -159,5 +160,26 @@ class _ProjectsListScreenState extends State<ProjectsListScreen> {
       });
     }
     return projectsJson;
+  }
+
+  void _logout() async {
+    setState(() {
+      _isError = false;
+      _isLoading = true;
+    });
+    bool hasOtherAccounts = await platform.invokeMethod('logout');
+    print("1111 hasOtherAccounts = $hasOtherAccounts");
+    if (!hasOtherAccounts) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AuthScreen(),
+        ),
+      );
+    }
+    setState(() {
+      _isError = false;
+      _isLoading = false;
+    });
   }
 }
