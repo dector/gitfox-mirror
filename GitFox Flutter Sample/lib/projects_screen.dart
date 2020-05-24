@@ -168,7 +168,6 @@ class _ProjectsListScreenState extends State<ProjectsListScreen> {
       _isLoading = true;
     });
     bool hasOtherAccounts = await platform.invokeMethod('logout');
-    print("1111 hasOtherAccounts = $hasOtherAccounts");
     if (!hasOtherAccounts) {
       Navigator.pushReplacement(
         context,
