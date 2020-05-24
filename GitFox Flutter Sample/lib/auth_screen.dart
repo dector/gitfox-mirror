@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:gitfox/interactor/platform/platform.dart';
 import 'package:gitfox/projects_screen.dart';
 import 'package:gitfox/ui/kit/error.dart';
 import 'package:webview_flutter/platform_interface.dart';
@@ -13,24 +14,12 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
-  static const platform = const MethodChannel('gitfox/platform');
+  static const platform = const MethodChannel(METHOD_CHANNEL_NAME);
 
   WebViewController _webViewController;
 
   bool _isError = false;
   bool _isLoading = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _hasAccount().then((bool hasAccount) {
-      if (hasAccount) {
-        _signInToLastSession().then(
-          (_) => _openProjectsListScreen(),
-        );
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -167,26 +156,6 @@ class _AuthScreenState extends State<AuthScreen> {
       });
     }
     return isLogin;
-  }
-
-  /// Check current account status via platform SDK
-  Future<bool> _hasAccount() async {
-    bool _hasAccount;
-    try {
-      _hasAccount = await platform.invokeMethod('hasAccount');
-    } on PlatformException catch (_) {
-      // do nothing
-    }
-    return _hasAccount;
-  }
-
-  /// Sign in to last session via platform SDK
-  Future<void> _signInToLastSession() async {
-    try {
-      await platform.invokeMethod('signInToLastSession');
-    } catch (_) {
-      // do nothing
-    }
   }
 
   /// Navigate to the [ProjectsListScreen].

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:gitfox/interactor/platform/platform.dart';
 import 'package:gitfox/auth_screen.dart';
 import 'package:gitfox/entity/project.dart';
 import 'package:gitfox/ui/kit/error.dart';
@@ -16,7 +17,7 @@ class ProjectsListScreen extends StatefulWidget {
 }
 
 class _ProjectsListScreenState extends State<ProjectsListScreen> {
-  static const platform = const MethodChannel('gitfox/platform');
+  static const platform = const MethodChannel(METHOD_CHANNEL_NAME);
 
   bool _isError = false;
   bool _isLoading = false;
