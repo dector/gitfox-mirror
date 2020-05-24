@@ -55,6 +55,7 @@ import GitFoxSDK
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
     
+    // Retrieve OAuth URL
     func getOAuthUrl(result: FlutterResult) {
         guard let oAuthUrl = sessionInteractor?.oauthUrl else {
             result(FlutterMethodNotImplemented)
@@ -63,6 +64,7 @@ import GitFoxSDK
         result(oAuthUrl)
     }
     
+    // Check OAuth redirect URL
     func checkOAuthRedirect(call: FlutterMethodCall, result: FlutterResult) {
         guard let args = call.arguments else {
             result(FlutterError(code: "-1", message: "iOS could not extract " +
@@ -79,6 +81,7 @@ import GitFoxSDK
         }
     }
     
+    // Login
     func login(call: FlutterMethodCall, result: @escaping FlutterResult) {
         guard let args = call.arguments else {
             result(FlutterError(code: "-1", message: "iOS could not extract " +
@@ -102,16 +105,19 @@ import GitFoxSDK
         }
     }
     
+    // Check current account status
     func hasAccount(result: FlutterResult) {
         let hasAccount = sdk.getLaunchInteractor().hasAccount
         result(hasAccount)
     }
     
+    // Sign in to last session
     func signInToLastSession(result: FlutterResult) {
         sdk.getLaunchInteractor().signInToLastSession()
         result(true)
     }
     
+    // User's projects list retrieving
     func retrieveProjectsList(result: @escaping FlutterResult) {
         sdk.getProjectInteractor().getProjectsList(
             archived: false,
@@ -151,6 +157,7 @@ import GitFoxSDK
         return String(data: data, encoding: String.Encoding.utf8)
     }
     
+    // logout
     func logout(result: FlutterResult) {
         let logoutResult = sessionInteractor?.logout()
         result(logoutResult)

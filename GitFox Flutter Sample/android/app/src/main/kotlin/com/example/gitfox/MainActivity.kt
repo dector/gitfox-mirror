@@ -85,6 +85,7 @@ class MainActivity : FlutterActivity(), CoroutineScope by CoroutineScope(Dispatc
         }
     }
 
+    // Retrieve OAuth URL
     private fun getOAuthUrl(result: MethodChannel.Result) {
         val oAuthUrl = sessionInteractor?.oauthUrl
         oAuthUrl?.let {
@@ -96,6 +97,7 @@ class MainActivity : FlutterActivity(), CoroutineScope by CoroutineScope(Dispatc
         }
     }
 
+    // Check OAuth redirect URL
     private fun checkOAuthRedirect(call: MethodCall, result: MethodChannel.Result) {
         val url = call.argument<String>("url") ?: ""
         val isRedirected = sessionInteractor?.checkOAuthRedirect(url)
@@ -108,6 +110,7 @@ class MainActivity : FlutterActivity(), CoroutineScope by CoroutineScope(Dispatc
         }
     }
 
+    // Login
     private fun login(call: MethodCall, result: MethodChannel.Result) {
         val url = call.argument<String>("url") ?: ""
         launch {
@@ -122,16 +125,19 @@ class MainActivity : FlutterActivity(), CoroutineScope by CoroutineScope(Dispatc
         }
     }
 
+    // Sign in to last session
     private fun signInToLastSession(result: MethodChannel.Result) {
         sdk?.getLaunchInteractor()?.signInToLastSession()
         result.success(true)
     }
 
+    // Check current account status
     private fun hasAccount(result: MethodChannel.Result) {
         val hasAccount = sdk?.getLaunchInteractor()?.hasAccount
         result.success(hasAccount)
     }
 
+    // User's projects list retrieving
     private fun retrieveProjectsList(result: MethodChannel.Result) {
         launch {
             try {
@@ -157,6 +163,7 @@ class MainActivity : FlutterActivity(), CoroutineScope by CoroutineScope(Dispatc
         }
     }
 
+    // Logout
     private fun logout(result: MethodChannel.Result) {
         val logoutResult = sessionInteractor?.logout()
         result.success(logoutResult)
