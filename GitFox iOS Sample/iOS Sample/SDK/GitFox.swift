@@ -55,6 +55,10 @@ class GitFox {
         }
     }
 
+    func logout() {
+        sdk.getSessionInteractor().logout()
+    }
+
     func getProjectsList(
         page: Int,
         pageSize: Int,
@@ -67,11 +71,11 @@ class GitFox {
             sort: .asc,
             search: nil,
             simple: nil,
-            owned: nil,
-            membership: true,
-            starred: nil,
-            page: 0,
-            pageSize: 10
+            owned: false,
+            membership: false,
+            starred: true,
+            page: Int32(page),
+            pageSize: Int32(pageSize)
         ) { projects, error in
             if let error = error {
                 completion(.failure(.error(error)))
