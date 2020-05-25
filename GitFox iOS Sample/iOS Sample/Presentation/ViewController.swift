@@ -91,7 +91,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
 
     private var isLoading = false
-    private var currentPage = 0
+    private var currentPage = 1
     private var loadAllProjects = false
 
     private func loadProjects() {

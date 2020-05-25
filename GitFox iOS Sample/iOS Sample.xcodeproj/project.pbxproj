@@ -19,6 +19,7 @@
 		52C2A4852471285D002DCFF1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 52C2A4832471285D002DCFF1 /* LaunchScreen.storyboard */; };
 		52F858D2247AA0F3007D2A51 /* SDWebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F858D1247AA0F3007D2A51 /* SDWebImage.framework */; };
 		52FABE8A247A8C4500BBCCF7 /* ProjectTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52FABE89247A8C4500BBCCF7 /* ProjectTableViewCell.swift */; };
+		A91CF5D4247BD16B00DC6D7D /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A91CF5D3247BD16B00DC6D7D /* WebKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -49,6 +50,7 @@
 		52C2A4862471285D002DCFF1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52F858D1247AA0F3007D2A51 /* SDWebImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDWebImage.framework; path = Carthage/Build/iOS/SDWebImage.framework; sourceTree = "<group>"; };
 		52FABE89247A8C4500BBCCF7 /* ProjectTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectTableViewCell.swift; sourceTree = "<group>"; };
+		A91CF5D3247BD16B00DC6D7D /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +60,7 @@
 			files = (
 				52F858D2247AA0F3007D2A51 /* SDWebImage.framework in Frameworks */,
 				52651BB424712BA400AB96FB /* GitFoxSDK.framework in Frameworks */,
+				A91CF5D4247BD16B00DC6D7D /* WebKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -67,6 +70,7 @@
 		52651BB224712BA400AB96FB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A91CF5D3247BD16B00DC6D7D /* WebKit.framework */,
 				52F858D1247AA0F3007D2A51 /* SDWebImage.framework */,
 				52651BB324712BA400AB96FB /* GitFoxSDK.framework */,
 			);
