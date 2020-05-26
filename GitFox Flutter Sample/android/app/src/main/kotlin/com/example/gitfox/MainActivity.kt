@@ -144,13 +144,13 @@ class MainActivity : FlutterActivity(), CoroutineScope by CoroutineScope(Dispatc
                 val projects = sdk?.getProjectInteractor()?.getProjectsList(
                         archived = false,
                         visibility = null,
-                        orderBy = OrderBy.NAME,
-                        sort = Sort.ASC,
+                        orderBy = OrderBy.LAST_ACTIVITY_AT,
+                        sort = null,
                         search = null,
                         simple = null,
                         owned = null,
-                        membership = true,
-                        starred = null,
+                        membership = null,
+                        starred = true,
                         page = 0,
                         pageSize = 20)
                 val projectsJson = gson.toJson(projects)

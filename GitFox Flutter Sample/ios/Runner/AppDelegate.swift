@@ -122,13 +122,13 @@ import GitFoxSDK
         sdk.getProjectInteractor().getProjectsList(
             archived: false,
             visibility: nil,
-            orderBy: .name,
-            sort: .asc,
+            orderBy: .lastActivityAt,
+            sort: nil,
             search: nil,
             simple: nil,
             owned: nil,
-            membership: true,
-            starred: nil,
+            membership: nil,
+            starred: true,
             page: 0,
             pageSize: 20,
             callback: {
