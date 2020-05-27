@@ -120,6 +120,8 @@ android {
         exclude("META-INF/ktor-client-serialization.kotlin_module")
         exclude("META-INF/ktor-client-json.kotlin_module")
         exclude("META-INF/kotlinx-serialization-runtime.kotlin_module")
+        exclude("META-INF/ktor-client-auth.kotlin_module")
+        exclude("META-INF/ktor-client-logging.kotlin_module")
     }
 }
 
