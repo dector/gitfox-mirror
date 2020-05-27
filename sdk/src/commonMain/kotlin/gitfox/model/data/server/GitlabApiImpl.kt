@@ -7,6 +7,7 @@ import io.ktor.client.request.*
 import io.ktor.client.request.forms.FormDataContent
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.Parameters
+import io.ktor.http.encodeURLParameter
 import io.ktor.http.takeFrom
 
 /**
@@ -63,7 +64,7 @@ internal class GitlabApiImpl(
         ref: String
     ): File = httpClient.get {
         url {
-            takeFrom("$apiUrl/projects/$id/repository/files/$filePath")
+            takeFrom("$apiUrl/projects/$id/repository/files/${filePath.encodeURLParameter()}")
             parameter("ref", ref)
         }
     }
