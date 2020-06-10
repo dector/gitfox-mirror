@@ -48,11 +48,14 @@ kotlin {
     }
 
     sourceSets {
-        val ktorVersion = "1.3.2"
-        val coroutinesVersion = "1.3.4"
-        val serializationVersion = "0.20.0"
-        val napierVersion = "1.2.0"
-        val settingsVersion = "0.6"
+        val ktorVersion = "1.3.2-1.4-M2"
+        val coroutinesVersion = "1.3.7-1.4-M2"
+        val serializationVersion = "0.20.0-1.4-M2"
+
+        val napierVersion = "1.2.0-hmpp"
+        val settingsVersion = "0.6-hmpp"
+        val uuidVersion = "0.1.1-hmpp"
+
         commonMain {
             dependencies {
                 //Kotlin
@@ -60,7 +63,7 @@ kotlin {
                 //Log
                 implementation("com.github.aakira:napier:$napierVersion")
                 //JSON
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:$serializationVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serializationVersion")
                 //Preferences
                 implementation("com.russhwolf:multiplatform-settings:$settingsVersion")
                 //Network
@@ -69,61 +72,31 @@ kotlin {
                 implementation("io.ktor:ktor-client-auth:$ktorVersion")
                 implementation("io.ktor:ktor-client-logging:$ktorVersion")
                 //Coroutines
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$coroutinesVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
                 //UUID
-                implementation("com.benasher44:uuid:0.1.0")
+                implementation("com.benasher44:uuid:$uuidVersion")
             }
         }
         val androidMain by getting {
             dependencies {
                 //Kotlin
                 implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-                //Log
-                implementation("com.github.aakira:napier-android:$napierVersion")
-                //Network
-                api("io.ktor:ktor-client-core-jvm:$ktorVersion")
-                implementation("io.ktor:ktor-client-serialization-jvm:$ktorVersion")
-                implementation("io.ktor:ktor-client-auth-jvm:$ktorVersion")
-                implementation("io.ktor:ktor-client-logging-jvm:$ktorVersion")
+                //http client
                 implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
-                //Coroutines
-                api("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
-                //JSON
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serializationVersion")
             }
         }
         val iosMain by getting {
             dependencies {
-                //Log
-                implementation("com.github.aakira:napier-ios:$napierVersion")
-                //Network
-                implementation("io.ktor:ktor-client-core-native:$ktorVersion")
-                implementation("io.ktor:ktor-client-serialization-native:$ktorVersion")
-                implementation("io.ktor:ktor-client-auth-native:$ktorVersion")
-                implementation("io.ktor:ktor-client-logging-native:$ktorVersion")
+                //http client
                 implementation("io.ktor:ktor-client-ios:$ktorVersion")
-                //Coroutines
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-native:$coroutinesVersion")
-                //JSON
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:$serializationVersion")
             }
         }
         val jsMain by getting {
             dependencies {
                 //Kotlin
                 implementation("org.jetbrains.kotlin:kotlin-stdlib-js")
-                //Log
-                implementation("com.github.aakira:napier-js:$napierVersion")
-                //Network
-                implementation("io.ktor:ktor-client-core-js:$ktorVersion")
+                //http client
                 implementation("io.ktor:ktor-client-js:$ktorVersion")
-                implementation("io.ktor:ktor-client-serialization-js:$ktorVersion")
-                implementation("io.ktor:ktor-client-auth-js:$ktorVersion")
-                implementation("io.ktor:ktor-client-logging-js:$ktorVersion")
-                //Coroutines
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$coroutinesVersion")
-                //JSON
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-js:$serializationVersion")
                 //required NPM dependencies
                 implementation(npm("text-encoding", "*"))
                 implementation(npm("abort-controller", "*"))

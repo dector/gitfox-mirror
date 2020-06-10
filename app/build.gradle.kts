@@ -84,7 +84,7 @@ android {
                 initWith(getByName("debug"))
                 isMinifyEnabled = true
                 versionNameSuffix = " debugPG"
-                matchingFallbacks = mutableListOf("debug")
+                matchingFallbacks = mutableListOf("debug", "release")
 
                 proguardFiles(
                     getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -130,6 +130,11 @@ androidExtensions {
 }
 
 dependencies {
+    val ktorVersion = "1.3.2-1.4-M2"
+    val coroutinesVersion = "1.3.7-1.4-M2"
+    val napierVersion = "1.2.0-hmpp"
+    val serializationVersion = "0.20.0-1.4-M2"
+
     implementation(project(":sdk"))
     //Support
     implementation("androidx.appcompat:appcompat:1.1.0")
@@ -169,9 +174,13 @@ dependencies {
     //FlexBox Layout
     implementation("com.google.android:flexbox:1.0.0")
     //Log
-    implementation("com.github.aakira:napier-android:1.2.0")
+    implementation("com.github.aakira:napier:$napierVersion")
     //JSON
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serializationVersion")
+    //Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
+    //Ktor
+    implementation("io.ktor:ktor-client-core:$ktorVersion")
 
     //JUnit
     testImplementation("junit:junit:4.13")
