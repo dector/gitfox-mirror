@@ -21,7 +21,7 @@ import ru.terrakok.gitlabclient.markwonx.CompositeMarkdownDecorator
 import ru.terrakok.gitlabclient.markwonx.CompositeVisitor
 import ru.terrakok.gitlabclient.markwonx.GitlabExtensionsDelimiterProcessor
 import ru.terrakok.gitlabclient.markwonx.GitlabMarkdownExtension
-import ru.terrakok.gitlabclient.markwonx.MarkdownClickMediator
+import ru.terrakok.gitlabclient.markwonx.MarkdownClickHandler
 import ru.terrakok.gitlabclient.markwonx.MarkdownDecorator
 import ru.terrakok.gitlabclient.markwonx.label.LabelDescription
 import ru.terrakok.gitlabclient.markwonx.label.LabelSpanConfig
@@ -144,7 +144,7 @@ class MarkDownConverterProvider @Inject constructor(
         return MarkDownConverter(
             parser,
             markdownDecorator
-        ) { projectId, builder ->
+        ) { projectId, builder, markdownClickHandler ->
             if (projectId != null) {
                 val allLabels = labelInteractor.getAllProjectLabels(projectId)
                 val allMilestones = milestoneInteractor.getAllProjectMilestones(projectId)

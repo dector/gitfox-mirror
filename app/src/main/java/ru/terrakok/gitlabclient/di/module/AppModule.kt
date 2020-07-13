@@ -11,10 +11,7 @@ import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.BuildConfig
 import ru.terrakok.gitlabclient.di.AppDevelopersPath
 import ru.terrakok.gitlabclient.di.provider.*
-import ru.terrakok.gitlabclient.markwonx.MarkdownClickMediator
-import ru.terrakok.gitlabclient.markwonx.label.LabelSpanConfig
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
-import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.system.AppInfo
 import ru.terrakok.gitlabclient.system.AppInfoInteractor
 import ru.terrakok.gitlabclient.system.ResourceManager

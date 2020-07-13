@@ -18,6 +18,7 @@ import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.presentation.markdown.MarkdownPresenter
 import ru.terrakok.gitlabclient.presentation.markdown.MarkdownView
 import toothpick.Toothpick
+import toothpick.config.Module
 
 class MarkdownTextView @JvmOverloads constructor(
     context: Context,
