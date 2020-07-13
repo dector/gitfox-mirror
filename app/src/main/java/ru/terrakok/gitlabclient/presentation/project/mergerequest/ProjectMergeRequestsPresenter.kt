@@ -1,18 +1,22 @@
 package ru.terrakok.gitlabclient.presentation.project.mergerequest
 
-import io.reactivex.disposables.Disposable
-import javax.inject.Inject
+import gitfox.entity.MergeRequestState
+import gitfox.entity.app.target.TargetHeader
+import gitfox.model.interactor.MergeRequestInteractor
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import moxy.InjectViewState
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
-import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
-import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
-import ru.terrakok.gitlabclient.model.interactor.MergeRequestInteractor
-import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.Paginator
+import ru.terrakok.gitlabclient.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.util.openInfo
+import javax.inject.Inject
 
 /**
  * @author Eugene Shapovalov (CraggyHaggy). Date: 28.08.18
@@ -28,18 +32,20 @@ class ProjectMergeRequestsPresenter @Inject constructor(
 ) : BasePresenter<ProjectMergeRequestsView>() {
 
     private val projectId = projectIdWrapper.value
-    private var pageDisposable: Disposable? = null
+    private var pageJob: Job? = null
 
     init {
         paginator.render = { viewState.renderPaginatorState(it) }
-        paginator.sideEffects.subscribe { effect ->
-            when (effect) {
-                is Paginator.SideEffect.LoadPage -> loadNewPage(effect.currentPage)
-                is Paginator.SideEffect.ErrorEvent -> {
-                    errorHandler.proceed(effect.error) { viewState.showMessage(it) }
+        launch {
+            paginator.sideEffects.consumeEach { effect ->
+                when (effect) {
+                    is Paginator.SideEffect.LoadPage -> loadNewPage(effect.currentPage)
+                    is Paginator.SideEffect.ErrorEvent -> {
+                        errorHandler.proceed(effect.error) { viewState.showMessage(it) }
+                    }
                 }
             }
-        }.connect()
+        }
     }
 
     override fun onFirstViewAttach() {
@@ -47,24 +53,25 @@ class ProjectMergeRequestsPresenter @Inject constructor(
 
         refreshMergeRequests()
         mergeRequestInteractor.mergeRequestChanges
-            .subscribe { paginator.proceed(Paginator.Action.Refresh) }
-            .connect()
+            .onEach { paginator.proceed(Paginator.Action.Refresh) }
+            .launchIn(this)
     }
 
     private fun loadNewPage(page: Int) {
-        pageDisposable?.dispose()
-        pageDisposable =
-            mergeRequestInteractor.getMergeRequests(projectId, mergeRequestState, page = page)
-                .subscribe(
-                    { data ->
-                        paginator.proceed(Paginator.Action.NewPage(page, data))
-                    },
-                    { e ->
-                        errorHandler.proceed(e)
-                        paginator.proceed(Paginator.Action.PageError(e))
-                    }
+        pageJob?.cancel()
+        pageJob = launch {
+            try {
+                val data = mergeRequestInteractor.getMergeRequests(
+                    projectId = projectId,
+                    state = mergeRequestState,
+                    page = page
                 )
-        pageDisposable?.connect()
+                paginator.proceed(Paginator.Action.NewPage(page, data))
+            } catch (e: Exception) {
+                errorHandler.proceed(e)
+                paginator.proceed(Paginator.Action.PageError(e))
+            }
+        }
     }
 
     fun onMergeRequestClick(item: TargetHeader.Public) = item.openInfo(router)

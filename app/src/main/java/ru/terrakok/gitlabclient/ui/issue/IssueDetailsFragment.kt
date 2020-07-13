@@ -2,12 +2,12 @@ package ru.terrakok.gitlabclient.ui.issue
 
 import android.os.Bundle
 import android.view.View
+import gitfox.entity.Issue
+import gitfox.entity.IssueState
 import kotlinx.android.synthetic.main.fragment_issue_details.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.issue.Issue
-import ru.terrakok.gitlabclient.entity.issue.IssueState
 import ru.terrakok.gitlabclient.presentation.issue.details.IssueDetailsPresenter
 import ru.terrakok.gitlabclient.presentation.issue.details.IssueDetailsView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
@@ -53,8 +53,8 @@ class IssueDetailsFragment : BaseFragment(), IssueDetailsView {
                     String.format(
                         getString(R.string.issue_info_subtitle),
                         getString(R.string.target_status_closed),
-                        issue.closedBy.name,
-                        issue.closedAt.humanTime(resources)
+                        issue.closedBy?.name,
+                        issue.closedAt?.humanTime(resources)
                     )
                 } else {
                     getString(R.string.target_status_closed)

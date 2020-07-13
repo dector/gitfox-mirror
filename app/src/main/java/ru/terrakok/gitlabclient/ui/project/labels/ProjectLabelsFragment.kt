@@ -1,11 +1,11 @@
 package ru.terrakok.gitlabclient.ui.project.labels
 
 import android.os.Bundle
+import gitfox.entity.Label
 import kotlinx.android.synthetic.main.fragment_project_labels.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.Label
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 import ru.terrakok.gitlabclient.presentation.project.labels.ProjectLabelsPresenter
 import ru.terrakok.gitlabclient.presentation.project.labels.ProjectLabelsView

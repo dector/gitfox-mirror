@@ -1,11 +1,11 @@
 package ru.terrakok.gitlabclient.presentation.commit
 
+import gitfox.entity.Commit
+import gitfox.entity.DiffData
 import moxy.MvpView
 import moxy.viewstate.strategy.AddToEndSingleStrategy
 import moxy.viewstate.strategy.OneExecutionStateStrategy
 import moxy.viewstate.strategy.StateStrategyType
-import ru.terrakok.gitlabclient.entity.Commit
-import ru.terrakok.gitlabclient.entity.DiffData
 
 /**
  * @author Valentin Logvinovitch (glvvl) on 18.06.19.

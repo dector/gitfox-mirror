@@ -4,10 +4,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
+import gitfox.entity.app.CommitWithShortUser
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_merge_request_commit.*
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.app.CommitWithShortUser
 import ru.terrakok.gitlabclient.ui.global.view.custom.bindShortUser
 import ru.terrakok.gitlabclient.util.humanTime
 import ru.terrakok.gitlabclient.util.inflate

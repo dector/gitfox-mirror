@@ -2,12 +2,12 @@ package ru.terrakok.gitlabclient.ui.project.info
 
 import android.os.Bundle
 import android.view.View
+import gitfox.entity.Project
+import gitfox.entity.Visibility
 import kotlinx.android.synthetic.main.fragment_project_info.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.Project
-import ru.terrakok.gitlabclient.entity.Visibility
 import ru.terrakok.gitlabclient.presentation.project.info.ProjectInfoPresenter
 import ru.terrakok.gitlabclient.presentation.project.info.ProjectInfoView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment

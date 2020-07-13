@@ -1,12 +1,12 @@
 package ru.terrakok.gitlabclient.ui.project.mergerequest
 
 import android.os.Bundle
+import gitfox.entity.MergeRequestState
+import gitfox.entity.app.target.TargetHeader
 import kotlinx.android.synthetic.main.fragment_project_merge_requests.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
-import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 import ru.terrakok.gitlabclient.presentation.project.mergerequest.ProjectMergeRequestsPresenter
 import ru.terrakok.gitlabclient.presentation.project.mergerequest.ProjectMergeRequestsView

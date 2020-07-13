@@ -1,1 +1,1 @@
-include(":app", ":markwonx")
+include(":sdk", ":markwonx", ":app")

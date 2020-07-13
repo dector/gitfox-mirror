@@ -3,6 +3,7 @@ plugins {
     kotlin("android")
     kotlin("kapt")
     kotlin("android.extensions")
+    id("kotlinx-serialization")
 }
 
 apply(from = "${project.rootDir}/codequality/ktlint.gradle.kts")
@@ -83,6 +84,7 @@ android {
                 initWith(getByName("debug"))
                 isMinifyEnabled = true
                 versionNameSuffix = " debugPG"
+                matchingFallbacks = mutableListOf("debug")
 
                 proguardFiles(
                     getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -108,6 +110,19 @@ android {
         jvmTarget = "1.8"
     }
     buildToolsVersion = "29.0.2"
+
+    packagingOptions {
+        exclude("META-INF/ktor-client-core.kotlin_module")
+        exclude("META-INF/ktor-io.kotlin_module")
+        exclude("META-INF/ktor-http.kotlin_module")
+        exclude("META-INF/ktor-http-cio.kotlin_module")
+        exclude("META-INF/ktor-utils.kotlin_module")
+        exclude("META-INF/ktor-client-serialization.kotlin_module")
+        exclude("META-INF/ktor-client-json.kotlin_module")
+        exclude("META-INF/kotlinx-serialization-runtime.kotlin_module")
+        exclude("META-INF/ktor-client-auth.kotlin_module")
+        exclude("META-INF/ktor-client-logging.kotlin_module")
+    }
 }
 
 androidExtensions {
@@ -115,6 +130,7 @@ androidExtensions {
 }
 
 dependencies {
+    implementation(project(":sdk"))
     //Support
     implementation("androidx.appcompat:appcompat:1.1.0")
     implementation("com.google.android.material:material:1.1.0")
@@ -122,10 +138,6 @@ dependencies {
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.0.0")
     implementation("androidx.recyclerview:recyclerview:1.1.0")
     implementation("androidx.constraintlayout:constraintlayout:1.1.3")
-    //Kotlin
-    implementation("org.jetbrains.kotlin:kotlin-stdlib")
-    //Log
-    implementation("com.jakewharton.timber:timber:4.7.1")
     //MVP Moxy
     val moxyVersion = "2.0.2"
     kapt("com.github.moxy-community:moxy-compiler:$moxyVersion")
@@ -137,18 +149,6 @@ dependencies {
     val toothpickVersion = "3.1.0"
     implementation("com.github.stephanenicolas.toothpick:toothpick-runtime:$toothpickVersion")
     kapt("com.github.stephanenicolas.toothpick:toothpick-compiler:$toothpickVersion")
-    //Gson
-    implementation("com.google.code.gson:gson:2.8.6")
-    //Retrofit
-    val retrofitVersion = "2.7.1"
-    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
-    implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.4.0")
-    implementation("com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion")
-    //RxJava
-    implementation("io.reactivex.rxjava2:rxandroid:2.1.1")
-    implementation("io.reactivex.rxjava2:rxjava:2.2.6")
-    implementation("com.jakewharton.rxrelay2:rxrelay:2.1.1")
     //Adapter simplify
     implementation("com.hannesdorfmann:adapterdelegates4:4.2.0")
     //Image load and cache
@@ -172,6 +172,10 @@ dependencies {
     implementation("com.jakewharton.threetenabp:threetenabp:1.2.2")
     //FlexBox Layout
     implementation("com.google.android:flexbox:1.0.0")
+    //Log
+    implementation("com.github.aakira:napier-android:1.2.0")
+    //JSON
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0")
 
     //Custom GitLab markdown parsing tools
     implementation(project(":markwonx"))

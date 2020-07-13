@@ -2,29 +2,27 @@ package ru.terrakok.gitlabclient.presentation.global
 
 import android.text.Spanned
 import io.noties.markwon.Markwon
-import io.reactivex.Single
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import ru.terrakok.gitlabclient.markwonx.MarkdownClickHandler
-import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 28.05.17
  */
 class MarkDownConverter(
-    private val markwonFactory: (
+    private val markwonFactory: suspend (
         projectId: Long?,
         clickHandler: MarkdownClickHandler
-    ) -> Single<Markwon>,
-    private val schedulers: SchedulersProvider
+    ) -> Markwon
 ) {
 
-    fun markdownToSpannable(
-        raw: String,
+    suspend fun toSpannable(
+        raw: String?,
         projectId: Long?,
         markdownClickHandler: MarkdownClickHandler
-    ): Single<Spanned> = Single.defer {
-        markwonFactory(projectId, markdownClickHandler)
-            .map { markwon -> markwon.toMarkdown(raw) }
-            .subscribeOn(schedulers.computation())
-            .observeOn(schedulers.ui())
-    }
+    ): Spanned =
+        withContext(Dispatchers.Default) {
+            val markwon = markwonFactory(projectId, markdownClickHandler)
+            markwon.toMarkdown(raw)
+        }
 }

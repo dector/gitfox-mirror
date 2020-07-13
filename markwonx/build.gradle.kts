@@ -29,6 +29,7 @@ android {
 
 dependencies {
     val markwonVersion = "4.2.2"
+    val coroutinesVersion = "1.3.4"
     //Markdown to HTML converter
     compileOnly("io.noties.markwon:core:$markwonVersion")
     testImplementation("io.noties.markwon:core:$markwonVersion")
@@ -36,12 +37,8 @@ dependencies {
     val kotlinVersion = "1.3.61"
     //Kotlin
     compileOnly("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
+    compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
     testImplementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
-
-    //RxJava
-    compileOnly("io.reactivex.rxjava2:rxjava:2.2.3")
-    compileOnly("io.reactivex.rxjava2:rxandroid:2.1.0")
-    compileOnly("com.jakewharton.rxrelay2:rxrelay:2.1.0")
 
     //JUnit
     testImplementation("junit:junit:4.12")

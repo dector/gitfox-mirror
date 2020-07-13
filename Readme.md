@@ -1,51 +1,122 @@
-# Gitfox
+# GitFox
+#### This repository contains several parts:
+ - Multiplatform SDK for creating clients on various platforms (Android, iOS and browser)
+ - Android application GitFox:
+   * https://play.google.com/store/apps/details?id=com.gitlab.terrakok.gitfox
+   * https://f-droid.org/ru/packages/com.gitlab.terrakok.gitfox/
+ - iOS sample of using SDK with Swift
 
-GitFox is your application to manage GitLab projects using an intuitive interface. 
-In addition, it is a showcase of the "Clean Architecture" concepts and some useful libraries. 
+#### SDK
+GitFox SDK is library for creating clients application for GitLab servers.
+This is some supported features:
+ - OAuth authorization on GitLab.com
+ - authotrization with private token on any GitLab server
+ - multi account and switching bitween them
+ - getting information about projects, users, issues, todo's, merge requests and etc.
+ - sending commentaries
+ - and more
 
-GitFox brings you the next features: 
+**Request and vote for new functionality!**
 
-* OAuth and custom server authorization.
-* Activity stream from all projects.
-* Issue and MergeRequest details.
-* Markdown support
+#### Build
+**Build Android library**  
+Debug AAR: `./gradlew :sdk:assembleDebug`  
+Release AAR: `./gradlew :sdk:assembleRelease`  
+You can find **aar** library here: `./sdk/build/outputs/aar`  
 
-and much more...
+**Build iOS framework**  
+For iOS simulator: `./gradlew :sdk:packForXcode`  
+For iOS device: `SDK_NAME=iphoneos ./gradlew :sdk:packForXcode`  
+You can find **framework** here: `./sdk/build/xcode-frameworks`  
 
-## Code structure
+**Build js webpack library**  
+For development: `./gradlew :sdk:jsBrowserDevelopmentWebpack`  
+For production: `./gradlew :sdk:jsBrowserProductionWebpack`  
+You can find **sdk.js** here: `./sdk/build/distributions`  
 
-App is constructed according to the Single Activity approach:
-* The whole app is contained into the AppActivity
-* Every user flow is implemented inside FlowFragment containers
-* And every single screen is created in child fragments
+#### OAuth Authorization sample for Android:
+```kotlin
+val sdk = SDK.create(
+    context,
+    oAuthParams = OAuthParams(
+        "https://gitlab.com/",
+        "appId",
+        "appKey",
+        "redirectUrl"
+    ),
+    isDebug = BuildConfig.DEBUG
+)
 
-### Packages
+val sessionInteractor = sdk.getSessionInteractor()
 
-Here is a description of the most important packages and the logic behind the structure.
+webView.webViewClient = object : WebViewClient() {
+    override fun shouldOverrideUrlLoading(
+        view: WebView,
+        request: WebResourceRequest
+    ): Boolean {
+        val url = request.url.toString()
+        if (sessionInteractor.checkOAuthRedirect(url)) {
+            launch {
+                sessionInteractor.login(url)
+                //at the moment you are logged in
+                val p = sdk.getProjectInteractor().getProject(2977308)
+                println(p)
+            }
+            return true
+        } else {
+            view.loadUrl(url)
+            return false
+        }
+    }
+}
+//start oauth authorization
+webView.loadUrl(sessionInteractor.oauthUrl)
+```
 
-**entity** - the main business logic objects
+#### Private token authorization for iOS:
+```swift
+import GitFoxSDK
 
-**extension** - utility Kotlin extensions
+let sdk = IosSDK.init(
+    oAuthParams: OAuthParams.init(
+        endpoint: "https://gitlab.com/",
+        appId: "appId",
+        appKey: "appKey",
+        redirectUrl: "redirectUrl"
+   ),
+   isDebug: true
+)
 
-**model.data** - data sources, such as api, local storage, in-memory cache
+sdk.getSessionInteractor().loginOnCustomServer(
+    serverPath: "https://gitlab.com/",
+    token: "put real private token!"
+) { result, err in
+    if err == nil {
+        //at the moment you are logged in
+        sdk.getProjectInteractor().getProject(id: 2977308) { result, err in
+            if let project = result {
+                print(project)
+            } else {
+                print("error: " + err!.message!)
+            }
+        }
+    } else {
+        print("error: " + err!.message!)
+    }
+}
+```
 
-**model.repository** - repositories for async work with data sources and mappers for business logic models 
-
-**model.interactor** - mobile app logic divided by features. 
-Mostly, the whole app logic is contained on the server, so these classes are quite "thin"
-
-**model.system** - error handling, system helpers, etc
-
-**presentation** - presenters with according view interfaces:
- - presenter handles navigation and only the user input influencing business logic and/or data. 
- In case if there are only view-related changes (animations, changes of view state without touching the business logic, etc)
- these changes should be inside the view implementations and not in the presenter.
- - presenter handles and passes to its View business logic or data changes
- - overall, presenter stays relatively "thin" too
-
-**ui** - view implementation and everything that is bound to views only: animations, data binding, recycler view adapters
-
-## Contribution
-
-
-Information for contributors is in the [Wiki page](https://gitlab.com/terrakok/gitlab-client/wikis/home)
+#### Private token authorization for JavaScript:
+```javascript
+const SDK = new sdk.gitfox.JsSDK(
+  new sdk.gitfox.entity.app.session.OAuthParams(
+    "https://gitlab.com/", "", "", ""
+  ),
+  true
+);
+SDK.getSessionInteractor().loginOnCustomServer(
+	"https://gitlab.com/", "put real private token!"
+).then( () => {
+  SDK.getProjectInteractor().getProject(2977308).then( (project, err) => alert(project) );
+});
+```

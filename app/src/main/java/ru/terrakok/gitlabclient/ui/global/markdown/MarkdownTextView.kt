@@ -4,17 +4,22 @@ import android.content.Context
 import android.text.Spanned
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
+import com.github.aakira.napier.Napier
 import io.noties.markwon.Markwon
 import io.noties.markwon.image.glide.GlideImagesPlugin
 import moxy.MvpDelegate
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import ru.terrakok.gitlabclient.di.DI
+import ru.terrakok.gitlabclient.di.provider.LabelSpanConfigProvider
+import ru.terrakok.gitlabclient.di.provider.MarkDownConverterProvider
 import ru.terrakok.gitlabclient.markwonx.GitlabMarkdownExtension
 import ru.terrakok.gitlabclient.markwonx.MarkdownClickListener
+import ru.terrakok.gitlabclient.markwonx.MarkdownClickMediator
+import ru.terrakok.gitlabclient.markwonx.label.LabelSpanConfig
+import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.presentation.markdown.MarkdownPresenter
 import ru.terrakok.gitlabclient.presentation.markdown.MarkdownView
-import timber.log.Timber
 import toothpick.Toothpick
 
 class MarkdownTextView @JvmOverloads constructor(
@@ -48,7 +53,15 @@ class MarkdownTextView @JvmOverloads constructor(
 
     @ProvidePresenter
     fun providePresenter(): MarkdownPresenter = Toothpick
-        .openScopes(DI.SERVER_SCOPE, "MarkdownTextView_${hashCode()}")
+        .openScopes(DI.APP_SCOPE, "MarkdownTextView_${hashCode()}")
+        .apply {
+            installModules(object : Module() {
+                init {
+                    bind(LabelSpanConfig::class.java).toProvider(LabelSpanConfigProvider::class.java)
+                    bind(MarkDownConverter::class.java).toProvider(MarkDownConverterProvider::class.java)
+                }
+            })
+        }
         .getInstance(MarkdownPresenter::class.java)
 
     override fun markdownClicked(extension: GitlabMarkdownExtension, value: Any) {
@@ -70,7 +83,7 @@ class MarkdownTextView @JvmOverloads constructor(
         if (markdown != null) {
             presenter.setMarkdown(markdown, projectId)
         } else {
-            Timber.e("Text in markdown text view ${if (id != NO_ID) resources.getResourceName(id) else ""} is null")
+            Napier.e("Text in markdown text view ${if (id != NO_ID) resources.getResourceName(id) else ""} is null")
         }
     }
 
@@ -84,5 +97,4 @@ class MarkdownTextView @JvmOverloads constructor(
         mvpDelegate.onSaveInstanceState()
         mvpDelegate.onDetach()
     }
-
 }

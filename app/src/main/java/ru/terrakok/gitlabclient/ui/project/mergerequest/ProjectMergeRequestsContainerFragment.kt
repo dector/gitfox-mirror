@@ -2,10 +2,10 @@ package ru.terrakok.gitlabclient.ui.project.mergerequest
 
 import android.os.Bundle
 import androidx.fragment.app.FragmentPagerAdapter
+import gitfox.entity.MergeRequestState
 import kotlinx.android.synthetic.main.fragment_my_merge_requests_container.*
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.Screens
-import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequestState
 import ru.terrakok.gitlabclient.ui.global.BaseFragment
 
 /**

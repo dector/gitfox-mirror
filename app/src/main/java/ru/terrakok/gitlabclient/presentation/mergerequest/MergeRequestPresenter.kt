@@ -1,22 +1,20 @@
 package ru.terrakok.gitlabclient.presentation.mergerequest
 
-import io.reactivex.Single
-import io.reactivex.functions.BiFunction
-import javax.inject.Inject
+import gitfox.entity.app.target.TargetAction
+import gitfox.model.interactor.MergeRequestInteractor
+import gitfox.model.interactor.ProjectInteractor
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import moxy.InjectViewState
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.di.MergeRequestId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
-import ru.terrakok.gitlabclient.entity.Project
-import ru.terrakok.gitlabclient.entity.app.target.TargetAction
-import ru.terrakok.gitlabclient.entity.mergerequest.MergeRequest
-import ru.terrakok.gitlabclient.model.interactor.MergeRequestInteractor
-import ru.terrakok.gitlabclient.model.interactor.ProjectInteractor
-import ru.terrakok.gitlabclient.model.system.ResourceManager
-import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
+import ru.terrakok.gitlabclient.system.ResourceManager
+import ru.terrakok.gitlabclient.system.flow.FlowRouter
+import javax.inject.Inject
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 27.11.18.
@@ -43,23 +41,22 @@ class MergeRequestPresenter @Inject constructor(
     }
 
     private fun updateToolbarTitle() {
-        Single
-            .zip(
-                mrInteractor.getMergeRequest(projectId, mrId),
-                projectInteractor.getProject(projectId),
-                BiFunction<MergeRequest, Project, Pair<MergeRequest, Project>> { mr, project ->
-                    Pair(mr, project)
-                }
-            )
-            .doOnSubscribe { viewState.showBlockingProgress(true) }
-            .doAfterTerminate { viewState.showBlockingProgress(false) }
-            .subscribe(
-                { (mr, project) ->
-                    viewState.setTitle(resourceManager.getString(R.string.merge_request_title, mr.iid), project.name)
-                },
-                { errorHandler.proceed(it, { viewState.showMessage(it) }) }
-            )
-            .connect()
+        launch {
+            viewState.showBlockingProgress(true)
+            try {
+                val mr = async { mrInteractor.getMergeRequest(projectId, mrId) }
+                val project = projectInteractor.getProject(projectId)
+                viewState.setTitle(
+                    resourceManager.getString(
+                        R.string.merge_request_title,
+                        mr.await().iid
+                    ), project.name
+                )
+            } catch (e: Exception) {
+                errorHandler.proceed(e) { viewState.showMessage(it) }
+            }
+            viewState.showBlockingProgress(false)
+        }
     }
 
     private fun selectActionTab() {
