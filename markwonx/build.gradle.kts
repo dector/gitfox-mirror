@@ -28,7 +28,7 @@ android {
 }
 
 dependencies {
-    val markwonVersion = "4.2.2"
+    val markwonVersion = "4.4.0"
     val coroutinesVersion = "1.3.4"
     //Markdown to HTML converter
     compileOnly("io.noties.markwon:core:$markwonVersion")

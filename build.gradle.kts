@@ -12,7 +12,6 @@ buildscript {
 }
 
 allprojects {
-    extra["markwonVersion"] = "2.0.0"
     repositories {
         google()
         jcenter()

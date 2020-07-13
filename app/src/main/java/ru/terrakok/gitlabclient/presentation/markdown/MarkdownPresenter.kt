@@ -2,8 +2,6 @@ package ru.terrakok.gitlabclient.presentation.markdown
 
 import com.github.aakira.napier.Napier
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import moxy.InjectViewState
 import ru.terrakok.gitlabclient.markwonx.GitlabMarkdownExtension
@@ -12,7 +10,6 @@ import ru.terrakok.gitlabclient.markwonx.milestone.MilestoneDescription
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
-import timber.log.Timber
 import javax.inject.Inject
 
 @InjectViewState

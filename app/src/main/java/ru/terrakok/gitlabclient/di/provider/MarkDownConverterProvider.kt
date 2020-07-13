@@ -1,6 +1,7 @@
 package ru.terrakok.gitlabclient.di.provider
 
 import android.content.Context
+import com.github.aakira.napier.Napier
 import gitfox.entity.Label
 import gitfox.entity.Milestone
 import gitfox.model.interactor.LabelInteractor
@@ -13,13 +14,10 @@ import io.noties.markwon.ext.strikethrough.StrikethroughPlugin
 import io.noties.markwon.ext.tables.TablePlugin
 import io.noties.markwon.ext.tasklist.TaskListPlugin
 import io.noties.markwon.html.HtmlPlugin
+import io.noties.markwon.image.destination.ImageDestinationProcessorRelativeToAbsolute
 import io.noties.markwon.image.glide.GlideImagesPlugin
-import io.noties.markwon.urlprocessor.UrlProcessorRelativeToAbsolute
-import io.reactivex.Single
-import io.reactivex.functions.BiFunction
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.di.ServerPath
-import ru.terrakok.gitlabclient.entity.app.session.AuthHolder
+import ru.terrakok.gitlabclient.di.module.ServerPath
 import ru.terrakok.gitlabclient.markwonx.GitlabMarkdownExtension
 import ru.terrakok.gitlabclient.markwonx.MarkdownClickHandler
 import ru.terrakok.gitlabclient.markwonx.label.LabelDescription
@@ -29,11 +27,8 @@ import ru.terrakok.gitlabclient.markwonx.milestone.MilestoneDescription
 import ru.terrakok.gitlabclient.markwonx.milestone.SimpleMilestoneVisitor
 import ru.terrakok.gitlabclient.markwonx.simple.SimpleNodeVisitor
 import ru.terrakok.gitlabclient.markwonx.simple.SimplePlugin
-import ru.terrakok.gitlabclient.model.data.server.client.OkHttpClientFactory
-import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.util.color
-import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -48,7 +43,7 @@ class MarkDownConverterProvider @Inject constructor(
     @ServerPath private val serverPath: String
 ) : Provider<MarkDownConverter> {
 
-    private val urlProcessor by lazy { UrlProcessorRelativeToAbsolute(serverPath) }
+    private val urlProcessor by lazy { ImageDestinationProcessorRelativeToAbsolute(serverPath) }
 
     private fun createNodeVisitors(
         labels: List<Label>,
@@ -94,7 +89,7 @@ class MarkDownConverterProvider @Inject constructor(
 
                         override fun configureConfiguration(builder: MarkwonConfiguration.Builder) {
                             builder
-                                .urlProcessor(urlProcessor)
+                                .imageDestinationProcessor(urlProcessor)
                         }
                     },
                     GlideImagesPlugin.create(context),
@@ -111,29 +106,28 @@ class MarkDownConverterProvider @Inject constructor(
 
     override fun get(): MarkDownConverter {
         return MarkDownConverter(
-            this::createMarkwon,
-            schedulers
+            this::createMarkwon
         )
     }
 
     private suspend fun createMarkwon(
         projectId: Long?,
         markdownClickHandler: MarkdownClickHandler
-    ): Single<Markwon> {
-        val (labels, milestones) =
+    ): Markwon {
+        val (labels: List<Label>, milestones: List<Milestone>) =
             if (projectId != null) {
-                val allLabels = try {
+                val allLabels = kotlin.runCatching {
                     labelInteractor
                         .getAllProjectLabels(projectId)
-                } catch (e: Exception) {
-                    Timber.e(it)
+                }.getOrElse {
+                    Napier.e("", it)
                     emptyList()
                 }
-                val allMilestones = try {
+                val allMilestones = kotlin.runCatching {
                     milestoneInteractor
                         .getAllProjectMilestones(projectId)
-                } catch (e: Exception) {
-                    Timber.e(it)
+                }.getOrElse {
+                    Napier.e("", it)
                     emptyList()
                 }
                 allLabels to allMilestones

@@ -157,7 +157,7 @@ dependencies {
     kapt("com.github.bumptech.glide:compiler:$glideVersion")
     implementation("com.github.bumptech.glide:okhttp3-integration:$glideVersion")
     //Markdown to HTML converter
-    val markwonVersion = "4.2.2"
+    val markwonVersion = "4.4.0"
     implementation("io.noties.markwon:core:$markwonVersion")
     implementation("io.noties.markwon:ext-strikethrough:$markwonVersion")
     implementation("io.noties.markwon:ext-tables:$markwonVersion")

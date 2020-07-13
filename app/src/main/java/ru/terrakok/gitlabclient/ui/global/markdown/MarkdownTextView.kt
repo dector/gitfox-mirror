@@ -15,12 +15,12 @@ import ru.terrakok.gitlabclient.di.provider.LabelSpanConfigProvider
 import ru.terrakok.gitlabclient.di.provider.MarkDownConverterProvider
 import ru.terrakok.gitlabclient.markwonx.GitlabMarkdownExtension
 import ru.terrakok.gitlabclient.markwonx.MarkdownClickListener
-import ru.terrakok.gitlabclient.markwonx.MarkdownClickMediator
 import ru.terrakok.gitlabclient.markwonx.label.LabelSpanConfig
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.presentation.markdown.MarkdownPresenter
 import ru.terrakok.gitlabclient.presentation.markdown.MarkdownView
 import toothpick.Toothpick
+import toothpick.config.Module
 
 class MarkdownTextView @JvmOverloads constructor(
     context: Context,

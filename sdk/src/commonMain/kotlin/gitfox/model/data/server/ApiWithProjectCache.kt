@@ -48,7 +48,8 @@ internal class ApiWithProjectCache(
         id: Long,
         statistics: Boolean
     ): Project =
-        projectCache.get(id) ?: serverApi.getProject(id, statistics)
-            .also { projectCache.put(listOf(it)) }
+        projectCache.getOrPut(id) {
+            serverApi.getProject(id, statistics)
+        }
 
 }

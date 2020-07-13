@@ -1,5 +1,6 @@
 package ru.terrakok.gitlabclient.presentation.global
 
+import android.text.SpannableString
 import android.text.Spanned
 import io.noties.markwon.Markwon
 import kotlinx.coroutines.Dispatchers
@@ -22,7 +23,11 @@ class MarkDownConverter(
         markdownClickHandler: MarkdownClickHandler
     ): Spanned =
         withContext(Dispatchers.Default) {
-            val markwon = markwonFactory(projectId, markdownClickHandler)
-            markwon.toMarkdown(raw)
+            if (raw != null) {
+                val markwon = markwonFactory(projectId, markdownClickHandler)
+                markwon.toMarkdown(raw)
+            } else {
+                SpannableString("")
+            }
         }
 }
