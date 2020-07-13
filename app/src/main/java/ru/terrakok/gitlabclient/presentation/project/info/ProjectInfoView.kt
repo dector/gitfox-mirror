@@ -1,10 +1,10 @@
 package ru.terrakok.gitlabclient.presentation.project.info
 
+import gitfox.entity.Project
 import moxy.MvpView
 import moxy.viewstate.strategy.AddToEndSingleStrategy
 import moxy.viewstate.strategy.OneExecutionStateStrategy
 import moxy.viewstate.strategy.StateStrategyType
-import ru.terrakok.gitlabclient.entity.Project
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 27.04.17.

@@ -1,18 +1,18 @@
 package ru.terrakok.gitlabclient.markwonx
 
-import com.jakewharton.rxrelay2.PublishRelay
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
+import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.channels.sendBlocking
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
 
 class MarkdownClickMediator {
     data class MarkdownClickEvent(val extension: GitlabMarkdownExtension, val value: Any)
 
-    private val events by lazy { PublishRelay.create<MarkdownClickEvent>() }
+    private val events by lazy { BroadcastChannel<MarkdownClickEvent>(1) }
 
     fun markdownClicked(extension: GitlabMarkdownExtension, value: Any) {
-        events.accept(MarkdownClickEvent(extension, value))
+        events.sendBlocking(MarkdownClickEvent(extension, value))
     }
 
-    fun getClickEvents(): Observable<MarkdownClickEvent> =
-        events.hide().observeOn(AndroidSchedulers.mainThread())
+    fun getClickEvents(): Flow<MarkdownClickEvent> = events.asFlow()
 }

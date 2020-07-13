@@ -7,12 +7,12 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import androidx.recyclerview.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
+import gitfox.entity.Color
+import gitfox.entity.Label
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_label.*
 import kotlinx.android.synthetic.main.item_label.view.*
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.Color
-import ru.terrakok.gitlabclient.entity.Label
 import ru.terrakok.gitlabclient.util.inflate
 import ru.terrakok.gitlabclient.util.setBackgroundTintByColor
 
@@ -63,12 +63,13 @@ class ProjectLabelAdapterDelegate : AdapterDelegate<MutableList<Any>>() {
         }
 
         private fun setLabelColor(color: Color) = with(itemView.labelTitleTextView) {
+            val colorInt = android.graphics.Color.parseColor(color.name)
             val textColor = when {
-                isColorDark(color.value) -> ContextCompat.getColor(context, R.color.white)
+                isColorDark(colorInt) -> ContextCompat.getColor(context, R.color.white)
                 else -> ContextCompat.getColor(context, R.color.primary_text)
             }
 
-            setBackgroundTintByColor(color.value)
+            setBackgroundTintByColor(colorInt)
             setTextColor(textColor)
         }
 

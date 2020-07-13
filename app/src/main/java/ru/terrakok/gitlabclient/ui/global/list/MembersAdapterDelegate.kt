@@ -4,10 +4,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
+import gitfox.entity.Member
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_member.*
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.Member
 import ru.terrakok.gitlabclient.ui.global.view.custom.bindMember
 import ru.terrakok.gitlabclient.util.inflate
 

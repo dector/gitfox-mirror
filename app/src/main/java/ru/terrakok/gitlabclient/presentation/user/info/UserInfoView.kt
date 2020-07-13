@@ -1,10 +1,10 @@
 package ru.terrakok.gitlabclient.presentation.user.info
 
+import gitfox.entity.User
 import moxy.MvpView
 import moxy.viewstate.strategy.AddToEndSingleStrategy
 import moxy.viewstate.strategy.OneExecutionStateStrategy
 import moxy.viewstate.strategy.StateStrategyType
-import ru.terrakok.gitlabclient.entity.User
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 25.11.17.

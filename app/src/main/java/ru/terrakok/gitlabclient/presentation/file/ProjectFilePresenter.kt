@@ -1,15 +1,16 @@
 package ru.terrakok.gitlabclient.presentation.file
 
-import javax.inject.Inject
+import gitfox.model.interactor.ProjectInteractor
+import kotlinx.coroutines.launch
 import moxy.InjectViewState
 import ru.terrakok.cicerone.Router
 import ru.terrakok.gitlabclient.di.FilePath
 import ru.terrakok.gitlabclient.di.FileReference
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
-import ru.terrakok.gitlabclient.model.interactor.ProjectInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.util.extractFileNameFromPath
+import javax.inject.Inject
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 22.11.18.
@@ -35,13 +36,15 @@ class ProjectFilePresenter @Inject constructor(
     fun onFileReload() = loadProjectFileRaw(true)
 
     private fun loadProjectFileRaw(isReload: Boolean) {
-        projectInteractor.getProjectRawFile(projectId, filePath, fileReference)
-            .doOnSubscribe { if (isReload) viewState.showEmptyView(false) }
-            .subscribe(
-                { viewState.setRawFile(it) },
-                { viewState.showEmptyView(true) }
-            )
-            .connect()
+        launch {
+            if (isReload) viewState.showEmptyView(false)
+            try {
+                val f = projectInteractor.getProjectRawFile(projectId, filePath, fileReference)
+                viewState.setRawFile(f)
+            } catch (e: Exception) {
+                viewState.showEmptyView(true)
+            }
+        }
     }
 
     fun onBackPressed() = router.exit()

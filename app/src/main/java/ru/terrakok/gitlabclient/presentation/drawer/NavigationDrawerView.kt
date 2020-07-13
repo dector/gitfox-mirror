@@ -1,9 +1,9 @@
 package ru.terrakok.gitlabclient.presentation.drawer
 
+import gitfox.entity.app.session.UserAccount
 import moxy.MvpView
 import moxy.viewstate.strategy.AddToEndSingleStrategy
 import moxy.viewstate.strategy.StateStrategyType
-import ru.terrakok.gitlabclient.entity.app.session.UserAccount
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok). Date: 04.04.17

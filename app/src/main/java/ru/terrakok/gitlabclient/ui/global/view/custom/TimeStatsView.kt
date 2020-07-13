@@ -7,9 +7,9 @@ import android.text.style.ForegroundColorSpan
 import android.util.AttributeSet
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import gitfox.entity.TimeStats
 import kotlinx.android.synthetic.main.view_time_stats.view.*
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.TimeStats
 import ru.terrakok.gitlabclient.util.color
 import ru.terrakok.gitlabclient.util.visible
 

@@ -1,10 +1,10 @@
 package ru.terrakok.gitlabclient.presentation.project.files
 
+import gitfox.entity.Branch
 import moxy.MvpView
 import moxy.viewstate.strategy.AddToEndSingleStrategy
 import moxy.viewstate.strategy.OneExecutionStateStrategy
 import moxy.viewstate.strategy.StateStrategyType
-import ru.terrakok.gitlabclient.entity.Branch
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 
 /**

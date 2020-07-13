@@ -1,22 +1,20 @@
 package ru.terrakok.gitlabclient.presentation.issue
 
-import io.reactivex.Single
-import io.reactivex.functions.BiFunction
-import javax.inject.Inject
+import gitfox.entity.app.target.TargetAction
+import gitfox.model.interactor.IssueInteractor
+import gitfox.model.interactor.ProjectInteractor
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import moxy.InjectViewState
 import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.di.IssueId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
-import ru.terrakok.gitlabclient.entity.Project
-import ru.terrakok.gitlabclient.entity.app.target.TargetAction
-import ru.terrakok.gitlabclient.entity.issue.Issue
-import ru.terrakok.gitlabclient.model.interactor.IssueInteractor
-import ru.terrakok.gitlabclient.model.interactor.ProjectInteractor
-import ru.terrakok.gitlabclient.model.system.ResourceManager
-import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
+import ru.terrakok.gitlabclient.system.ResourceManager
+import ru.terrakok.gitlabclient.system.flow.FlowRouter
+import javax.inject.Inject
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 01.11.18.
@@ -43,23 +41,20 @@ class IssuePresenter @Inject constructor(
     }
 
     private fun updateToolbarTitle() {
-        Single
-            .zip(
-                issueInteractor.getIssue(projectId, issueId),
-                projectInteractor.getProject(projectId),
-                BiFunction<Issue, Project, Pair<Issue, Project>> { issue, project ->
-                    Pair(issue, project)
-                }
-            )
-            .doOnSubscribe { viewState.showBlockingProgress(true) }
-            .doAfterTerminate { viewState.showBlockingProgress(false) }
-            .subscribe(
-                { (issue, project) ->
-                    viewState.setTitle(resourceManager.getString(R.string.issue_title, issue.iid), project.name)
-                },
-                { errorHandler.proceed(it, { viewState.showMessage(it) }) }
-            )
-            .connect()
+        launch {
+            viewState.showBlockingProgress(true)
+            try {
+                val issue = async { issueInteractor.getIssue(projectId, issueId) }
+                val project = projectInteractor.getProject(projectId)
+                viewState.setTitle(
+                    resourceManager.getString(R.string.issue_title, issue.await().iid),
+                    project.name
+                )
+            } catch (e: Exception) {
+
+            }
+            viewState.showBlockingProgress(false)
+        }
     }
 
     private fun selectActionTab() {
@@ -69,13 +64,14 @@ class IssuePresenter @Inject constructor(
     fun onBackPressed() = flowRouter.exit()
 
     fun onCloseIssueClicked() {
-        issueInteractor.closeIssue(projectId, issueId)
-            .doOnSubscribe { viewState.showBlockingProgress(true) }
-            .doAfterTerminate { viewState.showBlockingProgress(false) }
-            .subscribe(
-                { },
-                { errorHandler.proceed(it, viewState::showMessage) }
-            )
-            .connect()
+        launch {
+            viewState.showBlockingProgress(true)
+            try {
+                issueInteractor.closeIssue(projectId, issueId)
+            } catch (e: Exception) {
+                errorHandler.proceed(e) { viewState.showMessage(it) }
+            }
+            viewState.showBlockingProgress(false)
+        }
     }
 }

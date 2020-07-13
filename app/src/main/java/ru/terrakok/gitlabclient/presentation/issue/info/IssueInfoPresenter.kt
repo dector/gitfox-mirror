@@ -1,13 +1,16 @@
 package ru.terrakok.gitlabclient.presentation.issue.info
 
-import javax.inject.Inject
+import gitfox.model.interactor.IssueInteractor
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.launch
 import moxy.InjectViewState
 import ru.terrakok.gitlabclient.di.IssueId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
-import ru.terrakok.gitlabclient.model.interactor.IssueInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
+import javax.inject.Inject
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 05.01.18.
@@ -25,20 +28,23 @@ class IssueInfoPresenter @Inject constructor(
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        issueInteractor
-            .issueChanges
-            .startWith(issueId)
-            .filter { it == issueId }
-            .switchMapMaybe {
-                issueInteractor.getIssue(projectId, issueId)
-                    .toMaybe()
-                    .doOnSubscribe { viewState.showEmptyProgress(true) }
-                    .doAfterTerminate { viewState.showEmptyProgress(false) }
-                    .doOnSuccess { issue -> viewState.showInfo(issue) }
-                    .doOnError { errorHandler.proceed(it, { viewState.showMessage(it) }) }
-                    .onErrorComplete()
-            }
-            .subscribe()
-            .connect()
+
+        launch {
+            loadIssue()
+            issueInteractor.issueChanges
+                .filter { it == issueId }
+                .collect { loadIssue() }
+        }
+    }
+
+    private suspend fun loadIssue() {
+        viewState.showEmptyProgress(true)
+        try {
+            val issue = issueInteractor.getIssue(projectId, issueId)
+            viewState.showInfo(issue)
+        } catch (e: Exception) {
+            errorHandler.proceed(e) { viewState.showMessage(it) }
+        }
+        viewState.showEmptyProgress(false)
     }
 }

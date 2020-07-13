@@ -1,6 +1,10 @@
 package ru.terrakok.gitlabclient.presentation.markdown
 
-import io.reactivex.disposables.Disposable
+import com.github.aakira.napier.Napier
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import moxy.InjectViewState
 import ru.terrakok.gitlabclient.markwonx.GitlabMarkdownExtension
 import ru.terrakok.gitlabclient.markwonx.MarkdownClickMediator
@@ -8,7 +12,6 @@ import ru.terrakok.gitlabclient.markwonx.label.LabelDescription
 import ru.terrakok.gitlabclient.markwonx.milestone.MilestoneDescription
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
-import timber.log.Timber
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import javax.inject.Inject
 
@@ -19,41 +22,43 @@ class MarkdownPresenter @Inject constructor(
     private val markdownClickMediator: MarkdownClickMediator
 ) : BasePresenter<MarkdownView>() {
 
-    private var conversionDisposable: Disposable? = null
+    private var conversionJob: Job? = null
+    private var clicksJob: Job? = null
 
     fun setMarkdown(markdown: String, projectId: Long?) {
-        conversionDisposable?.dispose()
-        conversionDisposable = mdConverter
-            .markdownToSpannable(markdown, projectId)
-            .subscribe(
-                { viewState.setMarkdownText(it) },
-                { errorHandler.proceed(it) }
-            )
+        conversionJob?.cancel()
+        conversionJob = launch {
+            try {
+                val text = mdConverter.toSpannable(markdown, projectId)
+                viewState.setMarkdownText(text)
+            } catch (e: Exception) {
+                errorHandler.proceed(e)
+            }
+        }
     }
 
     override fun onFirstViewAttach() {
-        markdownClickMediator
-            .getClickEvents()
-            .subscribe {
-                viewState.markdownClicked(it.extension, it.value)
-            }
-            .connect()
+        clicksJob =
+            markdownClickMediator
+                .getClickEvents()
+                .onEach { viewState.markdownClicked(it.extension, it.value) }
+                .launchIn(this)
     }
 
     override fun detachView(view: MarkdownView?) {
         super.detachView(view)
-        conversionDisposable?.dispose()
+        conversionJob?.cancel()
     }
 
     fun markdownClicked(extension: GitlabMarkdownExtension, value: Any) {
         when (extension) {
-            GitlabMarkdownExtension.LABEL -> Timber.d("Label clicked: ${value as LabelDescription}")
-            GitlabMarkdownExtension.MILESTONE -> Timber.d("Milestione clicked: ${value as MilestoneDescription}")
+            GitlabMarkdownExtension.LABEL -> Napier.d("Label clicked: ${value as LabelDescription}")
+            GitlabMarkdownExtension.MILESTONE -> Napier.d("Milestione clicked: ${value as MilestoneDescription}")
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        conversionDisposable?.dispose()
+        conversionJob?.cancel()
     }
 }
