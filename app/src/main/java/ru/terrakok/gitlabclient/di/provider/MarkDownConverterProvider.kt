@@ -1,8 +1,10 @@
 package ru.terrakok.gitlabclient.di.provider
 
 import android.content.Context
-import io.reactivex.Single
-import io.reactivex.functions.BiFunction
+import gitfox.entity.Label
+import gitfox.entity.Milestone
+import gitfox.model.interactor.LabelInteractor
+import gitfox.model.interactor.MilestoneInteractor
 import org.commonmark.ext.gfm.strikethrough.StrikethroughExtension
 import org.commonmark.ext.gfm.tables.TablesExtension
 import org.commonmark.node.Visitor
@@ -13,20 +15,22 @@ import ru.noties.markwon.UrlProcessorRelativeToAbsolute
 import ru.noties.markwon.il.AsyncDrawableLoader
 import ru.noties.markwon.spans.SpannableTheme
 import ru.noties.markwon.tasklist.TaskListExtension
-import ru.terrakok.gitlabclient.BuildConfig
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.di.ServerPath
-import ru.terrakok.gitlabclient.entity.Label
-import ru.terrakok.gitlabclient.entity.app.session.AuthHolder
-import ru.terrakok.gitlabclient.entity.milestone.Milestone
-import ru.terrakok.gitlabclient.markwonx.*
-import ru.terrakok.gitlabclient.markwonx.label.*
+import ru.terrakok.gitlabclient.di.module.ServerPath
+import ru.terrakok.gitlabclient.markwonx.CompositeMarkdownDecorator
+import ru.terrakok.gitlabclient.markwonx.CompositeVisitor
+import ru.terrakok.gitlabclient.markwonx.GitlabExtensionsDelimiterProcessor
+import ru.terrakok.gitlabclient.markwonx.GitlabMarkdownExtension
+import ru.terrakok.gitlabclient.markwonx.MarkdownClickMediator
+import ru.terrakok.gitlabclient.markwonx.MarkdownDecorator
+import ru.terrakok.gitlabclient.markwonx.label.LabelDescription
+import ru.terrakok.gitlabclient.markwonx.label.LabelSpanConfig
+import ru.terrakok.gitlabclient.markwonx.label.SimpleExtensionProcessor
+import ru.terrakok.gitlabclient.markwonx.label.SimpleLabelVisitor
+import ru.terrakok.gitlabclient.markwonx.label.SimpleMarkdownDecorator
+import ru.terrakok.gitlabclient.markwonx.label.SimpleVisitor
 import ru.terrakok.gitlabclient.markwonx.milestone.MilestoneDescription
 import ru.terrakok.gitlabclient.markwonx.milestone.SimpleMilestoneVisitor
-import ru.terrakok.gitlabclient.model.data.server.client.OkHttpClientFactory
-import ru.terrakok.gitlabclient.model.interactor.LabelInteractor
-import ru.terrakok.gitlabclient.model.interactor.MilestoneInteractor
-import ru.terrakok.gitlabclient.model.system.SchedulersProvider
 import ru.terrakok.gitlabclient.presentation.global.MarkDownConverter
 import ru.terrakok.gitlabclient.util.color
 import java.util.concurrent.Executors
@@ -38,9 +42,6 @@ import javax.inject.Provider
  */
 class MarkDownConverterProvider @Inject constructor(
     private val context: Context,
-    private val okHttpClientFactory: OkHttpClientFactory,
-    private val tokHolder: AuthHolder,
-    private val schedulers: SchedulersProvider,
     private val labelInteractor: LabelInteractor,
     private val milestoneInteractor: MilestoneInteractor,
     private val labelSpanConfig: LabelSpanConfig,
@@ -56,7 +57,6 @@ class MarkDownConverterProvider @Inject constructor(
 
     private val asyncDrawableLoader by lazy {
         AsyncDrawableLoader.builder()
-            .client(okHttpClientFactory.create(tokHolder, false, BuildConfig.DEBUG))
             .executorService(Executors.newCachedThreadPool())
             .resources(context.resources)
             .build()
@@ -143,34 +143,25 @@ class MarkDownConverterProvider @Inject constructor(
     override fun get(): MarkDownConverter {
         return MarkDownConverter(
             parser,
-            markdownDecorator,
-            { projectId, builder, markdownClickHandler ->
-                Single.defer {
-                    if (projectId != null) {
-                        val allLabels = labelInteractor.getAllProjectLabels(projectId)
-                        val allMilestones = milestoneInteractor.getAllProjectMilestones(projectId)
-                        Single
-                            .zip(allLabels, allMilestones, BiFunction { labels, milestones ->
-                                getCustomVisitor(
-                                    labels = labels,
-                                    milestones = milestones,
-                                    spannableBuilder = builder,
-                                    markdownClickHandler = markdownClickHandler
-                                )
-                            })
-                    } else {
-                        Single.fromCallable {
-                            getCustomVisitor(
-                                labels = emptyList(),
-                                milestones = emptyList(),
-                                spannableBuilder = builder,
-                                markdownClickHandler = markdownClickHandler
-                            )
-                        }
-                    }
-                }
-            },
-            schedulers
-        )
+            markdownDecorator
+        ) { projectId, builder ->
+            if (projectId != null) {
+                val allLabels = labelInteractor.getAllProjectLabels(projectId)
+                val allMilestones = milestoneInteractor.getAllProjectMilestones(projectId)
+                getCustomVisitor(
+                    labels = allLabels,
+                    milestones = allMilestones,
+                    spannableBuilder = builder,
+                    markdownClickHandler = markdownClickHandler
+                )
+            } else {
+                getCustomVisitor(
+                    labels = emptyList(),
+                    milestones = emptyList(),
+                    spannableBuilder = builder,
+                    markdownClickHandler = markdownClickHandler
+                )
+            }
+        }
     }
 }

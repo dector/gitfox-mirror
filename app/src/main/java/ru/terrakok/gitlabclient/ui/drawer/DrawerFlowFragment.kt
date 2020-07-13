@@ -4,9 +4,12 @@ import android.os.Bundle
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import io.reactivex.disposables.Disposable
-import javax.inject.Inject
 import kotlinx.android.synthetic.main.drawer_flow_fragment.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
@@ -25,8 +28,9 @@ import ru.terrakok.gitlabclient.ui.projects.ProjectsContainerFragment
 import ru.terrakok.gitlabclient.util.setLaunchScreen
 import toothpick.Scope
 import toothpick.Toothpick
+import javax.inject.Inject
 
-class DrawerFlowFragment : BaseFragment() {
+class DrawerFlowFragment : BaseFragment(), CoroutineScope by CoroutineScope(Dispatchers.Main) {
     @Inject
     lateinit var menuController: GlobalMenuController
 
@@ -36,7 +40,7 @@ class DrawerFlowFragment : BaseFragment() {
     @Inject
     lateinit var router: Router
 
-    private var menuStateDisposable: Disposable? = null
+    private var menuStateJob: Job? = null
 
     override val layoutRes = R.layout.drawer_flow_fragment
 
@@ -95,13 +99,16 @@ class DrawerFlowFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        menuStateDisposable = menuController.state.subscribe { openNavDrawer(it) }
+        menuStateJob = menuController.state
+            .onEach { openNavDrawer(it) }
+            .launchIn(this)
+
         navigatorHolder.setNavigator(navigator)
     }
 
     override fun onPause() {
         navigatorHolder.removeNavigator()
-        menuStateDisposable?.dispose()
+        menuStateJob?.cancel()
         super.onPause()
     }
 

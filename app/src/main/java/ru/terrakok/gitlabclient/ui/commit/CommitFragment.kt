@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
+import gitfox.entity.Commit
+import gitfox.entity.DiffData
 import kotlinx.android.synthetic.main.fragment_commit.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
@@ -11,8 +13,6 @@ import ru.terrakok.gitlabclient.R
 import ru.terrakok.gitlabclient.di.CommitId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
-import ru.terrakok.gitlabclient.entity.Commit
-import ru.terrakok.gitlabclient.entity.DiffData
 import ru.terrakok.gitlabclient.presentation.commit.CommitPresenter
 import ru.terrakok.gitlabclient.presentation.commit.CommitView
 import ru.terrakok.gitlabclient.ui.global.BaseFragment

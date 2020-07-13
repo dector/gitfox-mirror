@@ -1,12 +1,14 @@
 package ru.terrakok.gitlabclient.presentation.issue.notes
 
-import io.reactivex.Single
+import gitfox.entity.app.target.TargetAction
+import gitfox.model.interactor.IssueInteractor
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.launch
 import moxy.InjectViewState
 import ru.terrakok.gitlabclient.di.IssueId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
-import ru.terrakok.gitlabclient.entity.app.target.TargetAction
-import ru.terrakok.gitlabclient.model.interactor.IssueInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.NoteWithProjectId
@@ -29,62 +31,43 @@ class IssueNotesPresenter @Inject constructor(
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        issueInteractor
-            .issueChanges
-            .startWith(issueId)
-            .filter { it == issueId }
-            .switchMapMaybe {
-                getAllIssueNotes()
-                    .toMaybe()
-                    .doOnSubscribe { viewState.showEmptyProgress(true) }
-                    .doAfterTerminate { viewState.showEmptyProgress(false) }
-                    .doOnSuccess { notes ->
-                        val selectedNotePosition =
-                            targetAction.let { it as? TargetAction.CommentedOn }
-                                ?.noteId
-                                ?.let { noteIdToSelect ->
-                                    notes.indexOfFirst { it.note.id == noteIdToSelect }
-                                }
-                        viewState.showNotes(notes, selectedNotePosition)
-                    }
-                    .doOnError { errorHandler.proceed(it, { viewState.showMessage(it) }) }
-                    .onErrorComplete()
-            }
-            .subscribe()
-            .connect()
+        launch {
+            loadAndScrollToPosition()
+            issueInteractor.issueChanges
+                .filter { it == issueId }
+                .collect { loadAndScrollToPosition() }
+        }
     }
 
-    private fun getAllIssueNotes(): Single<List<NoteWithProjectId>> {
-        return issueInteractor
-            .getAllIssueNotes(projectId, issueId)
-            .map { notes ->
-                notes.map {
-                    NoteWithProjectId(
-                        it,
-                        projectId
-                    )
-                }
-            }
+    private suspend fun loadAndScrollToPosition() {
+        viewState.showEmptyProgress(true)
+        try {
+            val notes = getAllIssueNotes()
+            val selectedNotePosition =
+                notes.indexOfFirst { it.note.id == (targetAction as? TargetAction.CommentedOn)?.noteId }
+            viewState.showNotes(notes, selectedNotePosition)
+        } catch (e: Exception) {
+            errorHandler.proceed(e) { viewState.showMessage(it) }
+        }
+        viewState.showEmptyProgress(false)
     }
 
-    fun onSendClicked(body: String) =
-        issueInteractor.createIssueNote(projectId, issueId, body)
-            .flatMap {
-                issueInteractor.getAllIssueNotes(projectId, issueId)
+    fun onSendClicked(body: String) {
+        launch {
+            viewState.showBlockingProgress(true)
+            try {
+                issueInteractor.createIssueNote(projectId, issueId, body)
+                val allNotes = getAllIssueNotes()
+                viewState.showNotes(allNotes, allNotes.size - 1)
+                viewState.clearInput()
+            } catch (e: Exception) {
+                errorHandler.proceed(e) { viewState.showMessage(it) }
             }
-            .doOnSubscribe { viewState.showBlockingProgress(true) }
-            .doAfterTerminate { viewState.showBlockingProgress(false) }
-            .subscribe(
-                {
-                    viewState.showNotes(it.map {
-                    NoteWithProjectId(
-                        it,
-                        projectId
-                    )
-                }, it.size - 1)
-                    viewState.clearInput()
-                },
-                { errorHandler.proceed(it, { viewState.showMessage(it) }) }
-            )
-            .connect()
+            viewState.showBlockingProgress(false)
+        }
+    }
+
+    private suspend fun getAllIssueNotes(): List<NoteWithProjectId> =
+        issueInteractor.getAllIssueNotes(projectId, issueId)
+            .map { note -> NoteWithProjectId(note, projectId) }
 }

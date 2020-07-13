@@ -1,10 +1,10 @@
 package ru.terrakok.gitlabclient.presentation.mergerequest.changes
 
+import gitfox.entity.DiffData
 import moxy.MvpView
 import moxy.viewstate.strategy.AddToEndSingleStrategy
 import moxy.viewstate.strategy.OneExecutionStateStrategy
 import moxy.viewstate.strategy.StateStrategyType
-import ru.terrakok.gitlabclient.entity.DiffData
 
 /**
  * Created by Eugene Shapovalov (@CraggyHaggy) on 26.10.18.

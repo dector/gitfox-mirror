@@ -1,16 +1,15 @@
 package ru.terrakok.gitlabclient.presentation.my.events
 
-import io.reactivex.disposables.Disposable
-import javax.inject.Inject
+import gitfox.entity.app.target.TargetHeader
+import gitfox.model.interactor.EventInteractor
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.launch
 import moxy.InjectViewState
-import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
-import ru.terrakok.gitlabclient.model.interactor.EventInteractor
-import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
-import ru.terrakok.gitlabclient.presentation.global.BasePresenter
-import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
-import ru.terrakok.gitlabclient.presentation.global.GlobalMenuController
-import ru.terrakok.gitlabclient.presentation.global.Paginator
+import ru.terrakok.gitlabclient.presentation.global.*
+import ru.terrakok.gitlabclient.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.util.openInfo
+import javax.inject.Inject
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 15.06.17.
@@ -24,18 +23,20 @@ class MyEventsPresenter @Inject constructor(
     private val paginator: Paginator.Store<TargetHeader>
 ) : BasePresenter<MyEventsView>() {
 
-    private var pageDisposable: Disposable? = null
+    private var pageJob: Job? = null
 
     init {
         paginator.render = { viewState.renderPaginatorState(it) }
-        paginator.sideEffects.subscribe { effect ->
-            when (effect) {
-                is Paginator.SideEffect.LoadPage -> loadNewPage(effect.currentPage)
-                is Paginator.SideEffect.ErrorEvent -> {
-                    errorHandler.proceed(effect.error) { viewState.showMessage(it) }
+        launch {
+            paginator.sideEffects.consumeEach { effect ->
+                when (effect) {
+                    is Paginator.SideEffect.LoadPage -> loadNewPage(effect.currentPage)
+                    is Paginator.SideEffect.ErrorEvent -> {
+                        errorHandler.proceed(effect.error) { viewState.showMessage(it) }
+                    }
                 }
             }
-        }.connect()
+        }
     }
 
     override fun onFirstViewAttach() {
@@ -44,19 +45,16 @@ class MyEventsPresenter @Inject constructor(
     }
 
     private fun loadNewPage(page: Int) {
-        pageDisposable?.dispose()
-        pageDisposable =
-            eventInteractor.getEvents(page = page)
-                .subscribe(
-                    { data ->
-                        paginator.proceed(Paginator.Action.NewPage(page, data))
-                    },
-                    { e ->
-                        errorHandler.proceed(e)
-                        paginator.proceed(Paginator.Action.PageError(e))
-                    }
-                )
-        pageDisposable?.connect()
+        pageJob?.cancel()
+        pageJob = launch {
+            try {
+                val data = eventInteractor.getEvents(page = page)
+                paginator.proceed(Paginator.Action.NewPage(page, data))
+            } catch (e: Exception) {
+                errorHandler.proceed(e)
+                paginator.proceed(Paginator.Action.PageError(e))
+            }
+        }
     }
 
     fun onMenuClick() = menuController.open()

@@ -81,6 +81,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/diffDataFileName"
-        tools:text="@@ -0,0 +1,8 @@\n+package ru.terrakok.gitlabclient.entity.app\n+\n+import ru.terrakok.gitlabclient.entity.Commit\n+\n+/**\n+ * Created by Eugene Shapovalov (@CraggyHaggy) on 20.10.18.\n+ */\n+data class CommitWithAvatarUrl(val commit: Commit, val authorAvatarUrl: String?)\n\\ No newline at end of file\n" />
+        tools:text="@@ -0,0 +1,8 @@\n+package gitfox.entity.app\n+\n+import gitfox.entity.Commit\n+\n+/**\n+ * Created by Eugene Shapovalov (@CraggyHaggy) on 20.10.18.\n+ */\n+data class CommitWithAvatarUrl(val commit: Commit, val authorAvatarUrl: String?)\n\\ No newline at end of file\n" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

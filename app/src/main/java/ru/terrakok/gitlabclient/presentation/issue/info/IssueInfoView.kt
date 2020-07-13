@@ -1,10 +1,10 @@
 package ru.terrakok.gitlabclient.presentation.issue.info
 
+import gitfox.entity.Issue
 import moxy.MvpView
 import moxy.viewstate.strategy.AddToEndSingleStrategy
 import moxy.viewstate.strategy.OneExecutionStateStrategy
 import moxy.viewstate.strategy.StateStrategyType
-import ru.terrakok.gitlabclient.entity.issue.Issue
 
 /**
  * @author Konstantin Tskhovrebov (aka terrakok) on 27.04.17.

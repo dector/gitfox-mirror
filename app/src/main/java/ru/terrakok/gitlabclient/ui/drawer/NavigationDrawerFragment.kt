@@ -2,12 +2,12 @@ package ru.terrakok.gitlabclient.ui.drawer
 
 import android.os.Bundle
 import android.view.View
+import gitfox.entity.app.session.UserAccount
 import kotlinx.android.synthetic.main.fragment_nav_drawer.*
 import kotlinx.android.synthetic.main.item_user_acount.view.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.app.session.UserAccount
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerPresenter
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView
 import ru.terrakok.gitlabclient.presentation.drawer.NavigationDrawerView.MenuItem

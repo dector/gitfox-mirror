@@ -1,11 +1,12 @@
 package ru.terrakok.gitlabclient.presentation.auth
 
+import gitfox.model.interactor.SessionInteractor
+import kotlinx.coroutines.launch
 import moxy.InjectViewState
 import ru.terrakok.gitlabclient.Screens
-import ru.terrakok.gitlabclient.model.interactor.SessionInteractor
-import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
+import ru.terrakok.gitlabclient.system.flow.FlowRouter
 import javax.inject.Inject
 
 /**
@@ -27,13 +28,16 @@ class AuthPresenter @Inject constructor(
     }
 
     private fun requestToken(url: String) {
-        sessionInteractor.login(url)
-            .doOnSubscribe { viewState.showProgress(true) }
-            .doAfterTerminate { viewState.showProgress(false) }
-            .subscribe(
-                { router.newRootFlow(Screens.DrawerFlow) },
-                { errorHandler.proceed(it, { viewState.showMessage(it) }) }
-            ).connect()
+        launch {
+            viewState.showProgress(true)
+            try {
+                sessionInteractor.login(url)
+                router.newRootFlow(Screens.DrawerFlow)
+            } catch (e: Exception) {
+                errorHandler.proceed(e) { viewState.showMessage(it) }
+            }
+            viewState.showProgress(false)
+        }
     }
 
     fun onRedirect(url: String): Boolean {
@@ -51,11 +55,14 @@ class AuthPresenter @Inject constructor(
     }
 
     fun loginOnCustomServer(url: String, token: String) {
-        sessionInteractor.loginOnCustomServer(url, token)
-            .subscribe(
-                { router.newRootFlow(Screens.DrawerFlow) },
-                { errorHandler.proceed(it, { viewState.showMessage(it) }) }
-            ).connect()
+        launch {
+            try {
+                sessionInteractor.loginOnCustomServer(url, token)
+                router.newRootFlow(Screens.DrawerFlow)
+            } catch (e: Exception) {
+                errorHandler.proceed(e) { viewState.showMessage(it) }
+            }
+        }
     }
 
     fun onBackPressed() = router.exit()

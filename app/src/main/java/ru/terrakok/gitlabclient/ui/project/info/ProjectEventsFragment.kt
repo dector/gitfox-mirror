@@ -1,11 +1,11 @@
 package ru.terrakok.gitlabclient.ui.project.info
 
 import android.os.Bundle
+import gitfox.entity.app.target.TargetHeader
 import kotlinx.android.synthetic.main.fragment_project_events.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import ru.terrakok.gitlabclient.R
-import ru.terrakok.gitlabclient.entity.app.target.TargetHeader
 import ru.terrakok.gitlabclient.presentation.global.Paginator
 import ru.terrakok.gitlabclient.presentation.project.events.ProjectEventsPresenter
 import ru.terrakok.gitlabclient.presentation.project.events.ProjectEventsView

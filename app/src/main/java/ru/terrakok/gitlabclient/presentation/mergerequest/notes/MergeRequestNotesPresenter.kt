@@ -1,11 +1,12 @@
 package ru.terrakok.gitlabclient.presentation.mergerequest.notes
 
+import gitfox.entity.app.target.TargetAction
+import gitfox.model.interactor.MergeRequestInteractor
+import kotlinx.coroutines.launch
 import moxy.InjectViewState
 import ru.terrakok.gitlabclient.di.MergeRequestId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
-import ru.terrakok.gitlabclient.entity.app.target.TargetAction
-import ru.terrakok.gitlabclient.model.interactor.MergeRequestInteractor
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
 import ru.terrakok.gitlabclient.presentation.global.NoteWithProjectId
@@ -29,40 +30,39 @@ class MergeRequestNotesPresenter @Inject constructor(
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
-        mrInteractor
-            .getAllMergeRequestNotes(projectId, mrId)
-            .doOnSubscribe { viewState.showEmptyProgress(true) }
-            .doAfterTerminate { viewState.showEmptyProgress(false) }
-            .subscribe(
-                { notes ->
-                    val notesWithProjectId =
-                        notes.map {
-                            NoteWithProjectId(it, projectId)
-                        }
-
-                    val selectedNotePosition =
-                        targetAction
-                            .let { it as? TargetAction.CommentedOn }
-                            ?.noteId
-                            ?.let { noteIdToSelect -> notes.indexOfFirst { note -> note.id == noteIdToSelect } }
-                    viewState.showNotes(notesWithProjectId, selectedNotePosition)
-                },
-                { errorHandler.proceed(it, { viewState.showMessage(it) }) }
-            )
-            .connect()
+        launch {
+            viewState.showEmptyProgress(true)
+            try {
+                val notes = mrInteractor.getAllMergeRequestNotes(projectId, mrId)
+                    .map { note ->
+                        NoteWithProjectId(note, projectId)
+                    }
+                val selectedNotePosition = targetAction.let { it as? TargetAction.CommentedOn }
+                    ?.noteId
+                    ?.let { noteIdToSelect -> notes.indexOfFirst { it.note.id == noteIdToSelect } }
+                viewState.showNotes(notes, selectedNotePosition)
+            } catch (e: Exception) {
+                errorHandler.proceed(e) { viewState.showMessage(it) }
+            }
+            viewState.showEmptyProgress(false)
+        }
     }
 
-    fun onSendClicked(body: String) =
-        mrInteractor.createMergeRequestNote(projectId, mrId, body)
-            .flatMap { mrInteractor.getAllMergeRequestNotes(projectId, mrId) }
-            .doOnSubscribe { viewState.showBlockingProgress(true) }
-            .doAfterTerminate { viewState.showBlockingProgress(false) }
-            .subscribe(
-                {
-                    viewState.showNotes(it.map { NoteWithProjectId(it, projectId) }, it.size - 1)
-                    viewState.clearInput()
-                },
-                { errorHandler.proceed(it, { viewState.showMessage(it) }) }
-            )
-            .connect()
+    fun onSendClicked(body: String) {
+        launch {
+            viewState.showBlockingProgress(true)
+            try {
+                mrInteractor.createMergeRequestNote(projectId, mrId, body)
+                val notes = mrInteractor.getAllMergeRequestNotes(projectId, mrId)
+                    .map { note ->
+                        NoteWithProjectId(note, projectId)
+                    }
+                viewState.showNotes(notes, notes.size - 1)
+                viewState.clearInput()
+            } catch (e: Exception) {
+                errorHandler.proceed(e) { viewState.showMessage(it) }
+            }
+            viewState.showBlockingProgress(false)
+        }
+    }
 }

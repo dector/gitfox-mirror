@@ -1,14 +1,14 @@
 package ru.terrakok.gitlabclient.presentation.mergerequest.info
 
-import javax.inject.Inject
+import gitfox.model.interactor.MergeRequestInteractor
+import kotlinx.coroutines.launch
 import moxy.InjectViewState
 import ru.terrakok.gitlabclient.di.MergeRequestId
 import ru.terrakok.gitlabclient.di.PrimitiveWrapper
 import ru.terrakok.gitlabclient.di.ProjectId
-import ru.terrakok.gitlabclient.model.interactor.MergeRequestInteractor
-import ru.terrakok.gitlabclient.model.system.flow.FlowRouter
 import ru.terrakok.gitlabclient.presentation.global.BasePresenter
 import ru.terrakok.gitlabclient.presentation.global.ErrorHandler
+import javax.inject.Inject
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 05.01.18.
@@ -18,8 +18,7 @@ class MergeRequestInfoPresenter @Inject constructor(
     @ProjectId projectIdWrapper: PrimitiveWrapper<Long>,
     @MergeRequestId mrIdWrapper: PrimitiveWrapper<Long>,
     private val mrInteractor: MergeRequestInteractor,
-    private val errorHandler: ErrorHandler,
-    private val router: FlowRouter
+    private val errorHandler: ErrorHandler
 ) : BasePresenter<MergeRequestInfoView>() {
 
     private val projectId = projectIdWrapper.value
@@ -28,14 +27,15 @@ class MergeRequestInfoPresenter @Inject constructor(
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
-        mrInteractor
-            .getMergeRequest(projectId, mrId)
-            .doOnSubscribe { viewState.showEmptyProgress(true) }
-            .doAfterTerminate { viewState.showEmptyProgress(false) }
-            .subscribe(
-                { mr -> viewState.showInfo(mr) },
-                { errorHandler.proceed(it, { viewState.showMessage(it) }) }
-            )
-            .connect()
+        launch {
+            viewState.showEmptyProgress(true)
+            try {
+                val mr = mrInteractor.getMergeRequest(projectId, mrId)
+                viewState.showInfo(mr)
+            } catch (e: Exception) {
+                errorHandler.proceed(e) { viewState.showMessage(it) }
+            }
+            viewState.showEmptyProgress(false)
+        }
     }
 }

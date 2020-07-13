@@ -3,7 +3,7 @@ package ru.terrakok.gitlabclient.presentation.libraries
 import moxy.MvpView
 import moxy.viewstate.strategy.AddToEndSingleStrategy
 import moxy.viewstate.strategy.StateStrategyType
-import ru.terrakok.gitlabclient.entity.app.develop.AppLibrary
+import ru.terrakok.gitlabclient.system.AppLibrary
 
 /**
  * Created by Konstantin Tskhovrebov (aka @terrakok) on 23.12.17.
