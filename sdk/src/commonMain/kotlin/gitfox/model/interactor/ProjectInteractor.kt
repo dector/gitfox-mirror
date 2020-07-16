@@ -4,7 +4,7 @@ import gitfox.entity.*
 import gitfox.entity.app.ProjectFile
 import gitfox.model.data.server.GitlabApi
 import gitfox.model.data.state.ServerChanges
-import gitfox.util.Base64Tools
+import gitfox.util.decodeBase64
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -15,8 +15,6 @@ class ProjectInteractor internal constructor(
     serverChanges: ServerChanges,
     private val defaultPageSize: Int
 ) {
-    private val base64Tools = Base64Tools()
-
     val projectChanges: Flow<Long> = serverChanges.projectChanges
 
     suspend fun getProjectsList(
@@ -41,7 +39,7 @@ class ProjectInteractor internal constructor(
 
     suspend fun getProjectRawFile(projectId: Long, path: String, fileReference: String): String {
         val file = getProjectFile(projectId, path, fileReference)
-        return base64Tools.decode(file.content)
+        return file.content.decodeBase64()
     }
 
     suspend fun getProjectReadme(project: Project): String {
@@ -50,7 +48,7 @@ class ProjectInteractor internal constructor(
                 "/blob/${project.defaultBranch}/"
             )
             val file = getProjectFile(project.id, readmePath, project.defaultBranch)
-            return base64Tools.decode(file.content)
+            return file.content.decodeBase64()
         } else {
             throw ReadmeNotFound()
         }
