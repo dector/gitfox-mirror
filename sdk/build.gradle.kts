@@ -9,13 +9,7 @@ plugins {
 
 kotlin {
     android()
-
-    //select iOS target platform depending on the Xcode environment variables
-    val iOSTarget: (String, KotlinNativeTarget.() -> Unit) -> KotlinNativeTarget =
-        if (System.getenv("SDK_NAME")?.startsWith("iphoneos") == true) ::iosArm64
-        else ::iosX64
-
-    iOSTarget("ios") {
+    ios {
         binaries {
             framework {
                 baseName = "GitFoxSDK"
@@ -48,82 +42,41 @@ kotlin {
     }
 
     sourceSets {
-        val ktorVersion = "1.3.2"
-        val coroutinesVersion = "1.3.4"
-        val serializationVersion = "0.20.0"
-        val napierVersion = "1.2.0"
-        val settingsVersion = "0.6"
         commonMain {
             dependencies {
-                //Kotlin
-                implementation("org.jetbrains.kotlin:kotlin-stdlib-common")
                 //Log
-                implementation("com.github.aakira:napier:$napierVersion")
+                implementation("com.github.aakira:napier:${properties["version.napier"]}")
                 //JSON
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:$serializationVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:${properties["version.kotlinx.serialization"]}")
                 //Preferences
-                implementation("com.russhwolf:multiplatform-settings:$settingsVersion")
+                implementation("com.russhwolf:multiplatform-settings:${properties["version.multiplatformSettings"]}")
                 //Network
-                implementation("io.ktor:ktor-client-core:$ktorVersion")
-                implementation("io.ktor:ktor-client-serialization:$ktorVersion")
-                implementation("io.ktor:ktor-client-auth:$ktorVersion")
-                implementation("io.ktor:ktor-client-logging:$ktorVersion")
+                implementation("io.ktor:ktor-client-core:${properties["version.ktor"]}")
+                implementation("io.ktor:ktor-client-serialization:${properties["version.ktor"]}")
+                implementation("io.ktor:ktor-client-auth:${properties["version.ktor"]}")
+                implementation("io.ktor:ktor-client-logging:${properties["version.ktor"]}")
                 //Coroutines
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$coroutinesVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${properties["version.kotlinx.coroutines"]}")
                 //UUID
                 implementation("com.benasher44:uuid:0.1.0")
             }
         }
         val androidMain by getting {
             dependencies {
-                //Kotlin
-                implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-                //Log
-                implementation("com.github.aakira:napier-android:$napierVersion")
                 //Network
-                api("io.ktor:ktor-client-core-jvm:$ktorVersion")
-                implementation("io.ktor:ktor-client-serialization-jvm:$ktorVersion")
-                implementation("io.ktor:ktor-client-auth-jvm:$ktorVersion")
-                implementation("io.ktor:ktor-client-logging-jvm:$ktorVersion")
-                implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
-                //Coroutines
-                api("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
-                //JSON
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serializationVersion")
+                implementation("io.ktor:ktor-client-okhttp:${properties["version.ktor"]}")
             }
         }
         val iosMain by getting {
             dependencies {
-                //Log
-                implementation("com.github.aakira:napier-ios:$napierVersion")
                 //Network
-                implementation("io.ktor:ktor-client-core-native:$ktorVersion")
-                implementation("io.ktor:ktor-client-serialization-native:$ktorVersion")
-                implementation("io.ktor:ktor-client-auth-native:$ktorVersion")
-                implementation("io.ktor:ktor-client-logging-native:$ktorVersion")
-                implementation("io.ktor:ktor-client-ios:$ktorVersion")
-                //Coroutines
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-native:$coroutinesVersion")
-                //JSON
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:$serializationVersion")
+                implementation("io.ktor:ktor-client-ios:${properties["version.ktor"]}")
             }
         }
         val jsMain by getting {
             dependencies {
-                //Kotlin
-                implementation("org.jetbrains.kotlin:kotlin-stdlib-js")
-                //Log
-                implementation("com.github.aakira:napier-js:$napierVersion")
                 //Network
-                implementation("io.ktor:ktor-client-core-js:$ktorVersion")
-                implementation("io.ktor:ktor-client-js:$ktorVersion")
-                implementation("io.ktor:ktor-client-serialization-js:$ktorVersion")
-                implementation("io.ktor:ktor-client-auth-js:$ktorVersion")
-                implementation("io.ktor:ktor-client-logging-js:$ktorVersion")
-                //Coroutines
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$coroutinesVersion")
-                //JSON
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-js:$serializationVersion")
+                implementation("io.ktor:ktor-client-js:${properties["version.ktor"]}")
                 //required NPM dependencies
                 implementation(npm("text-encoding", "*"))
                 implementation(npm("abort-controller", "*"))
@@ -141,10 +94,10 @@ kotlin {
 }
 
 android {
-    compileSdkVersion(29)
+    compileSdkVersion((properties["android.compileSdk"] as String).toInt())
     defaultConfig {
-        minSdkVersion(19)
-        targetSdkVersion(29)
+        minSdkVersion((properties["android.minSdk"] as String).toInt())
+        targetSdkVersion((properties["android.targetSdk"] as String).toInt())
     }
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
 }
@@ -152,7 +105,9 @@ android {
 val packForXcode by tasks.creating(Sync::class) {
     group = "build"
     val mode = System.getenv("CONFIGURATION") ?: "DEBUG"
-    val framework = kotlin.targets.getByName<KotlinNativeTarget>("ios").binaries.getFramework(mode)
+    val sdkName = System.getenv("SDK_NAME") ?: "iphonesimulator"
+    val targetName = "ios" + if (sdkName.startsWith("iphoneos")) "Arm64" else "X64"
+    val framework = kotlin.targets.getByName<KotlinNativeTarget>(targetName).binaries.getFramework(mode)
     inputs.property("mode", mode)
     dependsOn(framework.linkTask)
     val targetDir = File(buildDir, "xcode-frameworks")

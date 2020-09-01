@@ -18,18 +18,17 @@ val oaAppSecret = System.getenv("OA_APP_SECRET") ?: "a9dd39c8d2e781b65814007ca0f
 val oaAppUrl = System.getenv("OA_APP_URL") ?: "app://gitlab.client/"
 
 android {
-    compileSdkVersion(29)
+    compileSdkVersion((properties["android.compileSdk"] as String).toInt())
 
     defaultConfig {
         applicationId = "com.gitlab.terrakok.gitfox"
 
-        minSdkVersion(19)
-        targetSdkVersion(29)
+        minSdkVersion((properties["android.minSdk"] as String).toInt())
+        targetSdkVersion((properties["android.targetSdk"] as String).toInt())
+        buildToolsVersion = properties["android.buildToolsVersion"] as String
 
         versionName = buildName
         versionCode = buildNumber
-
-        buildToolsVersion = "28.0.3"
 
         lintOptions {
             isWarningsAsErrors = true
@@ -84,7 +83,7 @@ android {
                 initWith(getByName("debug"))
                 isMinifyEnabled = true
                 versionNameSuffix = " debugPG"
-                matchingFallbacks = mutableListOf("debug")
+                matchingFallbacks.add("debug")
 
                 proguardFiles(
                     getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -109,7 +108,6 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    buildToolsVersion = "29.0.2"
 
     packagingOptions {
         exclude("META-INF/ktor-client-core.kotlin_module")
@@ -132,55 +130,56 @@ androidExtensions {
 dependencies {
     implementation(project(":sdk"))
     //Support
-    implementation("androidx.appcompat:appcompat:1.1.0")
-    implementation("com.google.android.material:material:1.1.0")
-    implementation("androidx.cardview:cardview:1.0.0")
-    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.0.0")
-    implementation("androidx.recyclerview:recyclerview:1.1.0")
-    implementation("androidx.constraintlayout:constraintlayout:1.1.3")
+    implementation("androidx.appcompat:appcompat:${properties["version.androidx.appcompat"]}")
+    implementation("com.google.android.material:material:${properties["version.androidx.material"]}")
+    implementation("androidx.cardview:cardview:${properties["version.androidx.cardview"]}")
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:${properties["version.androidx.swiperefreshlayout"]}")
+    implementation("androidx.recyclerview:recyclerview:${properties["version.androidx.recyclerview"]}")
+    implementation("androidx.constraintlayout:constraintlayout:${properties["version.androidx.constraintlayout"]}")
+    //Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${properties["version.kotlinx.coroutines"]}")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${properties["version.kotlinx.coroutines"]}")
     //MVP Moxy
-    val moxyVersion = "2.0.2"
-    kapt("com.github.moxy-community:moxy-compiler:$moxyVersion")
-    implementation("com.github.moxy-community:moxy:$moxyVersion")
-    implementation("com.github.moxy-community:moxy-androidx:$moxyVersion")
+    kapt("com.github.moxy-community:moxy-compiler:${properties["version.moxy"]}")
+    implementation("com.github.moxy-community:moxy:${properties["version.moxy"]}")
+    implementation("com.github.moxy-community:moxy-androidx:${properties["version.moxy"]}")
     //Cicerone Navigation
-    implementation("ru.terrakok.cicerone:cicerone:5.1.0")
+    implementation("ru.terrakok.cicerone:cicerone:${properties["version.cicerone"]}")
     //DI
-    val toothpickVersion = "3.1.0"
-    implementation("com.github.stephanenicolas.toothpick:toothpick-runtime:$toothpickVersion")
-    kapt("com.github.stephanenicolas.toothpick:toothpick-compiler:$toothpickVersion")
+    implementation("com.github.stephanenicolas.toothpick:toothpick-runtime:${properties["version.toothpick"]}")
+    kapt("com.github.stephanenicolas.toothpick:toothpick-compiler:${properties["version.toothpick"]}")
     //Adapter simplify
-    implementation("com.hannesdorfmann:adapterdelegates4:4.2.0")
+    implementation("com.hannesdorfmann:adapterdelegates4:${properties["version.adapterdelegates"]}")
     //Image load and cache
-    val glideVersion = "4.11.0"
-    implementation("com.github.bumptech.glide:glide:$glideVersion")
-    kapt("com.github.bumptech.glide:compiler:$glideVersion")
-    implementation("com.github.bumptech.glide:okhttp3-integration:$glideVersion")
+    implementation("com.github.bumptech.glide:glide:${properties["version.glide"]}")
+    kapt("com.github.bumptech.glide:compiler:${properties["version.glide"]}")
+    implementation("com.github.bumptech.glide:okhttp3-integration:${properties["version.glide"]}")
     //Markdown to HTML converter
-    val markwonVersion = "2.0.0"
-    implementation("ru.noties:markwon:$markwonVersion")
-    implementation("ru.noties:markwon-image-loader:$markwonVersion")
+    implementation("ru.noties:markwon:${properties["version.markwon"]}")
+    implementation("ru.noties:markwon-image-loader:${properties["version.markwon"]}")
     //Bottom navigation bar
-    implementation("com.aurelhubert:ahbottomnavigation:2.3.4")
+    implementation("com.aurelhubert:ahbottomnavigation:${properties["version.ahbottomnavigation"]}")
     //Lottie
-    implementation("com.airbnb.android:lottie:3.3.1")
+    implementation("com.airbnb.android:lottie:${properties["version.lottie"]}")
     //Date
-    implementation("com.jakewharton.threetenabp:threetenabp:1.2.2")
+    implementation("com.jakewharton.threetenabp:threetenabp:${properties["version.threetenabp"]}")
     //FlexBox Layout
-    implementation("com.google.android:flexbox:1.0.0")
+    implementation("com.google.android:flexbox:${properties["version.flexbox"]}")
     //Log
-    implementation("com.github.aakira:napier-android:1.2.0")
+    implementation("com.github.aakira:napier:${properties["version.napier"]}")
     //JSON
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:${properties["version.kotlinx.serialization"]}")
+    //Network
+    implementation("io.ktor:ktor-client-core:${properties["version.ktor"]}")
 
     //JUnit
-    testImplementation("junit:junit:4.13")
+    testImplementation("junit:junit:${properties["version.junit"]}")
     //Mockito
-    testImplementation("org.mockito:mockito-core:2.27.0")
+    testImplementation("org.mockito:mockito-core:${properties["version.mockito"]}")
     //Mockito Kotlin
-    testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
+    testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:${properties["version.mockito.kotlin"]}")
     //Date with timezone
-    testImplementation("org.threeten:threetenbp:1.4.1")
+    testImplementation("org.threeten:threetenbp:${properties["version.threetenbp"]}")
 }
 
 gradle.buildFinished {

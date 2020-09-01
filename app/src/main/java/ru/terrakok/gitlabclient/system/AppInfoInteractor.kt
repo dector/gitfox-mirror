@@ -4,9 +4,8 @@ import android.content.Context
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.builtins.list
+import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonConfiguration
 import java.io.InputStreamReader
 import kotlin.coroutines.resume
 
@@ -19,8 +18,8 @@ class AppInfoInteractor(
 
     suspend fun getAppLibraries(): List<AppLibrary> = suspendCancellableCoroutine { continuation ->
         context.assets.open("app/app_libraries.json").use { stream ->
-            val list: List<AppLibrary> = Json(configuration = JsonConfiguration.Stable).parse(
-                AppLibrary.serializer().list,
+            val list: List<AppLibrary> = Json.decodeFromString(
+                ListSerializer(AppLibrary.serializer()),
                 InputStreamReader(stream).readText()
             )
             continuation.resume(list)

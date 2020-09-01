@@ -7,7 +7,7 @@ import gitfox.entity.*
 import gitfox.entity.app.target.TargetBadgeStatus
 import gitfox.entity.app.target.TargetHeaderIcon
 import gitfox.entity.app.target.TargetHeaderTitle
-import io.ktor.client.features.ResponseException
+import io.ktor.client.features.*
 import org.threeten.bp.Duration
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZonedDateTime
@@ -22,7 +22,7 @@ import java.io.IOException
  */
 
 fun Throwable.userMessage(resourceManager: ResourceManager) = when (this) {
-    is ResponseException -> when (response.status.value) {
+    is ResponseException -> when (response?.status?.value) {
         304 -> resourceManager.getString(R.string.not_modified_error)
         400 -> resourceManager.getString(R.string.bad_request_error)
         401 -> resourceManager.getString(R.string.unauthorized_error)

@@ -3,7 +3,7 @@ package ru.terrakok.gitlabclient.presentation.global
 import android.annotation.SuppressLint
 import com.github.aakira.napier.Napier
 import gitfox.model.interactor.SessionInteractor
-import io.ktor.client.features.ResponseException
+import io.ktor.client.features.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -37,7 +37,7 @@ class ErrorHandler @Inject constructor(
     fun proceed(error: Throwable, messageListener: (String) -> Unit = {}) {
         Napier.e(error)
         when (error) {
-            is ResponseException -> when (error.response.status.value) {
+            is ResponseException -> when (error.response?.status?.value) {
                 401 -> launch { authErrorChannel.send(true) }
                 else -> messageListener(error.userMessage(resourceManager))
             }

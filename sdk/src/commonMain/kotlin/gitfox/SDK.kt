@@ -12,7 +12,6 @@ import gitfox.model.data.storage.Prefs
 import gitfox.model.interactor.*
 import gitfox.util.HttpClientFactory
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonConfiguration
 
 open class SDK internal constructor(
     private val defaultPageSize: Int = SDK.defaultPageSize,
@@ -23,11 +22,11 @@ open class SDK internal constructor(
     private val settings: Settings
 ) {
 
-    private val json = Json(JsonConfiguration.Stable.copy(
-        ignoreUnknownKeys = true,
-        isLenient = true,
+    private val json = Json {
+        ignoreUnknownKeys = true
+        isLenient = true
         encodeDefaults = false
-    ))
+    }
 
     private val userAccountApi = UserAccountApi(httpClientFactory.create(json, null, isDebug))
     private val serverChanges = ServerChanges()

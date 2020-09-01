@@ -2,7 +2,7 @@ package gitfox.model.data.storage
 
 import com.russhwolf.settings.Settings
 import gitfox.entity.app.session.UserAccount
-import kotlinx.serialization.builtins.list
+import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 
 /**
@@ -28,14 +28,14 @@ internal class Prefs(
         }
 
     var accounts: List<UserAccount>
-        get() = json.parse(
-            UserAccount.serializer().list,
+        get() = json.decodeFromString(
+            ListSerializer(UserAccount.serializer()),
             settings.getString(KEY_USER_ACCOUNTS, "[]")
         )
         set(value) {
             settings.putString(
                 KEY_USER_ACCOUNTS,
-                json.stringify(UserAccount.serializer().list, value)
+                json.encodeToString(ListSerializer(UserAccount.serializer()), value)
             )
         }
 
