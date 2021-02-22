@@ -47,7 +47,7 @@ kotlin {
                 //Log
                 implementation("com.github.aakira:napier:${properties["version.napier"]}")
                 //JSON
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:${properties["version.kotlinx.serialization"]}")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:${properties["version.kotlinx.serialization"]}")
                 //Preferences
                 implementation("com.russhwolf:multiplatform-settings:${properties["version.multiplatformSettings"]}")
                 //Network
@@ -77,9 +77,6 @@ kotlin {
             dependencies {
                 //Network
                 implementation("io.ktor:ktor-client-js:${properties["version.ktor"]}")
-                //required NPM dependencies
-                implementation(npm("text-encoding", "*"))
-                implementation(npm("abort-controller", "*"))
             }
         }
         all {

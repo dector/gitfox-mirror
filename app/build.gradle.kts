@@ -168,7 +168,7 @@ dependencies {
     //Log
     implementation("com.github.aakira:napier:${properties["version.napier"]}")
     //JSON
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:${properties["version.kotlinx.serialization"]}")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:${properties["version.kotlinx.serialization"]}")
     //Network
     implementation("io.ktor:ktor-client-core:${properties["version.ktor"]}")
 
